@@ -31,25 +31,24 @@ using DisCatSharp.Interactivity.Extensions;
 [SlashCommand("cats_modal", "A modal with questions about cats!")]
 public async Task SendCatsModalAsync(InteractionContext ctx)
 {
-	DiscordInteractionModalBuilder builder = new DiscordInteractionModalBuilder();
+	var builder = new DiscordInteractionModalBuilder();
 	builder.WithCustomId("cats_modal");
 	builder.WithTitle("Cats");
 
-    List<DiscordStringSelectComponentOption> cats = [new("Yes", "I love cats", isDefault: true), new("No", "I hate cats")];
-	DiscordStringSelectComponent catSelect = new("Choose carefully..", cats);
+	List<DiscordStringSelectComponentOption> cats = [new("Yes", "I love cats", isDefault: true), new("No", "I hate cats")];
 
-	builder.AddLabelComponent(new DiscordLabelComponent("Cats", "Do you like cats?").WithStringSelectComponent(catSelect));
-	builder.AddLabelComponent(new DiscordLabelComponent("Like", "What do you like about cats?").WithTextComponent(new(TextComponentStyle.Paragraph)));
-	builder.AddLabelComponent(new DiscordLabelComponent("Dislike", "What do you dislike about cats?").WithTextComponent(new(TextComponentStyle.Small)));
+	builder.AddLabelComponent(new DiscordLabelComponent("Cats", "Do you like cats?").WithStringSelectComponent(new("Choose carefully..", cats, customId: "cat_select")));
+	builder.AddLabelComponent(new DiscordLabelComponent("Like", "What do you like about cats?").WithTextComponent(new(TextComponentStyle.Paragraph, customId: "cat_like")));
+	builder.AddLabelComponent(new DiscordLabelComponent("Dislike", "What do you dislike about cats?").WithTextComponent(new(TextComponentStyle.Small, customId: "cat_dislike")));
 
-    await ctx.CreateModalResponseAsync(builder);
+	await ctx.CreateModalResponseAsync(builder);
 
 	var res = await ctx.Client.GetInteractivity().WaitForModalAsync(builder.CustomId, TimeSpan.FromMinutes(1));
 
 	if (res.TimedOut)
 		return;
 
-    await res.Result.Interaction.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
+	await res.Result.Interaction.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
 
 	var catSelectChoice = (res.Result.Interaction.Data.ModalComponents
 		.OfType<DiscordLabelComponent>()
@@ -58,15 +57,15 @@ public async Task SendCatsModalAsync(InteractionContext ctx)
 
 	var catLikeText = (res.Result.Interaction.Data.ModalComponents
 		.OfType<DiscordLabelComponent>()
-		.Where(x => x.Component is DiscordTextInputComponent y && y.Style is TextComponentStyle.Paragraph)
+		.Where(x => x.Component is DiscordTextInputComponent y && y.CustomId is "cat_like")
 		.FirstOrDefault()?.Component as DiscordTextInputComponent)?.Value;
 
 	var catDislikeText = (res.Result.Interaction.Data.ModalComponents
 		.OfType<DiscordLabelComponent>()
-		.Where(x => x.Component is DiscordTextInputComponent y && y.Style is TextComponentStyle.Small)
+		.Where(x => x.Component is DiscordTextInputComponent y && y.CustomId is "cat_dislike")
 		.FirstOrDefault()?.Component as DiscordTextInputComponent)?.Value;
 
-    var webhookBuilder = new DiscordWebhookBuilder().WithV2Components();
+	var webhookBuilder = new DiscordWebhookBuilder().WithV2Components();
 	var container = new DiscordContainerComponent([
 		new DiscordTextDisplayComponent(builder.Title.Header2()),
 		new DiscordTextDisplayComponent("Do you like cats?".Header3() + $"\n{(catSelectChoice ?? "No selection").Italic()}"),
