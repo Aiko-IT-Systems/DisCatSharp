@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 using DisCatSharp.Entities;
 
-namespace DisCatSharp.Interactivity.Enums;
+namespace DisCatSharp.Interactivity.Entities;
 
 /// <summary>
 ///     A response from the paginated modal response
@@ -13,6 +13,11 @@ public class PaginatedModalResponse
 	///     The responses. The key is the customid of each component.
 	/// </summary>
 	public IReadOnlyDictionary<string, string> Responses { get; internal set; }
+
+	/// <summary>
+	///     The select menu responses. The key is the customid of each component.
+	/// </summary>
+	public IReadOnlyDictionary<string, string[]> SelectResponses { get; internal set; }
 
 	/// <summary>
 	///     The last interaction. This is automatically replied to with a ephemeral "thinking" state. Use

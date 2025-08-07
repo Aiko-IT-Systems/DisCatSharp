@@ -2,7 +2,7 @@ using System;
 
 using DisCatSharp.Entities;
 
-namespace DisCatSharp.Interactivity;
+namespace DisCatSharp.Interactivity.Entities;
 
 /// <summary>
 ///     The page.

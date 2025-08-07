@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Interactivity.Entities;
 
 namespace DisCatSharp.Interactivity.EventHandling;
 

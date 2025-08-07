@@ -1,7 +1,7 @@
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 
-namespace DisCatSharp.Interactivity.Enums;
+namespace DisCatSharp.Interactivity.Entities;
 
 /// <summary>
 ///     A modal page.
