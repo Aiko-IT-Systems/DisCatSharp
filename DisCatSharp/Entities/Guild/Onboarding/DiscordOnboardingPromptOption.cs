@@ -7,7 +7,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 ///     Represents an onboarding prompt option.
 /// </summary>
-public sealed class DiscordOnboardingPromptOption : SnowflakeObject
+public sealed class DiscordOnboardingPromptOption : NullableSnowflakeObject
 {
 	/// <summary>
 	///     Constructs a new onboarding prompt option.
