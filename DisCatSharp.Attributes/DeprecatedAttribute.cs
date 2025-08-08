@@ -1,23 +1,24 @@
 using System;
 
-namespace DisCatSharp.Attributes;
-
-/// <summary>
-/// Marks something as deprecated by DisCatSharp.
-/// </summary>
-[AttributeUsage(AttributeTargets.All, AllowMultiple = true, Inherited = true)]
-public sealed class DeprecatedAttribute : Attribute
+namespace DisCatSharp.Attributes
 {
 	/// <summary>
-	/// The additional information message.
+	///     Marks something as deprecated by DisCatSharp.
 	/// </summary>
-	public string Message { get; set; }
-
-	public DeprecatedAttribute(string message)
+	[AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
+	public sealed class DeprecatedAttribute : Attribute
 	{
-		this.Message = message;
-	}
+		public DeprecatedAttribute(string message)
+		{
+			this.Message = message;
+		}
 
-	public DeprecatedAttribute()
-	{ }
+		public DeprecatedAttribute()
+		{ }
+
+		/// <summary>
+		///     The additional information message.
+		/// </summary>
+		public string Message { get; set; }
+	}
 }

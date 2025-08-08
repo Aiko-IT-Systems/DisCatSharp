@@ -1,0 +1,173 @@
+{
+	"short_name": "DCS",
+	"name": "DisCatSharp Docs",
+	"description": "Your library to write discord bots in C# with focus on always providing access to the latest discord features.",
+	"icons": [
+		{
+			"src": "/favicon-16x16.png",
+			"sizes": "16x16",
+			"type": "image/png"
+		},
+		{
+			"src": "/favicon-32x32.png",
+			"sizes": "32x32",
+			"type": "image/png"
+		},
+		{
+			"src": "/favicon-96x96.png",
+			"sizes": "96x96",
+			"type": "image/png"
+		},
+		{
+			"src": "/favicon-512x512.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		}
+	],
+	"start_url": "https://docs.dcs.aitsys.dev",
+	"display": "minimal-ui",
+	"display_override": ["window-controls-overlay", "standalone", "browser"],
+	"theme_color": "#fc0fc0",
+	"background_color": "#000000",
+	"orientation": "natural",
+	"categories": [
+		"utilities",
+		"discord",
+		"discord library",
+		"discord bots",
+		"programming",
+		"productivity"
+	],
+	"prefer_related_applications": false,
+	"dir": "ltr",
+	"id": "https://docs.dcs.aitsys.dev",
+	"lang": "en-US",
+	"related_applications": [],
+	"scope": "https://docs.dcs.aitsys.dev",
+	"shortcuts": [
+		{
+			"name": "DisCatSharp Articles",
+			"short_name": "Articles",
+			"description": "Various articles about DisCatSharp and development",
+			"url": "/articles",
+			"icons": [
+				{
+					"src": "/favicon-16x16.png",
+					"sizes": "16x16",
+					"type": "image/png"
+				},
+				{
+					"src": "/favicon-32x32.png",
+					"sizes": "32x32",
+					"type": "image/png"
+				},
+				{
+					"src": "/favicon-96x96.png",
+					"sizes": "96x96",
+					"type": "image/png"
+				},
+				{
+					"src": "/favicon-512x512.png",
+					"sizes": "512x512",
+					"type": "image/png"
+				}
+			]
+		},
+		{
+			"name": "DisCatSharp API Reference",
+			"short_name": "API Reference",
+			"description": "DisCatSharps API Reference",
+			"url": "/api",
+			"icons": [
+				{
+					"src": "/favicon-16x16.png",
+					"sizes": "16x16",
+					"type": "image/png"
+				},
+				{
+					"src": "/favicon-32x32.png",
+					"sizes": "32x32",
+					"type": "image/png"
+				},
+				{
+					"src": "/favicon-96x96.png",
+					"sizes": "96x96",
+					"type": "image/png"
+				},
+				{
+					"src": "/favicon-512x512.png",
+					"sizes": "512x512",
+					"type": "image/png"
+				}
+			]
+		},
+		{
+			"name": "DisCatSharp Changelogs",
+			"short_name": "Changelogs",
+			"description": "DisCatSharp Changelogs",
+			"url": "/changelogs",
+			"icons": [
+				{
+					"src": "/favicon-16x16.png",
+					"sizes": "16x16",
+					"type": "image/png"
+				},
+				{
+					"src": "/favicon-32x32.png",
+					"sizes": "32x32",
+					"type": "image/png"
+				},
+				{
+					"src": "/favicon-96x96.png",
+					"sizes": "96x96",
+					"type": "image/png"
+				},
+				{
+					"src": "/favicon-512x512.png",
+					"sizes": "512x512",
+					"type": "image/png"
+				}
+			]
+		},
+		{
+			"name": "DisCatSharp Visual Studio Tools",
+			"short_name": "Visual Studio Tools",
+			"description": "DisCatSharp's Visual Studio Tools such as analyzers and codefixes",
+			"url": "/vs",
+			"icons": [
+				{
+					"src": "/favicon-16x16.png",
+					"sizes": "16x16",
+					"type": "image/png"
+				},
+				{
+					"src": "/favicon-32x32.png",
+					"sizes": "32x32",
+					"type": "image/png"
+				},
+				{
+					"src": "/favicon-96x96.png",
+					"sizes": "96x96",
+					"type": "image/png"
+				},
+				{
+					"src": "/favicon-512x512.png",
+					"sizes": "512x512",
+					"type": "image/png"
+				}
+			]
+		}
+	],
+	"screenshots": [
+		{
+			"src":"/images/screenshot-wide.png",
+			"sizes":"1898x1018",
+			"type":"image/png"
+		},
+		{
+			"src":"/images/screenshot-tall.png",
+			"sizes":"362x743",
+			"type":"image/png"
+		}
+	]
+}

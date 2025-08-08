@@ -21,22 +21,10 @@ namespace DisCatSharp.Entities;
 public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 {
 	/// <summary>
-	///     Gets the user's banner color integer.
-	/// </summary>
-	[JsonProperty("accent_color")]
-	internal int? BannerColorInternal;
-
-	/// <summary>
-	///     Gets the user's theme color integers.
-	/// </summary>
-	[JsonProperty("theme_colors", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<int>? ThemeColorsInternal;
-
-	/// <summary>
 	///     Initializes a new instance of the <see cref="DiscordUser" /> class.
 	/// </summary>
 	internal DiscordUser()
-		: base(["display_name", "linked_users", "banner_color", "authenticator_types"])
+		: base(["display_name", "linked_users", "banner_color", "authenticator_types", "clan"])
 	{ }
 
 	/// <summary>
@@ -50,10 +38,12 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		this.Discriminator = transport.Discriminator;
 		this.AvatarHash = transport.AvatarHash;
 		this.AvatarDecorationData = transport.AvatarDecorationData;
+		this.Collectibles = transport.Collectibles;
 		this.BannerHash = transport.BannerHash;
 		this.BannerColorInternal = transport.BannerColor;
 		this.ThemeColorsInternal = [.. transport.ThemeColors ?? []];
 		this.IsBot = transport.IsBot;
+		this.IsSystem = transport.IsSystem;
 		this.MfaEnabled = transport.MfaEnabled;
 		this.Verified = transport.Verified;
 		this.Email = transport.Email;
@@ -64,9 +54,20 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		this.Bio = transport.Bio;
 		this.Pronouns = transport.Pronouns;
 		this.GlobalName = transport.GlobalName;
-		this.Clan = transport.Clan;
 		this.PrimaryGuild = transport.PrimaryGuild;
 	}
+
+	/// <summary>
+	///     Gets the user's banner color integer.
+	/// </summary>
+	[JsonProperty("accent_color")]
+	internal int? BannerColorInternal { get; set; }
+
+	/// <summary>
+	///     Gets the user's theme color integers.
+	/// </summary>
+	[JsonProperty("theme_colors", NullValueHandling = NullValueHandling.Ignore)]
+	internal List<int>? ThemeColorsInternal { get; set; }
 
 	/// <summary>
 	///     Gets this user's username.
@@ -78,7 +79,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	///     Gets this user's username with the discriminator.
 	///     Example: Discord#0000
 	/// </summary>
-	[JsonIgnore, DiscordDeprecated("We will internally use the GlobalName if a user is already migrated. This will be removed in future. Consider switching to UsernameWithGlobalName then.")]
+	[JsonIgnore]
 	public virtual string UsernameWithDiscriminator
 		=> this.IsMigrated ? this.UsernameWithGlobalName : $"{this.Username}#{this.Discriminator}";
 
@@ -108,7 +109,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <summary>
 	///     Gets the user's 4-digit discriminator.
 	/// </summary>
-	[JsonProperty("discriminator", NullValueHandling = NullValueHandling.Ignore), DiscordDeprecated("Users are being migrated currently. Bots still have discrims")]
+	[JsonProperty("discriminator", NullValueHandling = NullValueHandling.Ignore)]
 	public virtual string Discriminator { get; internal set; }
 
 	/// <summary>
@@ -152,16 +153,10 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	public virtual string Bio { get; internal set; }
 
 	/// <summary>
-	///     Gets the users clan.
-	/// </summary>
-	[JsonProperty("clan", NullValueHandling = NullValueHandling.Ignore), DiscordUnreleased]
-	public virtual DiscordClan? Clan { get; internal set; }
-
-	/// <summary>
 	///     Gets the users primary guild.
 	/// </summary>
-	[JsonProperty("primary_guild", NullValueHandling = NullValueHandling.Ignore), DiscordUnreleased]
-	public virtual DiscordClan? PrimaryGuild { get; internal set; }
+	[JsonProperty("primary_guild", NullValueHandling = NullValueHandling.Ignore)]
+	public virtual DiscordPrimaryGuild? PrimaryGuild { get; internal set; }
 
 	/// <summary>
 	///     Gets the user's avatar hash.
@@ -173,7 +168,13 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	///     Gets the user's avatar decoration data.
 	/// </summary>
 	[JsonProperty("avatar_decoration_data", NullValueHandling = NullValueHandling.Ignore)]
-	public virtual AvatarDecorationData AvatarDecorationData { get; internal set; }
+	public virtual AvatarDecorationData? AvatarDecorationData { get; internal set; }
+
+	/// <summary>
+	///     Gets the user's collectibles.
+	/// </summary>
+	[JsonProperty("collectibles", NullValueHandling = NullValueHandling.Ignore)]
+	public virtual DiscordCollectibles? Collectibles { get; internal set; }
 
 	/// <summary>
 	///     Returns a uri to this users profile.
@@ -217,7 +218,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	public virtual bool IsBot { get; internal set; }
 
 	/// <summary>
-	///     Gets whether the user has multi-factor authentication enabled.
+	///     Gets whether the user has multifactor authentication enabled.
 	/// </summary>
 	[JsonProperty("mfa_enabled", NullValueHandling = NullValueHandling.Ignore)]
 	public virtual bool? MfaEnabled { get; internal set; }
@@ -759,24 +760,6 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		=> this.AccessToken is not null ? await oauth2Client.UpdateCurrentUserApplicationRoleConnectionAsync(this.AccessToken, platformName, platformUsername, metadata) : throw new NullReferenceException("You need to specify the AccessToken on this DiscordUser entity.");
 
 #endregion
-}
-
-/// <summary>
-///     Represents a user's avatar decoration data.
-/// </summary>
-public class AvatarDecorationData
-{
-	[JsonProperty("asset", NullValueHandling = NullValueHandling.Ignore)]
-	public string Asset { get; internal set; }
-
-	/// <summary>
-	///     Gets the user's avatar decoration url.
-	/// </summary>
-	[JsonIgnore]
-	public string? AssetUrl => string.IsNullOrWhiteSpace(this.Asset) ? null : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS_DECORATION_PRESETS}/{this.Asset}.png?size=1024";
-
-	[JsonProperty("sku_id", NullValueHandling = NullValueHandling.Ignore)]
-	public ulong SkuId { get; internal set; }
 }
 
 /// <summary>

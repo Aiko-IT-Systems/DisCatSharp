@@ -34,26 +34,6 @@ public sealed class DiscordChannelSelectComponent : DiscordBaseSelectComponent
 	}
 
 	/// <summary>
-	///     Constructs a new <see cref="DiscordChannelSelectComponent" /> for modals.
-	/// </summary>
-	/// <param name="label">Maximum count of selectable options.</param>
-	/// <param name="placeholder">Text to show if no option is selected.</param>
-	/// <param name="channelTypes">The channel types to filter by.</param>
-	/// <param name="customId">The Id to assign to the select component.</param>
-	/// <param name="minOptions">Minimum count of selectable options.</param>
-	/// <param name="maxOptions">Maximum count of selectable options.</param>
-	/// <param name="disabled">
-	///     Whether this select component should be initialized as being disabled. User sees a greyed out
-	///     select component that cannot be interacted with.
-	/// </param>
-	/// <param name="defaultValues">The default values of this select menu.</param>
-	public DiscordChannelSelectComponent(string label, string placeholder, IEnumerable<ChannelType> channelTypes = null, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false, IEnumerable<DiscordSelectDefaultValue>? defaultValues = null)
-		: base(ComponentType.ChannelSelect, label, placeholder, customId, minOptions, maxOptions, disabled, defaultValues)
-	{
-		this.ChannelTypes = channelTypes?.ToArray() ?? [];
-	}
-
-	/// <summary>
 	///     Constructs a new <see cref="DiscordChannelSelectComponent" />.
 	/// </summary>
 	public DiscordChannelSelectComponent()

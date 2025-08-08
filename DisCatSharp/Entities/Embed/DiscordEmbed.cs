@@ -147,7 +147,7 @@ public sealed class DiscordEmbed : ObservableApiObject
 	///     Gets the embed's flags.
 	/// </summary>
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
-	public EmbedFlags Flags { get; internal set; } = EmbedFlags.None;
+	public EmbedFlags? Flags { get; internal set; }
 
 	/// <summary>
 	///     Gets the content scan version.

@@ -414,7 +414,7 @@ public sealed partial class DiscordClient
 			case "message_create":
 				rawMbr = dat["member"]!;
 
-				if (rawMbr != null)
+				if (rawMbr != null!)
 					mbr = DiscordJson.DeserializeObject<TransportMember>(rawMbr.ToString(), this);
 
 				if (rawRefMsg is { HasValues: true })
@@ -426,13 +426,13 @@ public sealed partial class DiscordClient
 						refMbr = DiscordJson.DeserializeObject<TransportMember>(rawRefMsg.SelectToken("member")!.ToString(), this);
 				}
 
-				await this.OnMessageCreateEventAsync(dat.ToDiscordObject<DiscordMessage>(), dat["author"].ToObject<TransportUser>(), mbr, refUsr, refMbr).ConfigureAwait(false);
+				await this.OnMessageCreateEventAsync(dat.ToDiscordObject<DiscordMessage>(), dat["author"]!.ToObject<TransportUser>(), mbr!, refUsr!, refMbr!).ConfigureAwait(false);
 				break;
 
 			case "message_update":
 				rawMbr = dat["member"]!;
 
-				if (rawMbr != null)
+				if (rawMbr != null!)
 					mbr = DiscordJson.DeserializeObject<TransportMember>(rawMbr.ToString(), this);
 
 				if (rawRefMsg is { HasValues: true })
@@ -444,7 +444,7 @@ public sealed partial class DiscordClient
 						refMbr = DiscordJson.DeserializeObject<TransportMember>(rawRefMsg.SelectToken("member")!.ToString(), this);
 				}
 
-				await this.OnMessageUpdateEventAsync(DiscordJson.DeserializeObject<DiscordMessage>(payloadString, this), dat["author"] != null ? DiscordJson.DeserializeObject<TransportUser>(dat["author"]!.ToString(), this) : null, mbr!, refUsr!, refMbr!).ConfigureAwait(false);
+				await this.OnMessageUpdateEventAsync(DiscordJson.DeserializeObject<DiscordMessage>(payloadString, this), dat["author"] != null ? DiscordJson.DeserializeObject<TransportUser>(dat["author"]!.ToString(), this) : null!, mbr!, refUsr!, refMbr!).ConfigureAwait(false);
 				break;
 
 			// delete event does *not* include message object
@@ -742,6 +742,7 @@ public sealed partial class DiscordClient
 		this.CurrentUser.MfaEnabled = rusr.MfaEnabled;
 		this.CurrentUser.Verified = rusr.Verified;
 		this.CurrentUser.IsBot = rusr.IsBot;
+		this.CurrentUser.IsSystem = rusr.IsSystem;
 		this.CurrentUser.Flags = rusr.Flags;
 		this.CurrentUser.GlobalName = rusr.GlobalName;
 		this.CurrentUser.Discord = this;
@@ -804,11 +805,13 @@ public sealed partial class DiscordClient
 							old.BannerHash = usr.BannerHash;
 							old.BannerColorInternal = usr.BannerColorInternal;
 							old.AvatarDecorationData = usr.AvatarDecorationData;
+							old.Collectibles = usr.Collectibles;
+							old.IsSystem = usr.IsSystem;
+							old.IsBot = usr.IsBot;
 							old.ThemeColorsInternal = usr.ThemeColorsInternal;
 							old.Pronouns = usr.Pronouns;
 							old.Locale = usr.Locale;
 							old.GlobalName = usr.GlobalName;
-							old.Clan = usr.Clan;
 							old.PrimaryGuild = usr.PrimaryGuild;
 							return old;
 						});
@@ -1120,17 +1123,16 @@ public sealed partial class DiscordClient
 	/// <param name="guild">The guild.</param>
 	/// <param name="rawMembers">The raw members.</param>
 	/// <param name="presences">The presences.</param>
-	internal async Task OnGuildCreateEventAsync(DiscordGuild guild, JArray rawMembers, IEnumerable<DiscordPresence> presences)
+	internal async Task OnGuildCreateEventAsync(DiscordGuild guild, JArray rawMembers, IEnumerable<DiscordPresence>? presences)
 	{
 		if (presences != null)
 			foreach (var xp in presences)
 			{
 				xp.Discord = this;
 				xp.GuildId = guild.Id;
-				xp.Activity = new(xp.RawActivity);
-				if (xp.RawActivities != null)
-					xp.InternalActivities = xp.RawActivities
-						.Select(x => new DiscordActivity(x)).ToArray();
+				xp.Activity = xp.RawActivity is not null ? new(xp.RawActivity) : null;
+				xp.InternalActivities = xp.RawActivities?
+					.Select(x => new DiscordActivity(x)).ToList();
 				this.PresencesInternal[xp.InternalUser.Id] = xp;
 			}
 
@@ -1462,11 +1464,12 @@ public sealed partial class DiscordClient
 
 			var dataList = await guild.ProcessAuditLog(workaroundAuditLogEntryList).ConfigureAwait(false);
 
-			await this._guildAuditLogEntryCreated.InvokeAsync(this, new(this.ServiceProvider)
-			{
-				Guild = guild,
-				AuditLogEntry = dataList[0]
-			}).ConfigureAwait(false);
+			if (dataList.Count > 0)
+				await this._guildAuditLogEntryCreated.InvokeAsync(this, new(this.ServiceProvider)
+				{
+					Guild = guild,
+					AuditLogEntry = dataList.FirstOrDefault()
+				}).ConfigureAwait(false);
 		}
 		catch (Exception)
 		{ }
@@ -1476,7 +1479,7 @@ public sealed partial class DiscordClient
 	///     Handles the guild sync event.
 	/// </summary>
 	/// <param name="guild">The guild.</param>
-	/// <param name="isLarge">Whether the guild is a large guild..</param>
+	/// <param name="isLarge">Whether the guild is a large guild.</param>
 	/// <param name="rawMembers">The raw members.</param>
 	/// <param name="presences">The presences.</param>
 	internal async Task OnGuildSyncEventAsync(DiscordGuild guild, bool isLarge, JArray rawMembers, IEnumerable<DiscordPresence> presences)
@@ -2019,11 +2022,13 @@ public sealed partial class DiscordClient
 			old.BannerHash = usr.BannerHash;
 			old.BannerColorInternal = usr.BannerColorInternal;
 			old.AvatarDecorationData = usr.AvatarDecorationData;
+			old.Collectibles = usr.Collectibles;
+			old.IsSystem = usr.IsSystem;
+			old.IsBot = usr.IsBot;
 			old.ThemeColorsInternal = usr.ThemeColorsInternal;
 			old.Pronouns = usr.Pronouns;
 			old.Locale = usr.Locale;
 			old.GlobalName = usr.GlobalName;
-			old.Clan = usr.Clan;
 			old.PrimaryGuild = usr.PrimaryGuild;
 			return old;
 		});
@@ -2094,11 +2099,13 @@ public sealed partial class DiscordClient
 			old.BannerHash = usr.BannerHash;
 			old.BannerColorInternal = usr.BannerColorInternal;
 			old.AvatarDecorationData = usr.AvatarDecorationData;
+			old.Collectibles = usr.Collectibles;
+			old.IsSystem = usr.IsSystem;
+			old.IsBot = usr.IsBot;
 			old.ThemeColorsInternal = usr.ThemeColorsInternal;
 			old.Pronouns = usr.Pronouns;
 			old.Locale = usr.Locale;
 			old.GlobalName = usr.GlobalName;
-			old.Clan = usr.Clan;
 			old.PrimaryGuild = usr.PrimaryGuild;
 			return old;
 		});
@@ -2111,6 +2118,7 @@ public sealed partial class DiscordClient
 			};
 		var old = mbr;
 
+		// TODO: fixme
 		var gAvOld = old.GuildAvatarHash;
 		var gBaOld = old.GuildBannerHash;
 		var gAvDeDaOld = old.GuildAvatarDecorationData;
@@ -2268,27 +2276,25 @@ public sealed partial class DiscordClient
 			Nonce = nonce
 		};
 
-		if (dat["presences"] != null)
+		if (dat["presences"] is not null)
 		{
-			var presences = dat["presences"]!.ToObject<DiscordPresence[]>()!;
+			var presences = dat["presences"]?.ToObject<List<DiscordPresence>?>();
+			if (presences is not null)
+				foreach (var presence in presences)
+				{
+					presence.Discord = this;
+					presence.Activity = presence.RawActivity is not null ? new(presence.RawActivity) : null;
 
-			var presCount = presences.Length;
-			foreach (var presence in presences)
-			{
-				presence.Discord = this;
-				presence.Activity = new(presence.RawActivity);
+					presence.InternalActivities = presence.RawActivities?
+						.Select(x => new DiscordActivity(x)).ToList();
 
-				if (presence.RawActivities != null)
-					presence.InternalActivities = presence.RawActivities
-						.Select(x => new DiscordActivity(x)).ToArray();
-
-				pres.Add(presence);
-			}
+					pres.Add(presence);
+				}
 
 			ea.Presences = new ReadOnlySet<DiscordPresence>(pres);
 		}
 
-		if (dat["not_found"] != null)
+		if (dat["not_found"] is not null)
 		{
 			var nf = dat["not_found"]!.ToObject<ISet<ulong>>()!;
 			ea.NotFound = new ReadOnlySet<ulong>(nf);
@@ -2651,10 +2657,10 @@ public sealed partial class DiscordClient
 		this.PopulateMessageReactionsAndCache(message, author, member);
 		message.PopulateMentions();
 
-		if (message.Channel == null && message.ChannelId == default)
+		if (message.Channel is null && message.ChannelId == 0)
 			this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Channel which the last message belongs to is not in cache - cache state might be invalid!");
 
-		if (message.ReferencedMessage != null)
+		if (message.ReferencedMessage is not null)
 		{
 			message.ReferencedMessage.Discord = this;
 			this.PopulateMessageReactionsAndCache(message.ReferencedMessage, referenceAuthor, referenceMember);
@@ -2685,9 +2691,9 @@ public sealed partial class DiscordClient
 		var ea = new MessageCreateEventArgs(this.ServiceProvider)
 		{
 			Message = message,
-			MentionedUsers = new ReadOnlyCollection<DiscordUser>(message.MentionedUsersInternal),
-			MentionedRoles = message.MentionedRolesInternal != null ? new ReadOnlyCollection<DiscordRole>(message.MentionedRolesInternal) : null,
-			MentionedChannels = message.MentionedChannelsInternal != null ? new ReadOnlyCollection<DiscordChannel>(message.MentionedChannelsInternal) : null
+			MentionedUsers = message.MentionedUsersInternal.Count is not 0 ? new ReadOnlyCollection<DiscordUser>(message.MentionedUsersInternal) : [],
+			MentionedRoles = message.MentionedRolesInternal.Count is not 0 ? new ReadOnlyCollection<DiscordRole>(message.MentionedRolesInternal) : [],
+			MentionedChannels = message.MentionedChannelsInternal.Count is not 0 ? new ReadOnlyCollection<DiscordChannel>(message.MentionedChannelsInternal) : []
 		};
 		await this._messageCreated.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
@@ -3566,7 +3572,7 @@ public sealed partial class DiscordClient
 	internal async Task OnPresenceUpdateEventAsync(JObject rawPresence, JObject rawUser)
 	{
 		var uid = (ulong)rawUser["id"]!;
-		DiscordPresence old = null;
+		DiscordPresence? old = null;
 
 		if (this.PresencesInternal.TryGetValue(uid, out var presence))
 		{
@@ -3578,22 +3584,22 @@ public sealed partial class DiscordClient
 			presence = DiscordJson.DeserializeObject<DiscordPresence>(rawPresence.ToString(), this);
 			;
 			presence.Discord = this;
-			presence.Activity = new(presence.RawActivity);
+			presence.Activity = presence.RawActivity is not null ? new(presence.RawActivity): null;
 			this.PresencesInternal[presence.InternalUser.Id] = presence;
 		}
 
 		// reuse arrays / avoid linq (this is a hot zone)
 		if (presence.Activities == null || rawPresence["activities"] == null)
 			presence.InternalActivities = [];
-		else
+		else if (presence.RawActivities is not null)
 		{
-			if (presence.InternalActivities.Length != presence.RawActivities.Length)
-				presence.InternalActivities = new DiscordActivity[presence.RawActivities.Length];
+			if (presence.InternalActivities?.Count != presence.RawActivities.Count)
+				presence.InternalActivities = new(presence.RawActivities.Count);
 
-			for (var i = 0; i < presence.InternalActivities.Length; i++)
+			for (var i = 0; i < presence.InternalActivities.Count; i++)
 				presence.InternalActivities[i] = new(presence.RawActivities[i]);
 
-			if (presence.InternalActivities.Length > 0)
+			if (presence.InternalActivities.Count > 0)
 			{
 				presence.RawActivity = presence.RawActivities[0];
 
@@ -3608,6 +3614,7 @@ public sealed partial class DiscordClient
 		{
 			Status = presence.Status,
 			Activity = presence.Activity,
+			Activities = presence.Activities,
 			User = presence.User,
 			PresenceBefore = old,
 			PresenceAfter = presence
@@ -3647,6 +3654,7 @@ public sealed partial class DiscordClient
 			Email = this.CurrentUser.Email,
 			Id = this.CurrentUser.Id,
 			IsBot = this.CurrentUser.IsBot,
+			IsSystem = this.CurrentUser.IsSystem,
 			MfaEnabled = this.CurrentUser.MfaEnabled,
 			Username = this.CurrentUser.Username,
 			Verified = this.CurrentUser.Verified
@@ -3657,6 +3665,7 @@ public sealed partial class DiscordClient
 		this.CurrentUser.Email = user.Email;
 		this.CurrentUser.Id = user.Id;
 		this.CurrentUser.IsBot = user.IsBot;
+		this.CurrentUser.IsSystem = user.IsSystem;
 		this.CurrentUser.MfaEnabled = user.MfaEnabled;
 		this.CurrentUser.Username = user.Username;
 		this.CurrentUser.Verified = user.Verified;
