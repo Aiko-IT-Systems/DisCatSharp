@@ -76,6 +76,7 @@ public sealed class DiscordTextInputComponent : DiscordComponent, ILabelComponen
 	/// <exception cref="ArgumentException">Is thrown when no label is set.</exception>
 	[DiscordDeprecated("Deprecated in favor of DiscordLabelComponent. Use overload without label in the new component.")]
 	public DiscordTextInputComponent(TextComponentStyle style, string label, string? customId = null, string? placeholder = null, int? minLength = null, int? maxLength = null, bool required = true, string defaultValue = null)
+		: this()
 	{
 		this.Style = style;
 		this.Label = label;
@@ -86,7 +87,6 @@ public sealed class DiscordTextInputComponent : DiscordComponent, ILabelComponen
 		//this.Disabled = disabled;
 		this.Required = required;
 		this.Value = defaultValue;
-		this.Type = ComponentType.TextInput;
 	}
 
 	/// <summary>
@@ -99,8 +99,8 @@ public sealed class DiscordTextInputComponent : DiscordComponent, ILabelComponen
 	/// <param name="maxLength">The maximal length of text input.</param>
 	/// <param name="required">Whether this text component should be required.</param>
 	/// <param name="defaultValue">Pre-filled value for text field.</param>
-	/// <exception cref="ArgumentException">Is thrown when no label is set.</exception>
 	public DiscordTextInputComponent(TextComponentStyle style, string? customId = null, string? placeholder = null, int? minLength = null, int? maxLength = null, bool required = true, string defaultValue = null)
+		: this()
 	{
 		this.Style = style;
 		this.CustomId = customId ?? Guid.NewGuid().ToString();
@@ -110,7 +110,6 @@ public sealed class DiscordTextInputComponent : DiscordComponent, ILabelComponen
 		//this.Disabled = disabled;
 		this.Required = required;
 		this.Value = defaultValue;
-		this.Type = ComponentType.TextInput;
 	}
 
 	/// <summary>
