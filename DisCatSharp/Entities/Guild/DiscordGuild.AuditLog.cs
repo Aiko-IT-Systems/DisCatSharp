@@ -135,7 +135,7 @@ public partial class DiscordGuild
 		if (ams.Count != 0)
 			amd = ams.ToDictionary(xm => xm.Id, xm => xm);
 
-		Dictionary<ulong, DiscordThreadChannel> dtc = null;
+		Dictionary<ulong, DiscordXThreadChannel> dtc = null;
 		Dictionary<ulong, DiscordIntegration> di = null;
 		Dictionary<ulong, DiscordScheduledEvent> dse = null;
 
