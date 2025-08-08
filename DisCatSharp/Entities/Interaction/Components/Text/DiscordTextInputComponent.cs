@@ -13,25 +13,27 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class DiscordTextInputComponent : DiscordComponent, ILabelComponent
 {
-	/*/// <summary>
-        /// Enables this component if it was disabled before.
-        /// </summary>
-        /// <returns>The current component.</returns>
-        public DiscordTextInputComponent Enable()
-        {
-            this.Disabled = false;
-            return this;
-        }
+	/*
+	/// <summary>
+	/// Enables this component if it was disabled before.
+	/// </summary>
+	/// <returns>The current component.</returns>
+	public DiscordTextInputComponent Enable()
+	{
+		this.Disabled = false;
+		return this;
+	}
 
-        /// <summary>
-        /// Disables this component.
-        /// </summary>
-        /// <returns>The current component.</returns>
-        public DiscordTextInputComponent Disable()
-        {
-            this.Disabled = true;
-            return this;
-        }*/
+	/// <summary>
+	/// Disables this component.
+	/// </summary>
+	/// <returns>The current component.</returns>
+	public DiscordTextInputComponent Disable()
+	{
+		this.Disabled = true;
+		return this;
+	}
+	*/
 
 	/// <summary>
 	///     Constructs a new <see cref="DiscordTextInputComponent" />.
@@ -65,7 +67,7 @@ public sealed class DiscordTextInputComponent : DiscordComponent, ILabelComponen
 	/// </summary>
 	/// <param name="style">The style of the text component.</param>
 	/// <param name="label">The text to display before the text component, up to 80 characters.</param>
-	/// <param name="customId">The Id to assign to the text component. This is sent back when a user presses it.</param>
+	/// <param name="customId">The Id to assign to the text component.</param>
 	/// <param name="placeholder">The placeholder for the text input.</param>
 	/// <param name="minLength">The minimal length of text input.</param>
 	/// <param name="maxLength">The maximal length of text input.</param>
@@ -91,7 +93,7 @@ public sealed class DiscordTextInputComponent : DiscordComponent, ILabelComponen
 	///     Constructs a new text component field with the specified options.
 	/// </summary>
 	/// <param name="style">The style of the text component.</param>
-	/// <param name="customId">The Id to assign to the text component. This is sent back when a user presses it.</param>
+	/// <param name="customId">The Id to assign to the text component.</param>
 	/// <param name="placeholder">The placeholder for the text input.</param>
 	/// <param name="minLength">The minimal length of text input.</param>
 	/// <param name="maxLength">The maximal length of text input.</param>
@@ -149,11 +151,13 @@ public sealed class DiscordTextInputComponent : DiscordComponent, ILabelComponen
 	public int? MaxLength { get; internal set; }
 
 	// NOTE: Probably will be introduced in future
-	/*/// <summary>
-        /// Whether this text component can be used.
-        /// </summary>
-        [JsonProperty("disabled", NullValueHandling = NullValueHandling.Ignore)]
-        public bool Disabled { get; internal set; }*/
+	/*
+	/// <summary>
+	/// Whether this text component can be used.
+	/// </summary>
+	[JsonProperty("disabled", NullValueHandling = NullValueHandling.Ignore)]
+	public bool Disabled { get; internal set; }
+	*/
 
 	/// <summary>
 	///     Whether this text component is required.
