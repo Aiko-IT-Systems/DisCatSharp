@@ -8,7 +8,8 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-///     Represents a row of components. Action rows can have up to five components.
+///     <para>Represents an action row holding interactable components like <see cref="DiscordButtonComponent" /> and <see cref="DiscordBaseSelectComponent" />.</para>
+///     <para>Can hold up to 5 components.</para>
 /// </summary>
 public sealed class DiscordActionRowComponent : DiscordComponent
 {
