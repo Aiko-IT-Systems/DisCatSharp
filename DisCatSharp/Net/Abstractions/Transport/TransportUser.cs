@@ -44,6 +44,9 @@ internal class TransportUser : ObservableApiObject
 		this.GlobalName = other.GlobalName;
 		this.ThemeColors = other.ThemeColors;
 		this.AvatarDecorationData = other.AvatarDecorationData;
+		this.Collectibles = other.Collectibles;
+		this.DisplayNameStyles = other.DisplayNameStyles;
+		this.PrimaryGuild = other.PrimaryGuild;
 	}
 
 	/// <summary>
@@ -192,4 +195,10 @@ internal class TransportUser : ObservableApiObject
 	/// </summary>
 	[JsonProperty("pronouns", NullValueHandling = NullValueHandling.Ignore)]
 	public string Pronouns { get; internal set; }
+
+	/// <summary>
+	///		Gets the user's display name styles.
+	/// </summary>
+	[JsonProperty("display_name_styles", NullValueHandling = NullValueHandling.Ignore)]
+	public DisplayNameStyles? DisplayNameStyles { get; internal set; }
 }
