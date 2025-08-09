@@ -63,6 +63,11 @@ public class ForumChannelEditModel : BaseEditModel
 	public Optional<ForumLayout?> DefaultForumLayout { get; internal set; }
 
 	/// <summary>
+	///     Sets the default tag matching setting for this forum channel.
+	/// </summary>
+	public Optional<TagMatching?> DefaultTagSetting { get; internal set; }
+
+	/// <summary>
 	///     <para>Sets the parent of this channel.</para>
 	///     <para>
 	///         This should be channel with <see cref="DisCatSharp.Entities.DiscordChannel.Type" /> set to

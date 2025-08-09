@@ -9,7 +9,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 ///     Represents an interactions application command callback data.
 /// </summary>
-internal class DiscordInteractionApplicationCommandCallbackData : ObservableApiObject
+internal sealed class DiscordInteractionApplicationCommandCallbackData : ObservableApiObject
 {
 	/// <summary>
 	///     Whether this message is text to speech.
@@ -69,19 +69,19 @@ internal class DiscordInteractionApplicationCommandCallbackData : ObservableApiO
 /// <summary>
 ///     Represents an interactions application command callback data for modals.
 /// </summary>
-internal class DiscordInteractionApplicationCommandModalCallbackData
+internal sealed class DiscordInteractionApplicationCommandModalCallbackData : ObservableApiObject
 {
 	/// <summary>
 	///     Gets the custom id.
 	/// </summary>
 	[JsonProperty("custom_id", NullValueHandling = NullValueHandling.Ignore)]
-	public string CustomId { get; internal set; }
+	public required string CustomId { get; internal set; }
 
 	/// <summary>
 	///     Gets the content.
 	/// </summary>
 	[JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
-	public string Title { get; internal set; }
+	public required string Title { get; internal set; }
 
 	/// <summary>
 	///     Gets the components.
@@ -93,19 +93,19 @@ internal class DiscordInteractionApplicationCommandModalCallbackData
 /// <summary>
 ///     Represents an interactions application command callback data for iFrames.
 /// </summary>
-internal class DiscordInteractionApplicationCommandIframeCallbackData
+internal sealed class DiscordInteractionApplicationCommandIframeCallbackData : ObservableApiObject
 {
 	/// <summary>
 	///     Gets the custom id.
 	/// </summary>
 	[JsonProperty("custom_id", NullValueHandling = NullValueHandling.Ignore)]
-	public string CustomId { get; internal set; }
+	public required string CustomId { get; internal set; }
 
 	/// <summary>
 	///     Gets the content.
 	/// </summary>
 	[JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
-	public string Title { get; internal set; }
+	public required string Title { get; internal set; }
 
 	/// <summary>
 	///     Gets the iFrame modal size.

@@ -1,21 +1,119 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<Project Sdk="Microsoft.NET.Sdk">
-
-	<Import Project="../DisCatSharp.Targets/DisCatSharp.targets" />
-	<Import Project="../DisCatSharp.Targets/Package.targets" />
-	<Import Project="../DisCatSharp.Targets/NuGet.targets" />
-	<Import Project="../DisCatSharp.Targets/Version.targets" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>netstandard2.1</TargetFramework>
+		<VersionPrefix>2025.03.27</VersionPrefix>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(VersionSuffix)' != '' And '$(BuildNumber)' != ''">
+		<Version>$(VersionPrefix)-$(VersionSuffix)-$(BuildNumber)</Version>
+		<AssemblyVersion>$(VersionPrefix).$(BuildNumber)</AssemblyVersion>
+		<FileVersion>$(VersionPrefix).$(BuildNumber)</FileVersion>
+		<PackageVersion>$(VersionPrefix).$(BuildNumber)</PackageVersion>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(VersionSuffix)' != '' And '$(BuildNumber)' == ''">
+		<Version>$(VersionPrefix)-$(VersionSuffix)</Version>
+		<AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
+		<FileVersion>$(VersionPrefix).0</FileVersion>
+		<PackageVersion>$(VersionPrefix).0</PackageVersion>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(VersionSuffix)' == ''">
+		<Version>$(VersionPrefix)</Version>
+		<AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
+		<FileVersion>$(VersionPrefix).0</FileVersion>
+		<PackageVersion>$(VersionPrefix).0</PackageVersion>
+	</PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0</TargetFrameworks>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<OutputType>Library</OutputType>
 	</PropertyGroup>
+		
+	<PropertyGroup>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<DebugType>Portable</DebugType>
+		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+		<PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/../RELEASENOTES.md"))</PackageReleaseNotes>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+		<DefineConstants>$(DefineConstants);CI_BUILD</DefineConstants>
+		<Deterministic>true</Deterministic>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(CI)' == 'True'">
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+		<DefineConstants>$(DefineConstants);CI_BUILD</DefineConstants>
+		<Deterministic>true</Deterministic>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+		<DefineConstants>$(DefineConstants);CI_BUILD</DefineConstants>
+		<Deterministic>true</Deterministic>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(GITHUB_ACTIONS)' != 'true' And '$(TF_BUILD)' != 'true' And '$(CI)' != 'True'">
+		<ContinuousIntegrationBuild>false</ContinuousIntegrationBuild>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true' And '$(SENTRY_AUTH_TOKEN)' != ''">
+		<SentryOrg>aitsys</SentryOrg>
+		<SentryProject>discatsharp</SentryProject>
+		<SentryUploadSymbols>true</SentryUploadSymbols>
+		<SentryUploadSources>true</SentryUploadSources>
+		<UseSentryCLI>true</UseSentryCLI>
+		<SentryCreateRelease>true</SentryCreateRelease>
+		<SentrySetCommits>true</SentrySetCommits>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<Authors>AITSYS, DisCatSharp, DisCatSharp Contributors</Authors>
+		<Company>AITSYS</Company>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<PackageProjectUrl>https://docs.dcs.aitsys.dev</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</RepositoryUrl>
+		<RepositoryType>Git</RepositoryType>
+		<PackageIcon>logo-pride.png</PackageIcon>
+		<PackageLicenseExpression />
+		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+		<RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\LICENSE.md">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+		<None Include="..\RELEASENOTES.md">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\DisCatSharp.Logos\logo-pride.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 
 	<PropertyGroup>
 		<AssemblyName>DisCatSharp.Attributes</AssemblyName>
 		<RootNamespace>DisCatSharp.Attributes</RootNamespace>
+		<Title>DisCatSharp Attributes</Title>
+	</PropertyGroup>
+	
+	<PropertyGroup>
+		<NoWarn>1591;NU5128;DV2001;NETSDK1188;CS8600;CS8625;CS8601;CS8604;CS0219;CS8618;CS8619;CS8597;CS8603;CS8602;CS8765;CS8632;CS8633;CS8714;CS8629;CS8767;CS8620</NoWarn>
+		<NuGetAuditSuppress>true</NuGetAuditSuppress>
+		<NuGetAudit>false</NuGetAudit>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		<Optimize>False</Optimize>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<Optimize>True</Optimize>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -27,9 +125,5 @@
 		</Description>
 		<PackageTags>DisCatSharp,DisCatSharp Attributes</PackageTags>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-	</ItemGroup>
 
 </Project>

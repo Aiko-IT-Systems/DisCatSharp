@@ -17,7 +17,7 @@ public static class SpeakingFlagExtensions
 }
 
 [Flags]
-public enum SpeakingFlags
+public enum SpeakingFlags : long
 {
 	/// <summary>
 	///     Not speaking.
@@ -27,15 +27,25 @@ public enum SpeakingFlags
 	/// <summary>
 	///     Normal transmission of voice audio.
 	/// </summary>
-	Microphone = 1 << 0,
+	Microphone = 1L << 0,
 
 	/// <summary>
 	///     Transmission of context audio for video, no speaking indicator.
 	/// </summary>
-	Soundshare = 1 << 1,
+	Soundshare = 1L << 1,
 
 	/// <summary>
 	///     Priority speaker, lowering audio of other speakers.
 	/// </summary>
-	Priority = 1 << 2
+	Priority = 1L << 2,
+
+	/// <summary>
+	///     Currently unknown, but likely indicates that the user is not visible in the channel.
+	/// </summary>
+	Hidden = 1L << 3,
+
+	/// <summary>
+	///      The flags are unknown.
+	/// </summary>
+	Unknown = long.MaxValue
 }

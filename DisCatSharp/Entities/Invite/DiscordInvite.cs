@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 using DisCatSharp.Exceptions;
 
@@ -141,12 +142,6 @@ public class DiscordInvite : ObservableApiObject
 	public bool IsRevoked { get; internal set; }
 
 	/// <summary>
-	///     Gets the stage instance this invite is for.
-	/// </summary>
-	[JsonProperty("stage_instance", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordInviteStage Stage { get; internal set; }
-
-	/// <summary>
 	///     Gets the guild scheduled event data for the invite.
 	/// </summary>
 	[JsonProperty("guild_scheduled_event", NullValueHandling = NullValueHandling.Ignore)]
@@ -157,6 +152,18 @@ public class DiscordInvite : ObservableApiObject
 	/// </summary>
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
 	public InviteFlags Flags { get; internal set; }
+
+	/// <summary>
+	///    Gets whether the useer can change their nickname on the guild.
+	/// </summary>
+	[JsonProperty("is_nickname_changeable", NullValueHandling = NullValueHandling.Ignore)]
+	public bool? IsNicknameChangeable { get; internal set; } = null;
+
+	/// <summary>
+	///    Gets the guild profile, if applicable.
+	/// </summary>
+	[JsonProperty("profile", NullValueHandling = NullValueHandling.Ignore), RequiresOverride("eyJvcyI6IldpbmRvd3MiLCJicm93c2VyIjoiRGlzY29yZCBDbGllbnQiLCJyZWxlYXNlX2NoYW5uZWwiOiJjYW5hcnkiLCJjbGllbnRfdmVyc2lvbiI6IjEuMC41NzgiLCJvc192ZXJzaW9uIjoiMTAuMC4yNjEyMCIsIm9zX2FyY2giOiJ4NjQiLCJhcHBfYXJjaCI6Ing2NCIsInN5c3RlbV9sb2NhbGUiOiJlbi1VUyIsImhhc19jbGllbnRfbW9kcyI6ZmFsc2UsImJyb3dzZXJfdXNlcl9hZ2VudCI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIGRpc2NvcmQvMS4wLjU3OCBDaHJvbWUvMTM0LjAuNjk5OC40NCBFbGVjdHJvbi8zNS4wLjIgU2FmYXJpLzUzNy4zNiIsImJyb3dzZXJfdmVyc2lvbiI6IjM1LjAuMiIsIm9zX3Nka192ZXJzaW9uIjoiMjYxMjAiLCJjbGllbnRfYnVpbGRfbnVtYmVyIjozODA2NzUsIm5hdGl2ZV9idWlsZF9udW1iZXIiOjYwNjYzLCJjbGllbnRfZXZlbnRfc291cmNlIjpudWxsfQ==", "21/03/2025")]
+	public DiscordGuildProfile? Profile { get; internal set; }
 
 	/// <summary>
 	///     Deletes the invite.
@@ -174,7 +181,7 @@ public class DiscordInvite : ObservableApiObject
 		=> this.Discord.ApiClient.DeleteInviteAsync(this.Code, reason);
 
 	/// <summary>
-	///     Converts this invite into an invite link.
+	///     Converts this invite into a link.
 	/// </summary>
 	/// <returns>A discord.gg invite link.</returns>
 	public override string ToString()

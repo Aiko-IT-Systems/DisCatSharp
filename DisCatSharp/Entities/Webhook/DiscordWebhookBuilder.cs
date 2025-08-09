@@ -17,7 +17,7 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	/// <summary>
 	///     Gets the applied tags.
 	/// </summary>
-	private readonly List<ulong> _appliedTags = [];
+	private List<ulong>? _appliedTags = null;
 
 	/// <summary>
 	///     Whether to keep previous attachments.
@@ -47,19 +47,19 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 
 	/// <summary>
 	///     Name of the new thread.
-	///     Only works if the webhook is send in a <see cref="ChannelType.Forum" />.
+	///     Only works if the webhook is sent in a <see cref="ChannelType.Forum" />.
 	/// </summary>
 	public string? ThreadName { get; set; }
 
 	/// <summary>
 	///     Forum post tags to send on this webhook request.
 	/// </summary>
-	public IReadOnlyList<ulong> AppliedTags => this._appliedTags;
+	public IReadOnlyList<ulong>? AppliedTags => this._appliedTags;
 
 	/// <summary>
 	///     Gets the poll for this message.
 	/// </summary>
-	public DiscordPollBuilder? Poll { get; private set; }
+	public DiscordPollBuilder? Poll { get; internal set; }
 
 	/// <summary>
 	///     Whether to send components with this webhook requests.
@@ -77,7 +77,7 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	}
 
 	/// <summary>
-	///     Sets the webhook to be send as silent message.
+	///     Sets the webhook to be sent as silent message.
 	/// </summary>
 	public DiscordWebhookBuilder AsSilentMessage()
 	{
@@ -95,7 +95,7 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	}
 
 	/// <summary>
-	///     Sets the webhook to be send as voice message.
+	///     Sets the webhook to be sent as voice message.
 	/// </summary>
 	public DiscordWebhookBuilder AsVoiceMessage()
 	{
@@ -134,6 +134,8 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordWebhookBuilder AddComponents(IEnumerable<DiscordActionRowComponent> components)
 	{
+		this.HasComponents = true;
+		this.ComponentsInternal ??= [];
 		var ara = components.ToArray();
 
 		if (ara.Length + this.ComponentsInternal.Count > 5)
@@ -153,6 +155,8 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	/// <exception cref="ArgumentOutOfRangeException">No components were passed.</exception>
 	public DiscordWebhookBuilder AddComponents(IEnumerable<DiscordComponent> components)
 	{
+		this.HasComponents = true;
+		this.ComponentsInternal ??= [];
 		var cmpArr = components.ToArray();
 		var count = cmpArr.Length;
 
@@ -162,8 +166,8 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 			{
 				case 0:
 					throw new ArgumentOutOfRangeException(nameof(components), "You must provide at least one component");
-				case > 10:
-					throw new ArgumentException("Cannot add more than 10 components!");
+				case > 40:
+					throw new ArgumentException("Cannot add more than 40 components!");
 			}
 
 			this.ComponentsInternal.AddRange(cmpArr);
@@ -264,7 +268,9 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	/// <param name="embed">Embed to add.</param>
 	public DiscordWebhookBuilder AddEmbed(DiscordEmbed embed)
 	{
+		this.HasEmbeds = true;
 		ArgumentNullException.ThrowIfNull(embed, nameof(embed));
+		this.EmbedsInternal ??= [];
 		this.EmbedsInternal.Add(embed);
 		return this;
 	}
@@ -275,6 +281,8 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	/// <param name="embeds">Embeds to add.</param>
 	public DiscordWebhookBuilder AddEmbeds(IEnumerable<DiscordEmbed> embeds)
 	{
+		this.HasEmbeds = true;
+		this.EmbedsInternal ??= [];
 		this.EmbedsInternal.AddRange(embeds);
 		return this;
 	}
@@ -291,6 +299,7 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	/// <param name="description">Description of the file.</param>
 	public DiscordWebhookBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false, string description = null)
 	{
+		this.FilesInternal ??= [];
 		if (this.FilesInternal.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
@@ -317,6 +326,7 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	/// <returns></returns>
 	public DiscordWebhookBuilder AddFile(FileStream stream, bool resetStreamPosition = false, string description = null)
 	{
+		this.FilesInternal ??= [];
 		if (this.FilesInternal.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
@@ -341,6 +351,7 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	/// </param>
 	public DiscordWebhookBuilder AddFiles(Dictionary<string, Stream> files, bool resetStreamPosition = false)
 	{
+		this.FilesInternal ??= [];
 		if (this.FilesInternal.Count + files.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
@@ -365,6 +376,7 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	/// <returns></returns>
 	public DiscordWebhookBuilder ModifyAttachments(IEnumerable<DiscordAttachment> attachments)
 	{
+		this.AttachmentsInternal ??= [];
 		this.AttachmentsInternal.AddRange(attachments);
 		return this;
 	}
@@ -385,6 +397,7 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	/// <param name="mention">Mention to add.</param>
 	public DiscordWebhookBuilder WithAllowedMention(IMention mention)
 	{
+		this.MentionsInternal ??= [];
 		this.MentionsInternal.Add(mention);
 		return this;
 	}
@@ -395,6 +408,7 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	/// <param name="mentions">Mentions to add.</param>
 	public DiscordWebhookBuilder WithAllowedMentions(IEnumerable<IMention> mentions)
 	{
+		this.MentionsInternal ??= [];
 		this.MentionsInternal.AddRange(mentions);
 		return this;
 	}
@@ -405,6 +419,7 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	/// <param name="tags">Tags to add.</param>
 	public DiscordWebhookBuilder WithAppliedTags(IEnumerable<ulong> tags)
 	{
+		this._appliedTags ??= [];
 		this._appliedTags.AddRange(tags);
 		return this;
 	}
@@ -413,66 +428,39 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	///     Executes a webhook.
 	/// </summary>
 	/// <param name="webhook">The webhook that should be executed.</param>
+	/// <param name="threadId">The target thread id.</param>
 	/// <returns>The message sent</returns>
-	public async Task<DiscordMessage> SendAsync(DiscordWebhook webhook)
-		=> await webhook.ExecuteAsync(this).ConfigureAwait(false);
-
-	/// <summary>
-	///     Executes a webhook.
-	/// </summary>
-	/// <param name="webhook">The webhook that should be executed.</param>
-	/// <param name="threadId">Target thread id.</param>
-	/// <returns>The message sent</returns>
-	public async Task<DiscordMessage> SendAsync(DiscordWebhook webhook, ulong threadId)
-		=> await webhook.ExecuteAsync(this, threadId.ToString()).ConfigureAwait(false);
+	public async Task<DiscordMessage> SendAsync(DiscordWebhook webhook, ulong? threadId = null)
+		=> await webhook.ExecuteAsync(this, threadId).ConfigureAwait(false);
 
 	/// <summary>
 	///     Sends the modified webhook message.
 	/// </summary>
 	/// <param name="webhook">The webhook that should be executed.</param>
 	/// <param name="message">The message to modify.</param>
+	/// <param name="thread">The target thread.</param>
 	/// <returns>The modified message</returns>
-	public async Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, DiscordMessage message)
-		=> await this.ModifyAsync(webhook, message.Id).ConfigureAwait(false);
+	public async Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, DiscordMessage message, DiscordThreadChannel? thread = null)
+		=> await this.ModifyAsync(webhook, message.Id, thread?.Id).ConfigureAwait(false);
 
 	/// <summary>
 	///     Sends the modified webhook message.
 	/// </summary>
 	/// <param name="webhook">The webhook that should be executed.</param>
 	/// <param name="messageId">The id of the message to modify.</param>
+	/// <param name="threadId">The target thread id.</param>
 	/// <returns>The modified message</returns>
-	public async Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, ulong messageId)
-		=> await webhook.EditMessageAsync(messageId, this).ConfigureAwait(false);
+	public async Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, ulong messageId, ulong? threadId = null)
+		=> await webhook.EditMessageAsync(messageId, this, threadId).ConfigureAwait(false);
 
-	/// <summary>
-	///     Sends the modified webhook message.
-	/// </summary>
-	/// <param name="webhook">The webhook that should be executed.</param>
-	/// <param name="message">The message to modify.</param>
-	/// <param name="thread">Target thread.</param>
-	/// <returns>The modified message</returns>
-	public async Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, DiscordMessage message, DiscordThreadChannel thread)
-		=> await this.ModifyAsync(webhook, message.Id, thread.Id).ConfigureAwait(false);
+	/// <inheritdoc cref="DisCatSharpBuilder.ClearComponents"/>
+	public new DiscordWebhookBuilder ClearComponents()
+	{
+		base.ClearComponents();
+		return this;
+	}
 
-	/// <summary>
-	///     Sends the modified webhook message.
-	/// </summary>
-	/// <param name="webhook">The webhook that should be executed.</param>
-	/// <param name="messageId">The id of the message to modify.</param>
-	/// <param name="threadId">Target thread id.</param>
-	/// <returns>The modified message</returns>
-	public async Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, ulong messageId, ulong threadId)
-		=> await webhook.EditMessageAsync(messageId, this, threadId.ToString()).ConfigureAwait(false);
-
-	/// <summary>
-	///     Clears the poll from this builder.
-	/// </summary>
-	public void ClearPoll()
-		=> this.Poll = null;
-
-	/// <summary>
-	///     Allows for clearing the Webhook Builder so that it can be used again to send a new message.
-	/// </summary>
+	/// <inheritdoc />
 	public override void Clear()
 	{
 		this.IsTts = false;
@@ -482,11 +470,25 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 		base.Clear();
 	}
 
+	/// <inheritdoc />
+    internal override void DoReplace()
+    {
+        this.Poll = null;
+        base.DoReplace();
+    }
+
+	/// <inheritdoc />
+    internal override void DoConditionalReplace()
+    {
+        this.Poll ??= null;
+        base.DoConditionalReplace();
+    }
+
 	/// <summary>
-	///     Does the validation before we send a the Create/Modify request.
+	///     Does the validation before we send the Create/Modify request.
 	/// </summary>
 	/// <param name="isModify">Tells the method to perform the Modify Validation or Create Validation.</param>
-	/// <param name="isFollowup">Tells the method to perform the follow up message validation.</param>
+	/// <param name="isFollowup">Tells the method to perform the follow-up message validation.</param>
 	/// <param name="isInteractionResponse">Tells the method to perform the interaction response validation.</param>
 	internal void Validate(bool isModify = false, bool isFollowup = false, bool isInteractionResponse = false)
 	{
@@ -521,7 +523,7 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 				throw new ArgumentException("You cannot change the avatar of an interaction response.");
 		}
 
-		if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && !this.Embeds.Any() && !this.Components.Any() && this.Poll is null && this?.Attachments.Count == 0)
+		if (this.Files?.Count is 0 or null && string.IsNullOrEmpty(this.Content) && this.Embeds?.Count is 0 or null && this.Components?.Count is 0 or null && this.Poll is null && this.Attachments?.Count is 0 or null)
 			throw new ArgumentException("You must specify content, an embed, a component, a poll, or at least one file.");
 
 		this.Poll?.Validate();

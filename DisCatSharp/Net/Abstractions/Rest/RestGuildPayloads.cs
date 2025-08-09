@@ -20,78 +20,6 @@ internal interface IReasonAction
 }
 
 /// <summary>
-///     Represents a guild create payload.
-/// </summary>
-internal sealed class RestGuildCreatePayload : ObservableApiObject
-{
-	/// <summary>
-	///     Gets or sets the name.
-	/// </summary>
-	[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
-	public string Name { get; set; }
-
-	/// <summary>
-	///     Gets or sets the region id.
-	/// </summary>
-	[JsonProperty("region", NullValueHandling = NullValueHandling.Ignore)]
-	public string RegionId { get; set; }
-
-	/// <summary>
-	///     Gets or sets the icon base64.
-	/// </summary>
-	[JsonProperty("icon", NullValueHandling = NullValueHandling.Include)]
-	public Optional<string> IconBase64 { get; set; }
-
-	/// <summary>
-	///     Gets or sets the verification level.
-	/// </summary>
-	[JsonProperty("verification_level", NullValueHandling = NullValueHandling.Ignore)]
-	public VerificationLevel? VerificationLevel { get; set; }
-
-	/// <summary>
-	///     Gets or sets the default message notifications.
-	/// </summary>
-	[JsonProperty("default_message_notifications", NullValueHandling = NullValueHandling.Ignore)]
-	public DefaultMessageNotifications? DefaultMessageNotifications { get; set; }
-
-	/// <summary>
-	///     Gets or sets the system channel flags.
-	/// </summary>
-	[JsonProperty("system_channel_flags", NullValueHandling = NullValueHandling.Ignore)]
-	public SystemChannelFlags? SystemChannelFlags { get; set; }
-
-	/// <summary>
-	///     Gets or sets the roles.
-	/// </summary>
-	[JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordRole> Roles { get; set; }
-
-	/// <summary>
-	///     Gets or sets the channels.
-	/// </summary>
-	[JsonProperty("channels", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<RestChannelCreatePayload> Channels { get; set; }
-}
-
-/// <summary>
-///     Represents a guild create from template payload.
-/// </summary>
-internal sealed class RestGuildCreateFromTemplatePayload : ObservableApiObject
-{
-	/// <summary>
-	///     Gets or sets the name.
-	/// </summary>
-	[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
-	public string Name { get; set; }
-
-	/// <summary>
-	///     Gets or sets the icon base64.
-	/// </summary>
-	[JsonProperty("icon", NullValueHandling = NullValueHandling.Include)]
-	public Optional<string> IconBase64 { get; set; }
-}
-
-/// <summary>
 ///     Represents a guild modify payload.
 /// </summary>
 internal sealed class RestGuildModifyPayload : ObservableApiObject
@@ -119,12 +47,6 @@ internal sealed class RestGuildModifyPayload : ObservableApiObject
 	/// </summary>
 	[JsonProperty("default_message_notifications")]
 	public Optional<DefaultMessageNotifications> DefaultMessageNotifications { get; set; }
-
-	/// <summary>
-	///     Gets or sets the owner id.
-	/// </summary>
-	[JsonProperty("owner_id")]
-	public Optional<ulong> OwnerId { get; set; }
 
 	/// <summary>
 	///     Gets or sets the splash base64.
@@ -607,6 +529,12 @@ internal sealed class RestGuildRolePayload : ObservableApiObject
 	public int? Color { get; set; }
 
 	/// <summary>
+	///     Gets or sets the colors.
+	/// </summary>
+	[JsonProperty("colors", NullValueHandling = NullValueHandling.Ignore)]
+	public RoleColors? Colors { get; set; }
+
+	/// <summary>
 	///     Gets or sets a value indicating whether hoist.
 	/// </summary>
 	[JsonProperty("hoist", NullValueHandling = NullValueHandling.Ignore)]
@@ -629,6 +557,31 @@ internal sealed class RestGuildRolePayload : ObservableApiObject
 	/// </summary>
 	[JsonProperty("unicode_emoji")]
 	public Optional<string> UnicodeEmoji { get; set; }
+
+	/// <summary>
+	///     Role colors.
+	/// </summary>
+	public sealed class RoleColors
+	{
+		/// <summary>
+		///     Gets the primary color. Is the same as <see cref="DiscordRole.Color" />.
+		/// </summary>
+		[JsonProperty("primary_color", NullValueHandling = NullValueHandling.Ignore)]
+		public int PrimaryColor { get; set; }
+
+		/// <summary>
+		///     Gets the secondary color. Uses for gradient style.
+		/// </summary>
+		[JsonProperty("secondary_color", NullValueHandling = NullValueHandling.Include)]
+		public int? SecondaryColor { get; set; }
+
+		/// <summary>
+		///     Gets the tertiary color. This only applies to the <c>holographic</c> role style and must have the value
+		///     <c>16761760</c>.
+		/// </summary>
+		[JsonProperty("tertiary_color", NullValueHandling = NullValueHandling.Include)]
+		public int? TertiaryColor { get; set; }
+	}
 }
 
 /// <summary>

@@ -1,23 +1,24 @@
 using System;
 
-namespace DisCatSharp.Attributes;
-
-/// <summary>
-/// Marks something as experimental by DisCatSharp.
-/// </summary>
-[AttributeUsage(AttributeTargets.All, AllowMultiple = true, Inherited = true)]
-public sealed class ExperimentalAttribute : Attribute
+namespace DisCatSharp.Attributes
 {
 	/// <summary>
-	/// The additional information message.
+	///     Marks something as experimental by DisCatSharp.
 	/// </summary>
-	public string Message { get; set; }
-
-	public ExperimentalAttribute(string message)
+	[AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
+	public sealed class ExperimentalAttribute : Attribute
 	{
-		this.Message = message;
-	}
+		public ExperimentalAttribute(string message)
+		{
+			this.Message = message;
+		}
 
-	public ExperimentalAttribute()
-	{ }
+		public ExperimentalAttribute()
+		{ }
+
+		/// <summary>
+		///     The additional information message.
+		/// </summary>
+		public string Message { get; set; }
+	}
 }

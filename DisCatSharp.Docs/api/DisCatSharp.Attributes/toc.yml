@@ -28,4 +28,7 @@ items:
   - uid: DisCatSharp.Attributes.RequiresFeatureAttribute
     name: RequiresFeatureAttribute
     type: Class
+  - uid: DisCatSharp.Attributes.RequiresOverrideAttribute
+    name: RequiresOverrideAttribute
+    type: Class
 memberLayout: SeparatePages

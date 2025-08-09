@@ -43,14 +43,14 @@ jobs:
 
             - name: Restore dependencies
               run: |
-                  dotnet restore --no-cache -f -v minimal DisCatSharp.sln
-                  dotnet restore --no-cache -f -v minimal DisCatSharp.Tools/DisCatSharp.Tools.sln
+                  dotnet restore --no-cache -f -v minimal DisCatSharp.slnx
+                  dotnet restore --no-cache -f -v minimal DisCatSharp.Tools/DisCatSharp.Tools.slnx
             - name: Build library
-              run: dotnet build -c Release -v minimal --no-restore DisCatSharp.sln
+              run: dotnet build -c Release -v minimal --no-restore DisCatSharp.slnx
             - name: Build tools
-              run: dotnet build -c Release -v minimal --no-restore DisCatSharp.Tools/DisCatSharp.Tools.sln
+              run: dotnet build -c Release -v minimal --no-restore DisCatSharp.Tools/DisCatSharp.Tools.slnx
             - name: Test library
-              run: dotnet test -v minimal -c Release --no-restore --no-build DisCatSharp.sln
+              run: dotnet test -v minimal -c Release --no-restore --no-build DisCatSharp.slnx
     pack:
         timeout-minutes: 15
         runs-on: ubuntu-latest
@@ -67,15 +67,15 @@ jobs:
                       9.x
                       8.x
             - name: Restore Packages
-              run: dotnet restore --no-cache -f -v minimal DisCatSharp.sln
+              run: dotnet restore --no-cache -f -v minimal DisCatSharp.slnx
             - name: Build library
-              run: dotnet build -c Release -v minimal --no-restore DisCatSharp.sln
+              run: dotnet build -c Release -v minimal --no-restore DisCatSharp.slnx
               env:
                   SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
                   SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
                   SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
             - name: Publish library
-              run: dotnet pack -c Release -v minimal --no-build --no-restore --include-symbols --include-source -o ./artifacts DisCatSharp.sln
+              run: dotnet pack -c Release -v minimal --no-build --no-restore --include-symbols --include-source -o ./artifacts DisCatSharp.slnx
             - name: Upload artifacts
               uses: actions/upload-artifact@v4.6.2
               with:

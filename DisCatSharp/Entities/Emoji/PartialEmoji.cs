@@ -43,6 +43,8 @@ public sealed class PartialEmoji
 			this.Id = discordEmoji.Id;
 			this.Name = null;
 		}
+
+		this.IsAnimated = discordEmoji.IsAnimated;
 	}
 
 	/// <summary>
@@ -52,9 +54,15 @@ public sealed class PartialEmoji
 	{ }
 
 	/// <summary>
+	///     Sets whether this emoji is animated.
+	/// </summary>
+	[JsonProperty("animated", NullValueHandling = NullValueHandling.Ignore)]
+	public bool IsAnimated { get; internal set; } = false;
+
+	/// <summary>
 	///     Sets the guild emoji.
 	/// </summary>
-	[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("id", NullValueHandling = NullValueHandling.Include)]
 	public ulong? Id { get; internal set; }
 
 	/// <summary>
