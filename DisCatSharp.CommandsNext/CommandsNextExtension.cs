@@ -82,7 +82,7 @@ public class CommandsNextExtension : BaseExtension
 			[typeof(DiscordGuild)] = new DiscordGuildConverter(),
 			[typeof(DiscordMessage)] = new DiscordMessageConverter(),
 			[typeof(DiscordEmoji)] = new DiscordEmojiConverter(),
-			[typeof(DiscordThreadChannel)] = new DiscordThreadChannelConverter(),
+			[typeof(DiscordXThreadChannel)] = new DiscordThreadChannelConverter(),
 			[typeof(DiscordInvite)] = new DiscordInviteConverter(),
 			[typeof(DiscordColor)] = new DiscordColorConverter(),
 			[typeof(DiscordScheduledEvent)] = new DiscordScheduledEventConverter()
@@ -114,7 +114,7 @@ public class CommandsNextExtension : BaseExtension
 			[typeof(DiscordGuild)] = "guild",
 			[typeof(DiscordMessage)] = "message",
 			[typeof(DiscordEmoji)] = "emoji",
-			[typeof(DiscordThreadChannel)] = "thread",
+			[typeof(DiscordXThreadChannel)] = "thread",
 			[typeof(DiscordInvite)] = "invite",
 			[typeof(DiscordColor)] = "color",
 			[typeof(DiscordScheduledEvent)] = "event"

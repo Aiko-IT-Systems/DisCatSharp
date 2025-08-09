@@ -59,7 +59,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	internal ConcurrentDictionary<ulong, DiscordSticker> StickersInternal = [];
 
 	[JsonProperty("threads", NullValueHandling = NullValueHandling.Ignore), JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
-	internal ConcurrentDictionary<ulong, DiscordThreadChannel> ThreadsInternal = [];
+	internal ConcurrentDictionary<ulong, DiscordXThreadChannel> ThreadsInternal = [];
 
 	[JsonProperty("voice_states", NullValueHandling = NullValueHandling.Ignore), JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
 	internal ConcurrentDictionary<ulong, DiscordVoiceState> VoiceStatesInternal = [];
@@ -71,7 +71,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	{
 		this._currentMemberLazy = new(() => this.MembersInternal.GetValueOrDefault(this.Discord.CurrentUser.Id));
 		this.Invites = new();
-		this.Threads = new ReadOnlyConcurrentDictionary<ulong, DiscordThreadChannel>(this.ThreadsInternal);
+		this.Threads = new ReadOnlyConcurrentDictionary<ulong, DiscordXThreadChannel>(this.ThreadsInternal);
 		this.StageInstances = new ReadOnlyConcurrentDictionary<ulong, DiscordStageInstance>(this.StageInstancesInternal);
 		this.ScheduledEvents = new ReadOnlyConcurrentDictionary<ulong, DiscordScheduledEvent>(this.ScheduledEventsInternal);
 		this.SoundboardSounds = new ReadOnlyConcurrentDictionary<ulong, DiscordSoundboardSound>(this.SoundboardSoundsInternal);
@@ -463,7 +463,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	///     dictionary's key is the channel ID.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyDictionary<ulong, DiscordThreadChannel> Threads { get; internal set; }
+	public IReadOnlyDictionary<ulong, DiscordXThreadChannel> Threads { get; internal set; }
 
 	/// <summary>
 	///     Gets a dictionary of all active stage instances. The dictionary's key is the stage ID.
@@ -2243,7 +2243,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="id">ID of the thread to get.</param>
 	/// <returns>Requested thread.</returns>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public DiscordThreadChannel? GetThread(ulong id)
+	public DiscordXThreadChannel? GetThread(ulong id)
 		=> this.ThreadsInternal.GetValueOrDefault(id);
 
 	/// <summary>
