@@ -43,7 +43,7 @@ jobs:
         name: Build library and release
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
             - name: Check Intention
               if: ${{!inputs.release_as_prerelease}}
               run: |
