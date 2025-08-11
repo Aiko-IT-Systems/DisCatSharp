@@ -32,7 +32,7 @@ jobs:
         name: Build library
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
             - name: Setup .NET
               uses: actions/setup-dotnet@v4.3.1
               with:
@@ -58,7 +58,7 @@ jobs:
         needs: build
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
             - name: Setup .NET
               uses: actions/setup-dotnet@v4.3.1
               with:
