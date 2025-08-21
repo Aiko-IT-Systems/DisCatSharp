@@ -112,7 +112,6 @@ public sealed class DiscordInteractionModalBuilder
 	/// <param name="components">The components to append. Up to five.</param>
 	/// <returns>The current builder to chain calls with.</returns>
 	/// <exception cref="ArgumentException">Thrown when passing more than 5 components.</exception>'
-	[DiscordDeprecated("Use AddLabelComponents")]
 	public DiscordInteractionModalBuilder AddLabelComponents(params DiscordLabelComponent[] components)
 		=> this.AddModalComponents(components);
 
@@ -121,7 +120,6 @@ public sealed class DiscordInteractionModalBuilder
 	/// </summary>
 	/// <param name="component">The component to append.</param>
 	/// <returns>The current builder to chain calls with.</returns>
-	[DiscordDeprecated("Use AddLabelComponent")]
 	public DiscordInteractionModalBuilder AddLabelComponent(DiscordLabelComponent component)
 		=> this.AddModalComponents(component);
 
