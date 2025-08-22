@@ -27,14 +27,14 @@ public async Task PaginatedModals(InteractionContext ctx)
         var responses = await ctx.Interaction.CreatePaginatedModalResponseAsync(
             new List<ModalPage>()
             {
-                new ModalPage(new DiscordInteractionModalBuilder().WithTitle("First Title")
-                    .AddLabelComponent(new DiscordLabelComponent().WithTextComponent(new DiscordTextComponent(TextComponentStyle.Small, "title", "Placeholder", 0, 250, false)))),
-                new ModalPage(new DiscordInteractionModalBuilder().WithTitle("Second Title")
-                    .AddLabelComponent(new DiscordLabelComponent().WithTextComponent(new DiscordTextComponent(TextComponentStyle.Small, "title_1", "Placeholder 1", 0, 250, false))),
-                    .AddLabelComponent(new DiscordLabelComponent().WithTextComponent(new DiscordTextComponent(TextComponentStyle.Paragraph, "description_1", "Some bigger Placeholder here", required: false)))),
-                new ModalPage(new DiscordInteractionModalBuilder().WithTitle("Third Title")
-                    .AddLabelComponent(new DiscordLabelComponent().WithTextComponent(new DiscordTextComponent(TextComponentStyle.Small, "title_2", "Placeholder 2", 0, 250, false)))
-                    .AddLabelComponent(new DiscordLabelComponent().WithTextComponent(new DiscordTextComponent(TextComponentStyle.Paragraph, "description_2", "Some placeholder here", required: false)))),
+                new ModalPage(new DiscordInteractionModalBuilder().WithTitle("First Modal")
+                    .AddLabelComponent(new DiscordLabelComponent("First Label").WithTextComponent(new DiscordTextComponent(TextComponentStyle.Small, "title", "Placeholder", 0, 250, false)))),
+                new ModalPage(new DiscordInteractionModalBuilder().WithTitle("Second Modal")
+                    .AddLabelComponent(new DiscordLabelComponent("Second Title").WithTextComponent(new DiscordTextComponent(TextComponentStyle.Small, "title_1", "Placeholder 1", 0, 250, false))),
+                    .AddLabelComponent(new DiscordLabelComponent("Second Description").WithTextComponent(new DiscordTextComponent(TextComponentStyle.Paragraph, "description_1", "Some bigger Placeholder here", required: false)))),
+                new ModalPage(new DiscordInteractionModalBuilder().WithTitle("Third Modal")
+                    .AddLabelComponent(new DiscordLabelComponent("Third Title").WithTextComponent(new DiscordTextComponent(TextComponentStyle.Small, "title_2", "Placeholder 2", 0, 250, false)))
+                    .AddLabelComponent(new DiscordLabelComponent("Third Description").WithTextComponent(new DiscordTextComponent(TextComponentStyle.Paragraph, "description_2", "Some placeholder here", required: false)))),
             });
 
         // If the user didn't submit all modals, TimedOut will be true. We return the command as there is nothing to handle.
