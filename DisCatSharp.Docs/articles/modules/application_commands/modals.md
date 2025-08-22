@@ -36,8 +36,8 @@ public async Task SendCatsModalAsync(InteractionContext ctx)
 	builder.WithTitle("Cats");
 
 	List<DiscordStringSelectComponentOption> cats = [new("Yes", "I love cats", isDefault: true), new("No", "I hate cats")];
-
-	builder.AddLabelComponent(new DiscordLabelComponent("Cats", "Do you like cats?").WithStringSelectComponent(new("Choose carefully..", cats, customId: "cat_select")));
+    builder.AddModalComponents(new DiscordTextDisplayComponent("Cats are the best things"));
+	builder.AddLabelComponent(new DiscordLabelComponent("Cats", "Do you like cats?").WithSelectComponent(new DiscordStringSelectComponent("Choose carefully..", cats, customId: "cat_select")));
 	builder.AddLabelComponent(new DiscordLabelComponent("Like", "What do you like about cats?").WithTextComponent(new(TextComponentStyle.Paragraph, customId: "cat_like")));
 	builder.AddLabelComponent(new DiscordLabelComponent("Dislike", "What do you dislike about cats?").WithTextComponent(new(TextComponentStyle.Small, customId: "cat_dislike")));
 
