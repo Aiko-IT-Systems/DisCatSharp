@@ -11,7 +11,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 ///     A select menu with multiple options to choose from.
 /// </summary>
-public sealed class DiscordStringSelectComponent : DiscordBaseSelectComponent, ILabelComponent
+public sealed class DiscordStringSelectComponent : DiscordBaseSelectComponent
 {
 	/// <summary>
 	///     Constructs a new <see cref="DiscordStringSelectComponent" />.

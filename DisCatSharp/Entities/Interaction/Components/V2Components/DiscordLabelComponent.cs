@@ -59,7 +59,7 @@ public sealed class DiscordLabelComponent : DiscordComponent
 	/// 	Sets the string select component for the label.
 	/// </summary>
 	/// <param name="component">The string select component to attach to the label.</param>
-	public DiscordLabelComponent WithStringSelectComponent(DiscordStringSelectComponent component)
+	public DiscordLabelComponent WithSelectComponent(DiscordBaseSelectComponent component)
 	{
 		this.Component = component;
 		return this;
@@ -84,7 +84,7 @@ public sealed class DiscordLabelComponent : DiscordComponent
 	public ILabelComponent Component { get; internal set; }
 
 	/// <summary>
-	/// 	Helper to determine whether a <see cref="DiscordTextInputComponent"/> or <see cref="DiscordStringSelectComponent"/> is attached to the label.
+	/// 	Helper to determine whether a <see cref="DiscordTextInputComponent"/> or <see cref="DiscordBaseSelectComponent"/> is attached to the label.
 	/// </summary>
 	[JsonIgnore]
 	public ComponentType SubComponentType

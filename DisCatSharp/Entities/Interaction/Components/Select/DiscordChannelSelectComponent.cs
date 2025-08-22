@@ -27,8 +27,9 @@ public sealed class DiscordChannelSelectComponent : DiscordBaseSelectComponent
 	///     select component that cannot be interacted with.
 	/// </param>
 	/// <param name="defaultValues">The default values of this select menu.</param>
-	public DiscordChannelSelectComponent(string placeholder, IEnumerable<ChannelType> channelTypes = null, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false, IEnumerable<DiscordSelectDefaultValue>? defaultValues = null)
-		: base(ComponentType.ChannelSelect, placeholder, customId, minOptions, maxOptions, disabled, defaultValues)
+	/// <param name="required">Whether this select component is required. Applicable for Modals.</param>
+	public DiscordChannelSelectComponent(string placeholder, IEnumerable<ChannelType> channelTypes = null, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false, IEnumerable<DiscordSelectDefaultValue>? defaultValues = null, bool? required = null)
+		: base(ComponentType.ChannelSelect, placeholder, customId, minOptions, maxOptions, disabled, defaultValues, required)
 	{
 		this.ChannelTypes = channelTypes?.ToArray() ?? [];
 	}

@@ -23,8 +23,9 @@ public sealed class DiscordMentionableSelectComponent : DiscordBaseSelectCompone
 	///     select component that cannot be interacted with.
 	/// </param>
 	/// <param name="defaultValues">The default values of this select menu.</param>
-	public DiscordMentionableSelectComponent(string placeholder, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false, IEnumerable<DiscordSelectDefaultValue>? defaultValues = null)
-		: base(ComponentType.MentionableSelect, placeholder, customId, minOptions, maxOptions, disabled, defaultValues)
+	/// <param name="required">Whether this select component is required. Applicable for Modals.</param>
+	public DiscordMentionableSelectComponent(string placeholder, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false, IEnumerable<DiscordSelectDefaultValue>? defaultValues = null, bool? required = null)
+		: base(ComponentType.MentionableSelect, placeholder, customId, minOptions, maxOptions, disabled, defaultValues, required)
 	{ }
 
 	/// <summary>

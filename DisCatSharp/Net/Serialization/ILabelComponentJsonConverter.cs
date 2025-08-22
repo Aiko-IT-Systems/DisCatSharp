@@ -13,11 +13,11 @@ internal sealed class ILabelComponentJsonConverter : JsonConverter
 {
 	/// <inheritdoc />
     public override bool CanWrite => false;
-	
+
 	/// <inheritdoc />
     public override bool CanConvert(Type objectType)
         => typeof(ILabelComponent).IsAssignableFrom(objectType);
-	
+
 	/// <inheritdoc />
     public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
     {
@@ -32,12 +32,16 @@ internal sealed class ILabelComponentJsonConverter : JsonConverter
         {
             ComponentType.TextInput => job.ToObject<DiscordTextInputComponent>(serializer),
             ComponentType.StringSelect => job.ToObject<DiscordStringSelectComponent>(serializer),
+            ComponentType.UserSelect => job.ToObject<DiscordUserSelectComponent>(serializer),
+			ComponentType.RoleSelect => job.ToObject<DiscordRoleSelectComponent>(serializer),
+			ComponentType.ChannelSelect => job.ToObject<DiscordChannelSelectComponent>(serializer),
+			ComponentType.MentionableSelect => job.ToObject<DiscordMentionableSelectComponent>(serializer),
             _ => throw new JsonSerializationException($"Unknown ILabelComponent type: {type}")
         };
 
         return cmp;
     }
-	
+
 	/// <inheritdoc />
     public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         => throw new NotImplementedException();
