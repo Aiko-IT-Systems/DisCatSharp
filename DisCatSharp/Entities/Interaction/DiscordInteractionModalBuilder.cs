@@ -145,7 +145,11 @@ public sealed class DiscordInteractionModalBuilder
 				this.ComponentsInternal.Add(new DiscordActionRowComponent(
 					[ar]));
 		else
+		{
+			if (components.OfType<DiscordLabelComponent>().Any(x => x.Component is null))
+				throw new ArgumentException("You can only add DiscordLabelComponents with a component attached to them.");
 			this.ComponentsInternal.AddRange(ara);
+		}
 
 		return this;
 	}
