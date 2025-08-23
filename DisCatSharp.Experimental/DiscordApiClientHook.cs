@@ -161,13 +161,30 @@ internal sealed class DiscordApiClientHook
 
 		var route = $"{Endpoints.CLYDE_PROFILES}{Endpoints.GENERATE_PERSONALITY}";
 		var bucket = this.ApiClient.Rest.GetBucket(RestRequestMethod.POST, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.ApiClient.Discord.Configuration);
 		var res = await this.ApiClient.DoRequestAsync(this.ApiClient.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		var generatedPersonality = DiscordJson.DeserializeObject<PersonalityGenerationPayload>(res.Response, this.ApiClient.Discord);
 		return generatedPersonality.Personality;
+	}
+
+	// TODO: Implement
+	/// <summary>
+	///    Searches the guild messages asynchronously based on the provided search parameters.
+	/// </summary>
+	/// <param name="guildId">The ID of the guild.</param>
+	/// <param name="searchParams">The search parameters.</param>
+	/// <exception cref="ValidationException">Thrown if the user gave an invalid input.</exception>
+	/// <exception cref="NotIndexedException">Thrown if the elastisearch endpoint has not finished indexing yet.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <returns>A list of messages that match the search criteria.</returns>
+	internal async Task<DiscordSearchGuildMessagesResponse?> SearchGuildMessagesAsync(ulong guildId, DiscordGuildMessageSearchParams searchParams)
+	{
+		await Task.Delay(1000);
+		return null;
 	}
 
 	/// <summary>
