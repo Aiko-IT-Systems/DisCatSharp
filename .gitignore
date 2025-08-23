@@ -134,3 +134,4 @@ DisCatSharp.Docs/obj/.cache/build/
 
 # Copilot
 copilot-resources/
+DisCatSharp.Experimental/openapi_preview.json
