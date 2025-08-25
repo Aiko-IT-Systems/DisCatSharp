@@ -20,7 +20,7 @@ public class DiscordThreadResult : ObservableApiObject
 	///     Gets the returned threads.
 	/// </summary>
 	[JsonIgnore]
-	public Dictionary<ulong, DiscordThreadChannel> ReturnedThreads
+	public Dictionary<ulong, DiscordXThreadChannel> ReturnedThreads
 		=> this.Threads == null || this.Threads.Count == 0
 			? []
 			: this.Threads.Select(t => new
@@ -30,7 +30,7 @@ public class DiscordThreadResult : ObservableApiObject
 			}).ToDictionary(t => t.Id, t => t.t);
 
 	[JsonProperty("threads", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<DiscordThreadChannel> Threads { get; set; }
+	internal List<DiscordXThreadChannel> Threads { get; set; }
 
 	/// <summary>
 	///     Gets the active members.

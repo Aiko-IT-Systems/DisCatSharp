@@ -41,14 +41,14 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	private readonly Lazy<IReadOnlyList<DiscordReaction>> _reactionsLazy;
 
 	[JsonProperty("thread", NullValueHandling = NullValueHandling.Ignore)]
-	private readonly DiscordThreadChannel _startedThread;
+	private readonly DiscordXThreadChannel _startedThread;
 
 	[JsonIgnore]
 	private readonly Lazy<IReadOnlyList<DiscordSticker>> _stickersLazy;
 
 	private DiscordChannel _channel;
 
-	private DiscordThreadChannel _thread;
+	private DiscordXThreadChannel _thread;
 
 	[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
 	internal List<DiscordAttachment> AttachmentsInternal = [];
@@ -95,7 +95,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 			if (this.Channel != null!)
 				gid = this.Channel is DiscordDmChannel
 					? "@me"
-					: this.Channel is DiscordThreadChannel
+					: this.Channel is DiscordXThreadChannel
 						? this.INTERNAL_THREAD?.GuildId?.ToString(CultureInfo.InvariantCulture)
 						: this.GuildId.HasValue
 							? this.GuildId.Value.ToString(CultureInfo.InvariantCulture)
@@ -180,7 +180,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	///     Gets the thread in which the message was sent.
 	/// </summary>
 	[JsonIgnore]
-	private DiscordThreadChannel INTERNAL_THREAD
+	private DiscordXThreadChannel INTERNAL_THREAD
 	{
 		get => (this.Discord as DiscordClient)?.InternalGetCachedThread(this.ChannelId) ?? this._thread;
 		set => this._thread = value;
@@ -445,12 +445,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	///     <para>
 	///         <note type="warning">
 	///             If you're looking to get the actual thread channel this message was send in, call
-	///             <see cref="Channel" /> and convert it to a <see cref="DiscordThreadChannel" />.
+	///             <see cref="Channel" /> and convert it to a <see cref="DiscordXThreadChannel" />.
 	///         </note>
 	///     </para>
 	/// </summary>
 	[JsonIgnore]
-	public DiscordThreadChannel Thread
+	public DiscordXThreadChannel Thread
 		=> this._startedThread != null!
 			? this._startedThread!
 			: this.GuildId.HasValue && this.Guild.ThreadsInternal.TryGetValue(this.Id, out var thread)
@@ -793,7 +793,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordThreadChannel> CreateThreadAsync(string name, ThreadAutoArchiveDuration autoArchiveDuration = ThreadAutoArchiveDuration.OneHour, int? rateLimitPerUser = null, string? reason = null)
+	public async Task<DiscordXThreadChannel> CreateThreadAsync(string name, ThreadAutoArchiveDuration autoArchiveDuration = ThreadAutoArchiveDuration.OneHour, int? rateLimitPerUser = null, string? reason = null)
 		=> await this.Discord.ApiClient.CreateThreadAsync(this.ChannelId, this.Id, name, autoArchiveDuration, this.Channel.Type == ChannelType.News ? ChannelType.NewsThread : ChannelType.PublicThread, rateLimitPerUser, isForum: false, reason: reason).ConfigureAwait(false);
 
 	/// <summary>
