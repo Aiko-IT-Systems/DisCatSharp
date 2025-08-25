@@ -13,28 +13,15 @@ namespace DisCatSharp.Net.Serialization;
 /// </summary>
 internal sealed class DiscordComponentJsonConverter : JsonConverter
 {
-	/// <summary>
-	///     Whether the converter can write.
-	/// </summary>
+	/// <inheritdoc />
 	public override bool CanWrite
 		=> false;
-
-	/// <summary>
-	///     Writes the json.
-	/// </summary>
-	/// <param name="writer">The writer.</param>
-	/// <param name="value">The value.</param>
-	/// <param name="serializer">The serializer.</param>
+	
+	/// <inheritdoc />
 	public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
 		=> throw new NotImplementedException();
-
-	/// <summary>
-	///     Reads the json.
-	/// </summary>
-	/// <param name="reader">The reader.</param>
-	/// <param name="objectType">The object type.</param>
-	/// <param name="existingValue">The existing value.</param>
-	/// <param name="serializer">The serializer.</param>
+	
+	/// <inheritdoc />
 	public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
 	{
 		if (reader.TokenType is JsonToken.Null)
@@ -49,7 +36,7 @@ internal sealed class DiscordComponentJsonConverter : JsonConverter
 			ComponentType.Button when (string?)job["sku_id"] is not null => new DiscordPremiumButtonComponent(),
 			ComponentType.Button => new DiscordButtonComponent(),
 			ComponentType.StringSelect => new DiscordStringSelectComponent(),
-			ComponentType.InputText => new DiscordTextComponent(),
+			ComponentType.TextInput => new DiscordTextInputComponent(),
 			ComponentType.UserSelect => new DiscordUserSelectComponent(),
 			ComponentType.RoleSelect => new DiscordRoleSelectComponent(),
 			ComponentType.MentionableSelect => new DiscordMentionableSelectComponent(),
@@ -60,6 +47,7 @@ internal sealed class DiscordComponentJsonConverter : JsonConverter
 			ComponentType.MediaGallery => new DiscordMediaGalleryComponent(),
 			ComponentType.File => new DiscordFileDisplayComponent(),
 			ComponentType.Separator => new DiscordSeparatorComponent(),
+			ComponentType.Label => new DiscordLabelComponent(),
 			_ => new()
 			{
 				Type = type
@@ -72,11 +60,8 @@ internal sealed class DiscordComponentJsonConverter : JsonConverter
 
 		return cmp;
 	}
-
-	/// <summary>
-	///     Whether the json can convert.
-	/// </summary>
-	/// <param name="objectType">The object type.</param>
+	
+	/// <inheritdoc />
 	public override bool CanConvert(Type objectType)
 		=> typeof(DiscordComponent).IsAssignableFrom(objectType);
 }

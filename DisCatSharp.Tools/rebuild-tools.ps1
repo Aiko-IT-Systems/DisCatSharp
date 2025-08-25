@@ -44,8 +44,8 @@ function Restore-Environment()
     Remove-Item ./NuGet.config
 }
 
-# Prepares the environment
-function Prepare-Environment([string] $target_dir_path)
+# Initializes the environment
+function Initialize-Environment([string] $target_dir_path)
 {
     # Prepare the environment
     Copy-Item ./.nuget/NuGet.config ./
@@ -59,7 +59,7 @@ function Prepare-Environment([string] $target_dir_path)
     }
 
     # Create target directory
-    $dir = New-Item -type directory "$target_dir_path"
+    New-Item -type directory "$target_dir_path"
 }
 
 # Builds everything
@@ -72,7 +72,7 @@ function Build-All([string] $target_dir_path, [string] $version_suffix, [string]
 
     # Clean previous build results
     Write-Host "Cleaning previous build"
-    & dotnet clean -v minimal -c "$bcfg" DisCatSharp.Tools/DisCatSharp.Tools.sln | Out-Host
+    & dotnet clean -v minimal -c "$bcfg" DisCatSharp.Tools/DisCatSharp.Tools.slnx | Out-Host
     if ($LastExitCode -ne 0)
     {
         Write-Host "Cleanup failed"
@@ -81,7 +81,7 @@ function Build-All([string] $target_dir_path, [string] $version_suffix, [string]
 
     # Restore nuget packages
     Write-Host "Restoring NuGet packages"
-    & dotnet restore --no-cache -f -v minimal DisCatSharp.Tools/DisCatSharp.Tools.sln | Out-Host
+    & dotnet restore --no-cache -f -v minimal DisCatSharp.Tools/DisCatSharp.Tools.slnx | Out-Host
     if ($LastExitCode -ne 0)
     {
         Write-Host "Restoring packages failed"
@@ -154,7 +154,7 @@ elseif ($VersionSuffix -and (-not $BuildNumber -or $BuildNumber -lt 0))
 }
 
 # Prepare environment
-Prepare-Environment "$ArtifactLocation"
+Initialize-Environment "$ArtifactLocation"
 
 # Build everything
 $BuildResult = Build-All "$ArtifactLocation" "$VersionSuffix" "$BuildNumber" "$Configuration"

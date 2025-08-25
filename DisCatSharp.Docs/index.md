@@ -3,6 +3,9 @@ uid: home
 title: DisCatSharp
 author: DisCatSharp Team
 hasDiscordComponents: true
+_disableAffix: true
+_disableBreadcrumb: true
+_disableNextArticle: true
 ---
 
 # DisCatSharp ![Stable](https://img.shields.io/nuget/v/DisCatSharp?color=1F8B4C&label=Stable&style=flat-square&logo=Nuget) ![Nightly](https://img.shields.io/nuget/vpre/DisCatSharp?color=AD1457&label=Nightly&style=flat-square&logo=Nuget)

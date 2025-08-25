@@ -20,3 +20,12 @@ DisCatSharp.Docs/dcs/
 *.min
 discatsharp-ai-test.xml
 discatsharp-ai.xml
+DisCatSharp.Experimental/openapi_preview.json
+*.png
+*.jpg
+*.jpeg
+*.svg
+*.js
+*.ts
+*.css
+*.mp4

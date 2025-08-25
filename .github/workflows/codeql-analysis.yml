@@ -47,12 +47,12 @@ jobs:
                       9.x
                       8.x
             - name: Restore dependencies
-              run: dotnet restore --no-cache -f -v minimal DisCatSharp.sln
+              run: dotnet restore --no-cache -f -v minimal DisCatSharp.slnx
             - name: Build
-              run: dotnet build -c Release -v minimal --no-restore --no-self-contained DisCatSharp.sln
+              run: dotnet build -c Release -v minimal --no-restore --no-self-contained DisCatSharp.slnx
             - name: Restore Tools Packages
-              run: dotnet restore --no-cache -f -v minimal DisCatSharp.Tools/DisCatSharp.Tools.sln
+              run: dotnet restore --no-cache -f -v minimal DisCatSharp.Tools/DisCatSharp.Tools.slnx
             - name: Build tools
-              run: dotnet build -c Release -v minimal --no-restore DisCatSharp.Tools/DisCatSharp.Tools.sln
+              run: dotnet build -c Release -v minimal --no-restore DisCatSharp.Tools/DisCatSharp.Tools.slnx
             - name: Perform CodeQL Analysis
               uses: github/codeql-action/analyze@v3

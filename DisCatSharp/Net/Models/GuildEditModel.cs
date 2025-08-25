@@ -57,10 +57,6 @@ public class GuildEditModel : BaseEditModel
 	/// </summary>
 	public Optional<int> AfkTimeout { internal get; set; }
 
-	/// <summary>
-	///     The new guild owner.
-	/// </summary>
-	public Optional<DiscordMember> Owner { internal get; set; }
 
 	/// <summary>
 	///     The new guild splash.

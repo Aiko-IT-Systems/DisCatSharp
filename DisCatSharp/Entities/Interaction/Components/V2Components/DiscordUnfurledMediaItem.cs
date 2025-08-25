@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace DisCatSharp.Entities;
 
 /// <summary>
@@ -8,6 +10,7 @@ public sealed class DiscordUnfurledMediaItem : DiscordUnfurledMedia
 	/// <summary>
 	///     Constructs a new empty <see cref="DiscordUnfurledMediaItem" />.
 	/// </summary>
+	[JsonConstructor]
 	internal DiscordUnfurledMediaItem()
 	{ }
 
