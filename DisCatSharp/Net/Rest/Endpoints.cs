@@ -205,6 +205,11 @@ public static class Endpoints
 	public const string AVATARS_DECORATION_PRESETS = "/avatar-decoration-presets";
 
 	/// <summary>
+	///     The collectibles endpoint.
+	/// </summary>
+	public const string COLLECTIBLES = "collectibles";
+
+	/// <summary>
 	///     The bans endpoint.
 	/// </summary>
 	public const string BANS = "/bans";
@@ -444,9 +449,14 @@ public static class Endpoints
 	public const string CHANNEL_ICONS = "/channel-icons";
 
 	/// <summary>
-	///     The user banners endpoint.
+	///     The banners endpoint.
 	/// </summary>
 	public const string BANNERS = "/banners";
+
+	/// <summary>
+	///     The custom banners endpoint.
+	/// </summary>
+	public const string CUSTOM_BANNERS = "/custom-banners";
 
 	/// <summary>
 	///     The sticker endpoint.
@@ -743,4 +753,6 @@ public static class Endpoints
 	///     The consume endpoint.
 	/// </summary>
 	public const string CONSUME = "/consume";
+
+	public const string BADGES = "/badges";
 }

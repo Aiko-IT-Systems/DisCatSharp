@@ -36,7 +36,8 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	///     Gets IDs the roles this emoji is enabled for.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyList<ulong> Roles => this._rolesLazy.Value;
+	public IReadOnlyList<ulong> Roles
+		=> this._rolesLazy.Value;
 
 	[JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
 	internal List<ulong> RolesInternal { get; set; } = [];
@@ -85,11 +86,13 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	public string UnicodeEmoji
 		=> this.Id != 0
 			? throw new InvalidOperationException("Emoji is not a unicode emoji")
-			: s_unicodeEmojis.TryGetValue(this.Name, out var value)
-				? value
-				: s_discordNameLookup.ContainsKey(this.Name)
-					? this.Name
-					: throw new InvalidOperationException("Emoji is not a unicode emoji");
+			: s_aliasNameToCanonical.TryGetValue(this.Name, out var canonicalName)
+				? s_unicodeEmojis[canonicalName]
+				: s_unicodeEmojis.TryGetValue(this.Name, out var value)
+					? value
+					: s_discordNameLookup.ContainsKey(this.Name)
+						? this.Name
+						: throw new InvalidOperationException("Emoji is not a unicode emoji");
 
 	/// <summary>
 	///     Checks whether this <see cref="DiscordEmoji" /> is equal to another <see cref="DiscordEmoji" />.
@@ -103,11 +106,11 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	///     Gets emoji's name in non-Unicode format (eg. :thinking: instead of the Unicode representation of the emoji).
 	/// </summary>
 	public string GetDiscordName()
-	{
-		s_discordNameLookup.TryGetValue(this.Name, out var name);
-
-		return name ?? $":{this.Name}:";
-	}
+		=> s_discordNameLookup.TryGetValue(this.Name, out var name)
+				? name
+				: s_aliasNameToCanonical.TryGetValue(this.Name, out var canonicalName) && s_discordNameLookup.TryGetValue(canonicalName, out var aliasName)
+					? aliasName
+					: $":{this.Name}:";
 
 	/// <summary>
 	///     Returns a string representation of this emoji.
@@ -183,7 +186,12 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	/// <param name="unicodeEntity">Entity to check.</param>
 	/// <returns>Whether it's a valid emoji.</returns>
 	public static bool IsValidUnicode(string unicodeEntity)
-		=> s_discordNameLookup.ContainsKey(unicodeEntity);
+	{
+		const char variationSelector = '\uFE0F';
+		if (unicodeEntity != null && unicodeEntity.Contains(variationSelector))
+			unicodeEntity = unicodeEntity.Replace(variationSelector.ToString(), "");
+		return s_discordNameLookup.ContainsKey(unicodeEntity) || (s_aliasNameToCanonical.TryGetValue(unicodeEntity, out var canonicalName) && s_unicodeEmojis.ContainsKey(canonicalName));
+	}
 
 	/// <summary>
 	///     Creates an emoji object from a unicode entity.
@@ -209,6 +217,15 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 		=> FromUnicode(null, unicodeEntity);
 
 	/// <summary>
+	///    Attempts to get Discord name from a unicode entity or its alias.
+	/// </summary>
+	/// <param name="name">The name or alias to look up.</param>
+	/// <param name="discordName">The resulting Discord name, if found.</param>
+	/// <returns>Whether the operation was successful.</returns>
+	internal static bool TryGetValueFromNameOrAlias(string name, out string discordName)
+		=> s_discordNameLookup.TryGetValue(name, out discordName) || (s_aliasNameToCanonical.TryGetValue(name, out var canonicalName) && s_discordNameLookup.TryGetValue(canonicalName, out discordName));
+
+	/// <summary>
 	///     Attempts to create an emoji object from a unicode entity.
 	/// </summary>
 	/// <param name="client"><see cref="BaseDiscordClient" /> to attach to the object.</param>
@@ -217,11 +234,8 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	/// <returns>Whether the operation was successful.</returns>
 	public static bool TryFromUnicode(BaseDiscordClient client, string unicodeEntity, out DiscordEmoji emoji)
 	{
-		// this is a round-trip operation because of FE0F inconsistencies.
-		// through this, the inconsistency is normalized.
-
 		emoji = null;
-		if (!s_discordNameLookup.TryGetValue(unicodeEntity, out var discordName))
+		if (!TryGetValueFromNameOrAlias(unicodeEntity, out var discordName))
 			return false;
 
 		if (!s_unicodeEmojis.TryGetValue(discordName, out unicodeEntity))
@@ -270,14 +284,13 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	/// <returns>Create <see cref="DiscordEmoji" /> object.</returns>
 	public static DiscordEmoji FromApplicationEmote(BaseDiscordClient client, ulong id)
 	{
-		if (client == null)
-			throw new ArgumentNullException(nameof(client), "Client cannot be null.");
-
-		if (client.Emojis.TryGetValue(id, out var found))
-			return found;
-
-		throw new KeyNotFoundException("Given emote was not found.");
+		return client == null
+			? throw new ArgumentNullException(nameof(client), "Client cannot be null.")
+			: client.Emojis.TryGetValue(id, out var found)
+				? (DiscordEmoji)found
+				: throw new KeyNotFoundException("Given emote was not found.");
 	}
+
 
 	/// <summary>
 	///     Attempts to get an emoji object from an guild emote.
@@ -317,6 +330,10 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 
 		if (string.IsNullOrWhiteSpace(name))
 			throw new ArgumentNullException(nameof(name), "Name cannot be empty or null.");
+
+
+		if (s_aliasNameToCanonical.TryGetValue(name, out var canonicalName))
+			name = canonicalName;
 
 		if (s_unicodeEmojis.TryGetValue(name, out var unicodeEntity))
 			return new()
@@ -377,6 +394,9 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 
 		if (string.IsNullOrWhiteSpace(name))
 			throw new ArgumentNullException(nameof(name), "Name cannot be empty or null.");
+
+		if (s_aliasNameToCanonical.TryGetValue(name, out var canonicalName))
+			name = canonicalName;
 
 		if (s_unicodeEmojis.TryGetValue(name, out var unicodeEntity))
 		{

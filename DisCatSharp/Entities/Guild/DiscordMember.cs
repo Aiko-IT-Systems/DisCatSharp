@@ -301,6 +301,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	public Permissions Permissions
 		=> this.InteractionPermissions ?? this.GetPermissions();
 
+	/// <inheritdoc />
+	public override DisplayNameStyles? DisplayNameStyles
+		=> this.User.DisplayNameStyles;
+
 	/// <summary>
 	///     Checks whether this <see cref="DiscordMember" /> is equal to another <see cref="DiscordMember" />.
 	/// </summary>
@@ -708,6 +712,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	///     Sets the user when converting a json object to <see cref="DiscordMember" /> while not having access to the user
 	///     cache.
 	/// </summary>
+	[JsonIgnore]
 	public DiscordUser ManualUser { get; set; }
 
 	/// <summary>
@@ -778,27 +783,27 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	///     Gets the member's user avatar decoration data.
 	/// </summary>
 	[JsonIgnore]
-	public override AvatarDecorationData AvatarDecorationData
+	public override AvatarDecorationData? AvatarDecorationData
 	{
 		get => this.User.AvatarDecorationData;
 		internal set => this.User.AvatarDecorationData = value;
 	}
 
 	/// <summary>
-	///     Gets the member's clan.
+	///     Gets the member's user avatar decoration data.
 	/// </summary>
 	[JsonIgnore]
-	public override DiscordClan? Clan
+	public override DiscordCollectibles? Collectibles
 	{
-		get => this.User.Clan;
-		internal set => this.User.Clan = value;
+		get => this.User.Collectibles;
+		internal set => this.User.Collectibles = value;
 	}
 
 	/// <summary>
 	///     Gets the member's primary guild.
 	/// </summary>
 	[JsonIgnore]
-	public override DiscordClan? PrimaryGuild
+	public override DiscordPrimaryGuild? PrimaryGuild
 	{
 		get => this.User.PrimaryGuild;
 		internal set => this.User.PrimaryGuild = value;

@@ -47,6 +47,9 @@ items:
   - uid: DisCatSharp.Lavalink.Entities.LavalinkInfo
     name: LavalinkInfo
     type: Class
+  - uid: DisCatSharp.Lavalink.Entities.LavalinkLyricsResult
+    name: LavalinkLyricsResult
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.LavalinkPlayer
     name: LavalinkPlayer
     type: Class
@@ -79,6 +82,9 @@ items:
     type: Class
   - uid: DisCatSharp.Lavalink.Entities.LavalinkVoiceState
     name: LavalinkVoiceState
+    type: Class
+  - uid: DisCatSharp.Lavalink.Entities.LyricsLine
+    name: LyricsLine
     type: Class
   - uid: DisCatSharp.Lavalink.Entities.MemoryStats
     name: MemoryStats
@@ -141,6 +147,9 @@ items:
     type: Enum
   - uid: DisCatSharp.Lavalink.Enums.LavalinkTrackEndReason
     name: LavalinkTrackEndReason
+    type: Enum
+  - uid: DisCatSharp.Lavalink.Enums.RepeatMode
+    name: RepeatMode
     type: Enum
   - uid: DisCatSharp.Lavalink.Enums.Severity
     name: Severity

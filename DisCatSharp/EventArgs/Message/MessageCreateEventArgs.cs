@@ -20,7 +20,7 @@ public class MessageCreateEventArgs : DiscordEventArgs
 	/// <summary>
 	///     Gets the message that was created.
 	/// </summary>
-	public DiscordMessage Message { get; internal set; }
+	public DiscordMessage Message { get; internal init; }
 
 	/// <summary>
 	///     Gets the channel this message belongs to.
@@ -31,7 +31,7 @@ public class MessageCreateEventArgs : DiscordEventArgs
 	/// <summary>
 	///     Gets the guild this message belongs to.
 	/// </summary>
-	public DiscordGuild Guild
+	public DiscordGuild? Guild
 		=> this.Message.Guild;
 
 	/// <summary>

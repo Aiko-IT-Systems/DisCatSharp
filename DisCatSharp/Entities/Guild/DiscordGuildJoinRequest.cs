@@ -98,7 +98,7 @@ public sealed class DiscordGuildJoinRequest : SnowflakeObject
 	///     Gets the datetime of when the join request was actioned.
 	/// </summary>
 	[JsonProperty("actioned_at", NullValueHandling = NullValueHandling.Ignore)]
-	public DateTimeOffset? ActionedAt { get; internal set; }
+	public ulong? ActionedAt { get; internal set; }
 
 	/// <summary>
 	///     Gets the datetime of when the join request was created.

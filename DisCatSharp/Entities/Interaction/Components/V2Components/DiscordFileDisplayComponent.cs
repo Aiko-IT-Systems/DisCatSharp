@@ -54,6 +54,18 @@ public sealed class DiscordFileDisplayComponent : DiscordComponent
 	public DiscordUnfurledMediaItem File { get; internal set; }
 
 	/// <summary>
+	///     Gets the file size.
+	/// </summary>
+	[JsonProperty("file", NullValueHandling = NullValueHandling.Ignore)]
+	public int Size { get; internal set; }
+
+	/// <summary>
+	///     Gets the file name.
+	/// </summary>
+	[JsonProperty("file", NullValueHandling = NullValueHandling.Ignore)]
+	public string Name { get; internal set; }
+
+	/// <summary>
 	///     Gets whether this file should be marked as spoiler.
 	/// </summary>
 	[JsonProperty("spoiler", NullValueHandling = NullValueHandling.Ignore)]

@@ -12,32 +12,47 @@ public class DisCatSharpBuilder
 	/// <summary>
 	///     The attachments of this builder.
 	/// </summary>
-	internal List<DiscordAttachment> AttachmentsInternal { get; } = [];
+	internal List<DiscordAttachment>? AttachmentsInternal { get; set; } = null;
 
 	/// <summary>
 	///     The components of this builder.
 	/// </summary>
-	internal List<DiscordComponent> ComponentsInternal { get; } = [];
+	internal List<DiscordComponent>? ComponentsInternal { get; set; } = null;
 
 	/// <summary>
 	///     The embeds of this builder.
 	/// </summary>
-	internal List<DiscordEmbed> EmbedsInternal { get; } = [];
+	internal List<DiscordEmbed>? EmbedsInternal { get; set; } = null;
 
 	/// <summary>
 	///     The files of this builder.
 	/// </summary>
-	internal List<DiscordMessageFile> FilesInternal { get; } = [];
+	internal List<DiscordMessageFile>? FilesInternal { get; set; } = null;
 
 	/// <summary>
 	///     The allowed mentions of this builder.
 	/// </summary>
-	internal List<IMention> MentionsInternal { get; } = [];
+	internal List<IMention>? MentionsInternal { get; set; } = null;
 
 	/// <summary>
 	///     The content of this builder.
 	/// </summary>
 	internal string? ContentInternal { get; set; }
+
+	/// <summary>
+	///     Tracks if content was explicitly set (even to null).
+	/// </summary>
+	internal bool HasContent { get; set; } = false;
+
+	/// <summary>
+	///     Tracks if embeds were explicitly set (including empty).
+	/// </summary>
+	internal bool HasEmbeds { get; set; } = false;
+
+	/// <summary>
+	///     Tracks if components were explicitly set (including empty).
+	/// </summary>
+	internal bool HasComponents { get; set; } = false;
 
 	/// <summary>
 	///     Whether flags were changed in this builder.
@@ -59,37 +74,38 @@ public class DisCatSharpBuilder
 				throw new ArgumentException("Content length cannot exceed 2000 characters.", nameof(value));
 
 			this.ContentInternal = value;
+			this.HasContent = true;
 		}
 	}
 
 	/// <summary>
 	///     Gets the components of this builder.
 	/// </summary>
-	public IReadOnlyList<DiscordComponent> Components
+	public IReadOnlyList<DiscordComponent>? Components
 		=> this.ComponentsInternal;
 
 	/// <summary>
 	///     Gets the embeds of this builder.
 	/// </summary>
-	public IReadOnlyList<DiscordEmbed> Embeds
+	public IReadOnlyList<DiscordEmbed>? Embeds
 		=> this.EmbedsInternal;
 
 	/// <summary>
 	///     Gets the attachments of this builder.
 	/// </summary>
-	public IReadOnlyList<DiscordAttachment> Attachments
+	public IReadOnlyList<DiscordAttachment>? Attachments
 		=> this.AttachmentsInternal;
 
 	/// <summary>
 	///     Gets the files of this builder.
 	/// </summary>
-	public IReadOnlyList<DiscordMessageFile> Files
+	public IReadOnlyList<DiscordMessageFile>? Files
 		=> this.FilesInternal;
 
 	/// <summary>
 	///     Gets the allowed mentions of this builder.
 	/// </summary>
-	public IReadOnlyList<IMention> Mentions
+	public IReadOnlyList<IMention>? Mentions
 		=> this.MentionsInternal;
 
 	/// <summary>
@@ -171,8 +187,12 @@ public class DisCatSharpBuilder
 	/// <summary>
 	///     Clears the components on this builder.
 	/// </summary>
-	public void ClearComponents()
-		=> this.ComponentsInternal.Clear();
+	public virtual void ClearComponents()
+	{
+		this.ComponentsInternal?.Clear();
+		this.ComponentsInternal ??= [];
+		this.HasComponents = true;
+	}
 
 	/// <summary>
 	///     Allows for clearing the builder so that it can be used again.
@@ -180,16 +200,58 @@ public class DisCatSharpBuilder
 	public virtual void Clear()
 	{
 		this.Content = null;
-		this.FilesInternal.Clear();
-		this.EmbedsInternal.Clear();
-		this.AttachmentsInternal.Clear();
-		this.ComponentsInternal.Clear();
+		this.HasContent = false;
+		this.FilesInternal?.Clear();
+		this.FilesInternal = null;
+		this.EmbedsInternal?.Clear();
+		this.EmbedsInternal = null;
+		this.HasEmbeds = false;
+		this.AttachmentsInternal?.Clear();
+		this.AttachmentsInternal = null;
+		this.ComponentsInternal?.Clear();
+		this.ComponentsInternal = null;
+		this.HasComponents = false;
 		this.IsVoiceMessage = false;
 		this.IsComponentsV2 = false;
 		this.EmbedsSuppressed = false;
 		this.NotificationsSuppressed = false;
 		this.FlagsChanged = false;
-		this.MentionsInternal.Clear();
+		this.MentionsInternal?.Clear();
+		this.MentionsInternal = null;
+	}
+
+	/// <summary>
+	///     Modifies the builder to replace all fields.
+	///     <para>Used when <see cref="Enums.Core.ModifyMode"/> is <see cref="Enums.Core.ModifyMode.Replace"/>.</para>
+	///     <para>Used when <see cref="Action{T}"/> is called on this builder.</para>
+	/// </summary>
+	internal virtual void DoReplace()
+	{
+		this.Content = null;
+		this.ClearComponents();
+		this.EmbedsInternal = [];
+		this.HasEmbeds = true;
+		this.AttachmentsInternal = [];
+		this.FilesInternal = [];
+		this.MentionsInternal = [];
+		this.FlagsChanged = true;
+	}
+
+	/// <summary>
+	/// 	Modifies the builder to replace all fields that are not null or empty.
+	/// 	<para>Used when <see cref="Enums.Core.ModifyMode"/> is <see cref="Enums.Core.ModifyMode.Replace"/>.</para>
+	/// </summary>
+	internal virtual void DoConditionalReplace()
+	{
+		this.Content ??= null;
+		this.ComponentsInternal ??= [];
+		this.HasComponents = true;
+		this.EmbedsInternal ??= [];
+		this.HasEmbeds = true;
+		this.AttachmentsInternal ??= [];
+		this.FilesInternal ??= [];
+		this.MentionsInternal ??= [];
+		this.FlagsChanged = true;
 	}
 
 	/// <summary>
@@ -197,7 +259,7 @@ public class DisCatSharpBuilder
 	/// </summary>
 	internal virtual void Validate()
 	{
-		if (this.Components.Count > 0)
+		if (this.Components?.Count > 0)
 		{
 			HashSet<int> ids = [];
 			Dictionary<int, List<string>> duplicateIds = [];
@@ -213,39 +275,83 @@ public class DisCatSharpBuilder
 		}
 	}
 
+	/// <summary>
+	///     Validates the uniqueness of component IDs within a given <see cref="DiscordComponent" /> hierarchy.
+	/// </summary>
+	/// <param name="component">The root component to validate.</param>
+	/// <param name="ids">A set of IDs already encountered, used to track uniqueness.</param>
+	/// <param name="duplicateIds">
+	///     A dictionary to store duplicate IDs and their associated component types,
+	///     for reporting purposes if duplicates are found.
+	/// </param>
+	/// <exception cref="AggregateException">
+	///     Thrown when duplicate component IDs are detected, providing details about the duplicates.
+	/// </exception>
 	private void CheckComponentIds(DiscordComponent component, HashSet<int> ids, Dictionary<int, List<string>> duplicateIds)
 	{
-		if (component is DiscordActionRowComponent actionRowComponent)
-			foreach (var actionRowComponentChild in actionRowComponent.Components)
-				this.AddId(actionRowComponentChild, ids, duplicateIds);
-		else if (component is DiscordContainerComponent containerComponent)
+		switch (component)
 		{
-			foreach (var containerComponentChild in containerComponent.Components)
+			case DiscordActionRowComponent actionRowComponent:
 			{
-				if (containerComponentChild is DiscordActionRowComponent actionRowContainerComponentChild)
-					foreach (var actionRowComponentChild in actionRowContainerComponentChild.Components)
-						this.AddId(actionRowComponentChild, ids, duplicateIds);
-				else if (containerComponentChild is DiscordSectionComponent subSectionComponent)
+				foreach (var actionRowComponentChild in actionRowComponent.Components)
+					this.AddId(actionRowComponentChild, ref ids, ref duplicateIds);
+				break;
+			}
+			case DiscordContainerComponent containerComponent:
+			{
+				foreach (var containerComponentChild in containerComponent.Components)
 				{
-					foreach (var sectionComponentChild in subSectionComponent.Components)
-						this.AddId(sectionComponentChild, ids, duplicateIds);
-					this.AddId(subSectionComponent.Accessory, ids, duplicateIds);
+					switch (containerComponentChild)
+					{
+						case DiscordActionRowComponent actionRowContainerComponentChild:
+						{
+							foreach (var actionRowComponentChild in actionRowContainerComponentChild.Components)
+								this.AddId(actionRowComponentChild, ref ids, ref duplicateIds);
+							break;
+						}
+						case DiscordSectionComponent subSectionComponent:
+						{
+							foreach (var sectionComponentChild in subSectionComponent.Components)
+								this.AddId(sectionComponentChild, ref ids, ref duplicateIds);
+							this.AddId(subSectionComponent.Accessory, ref ids, ref duplicateIds);
+							break;
+						}
+					}
+
+					this.AddId(containerComponentChild, ref ids, ref duplicateIds);
 				}
 
-				this.AddId(containerComponentChild, ids, duplicateIds);
+				break;
+			}
+			case DiscordSectionComponent sectionComponent:
+			{
+				foreach (var sectionComponentChild in sectionComponent.Components)
+					this.AddId(sectionComponentChild, ref ids, ref duplicateIds);
+				this.AddId(sectionComponent.Accessory, ref ids, ref duplicateIds);
+				break;
 			}
 		}
-		else if (component is DiscordSectionComponent sectionComponent)
-		{
-			foreach (var sectionComponentChild in sectionComponent.Components)
-				this.AddId(sectionComponentChild, ids, duplicateIds);
-			this.AddId(sectionComponent.Accessory, ids, duplicateIds);
-		}
 
-		this.AddId(component, ids, duplicateIds);
+		this.AddId(component, ref ids, ref duplicateIds);
 	}
 
-	private void AddId(DiscordComponent component, HashSet<int> ids, Dictionary<int, List<string>> duplicateIds)
+	/// <summary>
+	///     Adds the identifier of the specified <see cref="DiscordComponent" /> to the provided collection of identifiers.
+	/// </summary>
+	/// <param name="component">
+	///     The <see cref="DiscordComponent" /> whose identifier is to be added.
+	/// </param>
+	/// <param name="ids">
+	///     A collection of unique identifiers to which the component's identifier will be added.
+	/// </param>
+	/// <param name="duplicateIds">
+	///     A dictionary that tracks duplicate identifiers and their associated component types.
+	/// </param>
+	/// <remarks>
+	///     If the identifier of the specified component already exists in the <paramref name="ids" /> collection,
+	///     it will be added to the <paramref name="duplicateIds" /> dictionary along with its type.
+	/// </remarks>
+	private void AddId(DiscordComponent component, ref HashSet<int> ids, ref Dictionary<int, List<string>> duplicateIds)
 	{
 		if (component.Id.HasValue)
 		{
