@@ -299,6 +299,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._guildJoinRequestCreated = new("GUILD_JOIN_REQUEST_CREATED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildJoinRequestUpdated = new("GUILD_JOIN_REQUEST_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildJoinRequestDeleted = new("GUILD_JOIN_REQUEST_DELETED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildAppliedBoostsUpdated = new("GUILD_APPLIED_BOOSTS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 
 		this.GuildsInternal.Clear();
 		this.EmojisInternal.Clear();

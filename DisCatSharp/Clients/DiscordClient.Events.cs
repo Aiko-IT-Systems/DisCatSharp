@@ -309,6 +309,17 @@ public sealed partial class DiscordClient
 
 	private AsyncEvent<DiscordClient, GuildAuditLogEntryCreateEventArgs> _guildAuditLogEntryCreated;
 
+	/// <summary>
+	///     Fired when a guild applied boosts get updated.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, GuildAppliedBoostsUpdateEventArgs> GuildAppliedBoostsUpdated
+	{
+		add => this._guildAppliedBoostsUpdated.Register(value);
+		remove => this._guildAppliedBoostsUpdated.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, GuildAppliedBoostsUpdateEventArgs> _guildAppliedBoostsUpdated;
+
 #endregion
 
 #region Automod

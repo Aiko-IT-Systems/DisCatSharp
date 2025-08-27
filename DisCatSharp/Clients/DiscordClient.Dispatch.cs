@@ -179,9 +179,18 @@ public sealed partial class DiscordClient
 				await this.OnGuildIntegrationsUpdateEventAsync(value).ConfigureAwait(false);
 				break;
 
+			case "guild_applied_boosts_update":
+				gid = (ulong)dat["guild_id"]!;
+				uid = (ulong)dat["user_id"]!;
+				var pauseEndsAt = dat["pause_ends_at"]?.ToObject<DateTimeOffset?>();
+				var endsAt = dat["ends_at"]?.ToObject<DateTimeOffset?>();
+				var ended = dat["ended"].ToObject<bool>();
+				await this.OnGuildAppliedBoostsUpdateEventAsync((ulong)dat["id"], this.GuildsInternal[gid], uid, pauseEndsAt, endsAt, ended).ConfigureAwait(false);
+				break;
+
 #endregion
 
-#region Guild Automod
+			#region Guild Automod
 
 			case "auto_moderation_rule_create":
 				await this.OnAutomodRuleCreated(dat.ToDiscordObject<AutomodRule>()).ConfigureAwait(false);
@@ -2009,6 +2018,24 @@ public sealed partial class DiscordClient
 			Guild = guild
 		};
 		await this._guildIntegrationsUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+	}
+
+	internal async Task OnGuildAppliedBoostsUpdateEventAsync(ulong boostId, DiscordGuild guild, ulong userId, DateTimeOffset? pauseEndsAt, DateTimeOffset? endsAt, bool ended)
+	{
+		var ea = new GuildAppliedBoostsUpdateEventArgs(this.ServiceProvider)
+		{
+			Guild = guild,
+			BoostId = boostId,
+			User = this.UserCache.GetValueOrDefault(userId) ?? new DiscordUser
+			{
+				Id = userId,
+				Discord = this
+			},
+			PauseEndsAt = pauseEndsAt,
+			EndsAt = endsAt,
+			Ended = ended
+		};
+		await this._guildAppliedBoostsUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>

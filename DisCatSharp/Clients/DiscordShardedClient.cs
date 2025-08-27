@@ -605,9 +605,9 @@ public sealed partial class DiscordShardedClient
 		return Task.CompletedTask;
 	}
 
-#endregion
+	#endregion
 
-#region Event Handler Initialization/Registering
+	#region Event Handler Initialization/Registering
 
 	/// <summary>
 	///     Sets the shard client up internally..
@@ -716,6 +716,7 @@ public sealed partial class DiscordShardedClient
 		this._guildJoinRequestCreated = new("GUILD_JOIN_REQUEST_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildJoinRequestUpdated = new("GUILD_JOIN_REQUEST_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildJoinRequestDeleted = new("GUILD_JOIN_REQUEST_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._guildAppliedBoostsUpdated = new("GUILD_APPLIED_BOOSTS_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 	}
 
 	/// <summary>
@@ -826,6 +827,7 @@ public sealed partial class DiscordShardedClient
 		client.GuildJoinRequestCreated += this.Client_GuildJoinRequestCreated;
 		client.GuildJoinRequestUpdated += this.Client_GuildJoinRequestUpdated;
 		client.GuildJoinRequestDeleted += this.Client_GuildJoinRequestDeleted;
+		client.GuildAppliedBoostsUpdated += this.Client_GuildAppliedBoostsUpdated;
 	}
 
 	/// <summary>
@@ -936,6 +938,7 @@ public sealed partial class DiscordShardedClient
 		client.GuildJoinRequestCreated -= this.Client_GuildJoinRequestCreated;
 		client.GuildJoinRequestUpdated -= this.Client_GuildJoinRequestUpdated;
 		client.GuildJoinRequestDeleted -= this.Client_GuildJoinRequestDeleted;
+		client.GuildAppliedBoostsUpdated -= this.Client_GuildAppliedBoostsUpdated;
 	}
 
 	/// <summary>

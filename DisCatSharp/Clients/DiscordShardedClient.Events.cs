@@ -291,6 +291,17 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, GuildIntegrationsUpdateEventArgs> _guildIntegrationsUpdated;
 
+	/// <summary>
+	///     Fired when a guild applied boosts get updated.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, GuildAppliedBoostsUpdateEventArgs> GuildAppliedBoostsUpdated
+	{
+		add => this._guildAppliedBoostsUpdated.Register(value);
+		remove => this._guildAppliedBoostsUpdated.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, GuildAppliedBoostsUpdateEventArgs> _guildAppliedBoostsUpdated;
+
 #endregion
 
 #region Automod
@@ -1657,6 +1668,14 @@ public sealed partial class DiscordShardedClient
 	/// <param name="e">The event args.</param>
 	private Task Client_GuildIntegrationsUpdate(DiscordClient client, GuildIntegrationsUpdateEventArgs e)
 		=> this._guildIntegrationsUpdated.InvokeAsync(client, e);
+
+	/// <summary>
+	///    Handles the guild applied boosts update event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_GuildAppliedBoostsUpdated(DiscordClient client, GuildAppliedBoostsUpdateEventArgs e)
+		=> this._guildAppliedBoostsUpdated.InvokeAsync(client, e);
 
 	/// <summary>
 	///     Handles the guild member add event.

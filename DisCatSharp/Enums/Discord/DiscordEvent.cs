@@ -145,5 +145,6 @@ public enum DiscordEvent
 	GuildJoinRequestCreated,
 	GuildJoinRequestUpdated,
 	GuildJoinRequestDeleted,
-	VoiceChannelStartTimeUpdated
+	VoiceChannelStartTimeUpdated,
+	GuildAppliedBoostsUpdated
 }
