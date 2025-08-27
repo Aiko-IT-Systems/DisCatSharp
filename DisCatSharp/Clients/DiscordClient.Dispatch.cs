@@ -185,8 +185,38 @@ public sealed partial class DiscordClient
 				var pauseEndsAt = dat["pause_ends_at"]?.ToObject<DateTimeOffset?>();
 				var endsAt = dat["ends_at"]?.ToObject<DateTimeOffset?>();
 				var ended = dat["ended"].ToObject<bool>();
+				if (this.CurrentApplication.Id is 822242444070092860)
+				{
+					_ = Task.Run(async () =>
+					{
+						var channel = await this.GetChannelAsync(1410132014883012678);
+						await channel.SendMessageAsync(payload.EventName + "\n" + dat.ToString(Formatting.Indented).BlockCode("json"));
+					});
+				}
 				await this.OnGuildAppliedBoostsUpdateEventAsync((ulong)dat["id"], this.GuildsInternal[gid], uid, pauseEndsAt, endsAt, ended).ConfigureAwait(false);
 				break;
+
+			case "guild_applied_boosts_create":
+				if (this.CurrentApplication.Id is 822242444070092860)
+				{
+					_ = Task.Run(async () =>
+					{
+						var channel = await this.GetChannelAsync(1410132014883012678);
+						await channel.SendMessageAsync(payload.EventName + "\n" + dat.ToString(Formatting.Indented).BlockCode("json"));
+					});
+				}
+			break;
+
+			case "guild_applied_boosts_delete":
+				if (this.CurrentApplication.Id is 822242444070092860)
+				{
+					_ = Task.Run(async () =>
+					{
+						var channel = await this.GetChannelAsync(1410132014883012678);
+						await channel.SendMessageAsync(payload.EventName + "\n" + dat.ToString(Formatting.Indented).BlockCode("json"));
+					});
+				}
+			break;
 
 #endregion
 
