@@ -164,6 +164,19 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, VoiceChannelStatusUpdateEventArgs> _voiceChannelStatusUpdated;
 
+	/// <summary>
+	///     Fired whenever a voice channel's start time is updated.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, VoiceChannelStartTimeUpdateEventArgs> VoiceChannelStartTimeUpdated
+	{
+		add => this._voiceChannelStartTimeUpdated.Register(value);
+		remove => this._voiceChannelStartTimeUpdated.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, VoiceChannelStartTimeUpdateEventArgs> _voiceChannelStartTimeUpdated;
+
 #endregion
 
 #region Guild
@@ -2117,6 +2130,14 @@ public sealed partial class DiscordShardedClient
 	/// <param name="e">The event args.</param>
 	private Task Client_VoiceChannelStatusUpdated(DiscordClient client, VoiceChannelStatusUpdateEventArgs e)
 		=> this._voiceChannelStatusUpdated.InvokeAsync(client, e);
+
+	/// <summary>
+	///     Handles the voice channel start time updated event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_VoiceChannelStartTimeUpdated(DiscordClient client, VoiceChannelStartTimeUpdateEventArgs e)
+		=> this._voiceChannelStartTimeUpdated.InvokeAsync(client, e);
 
 	/// <summary>
 	///     Handles the message poll vote add event.

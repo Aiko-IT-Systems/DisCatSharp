@@ -168,6 +168,19 @@ public sealed partial class DiscordClient
 
 	private AsyncEvent<DiscordClient, VoiceChannelStatusUpdateEventArgs> _voiceChannelStatusUpdated;
 
+	/// <summary>
+	///     Fired whenever a voice channel's start time is updated.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, VoiceChannelStartTimeUpdateEventArgs> VoiceChannelStartTimeUpdated
+	{
+		add => this._voiceChannelStartTimeUpdated.Register(value);
+		remove => this._voiceChannelStartTimeUpdated.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, VoiceChannelStartTimeUpdateEventArgs> _voiceChannelStartTimeUpdated;
+
 #endregion
 
 #region Guild

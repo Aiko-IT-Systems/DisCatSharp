@@ -119,6 +119,13 @@ public sealed partial class DiscordClient
 				await this.OnVoiceChannelStatusUpdateAsync((ulong)dat["guild_id"], cid, voiceChannelStatus).ConfigureAwait(false);
 				break;
 
+			case "voice_channel_start_time_update":
+				cid = (ulong)dat["id"]!;
+				gid = (ulong)dat["guild_id"]!;
+				var voiceStartTime = (string?)dat["start_time"]!;
+				await this.OnVoiceChannelStartTimeUpdateAsync(gid, cid, voiceStartTime != null ? DateTimeOffset.Parse(voiceStartTime, CultureInfo.InvariantCulture) : null).ConfigureAwait(false);
+				break;
+
 			case "channel_topic_update":
 				// It's fired incorrectly.
 				break;
@@ -698,9 +705,9 @@ public sealed partial class DiscordClient
 		}
 	}
 
-#endregion
+	#endregion
 
-#region Private Fields
+	#region Private Fields
 
 	/// <summary>
 	///     /Gets the resume gateway url.
@@ -1111,6 +1118,25 @@ public sealed partial class DiscordClient
 			Status = status
 		};
 		await this._voiceChannelStatusUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Handles the voice channel start time update event.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="channelId">The channel id.</param>
+	/// <param name="voiceStartTime">The value.</param>
+	internal async Task OnVoiceChannelStartTimeUpdateAsync(ulong guildId, ulong channelId, DateTimeOffset? voiceStartTime)
+	{
+		var guild = this.InternalGetCachedGuild(guildId);
+		var channel = this.InternalGetCachedChannel(channelId);
+		var ea = new VoiceChannelStartTimeUpdateEventArgs(this.ServiceProvider)
+		{
+			Guild = guild,
+			Channel = channel,
+			VoiceStartTime = voiceStartTime
+		};
+		await this._voiceChannelStartTimeUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
 
 #endregion
