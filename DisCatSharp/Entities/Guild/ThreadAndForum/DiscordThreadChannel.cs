@@ -16,7 +16,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 ///     Represents a discord thread channel.
 /// </summary>
-public class DiscordThreadChannel : DiscordChannel
+public class DiscordXThreadChannel : DiscordChannel
 {
 	/// <summary>
 	///     List of applied tag ids.
@@ -28,9 +28,9 @@ public class DiscordThreadChannel : DiscordChannel
 	internal ConcurrentDictionary<ulong, DiscordThreadChannelMember> ThreadMembersInternal;
 
 	/// <summary>
-	///     Initializes a new instance of the <see cref="DiscordThreadChannel" /> class.
+	///     Initializes a new instance of the <see cref="DiscordXThreadChannel" /> class.
 	/// </summary>
-	internal DiscordThreadChannel()
+	internal DiscordXThreadChannel()
 		: base(["hashes", "guild_hashes"])
 	{ }
 
@@ -95,7 +95,7 @@ public class DiscordThreadChannel : DiscordChannel
 	public IReadOnlyList<ForumPostTag> AppliedTags
 		=> this.AppliedTagIds?.Select(id => this.Parent.GetForumPostTag(id)).Where(x => x != null).ToList();
 
-#region Methods
+	#region Methods
 
 	/// <summary>
 	///     Modifies the current thread.
@@ -402,5 +402,5 @@ public class DiscordThreadChannel : DiscordChannel
 			_ => $"Thread {this.Name} ({this.Id})"
 		};
 
-#endregion
+	#endregion
 }
