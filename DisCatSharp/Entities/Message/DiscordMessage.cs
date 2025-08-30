@@ -426,7 +426,11 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// </summary>
 	[JsonIgnore]
 	public DiscordGuild? Guild
-		=> this.GuildId.HasValue && this.Discord.Guilds.TryGetValue(this.GuildId.Value, out var guild) ? guild : null;
+		=> this.GuildId.HasValue && this.Discord.Guilds.TryGetValue(this.GuildId.Value, out var guild)
+		? guild
+		: this.Channel.GuildId.HasValue && this.Discord.Guilds.TryGetValue(this.Channel.GuildId.Value, out var channelGuild)
+			? channelGuild
+			: null;
 
 	/// <summary>
 	///     Gets the message object for the referenced message
