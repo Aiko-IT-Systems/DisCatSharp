@@ -1,5 +1,3 @@
-using DisCatSharp.Attributes;
-
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;
@@ -7,7 +5,6 @@ namespace DisCatSharp.Entities;
 /// <summary>
 ///     Represents a message snapshot.
 /// </summary>
-[DiscordInExperiment, Experimental]
 public class DiscordMessageSnapshot : ObservableApiObject
 {
 	/// <summary>
