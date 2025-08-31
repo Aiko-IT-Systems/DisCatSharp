@@ -3543,7 +3543,8 @@ public sealed partial class DiscordClient
 			{
 				var xtm = xj.ToDiscordObject<DiscordThreadChannelMember>();
 				xtm.Discord = this;
-				xtm.GuildId = guild.Id;
+				if (xtm.GuildId is 0)
+					xtm.GuildId = guild.Id;
 				if (xtm != null)
 					addedMembers.Add(xtm);
 

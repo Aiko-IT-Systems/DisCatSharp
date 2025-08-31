@@ -12,14 +12,14 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public class DiscordThreadChannelMember : SnowflakeObject, IEquatable<DiscordThreadChannelMember>
 {
-	[JsonIgnore] // guild_id exists
-	internal ulong GuildId;
+	[JsonProperty("guild_id")]
+	public ulong GuildId { get; internal set; }
 
 	/// <summary>
 	///     Initializes a new instance of the <see cref="DiscordThreadChannelMember" /> class.
 	/// </summary>
 	internal DiscordThreadChannelMember()
-		: base(["muted", "mute_config", "guild_id"])
+		: base(["muted", "mute_config"])
 	{ }
 
 	/// <summary>
