@@ -12,6 +12,8 @@ using DisCatSharp.Net;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Models;
 
+using Microsoft.Extensions.Logging;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;
@@ -142,7 +144,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 
 	/// <summary>
 	///     Gets the members guild bio.
-	///     This is not available to bots tho.
+	///     This is only present for the current user.
 	/// </summary>
 	[JsonProperty("bio", NullValueHandling = NullValueHandling.Ignore)]
 	public string? GuildBio { get; internal set; }
@@ -151,7 +153,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	///     Gets the members's pronouns.
 	/// </summary>
 	[JsonProperty("pronouns", NullValueHandling = NullValueHandling.Ignore)]
-	public string? GuildPronouns { get; internal set; }
+	internal string? GuildPronouns { get; set; }
 
 	/// <summary>
 	///     Gets the members flags.
@@ -362,8 +364,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="action">Action to perform on this member.</param>
 	/// <exception cref="UnauthorizedException">
-	///     Thrown when the client does not have the
-	///     <see cref="Permissions.ManageNicknames" /> permission.
+	///     Thrown when the client does not have the <see cref="Permissions.ChangeNickname" />, <see cref="Permissions.ManageNicknames" />, <see cref="Permissions.MuteMembers" />, <see cref="Permissions.DeafenMembers" />, <see cref="Permissions.MoveMembers" /> or <see cref="Permissions.ManageRoles" /> permission.
 	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -378,8 +379,8 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 
 		if (mdl.Nickname.HasValue && this.Discord.CurrentUser.Id == this.Id)
 		{
-			await this.Discord.ApiClient.ModifyCurrentMemberNicknameAsync(this.Guild.Id, mdl.Nickname.Value,
-				mdl.AuditLogReason).ConfigureAwait(false);
+			await this.Discord.ApiClient.ModifyCurrentGuildMemberAsync(this.Guild.Id, mdl.Nickname, Optional.None, Optional.None, Optional.None, mdl.AuditLogReason).ConfigureAwait(false);
+			this.Discord.Logger.LogWarning("Please use DiscordGuild.ModifyCurrentMemberAsync to change the current bot member's nickname from now on.");
 
 			await this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, Optional.None,
 				mdl.Roles.Map(e => e.Select(xr => xr.Id)), mdl.Muted, mdl.Deafened,
@@ -390,6 +391,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 				mdl.Roles.Map(e => e.Select(xr => xr.Id)), mdl.Muted, mdl.Deafened,
 				mdl.VoiceChannel.Map(e => e?.Id), default, this.MemberFlags, mdl.AuditLogReason).ConfigureAwait(false);
 	}
+
 
 	/// <summary>
 	///     Disconnects the member from their current voice channel.
@@ -699,7 +701,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	public static bool operator !=(DiscordMember e1, DiscordMember e2)
 		=> !(e1 == e2);
 
-#region Overridden user properties
+	#region Overridden user properties
 
 	/// <summary>
 	///     Gets the user.
@@ -899,5 +901,5 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		internal set => this.User.Flags = value;
 	}
 
-#endregion
+	#endregion
 }

@@ -494,6 +494,36 @@ internal sealed class RestGuildMemberModifyPayload : ObservableApiObject
 }
 
 /// <summary>
+///     Represents a current guild member modify payload.
+/// </summary>
+internal sealed class RestCurrentGuildMemberModifyPayload : ObservableApiObject
+{
+	/// <summary>
+	///     Gets or sets the nickname.
+	/// </summary>
+	[JsonProperty("nick", NullValueHandling = NullValueHandling.Include)]
+	public Optional<string?> Nickname { get; set; }
+
+	/// <summary>
+	///    Gets or sets the bio.
+	/// </summary>
+	[JsonProperty("bio", NullValueHandling = NullValueHandling.Include)]
+	public Optional<string?> Bio { get; set; }
+
+	/// <summary>
+	///     Gets or sets the avatar.
+	/// </summary>
+	[JsonProperty("avatar", NullValueHandling = NullValueHandling.Include)]
+	public Optional<string?> Avatar { get; set; }
+
+	/// <summary>
+	///     Gets or sets the banner.
+	/// </summary>
+	[JsonProperty("banner", NullValueHandling = NullValueHandling.Include)]
+	public Optional<string?> Banner { get; set; }
+}
+
+/// <summary>
 ///     Represents a guild member timeout modify payload.
 /// </summary>
 internal sealed class RestGuildMemberTimeoutModifyPayload : ObservableApiObject

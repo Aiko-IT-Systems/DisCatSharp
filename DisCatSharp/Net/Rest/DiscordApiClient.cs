@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
+
 using DisCatSharp.Entities;
 using DisCatSharp.Entities.OAuth2;
 using DisCatSharp.Enums;
@@ -4300,6 +4302,7 @@ public sealed class DiscordApiClient
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="nick">The nick.</param>
 	/// <param name="reason">The reason.</param>
+	[Deprecated("Use ModifyCurrentGuildMemberAsync with userId = @me instead.")]
 	internal Task ModifyCurrentMemberNicknameAsync(ulong guildId, string nick, string? reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
@@ -4319,6 +4322,39 @@ public sealed class DiscordApiClient
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
+	}
+
+	internal async Task<DiscordMember> ModifyCurrentGuildMemberAsync(
+		ulong guildId,
+		Optional<string?> nickname,
+		Optional<string?> bio,
+		Optional<string?> avatarBase64,
+		Optional<string?> bannerBase64,
+		string? reason
+	)
+	{
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers[REASON_HEADER_NAME] = reason;
+
+		var pld = new RestCurrentGuildMemberModifyPayload
+		{
+			Nickname = nickname,
+			Bio = bio,
+			Avatar = avatarBase64,
+			Banner = bannerBase64
+		};
+
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}{Endpoints.ME}{Endpoints.NICK}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
+		{
+			guild_id = guildId
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
+
+		return DiscordJson.DeserializeObject<DiscordMember>(res.Response, this.Discord);
 	}
 
 	#endregion

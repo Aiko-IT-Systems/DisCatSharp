@@ -2187,6 +2187,24 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	}
 
 	/// <summary>
+	///     Modifies the current bot member.
+	/// </summary>
+	/// <param name="action">Action to perform on the current member.</param>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the <see cref="Permissions.ChangeNickname" /> or <see cref="Permissions.ManageRoles" /> permission.
+	/// </exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordMember> ModifyCurrentMemberAsync(Action<CurrentMemberEditModel> action)
+	{
+		var mdl = new CurrentMemberEditModel();
+		action(mdl);
+
+		return await this.Discord.ApiClient.ModifyCurrentGuildMemberAsync(this.Id, mdl.Nickname, mdl.Bio, Optional.None, Optional.None, mdl.AuditLogReason).ConfigureAwait(false);
+	}
+
+	/// <summary>
 	///     Gets all the channels this guild has.
 	/// </summary>
 	/// <returns>A collection of this guild's channels.</returns>
