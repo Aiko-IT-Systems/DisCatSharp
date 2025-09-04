@@ -36,7 +36,7 @@ public sealed class DiscordLabelComponent : DiscordComponent
 	/// </summary>
 	/// <param name="label">The label for the modal field.</param>
 	/// <param name="description">The description for the modal field.</param>
-	/// <param name="component">The component to attach to the label. This parameter is added for future-proof support. Please use either <see cref="WithTextComponent(DiscordTextInputComponent)"/> or <see cref="WithStringSelectComponent(DiscordStringSelectComponent)"/>.</param>
+	/// <param name="component">The component to attach to the label. This parameter is added for future-proof support. Please use either <see cref="WithTextComponent(DiscordTextInputComponent)"/> or <see cref="WithSelectComponent(DiscordBaseSelectComponent)"/>.</param>
 	public DiscordLabelComponent(string label, string? description = null, ILabelComponent? component = null)
 		: this()
 	{

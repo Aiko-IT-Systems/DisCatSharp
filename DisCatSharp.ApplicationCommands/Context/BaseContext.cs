@@ -91,11 +91,6 @@ public class BaseContext : DisCatSharpCommandContext
 	public int AttachmentSizeLimit { get; internal set; }
 
 	/// <summary>
-	///     Gets the attachment size limit in bytes.
-	/// </summary>
-	public int AttachmentSizeLimit { get; internal set; }
-
-	/// <summary>
 	///     Gets the applications permissions.
 	/// </summary>
 	public Permissions AppPermissions { get; internal set; }
