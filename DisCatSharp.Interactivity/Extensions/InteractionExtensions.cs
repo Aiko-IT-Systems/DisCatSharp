@@ -55,7 +55,7 @@ public static class InteractionExtensions
 	{
 		if (modals is null || modals.Count == 0)
 			throw new ArgumentException("You have to set at least one page");
-
+		// TODO: Find out what the fuck is going wrong here: https://canary.discord.com/channels/858089281214087179/891496341941944360/1411121482142060635
 		var client = (DiscordClient)interaction.Discord;
 		var interactivity = client.GetInteractivity() ?? throw new InvalidOperationException($"Interactivity is not enabled for this {(client.IsShard ? "shard" : "client")}.");
 
