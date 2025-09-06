@@ -116,6 +116,23 @@ public sealed class DiscordInteractionModalBuilder
 		=> this.AddModalComponents(components);
 
 	/// <summary>
+	///     Appends a text display component to the builder.
+	/// </summary>
+	/// <param name="component">The component to append.</param>
+	/// <returns>The current builder to chain calls with.</returns>
+	public DiscordInteractionModalBuilder AddTextDisplayComponent(DiscordTextDisplayComponent component)
+		=> this.AddModalComponents(component);
+
+	/// <summary>
+	///     Appends a collection of text display components to the builder.
+	/// </summary>
+	/// <param name="components">The components to append. Up to five.</param>
+	/// <returns>The current builder to chain calls with.</returns>
+	/// <exception cref="ArgumentException">Thrown when passing more than 5 components.</exception>'
+	public DiscordInteractionModalBuilder AddTextDisplayComponents(params DiscordTextDisplayComponent[] components)
+		=> this.AddModalComponents(components);
+
+	/// <summary>
 	///     Appends a label component to the builder.
 	/// </summary>
 	/// <param name="component">The component to append.</param>
