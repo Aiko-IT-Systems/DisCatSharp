@@ -111,8 +111,6 @@ items:
                   uid: topics_components_buttons
                 - name: Select Menu
                   uid: topics_components_select_menus
-          - name: Components V2
-            href: '#'
           - name: Workarounds
             uid: topics_workarounds
     - name: Experimental
