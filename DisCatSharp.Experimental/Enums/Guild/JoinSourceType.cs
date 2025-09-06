@@ -43,5 +43,10 @@ public enum JoinSourceType
 	/// <summary>
 	///     The user was accepted into the guild after applying for membership.
 	/// </summary>
-	ManualMemberVerification = 7
+	ManualMemberVerification = 7,
+
+	/// <summary>
+	///     The user joined via a social layer integration linked channel.
+	/// </summary>
+	SocialLayerIntegrationLinkedChannel = 8
 }

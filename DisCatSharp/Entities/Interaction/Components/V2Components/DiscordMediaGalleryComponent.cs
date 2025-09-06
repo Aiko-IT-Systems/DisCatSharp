@@ -16,6 +16,7 @@ public sealed class DiscordMediaGalleryComponent : DiscordComponent
 	/// <summary>
 	///     Constructs a new <see cref="DiscordMediaGalleryComponent" />.
 	/// </summary>
+	[JsonConstructor]
 	internal DiscordMediaGalleryComponent()
 	{
 		this.Type = ComponentType.MediaGallery;
@@ -50,7 +51,7 @@ public sealed class DiscordMediaGalleryComponent : DiscordComponent
 	///     The content for the media gallery.
 	/// </summary>
 	[JsonProperty("items", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyList<DiscordMediaGalleryItem> Items { get; internal set; } = [];
+	public List<DiscordMediaGalleryItem> Items { get; internal set; } = [];
 
 	/// <summary>
 	///     Assigns a unique id to the components.

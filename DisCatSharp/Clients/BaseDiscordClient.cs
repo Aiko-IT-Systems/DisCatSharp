@@ -38,6 +38,19 @@ public abstract class BaseDiscordClient : IDisposable
 	/// </summary>
 	internal Lazy<IReadOnlyDictionary<string, DiscordVoiceRegion>> VoiceRegionsLazy;
 
+	public event EventHandler<GlobalExceptionEventArgs> GlobalExceptionOccurred;
+
+	public void InitGlobalExceptionTracking()
+	{
+		AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+			GlobalExceptionOccurred?.Invoke(this, new GlobalExceptionEventArgs((Exception)e.ExceptionObject, this.ServiceProvider));
+		TaskScheduler.UnobservedTaskException += (s, e) =>
+		{
+			GlobalExceptionOccurred?.Invoke(this, new GlobalExceptionEventArgs(e.Exception, this.ServiceProvider));
+			e.SetObserved();
+		};
+	}
+
 	/// <summary>
 	///     Initializes this Discord API client.
 	/// </summary>
@@ -263,6 +276,8 @@ public abstract class BaseDiscordClient : IDisposable
 			if (v.Revision > 0)
 				this.VersionString = $"{vs}, CI build {v.Revision}";
 		}
+
+		this.InitGlobalExceptionTracking();
 	}
 
 	/// <summary>

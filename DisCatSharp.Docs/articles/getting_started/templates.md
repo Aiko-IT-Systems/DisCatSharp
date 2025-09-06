@@ -4,6 +4,9 @@ title: Project Templates
 author: DisCatSharp Team
 ---
 
+> [!WARNING]
+> The project templates are currently unmaintained and may not work as expected.
+
 # Prerequisites
 
 Install the following packages:

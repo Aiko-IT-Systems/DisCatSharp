@@ -25,95 +25,100 @@ public enum ApplicationMonetizationEligibilityFlags : long
 	/// <summary>
 	///     This application is verified
 	/// </summary>
-	Verified = 1 << 0,
+	Verified = 1L << 0,
 
 	/// <summary>
 	///     This application is owned by a team
 	/// </summary>
-	HasTeam = 1 << 1,
+	HasTeam = 1L << 1,
 
 	/// <summary>
 	///     This application has the message content intent approved or utilizes application commands
 	/// </summary>
-	ApprovedCommandsOrMessageContent = 1 << 2,
+	ApprovedCommandsOrMessageContent = 1L << 2,
 
 	/// <summary>
 	///     This application has terms of service set
 	/// </summary>
-	TermsOfService = 1 << 3,
+	TermsOfService = 1L << 3,
 
 	/// <summary>
 	///     This application has a privacy policy set
 	/// </summary>
-	PrivacyPolicy = 1 << 4,
+	PrivacyPolicy = 1L << 4,
 
 	/// <summary>
 	///     This application's name is safe for work
 	/// </summary>
-	SafeName = 1 << 5,
+	SafeName = 1L << 5,
 
 	/// <summary>
 	///     This application's description is safe for work
 	/// </summary>
-	SafeDescription = 1 << 6,
+	SafeDescription = 1L << 6,
 
 	/// <summary>
 	///     This application's role connections metadata is safe for work
 	/// </summary>
-	HasSafeRoleConnections = 1 << 7,
+	HasSafeRoleConnections = 1L << 7,
 
 	/// <summary>
 	///     The user is the owner of the team that owns the application
 	/// </summary>
-	UserIsTeamOwner = 1 << 8,
+	UserIsTeamOwner = 1L << 8,
 
 	/// <summary>
 	///     This application is not quarantined
 	/// </summary>
-	NotQuarantined = 1 << 9,
+	NotQuarantined = 1L << 9,
 
 	/// <summary>
 	///     The user's locale is supported by monetization
 	/// </summary>
-	UserLocaleSupported = 1 << 10,
+	UserLocaleSupported = 1L << 10,
 
 	/// <summary>
 	///     The user is old enough to use monetization
 	/// </summary>
-	UserAgeSupported = 1 << 11,
+	UserAgeSupported = 1L << 11,
 
 	/// <summary>
 	///     The user has a date of birth defined on their account
 	/// </summary>
-	UserDateOfBirthDefined = 1 << 12,
+	UserDateOfBirthDefined = 1L << 12,
 
 	/// <summary>
 	///     The user has MFA enabled
 	/// </summary>
-	UserMfaEnabled = 1 << 13,
+	UserMfaEnabled = 1L << 13,
 
 	/// <summary>
 	///     The user's email is verified
 	/// </summary>
-	UserEmailVerified = 1 << 14,
+	UserEmailVerified = 1L << 14,
 
 	/// <summary>
 	///     All members of the team that owns the application have verified emails
 	/// </summary>
-	TeamMembersEmailVerified = 1 << 15,
+	TeamMembersEmailVerified = 1L << 15,
 
 	/// <summary>
 	///     All members of the team that owns the application have MFA enabled
 	/// </summary>
-	TeamMembersMfaEnabled = 1 << 16,
+	TeamMembersMfaEnabled = 1L << 16,
 
 	/// <summary>
 	///     This application has no issues blocking monetization
 	/// </summary>
-	NoBlockingIssues = 1 << 17,
+	NoBlockingIssues = 1L << 17,
 
 	/// <summary>
 	///     The team has a valid payout status
 	/// </summary>
-	ValidPayoutStatus = 1 << 18
+	ValidPayoutStatus = 1L << 18,
+
+	/// <summary>
+	///      The flags are unknown.
+	/// </summary>
+	Unknown = long.MaxValue
 }

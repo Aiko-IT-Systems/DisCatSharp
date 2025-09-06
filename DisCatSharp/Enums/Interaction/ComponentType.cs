@@ -21,9 +21,9 @@ public enum ComponentType
 	StringSelect = 3,
 
 	/// <summary>
-	///     A input text.
+	///     A text input.
 	/// </summary>
-	InputText = 4,
+	TextInput = 4,
 
 	/// <summary>
 	///     A select menu to select users.
@@ -83,5 +83,10 @@ public enum ComponentType
 	/// <summary>
 	///     A container.
 	/// </summary>
-	Container = 17
+	Container = 17,
+
+	/// <summary>
+	///     A label.
+	/// </summary>
+	Label = 18
 }

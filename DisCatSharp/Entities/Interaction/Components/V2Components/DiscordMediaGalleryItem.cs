@@ -10,6 +10,7 @@ public sealed class DiscordMediaGalleryItem
 	/// <summary>
 	///     Constructs a new empty <see cref="DiscordMediaGalleryItem" />.
 	/// </summary>
+	[JsonConstructor]
 	internal DiscordMediaGalleryItem()
 	{ }
 
