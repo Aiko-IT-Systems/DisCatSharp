@@ -10,6 +10,7 @@ using DisCatSharp.Enums;
 using DisCatSharp.Enums.Core;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net.Abstractions;
+using DisCatSharp.Net.Serialization;
 
 using Newtonsoft.Json;
 

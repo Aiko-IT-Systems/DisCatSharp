@@ -149,8 +149,16 @@ public class InteractivityExtension : BaseExtension
 		if (message.Components.Count is 0)
 			throw new ArgumentException("Provided message does not contain any components.");
 
-		if (!message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Button))
-			throw new ArgumentException("Provided Message does not contain any button components.");
+		if (message.Flags.HasValue && message.Flags.Value.HasMessageFlag(MessageFlags.IsComponentsV2))
+		{
+			if (message.Components.OfType<DiscordContainerComponent>().SelectMany(c => c.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components)).All(c => c.Type != ComponentType.Button))
+				throw new ArgumentException("Message does not contain any button components.");
+		}
+		else
+		{
+			if (message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).All(c => c.Type != ComponentType.Button))
+				throw new ArgumentException("Message does not contain any button components.");
+		}
 
 		var res = await this._componentEventWaiter
 			.WaitForMatchAsync(new(message,
@@ -226,10 +234,22 @@ public class InteractivityExtension : BaseExtension
 		if (message.Components.Count == 0)
 			throw new ArgumentException("Provided message does not contain any components.");
 
-		if (!message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Button))
-			throw new ArgumentException("Message does not contain any button components.");
+		string[]? ids = null;
+		
+		if (message.Flags.HasValue && message.Flags.Value.HasMessageFlag(MessageFlags.IsComponentsV2))
+		{
+			if (message.Components.OfType<DiscordContainerComponent>().SelectMany(c => c.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components)).All(c => c.Type != ComponentType.Button))
+				throw new ArgumentException("Message does not contain any button components.");
 
-		var ids = message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).Select(c => c.CustomId);
+			ids = message.Components.OfType<DiscordContainerComponent>().SelectMany(c => c.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components)).Select(c => c.CustomId).ToArray();
+		}
+		else
+		{
+			if (message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).All(c => c.Type != ComponentType.Button))
+				throw new ArgumentException("Message does not contain any button components.");
+
+			ids = message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).Select(c => c.CustomId).ToArray();
+		}
 
 		var result =
 			await this
@@ -281,8 +301,17 @@ public class InteractivityExtension : BaseExtension
 		if (message.Components.Count == 0)
 			throw new ArgumentException("Provided message does not contain any components.");
 
-		if (!message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Button))
-			throw new ArgumentException("Message does not contain any button components.");
+		
+		if (message.Flags.HasValue && message.Flags.Value.HasMessageFlag(MessageFlags.IsComponentsV2))
+		{
+			if (message.Components.OfType<DiscordContainerComponent>().SelectMany(c => c.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components)).All(c => c.Type != ComponentType.Button))
+				throw new ArgumentException("Message does not contain any button components.");
+		}
+		else
+		{
+			if (message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).All(c => c.Type != ComponentType.Button))
+				throw new ArgumentException("Message does not contain any button components.");
+		}
 
 		var result = await this
 			._componentEventWaiter
@@ -333,11 +362,23 @@ public class InteractivityExtension : BaseExtension
 		if (message.Components.Count is 0)
 			throw new ArgumentException("Provided message does not contain any components.");
 
-		if (!message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Button))
-			throw new ArgumentException("Message does not contain any button components.");
+		
+		if (message.Flags.HasValue && message.Flags.Value.HasMessageFlag(MessageFlags.IsComponentsV2))
+		{
+			if (message.Components.OfType<DiscordContainerComponent>().SelectMany(c => c.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components)).All(c => c.Type != ComponentType.Button))
+				throw new ArgumentException("Message does not contain any button components.");
 
-		if (message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).OfType<DiscordButtonComponent>().All(c => c.CustomId != id))
-			throw new ArgumentException($"Message does not contain button with Id of '{id}'.");
+			if (message.Components.OfType<DiscordContainerComponent>().SelectMany(c => c.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components)).OfType<DiscordButtonComponent>().All(c => c.CustomId != id))
+				throw new ArgumentException($"Message does not contain button with Id of '{id}'.");
+		}
+		else
+		{
+			if (message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).All(c => c.Type != ComponentType.Button))
+				throw new ArgumentException("Message does not contain any button components.");
+
+			if (message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).OfType<DiscordButtonComponent>().All(c => c.CustomId != id))
+				throw new ArgumentException($"Message does not contain button with Id of '{id}'.");
+		}
 
 		var result = await this
 			._componentEventWaiter
@@ -373,8 +414,16 @@ public class InteractivityExtension : BaseExtension
 		if (message.Components.Count is 0)
 			throw new ArgumentException("Provided message does not contain any components.");
 
-		if (!message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Button))
-			throw new ArgumentException("Message does not contain any button components.");
+		if (message.Flags.HasValue && message.Flags.Value.HasMessageFlag(MessageFlags.IsComponentsV2))
+		{
+			if (message.Components.OfType<DiscordContainerComponent>().SelectMany(c => c.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components)).All(c => c.Type != ComponentType.Button))
+				throw new ArgumentException("Message does not contain any button components.");
+		}
+		else
+		{
+			if (message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).All(c => c.Type != ComponentType.Button))
+				throw new ArgumentException("Message does not contain any button components.");
+		}
 
 		var result = await this
 			._componentEventWaiter
@@ -411,11 +460,16 @@ public class InteractivityExtension : BaseExtension
 		if (message.Author != this.Client.CurrentUser)
 			throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
 
-		if (message.Components.Count is 0)
-			throw new ArgumentException("Provided message does not contain any components.");
-
-		if (message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).All(c => c.Type != selectType))
+		if (message.Flags.HasValue && message.Flags.Value.HasMessageFlag(MessageFlags.IsComponentsV2))
+		{
+			if (message.Components.OfType<DiscordContainerComponent>().SelectMany(c => c.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components)).All(c => c.Type != selectType))
+				throw new ArgumentException("Message does not contain any select components.");
+		}
+		else
+		{
+			if (message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).All(c => c.Type != selectType))
 			throw new ArgumentException("Message does not contain any select components.");
+		}
 
 		var result = await this
 			._componentEventWaiter
@@ -459,11 +513,22 @@ public class InteractivityExtension : BaseExtension
 		if (message.Components.Count is 0)
 			throw new ArgumentException("Provided message does not contain any components.");
 
-		if (message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).All(c => c.Type != selectType))
+		if (message.Flags.HasValue && message.Flags.Value.HasMessageFlag(MessageFlags.IsComponentsV2))
+		{
+			if (message.Components.OfType<DiscordContainerComponent>().SelectMany(c => c.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components)).All(c => c.Type != selectType))
+				throw new ArgumentException("Message does not contain any select components.");
+
+			if (message.Components.OfType<DiscordContainerComponent>().SelectMany(c => c.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components)).OfType<DiscordBaseSelectComponent>().All(c => c.CustomId != id))
+				throw new ArgumentException($"Message does not contain select with Id of '{id}'.");
+		}
+		else
+		{
+			if (message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).All(c => c.Type != selectType))
 			throw new ArgumentException("Message does not contain any select components.");
 
-		if (message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).OfType<DiscordBaseSelectComponent>().All(c => c.CustomId != id))
-			throw new ArgumentException($"Message does not contain select component with Id of '{id}'.");
+			if (message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).OfType<DiscordBaseSelectComponent>().All(c => c.CustomId != id))
+				throw new ArgumentException($"Message does not contain select with Id of '{id}'.");
+		}
 
 		var result = await this
 			._componentEventWaiter
@@ -508,11 +573,22 @@ public class InteractivityExtension : BaseExtension
 		if (message.Components.Count is 0)
 			throw new ArgumentException("Provided message does not contain any components.");
 
-		if (message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).All(c => c.Type != selectType))
+		if (message.Flags.HasValue && message.Flags.Value.HasMessageFlag(MessageFlags.IsComponentsV2))
+		{
+			if (message.Components.OfType<DiscordContainerComponent>().SelectMany(c => c.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components)).All(c => c.Type != selectType))
+				throw new ArgumentException("Message does not contain any select components.");
+
+			if (message.Components.OfType<DiscordContainerComponent>().SelectMany(c => c.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components)).OfType<DiscordBaseSelectComponent>().All(c => c.CustomId != id))
+				throw new ArgumentException($"Message does not contain select with Id of '{id}'.");
+		}
+		else
+		{
+			if (message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).All(c => c.Type != selectType))
 			throw new ArgumentException("Message does not contain any select components.");
 
-		if (message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).OfType<DiscordBaseSelectComponent>().All(c => c.CustomId != id))
-			throw new ArgumentException($"Message does not contain select with Id of '{id}'.");
+			if (message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).OfType<DiscordBaseSelectComponent>().All(c => c.CustomId != id))
+				throw new ArgumentException($"Message does not contain select with Id of '{id}'.");
+		}
 
 		var result = await this
 			._componentEventWaiter

@@ -28,7 +28,7 @@ internal sealed class DiscordComponentJsonConverter : JsonConverter
 			return null;
 
 		var job = JObject.Load(reader);
-		var type = job["type"]?.ToObject<ComponentType>() ?? throw new ArgumentException($"Value {reader} does not have a component type specifier");
+		var type = job["type"]?.ToObject<ComponentType>() ?? throw new ArgumentException($"Value {reader} does not has a component type specifier");
 		DiscordComponent cmp = type switch
 		{
 			ComponentType.ActionRow => new DiscordActionRowComponent(),
@@ -48,6 +48,7 @@ internal sealed class DiscordComponentJsonConverter : JsonConverter
 			ComponentType.File => new DiscordFileDisplayComponent(),
 			ComponentType.Separator => new DiscordSeparatorComponent(),
 			ComponentType.Label => new DiscordLabelComponent(),
+			ComponentType.Container => new DiscordContainerComponent(),
 			_ => new()
 			{
 				Type = type
