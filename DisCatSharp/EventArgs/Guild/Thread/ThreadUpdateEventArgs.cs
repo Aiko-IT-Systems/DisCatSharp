@@ -19,12 +19,12 @@ public class ThreadUpdateEventArgs : DiscordEventArgs
 	/// <summary>
 	///     Gets the post-update thread.
 	/// </summary>
-	public DiscordThreadChannel ThreadAfter { get; internal set; }
+	public DiscordXThreadChannel ThreadAfter { get; internal set; }
 
 	/// <summary>
 	///     Gets the pre-update thread.
 	/// </summary>
-	public DiscordThreadChannel ThreadBefore { get; internal set; }
+	public DiscordXThreadChannel ThreadBefore { get; internal set; }
 
 	/// <summary>
 	///     Gets the threads parent channel.

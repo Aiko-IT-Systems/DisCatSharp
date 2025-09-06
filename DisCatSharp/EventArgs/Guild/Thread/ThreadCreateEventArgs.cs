@@ -19,7 +19,7 @@ public class ThreadCreateEventArgs : DiscordEventArgs
 	/// <summary>
 	///     Gets the thread that was created.
 	/// </summary>
-	public DiscordThreadChannel Thread { get; internal set; }
+	public DiscordXThreadChannel Thread { get; internal set; }
 
 	/// <summary>
 	///     Gets the threads parent channel.

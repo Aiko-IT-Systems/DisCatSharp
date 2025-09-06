@@ -40,7 +40,7 @@ public class ThreadMembersUpdateEventArgs : DiscordEventArgs
 	/// <summary>
 	///     Gets the id of the thread.
 	/// </summary>
-	public DiscordThreadChannel Thread { get; internal set; }
+	public DiscordXThreadChannel Thread { get; internal set; }
 
 	/// <summary>
 	///     Gets the guild.
