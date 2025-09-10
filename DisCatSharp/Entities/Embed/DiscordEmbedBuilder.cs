@@ -10,14 +10,29 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class DiscordEmbedBuilder
 {
+	/// <summary>
+	/// 
+	/// </summary>
 	private readonly List<DiscordEmbedField> _fields = [];
 
+	/// <summary>
+	/// 
+	/// </summary>
 	private string? _description;
 
+	/// <summary>
+	/// 
+	/// </summary>
 	private DiscordUri? _imageUri;
 
+	/// <summary>
+	/// 
+	/// </summary>
 	private string? _title;
 
+	/// <summary>
+	/// 
+	/// </summary>
 	private Uri? _url;
 
 	/// <summary>

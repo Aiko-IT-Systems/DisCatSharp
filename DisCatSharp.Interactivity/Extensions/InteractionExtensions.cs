@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
+using DisCatSharp.Interactivity.Entities;
 using DisCatSharp.Interactivity.Enums;
 using DisCatSharp.Interactivity.EventHandling;
 
@@ -38,7 +40,7 @@ public static class InteractionExtensions
 	///     <para>
 	///         <b>
 	///             After the last modal, this method automatically responds with the thinking state. Use
-	///             <see cref="DiscordInteraction.EditOriginalResponseAsync(DiscordWebhookBuilder)" /> to interact with the
+	///             <see cref="DiscordInteraction.EditOriginalResponseAsync(DiscordWebhookBuilder, DisCatSharp.Enums.Core.ModifyMode)" /> to interact with the
 	///             response.
 	///         </b>
 	///     </para>
@@ -53,13 +55,14 @@ public static class InteractionExtensions
 	{
 		if (modals is null || modals.Count == 0)
 			throw new ArgumentException("You have to set at least one page");
-
+		// TODO: Find out what the fuck is going wrong here: https://canary.discord.com/channels/858089281214087179/891496341941944360/1411121482142060635
 		var client = (DiscordClient)interaction.Discord;
 		var interactivity = client.GetInteractivity() ?? throw new InvalidOperationException($"Interactivity is not enabled for this {(client.IsShard ? "shard" : "client")}.");
 
 		timeOutOverride ??= TimeSpan.FromMinutes(15);
 
 		Dictionary<string, string> caughtResponses = [];
+		Dictionary<string, string[]> caughtSelectResponses = [];
 
 		var previousInteraction = interaction;
 
@@ -99,8 +102,11 @@ public static class InteractionExtensions
 					TimedOut = true
 				};
 
-			foreach (var submissions in modalResult.Result.Interaction.Data.Components)
+			foreach (var submissions in modalResult.Result.Interaction.Data.ModalComponents.OfType<DiscordLabelComponent>().Where(x => x.Component is DiscordTextInputComponent).Select(s => s.Component as DiscordTextInputComponent))
 				caughtResponses.Add(submissions.CustomId, submissions.Value);
+
+			foreach (var submissions in modalResult.Result.Interaction.Data.ModalComponents.OfType<DiscordLabelComponent>().Where(x => x.Component is DiscordStringSelectComponent).Select(s => s.Component as DiscordStringSelectComponent))
+				caughtSelectResponses.Add(submissions.CustomId, submissions.SelectedValues);
 
 			previousInteraction = modalResult.Result.Interaction;
 		}
@@ -111,6 +117,7 @@ public static class InteractionExtensions
 		{
 			TimedOut = false,
 			Responses = caughtResponses,
+			SelectResponses = caughtSelectResponses,
 			Interaction = previousInteraction
 		};
 	}

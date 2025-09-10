@@ -14,6 +14,7 @@ using System.Web;
 
 using DisCatSharp.Common;
 using DisCatSharp.Common.RegularExpressions;
+using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.Net;
 
@@ -54,9 +55,9 @@ public static class Utilities
 		{
 			var xsv = xv.ToString();
 			var xmv = ti.DeclaredMembers.FirstOrDefault(xm => xm.Name == xsv);
-			var xav = xmv!.GetCustomAttribute<PermissionStringAttribute>()!;
+			var xav = xmv?.GetCustomAttribute<PermissionStringAttribute>();
 
-			PermissionStrings[xv] = xav.String;
+			PermissionStrings[xv] = xav?.String ?? xv.ToString();
 		}
 
 		var a = typeof(DiscordClient).GetTypeInfo().Assembly;
@@ -125,7 +126,7 @@ public static class Utilities
 		if (string.IsNullOrWhiteSpace(str))
 			return str;
 
-		str = Regex.Replace(str, @"([a-zA-Z0-9]{68,})", "{WEBHOOK_OR_INTERACTION_TOKEN}"); // Any alphanumeric string this long is likely to be sensitive information anyways
+		str = Regex.Replace(str, @"([a-zA-Z0-9]{68,})", "{WEBHOOK_OR_INTERACTION_TOKEN}");
 		str = Regex.Replace(str, @"(mfa\.[a-z0-9_-]{20,})|((?<botid>[a-z0-9_-]{23,28})\.(?<creation>[a-z0-9_-]{6,7})\.(?<enc>[a-z0-9_-]{27,}))", "{BOT_OR_USER_TOKEN}");
 
 		return str;
@@ -247,7 +248,7 @@ public static class Utilities
 	/// </summary>
 	/// <param name="message">The message.</param>
 	/// <returns>A bool.</returns>
-	internal static bool ContainsUserMentions(string message)
+	public static bool ContainsUserMentions(string message)
 		=> DiscordRegEx.UserWithoutNicknameRegex().IsMatch(message);
 
 	/// <summary>
@@ -255,7 +256,7 @@ public static class Utilities
 	/// </summary>
 	/// <param name="message">The message.</param>
 	/// <returns>A bool.</returns>
-	internal static bool ContainsNicknameMentions(string message)
+	public static bool ContainsNicknameMentions(string message)
 		=> DiscordRegEx.UserWithNicknameRegex().IsMatch(message);
 
 	/// <summary>
@@ -263,7 +264,7 @@ public static class Utilities
 	/// </summary>
 	/// <param name="message">The message.</param>
 	/// <returns>A bool.</returns>
-	internal static bool ContainsChannelMentions(string message)
+	public static bool ContainsChannelMentions(string message)
 		=> DiscordRegEx.ChannelRegex().IsMatch(message);
 
 	/// <summary>
@@ -271,7 +272,7 @@ public static class Utilities
 	/// </summary>
 	/// <param name="message">The message.</param>
 	/// <returns>A bool.</returns>
-	internal static bool ContainsRoleMentions(string message)
+	public static bool ContainsRoleMentions(string message)
 		=> DiscordRegEx.RoleRegex().IsMatch(message);
 
 	/// <summary>
@@ -279,7 +280,7 @@ public static class Utilities
 	/// </summary>
 	/// <param name="message">The message.</param>
 	/// <returns>A bool.</returns>
-	internal static bool ContainsEmojis(string message)
+	public static bool ContainsEmojis(string message)
 		=> DiscordRegEx.EmojiRegex().IsMatch(message);
 
 	/// <summary>
@@ -287,7 +288,7 @@ public static class Utilities
 	/// </summary>
 	/// <param name="message">The message content.</param>
 	/// <returns>A list of ulong.</returns>
-	internal static IEnumerable<ulong> GetUserMentions(string message)
+	public static IEnumerable<ulong> GetUserMentions(string message)
 	{
 		var matches = DiscordRegEx.UserWithOptionalNicknameRegex().Matches(message);
 		return from Match match in matches
@@ -299,7 +300,7 @@ public static class Utilities
 	/// </summary>
 	/// <param name="message">The message content.</param>
 	/// <returns>A list of ulong.</returns>
-	internal static IEnumerable<ulong> GetRoleMentions(string message)
+	public static IEnumerable<ulong> GetRoleMentions(string message)
 	{
 		var matches = DiscordRegEx.RoleRegex().Matches(message);
 		return from Match match in matches
@@ -311,7 +312,7 @@ public static class Utilities
 	/// </summary>
 	/// <param name="message">The message content.</param>
 	/// <returns>A list of ulong.</returns>
-	internal static IEnumerable<ulong> GetChannelMentions(string message)
+	public static IEnumerable<ulong> GetChannelMentions(string message)
 	{
 		var matches = DiscordRegEx.ChannelRegex().Matches(message);
 		return from Match match in matches
@@ -323,7 +324,7 @@ public static class Utilities
 	/// </summary>
 	/// <param name="message">The message content.</param>
 	/// <returns>A list of ulong.</returns>
-	internal static IEnumerable<ulong> GetEmojis(string message)
+	public static IEnumerable<ulong> GetEmojis(string message)
 	{
 		var matches = DiscordRegEx.EmojiRegex().Matches(message);
 		return from Match match in matches
@@ -450,6 +451,43 @@ public static class Utilities
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static DateTimeOffset? GetSnowflakeTime(this ulong? snowflake)
 		=> snowflake is not null ? DiscordClient.DiscordEpoch.AddMilliseconds(snowflake.Value >> 22) : null;
+
+	/// <summary>
+	///     Converts a Discord snowflake to Unix time seconds.
+	/// </summary>
+	/// <param name="snowflake">The Discord snowflake.</param>
+	/// <returns>The Unix time in seconds.</returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static long GetUnixTimeFromSnowflake(ulong snowflake)
+		=> (long)(snowflake >> 22) + DiscordClient.DiscordEpoch.ToUnixTimeSeconds();
+
+	/// <summary>
+	///     Converts a Discord snowflake to Unix time seconds.
+	/// </summary>
+	/// <param name="snowflake">The Discord snowflake.</param>
+	/// <returns>The Unix time in seconds.</returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static long? GetUnixTimeFromSnowflake(ulong? snowflake)
+		=> snowflake is not null ? (long)(snowflake >> 22) + DiscordClient.DiscordEpoch.ToUnixTimeSeconds() : null;
+
+	/// <summary>
+	///     Converts a Discord snowflake object to Unix time seconds.
+	/// </summary>
+	/// <param name="snowflakeObject">The Discord snowflake object.</param>
+	/// <returns>The Unix time in seconds.</returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static long GetUnixTimeFromSnowflake(SnowflakeObject snowflakeObject)
+		=> (long)(snowflakeObject.Id >> 22) + DiscordClient.DiscordEpoch.ToUnixTimeSeconds();
+
+	/// <summary>
+	///     Converts a Discord snowflake object to Unix time seconds.
+	/// </summary>
+	/// <param name="snowflakeObject">The Discord snowflake object.</param>
+	/// <returns>The Unix time in seconds.</returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static long? GetUnixTimeFromSnowflake(NullableSnowflakeObject snowflakeObject)
+		=> snowflakeObject is not null ? (long)(snowflakeObject.Id >> 22) + DiscordClient.DiscordEpoch.ToUnixTimeSeconds() : null;
+
 
 	/// <summary>
 	///     Converts this <see cref="Permissions" /> into human-readable format.

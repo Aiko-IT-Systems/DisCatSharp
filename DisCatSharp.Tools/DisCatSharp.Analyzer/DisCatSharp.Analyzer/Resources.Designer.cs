@@ -115,6 +115,24 @@ namespace DisCatSharp.Analyzer {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This requires to modify the DiscordConfiguration to include an Override..
+        /// </summary>
+        internal static string AnalyzerDescriptionRequiresOverride {
+            get {
+                return ResourceManager.GetString("AnalyzerDescriptionRequiresOverride", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DisCatSharp Analyzer threw an exception: {0}.
+        /// </summary>
+        internal static string AnalyzerException {
+            get {
+                return ResourceManager.GetString("AnalyzerException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} &apos;{1}&apos; is deprecated: {2}.
         /// </summary>
         internal static string AnalyzerMessageFormatDeprecated {
@@ -169,6 +187,15 @@ namespace DisCatSharp.Analyzer {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} &apos;{1}&apos; needs override: {2}.
+        /// </summary>
+        internal static string AnalyzerMessageFormatRequiresOverride {
+            get {
+                return ResourceManager.GetString("AnalyzerMessageFormatRequiresOverride", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to [DCS] Deprecated.
         /// </summary>
         internal static string AnalyzerTitleDeprecated {
@@ -214,7 +241,7 @@ namespace DisCatSharp.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to [Discord] Requires Features.
+        ///   Looks up a localized string similar to [Discord] Requires Feature.
         /// </summary>
         internal static string AnalyzerTitleRequiresFeature {
             get {
@@ -223,7 +250,16 @@ namespace DisCatSharp.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to [Discord] Requires Override.
+        /// </summary>
+        internal static string AnalyzerTitleRequiresOverride {
+            get {
+                return ResourceManager.GetString("AnalyzerTitleRequiresOverride", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Faulty.
         /// </summary>
         internal static string Faulty {
             get {

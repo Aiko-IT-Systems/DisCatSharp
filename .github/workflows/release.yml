@@ -60,13 +60,13 @@ jobs:
                       8.x
             - name: Restore dependencies (DisCatSharp)
               if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp' }}
-              run: dotnet restore --no-cache -f -v minimal DisCatSharp.sln
+              run: dotnet restore --no-cache -f -v minimal DisCatSharp.slnx
             - name: Restore dependencies (DisCatSharp.Attributes)
               if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp.Attributes' }}
               run: dotnet restore --no-cache -f -v minimal DisCatSharp.Attributes/DisCatSharp.Attributes.csproj
             - name: Restore dependencies (DisCatSharp.Tools)
               if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp.Tools' }}
-              run: dotnet restore --no-cache -f -v minimal DisCatSharp.Tools/DisCatSharp.Tools.sln
+              run: dotnet restore --no-cache -f -v minimal DisCatSharp.Tools/DisCatSharp.Tools.slnx
             - name: Build DisCatSharp as full release
               if: ${{!inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp'}}
               shell: pwsh
@@ -105,7 +105,17 @@ jobs:
               working-directory: ./dcs-artifacts
             - name: Publish to NuGet
               shell: pwsh
-              run: dotnet nuget push --source https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}} * --skip-duplicate
+              run: |
+                if (Test-Path *.nupkg) {
+                  dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}} --skip-duplicate
+                }
+              working-directory: ./dcs-artifacts
+            - name: Publish Sources to NuGet
+              shell: pwsh
+              run: |
+                if (Test-Path *.snupkg) {
+                  dotnet nuget push *.snupkg --source https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}} --skip-duplicate
+                }
               working-directory: ./dcs-artifacts
             - name: Publish to GitHub Packages
               shell: pwsh

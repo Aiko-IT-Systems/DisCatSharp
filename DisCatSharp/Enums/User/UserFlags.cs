@@ -69,9 +69,9 @@ public enum UserFlags : long
 	TeamPseudoUser = 1L << 10,
 
 	/// <summary>
-	///     User previously requested verification and/or partnership for a guild.
+	///    User is registered on Discord's HubSpot customer platform, used for official Discord programs (e.g. partner).
 	/// </summary>
-	InternalApplication = 1L << 11,
+	IsHubspotContact = 1L << 11,
 
 	/// <summary>
 	///     Whether the user is an official system user.
@@ -131,6 +131,11 @@ public enum UserFlags : long
 	ActiveDeveloper = 1L << 22,
 
 	/// <summary>
+	///     The user is a provisional account used with the social layer integration.
+	/// </summary>
+	ProvisionalAccount = 1L << 23,
+
+	/// <summary>
 	///     Account has a high global ratelimit.
 	/// </summary>
 	HighGlobalRateLimit = 1L << 33,
@@ -176,9 +181,9 @@ public enum UserFlags : long
 	Disabled = 1L << 41,
 
 	/// <summary>
-	///     The user has a verified email.
+	///     The user has started at least one Gateway session and is now eligible to send messages.
 	/// </summary>
-	VerifiedEmail = 1L << 43,
+	HasSessionStarted = 1L << 43,
 
 	/// <summary>
 	///     The user is currently quarantined.
@@ -188,6 +193,11 @@ public enum UserFlags : long
 	Quarantined = 1L << 44,
 
 	/// <summary>
+	///     The user is eligible for early access to pomelo migration.
+	/// </summary>
+	PremiumEligibleForUniqueUsername = 1L << 47,
+
+	/// <summary>
 	///     User is a collaborator and has staff permissions.
 	/// </summary>
 	Collaborator = 1L << 50,
@@ -195,5 +205,10 @@ public enum UserFlags : long
 	/// <summary>
 	///     User is a restricted collaborator and has staff permissions.
 	/// </summary>
-	RestrictedCollaborator = 1L << 51
+	RestrictedCollaborator = 1L << 51,
+
+	/// <summary>
+	///      The flags are unknown.
+	/// </summary>
+	Unknown = long.MaxValue
 }

@@ -70,6 +70,14 @@ public sealed class CommandContext : DisCatSharpCommandContext
 	/// </summary>
 	public Command Command { get; internal set; }
 
+	/// <inheritdoc />
+	public override string FullCommandName
+		=> this.Command.QualifiedName;
+	
+	/// <inheritdoc />
+	public override string CommandName
+		=> this.Command.Name;
+
 	/// <summary>
 	///     Gets the overload of the command that is being executed.
 	/// </summary>

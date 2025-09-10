@@ -5,7 +5,10 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+
+using DisCatSharp.Attributes;
 
 using DisCatSharp.Entities;
 using DisCatSharp.Entities.OAuth2;
@@ -125,7 +128,7 @@ public sealed class DiscordApiClient
 	/// <param name="msgRaw">The raw message.</param>
 	private DiscordMessage PrepareMessage(JToken msgRaw)
 	{
-		var author = msgRaw["author"].ToObject<TransportUser>();
+		var author = msgRaw["author"].ToDiscordObject<TransportUser>();
 		var ret = msgRaw.ToDiscordObject<DiscordMessage>();
 		ret.Discord = this.Discord;
 
@@ -373,7 +376,7 @@ public sealed class DiscordApiClient
 		return req.WaitForCompletionAsync();
 	}
 
-#region Voice
+	#region Voice
 
 	/// <summary>
 	///     Lists the voice regions async.
@@ -382,7 +385,7 @@ public sealed class DiscordApiClient
 	{
 		var route = $"{Endpoints.VOICE}{Endpoints.REGIONS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
@@ -392,11 +395,11 @@ public sealed class DiscordApiClient
 		return regions;
 	}
 
-#endregion
+	#endregion
 
 	// begin todo
 
-#region Guild
+	#region Guild
 
 	/// <summary>
 	///     Gets the guild async.
@@ -474,10 +477,12 @@ public sealed class DiscordApiClient
 				old.BannerColorInternal = usr.BannerColorInternal;
 				old.AvatarDecorationData = usr.AvatarDecorationData;
 				old.ThemeColorsInternal = usr.ThemeColorsInternal;
+				old.Collectibles = usr.Collectibles;
+				old.IsSystem = usr.IsSystem;
+				old.IsBot = usr.IsBot;
 				old.Pronouns = usr.Pronouns;
 				old.Locale = usr.Locale;
 				old.GlobalName = usr.GlobalName;
-				old.Clan = usr.Clan;
 				old.PrimaryGuild = usr.PrimaryGuild;
 				return old;
 			});
@@ -515,104 +520,6 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	///     Creates the guild async.
-	/// </summary>
-	/// <param name="name">The name.</param>
-	/// <param name="regionId">The region_id.</param>
-	/// <param name="iconb64">The iconb64.</param>
-	/// <param name="verificationLevel">The verification_level.</param>
-	/// <param name="defaultMessageNotifications">The default_message_notifications.</param>
-	/// <param name="systemChannelFlags">The system_channel_flags.</param>
-	internal async Task<DiscordGuild> CreateGuildAsync(
-		string name,
-		string regionId,
-		Optional<string> iconb64,
-		VerificationLevel? verificationLevel,
-		DefaultMessageNotifications? defaultMessageNotifications,
-		SystemChannelFlags? systemChannelFlags
-	)
-	{
-		var pld = new RestGuildCreatePayload
-		{
-			Name = name,
-			RegionId = regionId,
-			DefaultMessageNotifications = defaultMessageNotifications,
-			VerificationLevel = verificationLevel,
-			IconBase64 = iconb64,
-			SystemChannelFlags = systemChannelFlags
-		};
-
-		var route = $"{Endpoints.GUILDS}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
-			{ }, out var path);
-
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
-
-		var json = JObject.Parse(res.Response);
-		var rawMembers = (JArray)json["members"];
-		var guild = json.ToDiscordObject<DiscordGuild>();
-
-		if (this.Discord is DiscordClient dc)
-			await dc.OnGuildCreateEventAsync(guild, rawMembers, null).ConfigureAwait(false);
-		return guild;
-	}
-
-	/// <summary>
-	///     Creates the guild from template async.
-	/// </summary>
-	/// <param name="templateCode">The template_code.</param>
-	/// <param name="name">The name.</param>
-	/// <param name="iconb64">The iconb64.</param>
-	internal async Task<DiscordGuild> CreateGuildFromTemplateAsync(string templateCode, string name, Optional<string> iconb64)
-	{
-		var pld = new RestGuildCreateFromTemplatePayload
-		{
-			Name = name,
-			IconBase64 = iconb64
-		};
-
-		var route = $"{Endpoints.GUILDS}{Endpoints.TEMPLATES}/:template_code";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
-		{
-			template_code = templateCode
-		}, out var path);
-
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
-
-		var json = JObject.Parse(res.Response);
-		var rawMembers = (JArray)json["members"];
-		var guild = json.ToDiscordObject<DiscordGuild>();
-
-		if (this.Discord is DiscordClient dc)
-			await dc.OnGuildCreateEventAsync(guild, rawMembers, null).ConfigureAwait(false);
-		return guild;
-	}
-
-	/// <summary>
-	///     Deletes the guild async.
-	/// </summary>
-	/// <param name="guildId">The guild_id.</param>
-	internal async Task DeleteGuildAsync(ulong guildId)
-	{
-		var route = $"{Endpoints.GUILDS}/:guild_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
-		{
-			guild_id = guildId
-		}, out var path);
-
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route).ConfigureAwait(false);
-
-		if (this.Discord is DiscordClient dc)
-		{
-			var gld = dc.GuildsInternal[guildId];
-			await dc.OnGuildDeleteEventAsync(gld).ConfigureAwait(false);
-		}
-	}
-
-	/// <summary>
 	///     Modifies the guild.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
@@ -624,7 +531,6 @@ public sealed class DiscordApiClient
 	/// <param name="afkChannelId">The afk channel id.</param>
 	/// <param name="afkTimeout">The afk timeout.</param>
 	/// <param name="iconb64">The iconb64.</param>
-	/// <param name="ownerId">The owner id.</param>
 	/// <param name="splashb64">The splashb64.</param>
 	/// <param name="systemChannelId">The system channel id.</param>
 	/// <param name="systemChannelFlags">The system channel flags.</param>
@@ -647,7 +553,6 @@ public sealed class DiscordApiClient
 		Optional<ulong?> afkChannelId,
 		Optional<int> afkTimeout,
 		Optional<string> iconb64,
-		Optional<ulong> ownerId,
 		Optional<string> splashb64,
 		Optional<ulong?> systemChannelId,
 		Optional<SystemChannelFlags> systemChannelFlags,
@@ -675,7 +580,6 @@ public sealed class DiscordApiClient
 			SplashBase64 = splashb64,
 			BannerBase64 = bannerb64,
 			DiscoverySplashBase64 = discoverySplashb64,
-			OwnerId = ownerId,
 			SystemChannelId = systemChannelId,
 			SystemChannelFlags = systemChannelFlags,
 			RulesChannelId = rulesChannelId,
@@ -1230,7 +1134,7 @@ public sealed class DiscordApiClient
 	/// <param name="roles">The roles.</param>
 	/// <param name="muted">If true, muted.</param>
 	/// <param name="deafened">If true, deafened.</param>
-	/// <returns>The added <see cref="DiscordMember"/>, or <see langword="null"/> if they were already a member.</returns>
+	/// <returns>The added <see cref="DiscordMember" />, or <see langword="null" /> if they were already a member.</returns>
 	internal async Task<DiscordMember?> AddGuildMemberAsync(ulong guildId, ulong userId, string accessToken, string? nickname = null, IEnumerable<DiscordRole>? roles = null, bool? muted = null, bool? deafened = null)
 	{
 		var pld = new RestGuildMemberAddPayload
@@ -2236,7 +2140,7 @@ public sealed class DiscordApiClient
 	{
 		var route = $"{Endpoints.SOUNDBOARD_DEFAULT_SOUNDS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-			{ }, out var path);
+		{ }, out var path);
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
@@ -2290,11 +2194,11 @@ public sealed class DiscordApiClient
 		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 
 	// End todo
 
-#region Guild Scheduled Events
+	#region Guild Scheduled Events
 
 	/// <summary>
 	///     Creates a scheduled event.
@@ -2319,12 +2223,12 @@ public sealed class DiscordApiClient
 	{
 		if (recurrenceRule is not null)
 		{
-			var (IsValid, ErrorMessage) = recurrenceRule.Validate();
-			if (!IsValid)
+			var (isValid, errorMessage) = recurrenceRule.Validate();
+			if (!isValid)
 				throw new ValidationException(
 					typeof(DiscordScheduledEventRecurrenceRule),
 					"DiscordGuild.CreateScheduledEventAsync or DiscordGuild.CreateExternalScheduledEventAsync",
-					ErrorMessage!
+					errorMessage!
 				);
 		}
 
@@ -2407,12 +2311,12 @@ public sealed class DiscordApiClient
 	{
 		if (recurrenceRule.HasValue && recurrenceRule.Value is not null)
 		{
-			var (IsValid, ErrorMessage) = recurrenceRule.Value.Validate();
-			if (!IsValid)
+			var (isValid, errorMessage) = recurrenceRule.Value.Validate();
+			if (!isValid)
 				throw new ValidationException(
 					typeof(DiscordScheduledEventRecurrenceRule),
 					"DiscordScheduledEvent.ModifyAsync(Action<ScheduledEventEditModel> action)",
-					ErrorMessage!
+					errorMessage!
 				);
 		}
 
@@ -2695,11 +2599,11 @@ public sealed class DiscordApiClient
 		return new ReadOnlyDictionary<ulong, DiscordScheduledEventUser>(new Dictionary<ulong, DiscordScheduledEventUser>(rspv));
 	}
 
-#endregion
+	#endregion
 
 	// begin todo
 
-#region Channel
+	#region Channel
 
 	/// <summary>
 	///     Creates a guild channel.
@@ -2939,6 +2843,7 @@ public sealed class DiscordApiClient
 	/// <param name="flags">The channel flags.</param>
 	/// <param name="reason">The reason.</param>
 	/// <param name="forumLayout"></param>
+	/// <param name="defaultTagSetting">The default tag setting for the forum channel ("match_some" or "match_all").</param>
 	internal async Task<DiscordChannel> ModifyForumChannelAsync(
 		ulong channelId,
 		string name,
@@ -2954,6 +2859,7 @@ public sealed class DiscordApiClient
 		Optional<ForumPostSortOrder?> defaultSortOrder,
 		Optional<ForumLayout?> forumLayout,
 		Optional<ThreadAutoArchiveDuration?> defaultAutoArchiveDuration,
+		Optional<TagMatching?> defaultTagSetting,
 		IEnumerable<DiscordOverwriteBuilder> permissionOverwrites,
 		Optional<ChannelFlags?> flags,
 		string? reason
@@ -2982,7 +2888,8 @@ public sealed class DiscordApiClient
 			DefaultSortOrder = defaultSortOrder,
 			Flags = flags,
 			AvailableTags = availableTags,
-			ForumLayout = forumLayout
+			ForumLayout = forumLayout,
+			DefaultTagSetting = defaultTagSetting
 		};
 
 		var headers = Utilities.GetBaseHeaders();
@@ -3083,7 +2990,7 @@ public sealed class DiscordApiClient
 	///     Thrown when the <paramref name="content" /> exceeds 2000 characters or is empty and
 	///     if neither content, sticker, components and embeds are definied..
 	/// </exception>
-	internal async Task<DiscordMessage> CreateMessageAsync(ulong channelId, string content, IEnumerable<DiscordEmbed> embeds, DiscordSticker sticker, ulong? replyMessageId, bool mentionReply, bool failOnInvalidReply, ReadOnlyCollection<DiscordComponent>? components = null)
+	internal async Task<DiscordMessage> CreateMessageAsync(ulong channelId, string content, IEnumerable<DiscordEmbed>? embeds = null, DiscordSticker? sticker = null, ulong? replyMessageId = null, bool mentionReply = false, bool failOnInvalidReply = false, IEnumerable<DiscordComponent>? components = null)
 	{
 		if (content is { Length: > 2000 })
 			throw new ArgumentException("Message content length cannot exceed 2000 characters.");
@@ -3103,14 +3010,15 @@ public sealed class DiscordApiClient
 
 		var pld = new RestChannelMessageCreatePayload
 		{
-			HasContent = content != null,
+			HasContent = !string.IsNullOrEmpty(content),
 			Content = content,
 			StickersIds = sticker is null
 				? Array.Empty<ulong>()
 				: [sticker.Id],
 			IsTts = false,
-			HasEmbed = embeds?.Any() ?? false,
+			HasEmbeds = embeds != null,
 			Embeds = embeds,
+			HasComponents = components != null,
 			Components = components
 		};
 
@@ -3165,15 +3073,14 @@ public sealed class DiscordApiClient
 
 		var pld = new RestChannelMessageCreatePayload
 		{
+			HasContent = !builder.IsComponentsV2 && builder.HasContent,
 			Content = builder.IsComponentsV2 ? null : builder.Content,
+			HasEmbeds = !builder.IsComponentsV2 && builder.HasEmbeds,
 			Embeds = builder.IsComponentsV2 ? null : builder.Embeds,
-			HasContent = builder.Content != null && !builder.IsComponentsV2,
-			HasEmbed = builder.Embeds != null && !builder.IsComponentsV2,
-			StickersIds = builder.Sticker is null
-				? Array.Empty<ulong>()
-				: [builder.Sticker.Id],
-			IsTts = builder.IsTts,
+			HasComponents = builder.HasComponents,
 			Components = builder.Components,
+			StickersIds = builder.StickerIds,
+			IsTts = builder.IsTts,
 			Nonce = builder.Nonce,
 			EnforceNonce = builder.EnforceNonce,
 			DiscordPollRequest = builder.Poll?.Build(),
@@ -3188,11 +3095,12 @@ public sealed class DiscordApiClient
 				FailIfNotExists = builder.FailOnInvalidReply
 			};
 
-		pld.Mentions = new(builder.Mentions.Count == 0 ? Mentions.All : builder.Mentions, builder.Mentions.Any(), builder.MentionOnReply);
+		if (builder.Mentions is not null)
+			pld.Mentions = new(builder.Mentions, builder.Mentions.Count is not 0, builder.MentionOnReply);
 
-		if (builder.Files.Count == 0)
+		if (builder.Files is null || builder.Files?.Count is 0)
 		{
-			if (builder.Attachments.Any())
+			if (builder.Attachments is not null)
 			{
 				ulong fileId = 0;
 				List<DiscordAttachment> attachments = new(builder.Attachments.Count);
@@ -3222,18 +3130,26 @@ public sealed class DiscordApiClient
 		{
 			ulong fileId = 0;
 			List<DiscordAttachment> attachments = new(builder.Files.Count);
-			foreach (var file in builder.Files)
+
+			if (!flags.HasMessageFlag(MessageFlags.IsVoiceMessage))
 			{
-				DiscordAttachment att = new()
+				foreach (var file in builder.Files)
 				{
-					Id = fileId,
-					Discord = this.Discord,
-					Description = file.Description,
-					Filename = file.Filename
-				};
-				attachments.Add(att);
-				fileId++;
+					DiscordAttachment att = new()
+					{
+						Id = fileId,
+						Discord = this.Discord,
+						Description = file.Description,
+						Filename = file.Filename,
+						FileSize = null
+					};
+					attachments.Add(att);
+					fileId++;
+				}
 			}
+
+			if (builder.Attachments is { Count: > 0 })
+				attachments.AddRange(builder.Attachments);
 
 			pld.Attachments = attachments;
 
@@ -3253,7 +3169,7 @@ public sealed class DiscordApiClient
 
 			var ret = this.PrepareMessage(JObject.Parse(res.Response));
 
-			foreach (var file in builder.FilesInternal.Where(x => x.ResetPositionTo.HasValue))
+			foreach (var file in builder.FilesInternal?.Where(x => x.ResetPositionTo.HasValue))
 				file.Stream.Position = file.ResetPositionTo!.Value;
 
 			return ret;
@@ -3368,7 +3284,7 @@ public sealed class DiscordApiClient
 
 		var route = $"{Endpoints.STAGE_INSTANCES}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
-			{ }, out var path);
+		{ }, out var path);
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
 			headers.Add(REASON_HEADER_NAME, reason);
@@ -3511,56 +3427,64 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="messageId">The message_id.</param>
-	/// <param name="content">The content.</param>
-	/// <param name="embeds">The embeds.</param>
-	/// <param name="mentions">The mentions.</param>
-	/// <param name="components">The components.</param>
-	/// <param name="suppressEmbed">The suppress_embed.</param>
-	/// <param name="files">The files.</param>
-	/// <param name="attachments">The attachments to keep.</param>
-	internal async Task<DiscordMessage> EditMessageAsync(ulong channelId, ulong messageId, Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds, Optional<IEnumerable<IMention>> mentions, IReadOnlyList<DiscordComponent> components, Optional<bool> suppressEmbed, IReadOnlyCollection<DiscordMessageFile> files, Optional<IEnumerable<DiscordAttachment>> attachments)
+	/// <param name="builder">The builder.</param>
+	/// <param name="previousAttachments">The previous attachments if they should be kept.</param>
+	internal async Task<DiscordMessage> EditMessageAsync(ulong channelId, ulong messageId, DiscordMessageBuilder builder, IEnumerable<DiscordAttachment>? previousAttachments = null)
 	{
-		if (embeds is { HasValue: true, Value: not null })
-			foreach (var embed in embeds.Value)
+		builder.Validate(true);
+
+		if (builder?.Embeds != null)
+			foreach (var embed in builder.Embeds)
 				if (embed.Timestamp != null)
 					embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
 
-		MessageFlags? flags = suppressEmbed.HasValue && suppressEmbed.Value ? MessageFlags.SuppressedEmbeds : null;
+		MessageFlags? flags = builder.FlagsChanged ? MessageFlags.None : null;
+		if (builder.EmbedsSuppressed && !builder.IsComponentsV2)
+			flags |= MessageFlags.SuppressedEmbeds;
+		if (builder.IsComponentsV2)
+			flags |= MessageFlags.IsComponentsV2;
+		if (builder.IsVoiceMessage && !builder.IsComponentsV2)
+			flags |= MessageFlags.IsVoiceMessage;
 
 		var pld = new RestChannelMessageEditPayload
 		{
-			HasContent = content.HasValue,
-			Content = content.ValueOrDefault(),
-			HasEmbed = embeds.HasValue && (embeds.Value?.Any() ?? false),
-			Embeds = embeds.HasValue && (embeds.Value?.Any() ?? false) ? embeds.Value : null,
-			Components = components,
-			Flags = flags,
-			Mentions = mentions
-				.Map(m => new DiscordMentions(m ?? Mentions.None, false, mentions.Value?.OfType<RepliedUserMention>().Any() ?? false))
-				.ValueOrDefault()
+			HasContent = builder.HasContent && !builder.IsComponentsV2,
+			Content = builder.IsComponentsV2 || !builder.HasContent ? null : builder.Content,
+			HasEmbeds = builder.HasEmbeds && !builder.IsComponentsV2,
+			Embeds = builder.IsComponentsV2 || !builder.HasEmbeds ? null : builder.Embeds,
+			HasComponents = builder.HasComponents,
+			Components = builder.HasComponents ? builder.Components : null,
+			Flags = flags
 		};
 
-		if (files?.Count > 0)
+		if (builder.Mentions is not null)
+			pld.Mentions = new(builder.Mentions, builder.Mentions.Count is not 0);
+
+		if (builder.Files?.Count > 0)
 		{
 			ulong fileId = 0;
-			List<DiscordAttachment> attachmentsNew = [];
-			foreach (var file in files)
+			List<DiscordAttachment> attachments = [];
+			if (!flags.HasValue || !flags.Value.HasMessageFlag(MessageFlags.IsVoiceMessage))
 			{
-				DiscordAttachment att = new()
+				foreach (var file in builder.Files)
 				{
-					Id = fileId,
-					Discord = this.Discord,
-					Description = file.Description,
-					Filename = file.Filename
-				};
-				attachmentsNew.Add(att);
-				fileId++;
+					DiscordAttachment att = new()
+					{
+						Id = fileId,
+						Discord = this.Discord,
+						Description = file.Description,
+						Filename = file.Filename,
+						FileSize = null
+					};
+					attachments.Add(att);
+					fileId++;
+				}
 			}
 
-			if (attachments.HasValue && attachments.Value.Any())
-				attachmentsNew.AddRange(attachments.Value);
+			if (builder.Attachments is { Count: > 0 })
+				attachments.AddRange(builder.Attachments);
 
-			pld.Attachments = attachmentsNew;
+			pld.Attachments = attachments;
 
 			var values = new Dictionary<string, string>
 			{
@@ -3575,29 +3499,33 @@ public sealed class DiscordApiClient
 			}, out var path);
 
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-			var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: files).ConfigureAwait(false);
+			var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: builder.Files).ConfigureAwait(false);
 
 			var ret = this.PrepareMessage(JObject.Parse(res.Response));
 
-			foreach (var file in files.Where(x => x.ResetPositionTo.HasValue))
-				file.Stream.Position = file.ResetPositionTo.Value;
+			foreach (var att in ret.AttachmentsInternal)
+				att.Discord = this.Discord;
+
+			if (builder.Files is not null)
+				foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
+					file.Stream.Position = file.ResetPositionTo.Value;
 
 			return ret;
 		}
 		else
 		{
-			if (attachments.HasValue && attachments.Value.Any())
+			if (builder.Attachments is not null)
 			{
 				ulong fileId = 0;
-				List<DiscordAttachment> attachmentsNew = new(attachments.Value.Count());
-				foreach (var att in attachments.Value)
+				List<DiscordAttachment> attachments = new(builder.Attachments.Count);
+				foreach (var att in builder.Attachments)
 				{
 					att.Id = fileId;
-					attachmentsNew.Add(att);
+					attachments.Add(att);
 					fileId++;
 				}
 
-				pld.Attachments = attachmentsNew;
+				pld.Attachments = attachments;
 			}
 
 			var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id";
@@ -3611,6 +3539,9 @@ public sealed class DiscordApiClient
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 			var ret = this.PrepareMessage(JObject.Parse(res.Response));
+
+			foreach (var att in ret.AttachmentsInternal)
+				att.Discord = this.Discord;
 
 			return ret;
 		}
@@ -3666,7 +3597,7 @@ public sealed class DiscordApiClient
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld));
 	}
 
-#region Polls
+	#region Polls
 
 	/// <summary>
 	///     Get a list of users that voted for a specific answer on a <see cref="DiscordPoll" />.
@@ -3744,7 +3675,7 @@ public sealed class DiscordApiClient
 		return DiscordJson.DeserializeObject<DiscordMessage>(res.Response, this.Discord);
 	}
 
-#endregion
+	#endregion
 
 	/// <summary>
 	///     Gets the channel invites async.
@@ -3890,21 +3821,30 @@ public sealed class DiscordApiClient
 	///     Gets the pinned messages async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
-	internal async Task<IReadOnlyList<DiscordMessage>> GetPinnedMessagesAsync(ulong channelId)
+	/// <param name="before">Get messages pinned before this timestamp.</param>
+	/// <param name="limit">Max number of pins to return (1-50).</param>
+	internal async Task<IReadOnlyList<DiscordMessage>> GetPinnedMessagesAsync(ulong channelId, ulong? before = null, int limit = 50)
 	{
-		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.PINS}";
+		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}{Endpoints.PINS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 		{
 			channel_id = channelId
 		}, out var path);
 
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+		var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration)
+			.AddParameter("limit", limit.ToString(CultureInfo.InvariantCulture));
 
-		var msgsRaw = JArray.Parse(res.Response);
+		if (before != null)
+			url.AddParameter("before", before.Value.ToString(CultureInfo.InvariantCulture));
+
+		var res = await this.DoRequestAsync(this.Discord, bucket, url.Build(), RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		// TODO: https://discord.com/developers/docs/resources/message#get-channel-pins
+		var pinResponseRaw = JObject.Parse(res.Response);
+		var msgsRaw = pinResponseRaw["items"].ToArray();
 		var msgs = new List<DiscordMessage>();
 		foreach (var xj in msgsRaw)
-			msgs.Add(this.PrepareMessage(xj));
+			msgs.Add(this.PrepareMessage(xj["message"]));
 
 		return new ReadOnlyCollection<DiscordMessage>([.. msgs]);
 	}
@@ -3914,9 +3854,14 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="messageId">The message_id.</param>
-	internal Task PinMessageAsync(ulong channelId, ulong messageId)
+	/// <param name="reason">The reason.</param>
+	internal Task PinMessageAsync(ulong channelId, ulong messageId, string? reason)
 	{
-		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.PINS}/:message_id";
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
+		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}{Endpoints.PINS}/:message_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new
 		{
 			channel_id = channelId,
@@ -3924,7 +3869,7 @@ public sealed class DiscordApiClient
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route);
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, headers);
 	}
 
 	/// <summary>
@@ -3932,9 +3877,14 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="messageId">The message_id.</param>
-	internal Task UnpinMessageAsync(ulong channelId, ulong messageId)
+	/// <param name="reason">The reason.</param>
+	internal Task UnpinMessageAsync(ulong channelId, ulong messageId, string? reason)
 	{
-		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.PINS}/:message_id";
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
+		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}{Endpoints.PINS}/:message_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
 		{
 			channel_id = channelId,
@@ -3942,7 +3892,7 @@ public sealed class DiscordApiClient
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route);
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
 	}
 
 	/// <summary>
@@ -4004,7 +3954,7 @@ public sealed class DiscordApiClient
 
 		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.CHANNELS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
@@ -4027,7 +3977,7 @@ public sealed class DiscordApiClient
 
 		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.CHANNELS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
@@ -4080,11 +4030,11 @@ public sealed class DiscordApiClient
 		return DiscordJson.DeserializeObject<DiscordMessage>(response.Response, this.Discord);
 	}
 
-#endregion
+	#endregion
 
 	// End todo
 
-#region Member
+	#region Member
 
 	/// <summary>
 	///     Gets the current user async.
@@ -4220,7 +4170,7 @@ public sealed class DiscordApiClient
 
 		var route = $"{Endpoints.USERS}{Endpoints.ME}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
@@ -4240,7 +4190,7 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.GUILDS}";
 
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration)
 			.AddParameter("limit", limit.ToString(CultureInfo.InvariantCulture));
@@ -4352,6 +4302,7 @@ public sealed class DiscordApiClient
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="nick">The nick.</param>
 	/// <param name="reason">The reason.</param>
+	[Deprecated("Use ModifyCurrentGuildMemberAsync with userId = @me instead.")]
 	internal Task ModifyCurrentMemberNicknameAsync(ulong guildId, string nick, string? reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
@@ -4373,9 +4324,42 @@ public sealed class DiscordApiClient
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
 	}
 
-#endregion
+	internal async Task<DiscordMember> ModifyCurrentGuildMemberAsync(
+		ulong guildId,
+		Optional<string?> nickname,
+		Optional<string?> bio,
+		Optional<string?> avatarBase64,
+		Optional<string?> bannerBase64,
+		string? reason
+	)
+	{
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers[REASON_HEADER_NAME] = reason;
 
-#region Roles
+		var pld = new RestCurrentGuildMemberModifyPayload
+		{
+			Nickname = nickname,
+			Bio = bio,
+			Avatar = avatarBase64,
+			Banner = bannerBase64
+		};
+
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}{Endpoints.ME}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
+		{
+			guild_id = guildId
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
+
+		return DiscordJson.DeserializeObject<DiscordMember>(res.Response, this.Discord);
+	}
+
+	#endregion
+
+	#region Roles
 
 	/// <summary>
 	///     Gets the guild roles async.
@@ -4432,12 +4416,13 @@ public sealed class DiscordApiClient
 	/// <param name="name">The name.</param>
 	/// <param name="permissions">The permissions.</param>
 	/// <param name="color">The color.</param>
+	/// <param name="colors">The colors.</param>
 	/// <param name="hoist">If true, hoist.</param>
 	/// <param name="mentionable">If true, mentionable.</param>
 	/// <param name="iconb64">The icon.</param>
 	/// <param name="emoji">The unicode emoji icon.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordRole> ModifyGuildRoleAsync(ulong guildId, ulong roleId, string name, Permissions? permissions, int? color, bool? hoist, bool? mentionable, Optional<string> iconb64, Optional<string> emoji, string? reason)
+	internal async Task<DiscordRole> ModifyGuildRoleAsync(ulong guildId, ulong roleId, string name, Permissions? permissions, int? color, DiscordRoleColors? colors, bool? hoist, bool? mentionable, Optional<string> iconb64, Optional<string> emoji, string? reason)
 	{
 		var pld = new RestGuildRolePayload
 		{
@@ -4447,6 +4432,14 @@ public sealed class DiscordApiClient
 			Hoist = hoist,
 			Mentionable = mentionable
 		};
+
+		if (colors is not null)
+			pld.Colors = new()
+			{
+				PrimaryColor = colors.PrimaryColor.Value,
+				SecondaryColor = colors.SecondaryColor?.Value,
+				TertiaryColor = colors.TertiaryColor?.Value
+			};
 
 		if (emoji.HasValue && iconb64.HasValue)
 		{
@@ -4541,9 +4534,9 @@ public sealed class DiscordApiClient
 		return ret;
 	}
 
-#endregion
+	#endregion
 
-#region Guild Member Applications
+	#region Guild Member Applications
 
 	/// <summary>
 	///     Gets the guild join requests.
@@ -4633,26 +4626,9 @@ public sealed class DiscordApiClient
 		return DiscordJson.DeserializeObject<DiscordGuildJoinRequest>(res.Response, this.Discord);
 	}
 
-	/// <summary>
-	///     Gets the settings for a clan.
-	/// </summary>
-	/// <param name="clanId">The ID of the clan.</param>
-	internal async Task<DiscordClanSettings> GetClanSettingsAsync(ulong clanId)
-	{
-		var route = $"{Endpoints.CLANS}/:clan_id{Endpoints.SETTINGS}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-		{
-			clan_id = clanId
-		}, out var path);
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+	#endregion
 
-		return DiscordJson.DeserializeObject<DiscordClanSettings>(res.Response, this.Discord);
-	}
-
-#endregion
-
-#region Prune
+	#region Prune
 
 	/// <summary>
 	///     Gets the guild prune count async.
@@ -4671,8 +4647,8 @@ public sealed class DiscordApiClient
 		};
 
 		var sb = includeRoles?.Aggregate(new StringBuilder(),
-			         (sb, id) => sb.Append($"&include_roles={id}"))
-		         ?? new StringBuilder();
+					 (sb, id) => sb.Append($"&include_roles={id}"))
+				 ?? new StringBuilder();
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.PRUNE}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
@@ -4707,8 +4683,8 @@ public sealed class DiscordApiClient
 		};
 
 		var sb = includeRoles?.Aggregate(new StringBuilder(),
-			         (sb, id) => sb.Append($"&include_roles={id}"))
-		         ?? new StringBuilder();
+					 (sb, id) => sb.Append($"&include_roles={id}"))
+				 ?? new StringBuilder();
 
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -4728,9 +4704,9 @@ public sealed class DiscordApiClient
 		return pruned.Pruned;
 	}
 
-#endregion
+	#endregion
 
-#region GuildVarious
+	#region GuildVarious
 
 	/// <summary>
 	///     Gets the template async.
@@ -4924,26 +4900,26 @@ public sealed class DiscordApiClient
 		return invites;
 	}
 
-#endregion
+	#endregion
 
-#region Invite
+	#region Invite
 
 	/// <summary>
 	///     Gets the invite async.
 	/// </summary>
 	/// <param name="inviteCode">The invite_code.</param>
 	/// <param name="withCounts">If true, with_counts.</param>
-	/// <param name="withExpiration">If true, with_expiration.</param>
 	/// <param name="guildScheduledEventId">The scheduled event id to get.</param>
-	internal async Task<DiscordInvite> GetInviteAsync(string inviteCode, bool? withCounts, bool? withExpiration, ulong? guildScheduledEventId)
+	/// <param name="withPermissions">If true, with_permissions.</param>
+	internal async Task<DiscordInvite> GetInviteAsync(string inviteCode, bool? withCounts, ulong? guildScheduledEventId, bool? withPermissions)
 	{
 		var urlParams = new Dictionary<string, string>();
 		if (withCounts.HasValue)
 			urlParams["with_counts"] = withCounts?.ToString();
-		if (withExpiration.HasValue)
-			urlParams["with_expiration"] = withExpiration?.ToString();
 		if (guildScheduledEventId.HasValue)
 			urlParams["guild_scheduled_event_id"] = guildScheduledEventId?.ToString();
+		if (withPermissions.HasValue)
+			urlParams["with_permissions"] = withPermissions?.ToString();
 
 		var route = $"{Endpoints.INVITES}/:invite_code";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
@@ -5000,9 +4976,9 @@ public sealed class DiscordApiClient
 	 * }
 	 */
 
-#endregion
+	#endregion
 
-#region Connections
+	#region Connections
 
 	/// <summary>
 	///     Gets the users connections async.
@@ -5011,7 +4987,7 @@ public sealed class DiscordApiClient
 	{
 		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.CONNECTIONS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
@@ -5074,9 +5050,9 @@ public sealed class DiscordApiClient
 		return metadata;
 	}
 
-#endregion
+	#endregion
 
-#region Webhooks
+	#region Webhooks
 
 	/// <summary>
 	///     Creates the webhook async.
@@ -5345,7 +5321,7 @@ public sealed class DiscordApiClient
 			flags |= MessageFlags.SuppressedEmbeds;
 		if (builder.NotificationsSuppressed)
 			flags |= MessageFlags.SuppressNotifications;
-		if (builder.IsVoiceMessage)
+		if (builder.IsVoiceMessage && !builder.IsComponentsV2)
 			flags |= MessageFlags.IsVoiceMessage;
 
 		var pld = new RestWebhookExecutePayload
@@ -5358,36 +5334,42 @@ public sealed class DiscordApiClient
 			Components = builder.Components,
 			ThreadName = builder.ThreadName,
 			Flags = flags,
-			AppliedTags = builder.AppliedTags.Any() ? builder.AppliedTags : null,
+			AppliedTags = builder.AppliedTags,
 			DiscordPollRequest = builder.Poll?.Build()
 		};
 
-		if (builder.Mentions.Any())
+		if (builder.Mentions is not null)
 			pld.Mentions = new(builder.Mentions, builder.Mentions.Count is not 0);
 
 		if (builder.Files?.Count > 0)
 		{
 			ulong fileId = 0;
 			List<DiscordAttachment> attachments = [];
-			foreach (var file in builder.Files)
+			if (!flags.HasMessageFlag(MessageFlags.IsVoiceMessage))
 			{
-				DiscordAttachment att = new()
+				foreach (var file in builder.Files)
 				{
-					Id = fileId,
-					Discord = this.Discord,
-					Description = file.Description,
-					Filename = file.Filename,
-					FileSize = null
-				};
-				attachments.Add(att);
-				fileId++;
+					DiscordAttachment att = new()
+					{
+						Id = fileId,
+						Discord = this.Discord,
+						Description = file.Description,
+						Filename = file.Filename,
+						FileSize = null
+					};
+					attachments.Add(att);
+					fileId++;
+				}
 			}
+
+			if (builder.Attachments is { Count: > 0 })
+				attachments.AddRange(builder.Attachments);
 
 			pld.Attachments = attachments;
 		}
 		else
 		{
-			if (builder.Attachments.Any())
+			if (builder.Attachments?.Any() ?? false)
 			{
 				ulong fileId = 0;
 				List<DiscordAttachment> attachments = new(builder.Attachments.Count);
@@ -5402,7 +5384,7 @@ public sealed class DiscordApiClient
 			}
 		}
 
-		if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.Files?.Count > 0 || builder.IsTts || builder.Mentions.Any())
+		if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.Files?.Count > 0 || builder.IsTts || builder.Mentions?.Count > 0)
 			values["payload_json"] = DiscordJson.SerializeObject(pld);
 
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token";
@@ -5427,8 +5409,9 @@ public sealed class DiscordApiClient
 			foreach (var att in ret.Attachments)
 				att.Discord = this.Discord;
 
-		foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
-			file.Stream.Position = file.ResetPositionTo.Value;
+		if (builder.Files is not null)
+			foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
+				file.Stream.Position = file.ResetPositionTo.Value;
 		return ret;
 	}
 
@@ -5501,34 +5484,42 @@ public sealed class DiscordApiClient
 			flags |= MessageFlags.SuppressNotifications;
 		if (builder.IsComponentsV2)
 			flags |= MessageFlags.IsComponentsV2;
+		if (builder.IsVoiceMessage && !builder.IsComponentsV2)
+			flags |= MessageFlags.IsVoiceMessage;
 
 		var pld = new RestWebhookMessageEditPayload
 		{
-			Content = builder.IsComponentsV2 ? Optional.None : builder.Content,
-			Embeds = builder.IsComponentsV2 ? null : builder.Embeds,
-			Components = builder.Components,
+			HasContent = builder.HasContent && !builder.IsComponentsV2,
+			Content = builder.IsComponentsV2 || !builder.HasContent ? Optional.None : builder.Content,
+			HasEmbeds = builder.HasEmbeds && !builder.IsComponentsV2,
+			Embeds = builder.IsComponentsV2 || !builder.HasEmbeds ? null : builder.Embeds,
+			HasComponents = builder.HasComponents,
+			Components = builder.HasComponents ? builder.Components : null,
 			Flags = flags
 		};
 
-		if (builder.Mentions.Any())
+		if (builder.Mentions is not null)
 			pld.Mentions = new(builder.Mentions, builder.Mentions.Count is not 0);
 
 		if (builder.Files?.Count > 0)
 		{
 			ulong fileId = 0;
 			List<DiscordAttachment> attachments = [];
-			foreach (var file in builder.Files)
+			if (!flags.HasValue || !flags.Value.HasMessageFlag(MessageFlags.IsVoiceMessage))
 			{
-				DiscordAttachment att = new()
+				foreach (var file in builder.Files)
 				{
-					Id = fileId,
-					Discord = this.Discord,
-					Description = file.Description,
-					Filename = file.Filename,
-					FileSize = null
-				};
-				attachments.Add(att);
-				fileId++;
+					DiscordAttachment att = new()
+					{
+						Id = fileId,
+						Discord = this.Discord,
+						Description = file.Description,
+						Filename = file.Filename,
+						FileSize = null
+					};
+					attachments.Add(att);
+					fileId++;
+				}
 			}
 
 			if (builder.Attachments is { Count: > 0 })
@@ -5560,14 +5551,15 @@ public sealed class DiscordApiClient
 			foreach (var att in ret.AttachmentsInternal)
 				att.Discord = this.Discord;
 
-			foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
-				file.Stream.Position = file.ResetPositionTo.Value;
+			if (builder.Files is not null)
+				foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
+					file.Stream.Position = file.ResetPositionTo.Value;
 
 			return ret;
 		}
 		else
 		{
-			if (builder.Attachments.Any())
+			if (builder.Attachments is not null)
 			{
 				ulong fileId = 0;
 				List<DiscordAttachment> attachments = new(builder.Attachments.Count);
@@ -5705,9 +5697,9 @@ public sealed class DiscordApiClient
 	internal Task DeleteWebhookMessageAsync(ulong webhookId, string webhookToken, ulong messageId, ulong threadId) =>
 		this.DeleteWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), threadId.ToString());
 
-#endregion
+	#endregion
 
-#region Reactions
+	#region Reactions
 
 	/// <summary>
 	///     Creates the reaction async.
@@ -5869,9 +5861,9 @@ public sealed class DiscordApiClient
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, ratelimitWaitOverride: this.Discord.Configuration.UseRelativeRatelimit ? null : 0.26);
 	}
 
-#endregion
+	#endregion
 
-#region Threads
+	#region Threads
 
 	/// <summary>
 	///     Creates the thread.
@@ -5894,7 +5886,7 @@ public sealed class DiscordApiClient
 		ChannelType? type,
 		int? rateLimitPerUser,
 		IEnumerable<ForumPostTag>? appliedTags = null,
-		DiscordMessageBuilder builder = null,
+		DiscordMessageBuilder? builder = null,
 		bool isForum = false,
 		string? reason = null
 	)
@@ -5906,17 +5898,20 @@ public sealed class DiscordApiClient
 			PerUserRateLimit = rateLimitPerUser
 		};
 
-		MessageFlags? flags = builder.FlagsChanged ? MessageFlags.None : null;
-		if (builder.EmbedsSuppressed && !builder.IsComponentsV2)
-			flags |= MessageFlags.SuppressedEmbeds;
-		if (builder.NotificationsSuppressed)
-			flags |= MessageFlags.SuppressNotifications;
-		if (builder.IsComponentsV2)
-			flags |= MessageFlags.IsComponentsV2;
-		if (builder.IsVoiceMessage)
-			flags |= MessageFlags.IsVoiceMessage;
+		MessageFlags? flags = builder?.FlagsChanged ?? false ? MessageFlags.None : null;
+		if (builder is not null)
+		{
+			if (builder.EmbedsSuppressed && !builder.IsComponentsV2)
+				flags |= MessageFlags.SuppressedEmbeds;
+			if (builder.NotificationsSuppressed)
+				flags |= MessageFlags.SuppressNotifications;
+			if (builder.IsComponentsV2)
+				flags |= MessageFlags.IsComponentsV2;
+			if (builder.IsVoiceMessage)
+				flags |= MessageFlags.IsVoiceMessage;
+		}
 
-		if (isForum)
+		if (isForum && builder is not null)
 		{
 			pld.Message = new()
 			{
@@ -5926,13 +5921,8 @@ public sealed class DiscordApiClient
 				Components = builder.Components,
 				HasContent = !builder.IsComponentsV2,
 				Flags = flags,
-				//Mentions = builder.Mentions,
-				StickersIds = builder.Sticker != null
-					? new List<ulong>(1)
-					{
-						builder.Sticker.Id
-					}
-					: null
+				Mentions = builder.Mentions?.Any() ?? false ? new(builder.Mentions, builder.Mentions.Count is not 0) : null,
+				StickersIds = builder.StickerIds
 			};
 			if (appliedTags != null && appliedTags.Any())
 			{
@@ -6172,6 +6162,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var threadReturn = DiscordJson.DeserializeObject<DiscordThreadResult>(res.Response, this.Discord);
+		threadReturn.Threads.ForEach(x => x.Discord = this.Discord);
 
 		return threadReturn;
 	}
@@ -6200,6 +6191,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var threadReturn = DiscordJson.DeserializeObject<DiscordThreadResult>(res.Response, this.Discord);
+		threadReturn.Threads.ForEach(x => x.Discord = this.Discord);
 
 		return threadReturn;
 	}
@@ -6228,6 +6220,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var threadReturn = DiscordJson.DeserializeObject<DiscordThreadResult>(res.Response, this.Discord);
+		threadReturn.Threads.ForEach(x => x.Discord = this.Discord);
 
 		return threadReturn;
 	}
@@ -6288,9 +6281,9 @@ public sealed class DiscordApiClient
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
 	}
 
-#endregion
+	#endregion
 
-#region Emoji
+	#region Emoji
 
 	/// <summary>
 	///     Gets the guild emojis.
@@ -6606,9 +6599,9 @@ public sealed class DiscordApiClient
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route);
 	}
 
-#endregion
+	#endregion
 
-#region Stickers
+	#region Stickers
 
 	/// <summary>
 	///     Gets a sticker.
@@ -6653,7 +6646,7 @@ public sealed class DiscordApiClient
 	{
 		var route = $"{Endpoints.STICKERPACKS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
@@ -6793,9 +6786,9 @@ public sealed class DiscordApiClient
 		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers).ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 
-#region Application Commands
+	#region Application Commands
 
 	/// <summary>
 	///     Gets the global application commands.
@@ -7232,10 +7225,10 @@ public sealed class DiscordApiClient
 				{
 					Content = builder.IsComponentsV2 ? null : builder.Content,
 					Embeds = builder.IsComponentsV2 ? null : builder.Embeds,
-					IsTts = builder.IsTts,
-					Mentions = builder.Mentions.Any() ? new(builder.Mentions, builder.Mentions.Count is not 0) : null,
-					Flags = flags,
 					Components = builder.Components,
+					IsTts = builder.IsTts,
+					Mentions = builder.Mentions?.Any() ?? false ? new(builder.Mentions, builder.Mentions.Count is not 0) : null,
+					Flags = flags,
 					Choices = null,
 					DiscordPollRequest = builder?.Poll?.Build()
 				}
@@ -7244,27 +7237,33 @@ public sealed class DiscordApiClient
 			pld = new()
 			{
 				Type = type,
-				Data = data,
-				CallbackHints = builder?.CallbackHints
+				Data = data
 			};
 
 			if (builder is { Files.Count: > 0 })
 			{
 				ulong fileId = 0;
 				List<DiscordAttachment> attachments = [];
-				foreach (var file in builder.Files)
+
+				if (!flags.HasValue || !flags.Value.HasMessageFlag(MessageFlags.IsVoiceMessage))
 				{
-					DiscordAttachment att = new()
+					foreach (var file in builder.Files)
 					{
-						Id = fileId,
-						Discord = this.Discord,
-						Description = file.Description,
-						Filename = file.Filename,
-						FileSize = null
-					};
-					attachments.Add(att);
-					fileId++;
+						DiscordAttachment att = new()
+						{
+							Id = fileId,
+							Discord = this.Discord,
+							Description = file.Description,
+							Filename = file.Filename,
+							FileSize = null
+						};
+						attachments.Add(att);
+						fileId++;
+					}
 				}
+
+				if (builder.Attachments is { Count: > 0 })
+					attachments.AddRange(builder.Attachments);
 
 				if (pld.Data is not null)
 					pld.Data.Attachments = attachments;
@@ -7299,14 +7298,13 @@ public sealed class DiscordApiClient
 					Choices = builder?.Choices,
 					Attachments = null,
 					DiscordPollRequest = null
-				},
-				CallbackHints = null
+				}
 			};
 
 		var values = new Dictionary<string, string>();
 
 		if (builder is not null)
-			if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.IsTts || builder.Mentions.Any() || builder.Files?.Count > 0 || builder.Components?.Count > 0)
+			if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.IsTts || builder.Mentions?.Count > 0 || builder.Files?.Count > 0 || builder.Components?.Count > 0)
 				values["payload_json"] = DiscordJson.SerializeObject(pld);
 
 		var route = $"{Endpoints.INTERACTIONS}/:interaction_id/:interaction_token{Endpoints.CALLBACK}";
@@ -7344,8 +7342,11 @@ public sealed class DiscordApiClient
 	/// <param name="builder">The builder.</param>
 	internal async Task CreateInteractionModalResponseAsync(ulong interactionId, string interactionToken, InteractionResponseType type, DiscordInteractionModalBuilder builder)
 	{
-		if (builder.ModalComponents.Any(mc => mc.Components.Any(c => c.Type != ComponentType.InputText)))
+		var oldHook = builder.Components.All(x => x.Type is ComponentType.ActionRow);
+		if (oldHook && builder.ModalComponents.Any(mc => mc.Components.Any(c => c.Type is not ComponentType.TextInput)))
 			throw new NotSupportedException("Can't send any other type then Input Text as Modal Component.");
+		else if (!oldHook && builder.Components.Any(x => x.Type is not (ComponentType.Label or ComponentType.TextDisplay)))
+			throw new NotSupportedException("Can't send any other type then Label as Modal Component.");
 
 		var pld = new RestInteractionModalResponsePayload
 		{
@@ -7354,9 +7355,8 @@ public sealed class DiscordApiClient
 			{
 				Title = builder.Title,
 				CustomId = builder.CustomId,
-				ModalComponents = builder.ModalComponents
-			},
-			CallbackHints = builder?.CallbackHints
+				ModalComponents = oldHook ? builder.ModalComponents : builder.Components
+			}
 		};
 
 		var values = new Dictionary<string, string>();
@@ -7393,8 +7393,7 @@ public sealed class DiscordApiClient
 				CustomId = customId,
 				ModalSize = modalSize,
 				IframePath = iFramePath
-			},
-			CallbackHints = null
+			}
 		};
 
 		var values = new Dictionary<string, string>();
@@ -7467,9 +7466,9 @@ public sealed class DiscordApiClient
 		{
 			Content = builder.IsComponentsV2 ? null : builder.Content,
 			Embeds = builder.IsComponentsV2 ? null : builder.Embeds,
+			Components = builder.Components,
 			IsTts = builder.IsTts,
 			Flags = flags,
-			Components = builder.Components,
 			DiscordPollRequest = builder.Poll?.Build()
 		};
 
@@ -7477,25 +7476,31 @@ public sealed class DiscordApiClient
 		{
 			ulong fileId = 0;
 			List<DiscordAttachment> attachments = [];
-			foreach (var file in builder.Files)
+			if (!flags.HasValue || !flags.Value.HasMessageFlag(MessageFlags.IsVoiceMessage))
 			{
-				DiscordAttachment att = new()
+				foreach (var file in builder.Files)
 				{
-					Id = fileId,
-					Discord = this.Discord,
-					Description = file.Description,
-					Filename = file.Filename,
-					FileSize = null
-				};
-				attachments.Add(att);
-				fileId++;
+					DiscordAttachment att = new()
+					{
+						Id = fileId,
+						Discord = this.Discord,
+						Description = file.Description,
+						Filename = file.Filename,
+						FileSize = null
+					};
+					attachments.Add(att);
+					fileId++;
+				}
 			}
+
+			if (builder.Attachments is { Count: > 0 })
+				attachments.AddRange(builder.Attachments);
 
 			pld.Attachments = attachments;
 		}
 		else
 		{
-			if (builder.Attachments.Any())
+			if (builder.Attachments is not null)
 			{
 				ulong fileId = 0;
 				List<DiscordAttachment> attachments = new(builder.Attachments.Count);
@@ -7510,10 +7515,10 @@ public sealed class DiscordApiClient
 			}
 		}
 
-		if (builder.Mentions.Any())
+		if (builder.Mentions is not null)
 			pld.Mentions = new(builder.Mentions, builder.Mentions.Count is not 0);
 
-		if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.IsTts || builder.Mentions.Any() || builder.Files?.Count > 0 || builder.Components?.Count > 0)
+		if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.IsTts || builder.Mentions?.Count > 0 || builder.Files?.Count > 0 || builder.Components?.Count > 0)
 			values["payload_json"] = DiscordJson.SerializeObject(pld);
 
 		var route = $"{Endpoints.WEBHOOKS}/:application_id/:interaction_token";
@@ -7533,8 +7538,9 @@ public sealed class DiscordApiClient
 			foreach (var att in ret.AttachmentsInternal)
 				att.Discord = this.Discord;
 
-			foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
-				file.Stream.Position = file.ResetPositionTo.Value;
+			if (builder.Files is not null)
+				foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
+					file.Stream.Position = file.ResetPositionTo.Value;
 			ret.Discord = this.Discord;
 			return ret;
 		}
@@ -7576,9 +7582,9 @@ public sealed class DiscordApiClient
 	internal Task DeleteFollowupMessageAsync(ulong applicationId, string interactionToken, ulong messageId) =>
 		this.DeleteWebhookMessageAsync(applicationId, interactionToken, messageId);
 
-#endregion
+	#endregion
 
-#region Misc
+	#region Misc
 
 	/// <summary>
 	///     Gets the published store sku listings (premium application subscription).
@@ -7594,7 +7600,7 @@ public sealed class DiscordApiClient
 
 		var route = $"{Endpoints.STORE}{Endpoints.PUBLISHED_LISTINGS}{Endpoints.SKUS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, urlParams.Count != 0 ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
@@ -7697,7 +7703,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	///    Consumes an entitlement.
+	///     Consumes an entitlement.
 	/// </summary>
 	/// <param name="applicationId">The application id to consume the entitlement for.</param>
 	/// <param name="entitlementId">The entitlement id to consume.</param>
@@ -7858,7 +7864,7 @@ public sealed class DiscordApiClient
 	{
 		var route = $"{Endpoints.APPLICATIONS}{Endpoints.ME}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
@@ -7902,7 +7908,7 @@ public sealed class DiscordApiClient
 
 		var route = $"{Endpoints.APPLICATIONS}{Endpoints.ME}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
@@ -7966,7 +7972,7 @@ public sealed class DiscordApiClient
 		if (this.Discord.Configuration.TokenType == TokenType.Bot)
 			route += Endpoints.BOT;
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route, headers).ConfigureAwait(false);
@@ -7976,9 +7982,9 @@ public sealed class DiscordApiClient
 		return info;
 	}
 
-#endregion
+	#endregion
 
-#region OAuth2
+	#region OAuth2
 
 	/// <summary>
 	///     Gets the current oauth2 authorization information.
@@ -7992,7 +7998,7 @@ public sealed class DiscordApiClient
 		// ReSharper disable once HeuristicUnreachableCode
 		var route = $"{Endpoints.OAUTH2}{Endpoints.ME}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var headers = Utilities.GetBaseHeaders();
 		headers.Add("Bearer", accessToken);
@@ -8043,7 +8049,7 @@ public sealed class DiscordApiClient
 		// ReSharper disable once HeuristicUnreachableCode
 		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.CONNECTIONS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var headers = Utilities.GetBaseHeaders();
 		headers.Add("Bearer", accessToken);
@@ -8066,7 +8072,7 @@ public sealed class DiscordApiClient
 		// ReSharper disable once HeuristicUnreachableCode
 		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.GUILDS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var headers = Utilities.GetBaseHeaders();
 		headers.Add("Bearer", accessToken);
@@ -8176,7 +8182,7 @@ public sealed class DiscordApiClient
 		// ReSharper disable once HeuristicUnreachableCode
 		var route = $"{Endpoints.OAUTH2}{Endpoints.TOKEN}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var formData = new Dictionary<string, string>
 		{
@@ -8206,7 +8212,7 @@ public sealed class DiscordApiClient
 		// ReSharper disable once HeuristicUnreachableCode
 		var route = $"{Endpoints.OAUTH2}{Endpoints.TOKEN}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var formData = new Dictionary<string, string>
 		{
@@ -8237,7 +8243,7 @@ public sealed class DiscordApiClient
 		// ReSharper disable once HeuristicUnreachableCode
 		var route = $"{Endpoints.OAUTH2}{Endpoints.TOKEN}{Endpoints.REVOKE}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var authorizationString = Encoding.UTF8.GetBytes($"{this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture)}:{this.OAuth2Client.ClientSecret}");
 		var base64EncodedAuthorizationString = Convert.ToBase64String(authorizationString);
@@ -8255,5 +8261,5 @@ public sealed class DiscordApiClient
 		await this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData, headers).ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 }

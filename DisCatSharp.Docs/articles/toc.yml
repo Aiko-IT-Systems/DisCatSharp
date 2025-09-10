@@ -1,92 +1,58 @@
 items:
     - name: Preamble
-      href: index.md
+      uid: preamble
     - name: FAQ
-      href: faq.md
+      uid: faq
     - name: Getting Started
       items:
           - name: Creating a Bot Account
-            href: getting_started/bot_account.md
+            uid: getting_started_bot_account
           - name: Writing Your First Bot
-            href: getting_started/first_bot.md
+            uid: getting_started_first_bot
           - name: Bot as Hosted Service
-            href: getting_started/web_app.md
+            uid: getting_started_web_app
           - name: Project Templates
-            href: getting_started/templates.md
-    - name: Experimental
-      items:
-          - name: Preamble
-            uid: experimental_preamble
-          - name: ElasticSearch-Based Member Search
-            uid: experimental_search_guild_members
-          - name: GCP Attachments
-            uid: experimental_gcp_attachments
-    - name: Topics
-      items:
-          - name: Events
-            href: topics/events.md
-          - name: Logging
-            items:
-                - name: The Default Logger
-                  href: topics/logging/default.md
-                - name: Third Party Loggers
-                  href: topics/logging/third_party.md
-                - name: Dependency Injection Loggers
-                  href: topics/logging/di.md
-          - name: Intents
-            href: topics/intents.md
-          - name: Sharding
-            href: topics/sharding.md
-          - name: Message Builder
-            href: topics/messagebuilder.md
-          - name: Components
-            items:
-                - name: Buttons
-                  href: topics/components/buttons.md
-                - name: Select Menu
-                  href: topics/components/select_menus.md
-          - name: Workarounds
-            href: topics/workarounds.md
+            uid: getting_started_templates
     - name: Modules
       items:
           - name: Application Commands
             items:
                 - name: Introduction
-                  href: modules/application_commands/intro.md
+                  uid: modules_application_commands_intro
                 - name: Options
-                  href: modules/application_commands/options.md
+                  uid: modules_application_commands_options
                 - name: Events
-                  href: modules/application_commands/events.md
+                  uid: modules_application_commands_events
                 - name: Translations
                   items:
                       - name: Using Translations
-                        href: modules/application_commands/translations/using.md
+                        uid: modules_application_commands_translations_using
                       - name: Translation Reference
-                        href: modules/application_commands/translations/reference.md
+                        uid: modules_application_commands_translations_reference
                 - name: Modals
-                  href: modules/application_commands/modals.md
+                  uid: modules_application_commands_modals
                 - name: Paginated Modals
-                  href: modules/application_commands/paginated_modals.md
+                  uid: modules_application_commands_paginated_modals
                 - name: Cooldowns
-                  href: modules/application_commands/cooldowns.md
+                  uid: modules_application_commands_cooldowns
           - name: CommandsNext
             items:
                 - name: Introduction
-                  href: modules/commandsnext/intro.md
+                  uid: modules_commandsnext_intro
                 - name: Command Attributes
-                  href: modules/commandsnext/command_attributes.md
+                  uid: modules_commandsnext_command_attributes
                 - name: Dependency Injection
-                  href: modules/commandsnext/dependency_injection.md
+                  uid: modules_commandsnext_dependency_injection
                 - name: Customization
                   items:
                       - name: Help Formatter
-                        href: modules/commandsnext/customization/help_formatter.md
+                        uid: modules_commandsnext_customization_help_formatter
                       - name: Argument Converters
-                        href: modules/commandsnext/customization/argument_converters.md
+                        uid: modules_commandsnext_customization_argument_converters
                       - name: Command Handler
-                        href: modules/commandsnext/customization/command_handler.md
+                        uid: modules_commandsnext_customization_command_handler
                 - name: Cooldowns
-                  href: modules/commandsnext/cooldowns.md
+                  uid: modules_commandsnext_cooldowns
           - name: Audio
             items:
                 - name: Lavalink V4
@@ -121,19 +87,51 @@ items:
             items:
                 - name: Interactivity Introduction
                   uid: modules_interactivity_introduction
+    - name: Topics
+      items:
+          - name: Events
+            uid: topics_events
+          - name: Logging
+            items:
+                - name: The Default Logger
+                  uid: topics_logging_default
+                - name: Third Party Loggers
+                  uid: topics_logging_third_party
+                - name: Dependency Injection Loggers
+                  uid: topics_logging_di
+          - name: Intents
+            uid: topics_intents
+          - name: Sharding
+            uid: topics_sharding
+          - name: Message Builder
+            uid: topics_sharding
+          - name: Components
+            items:
+                - name: Buttons
+                  uid: topics_components_buttons
+                - name: Select Menu
+                  uid: topics_components_select_menus
+          - name: Workarounds
+            uid: topics_workarounds
+    - name: Experimental
+      items:
+          - name: Preamble
+            uid: experimental_preamble
+          - name: ElasticSearch-Based Member Search
+            uid: experimental_search_guild_members
+          - name: GCP Attachments
+            uid: experimental_gcp_attachments
     - name: Miscellaneous
       items:
           - name: Nightly Builds
-            href: misc/nightly_builds.md
+            uid: misc_nightly_builds
           - name: Reporting Issues
-            href: misc/reporting_issues.md
+            uid: misc_reporting_issues
           - name: Hosting
-            href: misc/hosting.md
-          - name: Voice Activities
-            href: misc/voice_activities.md
+            uid: misc_hosting
           - name: Sentry
-            href: misc/sentry.md
+            uid: misc_sentry
     - name: Security & Compliance
       items:
           - name: Sentry Safety Report
-            href: sec_comp/sentry.md
+            uid: sec_comp_sentry

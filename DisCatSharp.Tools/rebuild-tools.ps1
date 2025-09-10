@@ -72,7 +72,7 @@ function Build-All([string] $target_dir_path, [string] $version_suffix, [string]
 
     # Clean previous build results
     Write-Host "Cleaning previous build"
-    & dotnet clean -v minimal -c "$bcfg" DisCatSharp.Tools/DisCatSharp.Tools.sln | Out-Host
+    & dotnet clean -v minimal -c "$bcfg" DisCatSharp.Tools/DisCatSharp.Tools.slnx | Out-Host
     if ($LastExitCode -ne 0)
     {
         Write-Host "Cleanup failed"
@@ -81,7 +81,7 @@ function Build-All([string] $target_dir_path, [string] $version_suffix, [string]
 
     # Restore nuget packages
     Write-Host "Restoring NuGet packages"
-    & dotnet restore --no-cache -f -v minimal DisCatSharp.Tools/DisCatSharp.Tools.sln | Out-Host
+    & dotnet restore --no-cache -f -v minimal DisCatSharp.Tools/DisCatSharp.Tools.slnx | Out-Host
     if ($LastExitCode -ne 0)
     {
         Write-Host "Restoring packages failed"

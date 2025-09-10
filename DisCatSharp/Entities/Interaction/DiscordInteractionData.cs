@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -25,21 +26,27 @@ public sealed class DiscordInteractionData : SnowflakeObject
 	public IReadOnlyList<DiscordInteractionDataOption> Options { get; internal set; } = [];
 
 	/// <summary>
-	///     Gets the component rows. Only applicable to modal submits.
+	///     Gets the submitted modal components.
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<DiscordActionRowComponentResult> ComponentsInternal { get; set; } = [];
+	internal List<DiscordComponent> ComponentsInternal { get; set; } = [];
+
+	public IReadOnlyList<DiscordComponent> ModalComponents
+		=> this.ComponentsInternal;
 
 	/// <summary>
-	///     Gets the components. Only applicable to modal submits.
+	///     Gets the submitted modal components.
 	///     <para>
 	///         If you want to get the components, use <see cref="DiscordInteraction" />.
 	///         <see cref="DiscordInteraction.Message" />.<see cref="DiscordMessage.Components" /> instead.
 	///     </para>
 	/// </summary>
-	[JsonIgnore]
-	public IReadOnlyList<DiscordComponentResult> Components
-		=> this.ComponentsInternal.Where(comp => comp.Components.All(innerComp => innerComp.Type == ComponentType.InputText)).Select(x => x.Components[0]).ToList();
+	[JsonIgnore, DiscordDeprecated("Use ModalComponents instead")]
+	public IReadOnlyList<DiscordTextInputComponent>? Components
+		=> this.ComponentsInternal.OfType<DiscordActionRowComponent>()
+			.SelectMany(x => x.Components.OfType<DiscordTextInputComponent>())
+			.ToList()
+			.AsReadOnly();
 
 	/// <summary>
 	///     Gets the Discord snowflake objects resolved from this interaction's arguments.

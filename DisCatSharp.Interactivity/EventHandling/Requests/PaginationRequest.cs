@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Interactivity.Entities;
 using DisCatSharp.Interactivity.Enums;
 
 namespace DisCatSharp.Interactivity.EventHandling;

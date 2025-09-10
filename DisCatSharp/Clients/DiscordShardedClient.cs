@@ -605,9 +605,9 @@ public sealed partial class DiscordShardedClient
 		return Task.CompletedTask;
 	}
 
-#endregion
+	#endregion
 
-#region Event Handler Initialization/Registering
+	#region Event Handler Initialization/Registering
 
 	/// <summary>
 	///     Sets the shard client up internally..
@@ -700,6 +700,7 @@ public sealed partial class DiscordShardedClient
 		this._automodActionExecuted = new("AUTO_MODERATION_ACTION_EXECUTED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildAuditLogEntryCreated = new("GUILD_AUDIT_LOG_ENTRY_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._voiceChannelStatusUpdated = new("CHANNEL_STATUS_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._voiceChannelStartTimeUpdated = new("VOICE_CHANNEL_START_TIME_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._entitlementCreated = new("ENTITLEMENT_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._entitlementUpdated = new("ENTITLEMENT_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._entitlementDeleted = new("ENTITLEMENT_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
@@ -715,6 +716,7 @@ public sealed partial class DiscordShardedClient
 		this._guildJoinRequestCreated = new("GUILD_JOIN_REQUEST_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildJoinRequestUpdated = new("GUILD_JOIN_REQUEST_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildJoinRequestDeleted = new("GUILD_JOIN_REQUEST_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._guildAppliedBoostsUpdated = new("GUILD_APPLIED_BOOSTS_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 	}
 
 	/// <summary>
@@ -809,6 +811,7 @@ public sealed partial class DiscordShardedClient
 		client.AutomodActionExecuted += this.Client_AutomodActionExecuted;
 		client.GuildAuditLogEntryCreated += this.Client_GuildAuditLogEntryCreated;
 		client.VoiceChannelStatusUpdated += this.Client_VoiceChannelStatusUpdated;
+		client.VoiceChannelStartTimeUpdated += this.Client_VoiceChannelStartTimeUpdated;
 		client.EntitlementCreated += this.Client_EntitlementCreated;
 		client.EntitlementUpdated += this.Client_EntitlementUpdated;
 		client.EntitlementDeleted += this.Client_EntitlementDeleted;
@@ -824,6 +827,7 @@ public sealed partial class DiscordShardedClient
 		client.GuildJoinRequestCreated += this.Client_GuildJoinRequestCreated;
 		client.GuildJoinRequestUpdated += this.Client_GuildJoinRequestUpdated;
 		client.GuildJoinRequestDeleted += this.Client_GuildJoinRequestDeleted;
+		client.GuildAppliedBoostsUpdated += this.Client_GuildAppliedBoostsUpdated;
 	}
 
 	/// <summary>
@@ -918,6 +922,7 @@ public sealed partial class DiscordShardedClient
 		client.AutomodActionExecuted -= this.Client_AutomodActionExecuted;
 		client.GuildAuditLogEntryCreated -= this.Client_GuildAuditLogEntryCreated;
 		client.VoiceChannelStatusUpdated -= this.Client_VoiceChannelStatusUpdated;
+		client.VoiceChannelStartTimeUpdated -= this.Client_VoiceChannelStartTimeUpdated;
 		client.EntitlementCreated -= this.Client_EntitlementCreated;
 		client.EntitlementUpdated -= this.Client_EntitlementUpdated;
 		client.EntitlementDeleted -= this.Client_EntitlementDeleted;
@@ -933,6 +938,7 @@ public sealed partial class DiscordShardedClient
 		client.GuildJoinRequestCreated -= this.Client_GuildJoinRequestCreated;
 		client.GuildJoinRequestUpdated -= this.Client_GuildJoinRequestUpdated;
 		client.GuildJoinRequestDeleted -= this.Client_GuildJoinRequestDeleted;
+		client.GuildAppliedBoostsUpdated -= this.Client_GuildAppliedBoostsUpdated;
 	}
 
 	/// <summary>

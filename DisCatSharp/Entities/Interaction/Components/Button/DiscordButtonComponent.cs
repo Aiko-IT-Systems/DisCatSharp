@@ -55,6 +55,7 @@ public sealed class DiscordButtonComponent : DiscordBaseButtonComponent
 	///     <paramref name="label" /> is set.
 	/// </exception>
 	public DiscordButtonComponent(ButtonStyle style, string customId = null, string label = null, bool disabled = false, DiscordComponentEmoji emoji = null)
+		: this()
 	{
 		if (style is ButtonStyle.Link or ButtonStyle.Premium)
 			throw new InvalidEnumArgumentException("Can not use link or premium style on this type of button");
@@ -71,8 +72,6 @@ public sealed class DiscordButtonComponent : DiscordBaseButtonComponent
 			this.Label = label ?? throw new ArgumentException("Label can only be null if emoji is set.");
 			this.Emoji = null;
 		}
-
-		this.Type = ComponentType.Button;
 	}
 
 	/// <summary>

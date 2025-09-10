@@ -1,51 +1,33 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>netstandard2.1</TargetFramework>
+		<TargetFramework>netstandard2.0</TargetFramework>
 		<IsPackable>false</IsPackable>
-
-		<!-- Avoid ID conflicts with the package project. -->
 		<PackageId>*$(MSBuildProjectFile)*</PackageId>
-		<Authors>AITSYS</Authors>
-	</PropertyGroup>
-
-	<ItemGroup>
-		<AdditionalFiles Include="AnalyzerReleases.Shipped.md" />
-		<AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
-	</ItemGroup>
-
-	<PropertyGroup>
-		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-		<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
-		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-		<IncludeSymbols>False</IncludeSymbols>
-		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-		<RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
-		<RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+		<GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+		<GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+		<GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+		<GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+		<GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+		<GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+		<GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
 		<NuGetAuditSuppress>true</NuGetAuditSuppress>
 		<NuGetAudit>false</NuGetAudit>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<DebugType>embedded</DebugType>
 		<NoWarn>1701;1702;NU1701</NoWarn>
+		<IncludeSymbols>True</IncludeSymbols>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<DebugType>embedded</DebugType>
-		<NoWarn>1701;1702;NU1701</NoWarn>
-	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="DisCatSharp.Attributes" Version="2025.3.27" />
-		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.9" />
 		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="4.14.0">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
-		<PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.13.40008" />
-		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.9" />
-		<PackageReference Include="System.Memory" Version="4.6.3" />
+		<PackageReference Include="DisCatSharp.Attributes" Version="2025.3.27" PrivateAssets="All" IncludeInPackage="true" />
 	</ItemGroup>
 
 	<ItemGroup>
