@@ -37,14 +37,14 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="DisCatSharp.Attributes" Version="2025.3.27" />
-		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.8" />
+		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.9" />
 		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="4.14.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
 		<PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.13.40008" />
-		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.8" />
+		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.9" />
 		<PackageReference Include="System.Memory" Version="4.6.3" />
 	</ItemGroup>
 
