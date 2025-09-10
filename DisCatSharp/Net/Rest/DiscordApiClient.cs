@@ -4345,7 +4345,7 @@ public sealed class DiscordApiClient
 			Banner = bannerBase64
 		};
 
-		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}{Endpoints.ME}{Endpoints.NICK}";
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}{Endpoints.ME}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
 		{
 			guild_id = guildId
