@@ -809,7 +809,7 @@ public sealed class DiscordAuditLogThreadEntry : DiscordAuditLogEntry
 	/// <summary>
 	///     Gets the affected thread
 	/// </summary>
-	public DiscordThreadChannel Target { get; internal set; }
+	public DiscordXThreadChannel Target { get; internal set; }
 
 	/// <summary>
 	///     Gets the name of the thread.

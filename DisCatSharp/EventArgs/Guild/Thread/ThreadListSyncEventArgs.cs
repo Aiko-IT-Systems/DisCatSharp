@@ -26,7 +26,7 @@ public class ThreadListSyncEventArgs : DiscordEventArgs
 	/// <summary>
 	///     Gets all active threads in the given channels that the current user can access.
 	/// </summary>
-	public IReadOnlyList<DiscordThreadChannel> Threads { get; internal set; }
+	public IReadOnlyList<DiscordXThreadChannel> Threads { get; internal set; }
 
 	/// <summary>
 	///     Gets the parent channels whose threads are being synced. If empty, then threads are synced for the guild. May
