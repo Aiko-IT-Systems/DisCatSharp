@@ -13,11 +13,6 @@ namespace DisCatSharp.Entities;
 public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 {
 	/// <summary>
-	///     Gets the callback hints.
-	/// </summary>
-	private readonly List<DiscordInteractionCallbackHint> _callbackHints = [];
-
-	/// <summary>
 	///     Constructs a new empty interaction response builder.
 	/// </summary>
 	public DiscordInteractionResponseBuilder()
@@ -25,25 +20,25 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 
 	/// <summary>
 	///     Constructs a new <see cref="DiscordInteractionResponseBuilder" /> based on an existing
-	///     <see cref="DisCatSharp.Entities.DiscordMessageBuilder" />.
+	///     <see cref="DisCatSharpBuilder" />.
 	/// </summary>
 	/// <param name="builder">The builder to copy.</param>
 	public DiscordInteractionResponseBuilder(DisCatSharpBuilder builder)
 	{
 		this.Content = builder.Content;
-		this.MentionsInternal.AddRange(builder.MentionsInternal);
-		this.EmbedsInternal.AddRange(builder.Embeds);
-		this.ComponentsInternal.AddRange(builder.Components);
+		this.MentionsInternal ??= builder.MentionsInternal;
+		this.EmbedsInternal ??= builder.EmbedsInternal;
+		this.ComponentsInternal ??= builder.ComponentsInternal;
 		this.EmbedsSuppressed = builder.EmbedsSuppressed;
 		this.IsComponentsV2 = builder.IsComponentsV2;
-		this.FilesInternal.AddRange(builder.Files);
-		this.AttachmentsInternal.AddRange(builder.Attachments);
+		this.FilesInternal ??= builder.FilesInternal;
+		this.AttachmentsInternal ??= builder.AttachmentsInternal;
 	}
 
 	/// <summary>
 	///     Gets the choices.
 	/// </summary>
-	internal List<DiscordApplicationCommandAutocompleteChoice> ChoicesInternal { get; } = [];
+	internal List<DiscordApplicationCommandAutocompleteChoice>? ChoicesInternal { get; set; } = null;
 
 	/// <summary>
 	///     Whether this interaction response is text-to-speech.
@@ -63,44 +58,25 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 		}
 	}
 
+	/// <summary>
+	///     Gets or sets a value indicating whether the followup message is ephemeral.
+	/// </summary>
+	/// <remarks>
+	///     An ephemeral message is only visible to the user who triggered the interaction.
+	/// </remarks>
 	private bool EPH { get; set; }
 
 	/// <summary>
-	///     The choices to send on this interaction response.
+	///     The choices to sent on this interaction response.
 	///     Mutually exclusive with content, embed, and components.
 	/// </summary>
-	public IReadOnlyList<DiscordApplicationCommandAutocompleteChoice> Choices
+	public IReadOnlyList<DiscordApplicationCommandAutocompleteChoice>? Choices
 		=> this.ChoicesInternal;
-
-	/// <summary>
-	///     The hints to send on this interaction response.
-	/// </summary>
-	internal IReadOnlyList<DiscordInteractionCallbackHint> CallbackHints
-		=> this._callbackHints;
 
 	/// <summary>
 	///     Gets the poll for this message.
 	/// </summary>
 	public DiscordPollBuilder? Poll { get; private set; }
-
-	/// <summary>
-	///     Provides the interaction response with <see cref="DiscordInteractionCallbackHint" />s.
-	/// </summary>
-	/// <param name="hintBuilder">The hint builder.</param>
-	/// <returns>The current builder to chain calls with.</returns>
-	/// <exception cref="ArgumentNullException">Thrown when the <paramref name="hintBuilder" /> is <see langword="null" />.</exception>
-	internal DiscordInteractionResponseBuilder WithCallbackHints(DiscordCallbackHintBuilder hintBuilder)
-	{
-		if (hintBuilder == null)
-			throw new ArgumentNullException(nameof(hintBuilder), "Callback hint builder cannot be null.");
-
-		if (hintBuilder.CallbackHints.Count == 0)
-			return this;
-
-		this._callbackHints.Clear();
-		this._callbackHints.AddRange(hintBuilder.CallbackHints);
-		return this;
-	}
 
 	/// <summary>
 	///     <para>
@@ -134,6 +110,8 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// <exception cref="ArgumentException">Thrown when passing more than 5 components.</exception>
 	public DiscordInteractionResponseBuilder AddComponents(IEnumerable<DiscordActionRowComponent> components)
 	{
+		this.HasComponents = true;
+		this.ComponentsInternal ??= [];
 		var ara = components.ToArray();
 
 		if (ara.Length + this.ComponentsInternal.Count > 5)
@@ -153,6 +131,8 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// <exception cref="ArgumentException">Thrown when passing more than 5 components.</exception>
 	public DiscordInteractionResponseBuilder AddComponents(IEnumerable<DiscordComponent> components)
 	{
+		this.HasComponents = true;
+		this.ComponentsInternal ??= [];
 		var cmpArr = components.ToArray();
 		var count = cmpArr.Length;
 
@@ -238,7 +218,7 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	}
 
 	/// <summary>
-	///     Sets the interaction response to be send as silent message.
+	///     Sets the interaction response to be sent as silent message.
 	/// </summary>
 	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AsSilentMessage()
@@ -248,7 +228,7 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	}
 
 	/// <summary>
-	///     Sets the followup message to be send as voice message.
+	///     Sets the followup message to be sent as voice message.
 	/// </summary>
 	internal DiscordInteractionResponseBuilder AsVoiceMessage(bool asVoiceMessage = true)
 	{
@@ -268,24 +248,28 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	}
 
 	/// <summary>
-	///     Adds an embed to send with the interaction response.
+	///     Adds an embed to sent with the interaction response.
 	/// </summary>
 	/// <param name="embed">Embed to add.</param>
 	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AddEmbed(DiscordEmbed embed)
 	{
+		this.HasEmbeds = true;
 		ArgumentNullException.ThrowIfNull(embed, nameof(embed));
+		this.EmbedsInternal ??= [];
 		this.EmbedsInternal.Add(embed);
 		return this;
 	}
 
 	/// <summary>
-	///     Adds the given embeds to send with the interaction response.
+	///     Adds the given embeds to sent with the interaction response.
 	/// </summary>
 	/// <param name="embeds">Embeds to add.</param>
 	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AddEmbeds(IEnumerable<DiscordEmbed> embeds)
 	{
+		this.HasEmbeds = true;
+		this.EmbedsInternal ??= [];
 		this.EmbedsInternal.AddRange(embeds);
 		return this;
 	}
@@ -301,10 +285,11 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// </param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns>The builder to chain calls with.</returns>
-	public DiscordInteractionResponseBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false, string description = null)
+	public DiscordInteractionResponseBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false, string? description = null)
 	{
+		this.FilesInternal ??= [];
 		if (this.FilesInternal.Count >= 10)
-			throw new ArgumentException("Cannot send more than 10 files with a single message.");
+			throw new ArgumentException("Cannot sent more than 10 files with a single message.");
 
 		if (this.FilesInternal.Any(x => x.Filename == filename))
 			throw new ArgumentException("A File with that filename already exists");
@@ -327,10 +312,11 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// </param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns>The builder to chain calls with.</returns>
-	public DiscordInteractionResponseBuilder AddFile(FileStream stream, bool resetStreamPosition = false, string description = null)
+	public DiscordInteractionResponseBuilder AddFile(FileStream stream, bool resetStreamPosition = false, string? description = null)
 	{
+		this.FilesInternal ??= [];
 		if (this.FilesInternal.Count >= 10)
-			throw new ArgumentException("Cannot send more than 10 files with a single message.");
+			throw new ArgumentException("Cannot sent more than 10 files with a single message.");
 
 		if (this.FilesInternal.Any(x => x.Filename == stream.Name))
 			throw new ArgumentException("A File with that filename already exists");
@@ -354,8 +340,9 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AddFiles(Dictionary<string, Stream> files, bool resetStreamPosition = false)
 	{
+		this.FilesInternal ??= [];
 		if (this.FilesInternal.Count + files.Count > 10)
-			throw new ArgumentException("Cannot send more than 10 files with a single message.");
+			throw new ArgumentException("Cannot sent more than 10 files with a single message.");
 
 		foreach (var file in files)
 		{
@@ -378,6 +365,7 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder WithAllowedMention(IMention mention)
 	{
+		this.MentionsInternal ??= [];
 		this.MentionsInternal.Add(mention);
 		return this;
 	}
@@ -389,6 +377,7 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder WithAllowedMentions(IEnumerable<IMention> mentions)
 	{
+		this.MentionsInternal ??= [];
 		this.MentionsInternal.AddRange(mentions);
 		return this;
 	}
@@ -400,6 +389,7 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AddAutoCompleteChoice(DiscordApplicationCommandAutocompleteChoice choice)
 	{
+		this.ChoicesInternal ??= [];
 		this.ChoicesInternal.Add(choice);
 		return this;
 	}
@@ -411,6 +401,7 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AddAutoCompleteChoices(IEnumerable<DiscordApplicationCommandAutocompleteChoice> choices)
 	{
+		this.ChoicesInternal ??= [];
 		this.ChoicesInternal.AddRange(choices);
 		return this;
 	}
@@ -423,18 +414,34 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	public DiscordInteractionResponseBuilder AddAutoCompleteChoices(params DiscordApplicationCommandAutocompleteChoice[] choices)
 		=> this.AddAutoCompleteChoices((IEnumerable<DiscordApplicationCommandAutocompleteChoice>)choices);
 
-	/// <summary>
-	///     Clears the poll from this builder.
-	/// </summary>
-	public void ClearPoll()
-		=> this.Poll = null;
+	/// <inheritdoc cref="DisCatSharpBuilder.ClearComponents"/>
+	public new DiscordInteractionResponseBuilder ClearComponents()
+	{
+		base.ClearComponents();
+		return this;
+	}
 
 	/// <inheritdoc />
 	public override void Clear()
 	{
 		this.IsEphemeral = false;
-		this.ChoicesInternal.Clear();
+		this.ChoicesInternal?.Clear();
+		this.ChoicesInternal = null;
 		this.Poll = null;
 		base.Clear();
 	}
+
+	/// <inheritdoc />
+    internal override void DoReplace()
+    {
+        this.Poll = null;
+        base.DoReplace();
+    }
+
+	/// <inheritdoc />
+    internal override void DoConditionalReplace()
+    {
+        this.Poll ??= null;
+        base.DoConditionalReplace();
+    }
 }

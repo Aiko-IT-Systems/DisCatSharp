@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
-using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Entities.Core;
 using DisCatSharp.Enums;
@@ -33,6 +33,7 @@ public class BaseContext : DisCatSharpCommandContext
 	/// <summary>
 	///     Gets the guild this interaction was executed in.
 	/// </summary>
+	[NotNullIfNotNull(nameof(GuildId))]
 	public DiscordGuild? Guild { get; internal init; }
 
 	/// <summary>
@@ -48,6 +49,7 @@ public class BaseContext : DisCatSharpCommandContext
 	/// <summary>
 	///     Gets the member which executed this interaction, or null if the command is in a DM.
 	/// </summary>
+	[NotNullIfNotNull(nameof(Guild))]
 	public DiscordMember? Member
 		=> this.User is DiscordMember member ? member : null;
 
@@ -80,7 +82,8 @@ public class BaseContext : DisCatSharpCommandContext
 	/// <summary>
 	///     Gets the guild locale if applicable.
 	/// </summary>
-	public string GuildLocale { get; internal set; }
+	[NotNullIfNotNull(nameof(Guild))]
+	public string? GuildLocale { get; internal set; }
 
 	/// <summary>
 	///     Gets the attachment size limit in bytes.
@@ -102,16 +105,6 @@ public class BaseContext : DisCatSharpCommandContext
 	public List<DiscordEntitlement> Entitlements { get; internal set; } = [];
 
 	/// <summary>
-	///     <para>Gets the entitlement sku ids.</para>
-	///     <para>This is related to premium subscriptions for bots.</para>
-	///     <para>
-	///         <note type="warning">Can only be used if you have an associated application subscription sku.</note>
-	///     </para>
-	/// </summary>
-	[DiscordDeprecated("Replaced by Entitlements"), Obsolete("Discord replaced this with Entitlements", true, DiagnosticId = "DCS0102")]
-	public List<ulong> EntitlementSkuIds { get; internal set; } = [];
-
-	/// <summary>
 	///     Gets the type of this interaction.
 	/// </summary>
 	public ApplicationCommandType Type { get; internal set; }
@@ -124,6 +117,12 @@ public class BaseContext : DisCatSharpCommandContext
 	public IServiceProvider Services { get; internal set; } = new ServiceCollection().BuildServiceProvider(true);
 
 	/// <summary>
+	///     Gets or sets the service scope for this command execution.
+	///     Used internally for proper disposal of scoped services.
+	/// </summary>
+	internal IServiceScope? ServiceScope { get; set; }
+
+	/// <summary>
 	///     Creates a response to this interaction.
 	///     <para>
 	///         You must create a response within 3 seconds of this interaction being executed; if the command has the
@@ -134,12 +133,13 @@ public class BaseContext : DisCatSharpCommandContext
 	/// </summary>
 	/// <param name="type">The type of the response.</param>
 	/// <param name="builder">The data to be sent, if any.</param>
+	/// <param name="modifyMode">The modify mode. Only useful for <see cref="InteractionResponseType.UpdateMessage"/>.</param>
 	/// <returns>
 	///     The created <see cref="DiscordMessage" />, or <see langword="null" /> if <paramref name="type" /> creates no
 	///     content.
 	/// </returns>
-	public async Task<DiscordInteractionCallbackResponse> CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder? builder = null)
-		=> await this.Interaction.CreateResponseAsync(type, builder);
+	public async Task<DiscordInteractionCallbackResponse> CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder? builder = null, ModifyMode modifyMode = ModifyMode.Update)
+		=> await this.Interaction.CreateResponseAsync(type, builder, modifyMode);
 
 	/// <summary>
 	///     Creates a modal response to this interaction.
@@ -162,9 +162,10 @@ public class BaseContext : DisCatSharpCommandContext
 	///     Edits the interaction response.
 	/// </summary>
 	/// <param name="builder">The data to edit the response with.</param>
+	/// <param name="modifyMode">The modify mode.</param>
 	/// <returns></returns>
-	public Task<DiscordMessage> EditResponseAsync(DiscordWebhookBuilder builder)
-		=> this.Interaction.EditOriginalResponseAsync(builder);
+	public Task<DiscordMessage> EditResponseAsync(DiscordWebhookBuilder builder, ModifyMode modifyMode = ModifyMode.Update)
+		=> this.Interaction.EditOriginalResponseAsync(builder, modifyMode);
 
 	/// <summary>
 	///     Edits the interaction response.
@@ -202,9 +203,10 @@ public class BaseContext : DisCatSharpCommandContext
 	/// </summary>
 	/// <param name="followupMessageId">The id of the followup message to edit.</param>
 	/// <param name="builder">The webhook builder.</param>
+	/// <param name="modifyMode">The modify mode.</param>
 	/// <returns>The created message.</returns>
-	public Task<DiscordMessage> EditFollowupAsync(ulong followupMessageId, DiscordWebhookBuilder builder)
-		=> this.Interaction.EditFollowupMessageAsync(followupMessageId, builder);
+	public Task<DiscordMessage> EditFollowupAsync(ulong followupMessageId, DiscordWebhookBuilder builder, ModifyMode modifyMode = ModifyMode.Update)
+		=> this.Interaction.EditFollowupMessageAsync(followupMessageId, builder, modifyMode);
 
 	/// <summary>
 	///     Edits a followup message.

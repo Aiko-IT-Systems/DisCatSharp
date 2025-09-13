@@ -111,12 +111,22 @@ public enum ChannelFlags : long
 	HideMediaDownloadOptions = 1L << 15,
 
 	/// <summary>
-	///     Channel is a interview channel for a clan join request (gdm style, with application details).
+	///     Channel is a interview channel for a guild join request (gdm style, with application details).
 	/// </summary>
 	IsJoinRequestInterviewChannel = 1L << 16,
 
 	/// <summary>
 	///     Channel is obfuscated.
 	/// </summary>
-	Obfuscated = 1L << 17
+	Obfuscated = 1L << 17,
+
+	/// <summary>
+	///     Indicates that this channel is a moderator report channel.
+	/// </summary>
+	IsModeratorReportChannel = 1L << 19,
+
+	/// <summary>
+	///      The flags are unknown.
+	/// </summary>
+	Unknown = long.MaxValue
 }

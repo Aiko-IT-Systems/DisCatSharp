@@ -23,25 +23,9 @@ public sealed class DiscordRoleSelectComponent : DiscordBaseSelectComponent
 	///     select component that cannot be interacted with.
 	/// </param>
 	/// <param name="defaultValues">The default values of this select menu.</param>
-	public DiscordRoleSelectComponent(string placeholder, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false, IEnumerable<DiscordSelectDefaultValue>? defaultValues = null)
-		: base(ComponentType.RoleSelect, placeholder, customId, minOptions, maxOptions, disabled, defaultValues)
-	{ }
-
-	/// <summary>
-	///     Constructs a new <see cref="DiscordRoleSelectComponent" /> for modals.
-	/// </summary>
-	/// <param name="label">Maximum count of selectable options.</param>
-	/// <param name="placeholder">Text to show if no option is selected.</param>
-	/// <param name="customId">The Id to assign to the select component.</param>
-	/// <param name="minOptions">Minimum count of selectable options.</param>
-	/// <param name="maxOptions">Maximum count of selectable options.</param>
-	/// <param name="disabled">
-	///     Whether this select component should be initialized as being disabled. User sees a greyed out
-	///     select component that cannot be interacted with.
-	/// </param>
-	/// <param name="defaultValues">The default values of this select menu.</param>
-	public DiscordRoleSelectComponent(string label, string placeholder, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false, IEnumerable<DiscordSelectDefaultValue>? defaultValues = null)
-		: base(ComponentType.RoleSelect, label, placeholder, customId, minOptions, maxOptions, disabled, defaultValues)
+	/// <param name="required">Whether this select component is required. Applicable for Modals.</param>
+	public DiscordRoleSelectComponent(string placeholder, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false, IEnumerable<DiscordSelectDefaultValue>? defaultValues = null, bool? required = null)
+		: base(ComponentType.RoleSelect, placeholder, customId, minOptions, maxOptions, disabled, defaultValues, required)
 	{ }
 
 	/// <summary>

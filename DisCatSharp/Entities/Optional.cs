@@ -250,55 +250,6 @@ public readonly struct Optional<T> : IEquatable<Optional<T>>, IEquatable<T>, IOp
 }
 
 /// <summary>
-///     Represents an optional json contract resolver.
-///     <seealso cref="DiscordJson.s_serializer" />
-/// </summary>
-internal sealed class OptionalJsonContractResolver : DefaultContractResolver
-{
-	/// <summary>
-	///     Creates the property.
-	/// </summary>
-	/// <param name="member">The member.</param>
-	/// <param name="memberSerialization">The member serialization.</param>
-	protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
-	{
-		var property = base.CreateProperty(member, memberSerialization);
-
-		var type = property.PropertyType;
-
-		if (!type.GetTypeInfo().ImplementedInterfaces.Contains(typeof(IOptional)))
-			return property;
-
-		// we cache the PropertyInfo object here (it's captured in closure). we don't have direct
-		// access to the property value so we have to reflect into it from the parent instance
-		// we use UnderlyingName instead of PropertyName in case the C# name is different from the Json name.
-		var declaringMember = property.DeclaringType.GetTypeInfo().DeclaredMembers
-			.FirstOrDefault(e => e.Name == property.UnderlyingName);
-
-		switch (declaringMember)
-		{
-			case PropertyInfo declaringProp:
-				property.ShouldSerialize = instance => // instance here is the declaring (parent) type
-				{
-					var optionalValue = declaringProp.GetValue(instance);
-					return (optionalValue as IOptional).HasValue;
-				};
-				return property;
-			case FieldInfo declaringField:
-				property.ShouldSerialize = instance => // instance here is the declaring (parent) type
-				{
-					var optionalValue = declaringField.GetValue(instance);
-					return (optionalValue as IOptional).HasValue;
-				};
-				return property;
-			default:
-				throw new InvalidOperationException(
-					"Can only serialize Optional<T> members that are fields or properties");
-		}
-	}
-}
-
-/// <summary>
 ///     Represents an optional json converter.
 /// </summary>
 internal sealed class OptionalJsonConverter : JsonConverter

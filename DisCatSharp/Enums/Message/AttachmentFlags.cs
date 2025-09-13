@@ -20,7 +20,7 @@ public static class AttachmentFlagExtensions
 ///     Represents additional features of a attachment.
 /// </summary>
 [Flags]
-public enum AttachmentFlags
+public enum AttachmentFlags : long
 {
 	/// <summary>
 	///     This attachment has no flags.
@@ -30,30 +30,40 @@ public enum AttachmentFlags
 	/// <summary>
 	///     This attachment is a clip.
 	/// </summary>
-	IsClip = 1 << 0,
+	IsClip = 1L << 0,
 
 	/// <summary>
 	///     This attachment is a thumbnail.
 	/// </summary>
-	IsThumbnail = 1 << 1,
+	IsThumbnail = 1L << 1,
 
 	/// <summary>
 	///     This attachment was edited with remix (https://support.discord.com/hc/en-us/articles/15145601963031).
 	/// </summary>
-	IsRemix = 1 << 2,
+	IsRemix = 1L << 2,
 
 	/// <summary>
 	///     This attachment is a spoiler.
 	/// </summary>
-	IsSpoiler = 1 << 3,
+	IsSpoiler = 1L << 3,
 
 	/// <summary>
 	///     This attachment contains explicit media.
 	/// </summary>
-	ContainsExplicitMedia = 1 << 4,
+	ContainsExplicitMedia = 1L << 4,
 
 	/// <summary>
 	///     This attachment is animated.
 	/// </summary>
-	IsAnimated = 1 << 5
+	IsAnimated = 1L << 5,
+
+	/// <summary>
+	///     This attachment contains gore content.
+	/// </summary>
+	ContainsGoreContent = 1L << 6,
+
+	/// <summary>
+	///      The flags are unknown.
+	/// </summary>
+	Unknown = long.MaxValue
 }

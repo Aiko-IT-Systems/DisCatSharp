@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 using DisCatSharp.Entities;
 
@@ -36,6 +37,7 @@ public class MessageUpdateEventArgs : DiscordEventArgs
 	/// <summary>
 	///     Gets the guild this message belongs to.
 	/// </summary>
+	[NotNullIfNotNull(nameof(GuildId))]
 	public DiscordGuild Guild
 		=> this.Channel.Guild;
 
@@ -43,7 +45,7 @@ public class MessageUpdateEventArgs : DiscordEventArgs
 	///     Gets the guild id in case it couldn't convert.
 	/// </summary>
 	public ulong? GuildId
-		=> this.Message.GuildId;
+		=> this.Channel.GuildId;
 
 	/// <summary>
 	///     Gets the author of the message.

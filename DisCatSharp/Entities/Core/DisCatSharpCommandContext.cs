@@ -49,17 +49,17 @@ public class DisCatSharpCommandContext
 	/// <summary>
 	///     Gets the name of the command.
 	/// </summary>
-	public string CommandName { get; internal set; } = string.Empty;
+	public virtual string CommandName { get; internal set; } = string.Empty;
 
 	/// <summary>
 	///     Gets the name of the sub command.
 	/// </summary>
-	public string? SubCommandName { get; internal set; }
+	public virtual string? SubCommandName { get; internal set; }
 
 	/// <summary>
 	///     Gets the name of the sub command within a sub group.
 	/// </summary>
-	public string? SubSubCommandName { get; internal set; }
+	public virtual string? SubSubCommandName { get; internal set; }
 
 	/// <summary>
 	///     Gets the fully qualified name of the command.

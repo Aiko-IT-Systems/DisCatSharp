@@ -30,8 +30,8 @@ jobs:
                       8.x
             - name: Restore dependencies
               run: |
-                  dotnet restore --no-cache -f -v minimal DisCatSharp.sln
-                  dotnet restore --no-cache -f -v minimal DisCatSharp.Tools/DisCatSharp.Tools.sln
+                  dotnet restore --no-cache -f -v minimal DisCatSharp.slnx
+                  dotnet restore --no-cache -f -v minimal DisCatSharp.Tools/DisCatSharp.Tools.slnx
             - name: Set outputs
               id: vars
               run: echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT

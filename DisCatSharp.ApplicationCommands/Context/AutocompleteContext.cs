@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Entities.Core;
 using DisCatSharp.Enums;
+using DisCatSharp.Enums.Core;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,22 +14,25 @@ namespace DisCatSharp.ApplicationCommands.Context;
 /// <summary>
 ///     Represents a context for an autocomplete interaction.
 /// </summary>
-public sealed class AutocompleteContext
+public sealed class AutocompleteContext : DisCatSharpCommandContext
 {
+	/// <summary>
+	///     Initializes a new instance of the <see cref="AutocompleteContext" /> class.
+	/// </summary>
+	internal AutocompleteContext()
+		: base(DisCatSharpCommandType.Autocomplete)
+	{ }
+
 	/// <summary>
 	///     The interaction created.
 	/// </summary>
 	public DiscordInteraction Interaction { get; internal set; }
 
 	/// <summary>
-	///     Gets the client for this interaction.
-	/// </summary>
-	public DiscordClient Client { get; internal init; }
-
-	/// <summary>
 	///     Gets the guild this interaction was executed in.
 	/// </summary>
-	public DiscordGuild Guild { get; internal init; }
+	[NotNullIfNotNull(nameof(GuildId))]
+	public DiscordGuild? Guild { get; internal init; }
 
 	/// <summary>
 	///     Gets the channel this interaction was executed in.
@@ -41,7 +47,8 @@ public sealed class AutocompleteContext
 	/// <summary>
 	///     Gets the member which executed this interaction, or null if the command is in a DM.
 	/// </summary>
-	public DiscordMember Member
+	[NotNullIfNotNull(nameof(Guild))]
+	public DiscordMember? Member
 		=> this.User is DiscordMember member ? member : null;
 
 	/// <summary>
@@ -52,7 +59,8 @@ public sealed class AutocompleteContext
 	/// <summary>
 	///     Gets the guild locale if applicable.
 	/// </summary>
-	public string GuildLocale { get; internal set; }
+	[NotNullIfNotNull(nameof(Guild))]
+	public string? GuildLocale { get; internal set; }
 
 	/// <summary>
 	///     Gets the applications permissions.
@@ -67,15 +75,6 @@ public sealed class AutocompleteContext
 	///     </para>
 	/// </summary>
 	public List<DiscordEntitlement> Entitlements { get; internal set; } = [];
-
-	/// <summary>
-	///     <para>Gets the entitlement sku ids.</para>
-	///     <para>This is related to premium subscriptions for bots.</para>
-	///     <para>
-	///         <note type="warning">Can only be used if you have an associated application subscription sku.</note>
-	///     </para>
-	/// </summary>
-	public List<ulong> EntitlementSkuIds { get; internal set; } = [];
 
 	/// <summary>
 	///     Gets the slash command module this interaction was created in.

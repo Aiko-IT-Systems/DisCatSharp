@@ -8,6 +8,7 @@
 		<InternalsVisibleTo Include="DisCatSharp.Common" />
 		<InternalsVisibleTo Include="DisCatSharp.Configuration" />
 		<InternalsVisibleTo Include="DisCatSharp.Configuration.Tests" />
+		<InternalsVisibleTo Include="DisCatSharp.CopilotTests" />
 		<InternalsVisibleTo Include="DisCatSharp.EventHandlers.Tests" />
 		<InternalsVisibleTo Include="DisCatSharp.Hosting" />
 		<InternalsVisibleTo Include="DisCatSharp.Hosting.DependencyInjection" />
@@ -43,5 +44,6 @@
 		<InternalsVisibleTo Include="BeluBOT" />
 		<InternalsVisibleTo Include="BeluGANG" />
 		<InternalsVisibleTo Include="AITSYS.Pycord" />
+		<InternalsVisibleTo Include="Rawr" />
 	</ItemGroup>
 </Project>

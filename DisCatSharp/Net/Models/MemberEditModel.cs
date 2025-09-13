@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 
 using DisCatSharp.Entities;
 
@@ -39,4 +40,36 @@ public class MemberEditModel : BaseEditModel
 	///     Voice channel to move this user to, set to null to kick
 	/// </summary>
 	public Optional<DiscordChannel> VoiceChannel { internal get; set; }
+}
+
+/// <summary>
+///     Represents a current guild member edit model.
+/// </summary>
+public class CurrentMemberEditModel : BaseEditModel
+{
+	/// <summary>
+	///     Initializes a new instance of the <see cref="CurrentMemberEditModel" /> class.
+	/// </summary>
+	internal CurrentMemberEditModel()
+	{ }
+
+	/// <summary>
+	///     The new nickname.
+	/// </summary>
+	public Optional<string?> Nickname { internal get; set; }
+
+	/// <summary>
+	///     The new bio.
+	/// </summary>
+	public Optional<string?> Bio { internal get; set; }
+
+	/// <summary>
+	///     The new role avatar.
+	/// </summary>
+	public Optional<Stream?> Avatar { internal get; set; }
+
+	/// <summary>
+	///     The new role banner.
+	/// </summary>
+	public Optional<Stream?> Banner { internal get; set; }
 }

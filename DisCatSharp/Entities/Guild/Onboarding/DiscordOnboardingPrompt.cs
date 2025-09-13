@@ -14,6 +14,7 @@ public sealed class DiscordOnboardingPrompt : SnowflakeObject
 	/// <summary>
 	///     Constructs a new onboarding prompt.
 	/// </summary>
+	/// <param name="id">The prompt ID. Starts at <c>0</c> unless provided by Discord.</param>
 	/// <param name="title">The prompt title.</param>
 	/// <param name="options">The prompt options.</param>
 	/// <param name="singleSelect">Whether the prompt is single select. Defaults to <see langword="false" />.</param>
@@ -21,6 +22,7 @@ public sealed class DiscordOnboardingPrompt : SnowflakeObject
 	/// <param name="inOnboarding">Whether the prompt is shown in onboarding. Defaults to <see langword="true" />.</param>
 	/// <param name="type">The prompt type. Defaults to <see cref="PromptType.MultipleChoice" />.</param>
 	public DiscordOnboardingPrompt(
+		ulong id,
 		string title,
 		List<DiscordOnboardingPromptOption> options,
 		bool singleSelect = false,
@@ -29,6 +31,7 @@ public sealed class DiscordOnboardingPrompt : SnowflakeObject
 		PromptType type = PromptType.MultipleChoice
 	)
 	{
+		this.Id = id;
 		this.Title = title;
 		this.Options = options;
 		this.SingleSelect = singleSelect;

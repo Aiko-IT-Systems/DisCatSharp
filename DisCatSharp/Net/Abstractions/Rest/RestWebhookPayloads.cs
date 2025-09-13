@@ -52,7 +52,7 @@ internal sealed class RestWebhookExecutePayload : ObservableApiObject
 	///     Gets or sets the content.
 	/// </summary>
 	[JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
-	public string Content { get; set; }
+	public string? Content { get; set; }
 
 	/// <summary>
 	///     Gets or sets the username.
@@ -76,7 +76,7 @@ internal sealed class RestWebhookExecutePayload : ObservableApiObject
 	///     Gets or sets the embeds.
 	/// </summary>
 	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordEmbed> Embeds { get; set; }
+	public IEnumerable<DiscordEmbed>? Embeds { get; set; }
 
 	/// <summary>
 	///     Gets or sets the mentions.
@@ -88,19 +88,19 @@ internal sealed class RestWebhookExecutePayload : ObservableApiObject
 	///     Gets or sets the components.
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordComponent> Components { get; set; }
+	public IEnumerable<DiscordComponent>? Components { get; set; }
 
 	/// <summary>
 	///     Gets or sets the attachments.
 	/// </summary>
 	[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
-	public List<DiscordAttachment> Attachments { get; set; }
+	public IEnumerable<DiscordAttachment>? Attachments { get; set; }
 
 	/// <summary>
 	///     Gets or sets the thread name.
 	/// </summary>
 	[JsonProperty("thread_name", NullValueHandling = NullValueHandling.Ignore)]
-	public string ThreadName { get; set; }
+	public string? ThreadName { get; set; }
 
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
 	public MessageFlags Flags { get; set; }
@@ -121,16 +121,48 @@ internal sealed class RestWebhookExecutePayload : ObservableApiObject
 internal sealed class RestWebhookMessageEditPayload : ObservableApiObject
 {
 	/// <summary>
+	///     Tracks if content was explicitly set (even to null).
+	///     Used to control conditional serialization of the content field.
+	/// </summary>
+	[JsonIgnore]
+	public bool HasContent { get; set; }
+
+	/// <summary>
+	///     Tracks if embeds were explicitly set (including empty).
+	///     Used to control conditional serialization of the embeds field.
+	/// </summary>
+	[JsonIgnore]
+	public bool HasEmbeds { get; set; }
+
+	/// <summary>
+	///     Tracks if components were explicitly set (including empty).
+	///     Used to control conditional serialization of the components field.
+	/// </summary>
+	[JsonIgnore]
+	public bool HasComponents { get; set; }
+
+	/// <summary>
 	///     Gets or sets the content.
 	/// </summary>
-	[JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
-	public Optional<string> Content { get; set; }
+	[JsonProperty("content", NullValueHandling = NullValueHandling.Include)]
+	public Optional<string?> Content { get; set; }
+
+	/// <summary>
+	///     Determines whether the content field should be serialized.
+	/// </summary>
+	public bool ShouldSerializeContent() => this.HasContent;
+
 
 	/// <summary>
 	///     Gets or sets the embeds.
 	/// </summary>
-	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordEmbed> Embeds { get; set; }
+	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Include)]
+	public IEnumerable<DiscordEmbed>? Embeds { get; set; }
+
+	/// <summary>
+	///     Determines whether the embeds field should be serialized.
+	/// </summary>
+	public bool ShouldSerializeEmbeds() => this.HasEmbeds;
 
 	/// <summary>
 	///     Gets or sets the mentions.
@@ -142,13 +174,18 @@ internal sealed class RestWebhookMessageEditPayload : ObservableApiObject
 	///     Gets or sets the attachments.
 	/// </summary>
 	[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordAttachment> Attachments { get; set; }
+	public IEnumerable<DiscordAttachment>? Attachments { get; set; }
 
 	/// <summary>
 	///     Gets or sets the components.
 	/// </summary>
-	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordComponent> Components { get; set; }
+	[JsonProperty("components", NullValueHandling = NullValueHandling.Include)]
+	public IEnumerable<DiscordComponent>? Components { get; set; }
+
+	/// <summary>
+	///     Determines whether the components field should be serialized.
+	/// </summary>
+	public bool ShouldSerializeComponents() => this.HasComponents;
 
 	/// <summary>
 	///     Gets or sets the flags.

@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 
-using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -14,7 +13,6 @@ namespace DisCatSharp.Entities;
 /// <summary>
 ///     Represents a forwarded <see cref="DiscordMessage" /> which contains only a subset of fields.
 /// </summary>
-[DiscordInExperiment, Experimental("This is subject to change at any time.")]
 public sealed class DiscordForwardedMessage : ObservableApiObject
 {
 	/// <summary>

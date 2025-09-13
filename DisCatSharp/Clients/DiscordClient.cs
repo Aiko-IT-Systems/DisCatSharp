@@ -32,7 +32,7 @@ namespace DisCatSharp;
 /// </summary>
 public sealed partial class DiscordClient : BaseDiscordClient
 {
-#region Internal Fields/Properties
+	#region Internal Fields/Properties
 
 	/// <summary>
 	///     Gets whether this client is running as a shard.
@@ -59,9 +59,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	private readonly ManualResetEventSlim _connectionLock = new(true);
 
-#endregion
+	#endregion
 
-#region Public Fields/Properties
+	#region Public Fields/Properties
 
 	/// <summary>
 	///     Gets the gateway protocol version.
@@ -165,9 +165,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	public ConcurrentDictionary<string, CooldownBucket> CommandCooldownBuckets { get; } = [];
 
-#endregion
+	#endregion
 
-#region Constructor/Internal Setup
+	#region Constructor/Internal Setup
 
 	/// <summary>
 	///     Initializes a new instance of <see cref="DiscordClient" />.
@@ -283,6 +283,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._automodActionExecuted = new("AUTO_MODERATION_ACTION_EXECUTED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildAuditLogEntryCreated = new("GUILD_AUDIT_LOG_ENTRY_CREATED", EventExecutionLimit, this.EventErrorHandler);
 		this._voiceChannelStatusUpdated = new("VOICE_CHANNEL_STATUS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._voiceChannelStartTimeUpdated = new("VOICE_CHANNEL_START_TIME_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 		this._entitlementCreated = new("ENTITLEMENT_CREATED", EventExecutionLimit, this.EventErrorHandler);
 		this._entitlementUpdated = new("ENTITLEMENT_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 		this._entitlementDeleted = new("ENTITLEMENT_DELETED", EventExecutionLimit, this.EventErrorHandler);
@@ -298,6 +299,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._guildJoinRequestCreated = new("GUILD_JOIN_REQUEST_CREATED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildJoinRequestUpdated = new("GUILD_JOIN_REQUEST_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildJoinRequestDeleted = new("GUILD_JOIN_REQUEST_DELETED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildAppliedBoostsUpdated = new("GUILD_APPLIED_BOOSTS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 
 		this.GuildsInternal.Clear();
 		this.EmojisInternal.Clear();
@@ -306,9 +308,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._embeddedActivitiesLazy = new(() => new ReadOnlyDictionary<string, DiscordActivity>(this.EmbeddedActivitiesInternal));
 	}
 
-#endregion
+	#endregion
 
-#region Client Extension Methods
+	#region Client Extension Methods
 
 	/// <summary>
 	///     Registers an extension with this client.
@@ -328,9 +330,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public T? GetExtension<T>() where T : BaseExtension
 		=> this._extensions.FirstOrDefault(x => x.GetType() == typeof(T)) as T;
 
-#endregion
+	#endregion
 
-#region Public Connection Methods
+	#region Public Connection Methods
 
 	/// <summary>
 	///     Connects to the gateway.
@@ -481,9 +483,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			await this.WebSocketClient.DisconnectAsync().ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 
-#region Public REST Methods
+	#region Public REST Methods
 
 	/// <summary>
 	///     Requests soundboard sounds over the gateway.
@@ -552,9 +554,11 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			old.BannerColorInternal = usr.BannerColorInternal;
 			old.AvatarDecorationData = usr.AvatarDecorationData;
 			old.ThemeColorsInternal = usr.ThemeColorsInternal;
+			old.Collectibles = usr.Collectibles;
+			old.IsSystem = usr.IsSystem;
+			old.IsBot = usr.IsBot;
 			old.Pronouns = usr.Pronouns;
 			old.GlobalName = usr.GlobalName;
-			old.Clan = usr.Clan;
 			old.PrimaryGuild = usr.PrimaryGuild;
 			return old;
 		});
@@ -956,47 +960,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	///     Creates a guild. This requires the bot to be in less than 10 guilds total.
-	/// </summary>
-	/// <param name="name">Name of the guild.</param>
-	/// <param name="region">Voice region of the guild.</param>
-	/// <param name="icon">Stream containing the icon for the guild.</param>
-	/// <param name="verificationLevel">Verification level for the guild.</param>
-	/// <param name="defaultMessageNotifications">Default message notification settings for the guild.</param>
-	/// <param name="systemChannelFlags">System channel flags for the guild.</param>
-	/// <returns>The created guild.</returns>
-	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordGuild> CreateGuildAsync(
-		string name,
-		string region = null,
-		Optional<Stream> icon = default,
-		VerificationLevel? verificationLevel = null,
-		DefaultMessageNotifications? defaultMessageNotifications = null,
-		SystemChannelFlags? systemChannelFlags = null
-	)
-	{
-		var iconb64 = MediaTool.Base64FromStream(icon);
-		return this.ApiClient.CreateGuildAsync(name, region, iconb64, verificationLevel, defaultMessageNotifications, systemChannelFlags);
-	}
-
-	/// <summary>
-	///     Creates a guild from a template. This requires the bot to be in less than 10 guilds total.
-	/// </summary>
-	/// <param name="code">The template code.</param>
-	/// <param name="name">Name of the guild.</param>
-	/// <param name="icon">Stream containing the icon for the guild.</param>
-	/// <returns>The created guild.</returns>
-	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordGuild> CreateGuildFromTemplateAsync(string code, string name, Optional<Stream> icon = default)
-	{
-		var iconb64 = MediaTool.Base64FromStream(icon);
-		return this.ApiClient.CreateGuildFromTemplateAsync(code, name, iconb64);
-	}
-
-	/// <summary>
 	///     Gets a guild.
 	///     <para>Setting <paramref name="withCounts" /> to true will make a REST request.</para>
 	/// </summary>
@@ -1101,6 +1064,11 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			widget = null;
 			return false;
 		}
+		catch (UnauthorizedException)
+		{
+			widget = null;
+			return false;
+		}
 	}
 
 	/// <summary>
@@ -1108,14 +1076,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="code">The invite code.</param>
 	/// <param name="withCounts">Whether to include presence and total member counts in the returned invite.</param>
-	/// <param name="withExpiration">Whether to include the expiration date in the returned invite.</param>
 	/// <param name="scheduledEventId">The scheduled event id.</param>
+	/// <param name="withPermissions">Whether to include the invite's permissions.</param>
 	/// <returns>The requested invite.</returns>
-	/// <exception cref="NotFoundException">Thrown when the invite does not exists.</exception>
+	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordInvite> GetInviteByCodeAsync(string code, bool? withCounts = null, bool? withExpiration = null, ulong? scheduledEventId = null)
-		=> this.ApiClient.GetInviteAsync(code, withCounts, withExpiration, scheduledEventId);
+	public Task<DiscordInvite> GetInviteByCodeAsync(string code, bool? withCounts = null, ulong? scheduledEventId = null, bool? withPermissions = null)
+		=> this.ApiClient.GetInviteAsync(code, withCounts, scheduledEventId, withPermissions);
 
 	/// <summary>
 	///     Tries to get an invite.
@@ -1123,14 +1091,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="code">The invite code.</param>
 	/// <param name="invite">The invite, if found.</param>
 	/// <param name="withCounts">Whether to include presence and total member counts in the returned invite.</param>
-	/// <param name="withExpiration">Whether to include the expiration date in the returned invite.</param>
 	/// <param name="scheduledEventId">The scheduled event id.</param>
+	/// <param name="withPermissions">Whether to include the invite's permissions.</param>
 	/// <returns>True if the invite was found, otherwise false.</returns>
-	public bool TryGetInviteByCode(string code, [NotNullWhen(true)] out DiscordInvite? invite, bool? withCounts = null, bool? withExpiration = null, ulong? scheduledEventId = null)
+	public bool TryGetInviteByCode(string code, [NotNullWhen(true)] out DiscordInvite? invite, bool? withCounts = null, ulong? scheduledEventId = null, bool? withPermissions = null)
 	{
 		try
 		{
-			invite = this.GetInviteByCodeAsync(code, withCounts, withExpiration, scheduledEventId).ConfigureAwait(false).GetAwaiter().GetResult();
+			invite = this.GetInviteByCodeAsync(code, withCounts, scheduledEventId, withPermissions).ConfigureAwait(false).GetAwaiter().GetResult();
 			return true;
 		}
 		catch (NotFoundException)
@@ -1499,9 +1467,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public Task<IReadOnlyList<DiscordSoundboardSound>> ListDefaultSoundboardSoundsAsync()
 		=> this.ApiClient.ListDefaultSoundboardSoundsAsync();
 
-#endregion
+	#endregion
 
-#region Internal Caching Methods
+	#region Internal Caching Methods
 
 	/// <summary>
 	///     Gets the internal cached threads.
@@ -1595,7 +1563,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="author">The author to update.</param>
 	/// <param name="guild">The guild to update.</param>
 	/// <param name="member">The member to update.</param>
-	private void UpdateMessage(DiscordMessage message, TransportUser? author, DiscordGuild guild, TransportMember? member)
+	private void UpdateMessage(DiscordMessage message, TransportUser? author, DiscordGuild? guild, TransportMember? member)
 	{
 		if (author is not null)
 		{
@@ -1690,11 +1658,13 @@ public sealed partial class DiscordClient : BaseDiscordClient
 					old.BannerHash = usr.BannerHash;
 					old.BannerColorInternal = usr.BannerColorInternal;
 					old.AvatarDecorationData = usr.AvatarDecorationData;
+					old.Collectibles = usr.Collectibles;
+					old.IsSystem = usr.IsSystem;
+					old.IsBot = usr.IsBot;
 					old.ThemeColorsInternal = usr.ThemeColorsInternal;
 					old.Pronouns = usr.Pronouns;
 					old.Locale = usr.Locale;
 					old.GlobalName = usr.GlobalName;
-					old.Clan = usr.Clan;
 					old.PrimaryGuild = usr.PrimaryGuild;
 					return old;
 				});
@@ -1730,10 +1700,12 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				old.BannerColorInternal = usr.BannerColorInternal;
 				old.AvatarDecorationData = usr.AvatarDecorationData;
 				old.ThemeColorsInternal = usr.ThemeColorsInternal;
+				old.Collectibles = usr.Collectibles;
+				old.IsSystem = usr.IsSystem;
+				old.IsBot = usr.IsBot;
 				old.Pronouns = usr.Pronouns;
 				old.Locale = usr.Locale;
 				old.GlobalName = usr.GlobalName;
-				old.Clan = usr.Clan;
 				old.PrimaryGuild = usr.PrimaryGuild;
 				return old;
 			});
@@ -1908,12 +1880,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 					old.AvatarHash = usr.AvatarHash;
 					old.BannerHash = usr.BannerHash;
 					old.BannerColorInternal = usr.BannerColorInternal;
+					old.Collectibles = usr.Collectibles;
+					old.IsSystem = usr.IsSystem;
+					old.IsBot = usr.IsBot;
 					old.AvatarDecorationData = usr.AvatarDecorationData;
 					old.ThemeColorsInternal = usr.ThemeColorsInternal;
 					old.Pronouns = usr.Pronouns;
 					old.Locale = usr.Locale;
 					old.GlobalName = usr.GlobalName;
-					old.Clan = usr.Clan;
 					old.PrimaryGuild = usr.PrimaryGuild;
 					return old;
 				});
@@ -1997,9 +1971,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			this.MessageCache?.Add(message);
 	}
 
-#endregion
+	#endregion
 
-#region Disposal
+	#region Disposal
 
 	/// <summary>
 	///     Disposes the client.
@@ -2067,5 +2041,5 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		GC.SuppressFinalize(this);
 	}
 
-#endregion
+	#endregion
 }

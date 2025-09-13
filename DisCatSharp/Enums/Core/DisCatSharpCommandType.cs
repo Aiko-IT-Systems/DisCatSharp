@@ -26,6 +26,11 @@ public enum DisCatSharpCommandType
 	MessageCommand,
 
 	/// <summary>
+	///		A autocomplete.
+	/// </summary>
+	Autocomplete,
+
+	/// <summary>
 	///     A special type.
 	/// </summary>
 	Special

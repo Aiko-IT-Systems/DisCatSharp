@@ -44,7 +44,70 @@ public class DiscordAttachment : NullableSnowflakeObject
 	///     Gets the media, or MIME, type of the file.
 	/// </summary>
 	[JsonProperty("content_type", NullValueHandling = NullValueHandling.Ignore)]
-	public string MediaType { get; internal set; }
+	public string ContentType { get; internal set; }
+
+	/// <summary>
+	///     Gets the categorized media type of the file.
+	/// </summary>
+	public MediaType MediaType
+	{
+		get
+		{
+			return !string.IsNullOrWhiteSpace(this.Filename) && this.Filename.Equals("voice_message.ogg", StringComparison.OrdinalIgnoreCase) && GetMediaTypeFromContentType(this.ContentType) is MediaType.Audio
+				? MediaType.VoiceMessage
+				: GetMediaTypeFromContentType(this.ContentType);
+		}
+	}
+
+	/// <summary>
+	///     Gets the high-level Discord media type category of the file.
+	/// </summary>
+	public DiscordMediaType DiscordMediaType
+	{
+		get
+		{
+			return this.MediaType switch
+			{
+				MediaType.Text or MediaType.Model => DiscordMediaType.File,
+				MediaType.Video or MediaType.Image => DiscordMediaType.Media,
+				MediaType.Audio or MediaType.VoiceMessage => DiscordMediaType.Audio,
+				MediaType.Application => DiscordMediaType.Executable,
+				MediaType.Font or MediaType.Haptics or MediaType.Message or MediaType.Multipart => DiscordMediaType.Other,
+				_ => DiscordMediaType.Other,
+			};
+		}
+	}
+
+	/// <summary>
+	/// 	Gets the media type of the file as a string.
+	/// </summary>
+	/// <param name="contentType">The content type of the file.</param>
+	/// <returns>The media type of the file.</returns>
+	private static MediaType GetMediaTypeFromContentType(string? contentType)
+	{
+		if (string.IsNullOrWhiteSpace(contentType))
+			return MediaType.Unknown;
+
+		var slash = contentType.IndexOf('/');
+		if (slash <= 0)
+			return MediaType.Unknown;
+
+		var type = contentType[..slash].ToLowerInvariant();
+		return type switch
+		{
+			"application" => MediaType.Application,
+			"audio" => MediaType.Audio,
+			"font" => MediaType.Font,
+			"haptics" => MediaType.Haptics,
+			"image" => MediaType.Image,
+			"model" => MediaType.Model,
+			"message" => MediaType.Message,
+			"multipart" => MediaType.Multipart,
+			"text" => MediaType.Text,
+			"video" => MediaType.Video,
+			_ => MediaType.Unknown,
+		};
+	}
 
 	/// <summary>
 	///     Gets the file size in bytes.

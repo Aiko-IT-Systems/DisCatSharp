@@ -17,5 +17,5 @@ public sealed class DiscordMemberPaginationFilter
 	///     When the user to paginate past joined the guild.
 	/// </summary>
 	[JsonProperty("guild_joined_at", NullValueHandling = NullValueHandling.Ignore)]
-	public long? GuildJoinedAt { get; set; }
+	public long GuildJoinedAt { get; set; } = 0;
 }

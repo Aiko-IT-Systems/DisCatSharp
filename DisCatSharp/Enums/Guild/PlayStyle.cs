@@ -1,7 +1,7 @@
 namespace DisCatSharp.Enums;
 
 /// <summary>
-///     Represents the play style of a clan.
+///     Represents the play style of a guild.
 /// </summary>
 public enum PlayStyle
 {

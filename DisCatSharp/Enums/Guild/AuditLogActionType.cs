@@ -325,5 +325,9 @@ public enum AuditLogActionType
 
 	GuildScheduledEventExceptionDelete = 202,
 
-	GuildMemberVerificationUpdate = 210
+	GuildMemberVerificationUpdate = 210,
+
+	GuildProfileUpdate = 211,
+
+	GuildMigratePinPermission = 212
 }

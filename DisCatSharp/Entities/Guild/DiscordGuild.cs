@@ -778,7 +778,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	public static bool operator !=(DiscordGuild e1, DiscordGuild e2)
 		=> !(e1 == e2);
 
-#region Guild Methods
+	#region Guild Methods
 
 	/// <summary>
 	///     Gets this guilds onboarding configuration.
@@ -879,13 +879,6 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	)
 		=> this.Discord.ApiClient.AddGuildMemberAsync(this.Id, user.Id, accessToken, nickname, roles, muted, deaf);
 
-	/// <summary>
-	///     Deletes this guild. Requires the caller to be the owner of the guild.
-	/// </summary>
-	/// <exception cref="UnauthorizedException">Thrown when the client is not the owner of the guild.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task DeleteAsync()
-		=> this.Discord.ApiClient.DeleteGuildAsync(this.Id);
 
 	/// <summary>
 	///     Enables the mfa requirement for this guild.
@@ -946,7 +939,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 
 		return await this.Discord.ApiClient.ModifyGuildAsync(this.Id, mdl.Name,
 			mdl.VerificationLevel, mdl.DefaultMessageNotifications, mdl.MfaLevel, mdl.ExplicitContentFilter,
-			afkChannelId, mdl.AfkTimeout, iconb64, mdl.Owner.Map(e => e.Id), splashb64,
+			afkChannelId, mdl.AfkTimeout, iconb64, splashb64,
 			systemChannelId, mdl.SystemChannelFlags, publicUpdatesChannelId, rulesChannelId,
 			mdl.Description, bannerb64, discoverySplashb64, homeHeaderb64, mdl.PreferredLocale, mdl.PremiumProgressBarEnabled, mdl.AuditLogReason).ConfigureAwait(false);
 	}
@@ -1457,7 +1450,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	)
 		=> await this.Discord.ApiClient.CreateAutomodRuleAsync(this.Id, name, eventType, triggerType, actions, triggerMetadata, enabled, exemptRoles, exemptChannels, reason).ConfigureAwait(false);
 
-#region Scheduled Events
+	#region Scheduled Events
 
 	/// <summary>
 	///     Creates a scheduled event.
@@ -1580,7 +1573,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	public async Task<IReadOnlyDictionary<ulong, DiscordScheduledEvent>> GetScheduledEventsAsync(bool? withUserCount = null)
 		=> await this.Discord.ApiClient.ListGuildScheduledEventsAsync(this.Id, withUserCount).ConfigureAwait(false);
 
-#endregion
+	#endregion
 
 	/// <summary>
 	///     Creates a new text channel in this guild.
@@ -2110,11 +2103,13 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 					old.BannerHash = usr.BannerHash;
 					old.BannerColorInternal = usr.BannerColorInternal;
 					old.AvatarDecorationData = usr.AvatarDecorationData;
+					old.Collectibles = usr.Collectibles;
+					old.IsSystem = usr.IsSystem;
+					old.IsBot = usr.IsBot;
 					old.ThemeColorsInternal = usr.ThemeColorsInternal;
 					old.Pronouns = usr.Pronouns;
 					old.Locale = usr.Locale;
 					old.GlobalName = usr.GlobalName;
-					old.Clan = usr.Clan;
 					old.PrimaryGuild = usr.PrimaryGuild;
 					return old;
 				});
@@ -2189,6 +2184,24 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 
 		var payloadStr = JsonConvert.SerializeObject(payload, Formatting.None);
 		await client.WsSendAsync(payloadStr).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Modifies the current bot member.
+	/// </summary>
+	/// <param name="action">Action to perform on the current member.</param>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the <see cref="Permissions.ChangeNickname" /> or <see cref="Permissions.ManageRoles" /> permission.
+	/// </exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordMember> ModifyCurrentMemberAsync(Action<CurrentMemberEditModel> action)
+	{
+		var mdl = new CurrentMemberEditModel();
+		action(mdl);
+
+		return await this.Discord.ApiClient.ModifyCurrentGuildMemberAsync(this.Id, mdl.Nickname, mdl.Bio, Optional.None, Optional.None, mdl.AuditLogReason).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -2822,12 +2835,5 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	public async Task<DiscordGuildJoinRequest> ModifyJoinRequestsAsync(ulong joinRequestId, bool approve, string? rejectionReason)
 		=> await this.Discord.ApiClient.ModifyGuildJoinRequestsAsync(this.Id, joinRequestId, approve ? JoinRequestStatusType.Approved : JoinRequestStatusType.Rejected, rejectionReason);
 
-	/// <summary>
-	///     Gets the clan settings.
-	/// </summary>
-	[DiscordUnreleased("This feature is not available for bots at the current time"), Obsolete("This feature is not available for bots at the current time", true)]
-	public async Task<DiscordClanSettings> GetClanSettingsAsync()
-		=> await this.Discord.ApiClient.GetClanSettingsAsync(this.Id);
-
-#endregion
+	#endregion
 }

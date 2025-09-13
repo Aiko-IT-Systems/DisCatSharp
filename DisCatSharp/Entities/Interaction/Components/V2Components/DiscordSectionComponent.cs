@@ -16,7 +16,7 @@ public sealed class DiscordSectionComponent : DiscordComponent
 	/// <summary>
 	///     Constructs a new <see cref="DiscordSectionComponent" />.
 	/// </summary>
-	internal DiscordSectionComponent()
+	public DiscordSectionComponent()
 	{
 		this.Type = ComponentType.Section;
 	}
@@ -51,14 +51,14 @@ public sealed class DiscordSectionComponent : DiscordComponent
 	///     The components for the section.
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyList<DiscordTextDisplayComponent> Components { get; internal set; } = [];
+	public List<DiscordTextDisplayComponent> Components { get; internal set; } = [];
 
 	/// <summary>
 	///     The accessory for the section.
-	///     Can be <see cref="DiscordThumbnailComponent" /> at the moment, but might include buttons later.
+	///     Can be <see cref="DiscordThumbnailComponent" /> or <see cref="DiscordButtonComponent"/> at the moment.
 	/// </summary>
 	[JsonProperty("accessory", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordSectionAccessory? Accessory { get; internal set; }
+	public DiscordSectionAccessory Accessory { get; internal set; }
 
 	/// <summary>
 	///     Adds a thumbnail component to the section as accessory.
@@ -91,6 +91,34 @@ public sealed class DiscordSectionComponent : DiscordComponent
 	public DiscordSectionComponent WithId(int id)
 	{
 		this.Id = id;
+		return this;
+	}
+
+	/// <summary>
+	///     Adds a text display components to the section.
+	/// </summary>
+	/// <param name="component">The component to add.</param>
+	/// <exception cref="ArgumentException">Thrown if the number of components exceeds 3.</exception>
+	public DiscordSectionComponent AddTextDisplayComponent(DiscordTextDisplayComponent component)
+	{
+		if (this.Components.Count >= 3)
+			throw new ArgumentException("You can only have up to 3 components in a section.");
+
+		this.Components.Add(component);
+		return this;
+	}
+
+	/// <summary>
+	///     Adds multiple text display components to the section.
+	/// </summary>
+	/// <param name="components">The components to add.</param>
+	/// <exception cref="ArgumentException">Thrown if the number of components exceeds 3.</exception>
+	public DiscordSectionComponent AddTextDisplayComponents(IEnumerable<DiscordTextDisplayComponent> components)
+	{
+		if (this.Components.Count >= 3)
+			throw new ArgumentException("You can only have up to 3 components in a section.");
+
+		this.Components.AddRange(components);
 		return this;
 	}
 }

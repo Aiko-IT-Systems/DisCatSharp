@@ -15,7 +15,7 @@ internal class TransportUser : ObservableApiObject
 	///     Initializes a new instance of the <see cref="TransportUser" /> class.
 	/// </summary>
 	internal TransportUser()
-		: base(["display_name", "linked_users", "banner_color", "authenticator_types", "collectibles"])
+		: base(["display_name", "linked_users", "banner_color", "authenticator_types", "clan"])
 	{ }
 
 	/// <summary>
@@ -31,6 +31,7 @@ internal class TransportUser : ObservableApiObject
 		this.BannerHash = other.BannerHash;
 		this.BannerColor = other.BannerColor;
 		this.IsBot = other.IsBot;
+		this.IsSystem = other.IsSystem;
 		this.MfaEnabled = other.MfaEnabled;
 		this.Verified = other.Verified;
 		this.Email = other.Email;
@@ -41,9 +42,11 @@ internal class TransportUser : ObservableApiObject
 		this.Bio = other.Bio;
 		this.Pronouns = other.Pronouns;
 		this.GlobalName = other.GlobalName;
-		this.Clan = other.Clan;
 		this.ThemeColors = other.ThemeColors;
 		this.AvatarDecorationData = other.AvatarDecorationData;
+		this.Collectibles = other.Collectibles;
+		this.DisplayNameStyles = other.DisplayNameStyles;
+		this.PrimaryGuild = other.PrimaryGuild;
 	}
 
 	/// <summary>
@@ -94,7 +97,13 @@ internal class TransportUser : ObservableApiObject
 	///     Gets the user's avatar decoration data.
 	/// </summary>
 	[JsonProperty("avatar_decoration_data", NullValueHandling = NullValueHandling.Ignore)]
-	public AvatarDecorationData AvatarDecorationData { get; internal set; }
+	public AvatarDecorationData? AvatarDecorationData { get; internal set; }
+
+	/// <summary>
+	///     Gets the user's collectibles.
+	/// </summary>
+	[JsonProperty("collectibles", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordCollectibles? Collectibles { get; internal set; }
 
 	/// <summary>
 	///     Gets the banner hash.
@@ -119,6 +128,12 @@ internal class TransportUser : ObservableApiObject
 	/// </summary>
 	[JsonProperty("bot", NullValueHandling = NullValueHandling.Ignore)]
 	public bool IsBot { get; internal set; }
+
+	/// <summary>
+	///     Gets a value indicating whether is system.
+	/// </summary>
+	[JsonProperty("system", NullValueHandling = NullValueHandling.Ignore)]
+	public bool? IsSystem { get; internal set; }
 
 	/// <summary>
 	///     Gets a value indicating whether mfa enabled.
@@ -170,20 +185,20 @@ internal class TransportUser : ObservableApiObject
 	public string Bio { get; internal set; }
 
 	/// <summary>
-	///     Gets the users clan.
-	/// </summary>
-	[JsonProperty("clan", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordClan? Clan { get; internal set; }
-
-	/// <summary>
 	///     Gets the users primary guild.
 	/// </summary>
 	[JsonProperty("primary_guild", NullValueHandling = NullValueHandling.Ignore), DiscordUnreleased]
-	public DiscordClan? PrimaryGuild { get; internal set; }
+	public DiscordPrimaryGuild? PrimaryGuild { get; internal set; }
 
 	/// <summary>
 	///     Gets the users pronouns.
 	/// </summary>
 	[JsonProperty("pronouns", NullValueHandling = NullValueHandling.Ignore)]
 	public string Pronouns { get; internal set; }
+
+	/// <summary>
+	///		Gets the user's display name styles.
+	/// </summary>
+	[JsonProperty("display_name_styles", NullValueHandling = NullValueHandling.Ignore)]
+	public DisplayNameStyles? DisplayNameStyles { get; internal set; }
 }

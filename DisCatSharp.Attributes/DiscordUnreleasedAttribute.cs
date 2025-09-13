@@ -1,23 +1,24 @@
 using System;
 
-namespace DisCatSharp.Attributes;
-
-/// <summary>
-/// Marks something as unreleased by discord.
-/// </summary>
-[AttributeUsage(AttributeTargets.All, AllowMultiple = true, Inherited = true)]
-public sealed class DiscordUnreleasedAttribute : Attribute
+namespace DisCatSharp.Attributes
 {
 	/// <summary>
-	/// The additional information message.
+	///     Marks something as unreleased by discord.
 	/// </summary>
-	public string Message { get; set; }
-
-	public DiscordUnreleasedAttribute(string message)
+	[AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
+	public sealed class DiscordUnreleasedAttribute : Attribute
 	{
-		this.Message = message;
-	}
+		public DiscordUnreleasedAttribute(string message)
+		{
+			this.Message = message;
+		}
 
-	public DiscordUnreleasedAttribute()
-	{ }
+		public DiscordUnreleasedAttribute()
+		{ }
+
+		/// <summary>
+		///     The additional information message.
+		/// </summary>
+		public string Message { get; set; }
+	}
 }

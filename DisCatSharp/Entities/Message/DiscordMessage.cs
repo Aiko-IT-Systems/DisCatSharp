@@ -1,14 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
+using DisCatSharp.Enums.Core;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net.Abstractions;
+using DisCatSharp.Net.Serialization;
 
 using Newtonsoft.Json;
 
@@ -54,6 +56,9 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 
 	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
 	internal List<DiscordEmbed> EmbedsInternal = [];
+
+	[JsonProperty("mention_channels")]
+	public List<DiscordChannelMention> MentionedChannelsPartial = [];
 
 	[JsonIgnore]
 	internal List<DiscordChannel> MentionedChannelsInternal = [];
@@ -206,7 +211,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	[JsonProperty("author", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordUser Author { get; internal set; }
 
-	[JsonProperty("member", NullValueHandling = NullValueHandling.Ignore), SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>")]
+	[JsonProperty("member", NullValueHandling = NullValueHandling.Ignore)]
 	private TransportMember TRANSPORT_MEMBER { get; set; }
 
 	/// <summary>
@@ -374,14 +379,14 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <summary>
 	///     Gets whether this message has a message reference (reply, announcement, etc.).
 	/// </summary>
-	[Attributes.Experimental("We provide that temporary, as we figure out things."), JsonIgnore]
+	[JsonIgnore]
 	public bool HasMessageReference
 		=> this.InternalReference is { Type: ReferenceType.Default };
 
 	/// <summary>
 	///     Gets whether this message has forwarded messages.
 	/// </summary>
-	[Attributes.Experimental("We provide that temporary, as we figure out things."), JsonIgnore]
+	[JsonIgnore]
 	public bool HasMessageSnapshots
 		=> this.InternalReference is { Type: ReferenceType.Forward };
 
@@ -421,8 +426,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	///     Gets the guild to which this channel belongs.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordGuild Guild
-		=> this.GuildId.HasValue && this.Discord.Guilds.TryGetValue(this.GuildId.Value, out var guild) ? guild : null;
+	public DiscordGuild? Guild
+		=> this.GuildId.HasValue && this.Discord.Guilds.TryGetValue(this.GuildId.Value, out var guild)
+		? guild
+		: this.Channel.GuildId.HasValue && this.Discord.Guilds.TryGetValue(this.Channel.GuildId.Value, out var channelGuild)
+			? channelGuild
+			: null;
 
 	/// <summary>
 	///     Gets the message object for the referenced message
@@ -590,7 +599,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	///     Gets the mentions.
 	/// </summary>
 	/// <returns>An array of IMentions.</returns>
-	private List<IMention> GetMentions()
+	internal List<IMention> GetMentions()
 	{
 		var mentions = new List<IMention>();
 
@@ -617,29 +626,25 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	internal void PopulateMentions()
 	{
 		var guild = this.Channel?.Guild;
-		this.MentionedUsersInternal ??= [];
-		this.MentionedRolesInternal ??= [];
-		this.MentionedChannelsInternal ??= [];
 
 		var mentionedUsers = new HashSet<DiscordUser>(new DiscordUserComparer());
-		if (guild != null)
-			foreach (var usr in this.MentionedUsersInternal)
+		foreach (var usr in this.MentionedUsersInternal)
+		{
+			usr.Discord = this.Discord;
+			this.Discord.UserCache.AddOrUpdate(usr.Id, usr, (id, old) =>
 			{
-				usr.Discord = this.Discord;
-				this.Discord.UserCache.AddOrUpdate(usr.Id, usr, (id, old) =>
-				{
-					old.Username = usr.Username;
-					old.Discriminator = usr.Discriminator;
-					old.AvatarHash = usr.AvatarHash;
-					old.GlobalName = usr.GlobalName;
-					return old;
-				});
+				old.Username = usr.Username;
+				old.Discriminator = usr.Discriminator;
+				old.AvatarHash = usr.AvatarHash;
+				old.GlobalName = usr.GlobalName;
+				return old;
+			});
 
-				mentionedUsers.Add(guild.MembersInternal.TryGetValue(usr.Id, out var member) ? member : usr);
-			}
+			mentionedUsers.Add(guild is not null && guild.MembersInternal.TryGetValue(usr.Id, out var member) ? member : usr);
+		}
 
 		if (!string.IsNullOrWhiteSpace(this.Content))
-			if (guild != null)
+			if (guild is not null)
 			{
 				this.MentionedRolesInternal = [.. this.MentionedRolesInternal.Union(this.MentionedRoleIds.Select(guild.GetRole))!];
 				this.MentionedChannelsInternal = [.. this.MentionedChannelsInternal.Union(Utilities.GetChannelMentions(this.Content).Select(guild.GetChannel))!];
@@ -651,104 +656,115 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <summary>
 	///     Edits the message.
 	/// </summary>
-	/// <param name="content">New content.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
-	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> ModifyAsync(Optional<string> content)
-		=> this.Flags?.HasMessageFlag(MessageFlags.IsComponentsV2) ?? false ? throw new InvalidOperationException("UI Kit messages can not have content.") : this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, default, this.GetMentions(), default, default, [], default);
-
-	/// <summary>
-	///     Edits the message.
-	/// </summary>
-	/// <param name="embed">New embed.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
-	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> ModifyAsync(Optional<DiscordEmbed> embed = default)
-		=> this.Flags?.HasMessageFlag(MessageFlags.IsComponentsV2) ?? false ? throw new InvalidOperationException("UI Kit messages can not have embeds.") : this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, default, embed.Map(v => new[] { v }).ValueOr([]), this.GetMentions(), default, default, [], default);
-
-	/// <summary>
-	///     Edits the message.
-	/// </summary>
-	/// <param name="content">New content.</param>
-	/// <param name="embed">New embed.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
-	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> ModifyAsync(Optional<string> content, Optional<DiscordEmbed> embed = default)
-		=> this.Flags?.HasMessageFlag(MessageFlags.IsComponentsV2) ?? false ? throw new InvalidOperationException("UI Kit messages can not have content or embeds.") : this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, embed.Map(v => new[] { v }).ValueOr([]), this.GetMentions(), default, default, [], default);
-
-	/// <summary>
-	///     Edits the message.
-	/// </summary>
-	/// <param name="content">New content.</param>
-	/// <param name="embeds">New embeds.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
-	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> ModifyAsync(Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds = default)
-		=> this.Flags?.HasMessageFlag(MessageFlags.IsComponentsV2) ?? false ? throw new InvalidOperationException("UI Kit messages can not have content or embeds.") : this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, embeds, this.GetMentions(), default, default, [], default);
-
-	/// <summary>
-	///     Edits the message.
-	/// </summary>
 	/// <param name="builder">The builder of the message to edit.</param>
+	/// <param name="modifyMode">The mode of modification.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordMessage> ModifyAsync(DiscordMessageBuilder builder)
+	public async Task<DiscordMessage> ModifyAsync(DiscordMessageBuilder builder, ModifyMode modifyMode = ModifyMode.Update)
 	{
-		builder.Validate(true);
-		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, Optional.Some(builder.Embeds.AsEnumerable()), Optional.Some(builder.Mentions.AsEnumerable()), builder.Components, builder.EmbedsSuppressed, builder.Files, builder.Attachments.Count > 0
-			? Optional.Some(builder.Attachments.AsEnumerable())
-			: builder.KeepAttachmentsInternal.HasValue
-				? builder.KeepAttachmentsInternal.Value && this.Attachments is not null ? Optional.Some(this.Attachments.AsEnumerable()) : Array.Empty<DiscordAttachment>()
-				: Optional.None).ConfigureAwait(false);
+		if (modifyMode == ModifyMode.Replace)
+			builder.DoConditionalReplace();
+		builder.MentionsInternal ??= this.GetMentions();
+		if (builder.KeepAttachmentsInternal.GetValueOrDefault())
+				builder.ModifyAttachments(this.Attachments);
+		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder).ConfigureAwait(false);
 	}
-
-	/// <summary>
-	///     Edits the message embed suppression.
-	/// </summary>
-	/// <param name="suppress">Suppress embeds.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
-	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> ModifySuppressionAsync(bool suppress = false)
-		=> this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, default, default, default, default, suppress, default, default);
-
-	/// <summary>
-	///     Clears all attachments from the message.
-	/// </summary>
-	/// <returns></returns>
-	public Task<DiscordMessage> ClearAttachmentsAsync()
-		=> this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, default, default, this.GetMentions(), default, default, default, Array.Empty<DiscordAttachment>());
 
 	/// <summary>
 	///     Edits the message.
 	/// </summary>
 	/// <param name="action">The builder of the message to edit.</param>
+	/// <param name="modifyMode">The mode of modification.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordMessage> ModifyAsync(Action<DiscordMessageBuilder> action)
+	public async Task<DiscordMessage> ModifyAsync(Action<DiscordMessageBuilder> action, ModifyMode modifyMode = ModifyMode.Update)
 	{
 		var builder = new DiscordMessageBuilder();
+		if (modifyMode == ModifyMode.Replace)
+			builder.DoReplace();
 		action(builder);
-		builder.Validate(true);
-		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, Optional.Some(builder.Embeds.AsEnumerable()), Optional.Some(builder.Mentions.AsEnumerable()), builder.Components, builder.EmbedsSuppressed, builder.Files, builder.Attachments.Count > 0
-			? Optional.Some(builder.Attachments.AsEnumerable())
-			: builder.KeepAttachmentsInternal.HasValue
-				? builder.KeepAttachmentsInternal.Value && this.Attachments is not null ? Optional.Some(this.Attachments.AsEnumerable()) : Array.Empty<DiscordAttachment>()
-				: Optional.None).ConfigureAwait(false);
+		builder.MentionsInternal ??= this.GetMentions();
+		if (builder.KeepAttachmentsInternal.GetValueOrDefault())
+			builder.ModifyAttachments(this.Attachments);
+		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder, builder.KeepAttachmentsInternal.GetValueOrDefault() ? this.Attachments : null).ConfigureAwait(false);
 	}
+
+	/// <summary>
+	///		Modifies the message by removing components.
+	/// </summary>
+	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<DiscordMessage> RemoveComponentsAsync()
+		=> this.ModifyAsync(x => x.ClearComponents());
+
+	/// <summary>
+	///		Modifies the message by editing the content.
+	/// </summary>
+	/// <param name="content">The content to edit.</param>
+	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<DiscordMessage> ModifyAsync(string content)
+		=> this.ModifyAsync(x => x.WithContent(content));
+
+	/// <summary>
+	///		Modifies the message by adding an embed.
+	/// </summary>
+	/// <param name="embed">The embed to add.</param>
+	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<DiscordMessage> ModifyAsync(DiscordEmbed embed)
+		=> this.ModifyAsync(x => x.AddEmbed(embed));
+
+	/// <summary>
+	///		Modifies the message by adding embeds.
+	/// </summary>
+	/// <param name="embeds">The embeds to add.</param>
+	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<DiscordMessage> ModifyAsync(IEnumerable<DiscordEmbed> embeds)
+		=> this.ModifyAsync(x => x.AddEmbeds(embeds));
+
+	/// <summary>
+	///		Modifies the message by modifying the content an embed.
+	/// </summary>
+	/// <param name="content">The content to edit.</param>
+	/// <param name="embed">The embed to add.</param>
+	public Task<DiscordMessage> ModifyAsync(string content, DiscordEmbed embed)
+		=> this.ModifyAsync(x => x.WithContent(content).AddEmbed(embed));
+
+	/// <summary>
+	///		Modifies the message by modifying the content and adding embeds.
+	/// </summary>
+	/// <param name="content">The content to edit.</param>
+	/// <param name="embeds">The embeds to add.</param>
+	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<DiscordMessage> ModifyAsync(string content, IEnumerable<DiscordEmbed> embeds)
+		=> this.ModifyAsync(x => x.WithContent(content).AddEmbeds(embeds));
+
+	/// <summary>
+	///     Edits the message embed suppression.
+	/// </summary>
+	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<DiscordMessage> SuppressEmbedsAsync()
+		=> this.ModifyAsync(x => x.SuppressEmbeds());
 
 	/// <summary>
 	///     Deletes the message.
@@ -788,6 +804,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <summary>
 	///     Pins the message in its channel.
 	/// </summary>
+	/// <param name="reason">The audit log reason.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageMessages" /> permission.
@@ -795,12 +812,13 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task PinAsync()
-		=> this.Discord.ApiClient.PinMessageAsync(this.ChannelId, this.Id);
+	public Task PinAsync(string? reason = null)
+		=> this.Discord.ApiClient.PinMessageAsync(this.ChannelId, this.Id, reason);
 
 	/// <summary>
 	///     Unpins the message in its channel.
 	/// </summary>
+	/// <param name="reason">The audit log reason.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageMessages" /> permission.
@@ -808,13 +826,14 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task UnpinAsync()
-		=> this.Discord.ApiClient.UnpinMessageAsync(this.ChannelId, this.Id);
+	public Task UnpinAsync(string? reason = null)
+		=> this.Discord.ApiClient.UnpinMessageAsync(this.ChannelId, this.Id, reason);
 
 	/// <summary>
 	///     Responds to the message. This produces a reply.
 	/// </summary>
 	/// <param name="content">Message content to respond with.</param>
+	/// <param name="mention">Whether to mention on reply.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -823,13 +842,14 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> RespondAsync(string content)
-		=> this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, content, null, null, this.Id, false, false);
+	public Task<DiscordMessage> RespondAsync(string content, bool mention = true)
+		=> this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, content, null, null, this.Id, mention, false);
 
 	/// <summary>
 	///     Responds to the message. This produces a reply.
 	/// </summary>
 	/// <param name="embed">Embed to attach to the message.</param>
+	/// <param name="mention">Whether to mention on reply.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -838,16 +858,17 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> RespondAsync(DiscordEmbed embed)
+	public Task<DiscordMessage> RespondAsync(DiscordEmbed embed, bool mention = true)
 		=> this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, null, embed != null
 			? new[] { embed }
-			: null, null, this.Id, false, false);
+			: null, null, this.Id, mention, false);
 
 	/// <summary>
 	///     Responds to the message. This produces a reply.
 	/// </summary>
 	/// <param name="content">Message content to respond with.</param>
 	/// <param name="embed">Embed to attach to the message.</param>
+	/// <param name="mention">Whether to mention on reply.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -857,15 +878,16 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public
-		Task<DiscordMessage> RespondAsync(string content, DiscordEmbed embed)
+		Task<DiscordMessage> RespondAsync(string content, DiscordEmbed embed, bool mention = true)
 		=> this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, content, embed != null
 			? new[] { embed }
-			: null, null, this.Id, false, false);
+			: null, null, this.Id, mention, false);
 
 	/// <summary>
 	///     Responds to the message. This produces a reply.
 	/// </summary>
 	/// <param name="builder">The Discord message builder.</param>
+	/// <param name="mention">Whether to mention on reply.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -875,13 +897,14 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public
-		Task<DiscordMessage> RespondAsync(DiscordMessageBuilder builder)
-		=> this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, builder.WithReply(this.Id));
+		Task<DiscordMessage> RespondAsync(DiscordMessageBuilder builder, bool mention = true)
+		=> this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, builder.WithReply(this.Id, mention));
 
 	/// <summary>
 	///     Responds to the message. This produces a reply.
 	/// </summary>
 	/// <param name="action">The Discord message builder.</param>
+	/// <param name="mention">Whether to mention on reply.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -890,11 +913,11 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> RespondAsync(Action<DiscordMessageBuilder> action)
+	public Task<DiscordMessage> RespondAsync(Action<DiscordMessageBuilder> action, bool mention = true)
 	{
 		var builder = new DiscordMessageBuilder();
 		action(builder);
-		return this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, builder.WithReply(this.Id));
+		return this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, builder.WithReply(this.Id, mention));
 	}
 
 	/// <summary>

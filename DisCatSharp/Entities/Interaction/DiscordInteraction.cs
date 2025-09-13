@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
+using DisCatSharp.Enums.Core;
 
 using Newtonsoft.Json;
 
@@ -31,7 +31,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	public DiscordInteractionData Data { get; internal set; }
 
 	/// <summary>
-	///     Gets the Id of the guild that invoked this interaction, if any.
+	///     Gets the ID of the guild that invoked this interaction, if any.
 	/// </summary>
 	[JsonIgnore]
 	public ulong? GuildId { get; internal set; }
@@ -40,17 +40,17 @@ public sealed class DiscordInteraction : SnowflakeObject
 	///     Gets the guild that invoked this interaction.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordGuild Guild
+	public DiscordGuild? Guild
 		=> (this.Discord as DiscordClient)?.InternalGetCachedGuild(this.GuildId) ?? this.PartialGuild;
 
 	/// <summary>
 	///     Gets the partial guild from the interaction.
 	/// </summary>
-	[JsonProperty("guild")]
-	internal DiscordGuild PartialGuild { get; set; }
+	[JsonProperty("guild", NullValueHandling = NullValueHandling.Ignore)]
+	internal DiscordGuild? PartialGuild { get; set; }
 
 	/// <summary>
-	///     Gets the Id of the channel that invoked this interaction.
+	///     Gets the ID of the channel that invoked this interaction.
 	/// </summary>
 	[JsonIgnore]
 	public ulong ChannelId { get; internal set; }
@@ -60,7 +60,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// </summary>
 	[JsonIgnore] // TODO: Is now also partial "channel"
 	public DiscordChannel Channel
-		=> (this.Discord as DiscordClient).InternalGetCachedChannel(this.ChannelId) ?? (DiscordChannel)(this.Discord as DiscordClient).InternalGetCachedThread(this.ChannelId) ?? (this.Guild == null
+		=> (this.Discord as DiscordClient).InternalGetCachedChannel(this.ChannelId) ?? (DiscordChannel)(this.Discord as DiscordClient).InternalGetCachedThread(this.ChannelId) ?? (this.Guild is null
 			? new DiscordDmChannel
 			{
 				Id = this.ChannelId,
@@ -101,8 +101,8 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <summary>
 	///     The message this interaction was created with, if any.
 	/// </summary>
-	[JsonProperty("message")]
-	internal DiscordMessage Message { get; set; }
+	[JsonProperty("message", NullValueHandling = NullValueHandling.Ignore)]
+	internal DiscordMessage? Message { get; set; }
 
 	/// <summary>
 	///     Gets the invoking user locale.
@@ -135,12 +135,6 @@ public sealed class DiscordInteraction : SnowflakeObject
 	public List<DiscordEntitlement> Entitlements { get; internal set; } = [];
 
 	/// <summary>
-	///     <para>Gets the entitlement sku ids.</para>
-	/// </summary>
-	[JsonProperty("entitlement_sku_ids", NullValueHandling = NullValueHandling.Ignore), DiscordDeprecated, Obsolete("Discord replaced this with Entitlements", true, DiagnosticId = "DCS0102")]
-	public List<ulong> EntitlementSkuIds { get; internal set; } = [];
-
-	/// <summary>
 	///     Gets which integrations authorized the interaction.
 	/// </summary>
 	[JsonProperty("authorizing_integration_owners", NullValueHandling = NullValueHandling.Ignore)]
@@ -157,12 +151,17 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// </summary>
 	/// <param name="type">The type of the response.</param>
 	/// <param name="builder">The data, if any, to send.</param>
+	/// <param name="modifyMode">The modify mode. Only useful for <see cref="InteractionResponseType.UpdateMessage"/>.</param>
 	/// <returns>
 	///     The created <see cref="DiscordMessage" />, or <see langword="null" /> if <paramref name="type" /> creates no
 	///     content.
 	/// </returns>
-	public async Task<DiscordInteractionCallbackResponse> CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder? builder = null)
-		=> await this.Discord.ApiClient.CreateInteractionResponseAsync(this.Id, this.Token, type, builder);
+	public async Task<DiscordInteractionCallbackResponse> CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder? builder = null, ModifyMode modifyMode = ModifyMode.Update)
+	{
+		if (modifyMode is ModifyMode.Replace)
+			builder.DoConditionalReplace();
+		return await this.Discord.ApiClient.CreateInteractionResponseAsync(this.Id, this.Token, type, builder);
+	}
 
 	/// <summary>
 	///     Creates a modal response to this interaction.
@@ -171,7 +170,6 @@ public sealed class DiscordInteraction : SnowflakeObject
 	public Task CreateInteractionModalResponseAsync(DiscordInteractionModalBuilder builder)
 		=> this.Type is not InteractionType.Ping && this.Type is not InteractionType.ModalSubmit ? this.Discord.ApiClient.CreateInteractionModalResponseAsync(this.Id, this.Token, InteractionResponseType.Modal, builder) : throw new NotSupportedException("You can't respond to a PING with a modal.");
 
-	// TODO: Add hints support
 	/// <summary>
 	///     Creates an iframe response to this interaction.
 	/// </summary>
@@ -193,18 +191,26 @@ public sealed class DiscordInteraction : SnowflakeObject
 	///     Edits the original interaction response.
 	/// </summary>
 	/// <param name="builder">The webhook builder.</param>
+	/// <param name="modifyMode">The modify mode.</param>
 	/// <returns>The edited <see cref="DiscordMessage" />.</returns>
-	public async Task<DiscordMessage> EditOriginalResponseAsync(DiscordWebhookBuilder builder)
+	public async Task<DiscordMessage> EditOriginalResponseAsync(DiscordWebhookBuilder builder, ModifyMode modifyMode = ModifyMode.Update)
 	{
+		if (modifyMode is ModifyMode.Replace)
+			builder.DoConditionalReplace();
+		// TODO: This might not work if i.e. the original response was deferred and edited.
+		builder.MentionsInternal ??= this.Message?.GetMentions();
 		builder.Validate(isInteractionResponse: true);
 		if (builder.KeepAttachmentsInternal.HasValue && builder.KeepAttachmentsInternal.Value)
 		{
 			var attachments = this.Discord.ApiClient.GetOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token).Result.Attachments;
 			if (attachments?.Count > 0)
+			{
+				builder.AttachmentsInternal ??= [];
 				builder.AttachmentsInternal.AddRange(attachments);
+			}
 		}
 		else if (builder.KeepAttachmentsInternal.HasValue)
-			builder.AttachmentsInternal.Clear();
+			builder.AttachmentsInternal?.Clear();
 
 		return await this.Discord.ApiClient.EditOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token, builder).ConfigureAwait(false);
 	}
@@ -217,7 +223,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 		=> this.Discord.ApiClient.DeleteOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token);
 
 	/// <summary>
-	///     Creates a follow up message to this interaction.
+	///     Creates a follow-up message to this interaction.
 	/// </summary>
 	/// <param name="builder">The webhook builder.</param>
 	/// <returns>The created <see cref="DiscordMessage" />.</returns>
@@ -229,38 +235,44 @@ public sealed class DiscordInteraction : SnowflakeObject
 	}
 
 	/// <summary>
-	///     Gets a follow up message.
+	///     Gets a follow-up message.
 	/// </summary>
-	/// <param name="messageId">The id of the follow up message.</param>
+	/// <param name="messageId">The id of the follow-up message.</param>
 	public Task<DiscordMessage> GetFollowupMessageAsync(ulong messageId)
 		=> this.Discord.ApiClient.GetFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId);
 
 	/// <summary>
-	///     Edits a follow up message.
+	///     Edits a follow-up message.
 	/// </summary>
-	/// <param name="messageId">The id of the follow up message.</param>
+	/// <param name="messageId">The id of the follow-up message.</param>
 	/// <param name="builder">The webhook builder.</param>
+	/// <param name="modifyMode">The modify mode.</param>
 	/// <returns>The edited <see cref="DiscordMessage" />.</returns>
-	public async Task<DiscordMessage> EditFollowupMessageAsync(ulong messageId, DiscordWebhookBuilder builder)
+	public async Task<DiscordMessage> EditFollowupMessageAsync(ulong messageId, DiscordWebhookBuilder builder, ModifyMode modifyMode = ModifyMode.Update)
 	{
+		if (modifyMode is ModifyMode.Replace)
+			builder.DoConditionalReplace();
+		builder.MentionsInternal ??= this.GetFollowupMessageAsync(messageId).Result.GetMentions();
 		builder.Validate(isFollowup: true);
-
 		if (builder.KeepAttachmentsInternal.HasValue && builder.KeepAttachmentsInternal.Value)
 		{
 			var attachments = this.Discord.ApiClient.GetFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId).Result.Attachments;
 			if (attachments?.Count > 0)
+			{
+				builder.AttachmentsInternal ??= [];
 				builder.AttachmentsInternal.AddRange(attachments);
+			}
 		}
 		else if (builder.KeepAttachmentsInternal.HasValue)
-			builder.AttachmentsInternal.Clear();
+			builder.AttachmentsInternal?.Clear();
 
 		return await this.Discord.ApiClient.EditFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId, builder).ConfigureAwait(false);
 	}
 
 	/// <summary>
-	///     Deletes a follow up message.
+	///     Deletes a follow-up message.
 	/// </summary>
-	/// <param name="messageId">The id of the follow up message.</param>
+	/// <param name="messageId">The id of the follow-up message.</param>
 	public Task DeleteFollowupMessageAsync(ulong messageId)
 		=> this.Discord.ApiClient.DeleteFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId);
 }
