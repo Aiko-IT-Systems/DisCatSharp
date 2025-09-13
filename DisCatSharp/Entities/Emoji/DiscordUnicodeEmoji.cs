@@ -1059,6 +1059,7 @@ public class DiscordUnicodeEmoji
     public const string SALT = "🧂";
     public const string SOCCER = "⚽";
     public const string SOCCER_BALL = "⚽";
+    public const string ACTUAL_FOOTBALL = "⚽";
     public const string BASKETBALL = "🏀";
     public const string FOOTBALL = "🏈";
     public const string BASEBALL = "⚾";
