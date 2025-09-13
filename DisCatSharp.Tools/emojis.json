@@ -9484,7 +9484,8 @@
         {
             "names": [
                 "soccer",
-                "soccer_ball"
+                "soccer_ball",
+                "actual_football"
             ],
             "surrogates": "⚽",
             "unicodeVersion": 5.2,
@@ -42392,6 +42393,7 @@
         "salt": 850,
         "soccer": 851,
         "soccer_ball": 851,
+        "actual_football": 851,
         "basketball": 852,
         "football": 853,
         "baseball": 854,
