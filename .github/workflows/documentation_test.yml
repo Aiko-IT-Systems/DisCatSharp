@@ -20,7 +20,7 @@ jobs:
                   token: ${{ secrets.NYUW_TOKEN_GH }}
                   path: GitHub/DisCatSharp
             - name: Checkout docs repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
               with:
                 repository: Aiko-IT-Systems/DisCatSharp.Docs
                 token: ${{ secrets.NYUW_TOKEN_GH }}
