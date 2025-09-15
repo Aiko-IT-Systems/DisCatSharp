@@ -40,7 +40,7 @@ public sealed class DiscordActionRowComponent : DiscordComponent
 	[JsonIgnore]
 	public IReadOnlyCollection<DiscordComponent> Components
 	{
-		get => this._components ?? [];
+		get => this._components;
 		set => this._components = [.. value];
 	}
 
@@ -52,5 +52,12 @@ public sealed class DiscordActionRowComponent : DiscordComponent
 	{
 		this.Id = id;
 		return this;
+	}
+
+	/// <inheritdoc/>
+	public override IEnumerable<DiscordComponent> GetChildren()
+	{
+		foreach (var comp in this.Components)
+			yield return comp;
 	}
 }

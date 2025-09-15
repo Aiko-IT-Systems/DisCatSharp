@@ -1,6 +1,7 @@
+using System.Collections.Generic;
+
 using DisCatSharp.Enums;
 using DisCatSharp.Net.Serialization;
-
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;
@@ -34,4 +35,12 @@ public class DiscordComponent : ObservableApiObject
 	/// </summary>
 	[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
 	public int? Id { get; internal set; }
+
+	/// <summary>
+	///     Gets the child components of this component, if any.
+	/// </summary>
+	public virtual IEnumerable<DiscordComponent> GetChildren()
+	{
+		yield break;
+	}
 }

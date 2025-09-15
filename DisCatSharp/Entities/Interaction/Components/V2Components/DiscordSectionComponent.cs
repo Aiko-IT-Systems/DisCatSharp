@@ -60,6 +60,15 @@ public sealed class DiscordSectionComponent : DiscordComponent
 	[JsonProperty("accessory", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordSectionAccessory Accessory { get; internal set; }
 
+	/// <inheritdoc/>
+	public override IEnumerable<DiscordComponent> GetChildren()
+	{
+		foreach (var comp in this.Components)
+			yield return comp;
+		if (this.Accessory is DiscordBaseButtonComponent acc)
+			yield return acc;
+	}
+
 	/// <summary>
 	///     Adds a thumbnail component to the section as accessory.
 	/// </summary>

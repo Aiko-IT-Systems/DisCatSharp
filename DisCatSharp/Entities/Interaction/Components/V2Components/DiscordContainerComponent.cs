@@ -148,4 +148,11 @@ public sealed class DiscordContainerComponent : DiscordComponent
 		this.Id = id;
 		return this;
 	}
+
+	/// <inheritdoc/>
+	public override IEnumerable<DiscordComponent> GetChildren()
+	{
+		foreach (var comp in this.Components)
+			yield return comp;
+	}
 }

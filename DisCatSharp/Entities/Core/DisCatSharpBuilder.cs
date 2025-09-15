@@ -289,50 +289,13 @@ public class DisCatSharpBuilder
 	/// </exception>
 	private void CheckComponentIds(DiscordComponent component, HashSet<int> ids, Dictionary<int, List<string>> duplicateIds)
 	{
-		switch (component)
-		{
-			case DiscordActionRowComponent actionRowComponent:
-			{
-				foreach (var actionRowComponentChild in actionRowComponent.Components)
-					this.AddId(actionRowComponentChild, ref ids, ref duplicateIds);
-				break;
-			}
-			case DiscordContainerComponent containerComponent:
-			{
-				foreach (var containerComponentChild in containerComponent.Components)
-				{
-					switch (containerComponentChild)
-					{
-						case DiscordActionRowComponent actionRowContainerComponentChild:
-						{
-							foreach (var actionRowComponentChild in actionRowContainerComponentChild.Components)
-								this.AddId(actionRowComponentChild, ref ids, ref duplicateIds);
-							break;
-						}
-						case DiscordSectionComponent subSectionComponent:
-						{
-							foreach (var sectionComponentChild in subSectionComponent.Components)
-								this.AddId(sectionComponentChild, ref ids, ref duplicateIds);
-							this.AddId(subSectionComponent.Accessory, ref ids, ref duplicateIds);
-							break;
-						}
-					}
-
-					this.AddId(containerComponentChild, ref ids, ref duplicateIds);
-				}
-
-				break;
-			}
-			case DiscordSectionComponent sectionComponent:
-			{
-				foreach (var sectionComponentChild in sectionComponent.Components)
-					this.AddId(sectionComponentChild, ref ids, ref duplicateIds);
-				this.AddId(sectionComponent.Accessory, ref ids, ref duplicateIds);
-				break;
-			}
-		}
+		if (component is null)
+			return;
 
 		this.AddId(component, ref ids, ref duplicateIds);
+
+		foreach (var child in component.GetChildren())
+			this.CheckComponentIds(child, ids, duplicateIds);
 	}
 
 	/// <summary>
