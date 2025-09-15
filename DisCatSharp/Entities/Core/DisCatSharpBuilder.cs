@@ -67,7 +67,7 @@ public class DisCatSharpBuilder
 		get => this.ContentInternal;
 		set
 		{
-			if (this.IsComponentsV2 || this.IsVoiceMessage)
+			if (value is not null && (this.IsComponentsV2 || this.IsVoiceMessage))
 				throw new InvalidOperationException("You cannot set the content for UI Kit / Voice messages");
 
 			if (value is { Length: > 2000 })
@@ -199,7 +199,9 @@ public class DisCatSharpBuilder
 	/// </summary>
 	public virtual void Clear()
 	{
-		this.Content = null;
+		this.IsVoiceMessage = false;
+		this.IsComponentsV2 = false;
+		this.ContentInternal = null;
 		this.HasContent = false;
 		this.FilesInternal?.Clear();
 		this.FilesInternal = null;
@@ -211,8 +213,6 @@ public class DisCatSharpBuilder
 		this.ComponentsInternal?.Clear();
 		this.ComponentsInternal = null;
 		this.HasComponents = false;
-		this.IsVoiceMessage = false;
-		this.IsComponentsV2 = false;
 		this.EmbedsSuppressed = false;
 		this.NotificationsSuppressed = false;
 		this.FlagsChanged = false;
