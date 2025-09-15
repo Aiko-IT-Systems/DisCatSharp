@@ -66,6 +66,16 @@ public sealed class DiscordLabelComponent : DiscordComponent
 	}
 
 	/// <summary>
+	/// 	Sets the file upload component for the label.
+	/// </summary>
+	/// <param name="component">The file upload component to attach to the label.</param>
+	public DiscordLabelComponent WithFileUploadComponent(DiscordFileUploadComponent component)
+	{
+		this.Component = component;
+		return this;
+	}
+
+	/// <summary>
 	///     The label.
 	/// </summary>
 	[JsonProperty("label")]

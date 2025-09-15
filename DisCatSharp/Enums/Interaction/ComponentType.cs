@@ -88,5 +88,10 @@ public enum ComponentType
 	/// <summary>
 	///     A label.
 	/// </summary>
-	Label = 18
+	Label = 18,
+
+	/// <summary>
+	///     A file upload component.
+	/// </summary>
+	FileUpload = 19
 }

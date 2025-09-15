@@ -1,0 +1,67 @@
+using System;
+
+using DisCatSharp.Enums;
+
+using Newtonsoft.Json;
+
+namespace DisCatSharp.Entities;
+
+/// <summary>
+///     A file upload component.
+/// </summary>
+public sealed class DiscordFileUploadComponent : DiscordComponent, ILabelComponent
+{
+	/// <summary>
+	///     Constructs a new <see cref="DiscordFileUploadComponent" />.
+	/// </summary>
+	internal DiscordFileUploadComponent()
+	{
+		this.Type = ComponentType.FileUpload;
+	}
+
+	/// <summary>
+	///     Constructs a new <see cref="DiscordFileUploadComponent" />.
+	/// </summary>
+	/// <param name="customId">The Id to assign to the file upload component.</param>
+	/// <param name="minOptions">Minimum count of files allowed to upload.</param>
+	/// <param name="maxOptions">Maximum count of files allowed to upload.</param>
+	/// <param name="required">Whether the file upload is required.</param>
+	public DiscordFileUploadComponent(string customId = null, int minOptions = 1, int maxOptions = 1, bool required = true)
+		: this()
+	{
+		this.CustomId = customId ?? Guid.NewGuid().ToString();
+		this.MinimumValues = minOptions;
+		this.MaximumValues = maxOptions;
+		this.Required = required;
+	}
+
+	/// <summary>
+	///     Whether this select component is required. For modals.
+	/// </summary>
+	[JsonProperty("required", NullValueHandling = NullValueHandling.Ignore)]
+	public bool? Required { get; internal set; }
+
+	/// <summary>
+	///     The minimum amount of files that can be uploaded. Must be less than or equal to
+	///     <see cref="MaximumValues" />. Defaults to <c>1</c>.
+	/// </summary>
+	[JsonProperty("min_values", NullValueHandling = NullValueHandling.Ignore)]
+	public int? MinimumValues { get; internal set; } = 1;
+
+	/// <summary>
+	///     The maximum amount of files that can be uploaded. Must be greater than or equal to <c>1</c> or
+	///     <see cref="MinimumValues" />. Defaults to <c>1</c>.
+	/// </summary>
+	[JsonProperty("max_values", NullValueHandling = NullValueHandling.Ignore)]
+	public int? MaximumValues { get; internal set; } = 1;
+
+	/// <summary>
+	///     Assigns a unique id to the components.
+	/// </summary>
+	/// <param name="id">The id to assign.</param>
+	public DiscordFileUploadComponent WithId(int id)
+	{
+		this.Id = id;
+		return this;
+	}
+}

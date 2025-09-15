@@ -16,11 +16,11 @@ internal sealed class DiscordComponentJsonConverter : JsonConverter
 	/// <inheritdoc />
 	public override bool CanWrite
 		=> false;
-	
+
 	/// <inheritdoc />
 	public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
 		=> throw new NotImplementedException();
-	
+
 	/// <inheritdoc />
 	public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
 	{
@@ -49,6 +49,7 @@ internal sealed class DiscordComponentJsonConverter : JsonConverter
 			ComponentType.Separator => new DiscordSeparatorComponent(),
 			ComponentType.Label => new DiscordLabelComponent(),
 			ComponentType.Container => new DiscordContainerComponent(),
+			ComponentType.FileUpload => new DiscordFileUploadComponent(),
 			_ => new()
 			{
 				Type = type
@@ -61,7 +62,7 @@ internal sealed class DiscordComponentJsonConverter : JsonConverter
 
 		return cmp;
 	}
-	
+
 	/// <inheritdoc />
 	public override bool CanConvert(Type objectType)
 		=> typeof(DiscordComponent).IsAssignableFrom(objectType);
