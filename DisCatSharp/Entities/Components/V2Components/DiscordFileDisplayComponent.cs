@@ -72,7 +72,7 @@ public sealed class DiscordFileDisplayComponent : DiscordComponent
 	public bool? Spoiler { get; internal set; }
 
 	/// <summary>
-	///     Assigns a unique id to the components.
+	///     Assigns a unique id to this component.
 	/// </summary>
 	/// <param name="id">The id to assign.</param>
 	public DiscordFileDisplayComponent WithId(int id)

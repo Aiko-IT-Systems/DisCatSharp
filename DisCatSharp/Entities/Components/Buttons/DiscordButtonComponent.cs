@@ -125,7 +125,7 @@ public sealed class DiscordButtonComponent : DiscordBaseButtonComponent
 	}
 
 	/// <summary>
-	///     Assigns a unique id to the components.
+	///     Assigns a unique id to this component.
 	/// </summary>
 	/// <param name="id">The id to assign.</param>
 	public DiscordButtonComponent WithId(int id)

@@ -56,23 +56,28 @@ public class DiscordPremiumButtonComponent : DiscordBaseButtonComponent
 	/// </summary>
 	/// <returns>The current component.</returns>
 	public DiscordPremiumButtonComponent Enable()
-	{
-		this.Disabled = false;
-		return this;
-	}
+		=> this.SetState(false);
 
 	/// <summary>
 	///     Disables this component.
 	/// </summary>
 	/// <returns>The current component.</returns>
 	public DiscordPremiumButtonComponent Disable()
+		=> this.SetState(true);
+
+	/// <summary>
+	///     Enables or disables this component.
+	/// </summary>
+	/// <param name="disabled">Whether this component should be disabled.</param>
+	/// <returns>The current component.</returns>
+	public DiscordPremiumButtonComponent SetState(bool disabled)
 	{
-		this.Disabled = true;
+		this.Disabled = disabled;
 		return this;
 	}
 
 	/// <summary>
-	///     Assigns a unique id to the components.
+	///     Assigns a unique id to this component.
 	/// </summary>
 	/// <param name="id">The id to assign.</param>
 	public DiscordPremiumButtonComponent WithId(int id)

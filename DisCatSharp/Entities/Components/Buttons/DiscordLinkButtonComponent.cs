@@ -70,23 +70,28 @@ public class DiscordLinkButtonComponent : DiscordBaseButtonComponent
 	/// </summary>
 	/// <returns>The current component.</returns>
 	public DiscordLinkButtonComponent Enable()
-	{
-		this.Disabled = false;
-		return this;
-	}
+		=> this.SetState(false);
 
 	/// <summary>
 	///     Disables this component.
 	/// </summary>
 	/// <returns>The current component.</returns>
 	public DiscordLinkButtonComponent Disable()
+		=> this.SetState(true);
+
+	/// <summary>
+	///     Enables or disables this component.
+	/// </summary>
+	/// <param name="disabled">Whether this component should be disabled.</param>
+	/// <returns>The current component.</returns>
+	public DiscordLinkButtonComponent SetState(bool disabled)
 	{
-		this.Disabled = true;
+		this.Disabled = disabled;
 		return this;
 	}
 
 	/// <summary>
-	///     Assigns a unique id to the components.
+	///     Assigns a unique id to this component.
 	/// </summary>
 	/// <param name="id">The id to assign.</param>
 	public DiscordLinkButtonComponent WithId(int id)

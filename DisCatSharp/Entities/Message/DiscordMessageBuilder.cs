@@ -592,7 +592,7 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 		var matchCustomId = customIds is not null && !string.IsNullOrEmpty(component.CustomId) && customIds.Contains(component.CustomId);
 		var shouldSet = all || matchId || matchCustomId;
 
-		if (component is DiscordButtonComponent btn)
+		if (component is DiscordBaseButtonComponent btn)
 		{
 			if (shouldSet)
 				btn.Disabled = disabled;

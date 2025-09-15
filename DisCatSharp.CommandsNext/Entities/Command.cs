@@ -157,14 +157,13 @@ public class Command
 		var o1 = cmd1 as object;
 		var o2 = cmd2 as object;
 
-		if (o1 == null && o2 != null)
-			return false;
-		if (o1 != null && o2 == null)
-			return false;
-		if (o1 == null && o2 == null)
-			return true;
-
-		return cmd1.QualifiedName == cmd2.QualifiedName;
+		return o1 == null && o2 != null
+			? false
+			: o1 != null && o2 == null
+				? false
+				: o1 == null && o2 == null
+					? true
+					: cmd1.QualifiedName == cmd2.QualifiedName;
 	}
 
 	/// <summary>
@@ -185,23 +184,22 @@ public class Command
 	{
 		var o1 = obj;
 		var o2 = this as object;
-
-		if (o1 == null && o2 != null)
-			return false;
-		if (o1 != null && o2 == null)
-			return false;
-		if (o1 == null && o2 == null)
-			return true;
-
-		return obj is Command cmd
-		       && cmd.QualifiedName == this.QualifiedName;
+		
+		return o1 == null && o2 != null
+			? false
+			: o1 != null && o2 == null
+				? false
+				: o1 == null && o2 == null
+					? true
+					: obj is Command cmd && cmd.QualifiedName == this.QualifiedName;
 	}
 
 	/// <summary>
 	///     Gets this command's hash code.
 	/// </summary>
 	/// <returns>This command's hash code.</returns>
-	public override int GetHashCode() => this.QualifiedName.GetHashCode();
+	public override int GetHashCode()
+		=> this.QualifiedName.GetHashCode();
 
 	/// <summary>
 	///     Returns a string representation of this command.
