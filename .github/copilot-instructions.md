@@ -20,6 +20,17 @@ applyTo: '**'
 - If you use copilot, add Co-Authored-By to the commit message to credit the AI assistant. The line should be `Co-Authored-By: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>`
 
 ## Coding Conventions
+
+### C# Language Version
+- The codebase uses the latest stable C# language version. You are encouraged to use modern C# features where they improve clarity, safety, or conciseness. This includes:
+  - Collection expressions (e.g., `[..source]`)
+  - Pattern matching improvements
+  - Target-typed `new()` expressions
+  - File-scoped types
+  - Required members
+  - Primary constructors
+  - Any other features available in the current C# standard
+- Prefer modern idioms and syntax, but ensure readability and maintainability for contributors.
 - Follows Microsoft C# conventions with project-specific rules:
   - Use `Optional<T>` for optional fields/properties in REST payloads.
   - Use `NullValueHandling = NullValueHandling.Ignore` for nullable REST properties.
