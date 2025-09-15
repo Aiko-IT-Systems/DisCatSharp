@@ -494,6 +494,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	public List<DiscordSoundboardSound>? SoundboardSounds { get; internal set; }
 
 	/// <summary>
+	///    Gets the shared client theme in this message, if applicable.
+	/// </summary>
+	[JsonProperty("shared_client_theme")]
+	public SharedClientTheme? SharedClientTheme { get; set; }
+
+	/// <summary>
 	///     Checks whether this <see cref="DiscordMessage" /> is equal to another <see cref="DiscordMessage" />.
 	/// </summary>
 	/// <param name="e"><see cref="DiscordMessage" /> to compare to.</param>
