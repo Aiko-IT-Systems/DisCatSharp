@@ -47,12 +47,6 @@ public class DiscordLinkButtonComponent : DiscordBaseButtonComponent
 	public string Label { get; set; }
 
 	/// <summary>
-	///     Whether this button can be pressed.
-	/// </summary>
-	[JsonProperty("disabled", NullValueHandling = NullValueHandling.Ignore)]
-	public bool Disabled { get; set; }
-
-	/// <summary>
 	///     The emoji to add to the button. Can be used in conjunction with a label, or as standalone. Must be added if label
 	///     is not specified.
 	/// </summary>
@@ -69,14 +63,14 @@ public class DiscordLinkButtonComponent : DiscordBaseButtonComponent
 	///     Enables this component if it was disabled before.
 	/// </summary>
 	/// <returns>The current component.</returns>
-	public DiscordLinkButtonComponent Enable()
+	public new DiscordLinkButtonComponent Enable()
 		=> this.SetState(false);
 
 	/// <summary>
 	///     Disables this component.
 	/// </summary>
 	/// <returns>The current component.</returns>
-	public DiscordLinkButtonComponent Disable()
+	public new DiscordLinkButtonComponent Disable()
 		=> this.SetState(true);
 
 	/// <summary>
@@ -84,7 +78,7 @@ public class DiscordLinkButtonComponent : DiscordBaseButtonComponent
 	/// </summary>
 	/// <param name="disabled">Whether this component should be disabled.</param>
 	/// <returns>The current component.</returns>
-	public DiscordLinkButtonComponent SetState(bool disabled)
+	public new DiscordLinkButtonComponent SetState(bool disabled)
 	{
 		this.Disabled = disabled;
 		return this;
@@ -94,7 +88,7 @@ public class DiscordLinkButtonComponent : DiscordBaseButtonComponent
 	///     Assigns a unique id to this component.
 	/// </summary>
 	/// <param name="id">The id to assign.</param>
-	public DiscordLinkButtonComponent WithId(int id)
+	public new DiscordLinkButtonComponent WithId(int id)
 	{
 		this.Id = id;
 		return this;

@@ -40,12 +40,6 @@ public class DiscordPremiumButtonComponent : DiscordBaseButtonComponent
 	public ulong SkuId { get; set; }
 
 	/// <summary>
-	///     Whether this button can be pressed.
-	/// </summary>
-	[JsonProperty("disabled", NullValueHandling = NullValueHandling.Ignore)]
-	public bool Disabled { get; set; }
-
-	/// <summary>
 	///     Gets the style.
 	/// </summary>
 	[JsonProperty("style", NullValueHandling = NullValueHandling.Ignore)]
@@ -55,14 +49,14 @@ public class DiscordPremiumButtonComponent : DiscordBaseButtonComponent
 	///     Enables this component if it was disabled before.
 	/// </summary>
 	/// <returns>The current component.</returns>
-	public DiscordPremiumButtonComponent Enable()
+	public new DiscordPremiumButtonComponent Enable()
 		=> this.SetState(false);
 
 	/// <summary>
 	///     Disables this component.
 	/// </summary>
 	/// <returns>The current component.</returns>
-	public DiscordPremiumButtonComponent Disable()
+	public new DiscordPremiumButtonComponent Disable()
 		=> this.SetState(true);
 
 	/// <summary>
@@ -70,7 +64,7 @@ public class DiscordPremiumButtonComponent : DiscordBaseButtonComponent
 	/// </summary>
 	/// <param name="disabled">Whether this component should be disabled.</param>
 	/// <returns>The current component.</returns>
-	public DiscordPremiumButtonComponent SetState(bool disabled)
+	public new DiscordPremiumButtonComponent SetState(bool disabled)
 	{
 		this.Disabled = disabled;
 		return this;
@@ -80,7 +74,7 @@ public class DiscordPremiumButtonComponent : DiscordBaseButtonComponent
 	///     Assigns a unique id to this component.
 	/// </summary>
 	/// <param name="id">The id to assign.</param>
-	public DiscordPremiumButtonComponent WithId(int id)
+	public new DiscordPremiumButtonComponent WithId(int id)
 	{
 		this.Id = id;
 		return this;
