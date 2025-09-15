@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities.Core;
+using DisCatSharp.Enums;
 
 namespace DisCatSharp.Entities;
 
@@ -506,22 +507,22 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	}
 
 	/// <inheritdoc />
-    internal override void DoReplace()
-    {
-        this.StickerIds = [];
-        this.Nonce = null;
-        this.Poll = null;
-        base.DoReplace();
-    }
+	internal override void DoReplace()
+	{
+		this.StickerIds = [];
+		this.Nonce = null;
+		this.Poll = null;
+		base.DoReplace();
+	}
 
 	/// <inheritdoc />
-    internal override void DoConditionalReplace()
-    {
-        this.StickerIds ??= [];
-        this.Nonce ??= null;
-        this.Poll ??= null;
-        base.DoConditionalReplace();
-    }
+	internal override void DoConditionalReplace()
+	{
+		this.StickerIds ??= [];
+		this.Nonce ??= null;
+		this.Poll ??= null;
+		base.DoConditionalReplace();
+	}
 
 	/// <summary>
 	///     Does the validation before we send the Create/Modify request.
@@ -557,5 +558,139 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 			throw new InvalidOperationException("Messages with polls can't be edited.");
 
 		base.Validate();
+	}
+
+
+	/// <summary>
+	/// 	Recursively sets the disabled state of components.
+	/// </summary>
+	/// <param name="disabled">The disabled state to set.</param>
+	/// <param name="ids">The component IDs to match.</param>
+	/// <param name="customIds">The custom IDs to match.</param>
+	/// <param name="all">Whether to apply the state to all components.</param>
+	private DiscordMessageBuilder SetComponentState(bool disabled, IEnumerable<int>? ids = null, IEnumerable<string>? customIds = null, bool all = false)
+	{
+		if (this.ComponentsInternal is null)
+			return this;
+
+		foreach (var c in this.ComponentsInternal)
+			SetComponentStateRecursive(c, disabled, ids, customIds, all);
+		return this;
+	}
+
+	/// <summary>
+	/// 	Recursively sets the disabled state of components.
+	/// </summary>
+	/// <param name="component">The component to modify.</param>
+	/// <param name="disabled">The disabled state to set.</param>
+	/// <param name="ids">The component IDs to match.</param>
+	/// <param name="customIds">The custom IDs to match.</param>
+	/// <param name="all">Whether to apply the state to all components.</param>
+	private static void SetComponentStateRecursive(DiscordComponent component, bool disabled, IEnumerable<int>? ids, IEnumerable<string>? customIds, bool all)
+	{
+		var matchId = ids is not null && component.Id.HasValue && ids.Contains(component.Id.Value);
+		var matchCustomId = customIds is not null && !string.IsNullOrEmpty(component.CustomId) && customIds.Contains(component.CustomId);
+		var shouldSet = all || matchId || matchCustomId;
+
+		if (component is DiscordButtonComponent btn)
+		{
+			if (shouldSet)
+				btn.Disabled = disabled;
+		}
+		else if (component is DiscordBaseSelectComponent select)
+		{
+			if (shouldSet)
+				select.Disabled = disabled;
+		}
+		else if (component is DiscordActionRowComponent row)
+		{
+			foreach (var child in row.Components)
+				SetComponentStateRecursive(child, disabled, ids, customIds, all);
+		}
+		else if (component is DiscordContainerComponent cont)
+		{
+			foreach (var child in cont.Components)
+				SetComponentStateRecursive(child, disabled, ids, customIds, all);
+		}
+		else if (component is DiscordSectionComponent sec)
+		{
+			foreach (var child in sec.Components)
+				SetComponentStateRecursive(child, disabled, ids, customIds, all);
+			if (sec.Accessory is DiscordButtonComponent accBtn)
+				SetComponentStateRecursive(accBtn, disabled, ids, customIds, all);
+		}
+	}
+
+	/// <summary>
+	///		Disables all buttons and selects with the specified component IDs.
+	/// </summary>
+	/// <param name="ids">The component IDs to disable.</param>
+	/// <returns>The current builder for chaining.</returns>
+	public DiscordMessageBuilder DisableComponentsById(params int[] ids)
+		=> this.SetComponentState(true, ids: ids);
+
+	/// <summary>
+	/// 	Disables all buttons and selects with the specified custom IDs.
+	/// </summary>
+	/// <param name="customIds">The custom IDs to disable.</param>
+	/// <returns>The current builder for chaining.</returns>
+	public DiscordMessageBuilder DisableComponentsByCustomId(params string[] customIds)
+		=> this.SetComponentState(true, customIds: customIds);
+
+	/// <summary>
+	/// 	Disables all buttons and selects in the builder.
+	/// </summary>
+	/// <returns>The current builder for chaining.</returns>
+	public DiscordMessageBuilder DisableAllComponents()
+		=> this.SetComponentState(true, all: true);
+
+	/// <summary>
+	/// 	Enables all buttons and selects with the specified component IDs.
+	/// </summary>
+	/// <param name="ids">The component IDs to enable.</param>
+	/// <returns>The current builder for chaining.</returns>
+	public DiscordMessageBuilder EnableComponentsById(params int[] ids)
+		=> this.SetComponentState(false, ids: ids);
+
+	/// <summary>
+	/// 	Enables all buttons and selects with the specified custom IDs.
+	/// </summary>
+	/// <param name="customIds">The custom IDs to enable.</param>
+	/// <returns>The current builder for chaining.</returns>
+	public DiscordMessageBuilder EnableComponentsByCustomId(params string[] customIds)
+		=> this.SetComponentState(false, customIds: customIds);
+
+	/// <summary>
+	/// 	Enables all buttons and selects in the builder.
+	/// </summary>
+	/// <returns>The current builder for chaining.</returns>
+	public DiscordMessageBuilder EnableAllComponents()
+		=> this.SetComponentState(false, all: true);
+
+	/// <summary>
+	///     Injects components and attachments from an existing message.
+	/// </summary>
+	/// <param name="message">The message to extract components from.</param>
+	/// <returns>The current builder for chaining.</returns>
+	public DiscordMessageBuilder InjectComponentsFromMessage(DiscordMessage message)
+	{
+		if (message.Components is null)
+			return this;
+
+		this.ComponentsInternal = [.. message.Components];
+		this.HasComponents = true;
+		this.IsComponentsV2 = message.Flags.HasValue && message.Flags.Value.HasFlag(MessageFlags.IsComponentsV2);
+
+		if (message.Attachments is not null && message.Attachments.Count > 0)
+		{
+			this.AttachmentsInternal ??= [];
+			foreach (var att in message.Attachments)
+			{
+				if (!this.AttachmentsInternal.Any(a => a.Id == att.Id))
+					this.AttachmentsInternal.Add(att);
+			}
+		}
+
+		return this;
 	}
 }
