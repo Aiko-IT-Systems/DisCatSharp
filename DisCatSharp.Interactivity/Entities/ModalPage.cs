@@ -18,7 +18,7 @@ public class ModalPage
 	{
 		this.Modal = modal;
 		this.OpenButton = openButton ?? new DiscordButtonComponent(ButtonStyle.Primary, null, "Open next page", false, new(DiscordEmoji.FromUnicode("📄")));
-		this.OpenMessage = new DiscordInteractionResponseBuilder().WithContent(openText ?? "`Click the button below to continue to the next page.`").AsEphemeral();
+		this.OpenMessage = openText ?? "`Click the button below to continue to the next page.`";
 	}
 
 	/// <summary>
@@ -34,5 +34,5 @@ public class ModalPage
 	/// <summary>
 	///     The ephemeral message to display for this page.
 	/// </summary>
-	public DiscordInteractionResponseBuilder OpenMessage { get; set; }
+	public string OpenMessage { get; set; }
 }

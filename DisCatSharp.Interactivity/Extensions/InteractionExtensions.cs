@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
+using DisCatSharp.Enums.Core;
+using DisCatSharp.EventArgs;
 using DisCatSharp.Interactivity.Entities;
 using DisCatSharp.Interactivity.Enums;
 using DisCatSharp.Interactivity.EventHandling;
+
+using NuGet.Packaging;
 
 namespace DisCatSharp.Interactivity.Extensions;
 
@@ -47,78 +51,115 @@ public static class InteractionExtensions
 	/// </summary>
 	/// <param name="interaction">The interaction to create a response to.</param>
 	/// <param name="modals">The modal pages.</param>
-	/// <param name="timeOutOverride">A custom timeout. (Default: 15 minutes)</param>
+	/// <param name="timeoutOverride">A custom timeout. (Default: 15 minutes)</param>
 	/// <returns>A read-only dictionary with the customid of the components as the key.</returns>
 	/// <exception cref="ArgumentException">Is thrown when no modals are defined.</exception>
 	/// <exception cref="InvalidOperationException">Is thrown when interactivity is not enabled for the client/shard.</exception>
-	public static async Task<PaginatedModalResponse> CreatePaginatedModalResponseAsync(this DiscordInteraction interaction, IReadOnlyList<ModalPage> modals, TimeSpan? timeOutOverride = null)
+	public static async Task<PaginatedModalResponse> CreatePaginatedModalResponseAsync(this DiscordInteraction interaction, IReadOnlyList<ModalPage> modals, TimeSpan? timeoutOverride = null)
 	{
 		if (modals is null || modals.Count is 0)
 			throw new ArgumentException("You have to set at least one page");
-		// TODO: Find out what the fuck is going wrong here: https://canary.discord.com/channels/858089281214087179/891496341941944360/1411121482142060635
 		var client = (DiscordClient)interaction.Discord;
 		var interactivity = client.GetInteractivity() ?? throw new InvalidOperationException($"Interactivity is not enabled for this {(client.IsShard ? "shard" : "client")}.");
 
-		timeOutOverride ??= TimeSpan.FromMinutes(15);
+		timeoutOverride ??= TimeSpan.FromMinutes(15);
 
 		Dictionary<string, string> caughtResponses = [];
 		Dictionary<string, string[]> caughtSelectResponses = [];
 
 		var previousInteraction = interaction;
+		DiscordInteraction ephemeralInteraction = null;
+		DiscordMessage ephemeralMsg = null;
 
-		foreach (var b in modals)
+		var firstModalPage = modals[0];
+		var firstModal = firstModalPage.Modal.WithCustomId(Guid.NewGuid().ToString());
+		await interaction.CreateInteractionModalResponseAsync(firstModal).ConfigureAwait(false);
+		var modalOpen = await interactivity.WaitForModalAsync(firstModal.CustomId, timeoutOverride);
+
+		if (modalOpen.TimedOut)
 		{
-			var modal = b.Modal.WithCustomId(Guid.NewGuid().ToString());
-
-			if (previousInteraction.Type is InteractionType.Ping or InteractionType.ModalSubmit)
+			return new()
 			{
-				var originalResponse = (await previousInteraction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, b.OpenMessage.AddComponents(b.OpenButton)).ConfigureAwait(false)).Message;
-				var modalOpen = await interactivity.WaitForButtonAsync(originalResponse, new List<DiscordButtonComponent>
-				{
-					b.OpenButton
-				}, timeOutOverride).ConfigureAwait(false);
+				TimedOut = true
+			};
+		}
 
-				if (modalOpen.TimedOut)
-				{
-					_ = previousInteraction.EditOriginalResponseAsync(new DiscordWebhookBuilder().WithContent(b.OpenMessage.Content).AddComponents(b.OpenButton.Disable()));
-					return new()
-					{
-						TimedOut = true
-					};
-				}
+		await modalOpen.Result.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent(firstModalPage.OpenMessage).AddComponents(firstModalPage.OpenButton).AsEphemeral()).ConfigureAwait(false);
+		ephemeralInteraction = modalOpen.Result.Interaction;
+		ephemeralMsg = await ephemeralInteraction.GetOriginalResponseAsync();
 
-				await modalOpen.Result.Interaction.CreateInteractionModalResponseAsync(modal).ConfigureAwait(false);
-			}
-			else
-				await previousInteraction.CreateInteractionModalResponseAsync(modal).ConfigureAwait(false);
+		var (firstResponses, firstSelectResponses) = GetResponsesFromInteraction(modalOpen.Result);
+		caughtResponses.AddRange(firstResponses);
+		caughtSelectResponses.AddRange(firstSelectResponses);
 
-			_ = previousInteraction.EditOriginalResponseAsync(new DiscordWebhookBuilder().WithContent(b.OpenMessage.Content).AddComponents(b.OpenButton.Disable()));
+		foreach (var b in modals.Skip(1))
+		{
+			var waitingOnButton = await interactivity.WaitForButtonAsync(ephemeralMsg, interaction.User, timeoutOverride).ConfigureAwait(false);
 
-			var modalResult = await interactivity.WaitForModalAsync(modal.CustomId, timeOutOverride).ConfigureAwait(false);
-
-			if (modalResult.TimedOut)
+			if (waitingOnButton.TimedOut)
+			{
+				if (ephemeralInteraction is not null && ephemeralMsg is not null)
+					await ephemeralInteraction.EditOriginalResponseAsync(new DiscordWebhookBuilder().WithContent(firstModalPage.OpenMessage + "\nTimed out.").InjectComponentsFromMessage(ephemeralMsg).DisableAllComponents());
 				return new()
 				{
 					TimedOut = true
 				};
+			}
 
-			foreach (var submissions in modalResult.Result.Interaction.Data.ModalComponents.OfType<DiscordLabelComponent>().Where(x => x.Component is DiscordTextInputComponent).Select(s => s.Component as DiscordTextInputComponent))
-				caughtResponses.Add(submissions.CustomId, submissions.Value);
+			previousInteraction = waitingOnButton.Result.Interaction;
+			var modal = b.Modal.WithCustomId(Guid.NewGuid().ToString());
 
-			foreach (var submissions in modalResult.Result.Interaction.Data.ModalComponents.OfType<DiscordLabelComponent>().Where(x => x.Component is DiscordStringSelectComponent).Select(s => s.Component as DiscordStringSelectComponent))
-				caughtSelectResponses.Add(submissions.CustomId, submissions.SelectedValues);
+			await previousInteraction.CreateInteractionModalResponseAsync(modal).ConfigureAwait(false);
+
+			var modalResult = await interactivity.WaitForModalAsync(modal.CustomId, timeoutOverride).ConfigureAwait(false);
+
+			if (modalResult.TimedOut)
+			{
+				if (ephemeralInteraction is not null && ephemeralMsg is not null)
+					await ephemeralInteraction.EditOriginalResponseAsync(new DiscordWebhookBuilder().WithContent(b.OpenMessage + "\nTimed out.").InjectComponentsFromMessage(ephemeralMsg).DisableAllComponents());
+				return new()
+				{
+					TimedOut = true
+				};
+			}
+
+			await modalResult.Result.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
+
+			if (ephemeralInteraction is not null && ephemeralMsg is not null)
+				ephemeralMsg = await ephemeralInteraction.EditOriginalResponseAsync(new DiscordWebhookBuilder().WithContent(b.OpenMessage).AddComponents(b.OpenButton));
+			
+			var (responses, selectResponses) = GetResponsesFromInteraction(modalResult.Result);
+			caughtResponses.AddRange(responses);
+			caughtSelectResponses.AddRange(selectResponses);
 
 			previousInteraction = modalResult.Result.Interaction;
 		}
 
-		await previousInteraction.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource, new DiscordInteractionResponseBuilder().AsEphemeral()).ConfigureAwait(false);
+		if (ephemeralInteraction is not null)
+		{
+			await ephemeralInteraction.EditOriginalResponseAsync(new DiscordWebhookBuilder().WithContent("Done!").ClearComponents(), ModifyMode.Replace);
+		}
 
 		return new()
 		{
 			TimedOut = false,
 			Responses = caughtResponses,
 			SelectResponses = caughtSelectResponses,
-			Interaction = previousInteraction
+			Interaction = ephemeralInteraction
 		};
+	}
+
+	private static (Dictionary<string, string> responses, Dictionary<string, string[]> selectResponses) GetResponsesFromInteraction(ComponentInteractionCreateEventArgs args)
+	{
+		var caughtResponses = new Dictionary<string, string>();
+		var caughtSelectResponses = new Dictionary<string, string[]>();
+
+		foreach (var submissions in args.Interaction.Data.ModalComponents.OfType<DiscordLabelComponent>().Where(x => x.Component is DiscordTextInputComponent).Select(s => s.Component as DiscordTextInputComponent))
+			caughtResponses.Add(submissions.CustomId, submissions.Value);
+
+		foreach (var submissions in args.Interaction.Data.ModalComponents.OfType<DiscordLabelComponent>().Where(x => x.Component is DiscordStringSelectComponent).Select(s => s.Component as DiscordStringSelectComponent))
+			caughtSelectResponses.Add(submissions.CustomId, submissions.SelectedValues);
+
+		return (caughtResponses, caughtSelectResponses);
 	}
 }
