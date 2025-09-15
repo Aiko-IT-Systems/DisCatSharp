@@ -53,7 +53,7 @@ public static class InteractionExtensions
 	/// <exception cref="InvalidOperationException">Is thrown when interactivity is not enabled for the client/shard.</exception>
 	public static async Task<PaginatedModalResponse> CreatePaginatedModalResponseAsync(this DiscordInteraction interaction, IReadOnlyList<ModalPage> modals, TimeSpan? timeOutOverride = null)
 	{
-		if (modals is null || modals.Count == 0)
+		if (modals is null || modals.Count is 0)
 			throw new ArgumentException("You have to set at least one page");
 		// TODO: Find out what the fuck is going wrong here: https://canary.discord.com/channels/858089281214087179/891496341941944360/1411121482142060635
 		var client = (DiscordClient)interaction.Discord;

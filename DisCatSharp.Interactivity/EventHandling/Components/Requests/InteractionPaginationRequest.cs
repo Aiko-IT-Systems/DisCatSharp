@@ -210,24 +210,39 @@ internal class InteractionPaginationRequest : IPaginationRequest
 		switch (this._behaviorBehavior)
 		{
 			case ButtonPaginationBehavior.Disable:
-				var buttons = this._buttons.ButtonArray
-					.Select(b => new DiscordButtonComponent(b))
-					.Select(b => b.Disable());
+				var buttons = this._buttons.ButtonArray.Select(b => b.Disable());
 
-				if (page.Content is not null)
+				if (!page.UsesCV2)
+				{
+					if (page.Content is not null)
 					builder.WithContent(page.Content);
-				if (page.Embed is not null)
-					builder.AddEmbed(page.Embed);
-				builder.AddComponents(buttons);
+					if (page.Embed is not null)
+						builder.AddEmbed(page.Embed);
+					builder.AddComponents(buttons);
+				}
+				else
+				{
+					builder.WithV2Components();
+					builder.AddComponents(page.ComponentsInternal);
+					builder.AddComponents(new DiscordActionRowComponent(buttons));
+				}
 
 				await this._lastInteraction.EditOriginalResponseAsync(builder).ConfigureAwait(false);
 				break;
 
 			case ButtonPaginationBehavior.DeleteButtons:
-				if (page.Content is not null)
+				if (!page.UsesCV2)
+				{
+					if (page.Content is not null)
 					builder.WithContent(page.Content);
-				if (page.Embed is not null)
-					builder.AddEmbed(page.Embed);
+					if (page.Embed is not null)
+						builder.AddEmbed(page.Embed);
+				}
+				else
+				{
+					builder.WithV2Components();
+					builder.AddComponents(page.ComponentsInternal);
+				}
 
 				await this._lastInteraction.EditOriginalResponseAsync(builder).ConfigureAwait(false);
 				break;

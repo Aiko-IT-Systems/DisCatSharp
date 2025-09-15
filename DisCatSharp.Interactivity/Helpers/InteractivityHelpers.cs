@@ -13,7 +13,7 @@ namespace DisCatSharp.Interactivity;
 public static class InteractivityHelpers
 {
 	/// <summary>
-	///     Recalculates the pages to include a footer with the current page number and total page count.
+	///     Recalculates the pages to include a footer with the current page number and total page count. Only works for embed pages.
 	/// </summary>
 	/// <param name="pages">The list of pages to recalculate.</param>
 	/// <returns>A new list of pages with updated footers.</returns>
@@ -21,6 +21,8 @@ public static class InteractivityHelpers
 	{
 		List<Page> recalulatedPages = new(pages.Count);
 		var pageCount = 1;
+		if (pages.All(p => p.Embed is null))
+			throw new InvalidOperationException("Recalculate can only be used on embed pages.");
 		foreach (var page in pages.Where(p => p.Embed is not null))
 		{
 			ArgumentNullException.ThrowIfNull(page.Embed);
