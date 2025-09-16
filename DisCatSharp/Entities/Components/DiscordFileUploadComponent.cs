@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using DisCatSharp.Enums;
 
@@ -36,7 +37,7 @@ public sealed class DiscordFileUploadComponent : DiscordComponent, ILabelCompone
 	}
 
 	/// <summary>
-	///     Whether this select component is required. For modals.
+	///     Whether this file upload component is required. For modals.
 	/// </summary>
 	[JsonProperty("required", NullValueHandling = NullValueHandling.Ignore)]
 	public bool? Required { get; internal set; }
@@ -54,6 +55,37 @@ public sealed class DiscordFileUploadComponent : DiscordComponent, ILabelCompone
 	/// </summary>
 	[JsonProperty("max_values", NullValueHandling = NullValueHandling.Ignore)]
 	public int? MaximumValues { get; internal set; } = 1;
+
+	/// <summary>
+	///     Whether this component can be used.
+	/// </summary>
+	[JsonProperty("disabled", NullValueHandling = NullValueHandling.Ignore)]
+	public bool Disabled { get; internal set; }
+
+	/// <summary>
+	///     Enables this component if it was disabled before.
+	/// </summary>
+	/// <returns>The current component.</returns>
+	public DiscordFileUploadComponent Enable()
+		=> this.SetState(false);
+
+	/// <summary>
+	///     Disables this component.
+	/// </summary>
+	/// <returns>The current component.</returns>
+	public DiscordFileUploadComponent Disable()
+		=> this.SetState(true);
+
+	/// <summary>
+	///     Enables or disables this component.
+	/// </summary>
+	/// <param name="disabled">Whether this component should be disabled.</param>
+	/// <returns>The current component.</returns>
+	public DiscordFileUploadComponent SetState(bool disabled)
+	{
+		this.Disabled = disabled;
+		return this;
+	}
 
 	/// <summary>
 	///     Assigns a unique id to the components.
