@@ -95,4 +95,11 @@ public sealed class DiscordFileUploadComponent : DiscordComponent, ILabelCompone
 		this.Id = id;
 		return this;
 	}
+
+	/// <summary>
+	///     The submitted values of this file upload component. The values are attachment ids.
+	///     This is only available in <see cref="DiscordInteractionData" />.
+	/// </summary>
+	[JsonProperty("values", NullValueHandling = NullValueHandling.Ignore)]
+	public string[]? Values { get; internal set; }
 }
