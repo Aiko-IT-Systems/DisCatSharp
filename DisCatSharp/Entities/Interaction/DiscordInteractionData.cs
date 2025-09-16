@@ -29,11 +29,8 @@ public sealed class DiscordInteractionData : SnowflakeObject
 	///     Gets the submitted modal components.
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<DiscordComponent> ComponentsInternal { get; set; } = [];
-
-	public IReadOnlyList<DiscordComponent> ModalComponents
-		=> this.ComponentsInternal;
-
+	internal List<DiscordComponent> ModalComponentsInternal { get; set; } = [];
+	
 	/// <summary>
 	///     Gets the submitted modal components.
 	///     <para>
@@ -41,12 +38,8 @@ public sealed class DiscordInteractionData : SnowflakeObject
 	///         <see cref="DiscordInteraction.Message" />.<see cref="DiscordMessage.Components" /> instead.
 	///     </para>
 	/// </summary>
-	[JsonIgnore, DiscordDeprecated("Use ModalComponents instead")]
-	public IReadOnlyList<DiscordTextInputComponent>? Components
-		=> this.ComponentsInternal.OfType<DiscordActionRowComponent>()
-			.SelectMany(x => x.Components.OfType<DiscordTextInputComponent>())
-			.ToList()
-			.AsReadOnly();
+	public IReadOnlyList<DiscordComponent> ModalComponents
+		=> this.ModalComponentsInternal;
 
 	/// <summary>
 	///     Gets the Discord snowflake objects resolved from this interaction's arguments.
