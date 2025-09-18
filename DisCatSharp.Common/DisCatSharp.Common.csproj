@@ -40,7 +40,7 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.9" />
 		<PackageReference Include="Microsoft.Maui.Graphics" Version="9.0.110" />
 		<PackageReference Include="Microsoft.Maui.Graphics.Skia" Version="9.0.110" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageReference Include="System.Collections.Immutable" Version="9.0.9" />
 		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.9" />
 		<PackageReference Include="System.Memory" Version="4.6.3" />
