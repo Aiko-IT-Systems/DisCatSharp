@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using DisCatSharp.Enums;
@@ -28,7 +29,7 @@ public class DiscordComponent : ObservableApiObject
 	///     The custom Id of this component, if applicable. Not applicable on ActionRow(s) and link buttons.
 	/// </summary>
 	[JsonProperty("custom_id", NullValueHandling = NullValueHandling.Ignore)]
-	public string? CustomId { get; internal set; }
+	public string? CustomId { get; internal set; } = Guid.NewGuid().ToString();
 
 	/// <summary>
 	///     Gets the Id of the compenent. Auto populated by discord if not provided.
