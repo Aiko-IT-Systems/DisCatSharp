@@ -36,7 +36,7 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v5
             - name: Initialize CodeQL
-              uses: github/codeql-action/init@v3
+              uses: github/codeql-action/init@v4
               with:
                   languages: ${{ matrix.language }}
             - name: Set up dotnet
@@ -55,4 +55,4 @@ jobs:
             - name: Build tools
               run: dotnet build -c Release -v minimal --no-restore DisCatSharp.Tools/DisCatSharp.Tools.slnx
             - name: Perform CodeQL Analysis
-              uses: github/codeql-action/analyze@v3
+              uses: github/codeql-action/analyze@v4
