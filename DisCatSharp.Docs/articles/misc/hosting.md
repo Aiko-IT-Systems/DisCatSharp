@@ -24,112 +24,119 @@ Depending on how complex your bot is, you may even consider purchasing a Raspber
 
 ### Termux
 
-If you don't have a PC or other gear sitting around, you may use your phone instead. Using [Termux](https://termux.dev/en/) and a program called [proot-distro](https://github.com/termux/proot-distro), we create a Debian virtual machine and configure DotNET to run the bot. For anyone interested, the instructions are detailed below:
+If you don't have a PC or other gear sitting around, you may use your phone instead. Using [Termux](https://termux.dev/en/) and a program called [proot-distro](https://github.com/termux/proot-distro), we create a Debian virtual machine and configure .NET to run the bot. For anyone interested, the instructions are detailed below:
 
 #### Requirements
 
-- A phone with Android 7 or higher (5+ is possible but, not recommended as it posses security issues).
-- Termux.
-- An internet connection.
-- Basic understanding of bash and nano.
+-   A phone with Android 7 or higher (5+ is possible but, not recommended as it posses security issues).
+-   Termux.
+-   An internet connection.
+-   Basic understanding of bash and nano.
 
 #### Setup
 
-- Initialize Termux.
+-   Initialize Termux.
+
 ```sh
 pkg update && pkg upgrade -y
 ```
->[!TIP]
+
+> [!TIP]
 > It might ask you for input, just click enter and let the default option be executed.
 
-- Install proot-distro package.
+-   Install proot-distro package.
+
 ```sh
 pkg install proot-distro -y
 ```
 
-- Install a Debian Virtual Machine (VM).
+-   Install a Debian Virtual Machine (VM).
+
 ```sh
 proot-distro install debian
 ```
->[!NOTE]
-> Installation time for anything will depend on your internet speed.
 
-- Login into Debian and initialize it.
+-   Login into Debian and initialize it.
+
 ```sh
 proot-distro login debian
 ```
+
+-   Initialize Debian.
+
 ```sh
 apt update -y && apt upgrade -y
 ```
 
-- Install Git and Wget.
+-   Install Git and Wget.
+
 ```sh
 apt install git wget -y
 ```
 
-- We get the DotNET script.
+-   We will be installing via a script for simplicity.
+
 ```sh
 wget https://dot.net/v1/dotnet-install.sh -O dotnet.sh && chmod +x ./dotnet.sh
 ```
 
-- Now, we install the DotNET SDK and runtime.
+-   Now installing .NET 9.
+
 ```sh
 ./dotnet.sh --channel 9.0
 ```
->[!NOTE]
-> Incase the script does not automatically add "dotnet" to path, add `export PATH=$PATH:$HOME/.dotnet` at the end of your `.bashrc` file. Simply, run `nano ~/.bashrc` and paste it in. After which run `source ~/.bashrc` to apply our changes.
-- When trying to run the bot later, we'll encounter errors such as "0x8007000E" and "valid ICU package". To migitage this, we'll add the following to our `.bashrc` as stated in the note.
+
+> [!CAUTION]
+> The following steps are essential to get .NET working.
+
+-   Add .NET to path and mitigate GC heap error
+
 ```sh
+nano ~/.bashrc
+export PATH=$PATH:$HOME/.dotnet
 export DOTNET_GCHeapHardLimit=1C0000000
 export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
 ```
+
 ##### Cloud Hosted Code
 
-- If you have your code hosted with git or simply are able to download it, get the source code and `cd` into the directory. Example of a git repository on GitHub:
+-   If you have your code hosted on platforms that use git or are able to download it, get the source code and `cd` into the directory, i.e:
+
 ```sh
-git clone https://github.com/username/repo.git
-cd repo
+git clone https://github.com/Aiko-IT-Systems/DisCatSharp.Examples/
+cd DisCatSharp.Examples
 ```
-- Add your configuration file then build the project.
+
+-   Remember if you have a configuration file of sorts to add one and configure it or else the bot won't start, then just build the project.
 
 ##### Local Source Code
 
-- If you do not have your source code hosted remotely, you can move the source code inside the VM by following the given steps: 
+-   If you don't have your source code hosted on the cloud, you can move the source code inside the VM by following the given steps:
 
-- Enable developer options on your phone, find out [here](https://developer.android.com/studio/debug/dev-options) and also enable USB debugging which you can do by going inside `Settings > Developer options > USB debugging` or where ever your phone's is located.
+-   Enable developer options on your phone, find out [here](https://developer.android.com/studio/debug/dev-options) and then enable USB debugging, you can find it by just scrolling in "Developer Options".
 
-- Find the option `Default USB configuration` and choose `Transferring files`. Disconnect your phone from the usb and reconnect it again.
+-   Connect your phone to your computer using USB. Then open up a file manager of your choice and just drag over your project files into the home directory of your phone. Then to actually move those project files into termux it's a bit complicated, so follow this [video](https://youtu.be/MMeM7szKt44) for the setup and then inside your phone's file manager, just copy and paste the files.
 
-- Double click on `Phone` or what it is named, then simply copy your project folder from your pc and paste it in there. If you want to keep it in a custom path, remember the path to the project.
+-   Now, exit out of Debian and inside Termux and make a new environment variable which leads us to the VM's root directory. Add the following to your `.bashrc` file and update your session.
 
->[!NOTE]
-> Transferring of files might take a bit. Be sure to not interrupt the process by shutting down or disconnecting your phone.
+```sh
+nano ~/.bashrc
+export PROOTDISTROFS=/data/data/com.termux/files/usr/var/lib/proot-distro/installed-rootfs
+source ~/.bashrc
+```
 
-- First, we setup Termux storage run, `termux-setup-storage` and then it'll prompt you to give Termux access to your files and folders. Then run, `ls ~/storage/shared` to make sure you have access.
+-   Now, we'll move over the source code from our phone to the VM. Simply, run, `mv projectname/ $PROOTDISTROFS/debian/root/`.
 
->[!WARNING]
-> If you do not give Termux access to your files and folders, nothing will work going from here on.
+-   Now, let's log back into Debian `proot-distro login debian` and check if the files are here, just run `ls` and see if they are or not.
 
-- Now, exit out of Debian and into normal Termux and make a new environment variable which leads us to the VM's root directory. Run, `export PROOTDISTROFS=/data/data/com.termux/files/usr/var/lib/proot-distro/installed-rootfs` and run `source $HOME/.bashrc`.
+-   Add your configuration file then build the project.
 
->[!TIP]
-> If you don't have a `.bashrc` file in your $HOME, just run `nano $HOME/.bashrc`, save, and exit. Then run the source command again.
-
-- Now, we'll move over the source code from our phone to the VM. Simply, run, `mv projectname/$PROOTDISTROFS/debian/root/`.
-
->[!WARNING]
-> Double-check file paths, as you might accidentally move the wrong files around.
-
-- Now, let's log back into Debian `proot-distro login debian` and check if the files are here. To check, you can run `ls` to list the current content of the folder.
-
-- Add your configuration file then build the project.
-
->[!CAUTION]
-> If you have folders such as `bin/` and `obj/` from your prior builds on your PC, delete those by running `rm -rf bin/ obj/`. You might run into issues otherwise.
+> [!WARNING]
+> If you have folders such as `bin/` and `obj/` from your prior builds then, delete those by running `rm -rf bin/ obj/`. You might run into issues otherwise.
 
 #### Profit
 
-The bot should be working fine, given you follow appropriate steps. For support or any inquires you can join the [Discord](https://discord.com/invite/2HWta4GXus).
+The bot should be working fine, given you follow appropriate steps. For support or any inquires you can join the [Discord](https://discord.gg/RXA6u3jxdU).
 
 ## Third-Party Hosting
 
