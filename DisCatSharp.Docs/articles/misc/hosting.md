@@ -24,18 +24,29 @@ Depending on how complex your bot is, you may even consider purchasing a Raspber
 
 ### Termux
 
-If you don't have a PC or other gear sitting around, you may use your phone instead. Using [Termux](https://termux.dev/en/) and a program called [proot-distro](https://github.com/termux/proot-distro), we create a Debian virtual machine and configure .NET to run the bot. For anyone interested, the instructions are detailed below:
+If you don't have a PC or other gear sitting around, you may use your phone instead. Using [Termux](https://termux.dev/en/) and a program called [proot-distro](https://github.com/termux/proot-distro), you create a Debian virtual machine and configure .NET to run the bot.
+
+> [!NOTE] > **Time required:** 30-45 minutes  
+> **Difficulty:** Intermediate  
+> **Prerequisites:** Basic command line knowledge
+
+> [!TIP] > **Performance:** This solution works well for small to medium bots. Resource-intensive bots may drain your battery or experience performance issues. For high-traffic production bots, consider traditional hosting.
+
+For anyone interested, the instructions are detailed below:
 
 #### Requirements
 
--   A phone with Android 7 or higher (5+ is possible but, not recommended as it posses security issues).
--   Termux.
+-   A phone with Android 7 or higher (5+ is possible but not recommended as it poses security issues).
+-   Termux installed from [F-Droid](https://f-droid.org/en/packages/com.termux/) (NOT from Google Play Store - the Play Store version is outdated).
+-   At least 2GB of free storage space.
 -   An internet connection.
 -   Basic understanding of bash and nano.
 
+> [!WARNING] > **Security:** Your bot token will be stored on your phone. Ensure your device is secured with a lock screen password.
+
 #### Setup
 
--   Initialize Termux.
+-   Initialize Termux:
 
 ```sh
 pkg update && pkg upgrade -y
@@ -44,43 +55,54 @@ pkg update && pkg upgrade -y
 > [!TIP]
 > It might ask you for input, just click enter and let the default option be executed.
 
--   Install proot-distro package.
+-   Install proot-distro package:
 
 ```sh
 pkg install proot-distro -y
 ```
 
--   Install a Debian Virtual Machine (VM).
+Verify installation:
+
+```sh
+proot-distro list
+```
+
+You should see available distributions including `debian`.
+
+-   Install a Debian Virtual Machine (VM):
 
 ```sh
 proot-distro install debian
 ```
 
--   Login into Debian and initialize it.
+> [!NOTE]
+> Installation time will depend on your internet speed.
+
+-   Login into Debian:
 
 ```sh
 proot-distro login debian
 ```
 
--   Initialize Debian.
+-   Initialize Debian:
 
 ```sh
 apt update -y && apt upgrade -y
 ```
 
--   Install Git and Wget.
+-   Install Git and Wget:
 
 ```sh
 apt install git wget -y
 ```
 
--   We will be installing via a script for simplicity.
+-   Install .NET via a script for simplicity:
 
 ```sh
 wget https://dot.net/v1/dotnet-install.sh -O dotnet.sh && chmod +x ./dotnet.sh
 ```
 
--   Now installing .NET 9.
+-   Install .NET 9:
 
 ```sh
 ./dotnet.sh --channel 9.0
@@ -89,35 +111,67 @@ wget https://dot.net/v1/dotnet-install.sh -O dotnet.sh && chmod +x ./dotnet.sh
 > [!CAUTION]
 > The following steps are essential to get .NET working.
 
--   Add .NET to path and mitigate GC heap error
+-   Add .NET to path and mitigate GC heap error. Open your `.bashrc` file:
 
 ```sh
 nano ~/.bashrc
+```
+
+> [!TIP] > **Using nano:** Use arrow keys to navigate. To save and exit: press `Ctrl+X`, then `Y` to confirm, then `Enter`.
+
+Add these lines **at the end of the file**:
+
+```sh
 export PATH=$PATH:$HOME/.dotnet
 export DOTNET_GCHeapHardLimit=1C0000000
 export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
 ```
 
+Save and exit the file.
+
+-   Apply the changes:
+
+```sh
+source ~/.bashrc
+```
+
+-   Verify .NET is working:
+
+```sh
+dotnet --version
+```
+
+You should see version 9.x.x displayed.
+
 ##### Cloud Hosted Code
 
--   If you have your code hosted on platforms that use git or are able to download it, get the source code and `cd` into the directory, i.e:
+-   If you have your code hosted on platforms that use Git or are able to download it, get the source code and `cd` into the directory:
 
 ```sh
 git clone https://github.com/Aiko-IT-Systems/DisCatSharp.Examples/
 cd DisCatSharp.Examples
 ```
 
--   Remember if you have a configuration file of sorts to add one and configure it or else the bot won't start, then just build the project.
+-   Add your configuration file, then build the project. To keep the bot online 24/7, check [here](#building-running).
 
 ##### Local Source Code
 
--   If you don't have your source code hosted on the cloud, you can move the source code inside the VM by following the given steps:
+-   If your source code is not hosted on the cloud, you can move the source code inside the VM by following the given steps:
 
--   Enable developer options on your phone, find out [here](https://developer.android.com/studio/debug/dev-options) and then enable USB debugging, you can find it by just scrolling in "Developer Options".
+-   Enable developer options on your phone ([find out how](https://developer.android.com/studio/debug/dev-options)), then enable USB debugging. You can find it by scrolling in "Developer Options".
 
--   Connect your phone to your computer using USB. Then open up a file manager of your choice and just drag over your project files into the home directory of your phone. Then to actually move those project files into termux it's a bit complicated, so follow this [video](https://youtu.be/MMeM7szKt44) for the setup and then inside your phone's file manager, just copy and paste the files.
+-   Connect your phone to your computer using USB. Open a file manager and drag your project files into your phone's home directory.
 
--   Now, exit out of Debian and inside Termux and make a new environment variable which leads us to the VM's root directory. Add the following to your `.bashrc` file and update your session.
+-   To move the project files from your phone's storage into Termux, you'll need to set up storage permissions. Follow this [video guide](https://youtu.be/MMeM7szKt44), or use these steps:
+
+    1. In Termux, run: `termux-setup-storage`
+    2. Grant storage permissions when prompted
+    3. Verify access: `ls ~/storage/shared/`
+    4. Your phone's files should now be accessible
+
+-   Once you can see your files in `~/storage/shared/`, copy your project folder there using your phone's file manager.
+
+-   Now, exit out of Debian. Inside Termux, create an environment variable that points to the VM's root directory. This allows you to access the VM's files from Termux. Add the following to your `.bashrc` file and update your session:
 
 ```sh
 nano ~/.bashrc
@@ -125,18 +179,142 @@ export PROOTDISTROFS=/data/data/com.termux/files/usr/var/lib/proot-distro/instal
 source ~/.bashrc
 ```
 
--   Now, we'll move over the source code from our phone to the VM. Simply, run, `mv projectname/ $PROOTDISTROFS/debian/root/`.
+-   Now, move the source code from your phone to the VM. The files should be in `~/storage/shared/`. Replace `projectname` with your actual project folder name:
 
--   Now, let's log back into Debian `proot-distro login debian` and check if the files are here, just run `ls` and see if they are or not.
+```sh
+mv ~/storage/shared/projectname/ $PROOTDISTROFS/debian/root/
+```
 
--   Add your configuration file then build the project.
+-   Log back into Debian and verify the files are there:
+
+```sh
+proot-distro login debian
+ls
+```
+
+-   Add your configuration file, then build the project.
+
+#### Building and Running {#building-running}
 
 > [!WARNING]
-> If you have folders such as `bin/` and `obj/` from your prior builds then, delete those by running `rm -rf bin/ obj/`. You might run into issues otherwise.
+> If you have folders such as `bin/` and `obj/` from your prior builds, delete those by running `rm -rf bin/ obj/`. You might run into issues otherwise.
 
-#### Profit
+-   Build your project:
 
-The bot should be working fine, given you follow appropriate steps. For support or any inquires you can join the [Discord](https://discord.gg/RXA6u3jxdU).
+```sh
+dotnet build
+```
+
+-   Run your bot:
+
+```sh
+dotnet run
+```
+
+**Keeping the bot running 24/7:**
+
+If you close Termux, your bot will stop. To keep it running in the background, install and use `screen`:
+
+```sh
+apt install screen -y
+screen -S mybot
+dotnet run
+```
+
+Press `Ctrl+A` then `D` to detach from the screen session. Your bot will continue running in the background.
+
+To reattach later and check on your bot:
+
+```sh
+screen -r mybot
+```
+
+#### Troubleshooting
+
+**Problem: `dotnet: command not found`**
+
+Solution: The .NET path wasn't added correctly. Verify the exports are in your `.bashrc`:
+
+```sh
+cat ~/.bashrc | grep dotnet
+```
+
+If nothing appears, re-add the export and source your `.bashrc` again.
+
+---
+
+**Problem: Error 0x8007000E or ICU package errors**
+
+Solution: The globalization environment variables weren't set. Check your `.bashrc`:
+
+```sh
+cat ~/.bashrc | grep DOTNET
+```
+
+Ensure these lines exist:
+
+```sh
+export DOTNET_GCHeapHardLimit=1C0000000
+export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
+```
+
+If missing, add them, save, and run `source ~/.bashrc`.
+
+---
+
+**Problem: Bot stops when I close Termux**
+
+Solution: You need to use `screen` to keep the bot running in the background. See the [keeping bot running section](#building-running).
+
+---
+
+**Problem: Cannot find project files after moving them**
+
+Solution: Verify the files are in the correct location:
+
+```sh
+proot-distro login debian
+ls ~/
+```
+
+If not there, check your source location:
+
+```sh
+exit  # Exit Debian back to Termux
+ls ~/storage/shared/
+```
+
+---
+
+**Problem: `mv: cannot stat` error when moving files**
+
+Solution: The path or filename is incorrect. List your storage contents:
+
+```sh
+ls ~/storage/shared/
+```
+
+Use the exact folder name shown in your `mv` command.
+
+---
+
+**Problem: Termux crashes or closes unexpectedly**
+
+Solution: This is often due to Android's battery optimization. Go to your phone's Settings > Apps > Termux > Battery and disable battery optimization for Termux.
+
+---
+
+**Problem: `screen: command not found`**
+
+Solution: You're trying to use screen without installing it. Make sure you're logged into Debian and run:
+
+```sh
+apt install screen -y
+```
+
+#### Support
+
+If you followed all steps correctly, your bot should now be running. For support or any inquiries, you can join the [Discord](https://discord.gg/RXA6u3jxdU).
 
 ## Third-Party Hosting
 
