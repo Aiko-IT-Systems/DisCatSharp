@@ -38,7 +38,7 @@ Documentation: https://docs.dcs.aitsys.dev/articles/modules/audio/lavalink/setup
     </PackageReference>
     <PackageReference Include="DisCatSharp.Attributes" Version="2025.3.27" />
     <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.10" />
   </ItemGroup>
 
 </Project>
