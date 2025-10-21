@@ -13,7 +13,7 @@ public static class PermissionMethods
 	///     Gets the full permissions enum (long).
 	/// </summary>
 	internal static Permissions FullPerms
-		=> (Permissions)1125899906842623L;
+		=> (Permissions)9007199254740991L;
 
 	/// <summary>
 	///     Calculates whether this permission set contains the given permission.
@@ -78,7 +78,7 @@ public enum Permissions : long
 	///     Indicates all permissions are granted.
 	/// </summary>
 	[PermissionString("All Permissions")]
-	All = 1125899906842623L,
+	All = 9007199254740991L,
 
 	/// <summary>
 	///     Allows creation of instant channel invites.
@@ -393,6 +393,12 @@ public enum Permissions : long
 	/// </summary>
 	[PermissionString("Pin Messages")]
 	PinMessages = 1L << 51,
+
+	/// <summary>
+	///     Allows members to bypass slowmode restrictions.
+	/// </summary>
+	[PermissionString("Bypass Slowmode")]
+	BypassSlowmode = 1L << 52,
 
 	/// <summary>
 	///      The flags are unknown.
