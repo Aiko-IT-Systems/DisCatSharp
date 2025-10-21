@@ -4,7 +4,7 @@
 	<Import Project="../../DisCatSharp.Targets/InternalsVisibleTo.targets" />
 
 	<ItemGroup>
-		<PackageReference Include="FluentAssertions" Version="8.6.0" />
+		<PackageReference Include="FluentAssertions" Version="8.7.1" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.14.0" />
