@@ -20,7 +20,7 @@ jobs:
                   echo "version=10.6.6" >> $GITHUB_OUTPUT
                   echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
             - name: "Create Sentry release"
-              uses: getsentry/action-release@v3.2.0
+              uses: getsentry/action-release@v3.3.0
               env:
                   SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
                   SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
