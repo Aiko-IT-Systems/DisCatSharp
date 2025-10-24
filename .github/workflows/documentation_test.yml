@@ -52,7 +52,7 @@ jobs:
               run: ./DisCatSharp.Tools/pack-docs.ps1 -DocsPath "./DisCatSharp.Docs" -OutputPath "./" -PackageName "dcs-docs-preview"
               working-directory: GitHub/DisCatSharp
             - name: Upload packed docs
-              uses: actions/upload-artifact@v4.6.2
+              uses: actions/upload-artifact@v5.0.0
               with:
                   name: dcs-docs-preview.zip
                   path: GitHub/DisCatSharp/dcs-docs-preview.zip
@@ -73,7 +73,7 @@ jobs:
               run: Get-ChildItem -Exclude .git* | Remove-Item -Recurse -Force
               working-directory: GitHub/DisCatSharp.Docs
             - name: Download packed docs
-              uses: actions/download-artifact@v5
+              uses: actions/download-artifact@v6
               with:
                   name: dcs-docs-preview.zip
                   path: GitHub/DisCatSharp.Docs
