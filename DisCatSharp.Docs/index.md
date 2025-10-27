@@ -94,7 +94,3 @@ The special thanks goes to Nagisa. Make sure to check out her [Instagram](https:
 
 The second special thanks goes to [Sentry](https://sentry.io) ([GitHub](https://github.com/getsentry/)) for sponsering us a business account on sentry for error tracking.
 You guys are the best 💕⭐
-
-## Open Source License Status
-
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FAiko-IT-Systems%2FDisCatSharp.svg?type=large)](https://app.fossa.com/reports/d18d903c-f217-4d82-a7ec-e113fb147275?ref=badge_large)
