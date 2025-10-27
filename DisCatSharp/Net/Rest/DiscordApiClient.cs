@@ -402,6 +402,24 @@ public sealed class DiscordApiClient
 	#region Guild
 
 	/// <summary>
+	///    Gets the member counts async.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <returns>The member counts of each role.</returns>
+	internal async Task<Dictionary<ulong, int>> GetMemberCountsAsync(ulong guildId)
+	{
+		var route = $"{Endpoints.GUILDS}/{guildId}{Endpoints.ROLES}{Endpoints.MEMBER_COUNTS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+		{ }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		var memberCounts = DiscordJson.DeserializeDictionaryObject<ulong, int>(res.Response, this.Discord);
+		return memberCounts;
+	}
+
+	/// <summary>
 	///     Gets the guild async.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>

@@ -1331,6 +1331,17 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		=> this.Discord.ApiClient.LeaveGuildAsync(this.Id);
 
 	/// <summary>
+	///     Gets the number of members in each role.
+	/// </summary>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<Dictionary<DiscordRole, int>> GetMemberCountsAsync()
+	{
+		var counts = await this.Discord.ApiClient.GetMemberCountsAsync(this.Id).ConfigureAwait(false);
+		return counts.ToDictionary(k => this.GetRole(k.Key) ?? throw new Exception("Role not found in guild."), v => v.Value);
+	}
+
+	/// <summary>
 	///     Gets the bans for this guild, allowing for pagination.
 	/// </summary>
 	/// <param name="limit">Maximum number of bans to fetch. Max 1000. Defaults to 1000.</param>

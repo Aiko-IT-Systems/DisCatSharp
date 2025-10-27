@@ -755,4 +755,6 @@ public static class Endpoints
 	public const string CONSUME = "/consume";
 
 	public const string BADGES = "/badges";
+
+	public const string MEMBER_COUNTS = "/member-counts";
 }

@@ -56,6 +56,16 @@ public static class DiscordJson
 	public static T DeserializeIEnumerableObject<T>(string? json, BaseDiscordClient? discord) where T : IEnumerable<ObservableApiObject>
 		=> DeserializeIEnumerableObjectInternal<T>(json, discord);
 
+	/// <summary>
+	///    Deserializes the specified JSON string to a dictionary object.
+	/// </summary>
+	/// <typeparam name="TKey">The key type.</typeparam>
+	/// <typeparam name="TValue">The value type.</typeparam>
+	/// <param name="json">The received json.</param>
+	/// <param name="discord">The discord client.</param>
+	public static Dictionary<TKey, TValue> DeserializeDictionaryObject<TKey, TValue>(string? json, BaseDiscordClient? discord)
+		=> DeserializeDictionaryObjectInternal<TKey, TValue>(json, discord);
+
 	/// <summary>Populates an object with the values from a JSON node.</summary>
 	/// <param name="value">The token to populate the object with.</param>
 	/// <param name="target">The object to populate.</param>
@@ -213,6 +223,26 @@ public static class DiscordJson
 		_ = Task.Run(discord.Sentry.FlushAsync);
 		if (discord.Configuration.EnableLibraryDeveloperMode)
 			discord.Logger.LogInformation("Missing fields reported to sentry with id {sid}", sid.ToString());
+
+		return obj;
+	}
+
+	/// <summary>
+	///     Deserializes the specified JSON string to a dictionary object.
+	/// </summary>
+	/// <typeparam name="TKey">The key type.</typeparam>
+	/// <typeparam name="TValue">The value type.</typeparam>
+	/// <param name="json">The received json.</param>
+	/// <param name="discord">The discord client.</param>
+	private static Dictionary<TKey, TValue> DeserializeDictionaryObjectInternal<TKey, TValue>(string? json, BaseDiscordClient? discord)
+	{
+		ArgumentNullException.ThrowIfNull(json, nameof(json));
+
+		var obj = JsonConvert.DeserializeObject<Dictionary<TKey, TValue>>(json, new JsonSerializerSettings
+		{
+			ContractResolver = new DisCatSharpContractResolver(),
+			Error = (s, e) => DiscordJsonErrorHandler(s, e, discord)
+		})!;
 
 		return obj;
 	}
