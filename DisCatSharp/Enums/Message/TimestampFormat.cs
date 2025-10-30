@@ -38,5 +38,15 @@ public enum TimestampFormat : byte
 	/// <summary>
 	///     The time relative to the client. e.g. An hour ago.
 	/// </summary>
-	RelativeTime = (byte)'R'
+	RelativeTime = (byte)'R',
+
+	/// <summary>
+	///     A short date with short time. e.g. 18/06/2021 03:50.
+	/// </summary>
+	ShortDateShortTime = (byte)'s',
+
+	/// <summary>
+	///     A short date with medium time. e.g. 18/06/2021 03:50:15.
+	/// </summary>
+	ShortDateMediumTime = (byte)'S',
 }
