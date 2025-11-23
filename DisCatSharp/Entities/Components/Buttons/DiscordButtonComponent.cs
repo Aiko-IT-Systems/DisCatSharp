@@ -75,6 +75,12 @@ public sealed class DiscordButtonComponent : DiscordBaseButtonComponent
 	}
 
 	/// <summary>
+	///     The custom Id of this button. This is sent back when a user presses it.
+	/// </summary>
+	[JsonProperty("custom_id", NullValueHandling = NullValueHandling.Ignore)]
+	public override string? CustomId { get; internal set; } = Guid.NewGuid().ToString();
+
+	/// <summary>
 	///     The style of the button.
 	/// </summary>
 	[JsonProperty("style", NullValueHandling = NullValueHandling.Ignore)]
