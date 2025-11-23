@@ -76,6 +76,8 @@ public sealed class DiscordButtonComponent : DiscordBaseButtonComponent
 
 	/// <summary>
 	///     The custom Id of this button. This is sent back when a user presses it.
+	///     Applies to buttons with Primary, Secondary, Success, and Danger styles.
+	///     Link buttons use URLs and Premium buttons use SKU IDs instead of custom IDs.
 	/// </summary>
 	[JsonProperty("custom_id", NullValueHandling = NullValueHandling.Ignore)]
 	public override string? CustomId { get; internal set; } = Guid.NewGuid().ToString();

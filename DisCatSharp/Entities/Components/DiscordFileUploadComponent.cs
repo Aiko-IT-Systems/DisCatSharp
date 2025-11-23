@@ -36,7 +36,7 @@ public sealed class DiscordFileUploadComponent : DiscordComponent, ILabelCompone
 	}
 
 	/// <summary>
-	///     The custom Id of this file upload component.
+	///     The custom Id of this file upload component. This is sent back when files are uploaded.
 	/// </summary>
 	[JsonProperty("custom_id", NullValueHandling = NullValueHandling.Ignore)]
 	public override string? CustomId { get; internal set; } = Guid.NewGuid().ToString();
