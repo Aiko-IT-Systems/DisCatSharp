@@ -113,6 +113,12 @@ public sealed class DiscordTextInputComponent : DiscordComponent, ILabelComponen
 	}
 
 	/// <summary>
+	///     The custom Id of this text input component. This is sent back when the form is submitted.
+	/// </summary>
+	[JsonProperty("custom_id", NullValueHandling = NullValueHandling.Ignore)]
+	public override string? CustomId { get; internal set; } = Guid.NewGuid().ToString();
+
+	/// <summary>
 	///     The style of the text input component.
 	/// </summary>
 	[JsonProperty("style", NullValueHandling = NullValueHandling.Ignore)]

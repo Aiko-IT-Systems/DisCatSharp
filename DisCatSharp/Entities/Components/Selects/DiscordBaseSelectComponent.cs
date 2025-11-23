@@ -61,6 +61,12 @@ public class DiscordBaseSelectComponent : DiscordComponent, ILabelComponent
 	{ }
 
 	/// <summary>
+	///     The custom Id of this select component. This is sent back when a user interacts with the select menu.
+	/// </summary>
+	[JsonProperty("custom_id", NullValueHandling = NullValueHandling.Ignore)]
+	public override string? CustomId { get; internal set; } = Guid.NewGuid().ToString();
+
+	/// <summary>
 	///     The text to show when no option is selected.
 	/// </summary>
 	[JsonProperty("placeholder", NullValueHandling = NullValueHandling.Ignore)]
