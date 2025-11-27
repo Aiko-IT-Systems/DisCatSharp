@@ -113,7 +113,7 @@ public sealed class DiscordContainerComponent : DiscordComponent
 		if (comps.Any(c => !allowedTypes.Contains(c.Type)))
 			throw new ArgumentException("All components must be of type ActionRow, TextDisplay, Section, MediaGallery, Separator, or File.");
 
-		this.Components = [.. comps];
+		this.Components = [..this.Components, ..comps];
 		return this;
 	}
 

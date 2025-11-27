@@ -532,6 +532,57 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	}
 
 	/// <summary>
+	/// 	Modifies a component with the specified custom ID using the provided action.
+	/// </summary>
+	/// <param name="customId">The custom ID to match.</param>
+	/// <param name="modifyAction">The action to perform on the matched component.</param>
+	/// <returns>The current builder for chaining.</returns>
+	public DiscordWebhookBuilder ModifyComponentByCustomId(string customId, Action<DiscordComponent> modifyAction)
+	{
+		if (this.ComponentsInternal is null)
+			return this;
+
+		foreach (var c in this.ComponentsInternal)
+			ModifyComponentRecursive(c, customId, modifyAction);
+
+		return this;
+	}
+
+	/// <summary>
+	/// 	Recursively searches for and modifies a component with the specified custom ID.
+	/// </summary>
+	/// <param name="component">The component to check and potentially modify.</param>
+	/// <param name="customId">The custom ID to match.</param>
+	/// <param name="modifyAction">The action to perform on the matched component.</param>
+	private static void ModifyComponentRecursive(DiscordComponent component, string customId, Action<DiscordComponent> modifyAction)
+	{
+		if (!string.IsNullOrEmpty(component.CustomId) && component.CustomId == customId)
+		{
+			modifyAction(component);
+			return;
+		}
+
+		if (component is DiscordActionRowComponent row)
+		{
+			foreach (var child in row.Components)
+				ModifyComponentRecursive(child, customId, modifyAction);
+		}
+		else if (component is DiscordContainerComponent cont)
+		{
+			foreach (var child in cont.Components)
+				ModifyComponentRecursive(child, customId, modifyAction);
+		}
+		else if (component is DiscordSectionComponent sec)
+		{
+			foreach (var child in sec.Components)
+				ModifyComponentRecursive(child, customId, modifyAction);
+
+			if (sec.Accessory != null)
+				ModifyComponentRecursive(sec.Accessory, customId, modifyAction);
+		}
+	}
+
+	/// <summary>
 	/// 	Recursively sets the disabled state of components.
 	/// </summary>
 	/// <param name="disabled">The disabled state to set.</param>
