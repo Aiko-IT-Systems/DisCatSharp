@@ -188,7 +188,7 @@ public abstract class BaseDiscordClient : IDisposable
 
 			if (!this.Configuration.DisableScrubber)
 			{
-				options.SetBeforeBreadcrumb(b
+				options.SetBeforeBreadcrumb((b, _)
 					=> new(Utilities.StripTokensAndOptIds(b.Message, this.Configuration.EnableDiscordIdScrubber)!,
 						b.Type!,
 						b.Data?.Select(x => new KeyValuePair<string, string>(x.Key, Utilities.StripTokensAndOptIds(x.Value, this.Configuration.EnableDiscordIdScrubber)!))
@@ -196,7 +196,7 @@ public abstract class BaseDiscordClient : IDisposable
 						b.Category,
 						b.Level));
 
-				options.SetBeforeSendTransaction(tr =>
+				options.SetBeforeSendTransaction((tr, _) =>
 				{
 					if (tr.Request.Data is string str)
 						tr.Request.Data = Utilities.StripTokensAndOptIds(str, this.Configuration.EnableDiscordIdScrubber);
