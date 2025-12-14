@@ -186,7 +186,7 @@ To enhance safety and ensure no sensitive information is leaked, various filters
 4. **Transaction Filter**: Ensures that sensitive information is not included in transaction data sent to Sentry.
 
     ```csharp
-    options.SetBeforeSendTransaction(tr =>
+    options.SetBeforeSendTransaction((tr, _) =>
     {
        if (tr.Request.Data is string str)
           tr.Request.Data = Utilities.StripIds(Utilities.StripTokens(str), this.Configuration.EnableDiscordIdScrubber);

@@ -50,7 +50,7 @@ Despite the validation that no sensitive data was being logged, additional measu
 
 3. **Transaction Filter**: Ensures that sensitive information is not included in transaction data sent to Sentry.
    ```csharp
-   options.SetBeforeSendTransaction(tr =>
+   options.SetBeforeSendTransaction((tr, _) =>
    {
       if (tr.Request.Data is string str)
          tr.Request.Data = Utilities.StripTokens(str);

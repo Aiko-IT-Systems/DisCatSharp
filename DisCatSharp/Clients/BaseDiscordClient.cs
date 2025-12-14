@@ -196,7 +196,7 @@ public abstract class BaseDiscordClient : IDisposable
 						b.Category,
 						b.Level));
 
-				options.SetBeforeSendTransaction(tr =>
+				options.SetBeforeSendTransaction((tr, _) =>
 				{
 					if (tr.Request.Data is string str)
 						tr.Request.Data = Utilities.StripTokensAndOptIds(str, this.Configuration.EnableDiscordIdScrubber);
