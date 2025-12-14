@@ -27,7 +27,7 @@ jobs:
                 path: GitHub/DisCatSharp.Docs
                 ref: main
             - name: Setup .NET
-              uses: actions/setup-dotnet@v5.0.0
+              uses: actions/setup-dotnet@v5.0.1
               with:
                   dotnet-version: |
                       10.0.100-rc.1.25451.107
