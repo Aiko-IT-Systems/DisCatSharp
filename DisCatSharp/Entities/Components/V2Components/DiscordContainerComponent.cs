@@ -38,15 +38,15 @@ public sealed class DiscordContainerComponent : DiscordComponent
 	/// <summary>
 	///     Constructs a new container component field with the specified options.
 	/// </summary>
-	/// <param name="components">The container components. Max of <c>10</c>.</param>
+	/// <param name="components">The container components. Max of <c>39</c>.</param>
 	/// <param name="spoiler">Whether the container should be marked as spoiler.</param>
 	/// <param name="accentColor">The accent color for the container.</param>
 	public DiscordContainerComponent(IEnumerable<DiscordComponent> components, bool? spoiler = null, DiscordColor? accentColor = null)
 		: this()
 	{
 		var comps = components.ToList();
-		if (comps.Count > 10)
-			throw new ArgumentException("You can only have up to 10 components in a container.");
+		if (comps.Count > 39)
+			throw new ArgumentException("You can only have up to 39 components in a container.");
 
 		List<ComponentType> allowedTypes = [ComponentType.ActionRow, ComponentType.TextDisplay, ComponentType.Section, ComponentType.MediaGallery, ComponentType.Separator, ComponentType.File];
 		if (comps.Any(c => !allowedTypes.Contains(c.Type)))
@@ -100,14 +100,14 @@ public sealed class DiscordContainerComponent : DiscordComponent
 	/// <param name="components">The components to add.</param>
 	/// <returns>The updated container component.</returns>
 	/// <exception cref="ArgumentException">
-	///     Thrown if the number of components exceeds 10 or if any of the components are not
+	///     Thrown if the number of components exceeds 39 or if any of the components are not
 	///     of the allowed types.
 	/// </exception>
 	public DiscordContainerComponent AddComponents(IEnumerable<DiscordComponent> components)
 	{
 		var comps = components.ToList();
-		if (this.Components.Count + comps.Count > 10)
-			throw new ArgumentException("You can only have up to 10 components in a container.");
+		if (this.Components.Count + comps.Count > 39)
+			throw new ArgumentException("You can only have up to 39 components in a container.");
 
 		List<ComponentType> allowedTypes = [ComponentType.ActionRow, ComponentType.TextDisplay, ComponentType.Section, ComponentType.MediaGallery, ComponentType.Separator, ComponentType.File];
 		if (comps.Any(c => !allowedTypes.Contains(c.Type)))
@@ -123,13 +123,13 @@ public sealed class DiscordContainerComponent : DiscordComponent
 	/// <param name="component">The component to add.</param>
 	/// <returns>The updated container component.</returns>
 	/// <exception cref="ArgumentException">
-	///     Thrown if the number of components exceeds 10 or if any of the components are not
+	///     Thrown if the number of components exceeds 39 or if any of the components are not
 	///     of the allowed types.
 	/// </exception>
 	public DiscordContainerComponent AddComponent(DiscordComponent component)
 	{
-		if (this.Components.Count > 10)
-			throw new ArgumentException("You can only have up to 10 components in a container.");
+		if (this.Components.Count > 39)
+			throw new ArgumentException("You can only have up to 39 components in a container.");
 
 		List<ComponentType> allowedTypes = [ComponentType.ActionRow, ComponentType.TextDisplay, ComponentType.Section, ComponentType.MediaGallery, ComponentType.Separator, ComponentType.File];
 		if (!allowedTypes.Contains(component.Type))
