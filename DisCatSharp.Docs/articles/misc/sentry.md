@@ -175,7 +175,7 @@ To enhance safety and ensure no sensitive information is leaked, various filters
 3. **Breadcrumb Filter**: Filters out sensitive information from breadcrumb logs before sending them to Sentry.
 
     ```csharp
-    options.SetBeforeBreadcrumb(b
+    options.SetBeforeBreadcrumb((b, _)
     => new(Utilities.StripIds(Utilities.StripTokens(b.Message), this.Configuration.EnableDiscordIdScrubber)!,
     	b.Type!,
     	b.Data?.Select(x => new KeyValuePair<string, string>(x.Key, Utilities.StripIds(Utilities.StripTokens(x.Value), this.Configuration.EnableDiscordIdScrubber)!))
