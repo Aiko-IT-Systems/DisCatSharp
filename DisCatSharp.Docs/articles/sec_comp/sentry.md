@@ -39,7 +39,7 @@ Despite the validation that no sensitive data was being logged, additional measu
 
 2. **Breadcrumb Filter**: Filters out sensitive information from breadcrumb logs before sending them to Sentry.
    ```csharp
-   options.SetBeforeBreadcrumb(b
+   options.SetBeforeBreadcrumb((b, _)
       => new Breadcrumb(Utilities.StripTokens(b.Message),
          b.Type,
          b.Data?.Select(x => new KeyValuePair<string, string>(x.Key, Utilities.StripTokens(x.Value)))

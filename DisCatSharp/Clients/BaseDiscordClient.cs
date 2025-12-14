@@ -188,7 +188,7 @@ public abstract class BaseDiscordClient : IDisposable
 
 			if (!this.Configuration.DisableScrubber)
 			{
-				options.SetBeforeBreadcrumb(b
+				options.SetBeforeBreadcrumb((b, _)
 					=> new(Utilities.StripTokensAndOptIds(b.Message, this.Configuration.EnableDiscordIdScrubber)!,
 						b.Type!,
 						b.Data?.Select(x => new KeyValuePair<string, string>(x.Key, Utilities.StripTokensAndOptIds(x.Value, this.Configuration.EnableDiscordIdScrubber)!))
