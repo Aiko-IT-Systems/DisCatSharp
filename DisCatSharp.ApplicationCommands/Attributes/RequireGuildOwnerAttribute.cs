@@ -9,12 +9,12 @@ namespace DisCatSharp.ApplicationCommands.Attributes;
 ///     Defines that this application command is only usable within a guild by its owner.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
-public sealed class ApplicationCommandRequireGuildOwnerAttributeAttribute : ApplicationCommandCheckBaseAttribute
+public sealed class ApplicationCommandRequireGuildOwnerAttribute : ApplicationCommandCheckBaseAttribute
 {
 	/// <summary>
 	///     Defines that this command is only usable within a guild by its owner.
 	/// </summary>
-	public ApplicationCommandRequireGuildOwnerAttributeAttribute()
+	public ApplicationCommandRequireGuildOwnerAttribute()
 	{ }
 
 	/// <summary>
