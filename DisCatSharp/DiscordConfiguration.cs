@@ -366,7 +366,7 @@ public sealed class DiscordConfiguration
 	public bool EnableSentry { internal get; set; } = false;
 
 	/// <summary>
-	///     <para>Whether to attach recent log entris.</para>
+	///     <para>Whether to attach recent log entries.</para>
 	///     <para>Defaults to <see langword="false" />.</para>
 	/// </summary>
 	public bool AttachRecentLogEntries { internal get; set; } = false;
