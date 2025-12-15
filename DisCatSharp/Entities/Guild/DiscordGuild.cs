@@ -2211,8 +2211,9 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	{
 		var mdl = new CurrentMemberEditModel();
 		action(mdl);
-
-		return await this.Discord.ApiClient.ModifyCurrentGuildMemberAsync(this.Id, mdl.Nickname, mdl.Bio, Optional.None, Optional.None, mdl.AuditLogReason).ConfigureAwait(false);
+		var avatarb64 = MediaTool.Base64FromStream(mdl.Avatar);
+		var bannerb64 = MediaTool.Base64FromStream(mdl.Banner);
+		return await this.Discord.ApiClient.ModifyCurrentGuildMemberAsync(this.Id, mdl.Nickname, mdl.Bio, avatarb64, bannerb64, mdl.AuditLogReason).ConfigureAwait(false);
 	}
 
 	/// <summary>
