@@ -235,7 +235,7 @@ public class InteractivityExtension : BaseExtension
 			throw new ArgumentException("Provided message does not contain any components.");
 
 		string[]? ids = null;
-		
+
 		if (message.Flags.HasValue && message.Flags.Value.HasMessageFlag(MessageFlags.IsComponentsV2))
 		{
 			if (message.Components.OfType<DiscordContainerComponent>().SelectMany(c => c.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components)).All(c => c.Type != ComponentType.Button))
@@ -301,7 +301,7 @@ public class InteractivityExtension : BaseExtension
 		if (message.Components.Count == 0)
 			throw new ArgumentException("Provided message does not contain any components.");
 
-		
+
 		if (message.Flags.HasValue && message.Flags.Value.HasMessageFlag(MessageFlags.IsComponentsV2))
 		{
 			if (message.Components.OfType<DiscordContainerComponent>().SelectMany(c => c.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components)).All(c => c.Type != ComponentType.Button))
@@ -362,7 +362,7 @@ public class InteractivityExtension : BaseExtension
 		if (message.Components.Count is 0)
 			throw new ArgumentException("Provided message does not contain any components.");
 
-		
+
 		if (message.Flags.HasValue && message.Flags.Value.HasMessageFlag(MessageFlags.IsComponentsV2))
 		{
 			if (message.Components.OfType<DiscordContainerComponent>().SelectMany(c => c.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components)).All(c => c.Type != ComponentType.Button))
@@ -468,7 +468,7 @@ public class InteractivityExtension : BaseExtension
 		else
 		{
 			if (message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).All(c => c.Type != selectType))
-			throw new ArgumentException("Message does not contain any select components.");
+				throw new ArgumentException("Message does not contain any select components.");
 		}
 
 		var result = await this
@@ -524,7 +524,7 @@ public class InteractivityExtension : BaseExtension
 		else
 		{
 			if (message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).All(c => c.Type != selectType))
-			throw new ArgumentException("Message does not contain any select components.");
+				throw new ArgumentException("Message does not contain any select components.");
 
 			if (message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).OfType<DiscordBaseSelectComponent>().All(c => c.CustomId != id))
 				throw new ArgumentException($"Message does not contain select with Id of '{id}'.");
@@ -584,7 +584,7 @@ public class InteractivityExtension : BaseExtension
 		else
 		{
 			if (message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).All(c => c.Type != selectType))
-			throw new ArgumentException("Message does not contain any select components.");
+				throw new ArgumentException("Message does not contain any select components.");
 
 			if (message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).OfType<DiscordBaseSelectComponent>().All(c => c.CustomId != id))
 				throw new ArgumentException($"Message does not contain select with Id of '{id}'.");
@@ -970,22 +970,40 @@ public class InteractivityExtension : BaseExtension
 		{
 			var page = pages.First();
 			var builder = new DiscordWebhookBuilder();
-			if (page.Content is not null)
-				builder.WithContent(page.Content);
-			if (page.Embed is not null)
-				builder.AddEmbed(page.Embed);
-			builder.AddComponents(bts.ButtonArray.ToList());
+			if (!page.UsesCV2)
+			{
+				if (page.Content is not null)
+					builder.WithContent(page.Content);
+				if (page.Embed is not null)
+					builder.AddEmbed(page.Embed);
+				builder.AddComponents(bts.ButtonArray.ToList());
+			}
+			else
+			{
+				builder.WithV2Components();
+				builder.AddComponents(page.ComponentsInternal);
+				builder.AddComponents(new DiscordActionRowComponent(bts.ButtonArray));
+			}
 			message = await interaction.EditOriginalResponseAsync(builder).ConfigureAwait(false);
 		}
 		else
 		{
 			var page = pages.First();
 			var builder = new DiscordInteractionResponseBuilder();
-			if (page.Content is not null)
-				builder.WithContent(page.Content);
-			if (page.Embed is not null)
-				builder.AddEmbed(page.Embed);
-			builder.AddComponents(bts.ButtonArray.ToList());
+			if (!page.UsesCV2)
+			{
+				if (page.Content is not null)
+					builder.WithContent(page.Content);
+				if (page.Embed is not null)
+					builder.AddEmbed(page.Embed);
+				builder.AddComponents(bts.ButtonArray.ToList());
+			}
+			else
+			{
+				builder.WithV2Components();
+				builder.AddComponents(page.ComponentsInternal);
+				builder.AddComponents(new DiscordActionRowComponent(bts.ButtonArray));
+			}
 			if (ephemeral)
 				builder = builder.AsEphemeral();
 			message = (await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, builder).ConfigureAwait(false)).Message!;

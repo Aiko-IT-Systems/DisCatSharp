@@ -145,11 +145,20 @@ internal class ComponentPaginator : IPaginator
 		if (request is InteractionPaginationRequest ipr)
 		{
 			var builder = new DiscordWebhookBuilder();
-			if (page.Content is not null)
-				builder.WithContent(page.Content);
-			if (page.Embed is not null)
-				builder.AddEmbed(page.Embed);
-			builder.AddComponents(bts);
+			if (!page.UsesCV2)
+			{
+				if (page.Content is not null)
+					builder.WithContent(page.Content);
+				if (page.Embed is not null)
+					builder.AddEmbed(page.Embed);
+				builder.AddComponents(bts);
+			}
+			else
+			{
+				builder.WithV2Components();
+				builder.AddComponents(page.ComponentsInternal);
+				builder.AddComponents(new DiscordActionRowComponent(bts));
+			}
 
 			await (await ipr.GetLastInteractionAsync()).EditOriginalResponseAsync(builder).ConfigureAwait(false);
 			return;
@@ -157,11 +166,20 @@ internal class ComponentPaginator : IPaginator
 
 		this._builder.Clear();
 
-		if (page.Content is not null)
-			this._builder.WithContent(page.Content);
-		if (page.Embed is not null)
-			this._builder.AddEmbed(page.Embed);
-		this._builder.AddComponents(bts);
+		if (!page.UsesCV2)
+		{
+			if (page.Content is not null)
+				this._builder.WithContent(page.Content);
+			if (page.Embed is not null)
+				this._builder.AddEmbed(page.Embed);
+			this._builder.AddComponents(bts);
+		}
+		else
+		{
+			this._builder.WithV2Components();
+			this._builder.AddComponents(page.ComponentsInternal);
+			this._builder.AddComponents(new DiscordActionRowComponent(bts));
+		}
 
 		await this._builder.ModifyAsync(msg).ConfigureAwait(false);
 	}
