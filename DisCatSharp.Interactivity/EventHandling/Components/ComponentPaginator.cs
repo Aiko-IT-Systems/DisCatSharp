@@ -135,9 +135,6 @@ internal class ComponentPaginator : IPaginator
 
 		await paginationTask.ConfigureAwait(false);
 
-		if (id == buttons.Stop.CustomId)
-			return;
-
 		var page = await request.GetPageAsync().ConfigureAwait(false);
 
 		var bts = await request.GetButtonsAsync().ConfigureAwait(false);
@@ -145,6 +142,30 @@ internal class ComponentPaginator : IPaginator
 		if (request is InteractionPaginationRequest ipr)
 		{
 			var builder = new DiscordWebhookBuilder();
+			if (id == buttons.Stop.CustomId)
+			{
+				if (!page.UsesCV2)
+				{
+					if (page.Content is not null)
+						builder.WithContent(page.Content);
+					if (page.Embed is not null)
+						builder.AddEmbed(page.Embed);
+					builder.AddComponents(bts);
+				}
+				else
+				{
+					builder.WithV2Components();
+					builder.AddComponents(page.ComponentsInternal);
+					builder.AddComponents(new DiscordActionRowComponent(bts));
+					builder.DisableAllComponents();
+				}
+
+				builder.DisableAllComponents();
+				await (await ipr.GetLastInteractionAsync()).EditOriginalResponseAsync(builder).ConfigureAwait(false);
+
+				return;
+			}
+
 			if (!page.UsesCV2)
 			{
 				if (page.Content is not null)
