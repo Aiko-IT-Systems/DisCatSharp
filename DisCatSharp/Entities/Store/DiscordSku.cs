@@ -106,7 +106,7 @@ public sealed class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 	/// <summary>
 	///     Gets the product line.
 	/// </summary>
-	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("product_line", NullValueHandling = NullValueHandling.Ignore)]
 	public ProductLine ProductLine { get; internal set; }
 
 	/// <summary>
