@@ -61,11 +61,11 @@ public sealed class GroupTranslator
 	///     Gets the sub group translators, if applicable.
 	/// </summary>
 	[JsonProperty("groups", NullValueHandling = NullValueHandling.Ignore)]
-	public List<SubGroupTranslator> SubGroups { get; set; }
+	public List<SubGroupTranslator> SubGroups { get; set; } = [];
 
 	/// <summary>
 	///     Gets the command translators, if applicable.
 	/// </summary>
 	[JsonProperty("commands", NullValueHandling = NullValueHandling.Ignore)]
-	public List<CommandTranslator> Commands { get; set; }
+	public List<CommandTranslator> Commands { get; set; } = [];
 }
