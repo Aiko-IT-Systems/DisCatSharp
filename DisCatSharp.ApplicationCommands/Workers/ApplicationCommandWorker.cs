@@ -316,7 +316,7 @@ internal class NestedCommandWorker
 
 					var commandTranslation = translator?.Single(c => c.Name == payload.Name);
 
-					var subCommandTranslation = commandTranslation?.SubGroups?.Single(sc => sc.Name == commatt.Name);
+					var subCommandTranslation = commandTranslation?.SubGroups?.Single(sc => sc.Name == subgroupAttribute.Name);
 
 					var subSubCommandTranslation = subCommandTranslation?.Commands.Single(sc => sc.Name == commatt.Name);
 
