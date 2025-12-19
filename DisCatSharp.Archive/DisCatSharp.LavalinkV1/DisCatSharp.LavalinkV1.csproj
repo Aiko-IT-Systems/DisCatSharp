@@ -28,7 +28,7 @@ Documentation: https://docs.dcs.aitsys.dev/articles/modules/audio/lavalink/setup
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
+    <ProjectReference Include="..\..\DisCatSharp\DisCatSharp.csproj" />
   </ItemGroup>
 
   <ItemGroup>
