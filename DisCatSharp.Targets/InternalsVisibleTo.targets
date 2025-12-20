@@ -30,6 +30,10 @@
 		<InternalsVisibleTo Include="DisCatSharp.Extensions.OAuth2Web" />
 		<InternalsVisibleTo Include="DisCatSharp.Extensions.TwoFactorCommands" />
 		<InternalsVisibleTo Include="DisCatSharp.Extensions.SimpleMusicCommands" />
+		<InternalsVisibleTo Include="DisCatSharp.Extensions.Translations" />
+		<InternalsVisibleTo Include="DisCatSharp.Extensions.Translations.ApplicationCommands" />
+		<InternalsVisibleTo Include="DisCatSharp.Extensions.Translations.CommandsNext" />
+		<InternalsVisibleTo Include="DisCatSharp.Extensions.Translations" />
 		<InternalsVisibleTo Include="Nyaw" />
 		<InternalsVisibleTo Include="MikuSharp" />
 		<InternalsVisibleTo Include="Microsoft.DocAsCode" />
