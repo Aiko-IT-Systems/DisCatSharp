@@ -31,7 +31,7 @@ namespace DisCatSharp;
 /// </summary>
 public sealed partial class DiscordShardedClient
 {
-#region Constructor
+	#region Constructor
 
 	/// <summary>
 	///     Initializes a new auto-sharding Discord client.
@@ -146,12 +146,26 @@ public sealed partial class DiscordShardedClient
 
 		this._configuration.HasShardLogger = true;
 
+		var a = typeof(DiscordClient).GetTypeInfo().Assembly;
+
+		var iv = a.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+		if (iv != null)
+			this.VersionString = iv.InformationalVersion;
+		else
+		{
+			var v = a.GetName().Version;
+			var vs = v.ToString(3);
+
+			if (v.Revision > 0)
+				this.VersionString = $"{vs}, CI build {v.Revision}";
+		}
+
 		this.Logger ??= this._configuration.LoggerFactory!.CreateLogger<BaseDiscordClient>();
 	}
 
-#endregion
+	#endregion
 
-#region Internal Methods
+	#region Internal Methods
 
 	/// <summary>
 	///     Initializes the shards.
@@ -182,9 +196,9 @@ public sealed partial class DiscordShardedClient
 		return shardCount;
 	}
 
-#endregion
+	#endregion
 
-#region Destructor
+	#region Destructor
 
 	/// <summary>
 	///     Disposes the client.
@@ -194,9 +208,9 @@ public sealed partial class DiscordShardedClient
 		this.InternalStopAsync(false).GetAwaiter().GetResult();
 	}
 
-#endregion
+	#endregion
 
-#region Public Properties
+	#region Public Properties
 
 	/// <summary>
 	///     Gets the logger for this client.
@@ -237,6 +251,11 @@ public sealed partial class DiscordShardedClient
 		=> "DisCatSharp";
 
 	/// <summary>
+	///     Gets the string representing the version of bot lib.
+	/// </summary>
+	public string VersionString { get; }
+
+	/// <summary>
 	///     Gets the current application.
 	/// </summary>
 	public DiscordApplication CurrentApplication { get; private set; }
@@ -268,9 +287,9 @@ public sealed partial class DiscordShardedClient
 		}
 	}
 
-#endregion
+	#endregion
 
-#region Private Properties/Fields
+	#region Private Properties/Fields
 
 	/// <summary>
 	///     Gets the configuration.
@@ -302,9 +321,9 @@ public sealed partial class DiscordShardedClient
 	/// </summary>
 	private readonly bool _manuallySharding;
 
-#endregion
+	#endregion
 
-#region Public Methods
+	#region Public Methods
 
 	/// <summary>
 	///     Initializes and connects all shards.
@@ -322,7 +341,10 @@ public sealed partial class DiscordShardedClient
 		{
 			if (this._configuration.TokenType != TokenType.Bot)
 				this.Logger.LogWarning(LoggerEvents.Misc, "You are logging in with a token that is not a bot token. This is not officially supported by Discord, and can result in your account being terminated if you aren't careful");
-			this.Logger.LogInformation(LoggerEvents.Startup, "Lib {LibraryName}, version {LibraryVersion}", this._botLibrary, this._versionString.Value);
+			var versionParts = this.VersionString.Split('+');
+			var version = versionParts[0];
+			var commit = versionParts.Length > 1 ? versionParts[1] : "unknown";
+			this.Logger.LogInformation(LoggerEvents.Startup, "Library {LibraryName}, Version {LibraryVersion}, Commit {CommitHash}", this.BotLibrary, version, commit);
 
 			var shardc = await this.InitializeShardsAsync().ConfigureAwait(false);
 			var connectTasks = new List<Task>();
@@ -409,9 +431,9 @@ public sealed partial class DiscordShardedClient
 		await Task.WhenAll(tasks).ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 
-#region Private Methods & Version Property
+	#region Private Methods & Version Property
 
 	/// <summary>
 	///     Gets the gateway info.
@@ -493,34 +515,9 @@ public sealed partial class DiscordShardedClient
 		}
 	}
 
-	/// <summary>
-	///     Gets the version string.
-	/// </summary>
-	private readonly Lazy<string> _versionString = new(() =>
-	{
-		var a = typeof(DiscordShardedClient).GetTypeInfo().Assembly;
+	#endregion
 
-		var iv = a.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
-		if (iv != null)
-			return iv.InformationalVersion;
-
-		var v = a.GetName().Version;
-		var vs = v.ToString(3);
-
-		if (v.Revision > 0)
-			vs = $"{vs}, CI build {v.Revision}";
-
-		return vs;
-	});
-
-	/// <summary>
-	///     Gets the name of the used bot library.
-	/// </summary>
-	private readonly string _botLibrary = "DisCatSharp";
-
-#endregion
-
-#region Private Connection Methods
+	#region Private Connection Methods
 
 	/// <summary>
 	///     Connects a shard.
@@ -955,5 +952,5 @@ public sealed partial class DiscordShardedClient
 		return -1;
 	}
 
-#endregion
+	#endregion
 }

@@ -375,7 +375,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		{
 			if (this.Configuration.TokenType != TokenType.Bot)
 				this.Logger.LogWarning(LoggerEvents.Misc, "You are logging in with a token that is not a bot token. This is not officially supported by Discord, and can result in your account being terminated if you aren't careful");
-			this.Logger.LogInformation(LoggerEvents.Startup, "Lib {LibraryName}, version {LibraryVersion}", this.BotLibrary, this.VersionString);
+			var versionParts = this.VersionString.Split('+');
+			var version = versionParts[0];
+			var commit = versionParts.Length > 1 ? versionParts[1] : "unknown";
+			this.Logger.LogInformation(LoggerEvents.Startup, "Library {LibraryName}, Version {LibraryVersion}, Commit {CommitHash}", this.BotLibrary, version, commit);
 		}
 
 		if (!this.Configuration.DisableUpdateCheck)
@@ -1572,8 +1575,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				Discord = this
 			};
 
-			if (member is not null)
-				member.User = author;
+			member?.User = author;
 
 			message.Author = this.UpdateUser(usr, guild?.Id, guild, member);
 		}
