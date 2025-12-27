@@ -56,13 +56,13 @@ public sealed class DiscordFileDisplayComponent : DiscordComponent
 	/// <summary>
 	///     Gets the file size.
 	/// </summary>
-	[JsonProperty("file", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("size", NullValueHandling = NullValueHandling.Ignore)]
 	public int Size { get; internal set; }
 
 	/// <summary>
 	///     Gets the file name.
 	/// </summary>
-	[JsonProperty("file", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
 	public string Name { get; internal set; }
 
 	/// <summary>
