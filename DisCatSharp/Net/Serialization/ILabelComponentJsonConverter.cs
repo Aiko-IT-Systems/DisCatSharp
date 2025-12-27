@@ -36,7 +36,8 @@ internal sealed class ILabelComponentJsonConverter : JsonConverter
 			ComponentType.RoleSelect => job.ToObject<DiscordRoleSelectComponent>(serializer),
 			ComponentType.ChannelSelect => job.ToObject<DiscordChannelSelectComponent>(serializer),
 			ComponentType.MentionableSelect => job.ToObject<DiscordMentionableSelectComponent>(serializer),
-            _ => throw new JsonSerializationException($"Unknown ILabelComponent type: {type}")
+			ComponentType.FileUpload => job.ToObject<DiscordFileUploadComponent>(serializer),
+			_ => throw new JsonSerializationException($"Unknown ILabelComponent type: {type}")
         };
 
         return cmp;
