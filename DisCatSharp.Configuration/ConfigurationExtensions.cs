@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Linq;
+using System.Net;
+using System.Globalization;
 
 using DisCatSharp.Configuration.Models;
 
@@ -86,13 +88,26 @@ internal static class ConfigurationExtensions
 				continue;
 			}
 
-			// From this point onward we require the 'entry' value to have something useful
-			if (string.IsNullOrEmpty(entry))
-				continue;
-
 			try
 			{
 				var targetType = prop.PropertyType;
+
+				// If no direct value provided, attempt nested hydration for complex/proxy types
+				if (string.IsNullOrEmpty(entry))
+				{
+					if (typeof(IWebProxy).IsAssignableFrom(targetType))
+					{
+						value = TryCreateWebProxy(section, prop.Name, entry);
+						if (value != null)
+							prop.SetValue(config, value);
+						continue;
+					}
+
+					value = TryHydrateComplexType(section, prop.Name, targetType, entry);
+					if (value != null)
+						prop.SetValue(config, value);
+					continue;
+				}
 
 				// Handle nullable types
 				if (Nullable.GetUnderlyingType(targetType) != null)
@@ -100,17 +115,19 @@ internal static class ConfigurationExtensions
 
 				// Primitive types and common types conversion
 				if (targetType.IsPrimitive)
-					value = Convert.ChangeType(entry, targetType);
+					value = Convert.ChangeType(entry, targetType, CultureInfo.InvariantCulture);
 				else if (targetType.IsEnum)
 					value = Enum.Parse(targetType, entry.Replace('|', ','));
 				else if (targetType == typeof(TimeSpan))
-					value = TimeSpan.Parse(entry);
+					value = TimeSpan.Parse(entry, CultureInfo.InvariantCulture);
 				else if (targetType == typeof(DateTime))
-					value = DateTime.Parse(entry);
+					value = DateTime.Parse(entry, CultureInfo.InvariantCulture);
 				else if (targetType == typeof(DateTimeOffset))
-					value = DateTimeOffset.Parse(entry);
+					value = DateTimeOffset.Parse(entry, CultureInfo.InvariantCulture);
+				else if (typeof(IWebProxy).IsAssignableFrom(targetType))
+					value = TryCreateWebProxy(section, prop.Name, entry) ?? throw new NotSupportedException($"Unable to parse proxy from '{entry}'.");
 				else
-					throw new NotSupportedException($"Type '{targetType.Name}' is not supported.");
+					value = TryHydrateComplexType(section, prop.Name, targetType, entry) ?? throw new NotSupportedException($"Type '{targetType.Name}' is not supported.");
 
 				// Update value within our config instance
 				prop.SetValue(config, value);
@@ -121,6 +138,96 @@ internal static class ConfigurationExtensions
 					$"Unable to convert value of '{entry}' to type '{prop.PropertyType.Name}' for property '{prop.Name}' in config '{config.GetType().Name}':\n\t\t{ex.Message}");
 			}
 		}
+	}
+
+	/// <summary>
+	///     Attempts to create a <see cref="IWebProxy" /> from a user-specified value or sub-section.
+	/// </summary>
+	/// <param name="section">Configuration section being hydrated.</param>
+	/// <param name="propertyName">Property name pointing to the proxy object.</param>
+	/// <param name="value">Proxy value provided via configuration.</param>
+	/// <returns>Instance of <see cref="IWebProxy" /> when parsable; otherwise, <see langword="null" />.</returns>
+	private static IWebProxy? TryCreateWebProxy(ConfigSection section, string propertyName, string value)
+	{
+		// First attempt: treat value as a direct URI (with or without scheme)
+		if (!string.IsNullOrWhiteSpace(value))
+		{
+			var directProxy = TryCreateProxyFromString(value, null);
+			if (directProxy != null)
+				return directProxy;
+		}
+
+		// Second attempt: hydrate from nested object
+		var proxySection = section.Config.GetSection(section.GetPath(propertyName));
+		if (!proxySection.Exists())
+			return null;
+
+		var host = proxySection["Host"] ?? proxySection["Address"] ?? proxySection["Uri"] ?? proxySection["Url"];
+		var port = proxySection["Port"];
+		var bypassOnLocal = proxySection["BypassOnLocal"];
+
+		return TryCreateProxyFromString(host, port, bypassOnLocal);
+	}
+
+	/// <summary>
+	///     Tries to create a proxy from string values, supporting host, port and bypass-on-local.
+	/// </summary>
+	private static IWebProxy? TryCreateProxyFromString(string hostOrUri, string? port = null, string? bypassOnLocal = null)
+	{
+		if (string.IsNullOrWhiteSpace(hostOrUri))
+			return null;
+
+
+		// Allow host:port without scheme
+		if (!Uri.TryCreate(hostOrUri, UriKind.Absolute, out var proxyUri))
+		{
+			var candidate = hostOrUri.Contains("://", StringComparison.Ordinal)
+				? hostOrUri
+				: $"http://{hostOrUri}";
+
+			if (Uri.TryCreate(candidate, UriKind.Absolute, out var candidateUri))
+				proxyUri = candidateUri;
+		}
+
+		if (proxyUri == null)
+			return null;
+
+		if (int.TryParse(port, NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsedPort) && parsedPort > 0)
+		{
+			var builder = new UriBuilder(proxyUri) { Port = parsedPort };
+			proxyUri = builder.Uri;
+		}
+
+		var proxy = new WebProxy(proxyUri);
+		if (bool.TryParse(bypassOnLocal, out var bypass))
+			proxy.BypassProxyOnLocal = bypass;
+
+		return proxy;
+	}
+
+	/// <summary>
+	///     Attempts to hydrate a complex type using JSON value or a nested configuration section.
+	/// </summary>
+	private static object? TryHydrateComplexType(ConfigSection section, string propertyName, Type targetType, string value)
+	{
+		if (!string.IsNullOrWhiteSpace(value))
+			try
+			{
+				return JsonConvert.DeserializeObject(value, targetType);
+			}
+			catch
+			{ }
+
+		var subSection = section.Config.GetSection(section.GetPath(propertyName));
+		if (subSection.Exists())
+			try
+			{
+				return subSection.Get(targetType);
+			}
+			catch
+			{ }
+
+		return null;
 	}
 
 	/// <summary>
@@ -235,7 +342,7 @@ internal static class ConfigurationExtensions
 	///     <code>
 	/// {
 	///    "Discord": {  // this is a section/object
-	/// 
+	///
 	///    },
 	///    "Value": "something" // this is not a section/object
 	/// }
