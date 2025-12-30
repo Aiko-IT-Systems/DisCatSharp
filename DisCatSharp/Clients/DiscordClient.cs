@@ -1575,7 +1575,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				Discord = this
 			};
 
-			member?.User = author;
+			if (member is not null)
+				member.User = author;
 
 			message.Author = this.UpdateUser(usr, guild?.Id, guild, member);
 		}
