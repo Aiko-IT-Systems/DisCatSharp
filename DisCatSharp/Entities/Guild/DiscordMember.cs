@@ -90,6 +90,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		this.MemberFlags = mbr.MemberFlags;
 		this.InteractionPermissions = mbr.Permissions;
 		this.GuildAvatarDecorationData = mbr.GuildAvatarDecorationData;
+		this.GuildDisplayNameStyles = mbr.GuildDisplayNameStyles;
 		if (mbr.User is not null)
 			this.ManualUser = new(mbr.User)
 			{
@@ -98,36 +99,42 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	}
 
 	/// <summary>
-	///     Gets the members avatar hash.
+	///     Gets the member's guild avatar hash.
 	/// </summary>
 	[JsonProperty("avatar", NullValueHandling = NullValueHandling.Ignore)]
 	public string? GuildAvatarHash { get; internal set; }
 
 	/// <summary>
-	///     Gets the members avatar URL.
+	///     Gets the member's guild avatar URL.
 	/// </summary>
 	[JsonIgnore]
 	public string GuildAvatarUrl
 		=> string.IsNullOrWhiteSpace(this.GuildAvatarHash) ? this.User.AvatarUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILDS}/{this.GuildId.ToString(CultureInfo.InvariantCulture)}{Endpoints.USERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}{Endpoints.AVATARS}/{this.GuildAvatarHash}.{(this.GuildAvatarHash.StartsWith("a_", StringComparison.Ordinal) ? "gif" : "png")}?size=1024";
 
 	/// <summary>
-	///     Gets the members banner hash.
+	///     Gets the member's guild banner hash.
 	/// </summary>
 	[JsonProperty("banner", NullValueHandling = NullValueHandling.Ignore)]
 	public string? GuildBannerHash { get; internal set; }
 
 	/// <summary>
-	///     Gets the members banner URL.
+	///     Gets the member's guild banner URL.
 	/// </summary>
 	[JsonIgnore]
 	public string? GuildBannerUrl
 		=> string.IsNullOrWhiteSpace(this.GuildBannerHash) ? this.User.BannerUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILDS}/{this.GuildId.ToString(CultureInfo.InvariantCulture)}{Endpoints.USERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}{Endpoints.BANNERS}/{this.GuildBannerHash}.{(this.GuildBannerHash.StartsWith("a_", StringComparison.Ordinal) ? "gif" : "png")}?size=1024";
 
 	/// <summary>
-	///     Gets the members guild avatar decoration data.
+	///     Gets the member's guild avatar decoration data.
 	/// </summary>
 	[JsonProperty("avatar_decoration_data", NullValueHandling = NullValueHandling.Ignore)]
 	public AvatarDecorationData GuildAvatarDecorationData { get; internal set; }
+
+	/// <summary>
+	///     Gets the member's guild display name styles.
+	/// </summary>
+	[JsonProperty("display_name_styles", NullValueHandling = NullValueHandling.Ignore)]
+	public DisplayNameStyles? GuildDisplayNameStyles { get; internal set; }
 
 	/// <summary>
 	///     The color of this member's banner. Mutually exclusive with <see cref="GuildBannerHash" />.
@@ -304,6 +311,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		=> this.InteractionPermissions ?? this.GetPermissions();
 
 	/// <inheritdoc />
+	[JsonIgnore]
 	public override DisplayNameStyles? DisplayNameStyles
 		=> this.User.DisplayNameStyles;
 

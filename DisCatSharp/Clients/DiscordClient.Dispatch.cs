@@ -4096,6 +4096,13 @@ public sealed partial class DiscordClient
 					c.Value.Discord = this;
 					c.Value.Id = c.Key;
 					c.Value.GuildId = guildId.Value;
+					c.Value.ManualUser = resolved.Users != null && resolved.Users.TryGetValue(c.Key, out var usrResolved)
+						? usrResolved
+						: new DiscordUser
+						{
+							Id = c.Key,
+							Discord = this
+						};
 					c.Value.User.Discord = this;
 					this.UserCache.AddOrUpdate(c.Value.User.Id, c.Value.User, (old, @new) => @new);
 				}
