@@ -90,6 +90,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		this.MemberFlags = mbr.MemberFlags;
 		this.InteractionPermissions = mbr.Permissions;
 		this.GuildAvatarDecorationData = mbr.GuildAvatarDecorationData;
+		this.GuildDisplayNameStyles = mbr.GuildDisplayNameStyles;
 		if (mbr.User is not null)
 			this.ManualUser = new(mbr.User)
 			{
@@ -130,7 +131,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	public AvatarDecorationData GuildAvatarDecorationData { get; internal set; }
 
 	/// <summary>
-	///		Gets the members's guild display name styles.
+	///     Gets the member's guild display name styles.
 	/// </summary>
 	[JsonProperty("display_name_styles", NullValueHandling = NullValueHandling.Ignore)]
 	public DisplayNameStyles? GuildDisplayNameStyles { get; internal set; }
