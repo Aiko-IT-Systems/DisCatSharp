@@ -578,6 +578,23 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	}
 
 	/// <summary>
+	/// 	Modifies a component with the specified custom ID using the provided action.
+	/// </summary>
+	/// <param name="id">The ID to match.</param>
+	/// <param name="modifyAction">The action to perform on the matched component.</param>
+	/// <returns>The current builder for chaining.</returns>
+	public DiscordMessageBuilder ModifyComponentById(int id, Action<DiscordComponent> modifyAction)
+	{
+		if (this.ComponentsInternal is null)
+			return this;
+
+		foreach (var c in this.ComponentsInternal)
+			ModifyComponentRecursive(c, id, modifyAction);
+
+		return this;
+	}
+
+	/// <summary>
 	/// 	Recursively searches for and modifies a component with the specified custom ID.
 	/// </summary>
 	/// <param name="component">The component to check and potentially modify.</param>
@@ -608,6 +625,40 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 
 			if (sec.Accessory != null)
 				ModifyComponentRecursive(sec.Accessory, customId, modifyAction);
+		}
+	}
+
+	/// <summary>
+	/// 	Recursively searches for and modifies a component with the specified custom ID.
+	/// </summary>
+	/// <param name="component">The component to check and potentially modify.</param>
+	/// <param name="id">The ID to match.</param>
+	/// <param name="modifyAction">The action to perform on the matched component.</param>
+	private static void ModifyComponentRecursive(DiscordComponent component, int id, Action<DiscordComponent> modifyAction)
+	{
+		if (component.Id.HasValue && component.Id.Value == id)
+		{
+			modifyAction(component);
+			return;
+		}
+
+		if (component is DiscordActionRowComponent row)
+		{
+			foreach (var child in row.Components)
+				ModifyComponentRecursive(child, id, modifyAction);
+		}
+		else if (component is DiscordContainerComponent cont)
+		{
+			foreach (var child in cont.Components)
+				ModifyComponentRecursive(child, id, modifyAction);
+		}
+		else if (component is DiscordSectionComponent sec)
+		{
+			foreach (var child in sec.Components)
+				ModifyComponentRecursive(child, id, modifyAction);
+
+			if (sec.Accessory != null)
+				ModifyComponentRecursive(sec.Accessory, id, modifyAction);
 		}
 	}
 
