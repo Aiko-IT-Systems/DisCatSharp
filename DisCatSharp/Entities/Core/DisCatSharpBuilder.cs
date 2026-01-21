@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using DisCatSharp.Enums;
-
 namespace DisCatSharp.Entities.Core;
 
 /// <summary>
