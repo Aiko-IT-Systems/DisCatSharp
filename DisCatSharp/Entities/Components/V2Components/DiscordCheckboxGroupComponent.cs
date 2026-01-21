@@ -72,7 +72,7 @@ public sealed class DiscordCheckboxGroupComponent : DiscordComponent, ILabelComp
 	///     The minimum number of selections.
 	/// </summary>
 	[JsonProperty("min_values", NullValueHandling = NullValueHandling.Ignore)]
-	public int? MinimumValues { get; internal set; } = 1;
+	public int? MinimumValues { get; internal set; } = 0;
 
 	/// <summary>
 	///     The maximum number of selections.

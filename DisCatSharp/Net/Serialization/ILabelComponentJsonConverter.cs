@@ -37,9 +37,9 @@ internal sealed class ILabelComponentJsonConverter : JsonConverter
 			ComponentType.ChannelSelect => job.ToObject<DiscordChannelSelectComponent>(serializer),
 			ComponentType.MentionableSelect => job.ToObject<DiscordMentionableSelectComponent>(serializer),
 			ComponentType.FileUpload => job.ToObject<DiscordFileUploadComponent>(serializer),
-            ComponentType.RadioGroup => job.ToObject<DiscordRadioGroupComponent>(serializer),
-            ComponentType.CheckboxGroup => job.ToObject<DiscordCheckboxGroupComponent>(serializer),
-            ComponentType.Checkbox => job.ToObject<DiscordCheckboxComponent>(serializer),
+			ComponentType.RadioGroup => job.ToObject<DiscordRadioGroupComponent>(serializer),
+			ComponentType.CheckboxGroup => job.ToObject<DiscordCheckboxGroupComponent>(serializer),
+			ComponentType.Checkbox => job.ToObject<DiscordCheckboxComponent>(serializer),
 			_ => throw new JsonSerializationException($"Unknown ILabelComponent type: {type}")
         };
 

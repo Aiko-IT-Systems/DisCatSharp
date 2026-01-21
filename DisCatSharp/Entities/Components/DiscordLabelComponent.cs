@@ -78,7 +78,7 @@ public sealed class DiscordLabelComponent : DiscordComponent
 	}
 
 	/// <summary>
-	/// 	Sets the radio group component for the label.
+	///     Sets the radio group component for the label.
 	/// </summary>
 	/// <param name="component">The radio group component to attach to the label.</param>
 	public DiscordLabelComponent WithRadioGroupComponent(DiscordRadioGroupComponent component)
@@ -88,7 +88,7 @@ public sealed class DiscordLabelComponent : DiscordComponent
 	}
 
 	/// <summary>
-	/// 	Sets the checkbox group component for the label.
+	///     Sets the checkbox group component for the label.
 	/// </summary>
 	/// <param name="component">The checkbox group component to attach to the label.</param>
 	public DiscordLabelComponent WithCheckboxGroupComponent(DiscordCheckboxGroupComponent component)
@@ -98,7 +98,7 @@ public sealed class DiscordLabelComponent : DiscordComponent
 	}
 
 	/// <summary>
-	/// 	Sets the checkbox component for the label.
+	///     Sets the checkbox component for the label.
 	/// </summary>
 	/// <param name="component">The checkbox component to attach to the label.</param>
 	public DiscordLabelComponent WithCheckboxComponent(DiscordCheckboxComponent component)
@@ -126,7 +126,7 @@ public sealed class DiscordLabelComponent : DiscordComponent
 	public ILabelComponent Component { get; internal set; }
 
 	/// <summary>
-	/// 	Helper to determine whether a <see cref="DiscordTextInputComponent"/> or <see cref="DiscordBaseSelectComponent"/> is attached to the label.
+	/// 	Helper to determine the type of component attached to the label (e.g., <see cref="DiscordTextInputComponent"/>, <see cref="DiscordBaseSelectComponent"/>, <see cref="DiscordRadioGroupComponent"/>, <see cref="DiscordCheckboxGroupComponent"/>, <see cref="DiscordCheckboxComponent"/>, or <see cref="DiscordFileUploadComponent"/>).
 	/// </summary>
 	[JsonIgnore]
 	public ComponentType SubComponentType
