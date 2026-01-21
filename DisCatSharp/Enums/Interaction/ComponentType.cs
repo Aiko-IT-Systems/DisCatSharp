@@ -93,5 +93,25 @@ public enum ComponentType
 	/// <summary>
 	///     A file upload component.
 	/// </summary>
-	FileUpload = 19
+	FileUpload = 19,
+
+	/// <summary>
+	///     A checkpoint card.
+	/// </summary>
+	CheckpointCard = 20,
+
+	/// <summary>
+	///     A radio group.
+	/// </summary>
+	RadioGroup = 21,
+
+	/// <summary>
+	///     A checkbox group.
+	/// </summary>
+	CheckboxGroup = 22,
+
+	/// <summary>
+	///     A checkbox.
+	/// </summary>
+	Checkbox = 23
 }
