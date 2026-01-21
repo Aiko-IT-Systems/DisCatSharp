@@ -13,8 +13,9 @@ public class DisCatSharpBuilder
 {
     /// <summary>
     ///     Component types that Discord only allows inside modal submissions.
+    ///     Note: Checkbox components are allowed only as children of DiscordLabelComponent.
     /// </summary>
-    private static readonly HashSet<ComponentType> s_modalOnlyComponentTypes = [ComponentType.RadioGroup, ComponentType.CheckboxGroup, ComponentType.Checkbox];
+    private static readonly HashSet<ComponentType> s_modalOnlyComponentTypes = [ComponentType.RadioGroup, ComponentType.CheckboxGroup];
 
 	/// <summary>
 	///     The attachments of this builder.

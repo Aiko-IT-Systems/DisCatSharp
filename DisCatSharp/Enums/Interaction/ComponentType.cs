@@ -101,17 +101,17 @@ public enum ComponentType
 	CheckpointCard = 20,
 
 	/// <summary>
-	///   A radio group.
+	///     A radio group.
 	/// </summary>
 	RadioGroup = 21,
 
 	/// <summary>
-	///    A checkbox group.
+	///     A checkbox group.
 	/// </summary>
 	CheckboxGroup = 22,
 
 	/// <summary>
-	///    A checkbox.
+	///     A checkbox.
 	/// </summary>
 	Checkbox = 23
 }
