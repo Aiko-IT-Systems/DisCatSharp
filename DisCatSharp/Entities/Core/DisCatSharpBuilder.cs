@@ -267,9 +267,7 @@ public class DisCatSharpBuilder
 			Dictionary<int, List<string>> duplicateIds = [];
 
 			foreach (var component in this.Components)
-			{
 				this.CheckComponentIds(component, ids, duplicateIds);
-			}
 
 			if (duplicateIds.Count > 0)
 			{
