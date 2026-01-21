@@ -11,12 +11,6 @@ namespace DisCatSharp.Entities.Core;
 /// </summary>
 public class DisCatSharpBuilder
 {
-    /// <summary>
-    ///     Component types that Discord only allows inside modal submissions.
-    ///     Note: Checkbox components are allowed only as children of DiscordLabelComponent.
-    /// </summary>
-    private static readonly HashSet<ComponentType> s_modalOnlyComponentTypes = [ComponentType.RadioGroup, ComponentType.CheckboxGroup];
-
 	/// <summary>
 	///     The attachments of this builder.
 	/// </summary>
@@ -271,12 +265,10 @@ public class DisCatSharpBuilder
 		{
 			HashSet<int> ids = [];
 			Dictionary<int, List<string>> duplicateIds = [];
-			HashSet<ComponentType> modalOnlyUsage = [];
 
 			foreach (var component in this.Components)
 			{
 				this.CheckComponentIds(component, ids, duplicateIds);
-				this.CheckModalOnlyComponents(component, modalOnlyUsage);
 			}
 
 			if (duplicateIds.Count > 0)
@@ -284,9 +276,6 @@ public class DisCatSharpBuilder
 				var duplicateDetails = string.Join(", ", duplicateIds.Select(kvp => $"ID: {kvp.Key}, Types: {string.Join(", ", kvp.Value)}"));
 				throw new AggregateException($"You provided one or more components with the same id. They have to be unique. Duplicates: {duplicateDetails}");
 			}
-
-			if (modalOnlyUsage.Count > 0)
-				throw new InvalidOperationException($"Component types {string.Join(", ", modalOnlyUsage)} are only valid for modals.");
 		}
 	}
 
@@ -311,20 +300,6 @@ public class DisCatSharpBuilder
 
 		foreach (var child in component.GetChildren())
 			this.CheckComponentIds(child, ids, duplicateIds);
-	}
-
-	/// <summary>
-	///     Validates that modal-only components are not used in message contexts.
-	/// </summary>
-	/// <param name="component">The component to validate.</param>
-	/// <param name="modalOnlyUsage">A set of modal-only component types that were found.</param>
-	private void CheckModalOnlyComponents(DiscordComponent component, ISet<ComponentType> modalOnlyUsage)
-	{
-		if (s_modalOnlyComponentTypes.Contains(component.Type))
-			modalOnlyUsage.Add(component.Type);
-
-		foreach (var child in component.GetChildren())
-			this.CheckModalOnlyComponents(child, modalOnlyUsage);
 	}
 
 	/// <summary>
