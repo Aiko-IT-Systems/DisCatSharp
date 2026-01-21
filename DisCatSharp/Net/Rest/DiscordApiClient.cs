@@ -7363,8 +7363,8 @@ public sealed class DiscordApiClient
 		var oldHook = builder.Components.All(x => x.Type is ComponentType.ActionRow);
 		if (oldHook && builder.ModalComponents.Any(mc => mc.Components.Any(c => c.Type is not ComponentType.TextInput)))
 			throw new NotSupportedException("Can't send any other type then Input Text as Modal Component.");
-		else if (!oldHook && builder.Components.Any(x => x.Type is not (ComponentType.Label or ComponentType.TextDisplay)))
-			throw new NotSupportedException("Can't send any other type then Label as Modal Component.");
+		else if (!oldHook && builder.Components.Any(x => x.Type is not (ComponentType.Label or ComponentType.TextDisplay or ComponentType.RadioGroup or ComponentType.CheckboxGroup or ComponentType.Checkbox)))
+			throw new NotSupportedException("Can't send any other type then Label, Text Display, Radio Group, Checkbox Group or Checkbox as Modal Component.");
 
 		var pld = new RestInteractionModalResponsePayload
 		{

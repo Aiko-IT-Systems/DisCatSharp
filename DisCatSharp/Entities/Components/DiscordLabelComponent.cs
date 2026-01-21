@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 using DisCatSharp.Enums;
 using DisCatSharp.Net.Serialization;
 
@@ -76,6 +78,36 @@ public sealed class DiscordLabelComponent : DiscordComponent
 	}
 
 	/// <summary>
+	/// 	Sets the radio group component for the label.
+	/// </summary>
+	/// <param name="component">The radio group component to attach to the label.</param>
+	public DiscordLabelComponent WithRadioGroupComponent(DiscordRadioGroupComponent component)
+	{
+		this.Component = component;
+		return this;
+	}
+
+	/// <summary>
+	/// 	Sets the checkbox group component for the label.
+	/// </summary>
+	/// <param name="component">The checkbox group component to attach to the label.</param>
+	public DiscordLabelComponent WithCheckboxGroupComponent(DiscordCheckboxGroupComponent component)
+	{
+		this.Component = component;
+		return this;
+	}
+
+	/// <summary>
+	/// 	Sets the checkbox component for the label.
+	/// </summary>
+	/// <param name="component">The checkbox component to attach to the label.</param>
+	public DiscordLabelComponent WithCheckboxComponent(DiscordCheckboxComponent component)
+	{
+		this.Component = component;
+		return this;
+	}
+
+	/// <summary>
 	///     The label.
 	/// </summary>
 	[JsonProperty("label")]
@@ -99,6 +131,13 @@ public sealed class DiscordLabelComponent : DiscordComponent
 	[JsonIgnore]
 	public ComponentType SubComponentType
 		=> (this.Component as DiscordComponent).Type;
+
+	/// <inheritdoc />
+	public override IEnumerable<DiscordComponent> GetChildren()
+	{
+		if (this.Component is DiscordComponent component)
+			yield return component;
+	}
 
 	/// <summary>
 	///     Assigns a unique id to this component.
