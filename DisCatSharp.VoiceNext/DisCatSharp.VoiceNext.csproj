@@ -43,7 +43,7 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.1" />
 		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="10.0.1" />
 		<PackageReference Include="System.Threading.Channels" Version="10.0.1" />
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.102" PrivateAssets="All" />
 	</ItemGroup>
 
 	<ItemGroup>
