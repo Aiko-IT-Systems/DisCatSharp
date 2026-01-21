@@ -126,7 +126,7 @@ public sealed class DiscordLabelComponent : DiscordComponent
 	public ILabelComponent Component { get; internal set; }
 
 	/// <summary>
-	/// 	Helper to determine the type of component attached to the label (e.g., <see cref="DiscordTextInputComponent"/>, <see cref="DiscordBaseSelectComponent"/>, <see cref="DiscordRadioGroupComponent"/>, <see cref="DiscordCheckboxGroupComponent"/>, <see cref="DiscordCheckboxComponent"/>, or <see cref="DiscordFileUploadComponent"/>).
+	///     Helper to determine the type of component attached to the label (e.g., <see cref="DiscordTextInputComponent"/>, <see cref="DiscordBaseSelectComponent"/>, <see cref="DiscordRadioGroupComponent"/>, <see cref="DiscordCheckboxGroupComponent"/>, <see cref="DiscordCheckboxComponent"/>, or <see cref="DiscordFileUploadComponent"/>).
 	/// </summary>
 	[JsonIgnore]
 	public ComponentType SubComponentType
