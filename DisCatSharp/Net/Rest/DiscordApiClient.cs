@@ -3899,13 +3899,16 @@ public sealed class DiscordApiClient
 		var ret = DiscordJson.DeserializeObject<DiscordInvite>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
-		try
+		if (targetUsersCsv is not null && targetUsersCsv.ResetPositionTo is null)
 		{
-			targetUsersCsv?.Stream.Dispose();
-		}
-		catch
-		{
-			// ignore
+			try
+			{
+				targetUsersCsv.Stream.Dispose();
+			}
+			catch
+			{
+				// ignore
+			}
 		}
 
 		return ret;
@@ -5152,13 +5155,16 @@ public sealed class DiscordApiClient
 
 		if (targetUsersCsv.ResetPositionTo is not null)
 			targetUsersCsv.Stream.Position = targetUsersCsv.ResetPositionTo.Value;
-		try
+		else if (targetUsersCsv is not null)
 		{
-			targetUsersCsv.Stream.Dispose();
-		}
-		catch
-		{
-			// ignore
+			try
+			{
+				targetUsersCsv.Stream.Dispose();
+			}
+			catch
+			{
+				// ignore
+			}
 		}
 	}
 
