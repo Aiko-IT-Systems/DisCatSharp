@@ -3853,6 +3853,7 @@ public sealed class DiscordApiClient
 		var targetUsersCsv = targetUsersFile is not null
 			? CreateTargetUsersFile(targetUsersFile)
 			: BuildTargetUsersCsvFile(mergedTargetUsers);
+		var disposeTargetUsersCsv = targetUsersFile is null && targetUsersCsv is not null;
 
 		var pld = new RestChannelInviteCreatePayload
 		{
@@ -3893,17 +3894,14 @@ public sealed class DiscordApiClient
 			res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 		}
 
-		if (targetUsersCsv?.ResetPositionTo is not null)
-			targetUsersCsv.Stream.Position = targetUsersCsv.ResetPositionTo.Value;
-
 		var ret = DiscordJson.DeserializeObject<DiscordInvite>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
-		if (targetUsersCsv is not null && targetUsersCsv.ResetPositionTo is null)
+		if (disposeTargetUsersCsv)
 		{
 			try
 			{
-				targetUsersCsv.Stream.Dispose();
+				targetUsersCsv?.Stream.Dispose();
 			}
 			catch
 			{
@@ -5136,6 +5134,7 @@ public sealed class DiscordApiClient
 		var targetUsersCsv = targetUsersFile is not null
 			? CreateTargetUsersFile(targetUsersFile)
 			: BuildTargetUsersCsvFile(mergedTargetUsers);
+		var disposeTargetUsersCsv = targetUsersFile is null && targetUsersCsv is not null;
 
 		if (targetUsersCsv is null)
 			throw new ArgumentException("No target users provided for update.");
@@ -5153,13 +5152,14 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, headers, files: new[] { targetUsersCsv }, fileFieldNameFactory: _ => "target_users_file").ConfigureAwait(false);
 
-		if (targetUsersCsv.ResetPositionTo is not null)
+		if (targetUsersCsv is not null && targetUsersCsv.ResetPositionTo is not null)
 			targetUsersCsv.Stream.Position = targetUsersCsv.ResetPositionTo.Value;
-		else if (targetUsersCsv is not null)
+
+		if (disposeTargetUsersCsv)
 		{
 			try
 			{
-				targetUsersCsv.Stream.Dispose();
+				targetUsersCsv?.Stream.Dispose();
 			}
 			catch
 			{
