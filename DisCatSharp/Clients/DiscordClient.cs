@@ -1112,6 +1112,67 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
+	///     Gets the target users allowed to accept an invite.
+	/// </summary>
+	/// <param name="inviteCode">The invite code.</param>
+	/// <returns>An allowlist of user ids.</returns>
+	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<IReadOnlyList<ulong>> GetInviteTargetUsersAsync(string inviteCode)
+		=> this.ApiClient.GetInviteTargetUsersAsync(inviteCode);
+
+	/// <summary>
+	///     Updates the target users allowed to accept an invite using a CSV stream.
+	/// </summary>
+	/// <param name="inviteCode">The invite code.</param>
+	/// <param name="targetUsersCsv">
+	///     CSV stream containing a single <c>Users</c> column. The CSV must have a header row where the first
+	///     (and only) column header is <c>Users</c>, and each subsequent line must contain exactly one user ID.
+	/// </param>
+	/// <param name="reason">The audit log reason.</param>
+	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task UpdateInviteTargetUsersAsync(string inviteCode, Stream targetUsersCsv, string reason = null)
+		=> this.ApiClient.UpdateInviteTargetUsersAsync(inviteCode, targetUsersCsv, null, null, reason);
+
+	/// <summary>
+	///     Updates the target users allowed to accept an invite using user ids.
+	/// </summary>
+	/// <param name="inviteCode">The invite code.</param>
+	/// <param name="targetUserIds">User ids allowed to accept the invite.</param>
+	/// <param name="reason">The audit log reason.</param>
+	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task UpdateInviteTargetUsersAsync(string inviteCode, IEnumerable<ulong> targetUserIds, string reason = null)
+		=> this.ApiClient.UpdateInviteTargetUsersAsync(inviteCode, null, targetUserIds, null, reason);
+
+	/// <summary>
+	///     Updates the target users allowed to accept an invite using user objects.
+	/// </summary>
+	/// <param name="inviteCode">The invite code.</param>
+	/// <param name="targetUsers">Users allowed to accept the invite.</param>
+	/// <param name="reason">The audit log reason.</param>
+	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task UpdateInviteTargetUsersAsync(string inviteCode, IEnumerable<DiscordUser> targetUsers, string reason = null)
+		=> this.ApiClient.UpdateInviteTargetUsersAsync(inviteCode, null, null, targetUsers, reason);
+
+	/// <summary>
+	///     Gets the invite target users job status.
+	/// </summary>
+	/// <param name="inviteCode">The invite code.</param>
+	/// <returns>The job status.</returns>
+	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<DiscordInviteTargetUsersJobStatus> GetInviteTargetUsersJobStatusAsync(string inviteCode)
+		=> this.ApiClient.GetInviteTargetUsersJobStatusAsync(inviteCode);
+
+	/// <summary>
 	///     Gets a list of user connections.
 	/// </summary>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>

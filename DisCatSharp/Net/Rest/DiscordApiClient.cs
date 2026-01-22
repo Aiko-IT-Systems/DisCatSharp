@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -280,6 +281,113 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
+	///     Builds a CSV file for target users from the provided user ids.
+	/// </summary>
+	/// <param name="targetUserIds">The target user ids.</param>
+	/// <returns>A <see cref="DiscordMessageFile" /> or null when no ids were provided. User IDs with a value of 0 are filtered out as they are considered invalid.</returns>
+	/// <remarks>
+	///     The MemoryStream created by this method will be disposed by the HTTP client when the multipart request completes.
+	/// </remarks>
+	private static DiscordMessageFile? BuildTargetUsersCsvFile(IEnumerable<ulong>? targetUserIds)
+	{
+		if (targetUserIds is null)
+			return null;
+
+		var validIds = targetUserIds.Where(id => id != 0).ToList();
+		if (validIds.Count == 0)
+			return null;
+
+		StringBuilder builder = new();
+		builder.AppendLine("Users");
+
+		foreach (var id in validIds)
+		{
+			builder.AppendLine(id.ToString(CultureInfo.InvariantCulture));
+		}
+
+		var buffer = Encoding.UTF8.GetBytes(builder.ToString());
+		var stream = new MemoryStream(buffer);
+		return new("target_users.csv", stream, resetPositionTo: null, contentType: "text/csv");
+	}
+
+	/// <summary>
+	///     Wraps a stream into a Discord file for target users.
+	/// </summary>
+	/// <param name="stream">The target users CSV stream.</param>
+	/// <returns>A <see cref="DiscordMessageFile" /> using the provided stream.</returns>
+	private static DiscordMessageFile CreateTargetUsersFile(Stream stream)
+	{
+		long? resetPositionTo = null;
+		if (stream.CanSeek)
+		{
+			resetPositionTo = stream.Position;
+			stream.Position = 0;
+		}
+
+		return new("target_users.csv", stream, resetPositionTo, contentType: "text/csv");
+	}
+
+	/// <summary>
+	///     Merges explicit ids and user objects into a distinct list of target user ids.
+	/// </summary>
+	/// <param name="targetUserIds">The explicit target user ids.</param>
+	/// <param name="targetUsers">The target user objects.</param>
+	/// <returns>A distinct list of ids or null when none were provided. User IDs with a value of 0 are filtered out as they are considered invalid.</returns>
+	private static IReadOnlyList<ulong>? MergeTargetUserIds(IEnumerable<ulong>? targetUserIds, IEnumerable<DiscordUser>? targetUsers)
+	{
+		HashSet<ulong>? seen = null;
+		List<ulong>? merged = null;
+
+		void AddIds(IEnumerable<ulong> source)
+		{
+			seen ??= [];
+			merged ??= [];
+
+			var validIds = source.Where(id => id != 0);
+			foreach (var id in validIds)
+			{
+				if (!seen.Add(id))
+					continue;
+
+				merged.Add(id);
+			}
+		}
+
+		if (targetUserIds is not null)
+			AddIds(targetUserIds);
+
+		if (targetUsers is not null)
+			AddIds(targetUsers.Select(u => u.Id));
+
+		return merged;
+	}
+
+	/// <summary>
+	///     Parses a CSV of target users into a list of user ids.
+	/// </summary>
+	/// <param name="csvContent">The CSV content.</param>
+	/// <returns>A read-only list of user ids. Lines that cannot be parsed as valid user IDs are silently skipped.</returns>
+	/// <remarks>
+	///     Lines containing only whitespace are skipped. The CSV is expected to have a header line containing "Users" which is also skipped.
+	/// </remarks>
+	private static IReadOnlyList<ulong> ParseTargetUsersCsv(string csvContent)
+	{
+		if (string.IsNullOrWhiteSpace(csvContent))
+			return Array.Empty<ulong>();
+
+		var lines = csvContent.Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries);
+		var ids = lines
+			.Select(line => line.Trim())
+			.Where(line => line.Length > 0 && !line.Equals("Users", StringComparison.OrdinalIgnoreCase))
+			.Select(line => (success: ulong.TryParse(line, NumberStyles.None, CultureInfo.InvariantCulture, out var id), id))
+			.Where(result => result.success)
+			.Select(result => result.id)
+			.ToList();
+
+		return new ReadOnlyCollection<ulong>(ids);
+	}
+
+	/// <summary>
 	///     Executes a rest form data request.
 	/// </summary>
 	/// <param name="client">The client.</param>
@@ -353,6 +461,8 @@ public sealed class DiscordApiClient
 	/// <param name="files">The files.</param>
 	/// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
 	/// <param name="targetDebug">Enables a possible breakpoint in the rest client for debugging purposes.</param>
+	/// <param name="overwriteFileIdStart">The file id start to overwrite.</param>
+	/// <param name="fileFieldNameFactory">The factory function to generate file field names.</param>
 	private Task<RestResponse> DoMultipartAsync(
 		BaseDiscordClient client,
 		RateLimitBucket bucket,
@@ -363,10 +473,12 @@ public sealed class DiscordApiClient
 		IReadOnlyDictionary<string, string>? values = null,
 		IEnumerable<DiscordMessageFile>? files = null,
 		double? ratelimitWaitOverride = null,
-		bool targetDebug = false
+		bool targetDebug = false,
+		int? overwriteFileIdStart = null,
+		Func<int, string>? fileFieldNameFactory = null
 	)
 	{
-		var req = new MultipartWebRequest(client, bucket, url, method, route, headers, values, files, ratelimitWaitOverride);
+		var req = new MultipartWebRequest(client, bucket, url, method, route, headers, values, files, ratelimitWaitOverride, overwriteFileIdStart, fileFieldNameFactory);
 
 		if (this.Discord is not null)
 			this.Rest.ExecuteRequestAsync(req, targetDebug).LogTaskFault(this.Discord.Logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
@@ -3731,8 +3843,17 @@ public sealed class DiscordApiClient
 	/// <param name="temporary">If true, temporary.</param>
 	/// <param name="unique">If true, unique.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordInvite> CreateChannelInviteAsync(ulong channelId, int maxAge, int maxUses, TargetType? targetType, ulong? targetApplicationId, ulong? targetUser, bool temporary, bool unique, string? reason)
+	/// <param name="roleIds">The roles to grant when the invite is accepted.</param>
+	/// <param name="targetUserIds">Explicit target user ids for the invite.</param>
+	/// <param name="targetUsers">Explicit target users for the invite.</param>
+	/// <param name="targetUsersFile">Optional CSV stream containing allowed target users.</param>
+	internal async Task<DiscordInvite> CreateChannelInviteAsync(ulong channelId, int maxAge, int maxUses, TargetType? targetType, ulong? targetApplicationId, ulong? targetUser, bool temporary, bool unique, string? reason, IEnumerable<ulong>? roleIds = null, IEnumerable<ulong>? targetUserIds = null, IEnumerable<DiscordUser>? targetUsers = null, Stream? targetUsersFile = null)
 	{
+		var mergedTargetUsers = MergeTargetUserIds(targetUserIds, targetUsers);
+		var targetUsersCsv = targetUsersFile is not null
+			? CreateTargetUsersFile(targetUsersFile)
+			: BuildTargetUsersCsvFile(mergedTargetUsers);
+
 		var pld = new RestChannelInviteCreatePayload
 		{
 			MaxAge = maxAge,
@@ -3741,7 +3862,8 @@ public sealed class DiscordApiClient
 			TargetApplicationId = targetApplicationId,
 			TargetUserId = targetUser,
 			Temporary = temporary,
-			Unique = unique
+			Unique = unique,
+			RoleIds = roleIds
 		};
 
 		var headers = Utilities.GetBaseHeaders();
@@ -3755,10 +3877,36 @@ public sealed class DiscordApiClient
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+
+		RestResponse res;
+		if (targetUsersCsv is not null)
+		{
+			var values = new Dictionary<string, string>
+			{
+				["payload_json"] = DiscordJson.SerializeObject(pld)
+			};
+
+			res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, values: values, files: new[] { targetUsersCsv }, fileFieldNameFactory: _ => "target_users_file").ConfigureAwait(false);
+		}
+		else
+		{
+			res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		}
+
+		if (targetUsersCsv?.ResetPositionTo is not null)
+			targetUsersCsv.Stream.Position = targetUsersCsv.ResetPositionTo.Value;
 
 		var ret = DiscordJson.DeserializeObject<DiscordInvite>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
+
+		try
+		{
+			targetUsersCsv?.Stream.Dispose();
+		}
+		catch
+		{
+			// ignore
+		}
 
 		return ret;
 	}
@@ -4950,6 +5098,87 @@ public sealed class DiscordApiClient
 
 		var ret = DiscordJson.DeserializeObject<DiscordInvite>(res.Response, this.Discord);
 		return ret;
+	}
+
+	/// <summary>
+	///     Gets the target users allowed to accept an invite.
+	/// </summary>
+	/// <param name="inviteCode">The invite_code.</param>
+	/// <returns>The allowlist of user ids.</returns>
+	internal async Task<IReadOnlyList<ulong>> GetInviteTargetUsersAsync(string inviteCode)
+	{
+		var route = $"{Endpoints.INVITES}/:invite_code{Endpoints.TARGET_USERS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+		{
+			invite_code = inviteCode
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		return ParseTargetUsersCsv(res.Response);
+	}
+
+	/// <summary>
+	///     Updates the target users allowed to accept an invite.
+	/// </summary>
+	/// <param name="inviteCode">The invite_code.</param>
+	/// <param name="targetUsersFile">Optional CSV stream containing allowed users.</param>
+	/// <param name="targetUserIds">Optional list of target user ids.</param>
+	/// <param name="targetUsers">Optional list of target users.</param>
+	/// <param name="reason">The reason.</param>
+	internal async Task UpdateInviteTargetUsersAsync(string inviteCode, Stream? targetUsersFile, IEnumerable<ulong>? targetUserIds, IEnumerable<DiscordUser>? targetUsers, string? reason)
+	{
+		var mergedTargetUsers = targetUsersFile is null ? MergeTargetUserIds(targetUserIds, targetUsers) : null;
+		var targetUsersCsv = targetUsersFile is not null
+			? CreateTargetUsersFile(targetUsersFile)
+			: BuildTargetUsersCsvFile(mergedTargetUsers);
+
+		if (targetUsersCsv is null)
+			throw new ArgumentException("No target users provided for update.");
+
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers[REASON_HEADER_NAME] = reason;
+
+		var route = $"{Endpoints.INVITES}/:invite_code{Endpoints.TARGET_USERS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new
+		{
+			invite_code = inviteCode
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, headers, files: new[] { targetUsersCsv }, fileFieldNameFactory: _ => "target_users_file").ConfigureAwait(false);
+
+		if (targetUsersCsv.ResetPositionTo is not null)
+			targetUsersCsv.Stream.Position = targetUsersCsv.ResetPositionTo.Value;
+		try
+		{
+			targetUsersCsv.Stream.Dispose();
+		}
+		catch
+		{
+			// ignore
+		}
+	}
+
+	/// <summary>
+	///     Gets the invite target users job status.
+	/// </summary>
+	/// <param name="inviteCode">The invite_code.</param>
+	/// <returns>The target users job status.</returns>
+	internal async Task<DiscordInviteTargetUsersJobStatus> GetInviteTargetUsersJobStatusAsync(string inviteCode)
+	{
+		var route = $"{Endpoints.INVITES}/:invite_code{Endpoints.TARGET_USERS}{Endpoints.JOB_STATUS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+		{
+			invite_code = inviteCode
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		return DiscordJson.DeserializeObject<DiscordInviteTargetUsersJobStatus>(res.Response, this.Discord);
 	}
 
 	/// <summary>

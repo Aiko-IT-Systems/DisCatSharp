@@ -419,6 +419,12 @@ internal sealed class RestChannelInviteCreatePayload : ObservableApiObject
 	/// </summary>
 	[JsonProperty("unique", NullValueHandling = NullValueHandling.Ignore)]
 	public bool Unique { get; set; }
+
+	/// <summary>
+	///     Gets or sets the role ids to grant when the invite is accepted.
+	/// </summary>
+	[JsonProperty("role_ids", NullValueHandling = NullValueHandling.Ignore)]
+	public IEnumerable<ulong>? RoleIds { get; set; }
 }
 
 /// <summary>
