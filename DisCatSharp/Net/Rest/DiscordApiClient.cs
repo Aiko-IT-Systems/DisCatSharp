@@ -284,31 +284,30 @@ public sealed class DiscordApiClient
 	///     Builds a CSV file for target users from the provided user ids.
 	/// </summary>
 	/// <param name="targetUserIds">The target user ids.</param>
-	/// <returns>A <see cref="DiscordMessageFile" /> or null when no ids were provided.</returns>
+	/// <returns>A <see cref="DiscordMessageFile" /> or null when no ids were provided. User IDs with a value of 0 are filtered out as they are considered invalid.</returns>
+	/// <remarks>
+	///     The MemoryStream created by this method will be disposed by the HTTP client when the multipart request completes.
+	/// </remarks>
 	private static DiscordMessageFile? BuildTargetUsersCsvFile(IEnumerable<ulong>? targetUserIds)
 	{
 		if (targetUserIds is null)
 			return null;
 
+		var validIds = targetUserIds.Where(id => id != 0).ToList();
+		if (validIds.Count == 0)
+			return null;
+
 		StringBuilder builder = new();
 		builder.AppendLine("Users");
 
-		var hasIds = false;
-		foreach (var id in targetUserIds)
+		foreach (var id in validIds)
 		{
-			if (id == 0)
-				continue;
-
-			hasIds = true;
 			builder.AppendLine(id.ToString(CultureInfo.InvariantCulture));
 		}
 
-		if (!hasIds)
-			return null;
-
 		var buffer = Encoding.UTF8.GetBytes(builder.ToString());
 		var stream = new MemoryStream(buffer);
-		return new("target_users.csv", stream, 0, contentType: "text/csv");
+		return new("target_users.csv", stream, resetPositionTo: null, contentType: "text/csv");
 	}
 
 	/// <summary>
@@ -333,7 +332,7 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="targetUserIds">The explicit target user ids.</param>
 	/// <param name="targetUsers">The target user objects.</param>
-	/// <returns>A distinct list of ids or null when none were provided.</returns>
+	/// <returns>A distinct list of ids or null when none were provided. User IDs with a value of 0 are filtered out as they are considered invalid.</returns>
 	private static IReadOnlyList<ulong>? MergeTargetUserIds(IEnumerable<ulong>? targetUserIds, IEnumerable<DiscordUser>? targetUsers)
 	{
 		HashSet<ulong>? seen = null;
@@ -344,9 +343,10 @@ public sealed class DiscordApiClient
 			seen ??= [];
 			merged ??= [];
 
-			foreach (var id in source)
+			var validIds = source.Where(id => id != 0);
+			foreach (var id in validIds)
 			{
-				if (id == 0 || !seen.Add(id))
+				if (!seen.Add(id))
 					continue;
 
 				merged.Add(id);
@@ -366,27 +366,23 @@ public sealed class DiscordApiClient
 	///     Parses a CSV of target users into a list of user ids.
 	/// </summary>
 	/// <param name="csvContent">The CSV content.</param>
-	/// <returns>A read-only list of user ids.</returns>
+	/// <returns>A read-only list of user ids. Lines that cannot be parsed as valid user IDs are silently skipped.</returns>
+	/// <remarks>
+	///     Lines containing only whitespace are skipped. The CSV is expected to have a header line containing "Users" which is also skipped.
+	/// </remarks>
 	private static IReadOnlyList<ulong> ParseTargetUsersCsv(string csvContent)
 	{
 		if (string.IsNullOrWhiteSpace(csvContent))
 			return Array.Empty<ulong>();
 
-		List<ulong> ids = [];
-		var lines = csvContent.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-
-		foreach (var rawLine in lines)
-		{
-			var line = rawLine.Trim();
-			if (line.Length == 0)
-				continue;
-
-			if (line.Equals("Users", StringComparison.OrdinalIgnoreCase))
-				continue;
-
-			if (ulong.TryParse(line, NumberStyles.None, CultureInfo.InvariantCulture, out var id))
-				ids.Add(id);
-		}
+		var lines = csvContent.Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries);
+		var ids = lines
+			.Select(line => line.Trim())
+			.Where(line => line.Length > 0 && !line.Equals("Users", StringComparison.OrdinalIgnoreCase))
+			.Select(line => (success: ulong.TryParse(line, NumberStyles.None, CultureInfo.InvariantCulture, out var id), id))
+			.Where(result => result.success)
+			.Select(result => result.id)
+			.ToList();
 
 		return new ReadOnlyCollection<ulong>(ids);
 	}
@@ -5130,7 +5126,7 @@ public sealed class DiscordApiClient
 			: BuildTargetUsersCsvFile(mergedTargetUsers);
 
 		if (targetUsersCsv is null)
-			throw new ArgumentException("No target users provided for update.", nameof(targetUserIds));
+			throw new ArgumentException("No target users provided for update.");
 
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
