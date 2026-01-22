@@ -3850,7 +3850,7 @@ public sealed class DiscordApiClient
 	internal async Task<DiscordInvite> CreateChannelInviteAsync(ulong channelId, int maxAge, int maxUses, TargetType? targetType, ulong? targetApplicationId, ulong? targetUser, bool temporary, bool unique, string? reason, IEnumerable<ulong>? roleIds = null, IEnumerable<ulong>? targetUserIds = null, IEnumerable<DiscordUser>? targetUsers = null, Stream? targetUsersFile = null)
 	{
 		var mergedTargetUsers = MergeTargetUserIds(targetUserIds, targetUsers);
-		DiscordMessageFile? targetUsersCsv = targetUsersFile is not null
+		var targetUsersCsv = targetUsersFile is not null
 			? CreateTargetUsersFile(targetUsersFile)
 			: BuildTargetUsersCsvFile(mergedTargetUsers);
 
@@ -3898,6 +3898,15 @@ public sealed class DiscordApiClient
 
 		var ret = DiscordJson.DeserializeObject<DiscordInvite>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
+
+		try
+		{
+			targetUsersCsv?.Stream.Dispose();
+		}
+		catch
+		{
+			// ignore
+		}
 
 		return ret;
 	}
@@ -5143,6 +5152,14 @@ public sealed class DiscordApiClient
 
 		if (targetUsersCsv.ResetPositionTo is not null)
 			targetUsersCsv.Stream.Position = targetUsersCsv.ResetPositionTo.Value;
+		try
+		{
+			targetUsersCsv.Stream.Dispose();
+		}
+		catch
+		{
+			// ignore
+		}
 	}
 
 	/// <summary>
