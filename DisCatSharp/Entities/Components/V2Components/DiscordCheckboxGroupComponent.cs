@@ -90,7 +90,7 @@ public sealed class DiscordCheckboxGroupComponent : DiscordComponent, ILabelComp
 	///     The submitted values. Present on modal submit interactions.
 	/// </summary>
 	[JsonProperty("values", NullValueHandling = NullValueHandling.Ignore)]
-	public string[]? Values { get; internal set; }
+	public string[]? SelectedValues { get; internal set; }
 
 	/// <summary>
 	///     Assigns a unique id to this component.
