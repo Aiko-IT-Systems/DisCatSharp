@@ -286,8 +286,7 @@ public sealed class DiscordApiClient
 	/// <param name="targetUserIds">The target user ids.</param>
 	/// <returns>A <see cref="DiscordMessageFile" /> or null when no ids were provided. User IDs with a value of 0 are filtered out as they are considered invalid.</returns>
 	/// <remarks>
-	///     The MemoryStream created by this method is owned by the returned <see cref="DiscordMessageFile" /> and will be disposed
-	///     by the HTTP client when the multipart request completes. Callers should not dispose the stream manually.
+	///     The MemoryStream created by this method will be disposed by the HTTP client when the multipart request completes.
 	/// </remarks>
 	private static DiscordMessageFile? BuildTargetUsersCsvFile(IEnumerable<ulong>? targetUserIds)
 	{
@@ -308,7 +307,7 @@ public sealed class DiscordApiClient
 
 		var buffer = Encoding.UTF8.GetBytes(builder.ToString());
 		var stream = new MemoryStream(buffer);
-		return new("target_users.csv", stream, 0, contentType: "text/csv");
+		return new("target_users.csv", stream, resetPositionTo: null, contentType: "text/csv");
 	}
 
 	/// <summary>
