@@ -1126,7 +1126,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Updates the target users allowed to accept an invite using a CSV stream.
 	/// </summary>
 	/// <param name="inviteCode">The invite code.</param>
-	/// <param name="targetUsersCsv">CSV stream containing a single Users column.</param>
+	/// <param name="targetUsersCsv">
+	///     CSV stream containing a single <c>Users</c> column. The CSV must have a header row where the first
+	///     (and only) column header is <c>Users</c>, and each subsequent line must contain exactly one user ID.
+	/// </param>
 	/// <param name="reason">The audit log reason.</param>
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
