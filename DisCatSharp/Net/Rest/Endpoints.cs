@@ -174,6 +174,16 @@ public static class Endpoints
 	public const string INVITES = "/invites";
 
 	/// <summary>
+	///     The target users endpoint.
+	/// </summary>
+	public const string TARGET_USERS = "/target-users";
+
+	/// <summary>
+	///     The job status endpoint.
+	/// </summary>
+	public const string JOB_STATUS = "/job-status";
+
+	/// <summary>
 	///     The roles endpoint.
 	/// </summary>
 	public const string ROLES = "/roles";

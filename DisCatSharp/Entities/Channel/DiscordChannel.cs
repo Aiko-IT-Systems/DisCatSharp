@@ -1121,6 +1121,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="targetApplicationId">The target activity ID. Defaults to null.</param>
 	/// <param name="targetUser">The target user id. Defaults to null.</param>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="roleIds">Role ids to grant when the invite is accepted.</param>
+	/// <param name="targetUserIds">Allowed target user ids for the invite.</param>
+	/// <param name="targetUsers">Allowed target users for the invite.</param>
+	/// <param name="targetUsersCsv">Optional CSV stream defining allowed users.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.CreateInstantInvite" /> permission.
@@ -1128,8 +1132,8 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordInvite> CreateInviteAsync(int maxAge = 86400, int maxUses = 0, bool temporary = false, bool unique = false, TargetType? targetType = null, ulong? targetApplicationId = null, ulong? targetUser = null, string reason = null)
-		=> this.Discord.ApiClient.CreateChannelInviteAsync(this.Id, maxAge, maxUses, targetType, targetApplicationId, targetUser, temporary, unique, reason);
+	public Task<DiscordInvite> CreateInviteAsync(int maxAge = 86400, int maxUses = 0, bool temporary = false, bool unique = false, TargetType? targetType = null, ulong? targetApplicationId = null, ulong? targetUser = null, string reason = null, IEnumerable<ulong>? roleIds = null, IEnumerable<ulong>? targetUserIds = null, IEnumerable<DiscordUser>? targetUsers = null, Stream? targetUsersCsv = null)
+		=> this.Discord.ApiClient.CreateChannelInviteAsync(this.Id, maxAge, maxUses, targetType, targetApplicationId, targetUser, temporary, unique, reason, roleIds, targetUserIds, targetUsers, targetUsersCsv);
 
 	#region Voice Channel
 

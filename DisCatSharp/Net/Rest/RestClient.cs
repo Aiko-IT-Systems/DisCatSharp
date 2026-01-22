@@ -873,7 +873,7 @@ internal sealed class RestClient : IDisposable
 				if (mprequest.Files is not null && mprequest.Files.Any())
 					foreach (var f in mprequest.Files)
 					{
-						var name = $"files[{fileId.ToString(CultureInfo.InvariantCulture)}]";
+						var name = mprequest.FileFieldNameFactory?.Invoke(fileId) ?? $"files[{fileId.ToString(CultureInfo.InvariantCulture)}]";
 						content.Add(new StreamContent(f.Value), name, f.Key);
 						fileId++;
 					}

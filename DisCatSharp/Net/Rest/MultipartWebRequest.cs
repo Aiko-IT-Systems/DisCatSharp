@@ -25,6 +25,7 @@ internal sealed class MultipartWebRequest : BaseRestRequest
 	/// <param name="files">The files.</param>
 	/// <param name="ratelimitWaitOverride">The ratelimit_wait_override.</param>
 	/// <param name="overwriteFileIdStart">The file id start.</param>
+	/// <param name="fileFieldNameFactory">The file field name factory.</param>
 	internal MultipartWebRequest(
 		BaseDiscordClient client,
 		RateLimitBucket bucket,
@@ -35,13 +36,15 @@ internal sealed class MultipartWebRequest : BaseRestRequest
 		IReadOnlyDictionary<string, string>? values = null,
 		IEnumerable<DiscordMessageFile>? files = null,
 		double? ratelimitWaitOverride = null,
-		int? overwriteFileIdStart = null
+		int? overwriteFileIdStart = null,
+		Func<int, string>? fileFieldNameFactory = null
 	)
 		: base(client, bucket, url, method, route, headers, ratelimitWaitOverride)
 	{
 		this.Values = values;
 		this.OverwriteFileIdStart = overwriteFileIdStart;
 		this.Files = files?.ToDictionary(x => x.Filename, x => x.Stream);
+		this.FileFieldNameFactory = fileFieldNameFactory;
 	}
 
 	/// <summary>
@@ -58,6 +61,11 @@ internal sealed class MultipartWebRequest : BaseRestRequest
 	///     Overwrites the file id start.
 	/// </summary>
 	public int? OverwriteFileIdStart { get; }
+
+	/// <summary>
+	///     Gets the factory for building file field names.
+	/// </summary>
+	public Func<int, string>? FileFieldNameFactory { get; }
 }
 
 /// <summary>
