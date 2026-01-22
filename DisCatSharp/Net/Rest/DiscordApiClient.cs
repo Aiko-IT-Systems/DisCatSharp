@@ -3893,7 +3893,7 @@ public sealed class DiscordApiClient
 			res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 		}
 
-		if (targetUsersCsv?.ResetPositionTo is not null)
+		if (targetUsersCsv is not null && targetUsersCsv.ResetPositionTo is not null)
 			targetUsersCsv.Stream.Position = targetUsersCsv.ResetPositionTo.Value;
 
 		var ret = DiscordJson.DeserializeObject<DiscordInvite>(res.Response, this.Discord);
@@ -3903,7 +3903,7 @@ public sealed class DiscordApiClient
 		{
 			try
 			{
-				targetUsersCsv.Stream.Dispose();
+				targetUsersCsv.Stream?.Dispose();
 			}
 			catch
 			{
@@ -5153,13 +5153,13 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, headers, files: new[] { targetUsersCsv }, fileFieldNameFactory: _ => "target_users_file").ConfigureAwait(false);
 
-		if (targetUsersCsv.ResetPositionTo is not null)
+		if (targetUsersCsv is not null && targetUsersCsv.ResetPositionTo is not null)
 			targetUsersCsv.Stream.Position = targetUsersCsv.ResetPositionTo.Value;
-		else if (targetUsersCsv is not null)
+		else if (targetUsersCsv is not null && targetUsersCsv.ResetPositionTo is null)
 		{
 			try
 			{
-				targetUsersCsv.Stream.Dispose();
+				targetUsersCsv.Stream?.Dispose();
 			}
 			catch
 			{
