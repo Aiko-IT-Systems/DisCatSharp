@@ -3893,7 +3893,7 @@ public sealed class DiscordApiClient
 			res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 		}
 
-		if (targetUsersCsv is not null && targetUsersCsv.ResetPositionTo is not null)
+		if (targetUsersCsv?.ResetPositionTo is not null)
 			targetUsersCsv.Stream.Position = targetUsersCsv.ResetPositionTo.Value;
 
 		var ret = DiscordJson.DeserializeObject<DiscordInvite>(res.Response, this.Discord);
@@ -5155,7 +5155,7 @@ public sealed class DiscordApiClient
 
 		if (targetUsersCsv is not null && targetUsersCsv.ResetPositionTo is not null)
 			targetUsersCsv.Stream.Position = targetUsersCsv.ResetPositionTo.Value;
-		else if (targetUsersCsv is not null && targetUsersCsv.ResetPositionTo is null)
+		else if (targetUsersCsv.ResetPositionTo is null)
 		{
 			try
 			{
