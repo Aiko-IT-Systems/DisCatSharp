@@ -315,6 +315,11 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	public override DisplayNameStyles? DisplayNameStyles
 		=> this.User.DisplayNameStyles;
 
+	/// <inheritdoc />
+	[JsonIgnore]
+	public override DiscordNameplate? Nameplate
+		=> this.User.Nameplate;
+
 	/// <summary>
 	///     Checks whether this <see cref="DiscordMember" /> is equal to another <see cref="DiscordMember" />.
 	/// </summary>

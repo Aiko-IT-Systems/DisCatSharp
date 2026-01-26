@@ -56,6 +56,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		this.GlobalName = transport.GlobalName;
 		this.PrimaryGuild = transport.PrimaryGuild;
 		this.DisplayNameStyles = transport.DisplayNameStyles;
+		this.Nameplate = transport.Nameplate;
 	}
 
 	/// <summary>
@@ -279,6 +280,12 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// </summary>
 	[JsonProperty("display_name_styles", NullValueHandling = NullValueHandling.Ignore)]
 	public virtual DisplayNameStyles? DisplayNameStyles { get; internal set; }
+
+	/// <summary>
+	///    Gets the user's nameplate.
+	/// </summary>
+	[JsonProperty("nameplate", NullValueHandling = NullValueHandling.Ignore)]
+	public virtual DiscordNameplate? Nameplate { get; internal set; }
 
 	/// <summary>
 	///     Gets the user's mention string.

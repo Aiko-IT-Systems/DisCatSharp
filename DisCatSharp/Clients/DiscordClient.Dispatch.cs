@@ -859,7 +859,8 @@ public sealed partial class DiscordClient
 							old.Locale = usr.Locale;
 							old.GlobalName = usr.GlobalName;
 							old.PrimaryGuild = usr.PrimaryGuild;
-			old.DisplayNameStyles = usr.DisplayNameStyles;
+							old.DisplayNameStyles = usr.DisplayNameStyles;
+							old.Nameplate = usr.Nameplate;
 							return old;
 						});
 
@@ -2115,6 +2116,7 @@ public sealed partial class DiscordClient
 			old.GlobalName = usr.GlobalName;
 			old.PrimaryGuild = usr.PrimaryGuild;
 			old.DisplayNameStyles = usr.DisplayNameStyles;
+			old.Nameplate = usr.Nameplate;
 			return old;
 		});
 
@@ -2193,6 +2195,7 @@ public sealed partial class DiscordClient
 			old.GlobalName = usr.GlobalName;
 			old.PrimaryGuild = usr.PrimaryGuild;
 			old.DisplayNameStyles = usr.DisplayNameStyles;
+			old.Nameplate = usr.Nameplate;
 			return old;
 		});
 
