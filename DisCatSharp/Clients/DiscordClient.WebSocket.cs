@@ -602,7 +602,8 @@ public sealed partial class DiscordClient
 			},
 			Presence = status,
 			Intents = this.Configuration.Intents,
-			Discord = this
+			Discord = this,
+			Capabilities = this.Configuration.Capabilities
 		};
 		var payload = new GatewayPayload
 		{

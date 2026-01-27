@@ -1690,16 +1690,20 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	///     Returns a string representation of this channel.
 	/// </summary>
 	/// <returns>String representation of this channel.</returns>
-	public override string ToString() =>
-		this.Type == ChannelType.Category
+	public override string ToString()
+	{
+		return this.Flags.HasChannelFlag(ChannelFlags.Obfuscated)
+			? $"Obfuscated Channel ({this.Id})"
+			: this.Type == ChannelType.Category
 			? $"Channel Category {this.Name} ({this.Id})"
 			: this.Type == ChannelType.Text || this.Type == ChannelType.News || this.IsThread()
-				? $"Channel #{this.Name} ({this.Id})"
+				? $"Channel `#{this.Name}` ({this.Id})"
 				: this.IsVoiceJoinable()
-					? $"Channel #!{this.Name} ({this.Id})"
+					? $"Channel `#!{this.Name}` ({this.Id})"
 					: !string.IsNullOrWhiteSpace(this.Name)
-						? $"Channel {this.Name} ({this.Id})"
-						: $"Channel {this.Id}";
+						? $"Channel `{this.Name}` ({this.Id})"
+						: $"Channel `{this.Id}`";
+	}
 
 	#endregion
 }

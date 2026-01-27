@@ -113,6 +113,7 @@ public sealed class DiscordConfiguration
 		this.AutoFetchApplicationEmojis = other.AutoFetchApplicationEmojis;
 		this.HasActivitiesEnabled = other.HasActivitiesEnabled;
 		this.ActivityHandlerType = other.ActivityHandlerType;
+		this.Capabilities = other.Capabilities;
 	}
 
 	/// <summary>
@@ -327,6 +328,11 @@ public sealed class DiscordConfiguration
 	///     <para>Defaults to <see langword="null" />.</para>
 	/// </summary>
 	public string? Override { internal get; set; } = null;
+
+	/// <summary>
+	///     Gets or sets the gateway capabilities for this connection.
+	/// </summary>
+	public GatewayCapabilities Capabilities { internal get; set; } = GatewayCapabilities.None;
 
 	/// <summary>
 	///     Sets your preferred API language. See <see cref="DiscordLocales" /> for valid locales.

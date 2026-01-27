@@ -60,6 +60,12 @@ internal sealed class GatewayIdentify
 	/// </summary>
 	[JsonProperty("intents")]
 	public DiscordIntents Intents { get; set; }
+
+	/// <summary>
+	///     Gets or sets the capabilities for this connection.
+	/// </summary>
+	[JsonProperty("capabilities", NullValueHandling = NullValueHandling.Ignore)]
+	public GatewayCapabilities Capabilities { get; set; } = GatewayCapabilities.None;
 }
 
 /// <summary>
