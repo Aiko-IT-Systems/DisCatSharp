@@ -15,11 +15,14 @@ public sealed class DiscordNameplate
 	/// </summary>
 	[JsonIgnore]
 	public string AssetUrl
-		=> $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ASSETS}{Endpoints.COLLECTIBLES}/{this.Asset}/asset.webm";
+		=> $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ASSETS}{Endpoints.COLLECTIBLES}/{this.Asset}asset.webm";
 
 	/// <summary>
 	///     Gets the nameplate's asset hash.
 	/// </summary>
+	/// <remarks>
+	/// 	This property will return something like <c>nameplates/tarot/towers_strike/</c>.
+	/// </remarks>
 	[JsonProperty("asset", NullValueHandling = NullValueHandling.Ignore)]
 	public string Asset { get; internal set; }
 

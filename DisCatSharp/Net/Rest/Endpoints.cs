@@ -217,7 +217,7 @@ public static class Endpoints
 	/// <summary>
 	///     The collectibles endpoint.
 	/// </summary>
-	public const string COLLECTIBLES = "collectibles";
+	public const string COLLECTIBLES = "/collectibles";
 
 	/// <summary>
 	///     The bans endpoint.
