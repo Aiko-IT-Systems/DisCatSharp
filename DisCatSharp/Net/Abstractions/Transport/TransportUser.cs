@@ -201,10 +201,4 @@ internal class TransportUser : ObservableApiObject
 	/// </summary>
 	[JsonProperty("display_name_styles", NullValueHandling = NullValueHandling.Ignore)]
 	public DisplayNameStyles? DisplayNameStyles { get; internal set; }
-
-	/// <summary>
-	///		Gets the user's nameplate.
-	/// </summary>
-	[JsonProperty("nameplate", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordNameplate? Nameplate { get; internal set; }
 }
