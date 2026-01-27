@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 using DisCatSharp.Attributes;
@@ -184,7 +185,27 @@ public class DiscordInvite : SnowflakeObject
 	///    Gets the roles to be assigned to the user on joining the guild via this invite.
 	/// </summary>
 	[JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
-	public List<DiscordRole>? Roles { get; internal set; }
+	internal List<DiscordRole>? RolesInternal { get; set; }
+
+	/// <summary>
+	///    Gets the roles to be assigned to the user on joining the guild via this invite.
+	/// </summary>
+	[JsonIgnore]
+	public List<DiscordRole>? Roles
+		=> this.RolesInternal ?? this.RoleIdsInternal?.Select(id => this.Discord.Guilds[this.GuildId].GetRole(id)).ToList();
+
+	/// <summary>
+	///    Gets the role ids to be assigned to the user on joining the guild via this invite.
+	/// </summary>
+	[JsonProperty("role_ids", NullValueHandling = NullValueHandling.Ignore)]
+	internal List<ulong>? RoleIdsInternal { get; set; }
+
+	/// <summary>
+	///    Gets the role ids to be assigned to the user on joining the guild via this invite.
+	/// </summary>
+	[JsonIgnore]
+	public List<ulong>? RoleIds
+		=> this.RoleIdsInternal ?? this.RolesInternal?.Select(role => role.Id).ToList();
 
 	/// <summary>
 	///     Deletes the invite.

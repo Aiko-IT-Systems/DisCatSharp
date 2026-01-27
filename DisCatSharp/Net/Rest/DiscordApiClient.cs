@@ -5107,7 +5107,7 @@ public sealed class DiscordApiClient
 
 		if (ret.Roles is not null)
 		{
-			foreach (var role in ret.Roles)
+			foreach (var role in ret.RolesInternal)
 			{
 				role.Discord = this.Discord;
 				if (ret.Guild is not null)
