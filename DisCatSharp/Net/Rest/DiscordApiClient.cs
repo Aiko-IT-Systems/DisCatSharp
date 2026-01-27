@@ -5098,6 +5098,23 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var ret = DiscordJson.DeserializeObject<DiscordInvite>(res.Response, this.Discord);
+
+		if (ret.Inviter is not null)
+		{
+			ret.Inviter.Discord = this.Discord;
+			this.Discord.UserCache.AddOrUpdate(ret.Inviter.Id, ret.Inviter, (old, @new) => @new);
+		}
+
+		if (ret.Roles is not null)
+		{
+			foreach (var role in ret.Roles)
+			{
+				role.Discord = this.Discord;
+				if (ret.Guild is not null)
+					role.GuildId = ret.Guild.Id;
+			}
+		}
+
 		return ret;
 	}
 

@@ -168,10 +168,10 @@ public class DiscordInvite : ObservableApiObject
 	public DiscordGuildProfile? Profile { get; internal set; }
 
 	/// <summary>
-	///    Gets the role ids to be assigned to the user on joining the guild via this invite.
+	///    Gets the roles to be assigned to the user on joining the guild via this invite.
 	/// </summary>
-	[JsonProperty("role_ids", NullValueHandling = NullValueHandling.Ignore)]
-	public List<ulong>? RoleIds { get; internal set; }
+	[JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
+	public List<DiscordRole>? Roles { get; internal set; }
 
 	/// <summary>
 	///     Deletes the invite.

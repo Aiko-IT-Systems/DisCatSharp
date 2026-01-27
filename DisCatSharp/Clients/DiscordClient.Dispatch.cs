@@ -2605,6 +2605,12 @@ public sealed partial class DiscordClient
 			this.UserCache.AddOrUpdate(invite.Inviter.Id, invite.Inviter, (old, @new) => @new);
 		}
 
+		foreach(var role in invite.Roles)
+		{
+			role.Discord = this;
+			role.GuildId = guildId;
+		}
+
 		guild.Invites[invite.Code] = invite;
 
 		var ea = new InviteCreateEventArgs(this.ServiceProvider)
