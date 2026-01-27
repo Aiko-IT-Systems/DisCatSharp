@@ -14,13 +14,12 @@ namespace DisCatSharp.Entities;
 /// <summary>
 ///     Represents a Discord invite.
 /// </summary>
-public class DiscordInvite : ObservableApiObject
+public class DiscordInvite : SnowflakeObject
 {
 	/// <summary>
 	///     Initializes a new instance of the <see cref="DiscordInvite" /> class.
 	/// </summary>
 	internal DiscordInvite()
-		: base(["guild_id", "channel_id"])
 	{ }
 
 	/// <summary>
@@ -33,13 +32,15 @@ public class DiscordInvite : ObservableApiObject
 	///     Gets the invite's url.
 	/// </summary>
 	[JsonIgnore]
-	public string Url => DiscordDomain.GetDomain(CoreDomain.DiscordShortlink).Url + "/" + this.Code;
+	public string Url
+		=> DiscordDomain.GetDomain(CoreDomain.DiscordShortlink).Url + "/" + this.Code;
 
 	/// <summary>
 	///     Gets the invite's url as Uri.
 	/// </summary>
 	[JsonIgnore]
-	public Uri Uri => new(this.Url);
+	public Uri Uri
+		=> new(this.Url);
 
 	/// <summary>
 	///     Gets the guild this invite is for.
@@ -48,10 +49,22 @@ public class DiscordInvite : ObservableApiObject
 	public DiscordInviteGuild Guild { get; internal set; }
 
 	/// <summary>
+	///     Gets the guild id this invite is for.
+	/// </summary>
+	[JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong GuildId { get; internal set; }
+
+	/// <summary>
 	///     Gets the channel this invite is for.
 	/// </summary>
 	[JsonProperty("channel", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordInviteChannel Channel { get; internal set; }
+
+	/// <summary>
+	///     Gets the channel id this invite is for.
+	/// </summary>
+	[JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong ChannelId { get; internal set; }
 
 	/// <summary>
 	///     Gets the target type for the voice channel this invite is for.
