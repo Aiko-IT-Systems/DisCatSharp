@@ -13,12 +13,6 @@ public static class DiscordShortlink
 	public static readonly string Support = $"{DiscordDomain.GetDomain(CoreDomain.DiscordMarketing).Url}/support";
 
 	/// <summary>
-	///     Gets the shortlink to the support site for trust and safety.
-	/// </summary>
-	[DiscordDeprecated]
-	public static readonly string TrustAndSafety = $"{DiscordDomain.GetDomain(CoreDomain.DiscordMarketing).Url}/request";
-
-	/// <summary>
 	///     Gets the shortlink to the contact form.
 	/// </summary>
 	public static readonly string Contact = $"{DiscordDomain.GetDomain(CoreDomain.DiscordMarketing).Url}/contact";
