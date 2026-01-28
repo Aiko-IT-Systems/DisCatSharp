@@ -1172,6 +1172,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public Task<DiscordInviteTargetUsersJobStatus> GetInviteTargetUsersJobStatusAsync(string inviteCode)
 		=> this.ApiClient.GetInviteTargetUsersJobStatusAsync(inviteCode);
 
+	/// <inheritdoc cref="DiscordMessage.FromJumpLinkAsync"/>
+	public async Task<DiscordMessage> GetMessageFromJumpLinkAsync(string jumpLink)
+		=> await DiscordMessage.FromJumpLinkAsync(this, jumpLink).ConfigureAwait(false);
+
 	/// <summary>
 	///     Gets a list of user connections.
 	/// </summary>

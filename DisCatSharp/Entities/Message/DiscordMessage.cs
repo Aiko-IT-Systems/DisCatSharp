@@ -1042,6 +1042,48 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	}
 
 	/// <summary>
+	///     Retrieves a <see cref="DiscordMessage" /> from its jump link.
+	/// </summary>
+	/// <param name="client">The discord client used to fetch the message.</param>
+	/// <param name="jumpLink">The jump link in the form https://discord.com/channels/{guildId}/{channelId}/{messageId}.</param>
+	/// <returns>The message referenced by the jump link.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when <paramref name="jumpLink" /> or <paramref name="client" /> is null or empty.</exception>
+	/// <exception cref="ArgumentException">Thrown when <paramref name="jumpLink" /> is not a valid Discord message link.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have access to the message.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel or message does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public static async Task<DiscordMessage> FromJumpLinkAsync(BaseDiscordClient client, string jumpLink)
+	{
+		ArgumentNullException.ThrowIfNull(client);
+
+		if (string.IsNullOrWhiteSpace(jumpLink))
+			throw new ArgumentNullException(nameof(jumpLink));
+
+		if (!Uri.TryCreate(jumpLink, UriKind.Absolute, out var uri))
+			throw new ArgumentException("Jump link must be a valid absolute URI.", nameof(jumpLink));
+
+		var host = uri.Host.ToLowerInvariant();
+		if (host is not ("discord.com" or "ptb.discord.com" or "canary.discord.com" or "staging.discord.co"))
+			throw new ArgumentException("Jump link host is not a recognized Discord domain.", nameof(jumpLink));
+
+		var segments = uri.AbsolutePath.Split('/', StringSplitOptions.RemoveEmptyEntries);
+		if (segments.Length != 4 || segments[0] != "channels")
+			throw new ArgumentException("Jump link is not in the expected /channels/{guildId}/{channelId}/{messageId} format.", nameof(jumpLink));
+
+		var guildSegment = segments[1];
+		return string.Equals(guildSegment, "@me", StringComparison.OrdinalIgnoreCase)
+			? throw new ArgumentException("Jump links for direct messages are not supported.", nameof(jumpLink))
+			: !ulong.TryParse(guildSegment, NumberStyles.None, CultureInfo.InvariantCulture, out _)
+			? throw new ArgumentException("Jump link did not contain a valid guild id.", nameof(jumpLink))
+			: !ulong.TryParse(segments[2], NumberStyles.None, CultureInfo.InvariantCulture, out var channelId)
+			? throw new ArgumentException("Jump link did not contain a valid channel id.", nameof(jumpLink))
+			: !ulong.TryParse(segments[3], NumberStyles.None, CultureInfo.InvariantCulture, out var messageId)
+			? throw new ArgumentException("Jump link did not contain a valid message id.", nameof(jumpLink))
+			: await client.ApiClient.GetMessageAsync(channelId, messageId).ConfigureAwait(false);
+	}
+
+	/// <summary>
 	///     Returns a string representation of this message.
 	/// </summary>
 	/// <returns>String representation of this message.</returns>
