@@ -2605,13 +2605,20 @@ public sealed partial class DiscordClient
 			this.UserCache.AddOrUpdate(invite.Inviter.Id, invite.Inviter, (old, @new) => @new);
 		}
 
-		foreach(var role in invite.Roles)
+		invite.Channel?.Discord = this;
+		invite.Guild?.Discord = this;
+		invite.TargetUser?.Discord = this;
+		invite.TargetApplication?.Discord = this;
+		invite.TargetApplication.Discord = this;
+		invite.GuildScheduledEvent?.Discord = this;
+		invite.Profile?.Discord = this;
+		if (invite.RolesInternal is not null)
 		{
-			role.Discord = this;
-			role.GuildId = guildId;
+			foreach (var role in invite.RolesInternal)
+				role.Discord = this;
 		}
 
-		guild.Invites[invite.Code] = invite;
+		guild?.Invites[invite.Code] = invite;
 
 		var ea = new InviteCreateEventArgs(this.ServiceProvider)
 		{
@@ -2637,6 +2644,18 @@ public sealed partial class DiscordClient
 		{
 			invite = dat.ToObject<DiscordInvite>();
 			invite!.Discord = this;
+			invite.Channel?.Discord = this;
+			invite.Guild?.Discord = this;
+			invite.TargetUser?.Discord = this;
+			invite.TargetApplication?.Discord = this;
+			invite.TargetApplication.Discord = this;
+			invite.GuildScheduledEvent?.Discord = this;
+			invite.Profile?.Discord = this;
+			if (invite.RolesInternal is not null)
+			{
+				foreach (var role in invite.RolesInternal)
+					role.Discord = this;
+			}
 		}
 
 		invite.IsRevoked = true;

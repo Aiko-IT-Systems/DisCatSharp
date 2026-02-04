@@ -249,11 +249,9 @@ public sealed class DiscordApiClient
 		foreach (var xr in ret.ReactionsInternal)
 			xr.Emoji.Discord = this.Discord;
 
-		if (ret.Poll is not null)
-			ret.Poll.Discord = this.Discord;
+		ret.Poll?.Discord = this.Discord;
 
-		if (ret.InteractionMetadata is not null)
-			ret.InteractionMetadata.Discord = this.Discord;
+		ret.InteractionMetadata?.Discord = this.Discord;
 	}
 
 	/// <summary>
@@ -1522,6 +1520,20 @@ public sealed class DiscordApiClient
 
 		var invite = DiscordJson.DeserializeObject<DiscordInvite>(res.Response, this.Discord);
 
+		invite.Channel?.Discord = this.Discord;
+		invite.Guild?.Discord = this.Discord;
+		invite.Inviter?.Discord = this.Discord;
+		invite.TargetUser?.Discord = this.Discord;
+		invite.TargetApplication?.Discord = this.Discord;
+		invite.TargetApplication.Discord = this.Discord;
+		invite.GuildScheduledEvent?.Discord = this.Discord;
+		invite.Profile?.Discord = this.Discord;
+		if (invite.RolesInternal is not null)
+		{
+			foreach (var role in invite.RolesInternal)
+				role.Discord = this.Discord;
+		}
+
 		return invite;
 	}
 
@@ -2393,8 +2405,7 @@ public sealed class DiscordApiClient
 
 		scheduledEvent.Discord = this.Discord;
 
-		if (scheduledEvent.Creator != null)
-			scheduledEvent.Creator.Discord = this.Discord;
+		scheduledEvent.Creator?.Discord = this.Discord;
 
 		if (this.Discord is DiscordClient dc)
 			await dc.OnGuildScheduledEventCreateEventAsync(scheduledEvent, guild).ConfigureAwait(false);
@@ -3822,10 +3833,23 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var invitesRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordInvite>>(res.Response).Select(xi =>
+		var invitesRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordInvite>>(res.Response).Select(invite =>
 		{
-			xi.Discord = this.Discord;
-			return xi;
+			invite.Discord = this.Discord;
+			invite.Channel?.Discord = this.Discord;
+			invite.Guild?.Discord = this.Discord;
+			invite.Inviter?.Discord = this.Discord;
+			invite.TargetUser?.Discord = this.Discord;
+			invite.TargetApplication?.Discord = this.Discord;
+			invite.TargetApplication.Discord = this.Discord;
+			invite.GuildScheduledEvent?.Discord = this.Discord;
+			invite.Profile?.Discord = this.Discord;
+			if (invite.RolesInternal is not null)
+			{
+				foreach (var role in invite.RolesInternal)
+					role.Discord = this.Discord;
+			}
+			return invite;
 		});
 
 		return new ReadOnlyCollection<DiscordInvite>([.. invitesRaw]);
@@ -3894,8 +3918,21 @@ public sealed class DiscordApiClient
 			res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 		}
 
-		var ret = DiscordJson.DeserializeObject<DiscordInvite>(res.Response, this.Discord);
-		ret.Discord = this.Discord;
+		var invite = DiscordJson.DeserializeObject<DiscordInvite>(res.Response, this.Discord);
+		invite.Discord = this.Discord;
+		invite.Channel?.Discord = this.Discord;
+		invite.Guild?.Discord = this.Discord;
+		invite.Inviter?.Discord = this.Discord;
+		invite.TargetUser?.Discord = this.Discord;
+		invite.TargetApplication?.Discord = this.Discord;
+		invite.TargetApplication.Discord = this.Discord;
+		invite.GuildScheduledEvent?.Discord = this.Discord;
+		invite.Profile?.Discord = this.Discord;
+		if (invite.RolesInternal is not null)
+		{
+			foreach (var role in invite.RolesInternal)
+				role.Discord = this.Discord;
+		}
 
 		if (disposeTargetUsersCsv)
 		{
@@ -3909,7 +3946,7 @@ public sealed class DiscordApiClient
 			}
 		}
 
-		return ret;
+		return invite;
 	}
 
 	/// <summary>
@@ -5064,6 +5101,23 @@ public sealed class DiscordApiClient
 
 		var invites = DiscordJson.DeserializeIEnumerableObject<List<DiscordInvite>>(res.Response, this.Discord);
 
+		foreach (var invite in invites)
+		{
+			invite.Channel?.Discord = this.Discord;
+			invite.Guild?.Discord = this.Discord;
+			invite.Inviter?.Discord = this.Discord;
+			invite.TargetUser?.Discord = this.Discord;
+			invite.TargetApplication?.Discord = this.Discord;
+			invite.TargetApplication.Discord = this.Discord;
+			invite.GuildScheduledEvent?.Discord = this.Discord;
+			invite.Profile?.Discord = this.Discord;
+			if (invite.RolesInternal is not null)
+			{
+				foreach (var role in invite.RolesInternal)
+					role.Discord = this.Discord;
+			}
+		}
+
 		return invites;
 	}
 
@@ -5097,25 +5151,23 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, urlParams.Count != 0 ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var ret = DiscordJson.DeserializeObject<DiscordInvite>(res.Response, this.Discord);
+		var invite = DiscordJson.DeserializeObject<DiscordInvite>(res.Response, this.Discord);
 
-		if (ret.Inviter is not null)
+		invite.Channel?.Discord = this.Discord;
+		invite.Guild?.Discord = this.Discord;
+		invite.Inviter?.Discord = this.Discord;
+		invite.TargetUser?.Discord = this.Discord;
+		invite.TargetApplication?.Discord = this.Discord;
+		invite.TargetApplication.Discord = this.Discord;
+		invite.GuildScheduledEvent?.Discord = this.Discord;
+		invite.Profile?.Discord = this.Discord;
+		if (invite.RolesInternal is not null)
 		{
-			ret.Inviter.Discord = this.Discord;
-			this.Discord.UserCache.AddOrUpdate(ret.Inviter.Id, ret.Inviter, (old, @new) => @new);
-		}
-
-		if (ret.Roles is not null)
-		{
-			foreach (var role in ret.RolesInternal)
-			{
+			foreach (var role in invite.RolesInternal)
 				role.Discord = this.Discord;
-				if (ret.Guild is not null)
-					role.GuildId = ret.Guild.Id;
-			}
 		}
 
-		return ret;
+		return invite;
 	}
 
 	/// <summary>
@@ -5224,27 +5276,24 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers).ConfigureAwait(false);
 
-		var ret = DiscordJson.DeserializeObject<DiscordInvite>(res.Response, this.Discord);
-		return ret;
-	}
+		var invite = DiscordJson.DeserializeObject<DiscordInvite>(res.Response, this.Discord);
 
-	/*
-	 * Disabled due to API restrictions
-	 *
-	 * internal async Task<DiscordInvite> InternalAcceptInvite(string invite_code)
-	 * {
-	 *     this.Discord.DebugLogger.LogMessage(LogLevel.Warning, "REST API", "Invite accept endpoint was used; this account is now likely unverified", DateTime.Now);
-	 *
-	 *     var url = new Uri($"{Utils.GetApiBaseUri(this.Configuration), Endpoints.INVITES}/{invite_code));
-	 *     var bucket = this.Rest.GetBucket(0, MajorParameterType.Unbucketed, url, HttpRequestMethod.POST);
-	 *     var res = await this.DoRequestAsync(this.Discord, bucket, url, HttpRequestMethod.POST).ConfigureAwait(false);
-	 *
-	 *     var ret = DiscordJson.DeserializeObject<DiscordInvite>(res.Response, this.Discord);
-	 *     ret.Discord = this.Discord;
-	 *
-	 *     return ret;
-	 * }
-	 */
+		invite.Channel?.Discord = this.Discord;
+		invite.Guild?.Discord = this.Discord;
+		invite.Inviter?.Discord = this.Discord;
+		invite.TargetUser?.Discord = this.Discord;
+		invite.TargetApplication?.Discord = this.Discord;
+		invite.TargetApplication.Discord = this.Discord;
+		invite.GuildScheduledEvent?.Discord = this.Discord;
+		invite.Profile?.Discord = this.Discord;
+		if (invite.RolesInternal is not null)
+		{
+			foreach (var role in invite.RolesInternal)
+				role.Discord = this.Discord;
+		}
+
+		return invite;
+	}
 
 	#endregion
 
@@ -7535,8 +7584,7 @@ public sealed class DiscordApiClient
 				if (builder.Attachments is { Count: > 0 })
 					attachments.AddRange(builder.Attachments);
 
-				if (pld.Data is not null)
-					pld.Data.Attachments = attachments;
+				pld.Data?.Attachments = attachments;
 			}
 			else if (builder is { Attachments.Count: > 0 })
 			{
@@ -7549,8 +7597,7 @@ public sealed class DiscordApiClient
 					fileId++;
 				}
 
-				if (pld.Data is not null)
-					pld.Data.Attachments = attachments;
+				pld.Data?.Attachments = attachments;
 			}
 		}
 		else
