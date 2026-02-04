@@ -185,14 +185,14 @@ public class DiscordInvite : SnowflakeObject
 	///    Gets the roles to be assigned to the user on joining the guild via this invite.
 	/// </summary>
 	[JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<DiscordRole>? RolesInternal { get; set; }
+	internal List<DiscordInviteRole>? RolesInternal { get; set; }
 
 	/// <summary>
 	///    Gets the roles to be assigned to the user on joining the guild via this invite.
 	/// </summary>
 	[JsonIgnore]
-	public List<DiscordRole>? Roles
-		=> this.RolesInternal ?? this.RoleIdsInternal?.Select(id => this.Discord.Guilds[this.GuildId].GetRole(id)).ToList();
+	public List<DiscordInviteRole>? Roles
+		=> this.RolesInternal ?? this.RoleIdsInternal?.Select(id => (DiscordInviteRole)this.Discord.Guilds[this.GuildId].GetRole(id)).ToList();
 
 	/// <summary>
 	///    Gets the role ids to be assigned to the user on joining the guild via this invite.

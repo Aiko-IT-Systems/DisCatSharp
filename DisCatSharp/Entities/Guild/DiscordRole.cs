@@ -124,7 +124,7 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// </summary>
 	[JsonIgnore]
 	public DiscordEmoji? UnicodeEmoji
-		=> this.UnicodeEmojiString != null ? DiscordEmoji.FromName(this.Discord, $":{this.UnicodeEmojiString}:", false) : null;
+		=> !string.IsNullOrEmpty(this.UnicodeEmojiString) ? DiscordEmoji.FromUnicode(this.UnicodeEmojiString) : null;
 
 	/// <summary>
 	///     Gets the guild this role belongs to.
@@ -188,6 +188,37 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// <returns>Whether the permissions are allowed or not.</returns>
 	public PermissionLevel CheckPermission(Permissions permission)
 		=> (this.Permissions & permission) != 0 ? PermissionLevel.Allowed : PermissionLevel.Unset;
+
+	/// <summary>
+	///    Creates a <see cref="DiscordRole"/> from a <see cref="DiscordInviteRole"/>.
+	/// </summary>
+	/// <param name="inviteRole">The invite role to create from.</param>
+	/// <returns>The created <see cref="DiscordRole"/>.</returns>
+	public static DiscordRole FromInviteRole(DiscordInviteRole inviteRole)
+	{
+		ArgumentNullException.ThrowIfNull(inviteRole, nameof(inviteRole));
+
+		var role = new DiscordRole
+		{
+			Id = inviteRole.Id,
+			Name = inviteRole.Name,
+			Position = inviteRole.Position,
+			ColorInternal = inviteRole.ColorInternal,
+			Colors = inviteRole.Colors,
+			IconHash = inviteRole.IconHash,
+			UnicodeEmojiString = inviteRole.UnicodeEmojiString,
+		};
+
+		return role;
+	}
+
+	/// <summary>
+	///     Implicitly creates a <see cref="DiscordRole"/> from a <see cref="DiscordInviteRole"/>.
+	/// </summary>
+	/// <param name="inviteRole">The invite role to convert.</param>
+	/// <returns>The created <see cref="DiscordRole"/>.</returns>
+	public static implicit operator DiscordRole(DiscordInviteRole inviteRole)
+		=> FromInviteRole(inviteRole);
 
 	/// <summary>
 	///     Returns a string representation of this role.
@@ -325,10 +356,9 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 				break;
 		}
 
-		if (mdl.Colors?.TertiaryColor is not null && mdl.Colors?.TertiaryColor?.Value is not 16761760 && mdl.Colors?.SecondaryColor?.Value is not 16759788 && mdl.Colors?.PrimaryColor.Value is not 11127295)
-			throw new ArgumentException("When using a holographic role style, the following colors must be set: primary (11127295), secondary (16759788) & tertiary (16761760). It cannot be any other value");
-
-		return canContinue ? this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, mdl.Name, mdl.Permissions, mdl.Color?.Value, mdl.Colors, mdl.Hoist, mdl.Mentionable, iconb64, emoji, mdl.AuditLogReason) : throw new NotSupportedException("Cannot modify role icon. Guild needs boost tier two.");
+		return mdl.Colors?.TertiaryColor is not null && mdl.Colors?.TertiaryColor?.Value is not 16761760 && mdl.Colors?.SecondaryColor?.Value is not 16759788 && mdl.Colors?.PrimaryColor.Value is not 11127295
+			? throw new ArgumentException("When using a holographic role style, the following colors must be set: primary (11127295), secondary (16759788) & tertiary (16761760). It cannot be any other value")
+			: (Task)(canContinue ? this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, mdl.Name, mdl.Permissions, mdl.Color?.Value, mdl.Colors, mdl.Hoist, mdl.Mentionable, iconb64, emoji, mdl.AuditLogReason) : throw new NotSupportedException("Cannot modify role icon. Guild needs boost tier two."));
 	}
 
 	/// <summary>
