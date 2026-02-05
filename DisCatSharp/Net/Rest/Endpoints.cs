@@ -28,6 +28,11 @@ public static class Endpoints
 	public const string STAGING_URI = "https://staging.discord.co/api/v";
 
 	/// <summary>
+	///     The cdn uri.
+	/// </summary>
+	public const string CDN_URI = "https://cdn.discordapp.com";
+
+	/// <summary>
 	///     The oauth2 endpoint.
 	/// </summary>
 	public const string OAUTH2 = "/oauth2";
@@ -764,7 +769,23 @@ public static class Endpoints
 	/// </summary>
 	public const string CONSUME = "/consume";
 
+	/// <summary>
+	///    The badges endpoint.
+	/// </summary>
 	public const string BADGES = "/badges";
 
+	/// <summary>
+	///    The member counts endpoint.
+	/// </summary>
 	public const string MEMBER_COUNTS = "/member-counts";
+
+	/// <summary>
+	///    The bad domain hashes endpoint.
+	/// </summary>
+	public const string BAD_DOMAINS = "/bad-domains";
+
+	/// <summary>
+	///    The bad domain hashes endpoint.
+	/// </summary>
+	public const string HASHES_JSON = "/hashes.json";
 }

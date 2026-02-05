@@ -8579,4 +8579,20 @@ public sealed class DiscordApiClient
 	}
 
 	#endregion
+
+	/// <summary>
+	///    Gets the bad domain hashes.
+	/// </summary>
+	internal async Task<HashSet<string>> GetBadDomainHashesAsync()
+	{
+		var route = $"{Endpoints.BAD_DOMAINS}{Endpoints.HASHES_JSON}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+		{ }, out var path);
+
+		var url = Utilities.GetCdnApiUriFor(path);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		var hashes = JsonConvert.DeserializeObject<List<string>>(res.Response);
+		return [.. hashes];
+	}
 }

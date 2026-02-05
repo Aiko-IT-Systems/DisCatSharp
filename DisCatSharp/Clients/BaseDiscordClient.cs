@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
+using DisCatSharp.Entities.Core;
 using DisCatSharp.Enums;
 using DisCatSharp.Enums.Core;
 using DisCatSharp.Exceptions;
@@ -252,16 +253,11 @@ public abstract class BaseDiscordClient : IDisposable
 			UseProxy = this.Configuration.Proxy != null,
 			Proxy = this.Configuration.Proxy
 		};
-		this.RestClient = new()
+		this.RestClient = new(httphandler)
 		{
 			Timeout = this.Configuration.HttpTimeout
 		};
 		this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.USER_AGENT, Utilities.GetUserAgent());
-		this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.DISCORD_LOCALE, this.Configuration.Locale);
-		if (!string.IsNullOrWhiteSpace(this.Configuration.Timezone))
-			this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.DISCORD_TIMEZONE, this.Configuration.Timezone);
-		if (this.Configuration.Override is not null)
-			this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.SUPER_PROPERTIES, this.Configuration.Override);
 
 		var a = typeof(DiscordClient).GetTypeInfo().Assembly;
 
@@ -278,6 +274,7 @@ public abstract class BaseDiscordClient : IDisposable
 		}
 
 		this.InitGlobalExceptionTracking();
+		_ = Task.Run(() => DisCatSharpBadDomainChecker.LoadAndInitBadDomainHashesAsync(this));
 	}
 
 	/// <summary>

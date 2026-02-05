@@ -181,7 +181,7 @@ public static class Utilities
 		} + (config?.ApiVersion ?? "10");
 
 	/// <summary>
-	///     Gets the api uri for.
+	///     Gets the api uri for a given <paramref name="path"/>.
 	/// </summary>
 	/// <param name="path">The path.</param>
 	/// <param name="config">The config</param>
@@ -190,7 +190,15 @@ public static class Utilities
 		=> new($"{GetApiBaseUri(config)}{path}");
 
 	/// <summary>
-	///     Gets the api uri for.
+	///    Gets the cdn api uri for a given <paramref name="path"/>.
+	/// </summary>
+	/// <param name="path"></param>
+	/// <returns></returns>
+	internal static Uri GetCdnApiUriFor(string path)
+		=> new($"{Endpoints.CDN_URI}{path}");
+
+	/// <summary>
+	///     Gets the api uri for a given <paramref name="path"/>.
 	/// </summary>
 	/// <param name="path">The path.</param>
 	/// <param name="queryString">The query string.</param>
@@ -200,7 +208,7 @@ public static class Utilities
 		=> new($"{GetApiBaseUri(config)}{path}{queryString}");
 
 	/// <summary>
-	///     Gets the api uri builder for.
+	///     Gets the api uri builder for a given <paramref name="path"/>.
 	/// </summary>
 	/// <param name="path">The path.</param>
 	/// <param name="config">The config</param>

@@ -114,6 +114,7 @@ public sealed class DiscordConfiguration
 		this.HasActivitiesEnabled = other.HasActivitiesEnabled;
 		this.ActivityHandlerType = other.ActivityHandlerType;
 		this.Capabilities = other.Capabilities;
+		this.EnableBadDomainCheckerSupport = other.EnableBadDomainCheckerSupport;
 	}
 
 	/// <summary>
@@ -519,4 +520,15 @@ public sealed class DiscordConfiguration
 	///     <para>Defaults to <see cref="ApplicationCommandHandlerType.DiscordLaunchActivity" />.</para>
 	/// </summary>
 	public ApplicationCommandHandlerType ActivityHandlerType { internal get; set; } = ApplicationCommandHandlerType.DiscordLaunchActivity;
+
+	/// <summary>
+	///		Whether to enable bad domain checker support.
+	/// </summary>
+	/// <remarks>
+	///		Enabling this will make the library load bad domain hashes on startup and check URLs against them when needed.
+	///		This may slightly increase startup time and memory usage.
+	/// 	When disabled, the bad domain checker will always return false on checks.
+	/// 	We use https://github.com/nager/Nager.PublicSuffix with a cached HTTP rule provider to parse domain names; the public suffix list is cached on disk in the temp directory using the library defaults.
+	/// </remarks>
+	public bool EnableBadDomainCheckerSupport { get; internal set; } = false;
 }
