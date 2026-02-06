@@ -296,7 +296,7 @@ public sealed class DiscordApiClient
 			return null;
 
 		StringBuilder builder = new();
-		builder.AppendLine("Users");
+		builder.AppendLine("user_ids");
 
 		foreach (var id in validIds)
 		{
@@ -366,7 +366,7 @@ public sealed class DiscordApiClient
 	/// <param name="csvContent">The CSV content.</param>
 	/// <returns>A read-only list of user ids. Lines that cannot be parsed as valid user IDs are silently skipped.</returns>
 	/// <remarks>
-	///     Lines containing only whitespace are skipped. The CSV is expected to have a header line containing "Users" which is also skipped.
+	///     Lines containing only whitespace are skipped. The CSV is expected to have a header line containing "user_ids" which is also skipped.
 	/// </remarks>
 	private static IReadOnlyList<ulong> ParseTargetUsersCsv(string csvContent)
 	{
@@ -376,7 +376,7 @@ public sealed class DiscordApiClient
 		var lines = csvContent.Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries);
 		var ids = lines
 			.Select(line => line.Trim())
-			.Where(line => line.Length > 0 && !line.Equals("Users", StringComparison.OrdinalIgnoreCase))
+			.Where(line => line.Length > 0 && !line.Equals("user_ids", StringComparison.OrdinalIgnoreCase))
 			.Select(line => (success: ulong.TryParse(line, NumberStyles.None, CultureInfo.InvariantCulture, out var id), id))
 			.Where(result => result.success)
 			.Select(result => result.id)
