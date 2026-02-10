@@ -35,18 +35,18 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.2" />
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.2" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.2" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.3" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.3" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.3" />
 		<PackageReference Include="Microsoft.Maui.Graphics" Version="10.0.31" />
 		<PackageReference Include="Microsoft.Maui.Graphics.Skia" Version="10.0.31" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-		<PackageReference Include="System.Collections.Immutable" Version="10.0.2" />
-		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="10.0.2" />
+		<PackageReference Include="System.Collections.Immutable" Version="10.0.3" />
+		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="10.0.3" />
 		<PackageReference Include="System.Memory" Version="4.6.3" />
 		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
 		<PackageReference Include="System.ValueTuple" Version="4.6.1" />
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.102" PrivateAssets="All" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.103" PrivateAssets="All" />
 	</ItemGroup>
 
 	<ItemGroup>
