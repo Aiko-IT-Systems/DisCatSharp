@@ -42,7 +42,7 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.2" />
 		<PackageReference Include="Nager.PublicSuffix" Version="3.7.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-		<PackageReference Include="NuGet.Protocol" Version="7.0.1" />
+		<PackageReference Include="NuGet.Protocol" Version="7.3.0" />
 		<PackageReference Include="Octokit" Version="14.0.0" />
 		<PackageReference Include="Sentry" Version="6.1.0" />
 		<PackageReference Include="Sentry.Extensions.Logging" Version="6.1.0" />
