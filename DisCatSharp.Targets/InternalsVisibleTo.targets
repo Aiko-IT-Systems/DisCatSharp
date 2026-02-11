@@ -47,6 +47,8 @@
 		<InternalsVisibleTo Include="DisCatSharp.Bots.DocBot.Bot" />
 		<InternalsVisibleTo Include="BeluBOT" />
 		<InternalsVisibleTo Include="BeluGANG" />
+		<InternalsVisibleTo Include="EventsBot" />
+		<InternalsVisibleTo Include="BeluBot" />
 		<InternalsVisibleTo Include="AITSYS.Pycord" />
 		<InternalsVisibleTo Include="Rawr" />
 	</ItemGroup>
