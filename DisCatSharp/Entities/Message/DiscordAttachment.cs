@@ -49,6 +49,7 @@ public class DiscordAttachment : NullableSnowflakeObject
 	/// <summary>
 	///     Gets the categorized media type of the file.
 	/// </summary>
+	[JsonIgnore]
 	public MediaType MediaType
 	{
 		get
@@ -62,6 +63,7 @@ public class DiscordAttachment : NullableSnowflakeObject
 	/// <summary>
 	///     Gets the high-level Discord media type category of the file.
 	/// </summary>
+	[JsonIgnore]
 	public DiscordMediaType DiscordMediaType
 	{
 		get
