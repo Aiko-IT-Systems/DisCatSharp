@@ -837,8 +837,7 @@ public sealed class LavalinkSession
 				{
 					Endpoint = args.Endpoint,
 					Token = args.VoiceToken,
-					SessionId = guildPlayer.Player.VoiceState.SessionId,
-					ChannelId = guildPlayer.ChannelId
+					SessionId = guildPlayer.Player.VoiceState.SessionId
 				};
 				await this.Rest.UpdatePlayerVoiceStateAsync(this.Config.SessionId!, guildPlayer.GuildId, state).ConfigureAwait(false);
 				guildPlayer.UpdateVoiceState(state);
