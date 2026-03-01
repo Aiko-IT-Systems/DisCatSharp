@@ -593,18 +593,6 @@ references:
   commentId: Overload:DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.LogTimestampFormat
   fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.LogTimestampFormat
   nameWithType: OAuth2WebConfiguration.LogTimestampFormat
-- uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.LoggerFactory
-  name: LoggerFactory
-  href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.LoggerFactory.html#DisCatSharp_Extensions_OAuth2Web_OAuth2WebConfiguration_LoggerFactory
-  commentId: P:DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.LoggerFactory
-  fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.LoggerFactory
-  nameWithType: OAuth2WebConfiguration.LoggerFactory
-- uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.LoggerFactory*
-  name: LoggerFactory
-  href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.LoggerFactory.html
-  commentId: Overload:DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.LoggerFactory
-  fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.LoggerFactory
-  nameWithType: OAuth2WebConfiguration.LoggerFactory
 - uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.MinimumLogLevel
   name: MinimumLogLevel
   href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.MinimumLogLevel.html#DisCatSharp_Extensions_OAuth2Web_OAuth2WebConfiguration_MinimumLogLevel
@@ -962,6 +950,345 @@ references:
   commentId: Overload:DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtensionUtilities.GenerateApache2ProxyFileAsync
   fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtensionUtilities.GenerateApache2ProxyFileAsync
   nameWithType: OAuth2WebExtensionUtilities.GenerateApache2ProxyFileAsync
+- uid: DisCatSharp.Extensions.SimpleMusicCommands
+  name: DisCatSharp.Extensions.SimpleMusicCommands
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.html
+  commentId: N:DisCatSharp.Extensions.SimpleMusicCommands
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands
+  nameWithType: DisCatSharp.Extensions.SimpleMusicCommands
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands
+  name: DisCatSharp.Extensions.SimpleMusicCommands.Commands
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.html
+  commentId: N:DisCatSharp.Extensions.SimpleMusicCommands.Commands
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands
+  nameWithType: DisCatSharp.Extensions.SimpleMusicCommands.Commands
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands
+  name: MusicCommands
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.html
+  commentId: T:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands
+  nameWithType: MusicCommands
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands
+  name: MusicCommands.ControlCommands
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.html
+  commentId: T:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands
+  nameWithType: MusicCommands.ControlCommands
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.ConnectAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext,DisCatSharp.Entities.DiscordChannel)
+  name: ConnectAsync(InteractionContext, DiscordChannel)
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.ConnectAsync.html#DisCatSharp_Extensions_SimpleMusicCommands_Commands_MusicCommands_ControlCommands_ConnectAsync_DisCatSharp_ApplicationCommands_Context_InteractionContext_DisCatSharp_Entities_DiscordChannel_
+  commentId: M:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.ConnectAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext,DisCatSharp.Entities.DiscordChannel)
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.ConnectAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext, DisCatSharp.Entities.DiscordChannel)
+  nameWithType: MusicCommands.ControlCommands.ConnectAsync(InteractionContext, DiscordChannel)
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.ConnectAsync*
+  name: ConnectAsync
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.ConnectAsync.html
+  commentId: Overload:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.ConnectAsync
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.ConnectAsync
+  nameWithType: MusicCommands.ControlCommands.ConnectAsync
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.DisconnectAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  name: DisconnectAsync(InteractionContext)
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.DisconnectAsync.html#DisCatSharp_Extensions_SimpleMusicCommands_Commands_MusicCommands_ControlCommands_DisconnectAsync_DisCatSharp_ApplicationCommands_Context_InteractionContext_
+  commentId: M:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.DisconnectAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.DisconnectAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  nameWithType: MusicCommands.ControlCommands.DisconnectAsync(InteractionContext)
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.DisconnectAsync*
+  name: DisconnectAsync
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.DisconnectAsync.html
+  commentId: Overload:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.DisconnectAsync
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.DisconnectAsync
+  nameWithType: MusicCommands.ControlCommands.DisconnectAsync
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.NowPlayingAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  name: NowPlayingAsync(InteractionContext)
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.NowPlayingAsync.html#DisCatSharp_Extensions_SimpleMusicCommands_Commands_MusicCommands_ControlCommands_NowPlayingAsync_DisCatSharp_ApplicationCommands_Context_InteractionContext_
+  commentId: M:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.NowPlayingAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.NowPlayingAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  nameWithType: MusicCommands.ControlCommands.NowPlayingAsync(InteractionContext)
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.NowPlayingAsync*
+  name: NowPlayingAsync
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.NowPlayingAsync.html
+  commentId: Overload:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.NowPlayingAsync
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.NowPlayingAsync
+  nameWithType: MusicCommands.ControlCommands.NowPlayingAsync
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.PauseAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  name: PauseAsync(InteractionContext)
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.PauseAsync.html#DisCatSharp_Extensions_SimpleMusicCommands_Commands_MusicCommands_ControlCommands_PauseAsync_DisCatSharp_ApplicationCommands_Context_InteractionContext_
+  commentId: M:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.PauseAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.PauseAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  nameWithType: MusicCommands.ControlCommands.PauseAsync(InteractionContext)
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.PauseAsync*
+  name: PauseAsync
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.PauseAsync.html
+  commentId: Overload:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.PauseAsync
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.PauseAsync
+  nameWithType: MusicCommands.ControlCommands.PauseAsync
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.ResumeAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  name: ResumeAsync(InteractionContext)
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.ResumeAsync.html#DisCatSharp_Extensions_SimpleMusicCommands_Commands_MusicCommands_ControlCommands_ResumeAsync_DisCatSharp_ApplicationCommands_Context_InteractionContext_
+  commentId: M:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.ResumeAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.ResumeAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  nameWithType: MusicCommands.ControlCommands.ResumeAsync(InteractionContext)
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.ResumeAsync*
+  name: ResumeAsync
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.ResumeAsync.html
+  commentId: Overload:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.ResumeAsync
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.ResumeAsync
+  nameWithType: MusicCommands.ControlCommands.ResumeAsync
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.SkipAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  name: SkipAsync(InteractionContext)
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.SkipAsync.html#DisCatSharp_Extensions_SimpleMusicCommands_Commands_MusicCommands_ControlCommands_SkipAsync_DisCatSharp_ApplicationCommands_Context_InteractionContext_
+  commentId: M:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.SkipAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.SkipAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  nameWithType: MusicCommands.ControlCommands.SkipAsync(InteractionContext)
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.SkipAsync*
+  name: SkipAsync
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.SkipAsync.html
+  commentId: Overload:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.SkipAsync
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.SkipAsync
+  nameWithType: MusicCommands.ControlCommands.SkipAsync
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.StopAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  name: StopAsync(InteractionContext)
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.StopAsync.html#DisCatSharp_Extensions_SimpleMusicCommands_Commands_MusicCommands_ControlCommands_StopAsync_DisCatSharp_ApplicationCommands_Context_InteractionContext_
+  commentId: M:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.StopAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.StopAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  nameWithType: MusicCommands.ControlCommands.StopAsync(InteractionContext)
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.StopAsync*
+  name: StopAsync
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.StopAsync.html
+  commentId: Overload:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.StopAsync
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.StopAsync
+  nameWithType: MusicCommands.ControlCommands.StopAsync
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.SwitchToChannelAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext,DisCatSharp.Entities.DiscordChannel)
+  name: SwitchToChannelAsync(InteractionContext, DiscordChannel)
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.SwitchToChannelAsync.html#DisCatSharp_Extensions_SimpleMusicCommands_Commands_MusicCommands_ControlCommands_SwitchToChannelAsync_DisCatSharp_ApplicationCommands_Context_InteractionContext_DisCatSharp_Entities_DiscordChannel_
+  commentId: M:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.SwitchToChannelAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext,DisCatSharp.Entities.DiscordChannel)
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.SwitchToChannelAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext, DisCatSharp.Entities.DiscordChannel)
+  nameWithType: MusicCommands.ControlCommands.SwitchToChannelAsync(InteractionContext, DiscordChannel)
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.SwitchToChannelAsync*
+  name: SwitchToChannelAsync
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.SwitchToChannelAsync.html
+  commentId: Overload:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.SwitchToChannelAsync
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.ControlCommands.SwitchToChannelAsync
+  nameWithType: MusicCommands.ControlCommands.SwitchToChannelAsync
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.OptionCommands
+  name: MusicCommands.OptionCommands
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.OptionCommands.html
+  commentId: T:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.OptionCommands
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.OptionCommands
+  nameWithType: MusicCommands.OptionCommands
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.OptionCommands.SeekAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext,System.Int64)
+  name: SeekAsync(InteractionContext, long)
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.OptionCommands.SeekAsync.html#DisCatSharp_Extensions_SimpleMusicCommands_Commands_MusicCommands_OptionCommands_SeekAsync_DisCatSharp_ApplicationCommands_Context_InteractionContext_System_Int64_
+  commentId: M:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.OptionCommands.SeekAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext,System.Int64)
+  name.vb: SeekAsync(InteractionContext, Long)
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.OptionCommands.SeekAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext, long)
+  fullName.vb: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.OptionCommands.SeekAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext, Long)
+  nameWithType: MusicCommands.OptionCommands.SeekAsync(InteractionContext, long)
+  nameWithType.vb: MusicCommands.OptionCommands.SeekAsync(InteractionContext, Long)
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.OptionCommands.SeekAsync*
+  name: SeekAsync
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.OptionCommands.SeekAsync.html
+  commentId: Overload:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.OptionCommands.SeekAsync
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.OptionCommands.SeekAsync
+  nameWithType: MusicCommands.OptionCommands.SeekAsync
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.OptionCommands.SetVolumeAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext,System.Int32)
+  name: SetVolumeAsync(InteractionContext, int)
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.OptionCommands.SetVolumeAsync.html#DisCatSharp_Extensions_SimpleMusicCommands_Commands_MusicCommands_OptionCommands_SetVolumeAsync_DisCatSharp_ApplicationCommands_Context_InteractionContext_System_Int32_
+  commentId: M:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.OptionCommands.SetVolumeAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext,System.Int32)
+  name.vb: SetVolumeAsync(InteractionContext, Integer)
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.OptionCommands.SetVolumeAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext, int)
+  fullName.vb: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.OptionCommands.SetVolumeAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext, Integer)
+  nameWithType: MusicCommands.OptionCommands.SetVolumeAsync(InteractionContext, int)
+  nameWithType.vb: MusicCommands.OptionCommands.SetVolumeAsync(InteractionContext, Integer)
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.OptionCommands.SetVolumeAsync*
+  name: SetVolumeAsync
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.OptionCommands.SetVolumeAsync.html
+  commentId: Overload:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.OptionCommands.SetVolumeAsync
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.OptionCommands.SetVolumeAsync
+  nameWithType: MusicCommands.OptionCommands.SetVolumeAsync
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands
+  name: MusicCommands.QueueCommands
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.html
+  commentId: T:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands
+  nameWithType: MusicCommands.QueueCommands
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.ClearQueueAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  name: ClearQueueAsync(InteractionContext)
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.ClearQueueAsync.html#DisCatSharp_Extensions_SimpleMusicCommands_Commands_MusicCommands_QueueCommands_ClearQueueAsync_DisCatSharp_ApplicationCommands_Context_InteractionContext_
+  commentId: M:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.ClearQueueAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.ClearQueueAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  nameWithType: MusicCommands.QueueCommands.ClearQueueAsync(InteractionContext)
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.ClearQueueAsync*
+  name: ClearQueueAsync
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.ClearQueueAsync.html
+  commentId: Overload:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.ClearQueueAsync
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.ClearQueueAsync
+  nameWithType: MusicCommands.QueueCommands.ClearQueueAsync
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.PlayQueueAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  name: PlayQueueAsync(InteractionContext)
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.PlayQueueAsync.html#DisCatSharp_Extensions_SimpleMusicCommands_Commands_MusicCommands_QueueCommands_PlayQueueAsync_DisCatSharp_ApplicationCommands_Context_InteractionContext_
+  commentId: M:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.PlayQueueAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.PlayQueueAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  nameWithType: MusicCommands.QueueCommands.PlayQueueAsync(InteractionContext)
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.PlayQueueAsync*
+  name: PlayQueueAsync
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.PlayQueueAsync.html
+  commentId: Overload:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.PlayQueueAsync
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.PlayQueueAsync
+  nameWithType: MusicCommands.QueueCommands.PlayQueueAsync
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.QueuePlaylistAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext,System.String)
+  name: QueuePlaylistAsync(InteractionContext, string)
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.QueuePlaylistAsync.html#DisCatSharp_Extensions_SimpleMusicCommands_Commands_MusicCommands_QueueCommands_QueuePlaylistAsync_DisCatSharp_ApplicationCommands_Context_InteractionContext_System_String_
+  commentId: M:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.QueuePlaylistAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext,System.String)
+  name.vb: QueuePlaylistAsync(InteractionContext, String)
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.QueuePlaylistAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext, string)
+  fullName.vb: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.QueuePlaylistAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext, String)
+  nameWithType: MusicCommands.QueueCommands.QueuePlaylistAsync(InteractionContext, string)
+  nameWithType.vb: MusicCommands.QueueCommands.QueuePlaylistAsync(InteractionContext, String)
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.QueuePlaylistAsync*
+  name: QueuePlaylistAsync
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.QueuePlaylistAsync.html
+  commentId: Overload:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.QueuePlaylistAsync
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.QueuePlaylistAsync
+  nameWithType: MusicCommands.QueueCommands.QueuePlaylistAsync
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.QueueSongAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext,System.String)
+  name: QueueSongAsync(InteractionContext, string)
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.QueueSongAsync.html#DisCatSharp_Extensions_SimpleMusicCommands_Commands_MusicCommands_QueueCommands_QueueSongAsync_DisCatSharp_ApplicationCommands_Context_InteractionContext_System_String_
+  commentId: M:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.QueueSongAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext,System.String)
+  name.vb: QueueSongAsync(InteractionContext, String)
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.QueueSongAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext, string)
+  fullName.vb: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.QueueSongAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext, String)
+  nameWithType: MusicCommands.QueueCommands.QueueSongAsync(InteractionContext, string)
+  nameWithType.vb: MusicCommands.QueueCommands.QueueSongAsync(InteractionContext, String)
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.QueueSongAsync*
+  name: QueueSongAsync
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.QueueSongAsync.html
+  commentId: Overload:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.QueueSongAsync
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.QueueSongAsync
+  nameWithType: MusicCommands.QueueCommands.QueueSongAsync
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.ReverseQueueAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  name: ReverseQueueAsync(InteractionContext)
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.ReverseQueueAsync.html#DisCatSharp_Extensions_SimpleMusicCommands_Commands_MusicCommands_QueueCommands_ReverseQueueAsync_DisCatSharp_ApplicationCommands_Context_InteractionContext_
+  commentId: M:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.ReverseQueueAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.ReverseQueueAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  nameWithType: MusicCommands.QueueCommands.ReverseQueueAsync(InteractionContext)
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.ReverseQueueAsync*
+  name: ReverseQueueAsync
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.ReverseQueueAsync.html
+  commentId: Overload:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.ReverseQueueAsync
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.ReverseQueueAsync
+  nameWithType: MusicCommands.QueueCommands.ReverseQueueAsync
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.ShuffleQueueAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  name: ShuffleQueueAsync(InteractionContext)
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.ShuffleQueueAsync.html#DisCatSharp_Extensions_SimpleMusicCommands_Commands_MusicCommands_QueueCommands_ShuffleQueueAsync_DisCatSharp_ApplicationCommands_Context_InteractionContext_
+  commentId: M:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.ShuffleQueueAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.ShuffleQueueAsync(DisCatSharp.ApplicationCommands.Context.InteractionContext)
+  nameWithType: MusicCommands.QueueCommands.ShuffleQueueAsync(InteractionContext)
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.ShuffleQueueAsync*
+  name: ShuffleQueueAsync
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.ShuffleQueueAsync.html
+  commentId: Overload:DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.ShuffleQueueAsync
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.Commands.MusicCommands.QueueCommands.ShuffleQueueAsync
+  nameWithType: MusicCommands.QueueCommands.ShuffleQueueAsync
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods
+  name: ExtensionMethods
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.html
+  commentId: T:DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods
+  nameWithType: ExtensionMethods
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.GetSimpleMusicCommandsExtension(DisCatSharp.DiscordClient)
+  name: GetSimpleMusicCommandsExtension(DiscordClient)
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.GetSimpleMusicCommandsExtension.html#DisCatSharp_Extensions_SimpleMusicCommands_ExtensionMethods_GetSimpleMusicCommandsExtension_DisCatSharp_DiscordClient_
+  commentId: M:DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.GetSimpleMusicCommandsExtension(DisCatSharp.DiscordClient)
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.GetSimpleMusicCommandsExtension(DisCatSharp.DiscordClient)
+  nameWithType: ExtensionMethods.GetSimpleMusicCommandsExtension(DiscordClient)
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.GetSimpleMusicCommandsExtension(DisCatSharp.DiscordShardedClient)
+  name: GetSimpleMusicCommandsExtension(DiscordShardedClient)
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.GetSimpleMusicCommandsExtension.html#DisCatSharp_Extensions_SimpleMusicCommands_ExtensionMethods_GetSimpleMusicCommandsExtension_DisCatSharp_DiscordShardedClient_
+  commentId: M:DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.GetSimpleMusicCommandsExtension(DisCatSharp.DiscordShardedClient)
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.GetSimpleMusicCommandsExtension(DisCatSharp.DiscordShardedClient)
+  nameWithType: ExtensionMethods.GetSimpleMusicCommandsExtension(DiscordShardedClient)
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.GetSimpleMusicCommandsExtension*
+  name: GetSimpleMusicCommandsExtension
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.GetSimpleMusicCommandsExtension.html
+  commentId: Overload:DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.GetSimpleMusicCommandsExtension
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.GetSimpleMusicCommandsExtension
+  nameWithType: ExtensionMethods.GetSimpleMusicCommandsExtension
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.UseSimpleMusicCommands(DisCatSharp.DiscordClient,DisCatSharp.Lavalink.LavalinkConfiguration)
+  name: UseSimpleMusicCommands(DiscordClient, LavalinkConfiguration?)
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.UseSimpleMusicCommands.html#DisCatSharp_Extensions_SimpleMusicCommands_ExtensionMethods_UseSimpleMusicCommands_DisCatSharp_DiscordClient_DisCatSharp_Lavalink_LavalinkConfiguration_
+  commentId: M:DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.UseSimpleMusicCommands(DisCatSharp.DiscordClient,DisCatSharp.Lavalink.LavalinkConfiguration)
+  name.vb: UseSimpleMusicCommands(DiscordClient, LavalinkConfiguration)
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.UseSimpleMusicCommands(DisCatSharp.DiscordClient, DisCatSharp.Lavalink.LavalinkConfiguration?)
+  fullName.vb: DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.UseSimpleMusicCommands(DisCatSharp.DiscordClient, DisCatSharp.Lavalink.LavalinkConfiguration)
+  nameWithType: ExtensionMethods.UseSimpleMusicCommands(DiscordClient, LavalinkConfiguration?)
+  nameWithType.vb: ExtensionMethods.UseSimpleMusicCommands(DiscordClient, LavalinkConfiguration)
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.UseSimpleMusicCommands*
+  name: UseSimpleMusicCommands
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.UseSimpleMusicCommands.html
+  commentId: Overload:DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.UseSimpleMusicCommands
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.UseSimpleMusicCommands
+  nameWithType: ExtensionMethods.UseSimpleMusicCommands
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.UseSimpleMusicCommandsAsync(DisCatSharp.DiscordShardedClient,DisCatSharp.Lavalink.LavalinkConfiguration)
+  name: UseSimpleMusicCommandsAsync(DiscordShardedClient, LavalinkConfiguration?)
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.UseSimpleMusicCommandsAsync.html#DisCatSharp_Extensions_SimpleMusicCommands_ExtensionMethods_UseSimpleMusicCommandsAsync_DisCatSharp_DiscordShardedClient_DisCatSharp_Lavalink_LavalinkConfiguration_
+  commentId: M:DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.UseSimpleMusicCommandsAsync(DisCatSharp.DiscordShardedClient,DisCatSharp.Lavalink.LavalinkConfiguration)
+  name.vb: UseSimpleMusicCommandsAsync(DiscordShardedClient, LavalinkConfiguration)
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.UseSimpleMusicCommandsAsync(DisCatSharp.DiscordShardedClient, DisCatSharp.Lavalink.LavalinkConfiguration?)
+  fullName.vb: DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.UseSimpleMusicCommandsAsync(DisCatSharp.DiscordShardedClient, DisCatSharp.Lavalink.LavalinkConfiguration)
+  nameWithType: ExtensionMethods.UseSimpleMusicCommandsAsync(DiscordShardedClient, LavalinkConfiguration?)
+  nameWithType.vb: ExtensionMethods.UseSimpleMusicCommandsAsync(DiscordShardedClient, LavalinkConfiguration)
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.UseSimpleMusicCommandsAsync*
+  name: UseSimpleMusicCommandsAsync
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.UseSimpleMusicCommandsAsync.html
+  commentId: Overload:DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.UseSimpleMusicCommandsAsync
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.ExtensionMethods.UseSimpleMusicCommandsAsync
+  nameWithType: ExtensionMethods.UseSimpleMusicCommandsAsync
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension
+  name: SimpleMusicCommandsExtension
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.html
+  commentId: T:DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension
+  nameWithType: SimpleMusicCommandsExtension
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.ConnectAsync
+  name: ConnectAsync()
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.ConnectAsync.html#DisCatSharp_Extensions_SimpleMusicCommands_SimpleMusicCommandsExtension_ConnectAsync
+  commentId: M:DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.ConnectAsync
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.ConnectAsync()
+  nameWithType: SimpleMusicCommandsExtension.ConnectAsync()
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.ConnectAsync*
+  name: ConnectAsync
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.ConnectAsync.html
+  commentId: Overload:DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.ConnectAsync
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.ConnectAsync
+  nameWithType: SimpleMusicCommandsExtension.ConnectAsync
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.RegisterMusicCommands(System.Collections.Generic.List{System.UInt64})
+  name: RegisterMusicCommands(List<ulong>?)
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.RegisterMusicCommands.html#DisCatSharp_Extensions_SimpleMusicCommands_SimpleMusicCommandsExtension_RegisterMusicCommands_System_Collections_Generic_List_System_UInt64__
+  commentId: M:DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.RegisterMusicCommands(System.Collections.Generic.List{System.UInt64})
+  name.vb: RegisterMusicCommands(List(Of ULong))
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.RegisterMusicCommands(System.Collections.Generic.List<ulong>?)
+  fullName.vb: DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.RegisterMusicCommands(System.Collections.Generic.List(Of ULong))
+  nameWithType: SimpleMusicCommandsExtension.RegisterMusicCommands(List<ulong>?)
+  nameWithType.vb: SimpleMusicCommandsExtension.RegisterMusicCommands(List(Of ULong))
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.RegisterMusicCommands*
+  name: RegisterMusicCommands
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.RegisterMusicCommands.html
+  commentId: Overload:DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.RegisterMusicCommands
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.RegisterMusicCommands
+  nameWithType: SimpleMusicCommandsExtension.RegisterMusicCommands
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.Setup(DisCatSharp.DiscordClient)
+  name: Setup(DiscordClient)
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.Setup.html#DisCatSharp_Extensions_SimpleMusicCommands_SimpleMusicCommandsExtension_Setup_DisCatSharp_DiscordClient_
+  commentId: M:DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.Setup(DisCatSharp.DiscordClient)
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.Setup(DisCatSharp.DiscordClient)
+  nameWithType: SimpleMusicCommandsExtension.Setup(DiscordClient)
+- uid: DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.Setup*
+  name: Setup
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.Setup.html
+  commentId: Overload:DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.Setup
+  fullName: DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.Setup
+  nameWithType: SimpleMusicCommandsExtension.Setup
 - uid: DisCatSharp.Extensions.TwoFactorCommands
   name: DisCatSharp.Extensions.TwoFactorCommands
   href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.html
@@ -980,6 +1307,18 @@ references:
   commentId: T:DisCatSharp.Extensions.TwoFactorCommands.ApplicationCommands.TwoFactorApplicationCommandExtension
   fullName: DisCatSharp.Extensions.TwoFactorCommands.ApplicationCommands.TwoFactorApplicationCommandExtension
   nameWithType: TwoFactorApplicationCommandExtension
+- uid: DisCatSharp.Extensions.TwoFactorCommands.ApplicationCommands.TwoFactorApplicationCommandExtension.EnrollTwoFactorAsync(DisCatSharp.ApplicationCommands.Context.BaseContext)
+  name: EnrollTwoFactorAsync(BaseContext)
+  href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.ApplicationCommands.TwoFactorApplicationCommandExtension.EnrollTwoFactorAsync.html#DisCatSharp_Extensions_TwoFactorCommands_ApplicationCommands_TwoFactorApplicationCommandExtension_EnrollTwoFactorAsync_DisCatSharp_ApplicationCommands_Context_BaseContext_
+  commentId: M:DisCatSharp.Extensions.TwoFactorCommands.ApplicationCommands.TwoFactorApplicationCommandExtension.EnrollTwoFactorAsync(DisCatSharp.ApplicationCommands.Context.BaseContext)
+  fullName: DisCatSharp.Extensions.TwoFactorCommands.ApplicationCommands.TwoFactorApplicationCommandExtension.EnrollTwoFactorAsync(DisCatSharp.ApplicationCommands.Context.BaseContext)
+  nameWithType: TwoFactorApplicationCommandExtension.EnrollTwoFactorAsync(BaseContext)
+- uid: DisCatSharp.Extensions.TwoFactorCommands.ApplicationCommands.TwoFactorApplicationCommandExtension.EnrollTwoFactorAsync*
+  name: EnrollTwoFactorAsync
+  href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.ApplicationCommands.TwoFactorApplicationCommandExtension.EnrollTwoFactorAsync.html
+  commentId: Overload:DisCatSharp.Extensions.TwoFactorCommands.ApplicationCommands.TwoFactorApplicationCommandExtension.EnrollTwoFactorAsync
+  fullName: DisCatSharp.Extensions.TwoFactorCommands.ApplicationCommands.TwoFactorApplicationCommandExtension.EnrollTwoFactorAsync
+  nameWithType: TwoFactorApplicationCommandExtension.EnrollTwoFactorAsync
 - uid: DisCatSharp.Extensions.TwoFactorCommands.ApplicationCommands.TwoFactorApplicationCommandExtension.RequestTwoFactorAsync(DisCatSharp.ApplicationCommands.Context.BaseContext)
   name: RequestTwoFactorAsync(BaseContext)
   href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.ApplicationCommands.TwoFactorApplicationCommandExtension.RequestTwoFactorAsync.html#DisCatSharp_Extensions_TwoFactorCommands_ApplicationCommands_TwoFactorApplicationCommandExtension_RequestTwoFactorAsync_DisCatSharp_ApplicationCommands_Context_BaseContext_
@@ -998,6 +1337,18 @@ references:
   commentId: Overload:DisCatSharp.Extensions.TwoFactorCommands.ApplicationCommands.TwoFactorApplicationCommandExtension.RequestTwoFactorAsync
   fullName: DisCatSharp.Extensions.TwoFactorCommands.ApplicationCommands.TwoFactorApplicationCommandExtension.RequestTwoFactorAsync
   nameWithType: TwoFactorApplicationCommandExtension.RequestTwoFactorAsync
+- uid: DisCatSharp.Extensions.TwoFactorCommands.ApplicationCommands.TwoFactorApplicationCommandExtension.UnenrollTwoFactorAsync(DisCatSharp.ApplicationCommands.Context.BaseContext)
+  name: UnenrollTwoFactorAsync(BaseContext)
+  href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.ApplicationCommands.TwoFactorApplicationCommandExtension.UnenrollTwoFactorAsync.html#DisCatSharp_Extensions_TwoFactorCommands_ApplicationCommands_TwoFactorApplicationCommandExtension_UnenrollTwoFactorAsync_DisCatSharp_ApplicationCommands_Context_BaseContext_
+  commentId: M:DisCatSharp.Extensions.TwoFactorCommands.ApplicationCommands.TwoFactorApplicationCommandExtension.UnenrollTwoFactorAsync(DisCatSharp.ApplicationCommands.Context.BaseContext)
+  fullName: DisCatSharp.Extensions.TwoFactorCommands.ApplicationCommands.TwoFactorApplicationCommandExtension.UnenrollTwoFactorAsync(DisCatSharp.ApplicationCommands.Context.BaseContext)
+  nameWithType: TwoFactorApplicationCommandExtension.UnenrollTwoFactorAsync(BaseContext)
+- uid: DisCatSharp.Extensions.TwoFactorCommands.ApplicationCommands.TwoFactorApplicationCommandExtension.UnenrollTwoFactorAsync*
+  name: UnenrollTwoFactorAsync
+  href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.ApplicationCommands.TwoFactorApplicationCommandExtension.UnenrollTwoFactorAsync.html
+  commentId: Overload:DisCatSharp.Extensions.TwoFactorCommands.ApplicationCommands.TwoFactorApplicationCommandExtension.UnenrollTwoFactorAsync
+  fullName: DisCatSharp.Extensions.TwoFactorCommands.ApplicationCommands.TwoFactorApplicationCommandExtension.UnenrollTwoFactorAsync
+  nameWithType: TwoFactorApplicationCommandExtension.UnenrollTwoFactorAsync
 - uid: DisCatSharp.Extensions.TwoFactorCommands.CommandsNext
   name: DisCatSharp.Extensions.TwoFactorCommands.CommandsNext
   href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.CommandsNext.html
@@ -1082,6 +1433,12 @@ references:
   commentId: T:DisCatSharp.Extensions.TwoFactorCommands.Enums.TwoFactorResult
   fullName: DisCatSharp.Extensions.TwoFactorCommands.Enums.TwoFactorResult
   nameWithType: TwoFactorResult
+- uid: DisCatSharp.Extensions.TwoFactorCommands.Enums.TwoFactorResult.Enrolled
+  name: Enrolled
+  href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.Enums.TwoFactorResult.html#DisCatSharp_Extensions_TwoFactorCommands_Enums_TwoFactorResult_Enrolled
+  commentId: F:DisCatSharp.Extensions.TwoFactorCommands.Enums.TwoFactorResult.Enrolled
+  fullName: DisCatSharp.Extensions.TwoFactorCommands.Enums.TwoFactorResult.Enrolled
+  nameWithType: TwoFactorResult.Enrolled
 - uid: DisCatSharp.Extensions.TwoFactorCommands.Enums.TwoFactorResult.InvalidCode
   name: InvalidCode
   href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.Enums.TwoFactorResult.html#DisCatSharp_Extensions_TwoFactorCommands_Enums_TwoFactorResult_InvalidCode
@@ -1106,6 +1463,12 @@ references:
   commentId: F:DisCatSharp.Extensions.TwoFactorCommands.Enums.TwoFactorResult.TimedOut
   fullName: DisCatSharp.Extensions.TwoFactorCommands.Enums.TwoFactorResult.TimedOut
   nameWithType: TwoFactorResult.TimedOut
+- uid: DisCatSharp.Extensions.TwoFactorCommands.Enums.TwoFactorResult.Unenrolled
+  name: Unenrolled
+  href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.Enums.TwoFactorResult.html#DisCatSharp_Extensions_TwoFactorCommands_Enums_TwoFactorResult_Unenrolled
+  commentId: F:DisCatSharp.Extensions.TwoFactorCommands.Enums.TwoFactorResult.Unenrolled
+  fullName: DisCatSharp.Extensions.TwoFactorCommands.Enums.TwoFactorResult.Unenrolled
+  nameWithType: TwoFactorResult.Unenrolled
 - uid: DisCatSharp.Extensions.TwoFactorCommands.Enums.TwoFactorResult.ValidCode
   name: ValidCode
   href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.Enums.TwoFactorResult.html#DisCatSharp_Extensions_TwoFactorCommands_Enums_TwoFactorResult_ValidCode
@@ -1316,6 +1679,66 @@ references:
   commentId: T:DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension
   fullName: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension
   nameWithType: TwoFactorExtension
+- uid: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.DisenrollUser(System.UInt64)
+  name: DisenrollUser(ulong)
+  href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.DisenrollUser.html#DisCatSharp_Extensions_TwoFactorCommands_TwoFactorExtension_DisenrollUser_System_UInt64_
+  commentId: M:DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.DisenrollUser(System.UInt64)
+  name.vb: DisenrollUser(ULong)
+  fullName: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.DisenrollUser(ulong)
+  fullName.vb: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.DisenrollUser(ULong)
+  nameWithType: TwoFactorExtension.DisenrollUser(ulong)
+  nameWithType.vb: TwoFactorExtension.DisenrollUser(ULong)
+- uid: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.DisenrollUser*
+  name: DisenrollUser
+  href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.DisenrollUser.html
+  commentId: Overload:DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.DisenrollUser
+  fullName: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.DisenrollUser
+  nameWithType: TwoFactorExtension.DisenrollUser
+- uid: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.EnrollUser(System.UInt64,System.String)
+  name: EnrollUser(ulong, string)
+  href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.EnrollUser.html#DisCatSharp_Extensions_TwoFactorCommands_TwoFactorExtension_EnrollUser_System_UInt64_System_String_
+  commentId: M:DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.EnrollUser(System.UInt64,System.String)
+  name.vb: EnrollUser(ULong, String)
+  fullName: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.EnrollUser(ulong, string)
+  fullName.vb: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.EnrollUser(ULong, String)
+  nameWithType: TwoFactorExtension.EnrollUser(ulong, string)
+  nameWithType.vb: TwoFactorExtension.EnrollUser(ULong, String)
+- uid: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.EnrollUser*
+  name: EnrollUser
+  href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.EnrollUser.html
+  commentId: Overload:DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.EnrollUser
+  fullName: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.EnrollUser
+  nameWithType: TwoFactorExtension.EnrollUser
+- uid: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.IsEnrolled(System.UInt64)
+  name: IsEnrolled(ulong)
+  href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.IsEnrolled.html#DisCatSharp_Extensions_TwoFactorCommands_TwoFactorExtension_IsEnrolled_System_UInt64_
+  commentId: M:DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.IsEnrolled(System.UInt64)
+  name.vb: IsEnrolled(ULong)
+  fullName: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.IsEnrolled(ulong)
+  fullName.vb: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.IsEnrolled(ULong)
+  nameWithType: TwoFactorExtension.IsEnrolled(ulong)
+  nameWithType.vb: TwoFactorExtension.IsEnrolled(ULong)
+- uid: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.IsEnrolled*
+  name: IsEnrolled
+  href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.IsEnrolled.html
+  commentId: Overload:DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.IsEnrolled
+  fullName: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.IsEnrolled
+  nameWithType: TwoFactorExtension.IsEnrolled
+- uid: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.IsValidCode(System.UInt64,System.String)
+  name: IsValidCode(ulong, string)
+  href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.IsValidCode.html#DisCatSharp_Extensions_TwoFactorCommands_TwoFactorExtension_IsValidCode_System_UInt64_System_String_
+  commentId: M:DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.IsValidCode(System.UInt64,System.String)
+  name.vb: IsValidCode(ULong, String)
+  fullName: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.IsValidCode(ulong, string)
+  fullName.vb: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.IsValidCode(ULong, String)
+  nameWithType: TwoFactorExtension.IsValidCode(ulong, string)
+  nameWithType.vb: TwoFactorExtension.IsValidCode(ULong, String)
+- uid: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.IsValidCode*
+  name: IsValidCode
+  href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.IsValidCode.html
+  commentId: Overload:DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.IsValidCode
+  fullName: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.IsValidCode
+  nameWithType: TwoFactorExtension.IsValidCode
 - uid: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.Services
   name: Services
   href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtension.Services.html#DisCatSharp_Extensions_TwoFactorCommands_TwoFactorExtension_Services
@@ -1388,6 +1811,21 @@ references:
   commentId: Overload:DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtensionUtilities.EnrollTwoFactor
   fullName: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtensionUtilities.EnrollTwoFactor
   nameWithType: TwoFactorExtensionUtilities.EnrollTwoFactor
+- uid: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtensionUtilities.ToBlockText(System.String,System.Int32)
+  name: ToBlockText(string, int)
+  href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtensionUtilities.ToBlockText.html#DisCatSharp_Extensions_TwoFactorCommands_TwoFactorExtensionUtilities_ToBlockText_System_String_System_Int32_
+  commentId: M:DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtensionUtilities.ToBlockText(System.String,System.Int32)
+  name.vb: ToBlockText(String, Integer)
+  fullName: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtensionUtilities.ToBlockText(string, int)
+  fullName.vb: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtensionUtilities.ToBlockText(String, Integer)
+  nameWithType: TwoFactorExtensionUtilities.ToBlockText(string, int)
+  nameWithType.vb: TwoFactorExtensionUtilities.ToBlockText(String, Integer)
+- uid: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtensionUtilities.ToBlockText*
+  name: ToBlockText
+  href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtensionUtilities.ToBlockText.html
+  commentId: Overload:DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtensionUtilities.ToBlockText
+  fullName: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorExtensionUtilities.ToBlockText
+  nameWithType: TwoFactorExtensionUtilities.ToBlockText
 - uid: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorResponseConfiguration
   name: TwoFactorResponseConfiguration
   href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.TwoFactorResponseConfiguration.html
@@ -1412,6 +1850,18 @@ references:
   fullName.vb: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorResponseConfiguration.New
   nameWithType: TwoFactorResponseConfiguration.TwoFactorResponseConfiguration
   nameWithType.vb: TwoFactorResponseConfiguration.New
+- uid: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorResponseConfiguration.AuthenticationEnrolledMessage
+  name: AuthenticationEnrolledMessage
+  href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.TwoFactorResponseConfiguration.AuthenticationEnrolledMessage.html#DisCatSharp_Extensions_TwoFactorCommands_TwoFactorResponseConfiguration_AuthenticationEnrolledMessage
+  commentId: P:DisCatSharp.Extensions.TwoFactorCommands.TwoFactorResponseConfiguration.AuthenticationEnrolledMessage
+  fullName: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorResponseConfiguration.AuthenticationEnrolledMessage
+  nameWithType: TwoFactorResponseConfiguration.AuthenticationEnrolledMessage
+- uid: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorResponseConfiguration.AuthenticationEnrolledMessage*
+  name: AuthenticationEnrolledMessage
+  href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.TwoFactorResponseConfiguration.AuthenticationEnrolledMessage.html
+  commentId: Overload:DisCatSharp.Extensions.TwoFactorCommands.TwoFactorResponseConfiguration.AuthenticationEnrolledMessage
+  fullName: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorResponseConfiguration.AuthenticationEnrolledMessage
+  nameWithType: TwoFactorResponseConfiguration.AuthenticationEnrolledMessage
 - uid: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorResponseConfiguration.AuthenticationFailureMessage
   name: AuthenticationFailureMessage
   href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.TwoFactorResponseConfiguration.AuthenticationFailureMessage.html#DisCatSharp_Extensions_TwoFactorCommands_TwoFactorResponseConfiguration_AuthenticationFailureMessage
@@ -1460,6 +1910,18 @@ references:
   commentId: Overload:DisCatSharp.Extensions.TwoFactorCommands.TwoFactorResponseConfiguration.AuthenticationSuccessMessage
   fullName: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorResponseConfiguration.AuthenticationSuccessMessage
   nameWithType: TwoFactorResponseConfiguration.AuthenticationSuccessMessage
+- uid: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorResponseConfiguration.AuthenticationUnenrolledMessage
+  name: AuthenticationUnenrolledMessage
+  href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.TwoFactorResponseConfiguration.AuthenticationUnenrolledMessage.html#DisCatSharp_Extensions_TwoFactorCommands_TwoFactorResponseConfiguration_AuthenticationUnenrolledMessage
+  commentId: P:DisCatSharp.Extensions.TwoFactorCommands.TwoFactorResponseConfiguration.AuthenticationUnenrolledMessage
+  fullName: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorResponseConfiguration.AuthenticationUnenrolledMessage
+  nameWithType: TwoFactorResponseConfiguration.AuthenticationUnenrolledMessage
+- uid: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorResponseConfiguration.AuthenticationUnenrolledMessage*
+  name: AuthenticationUnenrolledMessage
+  href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.TwoFactorResponseConfiguration.AuthenticationUnenrolledMessage.html
+  commentId: Overload:DisCatSharp.Extensions.TwoFactorCommands.TwoFactorResponseConfiguration.AuthenticationUnenrolledMessage
+  fullName: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorResponseConfiguration.AuthenticationUnenrolledMessage
+  nameWithType: TwoFactorResponseConfiguration.AuthenticationUnenrolledMessage
 - uid: DisCatSharp.Extensions.TwoFactorCommands.TwoFactorResponseConfiguration.AuthenticatorAccountPrefix
   name: AuthenticatorAccountPrefix
   href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.TwoFactorResponseConfiguration.AuthenticatorAccountPrefix.html#DisCatSharp_Extensions_TwoFactorCommands_TwoFactorResponseConfiguration_AuthenticatorAccountPrefix
@@ -1487,6 +1949,9 @@ references:
 - uid: api_discatsharp_extensions_oauth2web_index
   name: DisCatSharp OAuth2 Web Extension API Reference
   href: api/DisCatSharp.Extensions.OAuth2Web/index.html
+- uid: api_discatsharp_extensions_simplemusiccommands_index
+  name: DisCatSharp Simple Music Commands Extension API Reference
+  href: api/DisCatSharp.Extensions.SimpleMusicCommands/index.html
 - uid: api_discatsharp_extensions_twofactorcommands_index
   name: DisCatSharp TwoFactor Commands Extension API Reference
   href: api/DisCatSharp.Extensions.TwoFactorCommands/index.html
