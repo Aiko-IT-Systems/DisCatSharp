@@ -24,4 +24,10 @@ public sealed class LavalinkVoiceState
 	/// </summary>
 	[JsonProperty("sessionId")]
 	public string SessionId { get; set; }
+
+	/// <summary>
+	///     The channel id for the voice connection.
+	/// </summary>
+	[JsonProperty("channelId", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong? ChannelId { get; internal set; }
 }
