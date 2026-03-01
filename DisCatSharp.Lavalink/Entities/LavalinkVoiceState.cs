@@ -28,6 +28,13 @@ public sealed class LavalinkVoiceState
 	/// <summary>
 	///     The channel id for the voice connection.
 	/// </summary>
-	[JsonProperty("channelId", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonIgnore]
 	public ulong? ChannelId { get; internal set; }
+
+	/// <summary>
+	///		The channel id for the voice connection as a string, used for serialization.
+	/// </summary>
+	[JsonProperty("channelId", NullValueHandling = NullValueHandling.Ignore)]
+	internal string? ChannelIdString
+		=> this.ChannelId.ToString();
 }
