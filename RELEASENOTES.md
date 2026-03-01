@@ -5,6 +5,7 @@ DisCatSharp Release Notes
 	- Build-in Statistics
 	- Support for .NET 10
 	- Improvements for OAuth2 operations
+	- Support for Lavalink 4.2.0 which supports [DAVE](https://daveprotocol.com/), Discord's new E2EE voice protocol
 
     Breaking
 
