@@ -68,8 +68,8 @@ public sealed class RequireRolesAttribute : CheckBaseAttribute
 		if (ctx.Guild == null || ctx.Member == null)
 			return Task.FromResult(false);
 
-		int rnc = 0;
-		int inc = 0;
+		var rnc = 0;
+		var inc = 0;
 
 		if (this.UsesRoleIds)
 		{

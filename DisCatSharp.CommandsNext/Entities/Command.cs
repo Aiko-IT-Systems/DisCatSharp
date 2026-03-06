@@ -184,7 +184,7 @@ public class Command
 	{
 		var o1 = obj;
 		var o2 = this as object;
-		
+
 		return o1 == null && o2 != null
 			? false
 			: o1 != null && o2 == null

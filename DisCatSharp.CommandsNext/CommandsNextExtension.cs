@@ -159,7 +159,7 @@ public class CommandsNextExtension : BaseExtension
 	/// <typeparam name="T">Type of the formatter to use.</typeparam>
 	public void SetHelpFormatter<T>() where T : BaseHelpFormatter => this._helpFormatter.SetFormatterType<T>();
 
-#region DiscordClient Registration
+	#region DiscordClient Registration
 
 	/// <summary>
 	///     DO NOT USE THIS MANUALLY.
@@ -199,9 +199,9 @@ public class CommandsNextExtension : BaseExtension
 		}
 	}
 
-#endregion
+	#endregion
 
-#region Sudo
+	#region Sudo
 
 	/// <summary>
 	///     Creates a fake command context to execute commands with.
@@ -283,9 +283,9 @@ public class CommandsNextExtension : BaseExtension
 		return ctx;
 	}
 
-#endregion
+	#endregion
 
-#region Default Help
+	#region Default Help
 
 	/// <summary>
 	///     Represents the default help module.
@@ -389,9 +389,9 @@ public class CommandsNextExtension : BaseExtension
 		}
 	}
 
-#endregion
+	#endregion
 
-#region Command Handling
+	#region Command Handling
 
 	/// <summary>
 	///     Handles the commands async.
@@ -598,9 +598,9 @@ public class CommandsNextExtension : BaseExtension
 			throw new ChecksFailedException(cmd, ctx, fchecks);
 	}
 
-#endregion
+	#endregion
 
-#region Command Registration
+	#region Command Registration
 
 	/// <summary>
 	///     Gets a dictionary of registered top-level commands.
@@ -894,9 +894,9 @@ public class CommandsNextExtension : BaseExtension
 				this._topLevelCommands[xs] = cmd;
 	}
 
-#endregion
+	#endregion
 
-#region Type Conversion
+	#region Type Conversion
 
 	/// <summary>
 	///     Converts a string to specified type.
@@ -1028,9 +1028,9 @@ public class CommandsNextExtension : BaseExtension
 		return this._userFriendlyTypeNames.TryGetValue(tn, out var name) ? name : tn.Name;
 	}
 
-#endregion
+	#endregion
 
-#region Helpers
+	#region Helpers
 
 	/// <summary>
 	///     Allows easier interoperability with reflection by turning the <see cref="Task{T}" /> returned by
@@ -1052,9 +1052,9 @@ public class CommandsNextExtension : BaseExtension
 			? StringComparer.Ordinal
 			: StringComparer.OrdinalIgnoreCase;
 
-#endregion
+	#endregion
 
-#region Events
+	#region Events
 
 	/// <summary>
 	///     Triggered whenever a command executes successfully.
@@ -1092,5 +1092,5 @@ public class CommandsNextExtension : BaseExtension
 	private Task OnCommandErrored(CommandErrorEventArgs e)
 		=> this._error.InvokeAsync(this, e);
 
-#endregion
+	#endregion
 }

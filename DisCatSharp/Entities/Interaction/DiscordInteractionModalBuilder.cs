@@ -12,11 +12,6 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class DiscordInteractionModalBuilder
 {
-	/// <summary>
-	///     Represents the title associated with the current instance.
-	/// </summary>
-	/// <remarks>This field is private and is used internally to store the title value.</remarks>
-	private string _title;
 
 	/// <summary>
 	///     Constructs a new empty interaction modal builder.
@@ -43,13 +38,13 @@ public sealed class DiscordInteractionModalBuilder
 	/// </summary>
 	public string Title
 	{
-		get => this._title;
+		get;
 		set
 		{
 			if (value is { Length: > 128 })
 				throw new ArgumentException("Title length cannot exceed 128 characters.", nameof(value));
 
-			this._title = value;
+			field = value;
 		}
 	}
 

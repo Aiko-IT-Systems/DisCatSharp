@@ -135,3 +135,7 @@ DisCatSharp.Docs/obj/.cache/build/
 # Copilot
 copilot-resources/
 DisCatSharp.Experimental/openapi_preview.json
+# Allow native runtime assets for Voice
+!DisCatSharp.Voice.Natives/runtimes/**/*.dll
+!DisCatSharp.Voice.Natives/runtimes/**/*.so
+!DisCatSharp.Voice.Natives/runtimes/**/*.dylib

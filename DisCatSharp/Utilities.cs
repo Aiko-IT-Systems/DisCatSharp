@@ -300,7 +300,7 @@ public static class Utilities
 	{
 		var matches = DiscordRegEx.UserWithOptionalNicknameRegex().Matches(message);
 		return from Match match in matches
-		       select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+			   select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
 	}
 
 	/// <summary>
@@ -312,7 +312,7 @@ public static class Utilities
 	{
 		var matches = DiscordRegEx.RoleRegex().Matches(message);
 		return from Match match in matches
-		       select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+			   select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
 	}
 
 	/// <summary>
@@ -324,7 +324,7 @@ public static class Utilities
 	{
 		var matches = DiscordRegEx.ChannelRegex().Matches(message);
 		return from Match match in matches
-		       select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+			   select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
 	}
 
 	/// <summary>
@@ -336,7 +336,7 @@ public static class Utilities
 	{
 		var matches = DiscordRegEx.EmojiRegex().Matches(message);
 		return from Match match in matches
-		       select ulong.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
+			   select ulong.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
 	}
 
 	/// <summary>

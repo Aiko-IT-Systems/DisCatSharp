@@ -27,7 +27,7 @@ namespace DisCatSharp;
 /// </summary>
 public sealed partial class DiscordClient
 {
-#region Semaphore Methods
+	#region Semaphore Methods
 
 	/// <summary>
 	///     Gets the socket lock.
@@ -36,9 +36,9 @@ public sealed partial class DiscordClient
 	private SocketLock GetSocketLock()
 		=> s_socketLocks.GetOrAdd(this.CurrentApplication.Id, new SocketLock(this.CurrentApplication.Id, this.GatewayInfo!.SessionBucket.MaxConcurrency));
 
-#endregion
+	#endregion
 
-#region Private Fields
+	#region Private Fields
 
 	/// <summary>
 	///     Gets the heartbeat interval.
@@ -95,9 +95,9 @@ public sealed partial class DiscordClient
 	/// </summary>
 	private CancellationToken _cancelToken;
 
-#endregion
+	#endregion
 
-#region Connection Semaphore
+	#region Connection Semaphore
 
 	/// <summary>
 	///     Gets the socket locks.
@@ -109,9 +109,9 @@ public sealed partial class DiscordClient
 	/// </summary>
 	private readonly ManualResetEventSlim _sessionLock = new(true);
 
-#endregion
+	#endregion
 
-#region Internal Connection Methods
+	#region Internal Connection Methods
 
 	/// <summary>
 	///     Reconnects the websocket client.
@@ -298,9 +298,9 @@ public sealed partial class DiscordClient
 		}
 	}
 
-#endregion
+	#endregion
 
-#region WebSocket (Events)
+	#region WebSocket (Events)
 
 	/// <summary>
 	///     Handles the socket message.
@@ -470,9 +470,9 @@ public sealed partial class DiscordClient
 		{ }
 	}
 
-#endregion
+	#endregion
 
-#region Internal Gateway Methods
+	#region Internal Gateway Methods
 
 	/// <summary>
 	///     Updates the status.
@@ -489,7 +489,7 @@ public sealed partial class DiscordClient
 		var acts = activities ?? [new()];
 		var status = new StatusUpdate
 		{
-			Activities = [..acts.Select(a => new TransportActivity(a))],
+			Activities = [.. acts.Select(a => new TransportActivity(a))],
 			IdleSince = sinceUnix,
 			IsAfk = idleSince != null,
 			Status = userStatus ?? UserStatus.Online,
@@ -663,5 +663,5 @@ public sealed partial class DiscordClient
 		await this.WebSocketClient.SendMessageAsync(payload).ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 }

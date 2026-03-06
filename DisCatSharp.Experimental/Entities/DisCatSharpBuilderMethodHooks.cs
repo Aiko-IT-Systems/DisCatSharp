@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 
-using DisCatSharp.Entities;
 using DisCatSharp.Entities.Core;
 
 namespace DisCatSharp.Experimental.Entities;
@@ -52,7 +51,7 @@ public static class DisCatSharpBuilderMethodHooks
 		return builder;
 	}
 
-	
+
 	/// <summary>
 	///     Adds a manual GCP (Google Cloud Platform) voice message attachment to the <typeparamref name="T"/>.
 	/// </summary>
@@ -68,14 +67,14 @@ public static class DisCatSharpBuilderMethodHooks
 	{
 		builder.AttachmentsInternal ??= [];
 		builder.AttachmentsInternal.Add(new()
-			{
-				Filename = filename,
-				UploadedFilename = uploadedFilename,
-				Description = description,
-				DurationSecs = durationSeconds,
-				WaveForm = waveform
-			});
-			builder.IsVoiceMessage = true;
+		{
+			Filename = filename,
+			UploadedFilename = uploadedFilename,
+			Description = description,
+			DurationSecs = durationSeconds,
+			WaveForm = waveform
+		});
+		builder.IsVoiceMessage = true;
 
 		return builder;
 	}
@@ -94,14 +93,14 @@ public static class DisCatSharpBuilderMethodHooks
 	{
 		builder.AttachmentsInternal ??= [];
 		builder.AttachmentsInternal.Add(new()
-			{
-				Id = 0,
-				Filename = filename,
-				Description = description,
-				DurationSecs = durationSeconds,
-				WaveForm = waveform
-			});
-			builder.IsVoiceMessage = true;
+		{
+			Id = 0,
+			Filename = filename,
+			Description = description,
+			DurationSecs = durationSeconds,
+			WaveForm = waveform
+		});
+		builder.IsVoiceMessage = true;
 
 		return builder;
 	}

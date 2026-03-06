@@ -221,7 +221,7 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	public static bool operator !=(DiscordScheduledEvent e1, DiscordScheduledEvent e2)
 		=> !(e1 == e2);
 
-#region Methods
+	#region Methods
 
 	/// <summary>
 	///     Modifies the current scheduled event.
@@ -325,5 +325,5 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	public async Task DeleteAsync(string reason = null)
 		=> await this.Discord.ApiClient.DeleteGuildScheduledEventAsync(this.GuildId, this.Id, reason).ConfigureAwait(false);
 
-#endregion
+	#endregion
 }

@@ -14,6 +14,9 @@ items:
   name: DisCatSharp.Experimental.Entities
   type: Namespace
   items:
+  - uid: DisCatSharp.Experimental.Entities.DisCatSharpBuilderMethodHooks
+    name: DisCatSharpBuilderMethodHooks
+    type: Class
   - uid: DisCatSharp.Experimental.Entities.DiscordChannelMethodHooks
     name: DiscordChannelMethodHooks
     type: Class
@@ -23,6 +26,9 @@ items:
   - uid: DisCatSharp.Experimental.Entities.DiscordGuildMemberSearchValidator
     name: DiscordGuildMemberSearchValidator
     type: Class
+  - uid: DisCatSharp.Experimental.Entities.DiscordGuildMessageSearchParams
+    name: DiscordGuildMessageSearchParams
+    type: Class
   - uid: DisCatSharp.Experimental.Entities.DiscordGuildMethodsHook
     name: DiscordGuildMethodsHook
     type: Class
@@ -31,9 +37,6 @@ items:
     type: Class
   - uid: DisCatSharp.Experimental.Entities.DiscordMemberPaginationFilter
     name: DiscordMemberPaginationFilter
-    type: Class
-  - uid: DisCatSharp.Experimental.Entities.DiscordMessageBuilderMethodHooks
-    name: DiscordMessageBuilderMethodHooks
     type: Class
   - uid: DisCatSharp.Experimental.Entities.DiscordQuery
     name: DiscordQuery
@@ -47,6 +50,9 @@ items:
   - uid: DisCatSharp.Experimental.Entities.DiscordSearchGuildMembersResponse
     name: DiscordSearchGuildMembersResponse
     type: Class
+  - uid: DisCatSharp.Experimental.Entities.DiscordSearchGuildMessagesResponse
+    name: DiscordSearchGuildMessagesResponse
+    type: Class
   - uid: DisCatSharp.Experimental.Entities.DiscordSupplementalGuildMember
     name: DiscordSupplementalGuildMember
     type: Class
@@ -59,14 +65,38 @@ items:
   - uid: DisCatSharp.Experimental.Entities.GcpAttachmentsResponse
     name: GcpAttachmentsResponse
     type: Class
+  - uid: DisCatSharp.Experimental.Entities.ScoreCursor
+    name: ScoreCursor
+    type: Class
+  - uid: DisCatSharp.Experimental.Entities.TimestampCursor
+    name: TimestampCursor
+    type: Class
 - uid: DisCatSharp.Experimental.Enums
   name: DisCatSharp.Experimental.Enums
   type: Namespace
   items:
+  - uid: DisCatSharp.Experimental.Enums.AuthorType
+    name: AuthorType
+    type: Enum
+  - uid: DisCatSharp.Experimental.Enums.HasOption
+    name: HasOption
+    type: Enum
   - uid: DisCatSharp.Experimental.Enums.JoinSourceType
     name: JoinSourceType
     type: Enum
   - uid: DisCatSharp.Experimental.Enums.MemberSortType
     name: MemberSortType
+    type: Enum
+  - uid: DisCatSharp.Experimental.Enums.SearchCursorType
+    name: SearchCursorType
+    type: Enum
+  - uid: DisCatSharp.Experimental.Enums.SearchableEmbedType
+    name: SearchableEmbedType
+    type: Enum
+  - uid: DisCatSharp.Experimental.Enums.SortingMode
+    name: SortingMode
+    type: Enum
+  - uid: DisCatSharp.Experimental.Enums.SortingOrder
+    name: SortingOrder
     type: Enum
 memberLayout: SeparatePages

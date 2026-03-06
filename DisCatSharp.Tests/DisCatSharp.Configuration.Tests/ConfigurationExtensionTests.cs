@@ -14,7 +14,7 @@ namespace DisCatSharp.Configuration.Tests;
 
 public class ConfigurationExtensionTests
 {
-#region Test Classes
+	#region Test Classes
 
 	private class SampleClass
 	{
@@ -50,7 +50,7 @@ public class ConfigurationExtensionTests
 		public string ConstructorValue { get; } = value;
 	}
 
-#endregion
+	#endregion
 
 	private IConfiguration EnumerableTestConfiguration() =>
 		new ConfigurationBuilder()
@@ -132,7 +132,7 @@ public class ConfigurationExtensionTests
 		var config = source.ExtractConfig<DiscordConfiguration>("Discord");
 
 		var expected = DiscordIntents.GuildEmojisAndStickers | DiscordIntents.GuildMembers |
-		               DiscordIntents.GuildInvites | DiscordIntents.GuildMessageReactions;
+					   DiscordIntents.GuildInvites | DiscordIntents.GuildMessageReactions;
 
 		Assert.Equal(expected, config.Intents);
 	}
@@ -144,7 +144,7 @@ public class ConfigurationExtensionTests
 
 		var config = source.ExtractConfig<DiscordConfiguration>("Discord");
 		var expectedIntents = DiscordIntents.GuildEmojisAndStickers | DiscordIntents.GuildMembers |
-		                      DiscordIntents.Guilds;
+							  DiscordIntents.Guilds;
 
 		Assert.Equal(expectedIntents, config.Intents);
 		Assert.True(config.MobileStatus);

@@ -167,7 +167,7 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<KeyValuePair<ulong, DiscordMember>> Members
-		=> this.Guild.Members.Where(x => x.Value.RoleIds.Any(x => x == this.Id)).ToList();
+		=> [.. this.Guild.Members.Where(x => x.Value.RoleIds.Any(x => x == this.Id))];
 
 	/// <summary>
 	///     Checks whether this <see cref="DiscordRole" /> is equal to another <see cref="DiscordRole" />.
@@ -261,7 +261,7 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	public static bool operator !=(DiscordRole e1, DiscordRole e2)
 		=> !(e1 == e2);
 
-#region Methods
+	#region Methods
 
 	/// <summary>
 	///     Modifies this role's position.
@@ -376,7 +376,7 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	public Task DeleteAsync(string? reason = null)
 		=> this.Discord.ApiClient.DeleteRoleAsync(this.GuildId, this.Id, reason);
 
-#endregion
+	#endregion
 }
 
 /// <summary>

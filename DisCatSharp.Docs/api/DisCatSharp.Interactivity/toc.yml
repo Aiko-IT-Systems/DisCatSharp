@@ -19,10 +19,20 @@ items:
   - uid: DisCatSharp.Interactivity.InteractivityResult`1
     name: InteractivityResult<T>
     type: Struct
-  - uid: DisCatSharp.Interactivity.Page
+- uid: DisCatSharp.Interactivity.Entities
+  name: DisCatSharp.Interactivity.Entities
+  type: Namespace
+  items:
+  - uid: DisCatSharp.Interactivity.Entities.ModalPage
+    name: ModalPage
+    type: Class
+  - uid: DisCatSharp.Interactivity.Entities.Page
     name: Page
     type: Class
-  - uid: DisCatSharp.Interactivity.PaginationEmojis
+  - uid: DisCatSharp.Interactivity.Entities.PaginatedModalResponse
+    name: PaginatedModalResponse
+    type: Class
+  - uid: DisCatSharp.Interactivity.Entities.PaginationEmojis
     name: PaginationEmojis
     type: Class
 - uid: DisCatSharp.Interactivity.Enums
@@ -35,12 +45,6 @@ items:
   - uid: DisCatSharp.Interactivity.Enums.InteractionResponseBehavior
     name: InteractionResponseBehavior
     type: Enum
-  - uid: DisCatSharp.Interactivity.Enums.ModalPage
-    name: ModalPage
-    type: Class
-  - uid: DisCatSharp.Interactivity.Enums.PaginatedModalResponse
-    name: PaginatedModalResponse
-    type: Class
   - uid: DisCatSharp.Interactivity.Enums.PaginationBehaviour
     name: PaginationBehaviour
     type: Enum

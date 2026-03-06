@@ -208,7 +208,7 @@ To add the extensions `Interactivity` and `CommandsNext`:
 > -   `DiscordConfiguration`
 > -   `InteractivityConfiguration`
 > -   `LavalinkConfiguration`
-> -   `VoiceNextConfiguration`
+> -   `VoiceConfiguration`
 >
 > For more information, you can also see the [example](https://github.com/Aiko-IT-Systems/DisCatSharp.Examples/tree/main/Hosting).
 

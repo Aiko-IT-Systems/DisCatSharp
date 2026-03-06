@@ -36,14 +36,14 @@ Although most will compile and work at the time of writing, changes to the libra
 
 Many issues can be resolved with Intellisense by searching for similarly named methods and verifying method parameters.
 
-## Connecting to a voice channel with VoiceNext will either hang or throw an exception.
+## Connecting to a voice channel with Voice will either hang or throw an exception.
 
 To troubleshoot, please ensure that:
 
 -   You are using the latest version of DisCatSharp.
--   You have properly enabled VoiceNext with your instance of @DisCatSharp.DiscordClient.
--   You are _not_ using VoiceNext in an event handler.
--   You have [opus and libsodium](xref:modules_audio_voicenext_prerequisites) available in your target environment.
+-   You have properly enabled Voice with your instance of @DisCatSharp.DiscordClient.
+-   You are _not_ using Voice in an event handler.
+-   You have [libdave, opus and libsodium](xref:modules_audio_voice_prerequisites) available in your target environment.
 
 ## Why am I getting _heartbeat skipped_ message in my console?
 

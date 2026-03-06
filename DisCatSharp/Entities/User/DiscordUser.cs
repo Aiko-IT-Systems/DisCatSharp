@@ -596,7 +596,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	public static bool operator !=(DiscordUser? e1, DiscordUser? e2)
 		=> !(e1 == e2);
 
-#region Extension of DiscordUser
+	#region Extension of DiscordUser
 
 	/// <summary>
 	///     Whether this member is a <see cref="UserFlags.CertifiedModerator" />
@@ -658,9 +658,9 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	public bool IsStaff
 		=> this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.Staff);
 
-#endregion
+	#endregion
 
-#region OAuth2 Methods
+	#region OAuth2 Methods
 
 	/// <summary>
 	///     Gets the current user's connections.
@@ -773,7 +773,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	public async Task<DiscordApplicationRoleConnection> OAuth2UpdateApplicationRoleConnectionAsync(DiscordOAuth2Client oauth2Client, string platformName, string platformUsername, ApplicationRoleConnectionMetadata metadata)
 		=> this.AccessToken is not null ? await oauth2Client.UpdateCurrentUserApplicationRoleConnectionAsync(this.AccessToken, platformName, platformUsername, metadata) : throw new NullReferenceException("You need to specify the AccessToken on this DiscordUser entity.");
 
-#endregion
+	#endregion
 }
 
 /// <summary>

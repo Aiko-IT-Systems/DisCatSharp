@@ -127,7 +127,7 @@ public static class InteractionExtensions
 
 			if (ephemeralInteraction is not null && ephemeralMsg is not null)
 				ephemeralMsg = await ephemeralInteraction.EditOriginalResponseAsync(new DiscordWebhookBuilder().WithContent(b.OpenMessage).AddComponents(b.OpenButton));
-			
+
 			var (responses, selectResponses) = GetResponsesFromInteraction(modalResult.Result);
 			caughtResponses.AddRange(responses);
 			caughtSelectResponses.AddRange(selectResponses);

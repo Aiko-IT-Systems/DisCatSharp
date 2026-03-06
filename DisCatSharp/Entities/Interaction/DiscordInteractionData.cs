@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
 
-using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -30,7 +28,7 @@ public sealed class DiscordInteractionData : SnowflakeObject
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
 	internal List<DiscordComponent> ModalComponentsInternal { get; set; } = [];
-	
+
 	/// <summary>
 	///     Gets the submitted modal components.
 	///     <para>

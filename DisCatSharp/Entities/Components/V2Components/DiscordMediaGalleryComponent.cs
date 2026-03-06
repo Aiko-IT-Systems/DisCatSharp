@@ -44,7 +44,7 @@ public sealed class DiscordMediaGalleryComponent : DiscordComponent
 		if (it.Count > 10)
 			throw new ArgumentException("You can only have up to 10 items in a media gallery.");
 
-		this.Items = [..it];
+		this.Items = [.. it];
 	}
 
 	/// <summary>

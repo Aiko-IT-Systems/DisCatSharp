@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<Import Project="../DisCatSharp.Targets/Version.targets" />
+	<Import Project="../DisCatSharp.Targets/DisCatSharp.targets" />
+	<Import Project="../DisCatSharp.Targets/Package.targets" />
+	<Import Project="../DisCatSharp.Targets/Library.targets" />
+
+	<PropertyGroup>
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<RuntimeIdentifiers>win-x64;linux-x64;linux-arm64;osx-x64;osx-arm64</RuntimeIdentifiers>
+		<DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+		<IncludeSymbols>false</IncludeSymbols>
+		<SymbolPackageFormat>symbols.nupkg</SymbolPackageFormat>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<NoWarn>CS2008;CS8021</NoWarn>
+		<IsPackable>true</IsPackable>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<PackageId>DisCatSharp.Voice.Natives</PackageId>
+		<Description>
+			Natives for DisCatSharp Voice Extension
+
+			Manual Download: https://docs.dcs.aitsys.dev/natives/index.html
+		</Description>
+		<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord
+			Bots,AITSYS,Net8,Net9,Net10,Voice,Audio Player</PackageTags>
+
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Remove="**/*" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="runtimes/**/*" Pack="true" PackagePath="runtimes"
+			CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
+
+</Project>

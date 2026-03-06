@@ -1246,7 +1246,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordBulkBanResponse> BulkBanMembersAsync(List<DiscordMember> members, int deleteMessageSeconds = 0, string? reason = null)
-		=> this.Discord.ApiClient.CreateGuildBulkBanAsync(this.Id, members.Select(x => x.Id).ToList(), deleteMessageSeconds, reason);
+		=> this.Discord.ApiClient.CreateGuildBulkBanAsync(this.Id, [.. members.Select(x => x.Id)], deleteMessageSeconds, reason);
 
 	/// <summary>
 	///     Bulk bans a list of <see cref="DiscordUser" />s from this guild. This doesn't require the users to be in this
@@ -1269,7 +1269,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordBulkBanResponse> BulkBanMembersAsync(List<DiscordUser> users, int deleteMessageSeconds = 0, string? reason = null)
-		=> this.Discord.ApiClient.CreateGuildBulkBanAsync(this.Id, users.Select(x => x.Id).ToList(), deleteMessageSeconds, reason);
+		=> this.Discord.ApiClient.CreateGuildBulkBanAsync(this.Id, [.. users.Select(x => x.Id)], deleteMessageSeconds, reason);
 
 	/// <summary>
 	///     Bans a list of user IDs from this guild. This doesn't require the users to be in this guild.

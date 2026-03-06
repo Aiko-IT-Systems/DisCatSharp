@@ -7,9 +7,9 @@ namespace DisCatSharp.Experimental.Entities;
 /// </summary>
 public sealed class ScoreCursor
 {
-    /// <summary>
-    /// Gets or sets the score of the cursor.
-    /// </summary>
-    [JsonProperty("score")]
-    public double Score { get; set; }
+	/// <summary>
+	/// Gets or sets the score of the cursor.
+	/// </summary>
+	[JsonProperty("score")]
+	public double Score { get; set; }
 }

@@ -58,7 +58,7 @@ public class DiscordOverwrite : SnowflakeObject
 	public static implicit operator DiscordOverwriteBuilder(DiscordOverwrite b)
 		=> new(b);
 
-#region Methods
+	#region Methods
 
 	/// <summary>
 	///     Deletes this channel overwrite.
@@ -124,5 +124,5 @@ public class DiscordOverwrite : SnowflakeObject
 	public DiscordOverwriteBuilder ConvertToBuilder()
 		=> new(this);
 
-#endregion
+	#endregion
 }

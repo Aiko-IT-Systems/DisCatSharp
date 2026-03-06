@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Attributes;
@@ -371,7 +370,7 @@ public sealed class DiscordApiClient
 	private static IReadOnlyList<ulong> ParseTargetUsersCsv(string csvContent)
 	{
 		if (string.IsNullOrWhiteSpace(csvContent))
-			return Array.Empty<ulong>();
+			return [];
 
 		var lines = csvContent.Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries);
 		var ids = lines

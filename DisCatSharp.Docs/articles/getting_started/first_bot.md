@@ -68,8 +68,8 @@ The first results should be the DisCatSharp packages.
 |    `DisCatSharp.Interactivity`    |                                      Add-on which allows for interactive commands.                                      |
 |      `DisCatSharp.Lavalink`       |           Client implementation for [Lavalink](xref:modules_audio_lavalink_v4_intro). Useful for music bots.            |
 | `DisCatSharp.ApplicationCommands` |                              Add-on which makes dealing with application commands easier.                               |
-|      `DisCatSharp.VoiceNext`      |                              Add-on which enables connectivity to Discord voice channels.                               |
-|  `DisCatSharp.VoiceNext.Natives`  |                                                   Voice next natives.                                                   |
+|      `DisCatSharp.Voice`      |                              Add-on which enables connectivity to Discord voice channels.                               |
+|  `DisCatSharp.Voice.Natives`  |                                                   Voice natives.                                                   |
 |  `DisCatSharp.Analyzers.Roselyn`  | Our custom analyzer, providing extended IntelliSense functions. As example warns you about deprecated discord features. |
 
 <br/>

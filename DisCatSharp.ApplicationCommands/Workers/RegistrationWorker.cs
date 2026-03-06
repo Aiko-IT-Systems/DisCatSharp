@@ -324,7 +324,7 @@ internal class RegistrationWorker
 	private static List<ulong>? BuildGuildDeleteList(DiscordClient client, ulong guildId, List<DiscordApplicationCommand>? updateList = null)
 	{
 		if (ApplicationCommandsExtension.GuildDiscordCommands.Count is 0
-		    || !ApplicationCommandsExtension.GuildDiscordCommands!.TryGetFirstValueByKey(guildId, out var discord)
+			|| !ApplicationCommandsExtension.GuildDiscordCommands!.TryGetFirstValueByKey(guildId, out var discord)
 		)
 			return null;
 
@@ -377,8 +377,8 @@ internal class RegistrationWorker
 		) BuildGuildOverwriteList(DiscordClient client, ulong guildId, List<DiscordApplicationCommand>? updateList = null)
 	{
 		if (ApplicationCommandsExtension.GuildDiscordCommands.Count is 0
-		    || ApplicationCommandsExtension.GuildDiscordCommands.All(l => l.Key != guildId) || updateList is null
-		    || !ApplicationCommandsExtension.GuildDiscordCommands!.TryGetFirstValueByKey(guildId, out var discord)
+			|| ApplicationCommandsExtension.GuildDiscordCommands.All(l => l.Key != guildId) || updateList is null
+			|| !ApplicationCommandsExtension.GuildDiscordCommands!.TryGetFirstValueByKey(guildId, out var discord)
 		)
 			return (null, null);
 

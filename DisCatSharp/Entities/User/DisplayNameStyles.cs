@@ -1,8 +1,9 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Linq;
 
 using DisCatSharp.Enums;
-using System.Linq;
+
+using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;
 

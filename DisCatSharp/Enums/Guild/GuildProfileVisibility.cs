@@ -5,23 +5,23 @@ namespace DisCatSharp.Enums;
 /// </summary>
 public enum GuildProfileVisibility : int
 {
-    /// <summary>
-    ///    Not specified visibility.
-    /// </summary>
-    NotSpecified = 0,
+	/// <summary>
+	///    Not specified visibility.
+	/// </summary>
+	NotSpecified = 0,
 
-    /// <summary>
-    ///    Public visibility.
-    /// </summary>
-    Public = 1,
+	/// <summary>
+	///    Public visibility.
+	/// </summary>
+	Public = 1,
 
-    /// <summary>
-    ///    Restricted visibility.
-    /// </summary>
-    Restricted = 2,
+	/// <summary>
+	///    Restricted visibility.
+	/// </summary>
+	Restricted = 2,
 
-    /// <summary>
-    ///    Public with recruitment enabled.
-    /// </summary>
-    PublicWithRecruitment = 3
+	/// <summary>
+	///    Public with recruitment enabled.
+	/// </summary>
+	PublicWithRecruitment = 3
 }

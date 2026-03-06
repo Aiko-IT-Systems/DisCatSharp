@@ -22,9 +22,7 @@ internal class CompositeDefaultLogger : ILogger<BaseDiscordClient>
 	/// <param name="providers">The providers.</param>
 	public CompositeDefaultLogger(IEnumerable<ILoggerProvider> providers)
 	{
-		this._loggers = providers.Select(x => x.CreateLogger(typeof(BaseDiscordClient).FullName!))
-			.OfType<ILogger<BaseDiscordClient>>()
-			.ToList();
+		this._loggers = [.. providers.Select(x => x.CreateLogger(typeof(BaseDiscordClient).FullName!)).OfType<ILogger<BaseDiscordClient>>()];
 	}
 
 	/// <summary>

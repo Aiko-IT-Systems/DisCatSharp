@@ -44,12 +44,8 @@ internal class CollectRequest<T> : IDisposable where T : AsyncEventArgs
 		this.Ct.Dispose();
 		this.Tcs = null;
 		this.Predicate = null;
-
-		if (this.Collected != null)
-		{
-			this.Collected.Clear();
-			this.Collected = null;
-		}
+		this.Collected?.Clear();
+		this.Collected = null;
 
 		GC.SuppressFinalize(this);
 	}

@@ -73,7 +73,7 @@ public sealed class CommandContext : DisCatSharpCommandContext
 	/// <inheritdoc />
 	public override string FullCommandName
 		=> this.Command.QualifiedName;
-	
+
 	/// <inheritdoc />
 	public override string CommandName
 		=> this.Command.Name;

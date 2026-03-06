@@ -99,8 +99,8 @@ Either join our official support guild at https://discord.gg/RXA6u3jxdU, open an
 | Package                       | Stable                                                                                                         | Nightly                                                                                                                           |
 | ----------------------------- | -------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | DisCatSharp.Lavalink          | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Lavalink.svg?label=&logo=nuget&style=flat-square)          | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Lavalink.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)          |
-| DisCatSharp.VoiceNext         | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.VoiceNext.svg?label=&logo=nuget&style=flat-square)         | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.VoiceNext.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)         |
-| DisCatSharp.VoiceNext.Natives | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.VoiceNext.Natives.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.VoiceNext.Natives.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
+| DisCatSharp.Voice         | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Voice.svg?label=&logo=nuget&style=flat-square)         | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Voice.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)         |
+| DisCatSharp.Voice.Natives | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Voice.Natives.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Voice.Natives.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
 
 ### Hosting
 

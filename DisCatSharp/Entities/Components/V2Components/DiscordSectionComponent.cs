@@ -44,7 +44,7 @@ public sealed class DiscordSectionComponent : DiscordComponent
 		if (comps.Count > 3)
 			throw new ArgumentException("You can only have up to 3 components in a section.");
 
-		this.Components = [..comps];
+		this.Components = [.. comps];
 	}
 
 	/// <summary>

@@ -9,10 +9,6 @@ namespace DisCatSharp.EventArgs;
 /// </summary>
 public class PayloadReceivedEventArgs : DiscordEventArgs
 {
-	/// <summary>
-	///     Gets the json.
-	/// </summary>
-	private string _json;
 
 	/// <summary>
 	///     Initializes a new instance of the <see cref="PayloadReceivedEventArgs" /> class.
@@ -28,10 +24,12 @@ public class PayloadReceivedEventArgs : DiscordEventArgs
 	{
 		get
 		{
-			if (string.IsNullOrWhiteSpace(this._json))
-				this._json = this.PayloadObject.ToString();
-			return this._json;
+			if (string.IsNullOrWhiteSpace(field))
+				field = this.PayloadObject.ToString();
+			return field;
 		}
+
+		private set;
 	}
 
 	/// <summary>

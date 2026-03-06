@@ -106,9 +106,9 @@ public enum ApplicationVerificationEligibilityFlags : long
 	///     The application is eligible for verification.
 	/// </summary>
 	EligibleForVerification = HasTeam | SafeApplicationName | SafeApplicationDescription | SafeApplicationRoleConnectionsMetadata |
-	                          TermsOfService | PrivacyPolicy | InviteLink | NotEmbedded | NoUnapprovedIntents | UserIsTeamOwner |
-	                          TeamOwnerIsVerified | User2FaEnabled | UserEmailVerified | TeamMembersEmailVerified | TeamMembers2FaEnabled |
-	                          NoBlockingIssues,
+							  TermsOfService | PrivacyPolicy | InviteLink | NotEmbedded | NoUnapprovedIntents | UserIsTeamOwner |
+							  TeamOwnerIsVerified | User2FaEnabled | UserEmailVerified | TeamMembersEmailVerified | TeamMembers2FaEnabled |
+							  NoBlockingIssues,
 
 	/// <summary>
 	///      The flags are unknown.

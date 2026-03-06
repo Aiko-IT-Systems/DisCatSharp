@@ -257,6 +257,40 @@ public class WebSocketClient : IWebSocketClient
 	}
 
 	/// <summary>
+	///     Send a binary message to the WebSocket server.
+	/// </summary>
+	/// <param name="data">The binary data to send.</param>
+	public async Task SendMessageAsync(byte[] data)
+	{
+		if (this._ws is null)
+			return;
+
+		if (this._ws.State is not WebSocketState.Open && this._ws.State is not WebSocketState.CloseReceived)
+			return;
+
+		await this._senderLock.WaitAsync(CancellationToken.None).ConfigureAwait(false);
+		try
+		{
+			var len = data.Length;
+			var segCount = len / OUTGOING_CHUNK_SIZE;
+			if (len % OUTGOING_CHUNK_SIZE != 0)
+				segCount++;
+
+			for (var i = 0; i < segCount; i++)
+			{
+				var segStart = OUTGOING_CHUNK_SIZE * i;
+				var segLen = Math.Min(OUTGOING_CHUNK_SIZE, len - segStart);
+
+				await this._ws.SendAsync(new(data, segStart, segLen), WebSocketMessageType.Binary, i == segCount - 1, CancellationToken.None).ConfigureAwait(false);
+			}
+		}
+		finally
+		{
+			this._senderLock.Release();
+		}
+	}
+
+	/// <summary>
 	///     Adds a header to the default header collection.
 	/// </summary>
 	/// <param name="name">Name of the header to add.</param>
@@ -390,7 +424,7 @@ public class WebSocketClient : IWebSocketClient
 	public static IWebSocketClient CreateNew(IWebProxy proxy, IServiceProvider provider)
 		=> new WebSocketClient(proxy, provider);
 
-#region Events
+	#region Events
 
 	/// <summary>
 	///     Triggered when the client connects successfully.
@@ -468,5 +502,5 @@ public class WebSocketClient : IWebSocketClient
 			Exception = ex
 		}).ConfigureAwait(false).GetAwaiter().GetResult();
 
-#endregion
+	#endregion
 }

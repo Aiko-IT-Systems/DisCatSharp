@@ -71,14 +71,18 @@ items:
                         uid: modules_audio_lavalink_v4_queue_system
                       - name: Advanced
                         uid: modules_audio_lavalink_v4_advanced
-                - name: VoiceNext
+                - name: Voice
                   items:
                       - name: Prerequisites
-                        uid: modules_audio_voicenext_prerequisites
+                        uid: modules_audio_voice_prerequisites
                       - name: Transmitting
-                        uid: modules_audio_voicenext_transmit
+                        uid: modules_audio_voice_transmit
                       - name: Receiving
-                        uid: modules_audio_voicenext_receive
+                        uid: modules_audio_voice_receive
+                      - name: Architecture
+                        uid: modules_audio_voice_architecture
+                      - name: Migration Guide
+                        uid: modules_audio_voice_migration
           - name: OAuth2
             items:
                 - name: DiscordOAuth2Client

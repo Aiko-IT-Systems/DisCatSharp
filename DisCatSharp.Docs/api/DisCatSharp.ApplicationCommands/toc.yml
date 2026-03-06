@@ -38,8 +38,8 @@ items:
   - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireGuildAttribute
     name: ApplicationCommandRequireGuildAttribute
     type: Class
-  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireGuildOwnerAttributeAttribute
-    name: ApplicationCommandRequireGuildOwnerAttributeAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireGuildOwnerAttribute
+    name: ApplicationCommandRequireGuildOwnerAttribute
     type: Class
   - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireNsfwAttribute
     name: ApplicationCommandRequireNsfwAttribute

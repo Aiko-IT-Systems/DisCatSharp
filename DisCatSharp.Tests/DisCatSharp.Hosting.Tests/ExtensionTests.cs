@@ -84,11 +84,11 @@ public class HostExtensionTests
 		Assert.Equal("LavalinkExtension", last.Key, true);
 	}
 
-#region Reference to external assemblies - required to ensure they're loaded
+	#region Reference to external assemblies - required to ensure they're loaded
 
 	private InteractivityConfiguration? _interactivityConfig = null;
 	private LavalinkConfiguration? _lavalinkConfig = null;
 	private DiscordConfiguration? _discordConfig = null;
 
-#endregion
+	#endregion
 }

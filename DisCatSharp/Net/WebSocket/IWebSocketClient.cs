@@ -56,6 +56,12 @@ public interface IWebSocketClient : IDisposable
 	Task SendMessageAsync(string message);
 
 	/// <summary>
+	///     Send a binary message to the WebSocket server.
+	/// </summary>
+	/// <param name="data">The binary data to send.</param>
+	Task SendMessageAsync(byte[] data);
+
+	/// <summary>
 	///     Adds a header to the default header collection.
 	/// </summary>
 	/// <param name="name">Name of the header to add.</param>

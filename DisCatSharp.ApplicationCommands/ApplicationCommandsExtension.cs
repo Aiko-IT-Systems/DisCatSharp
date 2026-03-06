@@ -1476,12 +1476,12 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	internal async Task RunCommandAsync(BaseContext context, MethodInfo method, IEnumerable<object> args)
 	{
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Executing {cmd}", method.Name);
-		
+
 		try
 		{
 			//Accounts for lifespans
 			var moduleLifespan = (method.DeclaringType.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null ? method.DeclaringType.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>()?.Lifespan : ApplicationCommandModuleLifespan.Transient) ?? ApplicationCommandModuleLifespan.Transient;
-			
+
 			// Create service scope for scoped modules and store in context for disposal
 			IServiceProvider serviceProvider;
 			if (moduleLifespan == ApplicationCommandModuleLifespan.Scoped && Configuration?.ServiceProvider != null)
@@ -1493,7 +1493,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			{
 				serviceProvider = Configuration?.ServiceProvider;
 			}
-			
+
 			var classInstance = moduleLifespan switch
 			{
 				ApplicationCommandModuleLifespan.Scoped =>
@@ -1665,7 +1665,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				{
 					//Checks through resolved
 					if (e.Interaction.Data.Resolved.Attachments != null &&
-					    e.Interaction.Data.Resolved.Attachments.TryGetValue((ulong)option.Value, out var attachment))
+						e.Interaction.Data.Resolved.Attachments.TryGetValue((ulong)option.Value, out var attachment))
 						args.Add(attachment);
 					else
 						args.Add(new DiscordAttachment
@@ -1678,10 +1678,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				{
 					//Checks through resolved
 					if (e.Interaction.Data.Resolved.Members != null &&
-					    e.Interaction.Data.Resolved.Members.TryGetValue((ulong)option.Value, out var member))
+						e.Interaction.Data.Resolved.Members.TryGetValue((ulong)option.Value, out var member))
 						args.Add(member);
 					else if (e.Interaction.Data.Resolved.Users != null &&
-					         e.Interaction.Data.Resolved.Users.TryGetValue((ulong)option.Value, out var user))
+							 e.Interaction.Data.Resolved.Users.TryGetValue((ulong)option.Value, out var user))
 						args.Add(user);
 					else
 						args.Add(await this.Client.GetUserAsync((ulong)option.Value).ConfigureAwait(false));
@@ -1690,7 +1690,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				{
 					//Checks through resolved
 					if (e.Interaction.Data.Resolved.Channels != null &&
-					    e.Interaction.Data.Resolved.Channels.TryGetValue((ulong)option.Value, out var channel))
+						e.Interaction.Data.Resolved.Channels.TryGetValue((ulong)option.Value, out var channel))
 						args.Add(channel);
 					else
 						args.Add(e.Interaction.Guild.GetChannel((ulong)option.Value));
@@ -1699,7 +1699,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				{
 					//Checks through resolved
 					if (e.Interaction.Data.Resolved.Roles != null &&
-					    e.Interaction.Data.Resolved.Roles.TryGetValue((ulong)option.Value, out var role))
+						e.Interaction.Data.Resolved.Roles.TryGetValue((ulong)option.Value, out var role))
 						args.Add(role);
 					else
 						args.Add(e.Interaction.Guild.GetRole((ulong)option.Value));
@@ -2311,7 +2311,7 @@ internal sealed class DefaultHelpModule : ApplicationCommandsModule
 					.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
 					.GroupBy(ac => ac.Name).Select(x => x.First())
 					.ToList();
-				
+
 				if (context.Options.Count > 0 && !string.IsNullOrEmpty(context.Options[0].Value?.ToString()))
 					slashCommands = slashCommands.Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
 			}
@@ -2351,7 +2351,7 @@ internal sealed class DefaultHelpModule : ApplicationCommandsModule
 			else
 			{
 				var opt = command.Options.Where(c => c.Type is ApplicationCommandOptionType.SubCommandGroup or ApplicationCommandOptionType.SubCommand
-				                                     && c.Name.StartsWith(context.Options[1].Value.ToString(), StringComparison.InvariantCultureIgnoreCase)).ToList();
+													 && c.Name.StartsWith(context.Options[1].Value.ToString(), StringComparison.InvariantCultureIgnoreCase)).ToList();
 				options.AddRange(opt.Take(25).Select(option => new DiscordApplicationCommandAutocompleteChoice(option.Name, option.Name.Trim())));
 			}
 
@@ -2396,7 +2396,7 @@ internal sealed class DefaultHelpModule : ApplicationCommandsModule
 			else
 			{
 				var opt = foundCommand.Options.Where(x => x.Type == ApplicationCommandOptionType.SubCommand &&
-				                                          x.Name.StartsWith(context.Options[2].Value.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
+														  x.Name.StartsWith(context.Options[2].Value.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
 				options.AddRange(opt.Take(25).Select(option => new DiscordApplicationCommandAutocompleteChoice(option.Name, option.Name.Trim())));
 			}
 
@@ -2568,7 +2568,7 @@ internal sealed class DefaultUserAppsHelpModule : ApplicationCommandsModule
 					.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
 					.GroupBy(ac => ac.Name).Select(x => x.First())
 					.ToList();
-				
+
 				if (context.Options.Count > 0 && !string.IsNullOrEmpty(context.Options[0].Value?.ToString()))
 					slashCommands = slashCommands.Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
 			}
@@ -2579,7 +2579,7 @@ internal sealed class DefaultUserAppsHelpModule : ApplicationCommandsModule
 					.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
 					.GroupBy(ac => ac.Name).Select(x => x.First())
 					.ToList();
-				
+
 				if (context.Options.Count > 0 && !string.IsNullOrEmpty(context.Options[0].Value?.ToString()))
 					slashCommands = slashCommands.Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
 			}
@@ -2619,7 +2619,7 @@ internal sealed class DefaultUserAppsHelpModule : ApplicationCommandsModule
 			else
 			{
 				var opt = command.Options.Where(c => c.Type is ApplicationCommandOptionType.SubCommandGroup or ApplicationCommandOptionType.SubCommand
-				                                     && c.Name.StartsWith(context.Options[1].Value.ToString(), StringComparison.InvariantCultureIgnoreCase)).ToList();
+													 && c.Name.StartsWith(context.Options[1].Value.ToString(), StringComparison.InvariantCultureIgnoreCase)).ToList();
 				options.AddRange(opt.Take(25).Select(option => new DiscordApplicationCommandAutocompleteChoice(option.Name, option.Name.Trim())));
 			}
 
@@ -2664,7 +2664,7 @@ internal sealed class DefaultUserAppsHelpModule : ApplicationCommandsModule
 			else
 			{
 				var opt = foundCommand.Options.Where(x => x.Type == ApplicationCommandOptionType.SubCommand &&
-				                                          x.Name.StartsWith(context.Options[2].Value.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
+														  x.Name.StartsWith(context.Options[2].Value.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
 				options.AddRange(opt.Take(25).Select(option => new DiscordApplicationCommandAutocompleteChoice(option.Name, option.Name.Trim())));
 			}
 

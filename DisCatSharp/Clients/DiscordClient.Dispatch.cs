@@ -28,7 +28,7 @@ namespace DisCatSharp;
 /// </summary>
 public sealed partial class DiscordClient
 {
-#region Dispatch Handler
+	#region Dispatch Handler
 
 	/// <summary>
 	///     Handles the dispatch payloads.
@@ -49,7 +49,7 @@ public sealed partial class DiscordClient
 				PayloadObject = dat
 			}).ConfigureAwait(false);
 
-#region Default objects
+		#region Default objects
 
 		var payloadString = dat.ToString();
 		DiscordChannel chn;
@@ -73,11 +73,11 @@ public sealed partial class DiscordClient
 		JoinRequestStatusType joinRequestStatusType = default;
 		var rawRefMsg = dat["referenced_message"]; // TODO: Can we remove this?
 
-#endregion
+		#endregion
 
 		switch (payload.EventName.ToLowerInvariant())
 		{
-#region Gateway Status
+			#region Gateway Status
 
 			case "ready":
 				var glds = (JArray)dat["guilds"]!;
@@ -88,9 +88,9 @@ public sealed partial class DiscordClient
 				await this.OnResumedAsync().ConfigureAwait(false);
 				break;
 
-#endregion
+			#endregion
 
-#region Channel
+			#region Channel
 
 			case "channel_create":
 				chn = DiscordJson.DeserializeObject<DiscordChannel>(payloadString, this);
@@ -130,9 +130,9 @@ public sealed partial class DiscordClient
 				// It's fired incorrectly.
 				break;
 
-#endregion
+			#endregion
 
-#region Guild
+			#region Guild
 
 			case "guild_create":
 				await this.OnGuildCreateEventAsync(dat.ToDiscordObject<DiscordGuild>(), (JArray)dat["members"]!, dat["presences"]!.ToDiscordObject<IEnumerable<DiscordPresence>>()).ConfigureAwait(false);
@@ -205,7 +205,7 @@ public sealed partial class DiscordClient
 						await channel.SendMessageAsync(payload.EventName + "\n" + dat.ToString(Formatting.Indented).BlockCode("json"));
 					});
 				}
-			break;
+				break;
 
 			case "guild_applied_boosts_delete":
 				if (this.CurrentApplication.Id is 822242444070092860)
@@ -216,9 +216,9 @@ public sealed partial class DiscordClient
 						await channel.SendMessageAsync(payload.EventName + "\n" + dat.ToString(Formatting.Indented).BlockCode("json"));
 					});
 				}
-			break;
+				break;
 
-#endregion
+			#endregion
 
 			#region Guild Automod
 
@@ -236,9 +236,9 @@ public sealed partial class DiscordClient
 				await this.OnAutomodActionExecuted(this.GuildsInternal[gid], dat).ConfigureAwait(false);
 				break;
 
-#endregion
+			#endregion
 
-#region Guild Ban
+			#region Guild Ban
 
 			case "guild_ban_add":
 				usr = DiscordJson.DeserializeObject<TransportUser>(dat["user"]!.ToString(), this);
@@ -252,9 +252,9 @@ public sealed partial class DiscordClient
 				await this.OnGuildBanRemoveEventAsync(usr, this.GuildsInternal[gid]).ConfigureAwait(false);
 				break;
 
-#endregion
+			#endregion
 
-#region Guild Event
+			#region Guild Event
 
 			case "guild_scheduled_event_create":
 				gse = DiscordJson.DeserializeObject<DiscordScheduledEvent>(payloadString, this);
@@ -286,9 +286,9 @@ public sealed partial class DiscordClient
 				await this.OnGuildScheduledEventUserRemovedEventAsync((ulong)dat["guild_scheduled_event_id"]!, uid, this.GuildsInternal[gid]).ConfigureAwait(false);
 				break;
 
-#endregion
+			#endregion
 
-#region Guild Integration
+			#region Guild Integration
 
 			case "integration_create":
 				gid = (ulong)dat["guild_id"]!;
@@ -322,9 +322,9 @@ public sealed partial class DiscordClient
 				await this.OnGuildIntegrationDeleteEventAsync(idGuildVal, (ulong)dat["id"], (ulong?)dat["application_id"]).ConfigureAwait(false);
 				break;
 
-#endregion
+			#endregion
 
-#region Guild Member
+			#region Guild Member
 
 			case "guild_member_add":
 				gid = (ulong)dat["guild_id"]!;
@@ -355,9 +355,9 @@ public sealed partial class DiscordClient
 				await this.OnGuildMembersChunkEventAsync(dat).ConfigureAwait(false);
 				break;
 
-#endregion
+			#endregion
 
-#region Guild Role
+			#region Guild Role
 
 			case "guild_role_create":
 				gid = (ulong)dat["guild_id"]!;
@@ -374,9 +374,9 @@ public sealed partial class DiscordClient
 				await this.OnGuildRoleDeleteEventAsync((ulong)dat["role_id"]!, this.GuildsInternal[gid]).ConfigureAwait(false);
 				break;
 
-#endregion
+			#endregion
 
-#region Soundboard Sounds
+			#region Soundboard Sounds
 
 			case "guild_soundboard_sound_create":
 				gid = (ulong)dat["guild_id"]!;
@@ -404,9 +404,9 @@ public sealed partial class DiscordClient
 				await this.OnSoundboardSoundsEventAsync(sounds, gid).ConfigureAwait(false);
 				break;
 
-#endregion
+			#endregion
 
-#region Guild Member Applications
+			#region Guild Member Applications
 
 			// TODO: This is so fucked..
 			case "guild_join_request_create":
@@ -431,9 +431,9 @@ public sealed partial class DiscordClient
 				await this.OnGuildJoinRequestDeleteAsync(requestId, uid, this.Guilds[gid]).ConfigureAwait(false);
 				break;
 
-#endregion
+			#endregion
 
-#region Invite
+			#region Invite
 
 			case "invite_create":
 				gid = (ulong)dat["guild_id"]!;
@@ -447,9 +447,9 @@ public sealed partial class DiscordClient
 				await this.OnInviteDeleteEventAsync(cid, gid, dat).ConfigureAwait(false);
 				break;
 
-#endregion
+			#endregion
 
-#region Message
+			#region Message
 
 			case "message_ack":
 				cid = (ulong)dat["channel_id"]!;
@@ -508,9 +508,9 @@ public sealed partial class DiscordClient
 				await this.OnMessagePollVoteRemoveEventAsync(dat).ConfigureAwait(false);
 				break;
 
-#endregion
+			#endregion
 
-#region Message Reaction
+			#region Message Reaction
 
 			case "message_reaction_add":
 				rawMbr = dat["member"]!;
@@ -533,9 +533,9 @@ public sealed partial class DiscordClient
 				await this.OnMessageReactionRemoveEmojiAsync((ulong)dat["message_id"]!, (ulong)dat["channel_id"]!, (ulong)dat["guild_id"]!, DiscordJson.DeserializeObject<DiscordEmoji>(dat["emoji"]!.ToString(), this)).ConfigureAwait(false);
 				break;
 
-#endregion
+			#endregion
 
-#region Stage Instance
+			#region Stage Instance
 
 			case "stage_instance_create":
 				stg = DiscordJson.DeserializeObject<DiscordStageInstance>(payloadString, this);
@@ -552,9 +552,9 @@ public sealed partial class DiscordClient
 				await this.OnStageInstanceDeleteEventAsync(stg).ConfigureAwait(false);
 				break;
 
-#endregion
+			#endregion
 
-#region Thread
+			#region Thread
 
 			case "thread_create":
 				trd = DiscordJson.DeserializeObject<DiscordThreadChannel>(payloadString, this);
@@ -589,9 +589,9 @@ public sealed partial class DiscordClient
 				await this.OnThreadMembersUpdateEventAsync(this.GuildsInternal[gid], (ulong)dat["id"]!, (JArray)dat["added_members"]!, (JArray)dat["removed_member_ids"]!, (int)dat["member_count"]!).ConfigureAwait(false);
 				break;
 
-#endregion
+			#endregion
 
-#region Activities
+			#region Activities
 
 			case "embedded_activity_update":
 				gid = (ulong)dat["guild_id"]!;
@@ -599,9 +599,9 @@ public sealed partial class DiscordClient
 				await this.OnEmbeddedActivityUpdateAsync((JObject)dat["embedded_activity"]!, this.GuildsInternal[gid], cid, (JArray)dat["users"]!, (ulong)dat["embedded_activity"]["application_id"]!).ConfigureAwait(false);
 				break;
 
-#endregion
+			#endregion
 
-#region User/Presence Update
+			#region User/Presence Update
 
 			case "presence_update":
 				await this.OnPresenceUpdateEventAsync(dat, (JObject)dat["user"]!).ConfigureAwait(false);
@@ -617,9 +617,9 @@ public sealed partial class DiscordClient
 				await this.OnUserUpdateEventAsync(usr).ConfigureAwait(false);
 				break;
 
-#endregion
+			#endregion
 
-#region Voice
+			#region Voice
 
 			case "voice_state_update":
 				await this.OnVoiceStateUpdateEventAsync(dat).ConfigureAwait(false);
@@ -637,9 +637,9 @@ public sealed partial class DiscordClient
 				await this.OnVoiceChannelEffectSendEventAsync(gid, cid, uid, dat);
 				break;
 
-#endregion
+			#endregion
 
-#region Interaction/Integration/Application
+			#region Interaction/Integration/Application
 
 			case "interaction_create":
 				rawMbr = dat["member"]!;
@@ -691,9 +691,9 @@ public sealed partial class DiscordClient
 				await this.OnApplicationCommandPermissionsUpdateAsync(pms, (ulong)dat["id"]!, gid, aid).ConfigureAwait(false);
 				break;
 
-#endregion
+			#endregion
 
-#region Misc
+			#region Misc
 
 			case "gift_code_update": //Not supposed to be dispatched to bots
 				break;
@@ -740,7 +740,7 @@ public sealed partial class DiscordClient
 				this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Unknown event: {name}\npayload: {payload}", payload.EventName, dat.ToString(Formatting.Indented));
 				break;
 
-#endregion
+			#endregion
 		}
 	}
 
@@ -768,11 +768,11 @@ public sealed partial class DiscordClient
 	/// </summary>
 	private readonly Lock _guildDownloadCompletedLock = new();
 
-#endregion
+	#endregion
 
-#region Events
+	#region Events
 
-#region Gateway
+	#region Gateway
 
 	/// <summary>
 	///     Handles the ready event.
@@ -926,9 +926,9 @@ public sealed partial class DiscordClient
 		return this._resumed.InvokeAsync(this, new(this.ServiceProvider));
 	}
 
-#endregion
+	#endregion
 
-#region Channel
+	#region Channel
 
 	/// <summary>
 	///     Handles the channel create event.
@@ -1179,9 +1179,9 @@ public sealed partial class DiscordClient
 		await this._voiceChannelStartTimeUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 
-#region Guild
+	#region Guild
 
 	/// <summary>
 	///     Handles the guild create event.
@@ -1707,9 +1707,9 @@ public sealed partial class DiscordClient
 		await this._automodActionExecuted.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 
-#region Guild Ban
+	#region Guild Ban
 
 	/// <summary>
 	///     Handles the guild ban add event.
@@ -1779,9 +1779,9 @@ public sealed partial class DiscordClient
 		await this._guildBanRemoved.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 
-#region Guild Scheduled Event
+	#region Guild Scheduled Event
 
 	/// <summary>
 	///     Handles the scheduled event create event.
@@ -2002,9 +2002,9 @@ public sealed partial class DiscordClient
 		}).ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 
-#region Guild Integration
+	#region Guild Integration
 
 	/// <summary>
 	///     Handles the guild integration create event.
@@ -2083,9 +2083,9 @@ public sealed partial class DiscordClient
 			ApplicationId = applicationId
 		}).ConfigureAwait(false);
 
-#endregion
+	#endregion
 
-#region Guild Member
+	#region Guild Member
 
 	/// <summary>
 	///     Handles the guild member add event.
@@ -2389,9 +2389,9 @@ public sealed partial class DiscordClient
 		await this._guildMembersChunked.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 
-#region Guild Role
+	#region Guild Role
 
 	/// <summary>
 	///     Handles the guild role create event.
@@ -2477,9 +2477,9 @@ public sealed partial class DiscordClient
 		await this._guildRoleDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 
-#region Guild Soundboard Sounds
+	#region Guild Soundboard Sounds
 
 	/// <summary>
 	///     Handles the guild soundboard sound create event.
@@ -2582,9 +2582,9 @@ public sealed partial class DiscordClient
 			}).ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 
-#region Invite
+	#region Invite
 
 	/// <summary>
 	///     Handles the invite create event.
@@ -2669,9 +2669,9 @@ public sealed partial class DiscordClient
 		await this._inviteDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 
-#region Guild Member Application
+	#region Guild Member Application
 
 	/// <summary>
 	///     Handles the guild join request create event.
@@ -2729,9 +2729,9 @@ public sealed partial class DiscordClient
 		await this._guildJoinRequestDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 
-#region Message
+	#region Message
 
 	/// <summary>
 	///     Handles the message acknowledge event.
@@ -2826,8 +2826,8 @@ public sealed partial class DiscordClient
 
 		DiscordMessage oldmsg = null;
 		if (this.Configuration.MessageCacheSize == 0
-		    || this.MessageCache == null
-		    || !this.MessageCache.TryGet(xm => xm.Id == eventMessage.Id && xm.ChannelId == eventMessage.ChannelId, out message))
+			|| this.MessageCache == null
+			|| !this.MessageCache.TryGet(xm => xm.Id == eventMessage.Id && xm.ChannelId == eventMessage.ChannelId, out message))
 		{
 			message = eventMessage;
 			this.PopulateMessageReactionsAndCache(message, author, member);
@@ -2915,9 +2915,9 @@ public sealed partial class DiscordClient
 		var guild = this.InternalGetCachedGuild(guildId);
 
 		if (channel == null
-		    || this.Configuration.MessageCacheSize == 0
-		    || this.MessageCache == null
-		    || !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
+			|| this.Configuration.MessageCacheSize == 0
+			|| this.MessageCache == null
+			|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
 			msg = new()
 			{
 				Id = messageId,
@@ -2951,9 +2951,9 @@ public sealed partial class DiscordClient
 		foreach (var messageId in messageIds)
 		{
 			if (channel == null
-			    || this.Configuration.MessageCacheSize == 0
-			    || this.MessageCache == null
-			    || !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
+				|| this.Configuration.MessageCacheSize == 0
+				|| this.MessageCache == null
+				|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
 				msg = new()
 				{
 					Id = messageId,
@@ -2999,9 +2999,9 @@ public sealed partial class DiscordClient
 			};
 
 		if (channel == null
-		    || this.Configuration.MessageCacheSize == 0
-		    || this.MessageCache == null
-		    || !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var message))
+			|| this.Configuration.MessageCacheSize == 0
+			|| this.MessageCache == null
+			|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var message))
 			message = new()
 			{
 				Id = messageId,
@@ -3048,9 +3048,9 @@ public sealed partial class DiscordClient
 			};
 
 		if (channel == null
-		    || this.Configuration.MessageCacheSize == 0
-		    || this.MessageCache == null
-		    || !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var message))
+			|| this.Configuration.MessageCacheSize == 0
+			|| this.MessageCache == null
+			|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var message))
 			message = new()
 			{
 				Id = messageId,
@@ -3074,11 +3074,11 @@ public sealed partial class DiscordClient
 		await this._messagePollVoteRemoved.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 
 	// BUG: Possible ratelimit bug in big guilds like Belugang due to message fetching and message cache
 
-#region Message Reaction
+	#region Message Reaction
 
 	/// <summary>
 	///     Handles the message reaction add event.
@@ -3110,9 +3110,9 @@ public sealed partial class DiscordClient
 		}, guildId, guild, mbr);
 
 		if (channel == null
-		    || this.Configuration.MessageCacheSize == 0
-		    || this.MessageCache == null
-		    || !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
+			|| this.Configuration.MessageCacheSize == 0
+			|| this.MessageCache == null
+			|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
 			msg = new()
 			{
 				Id = messageId,
@@ -3186,9 +3186,9 @@ public sealed partial class DiscordClient
 				};
 
 		if (channel == null
-		    || this.Configuration.MessageCacheSize == 0
-		    || this.MessageCache == null
-		    || !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
+			|| this.Configuration.MessageCacheSize == 0
+			|| this.MessageCache == null
+			|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
 			msg = new()
 			{
 				Id = messageId,
@@ -3240,9 +3240,9 @@ public sealed partial class DiscordClient
 		};
 
 		if (channel == null
-		    || this.Configuration.MessageCacheSize == 0
-		    || this.MessageCache == null
-		    || !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
+			|| this.Configuration.MessageCacheSize == 0
+			|| this.MessageCache == null
+			|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
 			msg = new()
 			{
 				Id = messageId,
@@ -3276,9 +3276,9 @@ public sealed partial class DiscordClient
 		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
 
 		if (channel == null
-		    || this.Configuration.MessageCacheSize == 0
-		    || this.MessageCache == null
-		    || !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
+			|| this.Configuration.MessageCacheSize == 0
+			|| this.MessageCache == null
+			|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
 			msg = new()
 			{
 				Id = messageId,
@@ -3305,9 +3305,9 @@ public sealed partial class DiscordClient
 		await this._messageReactionRemovedEmoji.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 
-#region Stage Instance
+	#region Stage Instance
 
 	/// <summary>
 	///     Handles the stage instance create event.
@@ -3361,9 +3361,9 @@ public sealed partial class DiscordClient
 		}).ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 
-#region Thread
+	#region Thread
 
 	/// <summary>
 	///     Handles the thread create event.
@@ -3609,9 +3609,9 @@ public sealed partial class DiscordClient
 		await this._threadMembersUpdated.InvokeAsync(this, threadMembersUpdateArg).ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 
-#region Activities
+	#region Activities
 
 	/// <summary>
 	///     Dispatches the <see cref="EmbeddedActivityUpdated" /> event.
@@ -3672,9 +3672,9 @@ public sealed partial class DiscordClient
             }
         }*/
 
-#endregion
+	#endregion
 
-#region User/Presence Update
+	#region User/Presence Update
 
 	/// <summary>
 	///     Handles the presence update event.
@@ -3696,7 +3696,7 @@ public sealed partial class DiscordClient
 			presence = DiscordJson.DeserializeObject<DiscordPresence>(rawPresence.ToString(), this);
 			;
 			presence.Discord = this;
-			presence.Activity = presence.RawActivity is not null ? new(presence.RawActivity): null;
+			presence.Activity = presence.RawActivity is not null ? new(presence.RawActivity) : null;
 			this.PresencesInternal[presence.InternalUser.Id] = presence;
 		}
 
@@ -3790,9 +3790,9 @@ public sealed partial class DiscordClient
 		await this._userUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 
-#region Voice
+	#region Voice
 
 	/// <summary>
 	///     Handles the voice state update event.
@@ -3906,9 +3906,9 @@ public sealed partial class DiscordClient
 		await this._voiceChannelEffectSend.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 
-#region Commands
+	#region Commands
 
 	/// <summary>
 	///     Handles the application command create event.
@@ -4059,9 +4059,9 @@ public sealed partial class DiscordClient
 		await this._applicationCommandPermissionsUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 
-#region Interaction
+	#region Interaction
 
 	/// <summary>
 	///     Handles the interaction create event.
@@ -4227,9 +4227,9 @@ public sealed partial class DiscordClient
 		}
 	}
 
-#endregion
+	#endregion
 
-#region Misc
+	#region Misc
 
 	/// <summary>
 	///     Handles the entitlement create event.
@@ -4360,7 +4360,7 @@ public sealed partial class DiscordClient
 		await this._unknownEvent.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 
-#endregion
+	#endregion
 }
