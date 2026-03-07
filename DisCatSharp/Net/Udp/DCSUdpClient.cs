@@ -12,6 +12,8 @@ namespace DisCatSharp.Net.Udp;
 /// </summary>
 internal class DcsUdpClient : BaseUdpClient
 {
+	private readonly Lock _sync = new();
+
 	/// <summary>
 	///     Gets the packet queue.
 	/// </summary>
@@ -25,7 +27,7 @@ internal class DcsUdpClient : BaseUdpClient
 	/// <summary>
 	///     Gets the client.
 	/// </summary>
-	private UdpClient _client;
+	private UdpClient? _client;
 
 	/// <summary>
 	///     Gets the end point.
@@ -37,7 +39,7 @@ internal class DcsUdpClient : BaseUdpClient
 	/// </summary>
 	[SuppressMessage("CodeQuality", "IDE0052:Remove unread private members",
 		Justification = "<Pending>")]
-	private Task _receiverTask;
+	private Task? _receiverTask;
 
 	/// <summary>
 	///     Creates a new UDP client instance.
@@ -59,9 +61,26 @@ internal class DcsUdpClient : BaseUdpClient
 	/// <param name="endpoint">Endpoint that the client will be communicating with.</param>
 	public override void Setup(ConnectionEndpoint endpoint)
 	{
-		this._endPoint = endpoint;
-		this._client = new();
-		this._receiverTask = Task.Run(this.ReceiverLoopAsync, this.TOKEN);
+		lock (this._sync)
+		{
+			this._endPoint = endpoint;
+
+			try
+			{
+				this._client?.Close();
+			}
+			catch (Exception)
+			{
+				// Ignore close errors; we are re-binding anyway.
+			}
+
+			while (this._packetQueue.TryTake(out _))
+			{ }
+
+			this._client = new();
+			if (this._receiverTask is null || this._receiverTask.IsCompleted)
+				this._receiverTask = Task.Run(this.ReceiverLoopAsync, this.TOKEN);
+		}
 	}
 
 	/// <summary>
@@ -71,7 +90,12 @@ internal class DcsUdpClient : BaseUdpClient
 	/// <param name="dataLength">Length of the datagram.</param>
 	/// <returns></returns>
 	public override Task SendAsync(byte[] data, int dataLength)
-		=> this._client.SendAsync(data, dataLength, this._endPoint.Hostname, this._endPoint.Port);
+	{
+		if (this._client is null)
+			throw new InvalidOperationException("UDP client is not configured. Call Setup() first.");
+
+		return this._client.SendAsync(data, dataLength, this._endPoint.Hostname, this._endPoint.Port);
+	}
 
 	/// <summary>
 	///     Receives a datagram.
@@ -87,7 +111,7 @@ internal class DcsUdpClient : BaseUdpClient
 		this._tokenSource.Cancel();
 		try
 		{
-			this._client.Close();
+			this._client?.Close();
 		}
 		catch (Exception)
 		{

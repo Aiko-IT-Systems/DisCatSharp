@@ -208,11 +208,11 @@ public sealed class VoiceExtension : BaseExtension
 	/// <param name="client">The client.</param>
 	/// <param name="e">The e.</param>
 	/// <returns>A Task.</returns>
-	private async Task Client_VoiceServerUpdate(DiscordClient client, VoiceServerUpdateEventArgs e)
+	private Task Client_VoiceServerUpdate(DiscordClient client, VoiceServerUpdateEventArgs e)
 	{
 		var gld = e.Guild;
 		if (gld is null)
-			return;
+			return Task.CompletedTask;
 
 		if (this._activeConnections.TryGetValue(e.Guild.Id, out var vnc))
 		{
@@ -242,7 +242,13 @@ public sealed class VoiceExtension : BaseExtension
 			};
 
 			vnc.Resume = false;
-			await vnc.ReconnectAsync().ConfigureAwait(false);
+			_ = vnc.ReconnectAsync().ContinueWith(static (task, state) =>
+				{
+					if (task.Exception is not null && state is DiscordClient c)
+						c.Logger.LogError(task.Exception, "[Voice] ReconnectAsync failed after VOICE_SERVER_UPDATE");
+				},
+				client,
+				TaskScheduler.Default);
 		}
 
 		if (this._voiceServerUpdates.ContainsKey(gld.Id))
@@ -250,5 +256,7 @@ public sealed class VoiceExtension : BaseExtension
 			this._voiceServerUpdates.TryRemove(gld.Id, out var xe);
 			xe?.SetResult(e);
 		}
+
+		return Task.CompletedTask;
 	}
 }

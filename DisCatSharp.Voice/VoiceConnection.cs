@@ -457,6 +457,7 @@ public sealed class VoiceConnection : IDisposable
 		try
 		{
 			this._keepaliveTokenSource?.Cancel();
+			this.ClearAudioSenders();
 			this._tokenSource?.Dispose();
 			this._senderTokenSource?.Dispose();
 			this._receiverTokenSource?.Dispose();
@@ -575,6 +576,7 @@ public sealed class VoiceConnection : IDisposable
 		if (isNewSession)
 		{
 			vdp.OpCode = 0;
+			this._lastSeq = -1;
 			vdp.Payload = new VoiceIdentifyPayload
 			{
 				ServerId = this.ServerData.GuildId,
@@ -1534,7 +1536,7 @@ public sealed class VoiceConnection : IDisposable
 		}
 
 		this._isInitialized = true;
-		this._readyWait.SetResult(true);
+		this._readyWait.TrySetResult(true);
 	}
 
 	/// <summary>
@@ -1826,22 +1828,38 @@ public sealed class VoiceConnection : IDisposable
 		// otherwise problems happen
 		//this.Dispose();
 
+		var shouldAutoReconnect = this.Resume;
 		if (e.CloseCode is 4006 or 4009)
+		{
 			this.Resume = false;
+			shouldAutoReconnect = true;
+		}
+		else if (e.CloseCode == 4014)
+		{
+			// Voice server move/channel move. Wait for VOICE_SERVER_UPDATE before reconnecting,
+			// otherwise we can reconnect to a stale endpoint and get stuck.
+			this.Resume = false;
+			shouldAutoReconnect = false;
+		}
 
 		if (!this._isDisposed)
 		{
 			this._tokenSource.Cancel();
+			this._senderTokenSource?.Cancel();
+			this._receiverTokenSource?.Cancel();
+			this._keepaliveTokenSource?.Cancel();
+			this._isInitialized = false;
+			this.ClearAudioSenders();
 			this._daveSession?.Reset();
 			this._tokenSource = new();
 			this._voiceWs = this._discord.Configuration.WebSocketClientFactory(this._discord.Configuration.Proxy, this._discord.ServiceProvider);
 			this._voiceWs.Disconnected += this.VoiceWS_SocketClosed;
 			this._voiceWs.MessageReceived += this.VoiceWS_SocketMessage;
 			this._voiceWs.Connected += this.VoiceWS_SocketOpened;
+			this._voiceWs.ExceptionThrown += this.VoiceWs_SocketException;
 
-			// Always reconnect. StartAsync will choose IDENTIFY when Resume==false
-			// (e.g. after 4006/4009), otherwise RESUME.
-			await this.ConnectAsync().ConfigureAwait(false);
+			if (shouldAutoReconnect)
+				await this.ConnectAsync().ConfigureAwait(false);
 		}
 	}
 
@@ -1923,6 +1941,28 @@ public sealed class VoiceConnection : IDisposable
 		var sd = ts.TotalSeconds;
 		var si = (uint)sd;
 		return si;
+	}
+
+	/// <summary>
+	///     Clears cached per-SSRC sender state after a reconnect/move so sequence tracking and
+	///     decoders start fresh for the new voice server session.
+	/// </summary>
+	private void ClearAudioSenders()
+	{
+		foreach (var kv in this._transmittingSsrCs)
+		{
+			if (!this._transmittingSsrCs.TryRemove(kv.Key, out var sender))
+				continue;
+
+			try
+			{
+				this._opus?.DestroyDecoder(sender.Decoder);
+			}
+			catch
+			{
+				// best-effort cleanup
+			}
+		}
 	}
 
 	/// <summary>
