@@ -1,5 +1,3 @@
-using DisCatSharp.Attributes;
-
 namespace DisCatSharp.Enums;
 
 /// <summary>

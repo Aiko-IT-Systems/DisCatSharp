@@ -1,0 +1,63 @@
+### YamlMime:TableOfContent
+items:
+- uid: DisCatSharp.Voice
+  name: DisCatSharp.Voice
+  type: Namespace
+  items:
+  - uid: DisCatSharp.Voice.AudioFormat
+    name: AudioFormat
+    type: Struct
+  - uid: DisCatSharp.Voice.ExtensionMethods
+    name: ExtensionMethods
+    type: Class
+  - uid: DisCatSharp.Voice.IVoiceFilter
+    name: IVoiceFilter
+    type: Interface
+  - uid: DisCatSharp.Voice.StreamExtensions
+    name: StreamExtensions
+    type: Class
+  - uid: DisCatSharp.Voice.VoiceApplication
+    name: VoiceApplication
+    type: Enum
+  - uid: DisCatSharp.Voice.VoiceConfiguration
+    name: VoiceConfiguration
+    type: Class
+  - uid: DisCatSharp.Voice.VoiceConnection
+    name: VoiceConnection
+    type: Class
+  - uid: DisCatSharp.Voice.VoiceEvents
+    name: VoiceEvents
+    type: Class
+  - uid: DisCatSharp.Voice.VoiceExtension
+    name: VoiceExtension
+    type: Class
+  - uid: DisCatSharp.Voice.VoiceTransmitSink
+    name: VoiceTransmitSink
+    type: Class
+- uid: DisCatSharp.Voice.Codec
+  name: DisCatSharp.Voice.Codec
+  type: Namespace
+  items:
+  - uid: DisCatSharp.Voice.Codec.EncryptionMode
+    name: EncryptionMode
+    type: Enum
+  - uid: DisCatSharp.Voice.Codec.Opus
+    name: Opus
+    type: Class
+  - uid: DisCatSharp.Voice.Codec.OpusDecoder
+    name: OpusDecoder
+    type: Class
+- uid: DisCatSharp.Voice.EventArgs
+  name: DisCatSharp.Voice.EventArgs
+  type: Namespace
+  items:
+  - uid: DisCatSharp.Voice.EventArgs.VoiceReceiveEventArgs
+    name: VoiceReceiveEventArgs
+    type: Class
+  - uid: DisCatSharp.Voice.EventArgs.VoiceUserJoinEventArgs
+    name: VoiceUserJoinEventArgs
+    type: Class
+  - uid: DisCatSharp.Voice.EventArgs.VoiceUserLeaveEventArgs
+    name: VoiceUserLeaveEventArgs
+    type: Class
+memberLayout: SeparatePages

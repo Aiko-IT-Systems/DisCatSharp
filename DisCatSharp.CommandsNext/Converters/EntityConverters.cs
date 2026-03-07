@@ -92,7 +92,7 @@ public class DiscordMemberConverter : IArgumentConverter<DiscordMember>
 
 		var us = ctx.Guild.Members.Values
 			.Where(xm => ((cs ? xm.Username : xm.Username.ToLowerInvariant()) == un && ((dv != null && xm.Discriminator == dv) || dv == null))
-			             || (cs ? xm.Nickname : xm.Nickname?.ToLowerInvariant()) == value);
+						 || (cs ? xm.Nickname : xm.Nickname?.ToLowerInvariant()) == value);
 
 		return Optional.FromNullable(us.FirstOrDefault());
 	}
@@ -278,8 +278,8 @@ public class DiscordMessageConverter : IArgumentConverter<DiscordMessage>
 		{
 			var uripath = DiscordRegEx.MessageLinkRegex().Match(uri.AbsoluteUri);
 			if (!uripath.Success
-			    || !ulong.TryParse(uripath.Groups["channel"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var cid)
-			    || !ulong.TryParse(uripath.Groups["message"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out mid))
+				|| !ulong.TryParse(uripath.Groups["channel"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var cid)
+				|| !ulong.TryParse(uripath.Groups["message"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out mid))
 				return Optional.None;
 
 			var chn = await ctx.Client.GetChannelAsync(cid).ConfigureAwait(false);
@@ -321,10 +321,10 @@ public class DiscordScheduledEventConverter : IArgumentConverter<DiscordSchedule
 		{
 			var uripath = DiscordRegEx.EventRegex().Match(uri.AbsoluteUri);
 			if (uripath.Success
-			    && ulong.TryParse(uripath.Groups["guild"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture,
-				    out var gid)
-			    && ulong.TryParse(uripath.Groups["event"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture,
-				    out seid))
+				&& ulong.TryParse(uripath.Groups["guild"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture,
+					out var gid)
+				&& ulong.TryParse(uripath.Groups["event"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture,
+					out seid))
 			{
 				var guild = await ctx.Client.GetGuildAsync(gid).ConfigureAwait(false);
 				if (guild == null)

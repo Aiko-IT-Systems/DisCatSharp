@@ -1,4 +1,5 @@
 using System;
+
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.EventArgs;

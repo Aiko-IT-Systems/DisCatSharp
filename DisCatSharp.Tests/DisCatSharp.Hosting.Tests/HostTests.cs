@@ -154,7 +154,7 @@ public class HostTests
 			Assert.Null(service.Client.GetExtension<LavalinkExtension>());
 
 			var intents = DiscordIntents.GuildEmojisAndStickers | DiscordIntents.GuildMembers |
-			              DiscordIntents.Guilds;
+						  DiscordIntents.Guilds;
 			Assert.Equal(intents, service.Client.Intents);
 
 			var interactivity = service.Client.GetExtension<InteractivityExtension>();

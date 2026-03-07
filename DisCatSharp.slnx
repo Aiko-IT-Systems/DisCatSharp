@@ -59,7 +59,7 @@
   <Project Path="DisCatSharp.Hosting/DisCatSharp.Hosting.csproj" />
   <Project Path="DisCatSharp.Interactivity/DisCatSharp.Interactivity.csproj" />
   <Project Path="DisCatSharp.Lavalink/DisCatSharp.Lavalink.csproj" />
-  <Project Path="DisCatSharp.VoiceNext.Natives/DisCatSharp.VoiceNext.Natives.csproj" />
-  <Project Path="DisCatSharp.VoiceNext/DisCatSharp.VoiceNext.csproj" />
+  <Project Path="DisCatSharp.Voice.Natives/DisCatSharp.Voice.Natives.csproj" />
+  <Project Path="DisCatSharp.Voice/DisCatSharp.Voice.csproj" />
   <Project Path="DisCatSharp/DisCatSharp.csproj" />
 </Solution>

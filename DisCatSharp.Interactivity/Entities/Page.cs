@@ -16,7 +16,7 @@ public class Page
 	/// <summary>
 	///		Gets a value indicating whether the CV2 feature is used.
 	/// </summary>
-	internal bool UsesCV2 { get; private set;} = false;
+	internal bool UsesCV2 { get; private set; } = false;
 
 	public Page()
 	{ }

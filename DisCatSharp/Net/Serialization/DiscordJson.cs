@@ -115,13 +115,13 @@ public static class DiscordJson
 			return;
 
 		var sentryMessage = "DiscordJson error on deserialization (" + (sender?.GetType().Name ?? "x") + ")\n\n" +
-		                    "Path: " + e.ErrorContext.Path + "\n" +
-		                    "Original Object" + e.ErrorContext.OriginalObject + "\n" +
-		                    "Current Object" + e.CurrentObject + "\n\n" +
-		                    "JRE Message:" + jre.Message + "\n" +
-		                    "JRE Line Number: " + jre.LineNumber + "\n" +
-		                    "JRE Line Position" + jre.LinePosition + "\n" +
-		                    "JRE Path" + jre.Path;
+							"Path: " + e.ErrorContext.Path + "\n" +
+							"Original Object" + e.ErrorContext.OriginalObject + "\n" +
+							"Current Object" + e.CurrentObject + "\n\n" +
+							"JRE Message:" + jre.Message + "\n" +
+							"JRE Line Number: " + jre.LineNumber + "\n" +
+							"JRE Line Position" + jre.LinePosition + "\n" +
+							"JRE Path" + jre.Path;
 
 		if (discord.Configuration.EnableLibraryDeveloperMode)
 			discord.Logger.LogError(e.ErrorContext.Error, "{msg}\n\n{raw}", sentryMessage, e.ErrorContext.OriginalObject);

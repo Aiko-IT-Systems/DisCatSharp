@@ -1,0 +1,103 @@
+name: Build Voice Natives
+
+on:
+    workflow_dispatch:
+
+jobs:
+    build-linux:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                arch: [x64, arm64]
+
+        steps:
+            - uses: actions/checkout@v6
+
+            - name: Install deps
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y build-essential autoconf automake libtool pkg-config
+
+            - name: Download libsodium
+              run: |
+                  curl -L https://download.libsodium.org/libsodium/releases/libsodium-1.0.21.tar.gz -o sodium.tar.gz
+                  tar xzf sodium.tar.gz
+
+            - name: Build libsodium
+              run: |
+                  cd libsodium-*
+                  ./configure --enable-shared --disable-static
+                  make -j$(nproc)
+
+            - name: Copy binary
+              run: |
+                  mkdir -p DisCatSharp.VoiceNext.Natives/runtimes/linux-${{ matrix.arch }}/native
+                  cp libsodium-*/src/libsodium/.libs/libsodium.so \
+                     DisCatSharp.VoiceNext.Natives/runtimes/linux-${{ matrix.arch }}/native/
+
+            - uses: actions/upload-artifact@v7
+              with:
+                  name: sodium-linux-${{ matrix.arch }}
+                  path: DisCatSharp.VoiceNext.Natives/runtimes/linux-${{ matrix.arch }}/native/libsodium.so
+
+    build-macos:
+        runs-on: macos-latest
+        strategy:
+            matrix:
+                arch: [x64, arm64]
+
+        steps:
+            - uses: actions/checkout@v6
+
+            - name: Install deps
+              run: |
+                  brew install autoconf automake libtool
+
+            - name: Download libsodium
+              run: |
+                  curl -L https://download.libsodium.org/libsodium/releases/libsodium-1.0.21.tar.gz -o sodium.tar.gz
+                  tar xzf sodium.tar.gz
+
+            - name: Build libsodium
+              run: |
+                  cd libsodium-*
+                  ./configure --enable-shared --disable-static
+                  make -j$(sysctl -n hw.ncpu)
+
+            - name: Copy binary
+              run: |
+                  mkdir -p DisCatSharp.VoiceNext.Natives/runtimes/osx-${{ matrix.arch }}/native
+                  cp libsodium-*/src/libsodium/.libs/libsodium.dylib \
+                     DisCatSharp.VoiceNext.Natives/runtimes/osx-${{ matrix.arch }}/native/
+
+            - uses: actions/upload-artifact@v7
+              with:
+                  name: sodium-macos-${{ matrix.arch }}
+                  path: DisCatSharp.VoiceNext.Natives/runtimes/osx-${{ matrix.arch }}/native/libsodium.dylib
+
+    build-windows:
+        runs-on: windows-latest
+
+        steps:
+            - uses: actions/checkout@v6
+
+            - name: Download libsodium
+              run: |
+                  Invoke-WebRequest https://download.libsodium.org/libsodium/releases/libsodium-1.0.21-msvc.zip -OutFile sodium.zip
+                  Expand-Archive sodium.zip
+
+            - name: Copy x64 release DLL
+              shell: pwsh
+              run: |
+                    New-Item -ItemType Directory -Force -Path DisCatSharp.VoiceNext.Natives/runtimes/win-x64/native
+
+                    $dll = Get-ChildItem -Recurse -Filter libsodium.dll | Where-Object {
+                        $_.FullName -match "x64.*dynamic"
+                    } | Select-Object -First 1
+
+                    Copy-Item $dll.FullName DisCatSharp.VoiceNext.Natives/runtimes/win-x64/native/libsodium.dll
+
+            - uses: actions/upload-artifact@v7
+              with:
+                  name: sodium-win-x64
+                  path: DisCatSharp.VoiceNext.Natives/runtimes/win-x64/native/libsodium.dll

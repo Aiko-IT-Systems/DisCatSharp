@@ -5,12 +5,10 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
-using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 using DisCatSharp.Enums.Core;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net.Abstractions;
-using DisCatSharp.Net.Serialization;
 
 using Newtonsoft.Json;
 
@@ -674,7 +672,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 			builder.DoConditionalReplace();
 		builder.MentionsInternal ??= this.GetMentions();
 		if (builder.KeepAttachmentsInternal.GetValueOrDefault())
-				builder.ModifyAttachments(this.Attachments);
+			builder.ModifyAttachments(this.Attachments);
 		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder).ConfigureAwait(false);
 	}
 
@@ -1124,8 +1122,8 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		var o2 = e2 as object;
 
 		return (o1 != null || o2 == null)
-		       && (o1 == null || o2 != null)
-		       && ((o1 == null && o2 == null) || (e1.Id == e2.Id && e1.ChannelId == e2.ChannelId));
+			   && (o1 == null || o2 != null)
+			   && ((o1 == null && o2 == null) || (e1.Id == e2.Id && e1.ChannelId == e2.ChannelId));
 	}
 
 	/// <summary>

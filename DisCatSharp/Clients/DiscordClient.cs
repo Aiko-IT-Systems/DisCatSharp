@@ -123,6 +123,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public int Ping
 		=> Volatile.Read(ref this._ping);
 
+	/// <summary>Gets the current main-gateway session ID (populated on READY).</summary>
+	public string? SessionId => this._sessionId;
+
 	/// <summary>
 	///     Gets the ping.
 	/// </summary>
@@ -732,14 +735,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Removes all global application commands.
 	/// </summary>
 	public async Task RemoveGlobalApplicationCommandsAsync()
-		=> await this.ApiClient.BulkOverwriteGlobalApplicationCommandsAsync(this.CurrentApplication.Id, Array.Empty<DiscordApplicationCommand>()).ConfigureAwait(false);
+		=> await this.ApiClient.BulkOverwriteGlobalApplicationCommandsAsync(this.CurrentApplication.Id, []).ConfigureAwait(false);
 
 	/// <summary>
 	///     Removes all global application commands for a specific guild id.
 	/// </summary>
 	/// <param name="guildId">The target guild id.</param>
 	public async Task RemoveGuildApplicationCommandsAsync(ulong guildId)
-		=> await this.ApiClient.BulkOverwriteGuildApplicationCommandsAsync(this.CurrentApplication.Id, guildId, Array.Empty<DiscordApplicationCommand>()).ConfigureAwait(false);
+		=> await this.ApiClient.BulkOverwriteGuildApplicationCommandsAsync(this.CurrentApplication.Id, guildId, []).ConfigureAwait(false);
 
 	/// <summary>
 	///     Removes all global application commands for a specific guild.

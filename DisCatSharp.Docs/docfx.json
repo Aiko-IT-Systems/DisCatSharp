@@ -147,12 +147,12 @@
 		{
 			"src": [
 				{
-					"src": "../DisCatSharp.VoiceNext/",
+					"src": "../DisCatSharp.Voice/",
 					"files": ["**.csproj"],
 					"exclude": ["**/obj/**", "**/bin/**"]
 				}
 			],
-			"dest": "api/DisCatSharp.VoiceNext",
+			"dest": "api/DisCatSharp.Voice",
 			"filter": "filter_config.yml",
 			"disableDefaultFilter": false,
 			"memberLayout": "separatePages",

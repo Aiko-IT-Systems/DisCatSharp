@@ -21,8 +21,8 @@
 		<InternalsVisibleTo Include="DisCatSharp.Tests" />
 		<InternalsVisibleTo Include="DisCatSharp.SafetyTests.Internal" />
 		<InternalsVisibleTo Include="DisCatSharp.ApplicationCommands.Tests" />
-		<InternalsVisibleTo Include="DisCatSharp.VoiceNext" />
-		<InternalsVisibleTo Include="DisCatSharp.VoiceNext.Natives" />
+		<InternalsVisibleTo Include="DisCatSharp.Voice" />
+		<InternalsVisibleTo Include="DisCatSharp.Voice.Natives" />
 		<InternalsVisibleTo Include="DisCatSharp.DevTools" />
 		<InternalsVisibleTo Include="DisCatSharp.DocsGenerator" />
 		<InternalsVisibleTo Include="DisCatSharp.StaffApps" />

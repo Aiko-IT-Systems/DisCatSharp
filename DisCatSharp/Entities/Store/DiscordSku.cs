@@ -147,8 +147,8 @@ public sealed class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 	public static bool operator ==(DiscordSku? e1, DiscordSku? e2)
 	{
 		return (e1 is not null || e2 is null)
-		       && (e1 is null || e2 is not null)
-		       && ((e1 is null && e2 is null) || (e1 is not null && e2 is not null && e1.Id == e2.Id));
+			   && (e1 is null || e2 is not null)
+			   && ((e1 is null && e2 is null) || (e1 is not null && e2 is not null && e1.Id == e2.Id));
 	}
 
 	/// <summary>

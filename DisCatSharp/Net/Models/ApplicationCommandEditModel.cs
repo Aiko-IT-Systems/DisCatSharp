@@ -11,28 +11,19 @@ namespace DisCatSharp.Net.Models;
 /// </summary>
 public class ApplicationCommandEditModel : ObservableApiObject
 {
-	/// <summary>
-	///     The command's new description.
-	/// </summary>
-	private Optional<string> _description;
-
-	/// <summary>
-	///     The command's new name.
-	/// </summary>
-	private Optional<string> _name;
 
 	/// <summary>
 	///     Sets the command's new name.
 	/// </summary>
 	public Optional<string> Name
 	{
-		internal get => this._name;
+		internal get;
 		set
 		{
 			if (value.Value.Length > 32)
 				throw new ArgumentException("Application command name cannot exceed 32 characters.", nameof(value));
 
-			this._name = value;
+			field = value;
 		}
 	}
 
@@ -41,13 +32,13 @@ public class ApplicationCommandEditModel : ObservableApiObject
 	/// </summary>
 	public Optional<string> Description
 	{
-		internal get => this._description;
+		internal get;
 		set
 		{
 			if (value.Value.Length > 100)
 				throw new ArgumentException("Application command description cannot exceed 100 characters.", nameof(value));
 
-			this._description = value;
+			field = value;
 		}
 	}
 

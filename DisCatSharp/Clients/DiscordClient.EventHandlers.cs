@@ -203,12 +203,12 @@ public sealed partial class DiscordClient
 			where attribute is not null && ((registerStatic && method.IsStatic) || handler is not null)
 			let eventName = attribute.EventName ?? method.Name
 			let eventInfo = this.GetType().GetEvent(eventName)
-			                ?? throw new ArgumentException($"Tried to register handler to non-existent event \"{eventName}\"")
+							?? throw new ArgumentException($"Tried to register handler to non-existent event \"{eventName}\"")
 			let eventHandlerType = eventInfo.EventHandlerType
 			let dlgt = (method.IsStatic
-				           ? Delegate.CreateDelegate(eventHandlerType, method, false)
-				           : Delegate.CreateDelegate(eventHandlerType, handler, method, false))
-			           ?? throw new ArgumentException($"Method \"{method}\" does not adhere to event specification \"{eventHandlerType}\"")
+						   ? Delegate.CreateDelegate(eventHandlerType, method, false)
+						   : Delegate.CreateDelegate(eventHandlerType, handler, method, false))
+					   ?? throw new ArgumentException($"Method \"{method}\" does not adhere to event specification \"{eventHandlerType}\"")
 			select (eventInfo, dlgt)
 		).ToArray();
 

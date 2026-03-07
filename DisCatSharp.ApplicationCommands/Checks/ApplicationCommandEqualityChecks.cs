@@ -41,7 +41,7 @@ internal static class ApplicationCommandEqualityChecks
 		);
 
 		if (sourceApplicationCommand.DefaultMemberPermissions == Permissions.None &&
-		    targetApplicationCommand.DefaultMemberPermissions == null)
+			targetApplicationCommand.DefaultMemberPermissions == null)
 			sourceApplicationCommand.DefaultMemberPermissions = null;
 
 		if (isGuild)
@@ -91,40 +91,40 @@ internal static class ApplicationCommandEqualityChecks
 				{
 					ApplicationCommandType.ChatInput => DeepEqual(source, target, client, true),
 					_ => source.Name == target.Name
-					     && source.Type == target.Type && source.NameLocalizations == target.NameLocalizations
-					     && source.DefaultMemberPermissions == target.DefaultMemberPermissions
-					     && source.IsNsfw == target.IsNsfw
-					     && source.AllowedContexts.NullableSequenceEqual(target.AllowedContexts) &&
-					     source.IntegrationTypes.NullableSequenceEqual(target.IntegrationTypes) &&
-					     source.RawNameLocalizations.AreDictionariesEqual(target.RawNameLocalizations)
+						 && source.Type == target.Type && source.NameLocalizations == target.NameLocalizations
+						 && source.DefaultMemberPermissions == target.DefaultMemberPermissions
+						 && source.IsNsfw == target.IsNsfw
+						 && source.AllowedContexts.NullableSequenceEqual(target.AllowedContexts) &&
+						 source.IntegrationTypes.NullableSequenceEqual(target.IntegrationTypes) &&
+						 source.RawNameLocalizations.AreDictionariesEqual(target.RawNameLocalizations)
 				}
 				: type switch
 				{
 					ApplicationCommandType.ChatInput => DeepEqual(source, target, client),
 					_ => source.Name == target.Name
-					     && source.Type == target.Type
-					     && source.DefaultMemberPermissions == target.DefaultMemberPermissions
-					     && source.IsNsfw == target.IsNsfw
-					     && source.AllowedContexts.NullableSequenceEqual(target.AllowedContexts) &&
-					     source.IntegrationTypes.NullableSequenceEqual(target.IntegrationTypes)
+						 && source.Type == target.Type
+						 && source.DefaultMemberPermissions == target.DefaultMemberPermissions
+						 && source.IsNsfw == target.IsNsfw
+						 && source.AllowedContexts.NullableSequenceEqual(target.AllowedContexts) &&
+						 source.IntegrationTypes.NullableSequenceEqual(target.IntegrationTypes)
 				}
 			: localizationEnabled
 				? type switch
 				{
 					ApplicationCommandType.ChatInput => DeepEqual(source, target, client, true),
 					_ => source.Name == target.Name
-					     && source.Type == target.Type && source.NameLocalizations == target.NameLocalizations
-					     && source.DefaultMemberPermissions == target.DefaultMemberPermissions
-					     && source.IsNsfw == target.IsNsfw
-					     && source.RawNameLocalizations.AreDictionariesEqual(target.RawNameLocalizations)
+						 && source.Type == target.Type && source.NameLocalizations == target.NameLocalizations
+						 && source.DefaultMemberPermissions == target.DefaultMemberPermissions
+						 && source.IsNsfw == target.IsNsfw
+						 && source.RawNameLocalizations.AreDictionariesEqual(target.RawNameLocalizations)
 				}
 				: type switch
 				{
 					ApplicationCommandType.ChatInput => DeepEqual(source, target, client),
 					_ => source.Name == target.Name
-					     && source.Type == target.Type
-					     && source.DefaultMemberPermissions == target.DefaultMemberPermissions
-					     && source.IsNsfw == target.IsNsfw
+						 && source.Type == target.Type
+						 && source.DefaultMemberPermissions == target.DefaultMemberPermissions
+						 && source.IsNsfw == target.IsNsfw
 				};
 	}
 
@@ -182,17 +182,17 @@ internal static class ApplicationCommandEqualityChecks
 	{
 		var name = source.Name;
 		var rootCheck = source.Name == target.Name &&
-		                source.Description == target.Description &&
-		                source.Type == target.Type &&
-		                source.DefaultMemberPermissions == target.DefaultMemberPermissions &&
-		                source.IsNsfw == target.IsNsfw &&
-		                source.AllowedContexts.NullableSequenceEqual(target.AllowedContexts) &&
-		                source.IntegrationTypes.NullableSequenceEqual(target.IntegrationTypes);
+						source.Description == target.Description &&
+						source.Type == target.Type &&
+						source.DefaultMemberPermissions == target.DefaultMemberPermissions &&
+						source.IsNsfw == target.IsNsfw &&
+						source.AllowedContexts.NullableSequenceEqual(target.AllowedContexts) &&
+						source.IntegrationTypes.NullableSequenceEqual(target.IntegrationTypes);
 
 		if (localizationEnabled)
 			rootCheck = rootCheck &&
-			            source.RawNameLocalizations.AreDictionariesEqual(target.RawNameLocalizations) &&
-			            source.RawDescriptionLocalizations.AreDictionariesEqual(target.RawDescriptionLocalizations);
+						source.RawNameLocalizations.AreDictionariesEqual(target.RawNameLocalizations) &&
+						source.RawDescriptionLocalizations.AreDictionariesEqual(target.RawDescriptionLocalizations);
 
 		var (equal, reason) = DeepEqualOptions(source.Options, target.Options, localizationEnabled);
 		if (reason is not null)
@@ -230,23 +230,23 @@ internal static class ApplicationCommandEqualityChecks
 			var targetOption = targetOptions[i];
 
 			var optionCheck = sourceOption.Name == targetOption.Name &&
-			                  sourceOption.Description == targetOption.Description &&
-			                  sourceOption.Type == targetOption.Type &&
-			                  sourceOption.Required == targetOption.Required &&
-			                  sourceOption.AutoComplete == targetOption.AutoComplete &&
-			                  sourceOption.MinimumValue?.ToString() == targetOption.MinimumValue?.ToString() &&
-			                  sourceOption.MaximumValue?.ToString() == targetOption.MaximumValue?.ToString() &&
-			                  sourceOption.MinimumLength == targetOption.MinimumLength &&
-			                  sourceOption.MaximumLength == targetOption.MaximumLength;
+							  sourceOption.Description == targetOption.Description &&
+							  sourceOption.Type == targetOption.Type &&
+							  sourceOption.Required == targetOption.Required &&
+							  sourceOption.AutoComplete == targetOption.AutoComplete &&
+							  sourceOption.MinimumValue?.ToString() == targetOption.MinimumValue?.ToString() &&
+							  sourceOption.MaximumValue?.ToString() == targetOption.MaximumValue?.ToString() &&
+							  sourceOption.MinimumLength == targetOption.MinimumLength &&
+							  sourceOption.MaximumLength == targetOption.MaximumLength;
 
 			if (localizationEnabled)
 				optionCheck = optionCheck &&
-				              sourceOption.RawNameLocalizations.AreDictionariesEqual(targetOption.RawNameLocalizations) &&
-				              sourceOption.RawDescriptionLocalizations.AreDictionariesEqual(targetOption
-					              .RawDescriptionLocalizations);
+							  sourceOption.RawNameLocalizations.AreDictionariesEqual(targetOption.RawNameLocalizations) &&
+							  sourceOption.RawDescriptionLocalizations.AreDictionariesEqual(targetOption
+								  .RawDescriptionLocalizations);
 
 			if ((sourceOption.Choices is null && targetOption.Choices is not null) ||
-			    (sourceOption.Choices is not null && targetOption.Choices is null))
+				(sourceOption.Choices is not null && targetOption.Choices is null))
 				return (false, "source or target choices null, but not both - " + sourceOption.Name);
 
 			if (sourceOption.Choices is not null && targetOption.Choices is not null)
@@ -258,9 +258,9 @@ internal static class ApplicationCommandEqualityChecks
 			}
 
 			if ((sourceOption.ChannelTypes is null && targetOption.ChannelTypes is not null) ||
-			    (sourceOption.ChannelTypes is not null && targetOption.ChannelTypes is null) ||
-			    (sourceOption.ChannelTypes is not null && targetOption.ChannelTypes is not null &&
-			     !sourceOption.ChannelTypes.OrderBy(x => x).All(targetOption.ChannelTypes.OrderBy(x => x).Contains)))
+				(sourceOption.ChannelTypes is not null && targetOption.ChannelTypes is null) ||
+				(sourceOption.ChannelTypes is not null && targetOption.ChannelTypes is not null &&
+				 !sourceOption.ChannelTypes.OrderBy(x => x).All(targetOption.ChannelTypes.OrderBy(x => x).Contains)))
 				return (false, "channel type mismatch - " + sourceOption.Name);
 
 			var (equal, reason) = DeepEqualOptions(sourceOption.Options, targetOption.Options, localizationEnabled);

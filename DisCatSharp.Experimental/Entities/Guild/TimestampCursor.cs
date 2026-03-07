@@ -7,9 +7,9 @@ namespace DisCatSharp.Experimental.Entities;
 /// </summary>
 public sealed class TimestampCursor
 {
-    /// <summary>
-    /// Gets or sets the timestamp of the cursor.
-    /// </summary>
-    [JsonProperty("timestamp")]
-    public ulong Timestamp { get; set; }
+	/// <summary>
+	/// Gets or sets the timestamp of the cursor.
+	/// </summary>
+	[JsonProperty("timestamp")]
+	public ulong Timestamp { get; set; }
 }

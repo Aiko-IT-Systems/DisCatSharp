@@ -85,6 +85,6 @@ internal class SnowflakeArrayAsDictionaryJsonConverter : JsonConverter
 		var valueParam = objectType.GenericTypeArguments[1];
 
 		return typeof(SnowflakeObject).GetTypeInfo().IsAssignableFrom(valueParam.GetTypeInfo()) ||
-		       valueParam == typeof(DiscordVoiceState);
+			   valueParam == typeof(DiscordVoiceState);
 	}
 }

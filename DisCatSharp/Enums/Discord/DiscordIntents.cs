@@ -281,8 +281,8 @@ public enum DiscordIntents
 	///     </para>
 	/// </summary>
 	AllUnprivileged = Guilds | GuildModeration | GuildEmojisAndStickers | GuildIntegrations | GuildWebhooks | GuildInvites | GuildVoiceStates | GuildMessages |
-	                  GuildMessageReactions | GuildMessageTyping | DirectMessages | DirectMessageReactions | DirectMessageTyping | GuildScheduledEvents | AutoModerationConfiguration | AutoModerationExecution |
-	                  GuildMessagePolls | DirectMessagePolls,
+					  GuildMessageReactions | GuildMessageTyping | DirectMessages | DirectMessageReactions | DirectMessageTyping | GuildScheduledEvents | AutoModerationConfiguration | AutoModerationExecution |
+					  GuildMessagePolls | DirectMessagePolls,
 
 	/// <summary>
 	///     Includes all intents.

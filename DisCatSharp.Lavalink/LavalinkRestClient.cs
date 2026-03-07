@@ -178,7 +178,7 @@ internal sealed class LavalinkRestClient
 		var queryDict = this.GetDefaultParams();
 		var route = $"{Endpoints.VERSION}";
 		var path = GetPath(route, new
-			{ });
+		{ });
 		return await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
 	}
 
@@ -191,7 +191,7 @@ internal sealed class LavalinkRestClient
 		var queryDict = this.GetDefaultParams();
 		var route = $"{Endpoints.V4}{Endpoints.INFO}";
 		var path = GetPath(route, new
-			{ });
+		{ });
 		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<LavalinkInfo>(res.Response!)!;
 	}
@@ -205,7 +205,7 @@ internal sealed class LavalinkRestClient
 		var queryDict = this.GetDefaultParams();
 		var route = $"{Endpoints.V4}{Endpoints.STATS}";
 		var path = GetPath(route, new
-			{ });
+		{ });
 		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<LavalinkStats>(res.Response!)!;
 	}
@@ -400,7 +400,7 @@ internal sealed class LavalinkRestClient
 		queryDict.Add("identifier", identifier);
 		var route = $"{Endpoints.V4}{Endpoints.LOAD_TRACKS}";
 		var path = GetPath(route, new
-			{ });
+		{ });
 		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
 		var obj = JObject.Parse(res.Response!);
 		return new()
@@ -425,7 +425,7 @@ internal sealed class LavalinkRestClient
 		queryDict.Add("skipTrackSource", skipTrackSource.ToString().ToLowerInvariant());
 		var route = $"{Endpoints.V4}{Endpoints.LYRICS}";
 		var path = GetPath(route, new
-			{ });
+		{ });
 		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
 
 		return res.ResponseCode is HttpStatusCode.NoContent or HttpStatusCode.NotFound || res.Response is null
@@ -468,7 +468,7 @@ internal sealed class LavalinkRestClient
 		queryDict.Add("encodedTrack", base64Track);
 		var route = $"{Endpoints.V4}{Endpoints.DECODE_TRACK}";
 		var path = GetPath(route, new
-			{ });
+		{ });
 		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<LavalinkTrack>(res.Response!)!;
 	}
@@ -483,7 +483,7 @@ internal sealed class LavalinkRestClient
 		var queryDict = this.GetDefaultParams();
 		var route = $"{Endpoints.V4}{Endpoints.DECODE_TRACKS}";
 		var path = GetPath(route, new
-			{ });
+		{ });
 		var res = await this.DoRequestAsync(HttpMethod.Post, $"{path}{BuildQueryString(queryDict)}", payload: LavalinkJson.SerializeObject(base64Tracks)).ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<List<LavalinkTrack>>(res.Response!)!;
 	}

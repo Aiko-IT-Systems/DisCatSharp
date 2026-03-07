@@ -215,7 +215,7 @@ internal class InteractionPaginationRequest : IPaginationRequest
 				if (!page.UsesCV2)
 				{
 					if (page.Content is not null)
-					builder.WithContent(page.Content);
+						builder.WithContent(page.Content);
 					if (page.Embed is not null)
 						builder.AddEmbed(page.Embed);
 					builder.AddComponents(buttons);
@@ -234,7 +234,7 @@ internal class InteractionPaginationRequest : IPaginationRequest
 				if (!page.UsesCV2)
 				{
 					if (page.Content is not null)
-					builder.WithContent(page.Content);
+						builder.WithContent(page.Content);
 					if (page.Embed is not null)
 						builder.AddEmbed(page.Embed);
 				}

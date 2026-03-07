@@ -46,9 +46,10 @@ DisCatSharp.Lavalink Release Notes
     - Support for LavaLyrics plugin
 
 
-DisCatSharp.VoiceNext Release Notes
+DisCatSharp.Voice Release Notes
 
-    - Will be deprecated 2025 and replaced by DisCatSharp.Voice
+    - DAVE Support
+    - Replaced the old package `DisCatSharp.VoiceNext`
 
 
 DisCatSharp.Experimental Release Notes

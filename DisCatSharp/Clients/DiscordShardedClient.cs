@@ -706,7 +706,7 @@ public sealed partial class DiscordShardedClient
 		this._messagePollVoteAdded = new("MESSAGE_POLL_VOTE_ADDED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._messagePollVoteRemoved = new("MESSAGE_POLL_VOTE_REMOVED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildSoundboardSoundCreated = new("GUILD_SOUNDBOARD_SOUND_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
-		this._guildSoundboardSoundsUpdated = new("GUILD_SOUNDBOARD_SOUND_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._guildSoundboardSoundUpdated = new("GUILD_SOUNDBOARD_SOUND_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildSoundboardSoundDeleted = new("GUILD_SOUNDBOARD_SOUND_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildSoundboardSoundsUpdated = new("GUILD_SOUNDBOARD_SOUNDS_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._soundboardSounds = new("SOUNDBOARD_SOUNDS", DiscordClient.EventExecutionLimit, this.EventErrorHandler);

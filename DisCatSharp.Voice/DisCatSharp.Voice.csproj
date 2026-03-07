@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<Import Project="../DisCatSharp.Targets/Version.targets" />
+	<Import Project="../DisCatSharp.Targets/DisCatSharp.targets" />
+	<Import Project="../DisCatSharp.Targets/Package.targets" />
+	<Import Project="../DisCatSharp.Targets/NuGet.targets" />
+	<Import Project="../DisCatSharp.Targets/Library.targets" />
+	<Import Project="../DisCatSharp.Targets/InternalsVisibleTo.targets" />
+
+	<PropertyGroup>
+		<AssemblyName>DisCatSharp.Voice</AssemblyName>
+		<RootNamespace>DisCatSharp.Voice</RootNamespace>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<PackageId>DisCatSharp.Voice</PackageId>
+		<Description>
+			DisCatSharp Voice Extension
+
+			Easy made audio player for discord bots.
+
+			Documentation:
+			https://docs.dcs.aitsys.dev/articles/modules/audio/voice/prerequisites.html
+		</Description>
+		<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord
+			Bots,AITSYS,Net8,Net9,Net10,Voice,Audio Player,DAVE</PackageTags>
+	</PropertyGroup>
+
+	<ItemGroup
+		Condition="!$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net9.0'))">
+		<PackageReference Include="Backport.System.Threading.Lock" Version="3.1.6" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="DisCatSharp.Analyzer" Version="1.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.3" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.3" />
+		<PackageReference Include="System.Memory" Version="4.6.3" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.3" />
+		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="10.0.3" />
+		<PackageReference Include="System.Threading.Channels" Version="10.0.3" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.103"
+			PrivateAssets="All" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
+		<ProjectReference Include="..\DisCatSharp.Voice.Natives\DisCatSharp.Voice.Natives.csproj"
+			ReferenceOutputAssembly="false" />
+		<PackageReference Include="DisCatSharp.Attributes" Version="2025.3.27" />
+	</ItemGroup>
+
+</Project>

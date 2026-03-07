@@ -1,8 +1,10 @@
-using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using Xunit;
+
 using DisCatSharp.Net.Serialization;
+
+using Newtonsoft.Json;
+
+using Xunit;
 using Xunit.Abstractions;
 
 namespace DisCatSharp.Copilot.Tests;

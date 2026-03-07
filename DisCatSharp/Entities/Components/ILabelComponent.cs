@@ -1,4 +1,4 @@
-﻿namespace DisCatSharp.Entities;
+namespace DisCatSharp.Entities;
 
 /// <summary>
 ///     Represents a (potential) label component.

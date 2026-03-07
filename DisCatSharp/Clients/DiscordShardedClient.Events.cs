@@ -14,7 +14,7 @@ namespace DisCatSharp;
 /// </summary>
 public sealed partial class DiscordShardedClient
 {
-#region WebSocket
+	#region WebSocket
 
 	/// <summary>
 	///     Fired whenever a WebSocket error occurs within the client.
@@ -82,9 +82,9 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, HeartbeatEventArgs> _heartbeated;
 
-#endregion
+	#endregion
 
-#region Channel
+	#region Channel
 
 	/// <summary>
 	///     Fired when a new channel is created.
@@ -177,9 +177,9 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, VoiceChannelStartTimeUpdateEventArgs> _voiceChannelStartTimeUpdated;
 
-#endregion
+	#endregion
 
-#region Guild
+	#region Guild
 
 	/// <summary>
 	///     Fired when the user joins a new guild.
@@ -302,9 +302,9 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, GuildAppliedBoostsUpdateEventArgs> _guildAppliedBoostsUpdated;
 
-#endregion
+	#endregion
 
-#region Automod
+	#region Automod
 
 	/// <summary>
 	///     Fired when an auto mod rule gets created.
@@ -361,9 +361,9 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, GuildAuditLogEntryCreateEventArgs> _guildAuditLogEntryCreated;
 
-#endregion
+	#endregion
 
-#region Guild Ban
+	#region Guild Ban
 
 	/// <summary>
 	///     Fired when a guild ban gets added
@@ -391,9 +391,9 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, GuildBanRemoveEventArgs> _guildBanRemoved;
 
-#endregion
+	#endregion
 
-#region Guild Timeout
+	#region Guild Timeout
 
 	/// <summary>
 	///     Fired when a guild member timeout gets added.
@@ -434,9 +434,9 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, GuildMemberTimeoutRemoveEventArgs> _guildMemberTimeoutRemoved;
 
-#endregion
+	#endregion
 
-#region Guild Event
+	#region Guild Event
 
 	/// <summary>
 	///     Fired when a scheduled event is created.
@@ -503,9 +503,9 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, GuildScheduledEventUserRemoveEventArgs> _guildScheduledEventUserRemoved;
 
-#endregion
+	#endregion
 
-#region Guild Integration
+	#region Guild Integration
 
 	/// <summary>
 	///     Fired when a guild integration is created.
@@ -546,9 +546,9 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, GuildIntegrationDeleteEventArgs> _guildIntegrationDeleted;
 
-#endregion
+	#endregion
 
-#region Guild Member
+	#region Guild Member
 
 	/// <summary>
 	///     Fired when a new user joins a guild.
@@ -600,9 +600,9 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, GuildMembersChunkEventArgs> _guildMembersChunk;
 
-#endregion
+	#endregion
 
-#region Guild Role
+	#region Guild Role
 
 	/// <summary>
 	///     Fired when a guild role is created.
@@ -643,9 +643,9 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, GuildRoleDeleteEventArgs> _guildRoleDeleted;
 
-#endregion
+	#endregion
 
-#region Invite
+	#region Invite
 
 	/// <summary>
 	///     Fired when an invite is created.
@@ -673,9 +673,9 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, InviteDeleteEventArgs> _inviteDeleted;
 
-#endregion
+	#endregion
 
-#region Message
+	#region Message
 
 	/// <summary>
 	///     Fired when a message is created.
@@ -757,9 +757,9 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, MessagePollVoteRemoveEventArgs> _messagePollVoteRemoved;
 
-#endregion
+	#endregion
 
-#region Guild Soundboard Sound
+	#region Guild Soundboard Sound
 
 	/// <summary>
 	///     Fired when a guild soundboard sound is created.
@@ -824,9 +824,9 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, SoundboardSoundsEventArgs> _soundboardSounds;
 
-#endregion
+	#endregion
 
-#region Guild Member Application
+	#region Guild Member Application
 
 	/// <summary>
 	///     Fired when a guild join request is created.
@@ -867,9 +867,9 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, GuildJoinRequestDeleteEventArgs> _guildJoinRequestDeleted;
 
-#endregion
+	#endregion
 
-#region Message Reaction
+	#region Message Reaction
 
 	/// <summary>
 	///     Fired when a reaction gets added to a message.
@@ -923,9 +923,9 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, MessageReactionRemoveEmojiEventArgs> _messageReactionRemovedEmoji;
 
-#endregion
+	#endregion
 
-#region Stage Instance
+	#region Stage Instance
 
 	/// <summary>
 	///     Fired when a Stage Instance is created.
@@ -966,9 +966,9 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, StageInstanceDeleteEventArgs> _stageInstanceDeleted;
 
-#endregion
+	#endregion
 
-#region Thread
+	#region Thread
 
 	/// <summary>
 	///     Fired when a thread is created.
@@ -1048,9 +1048,9 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, ThreadMembersUpdateEventArgs> _threadMembersUpdated;
 
-#endregion
+	#endregion
 
-#region Activities
+	#region Activities
 
 	/// <summary>
 	///     Fired when a embedded activity has been updated.
@@ -1063,9 +1063,9 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, EmbeddedActivityUpdateEventArgs> _embeddedActivityUpdated;
 
-#endregion
+	#endregion
 
-#region User/Presence Update
+	#region User/Presence Update
 
 	/// <summary>
 	///     Fired when a presence has been updated.
@@ -1109,9 +1109,9 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, UserUpdateEventArgs> _userUpdated;
 
-#endregion
+	#endregion
 
-#region Voice
+	#region Voice
 
 	/// <summary>
 	///     Fired when someone joins/leaves/moves voice channels.
@@ -1152,9 +1152,9 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, VoiceChannelEffectSendEventArgs> _voiceChannelEffectSend;
 
-#endregion
+	#endregion
 
-#region Application
+	#region Application
 
 	/// <summary>
 	///     Fired when a new application command is registered.
@@ -1222,9 +1222,9 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, ApplicationCommandPermissionsUpdateEventArgs> _applicationCommandPermissionsUpdated;
 
-#endregion
+	#endregion
 
-#region Misc
+	#region Misc
 
 	/// <summary>
 	///     Fired when an interaction is invoked.
@@ -1347,9 +1347,9 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, ClientErrorEventArgs> _clientErrored;
 
-#endregion
+	#endregion
 
-#region Error Handling
+	#region Error Handling
 
 	/// <summary>
 	///     Handles event errors.
@@ -1409,9 +1409,9 @@ public sealed partial class DiscordShardedClient
 	private void Goof<TArgs>(AsyncEvent<DiscordClient, TArgs> asyncEvent, Exception ex, AsyncEventHandler<DiscordClient, TArgs> handler, DiscordClient sender, TArgs eventArgs)
 		where TArgs : AsyncEventArgs => this.Logger.LogCritical(LoggerEvents.EventHandlerException, ex, "Exception event handler {0} (defined in {1}) threw an exception", handler.Method, handler.Method.DeclaringType);
 
-#endregion
+	#endregion
 
-#region Event Dispatchers
+	#region Event Dispatchers
 
 	/// <summary>
 	///     Handles the client zombied event.
@@ -2238,5 +2238,5 @@ public sealed partial class DiscordShardedClient
 	private Task Client_GuildJoinRequestDeleted(DiscordClient client, GuildJoinRequestDeleteEventArgs e)
 		=> this._guildJoinRequestDeleted.InvokeAsync(client, e);
 
-#endregion
+	#endregion
 }

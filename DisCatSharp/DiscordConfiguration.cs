@@ -26,21 +26,6 @@ public sealed class DiscordConfiguration
 	private List<Type> _exceptions = [typeof(ServerErrorException), typeof(BadRequestException), typeof(DiscordJsonException)];
 
 	/// <summary>
-	///     Sets the token used to identify the client (protected).
-	/// </summary>
-	private string? _token;
-
-	/// <summary>
-	///     Sets the factory method and creates a new instances of the <see cref="DcsUdpClient" />.
-	/// </summary>
-	private UdpClientFactoryDelegate _udpClientFactory = DcsUdpClient.CreateNew;
-
-	/// <summary>
-	///     Sets the factory method and creates a new instances of the <see cref="WebSocketClient" />.
-	/// </summary>
-	private WebSocketClientFactoryDelegate _webSocketClientFactory = WebSocketClient.CreateNew;
-
-	/// <summary>
 	///     Creates a new configuration with default values.
 	/// </summary>
 	public DiscordConfiguration()
@@ -122,13 +107,13 @@ public sealed class DiscordConfiguration
 	/// </summary>
 	public string? Token
 	{
-		internal get => this._token;
+		internal get;
 		set
 		{
 			if (string.IsNullOrWhiteSpace(value))
 				throw new ArgumentNullException(nameof(value), "Token cannot be null, empty, or all whitespace.");
 
-			this._token = value.Trim();
+			field = value.Trim();
 		}
 	}
 
@@ -281,9 +266,9 @@ public sealed class DiscordConfiguration
 	/// </summary>
 	public WebSocketClientFactoryDelegate WebSocketClientFactory
 	{
-		internal get => this._webSocketClientFactory;
-		set => this._webSocketClientFactory = value ?? throw new InvalidOperationException("You need to supply a valid WebSocket client factory method.");
-	}
+		internal get;
+		set => field = value ?? throw new InvalidOperationException("You need to supply a valid WebSocket client factory method.");
+	} = WebSocketClient.CreateNew;
 
 	/// <summary>
 	///     <para>Sets the factory method used to create instances of UDP clients.</para>
@@ -295,9 +280,9 @@ public sealed class DiscordConfiguration
 	/// </summary>
 	public UdpClientFactoryDelegate UdpClientFactory
 	{
-		internal get => this._udpClientFactory;
-		set => this._udpClientFactory = value ?? throw new InvalidOperationException("You need to supply a valid UDP client factory method.");
-	}
+		internal get;
+		set => field = value ?? throw new InvalidOperationException("You need to supply a valid UDP client factory method.");
+	} = DcsUdpClient.CreateNew;
 
 	/// <summary>
 	///     <para>Sets the logger implementation to use.</para>

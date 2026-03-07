@@ -18,17 +18,7 @@ public sealed class DiscordEmbedBuilder
 	/// <summary>
 	/// 
 	/// </summary>
-	private string? _description;
-
-	/// <summary>
-	/// 
-	/// </summary>
 	private DiscordUri? _imageUri;
-
-	/// <summary>
-	/// 
-	/// </summary>
-	private string? _title;
 
 	/// <summary>
 	/// 
@@ -92,13 +82,13 @@ public sealed class DiscordEmbedBuilder
 	/// </summary>
 	public string? Title
 	{
-		get => this._title;
+		get;
 		set
 		{
 			if (value is { Length: > 256 })
 				throw new ArgumentException("Title length cannot exceed 256 characters.", nameof(value));
 
-			this._title = value;
+			field = value;
 		}
 	}
 
@@ -107,13 +97,13 @@ public sealed class DiscordEmbedBuilder
 	/// </summary>
 	public string? Description
 	{
-		get => this._description;
+		get;
 		set
 		{
 			if (value is { Length: > 4096 })
 				throw new ArgumentException("Description length cannot exceed 4096 characters.", nameof(value));
 
-			this._description = value;
+			field = value;
 		}
 	}
 
@@ -482,8 +472,8 @@ public sealed class DiscordEmbedBuilder
 	{
 		var embed = new DiscordEmbed
 		{
-			Title = this._title,
-			Description = this._description,
+			Title = this.Title,
+			Description = this.Description,
 			Url = this._url,
 			ColorInternal = this.Color.Map(e => e.Value),
 			Timestamp = this.Timestamp
@@ -556,8 +546,6 @@ public sealed class DiscordEmbedBuilder
 	/// </summary>
 	public sealed class EmbedAuthor
 	{
-		private string? _name;
-
 		internal DiscordUri? IconUri;
 
 		internal Uri? Uri;
@@ -567,13 +555,13 @@ public sealed class DiscordEmbedBuilder
 		/// </summary>
 		public string? Name
 		{
-			get => this._name;
+			get;
 			set
 			{
 				if (value is { Length: > 256 })
 					throw new ArgumentException("Author name length cannot exceed 256 characters.", nameof(value));
 
-				this._name = value;
+				field = value;
 			}
 		}
 
@@ -601,8 +589,6 @@ public sealed class DiscordEmbedBuilder
 	/// </summary>
 	public sealed class EmbedFooter
 	{
-		private string? _text;
-
 		internal DiscordUri? IconUri;
 
 		/// <summary>
@@ -610,13 +596,13 @@ public sealed class DiscordEmbedBuilder
 		/// </summary>
 		public string? Text
 		{
-			get => this._text;
+			get;
 			set
 			{
 				if (value is { Length: > 2048 })
 					throw new ArgumentException("Footer text length cannot exceed 2048 characters.", nameof(value));
 
-				this._text = value;
+				field = value;
 			}
 		}
 
@@ -635,10 +621,6 @@ public sealed class DiscordEmbedBuilder
 	/// </summary>
 	public sealed class EmbedThumbnail
 	{
-		private int? _height;
-
-		private int? _width;
-
 		internal DiscordUri? Uri;
 
 		/// <summary>
@@ -655,8 +637,8 @@ public sealed class DiscordEmbedBuilder
 		/// </summary>
 		public int? Height
 		{
-			get => this._height;
-			set => this._height = value >= 0 ? value : 0;
+			get;
+			set => field = value >= 0 ? value : 0;
 		}
 
 		/// <summary>
@@ -664,8 +646,8 @@ public sealed class DiscordEmbedBuilder
 		/// </summary>
 		public int? Width
 		{
-			get => this._width;
-			set => this._width = value >= 0 ? value : 0;
+			get;
+			set => field = value >= 0 ? value : 0;
 		}
 	}
 }

@@ -37,7 +37,7 @@ public sealed class DiscordSignedLink : DiscordUri
 			this.ExpiresAt = DateTimeOffset.FromUnixTimeSeconds(expiresTimeStamp);
 
 		if (queries.Get("is") is { } issuedString &&
-		    long.TryParse(issuedString, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var issuedTimeStamp))
+			long.TryParse(issuedString, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var issuedTimeStamp))
 			this.IssuedAt = DateTimeOffset.FromUnixTimeSeconds(issuedTimeStamp);
 
 		this.Signature = queries.Get("hm");
@@ -72,7 +72,7 @@ public sealed class DiscordSignedLink : DiscordUri
 			this.ExpiresAt = DateTimeOffset.FromUnixTimeSeconds(expiresTimeStamp);
 
 		if (queries.Get("is") is { } issuedString &&
-		    long.TryParse(issuedString, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var issuedTimeStamp))
+			long.TryParse(issuedString, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var issuedTimeStamp))
 			this.IssuedAt = DateTimeOffset.FromUnixTimeSeconds(issuedTimeStamp);
 
 		this.Signature = queries.Get("hm");
@@ -146,7 +146,7 @@ public sealed class DiscordSignedLink : DiscordUri
 				? null
 				: val is not string s
 					? throw new JsonReaderException("DiscordSignedLink value invalid format! This is a bug in DisCatSharp. " +
-					                                $"Include the type in your bug report: [[{reader.TokenType}]]")
+													$"Include the type in your bug report: [[{reader.TokenType}]]")
 					: new DiscordSignedLink(s);
 		}
 

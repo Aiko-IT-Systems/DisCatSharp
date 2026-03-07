@@ -30,7 +30,7 @@ jobs:
               uses: actions/setup-dotnet@v5.2.0
               with:
                   dotnet-version: |
-                      10.0.100-rc.1.25451.107
+                      10.x
                       9.x
                       8.x
             - name: Install DocFX
@@ -52,7 +52,7 @@ jobs:
               run: ./DisCatSharp.Tools/pack-docs.ps1 -DocsPath "./DisCatSharp.Docs" -OutputPath "./" -PackageName "dcs-docs-preview"
               working-directory: GitHub/DisCatSharp
             - name: Upload packed docs
-              uses: actions/upload-artifact@v7.0.0
+              uses: actions/upload-artifact@v7
               with:
                   name: dcs-docs-preview.zip
                   path: GitHub/DisCatSharp/dcs-docs-preview.zip

@@ -95,7 +95,7 @@ public class DiscordThreadChannel : DiscordChannel
 	public IReadOnlyList<ForumPostTag> AppliedTags
 		=> this.AppliedTagIds?.Select(id => this.Parent.GetForumPostTag(id)).Where(x => x != null).ToList();
 
-#region Methods
+	#region Methods
 
 	/// <summary>
 	///     Modifies the current thread.
@@ -402,5 +402,5 @@ public class DiscordThreadChannel : DiscordChannel
 			_ => $"Thread {this.Name} ({this.Id})"
 		};
 
-#endregion
+	#endregion
 }

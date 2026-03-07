@@ -31,6 +31,9 @@ items:
   - uid: DisCatSharp.Formatter
     name: Formatter
     type: Class
+  - uid: DisCatSharp.GlobalExceptionEventArgs
+    name: GlobalExceptionEventArgs
+    type: Class
   - uid: DisCatSharp.Internals
     name: Internals
     type: Class
@@ -85,9 +88,6 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.DiscordActionRowComponent
     name: DiscordActionRowComponent
-    type: Class
-  - uid: DisCatSharp.Entities.DiscordActionRowComponentResult
-    name: DiscordActionRowComponentResult
     type: Class
   - uid: DisCatSharp.Entities.DiscordActivity
     name: DiscordActivity
@@ -221,17 +221,26 @@ items:
   - uid: DisCatSharp.Entities.DiscordChannel
     name: DiscordChannel
     type: Class
+  - uid: DisCatSharp.Entities.DiscordChannelMention
+    name: DiscordChannelMention
+    type: Class
   - uid: DisCatSharp.Entities.DiscordChannelSelectComponent
     name: DiscordChannelSelectComponent
     type: Class
-  - uid: DisCatSharp.Entities.DiscordClan
-    name: DiscordClan
+  - uid: DisCatSharp.Entities.DiscordCheckboxComponent
+    name: DiscordCheckboxComponent
     type: Class
-  - uid: DisCatSharp.Entities.DiscordClanSettings
-    name: DiscordClanSettings
+  - uid: DisCatSharp.Entities.DiscordCheckboxGroupComponent
+    name: DiscordCheckboxGroupComponent
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordCheckboxGroupComponentOption
+    name: DiscordCheckboxGroupComponentOption
     type: Class
   - uid: DisCatSharp.Entities.DiscordClientStatus
     name: DiscordClientStatus
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordCollectibles
+    name: DiscordCollectibles
     type: Class
   - uid: DisCatSharp.Entities.DiscordColor
     name: DiscordColor
@@ -241,9 +250,6 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.DiscordComponentEmoji
     name: DiscordComponentEmoji
-    type: Class
-  - uid: DisCatSharp.Entities.DiscordComponentResult
-    name: DiscordComponentResult
     type: Class
   - uid: DisCatSharp.Entities.DiscordConnection
     name: DiscordConnection
@@ -301,6 +307,9 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.DiscordFileDisplayComponent
     name: DiscordFileDisplayComponent
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordFileUploadComponent
+    name: DiscordFileUploadComponent
     type: Class
   - uid: DisCatSharp.Entities.DiscordFollowedChannel
     name: DiscordFollowedChannel
@@ -380,9 +389,6 @@ items:
   - uid: DisCatSharp.Entities.DiscordInteractionCallback
     name: DiscordInteractionCallback
     type: Class
-  - uid: DisCatSharp.Entities.DiscordInteractionCallbackHint
-    name: DiscordInteractionCallbackHint
-    type: Class
   - uid: DisCatSharp.Entities.DiscordInteractionCallbackResponse
     name: DiscordInteractionCallbackResponse
     type: Class
@@ -416,8 +422,14 @@ items:
   - uid: DisCatSharp.Entities.DiscordInviteGuild
     name: DiscordInviteGuild
     type: Class
-  - uid: DisCatSharp.Entities.DiscordInviteStage
-    name: DiscordInviteStage
+  - uid: DisCatSharp.Entities.DiscordInviteRole
+    name: DiscordInviteRole
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordInviteTargetUsersJobStatus
+    name: DiscordInviteTargetUsersJobStatus
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordLabelComponent
+    name: DiscordLabelComponent
     type: Class
   - uid: DisCatSharp.Entities.DiscordLinkButtonComponent
     name: DiscordLinkButtonComponent
@@ -460,6 +472,9 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.DiscordMessageSnapshot
     name: DiscordMessageSnapshot
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordNameplate
+    name: DiscordNameplate
     type: Class
   - uid: DisCatSharp.Entities.DiscordOAuth2InstallParams
     name: DiscordOAuth2InstallParams
@@ -506,8 +521,17 @@ items:
   - uid: DisCatSharp.Entities.DiscordPresence
     name: DiscordPresence
     type: Class
+  - uid: DisCatSharp.Entities.DiscordPrimaryGuild
+    name: DiscordPrimaryGuild
+    type: Class
   - uid: DisCatSharp.Entities.DiscordProtocol
     name: DiscordProtocol
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordRadioGroupComponent
+    name: DiscordRadioGroupComponent
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordRadioGroupComponentOption
+    name: DiscordRadioGroupComponentOption
     type: Class
   - uid: DisCatSharp.Entities.DiscordReaction
     name: DiscordReaction
@@ -520,6 +544,9 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.DiscordRole
     name: DiscordRole
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordRoleColors
+    name: DiscordRoleColors
     type: Class
   - uid: DisCatSharp.Entities.DiscordRoleSelectComponent
     name: DiscordRoleSelectComponent
@@ -602,11 +629,11 @@ items:
   - uid: DisCatSharp.Entities.DiscordTeamMembershipStatus
     name: DiscordTeamMembershipStatus
     type: Enum
-  - uid: DisCatSharp.Entities.DiscordTextComponent
-    name: DiscordTextComponent
-    type: Class
   - uid: DisCatSharp.Entities.DiscordTextDisplayComponent
     name: DiscordTextDisplayComponent
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordTextInputComponent
+    name: DiscordTextInputComponent
     type: Class
   - uid: DisCatSharp.Entities.DiscordThreadChannel
     name: DiscordThreadChannel
@@ -665,6 +692,9 @@ items:
   - uid: DisCatSharp.Entities.DiscordWidgetSettings
     name: DiscordWidgetSettings
     type: Class
+  - uid: DisCatSharp.Entities.DisplayNameStyles
+    name: DisplayNameStyles
+    type: Class
   - uid: DisCatSharp.Entities.EveryoneMention
     name: EveryoneMention
     type: Struct
@@ -680,6 +710,9 @@ items:
   - uid: DisCatSharp.Entities.GuildFeaturesEnum
     name: GuildFeaturesEnum
     type: Enum
+  - uid: DisCatSharp.Entities.ILabelComponent
+    name: ILabelComponent
+    type: Interface
   - uid: DisCatSharp.Entities.IMention
     name: IMention
     type: Interface
@@ -725,6 +758,9 @@ items:
   - uid: DisCatSharp.Entities.RoleMention
     name: RoleMention
     type: Struct
+  - uid: DisCatSharp.Entities.SharedClientTheme
+    name: SharedClientTheme
+    type: Class
   - uid: DisCatSharp.Entities.SkuPrice
     name: SkuPrice
     type: Class
@@ -755,6 +791,9 @@ items:
   items:
   - uid: DisCatSharp.Entities.Core.CooldownBucket
     name: CooldownBucket
+    type: Class
+  - uid: DisCatSharp.Entities.Core.DisCatSharpBadDomainChecker
+    name: DisCatSharpBadDomainChecker
     type: Class
   - uid: DisCatSharp.Entities.Core.DisCatSharpBuilder
     name: DisCatSharpBuilder
@@ -878,6 +917,9 @@ items:
   - uid: DisCatSharp.Enums.BannerType
     name: BannerType
     type: Enum
+  - uid: DisCatSharp.Enums.BaseTheme
+    name: BaseTheme
+    type: Enum
   - uid: DisCatSharp.Enums.ButtonStyle
     name: ButtonStyle
     type: Enum
@@ -920,9 +962,18 @@ items:
   - uid: DisCatSharp.Enums.DiscordIntents
     name: DiscordIntents
     type: Enum
+  - uid: DisCatSharp.Enums.DiscordMediaType
+    name: DiscordMediaType
+    type: Enum
   - uid: DisCatSharp.Enums.DiscordShortlink
     name: DiscordShortlink
     type: Class
+  - uid: DisCatSharp.Enums.DisplayNameEffect
+    name: DisplayNameEffect
+    type: Enum
+  - uid: DisCatSharp.Enums.DisplayNameFont
+    name: DisplayNameFont
+    type: Enum
   - uid: DisCatSharp.Enums.DomainHelpAttribute
     name: DomainHelpAttribute
     type: Class
@@ -952,6 +1003,9 @@ items:
     type: Enum
   - uid: DisCatSharp.Enums.ForumPostSortOrder
     name: ForumPostSortOrder
+    type: Enum
+  - uid: DisCatSharp.Enums.GatewayCapabilities
+    name: GatewayCapabilities
     type: Enum
   - uid: DisCatSharp.Enums.GatewayCompressionLevel
     name: GatewayCompressionLevel
@@ -986,6 +1040,9 @@ items:
   - uid: DisCatSharp.Enums.InviteFlags
     name: InviteFlags
     type: Enum
+  - uid: DisCatSharp.Enums.InviteTargetUsersJobStatus
+    name: InviteTargetUsersJobStatus
+    type: Enum
   - uid: DisCatSharp.Enums.InviteType
     name: InviteType
     type: Enum
@@ -994,6 +1051,9 @@ items:
     type: Enum
   - uid: DisCatSharp.Enums.LoadingState
     name: LoadingState
+    type: Enum
+  - uid: DisCatSharp.Enums.MediaType
+    name: MediaType
     type: Enum
   - uid: DisCatSharp.Enums.MemberFlagExtensions
     name: MemberFlagExtensions
@@ -1133,6 +1193,9 @@ items:
   - uid: DisCatSharp.Enums.SystemChannelFlagsExtension
     name: SystemChannelFlagsExtension
     type: Class
+  - uid: DisCatSharp.Enums.TagMatching
+    name: TagMatching
+    type: Enum
   - uid: DisCatSharp.Enums.TargetType
     name: TargetType
     type: Enum
@@ -1187,6 +1250,9 @@ items:
     type: Enum
   - uid: DisCatSharp.Enums.Core.DisCatSharpStatisticType
     name: DisCatSharpStatisticType
+    type: Enum
+  - uid: DisCatSharp.Enums.Core.ModifyMode
+    name: ModifyMode
     type: Enum
 - uid: DisCatSharp.EventArgs
   name: DisCatSharp.EventArgs
@@ -1251,6 +1317,9 @@ items:
     type: Class
   - uid: DisCatSharp.EventArgs.GuildApplicationCommandCountEventArgs
     name: GuildApplicationCommandCountEventArgs
+    type: Class
+  - uid: DisCatSharp.EventArgs.GuildAppliedBoostsUpdateEventArgs
+    name: GuildAppliedBoostsUpdateEventArgs
     type: Class
   - uid: DisCatSharp.EventArgs.GuildAuditLogEntryCreateEventArgs
     name: GuildAuditLogEntryCreateEventArgs
@@ -1486,6 +1555,9 @@ items:
   - uid: DisCatSharp.EventArgs.VoiceChannelEffectSendEventArgs
     name: VoiceChannelEffectSendEventArgs
     type: Class
+  - uid: DisCatSharp.EventArgs.VoiceChannelStartTimeUpdateEventArgs
+    name: VoiceChannelStartTimeUpdateEventArgs
+    type: Class
   - uid: DisCatSharp.EventArgs.VoiceChannelStatusUpdateEventArgs
     name: VoiceChannelStatusUpdateEventArgs
     type: Class
@@ -1591,6 +1663,9 @@ items:
   - uid: DisCatSharp.Net.Models.ChannelEditModel
     name: ChannelEditModel
     type: Class
+  - uid: DisCatSharp.Net.Models.CurrentMemberEditModel
+    name: CurrentMemberEditModel
+    type: Class
   - uid: DisCatSharp.Net.Models.ForumChannelEditModel
     name: ForumChannelEditModel
     type: Class
@@ -1625,6 +1700,9 @@ items:
   name: DisCatSharp.Net.Serialization
   type: Namespace
   items:
+  - uid: DisCatSharp.Net.Serialization.DisCatSharpContractResolver
+    name: DisCatSharpContractResolver
+    type: Class
   - uid: DisCatSharp.Net.Serialization.DiscordJson
     name: DiscordJson
     type: Class

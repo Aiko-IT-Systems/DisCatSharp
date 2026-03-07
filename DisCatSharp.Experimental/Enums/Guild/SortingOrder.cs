@@ -7,15 +7,15 @@ namespace DisCatSharp.Experimental.Enums;
 /// </summary>
 public enum SortingOrder
 {
-    /// <summary>
-    /// Sort in ascending order.
-    /// </summary>
+	/// <summary>
+	/// Sort in ascending order.
+	/// </summary>
 	[EnumMember(Value = "asc")]
-    Asc,
+	Asc,
 
-    /// <summary>
-    /// Sort in descending order.
-    /// </summary>
-    [EnumMember(Value = "desc")]
-    Desc
+	/// <summary>
+	/// Sort in descending order.
+	/// </summary>
+	[EnumMember(Value = "desc")]
+	Desc
 }

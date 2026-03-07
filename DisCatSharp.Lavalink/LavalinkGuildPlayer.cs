@@ -620,7 +620,7 @@ public sealed class LavalinkGuildPlayer
 		return Task.CompletedTask;
 	}
 
-#region Queue Operations
+	#region Queue Operations
 
 	/// <summary>
 	///     Adds a Lavalink track to the queue.
@@ -856,5 +856,5 @@ public sealed class LavalinkGuildPlayer
 		}
 	}
 
-#endregion
+	#endregion
 }

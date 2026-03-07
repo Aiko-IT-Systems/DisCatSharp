@@ -7,15 +7,15 @@ namespace DisCatSharp.Experimental.Enums;
 /// </summary>
 public enum SearchCursorType
 {
-    /// <summary>
-    /// Represents a score-based cursor.
-    /// </summary>
-    [EnumMember(Value = "score")]
-    Score,
+	/// <summary>
+	/// Represents a score-based cursor.
+	/// </summary>
+	[EnumMember(Value = "score")]
+	Score,
 
-    /// <summary>
-    /// Represents a timestamp-based cursor.
-    /// </summary>
-    [EnumMember(Value = "timestamp")]
-    Timestamp
+	/// <summary>
+	/// Represents a timestamp-based cursor.
+	/// </summary>
+	[EnumMember(Value = "timestamp")]
+	Timestamp
 }

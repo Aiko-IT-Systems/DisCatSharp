@@ -1,8 +1,8 @@
-using System;
 using System.Collections.Generic;
 
 using DisCatSharp.Enums;
 using DisCatSharp.Net.Serialization;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;
