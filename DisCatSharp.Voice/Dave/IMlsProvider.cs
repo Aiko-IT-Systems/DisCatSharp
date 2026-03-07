@@ -6,8 +6,8 @@ namespace DisCatSharp.Voice.Dave;
 ///     Abstraction over MLS group operations for the DAVE protocol.
 /// </summary>
 /// <remarks>
-///     Phase 3–5 use <see cref="NullMlsProvider"/> (no-op stub).
-///     Phase 6 replaces this with a libdave P/Invoke implementation.
+///     Production builds typically provide a native-backed implementation.
+///     Non-native builds may use <see cref="NullMlsProvider"/> as a no-op fallback.
 /// </remarks>
 internal interface IMlsProvider
 {

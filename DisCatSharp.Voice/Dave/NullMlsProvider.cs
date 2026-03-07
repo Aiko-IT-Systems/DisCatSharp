@@ -4,9 +4,8 @@ using System.Collections.Generic;
 namespace DisCatSharp.Voice.Dave;
 
 /// <summary>
-///     No-op <see cref="IMlsProvider"/> stub used in Phase 4 and Phase 5.
-///     MLS operations are not performed; the DAVE session never reaches <see cref="DaveSessionState.Active"/>.
-///     Phase 6 replaces this with a libdave-backed implementation.
+///     No-op <see cref="IMlsProvider"/> implementation used when native MLS support is unavailable.
+///     MLS operations are not performed; the DAVE session does not transition to <see cref="DaveSessionState.Active"/>.
 /// </summary>
 internal sealed class NullMlsProvider : IMlsProvider
 {

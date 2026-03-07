@@ -31,7 +31,7 @@ internal static class Interop
 	public static int SodiumMacSize { get; } = (int)_SodiumSecretBoxMacSize();
 
 	/// <summary>
-	///     _S the sodium secret box key size.
+	///     Gets the libsodium secretbox key size.
 	/// </summary>
 	/// <returns>An UIntPtr.</returns>
 	[DllImport(SODIUM_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "crypto_secretbox_xsalsa20poly1305_keybytes")]
@@ -39,7 +39,7 @@ internal static class Interop
 	private static extern UIntPtr _SodiumSecretBoxKeySize();
 
 	/// <summary>
-	///     _S the sodium secret box nonce size.
+	///     Gets the libsodium secretbox nonce size.
 	/// </summary>
 	/// <returns>An UIntPtr.</returns>
 	[DllImport(SODIUM_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "crypto_secretbox_xsalsa20poly1305_noncebytes")]
@@ -47,7 +47,7 @@ internal static class Interop
 	private static extern UIntPtr _SodiumSecretBoxNonceSize();
 
 	/// <summary>
-	///     _S the sodium secret box mac size.
+	///     Gets the libsodium secretbox MAC size.
 	/// </summary>
 	/// <returns>An UIntPtr.</returns>
 	[DllImport(SODIUM_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "crypto_secretbox_xsalsa20poly1305_macbytes")]
@@ -55,7 +55,7 @@ internal static class Interop
 	private static extern UIntPtr _SodiumSecretBoxMacSize();
 
 	/// <summary>
-	///     _S the sodium secret box create.
+	///     Native binding for <c>crypto_secretbox_easy</c>.
 	/// </summary>
 	/// <param name="buffer">The buffer.</param>
 	/// <param name="message">The message.</param>
@@ -67,7 +67,7 @@ internal static class Interop
 	private static extern unsafe int _SodiumSecretBoxCreate(byte* buffer, byte* message, ulong messageLength, byte* nonce, byte* key);
 
 	/// <summary>
-	///     _S the sodium secret box open.
+	///     Native binding for <c>crypto_secretbox_open_easy</c>.
 	/// </summary>
 	/// <param name="buffer">The buffer.</param>
 	/// <param name="encryptedMessage">The encrypted message.</param>
@@ -211,7 +211,7 @@ internal static class Interop
 	private const string OPUS_LIBRARY_NAME = "libopus";
 
 	/// <summary>
-	///     _S the opus create encoder.
+	///     Native binding for <c>opus_encoder_create</c>.
 	/// </summary>
 	/// <param name="sampleRate">The sample rate.</param>
 	/// <param name="channels">The channels.</param>
@@ -222,14 +222,14 @@ internal static class Interop
 	private static extern IntPtr _OpusCreateEncoder(int sampleRate, int channels, int application, out OpusError error);
 
 	/// <summary>
-	///     Opuses the destroy encoder.
+	///     Destroys an Opus encoder instance.
 	/// </summary>
 	/// <param name="encoder">The encoder.</param>
 	[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_encoder_destroy")]
 	public static extern void OpusDestroyEncoder(IntPtr encoder);
 
 	/// <summary>
-	///     _S the opus encode.
+	///     Native binding for <c>opus_encode</c>.
 	/// </summary>
 	/// <param name="encoder">The encoder.</param>
 	/// <param name="pcmData">The pcm data.</param>
@@ -241,7 +241,7 @@ internal static class Interop
 	private static extern unsafe int _OpusEncode(IntPtr encoder, byte* pcmData, int frameSize, byte* data, int maxDataBytes);
 
 	/// <summary>
-	///     _S the opus encoder control.
+	///     Native binding for <c>opus_encoder_ctl</c>.
 	/// </summary>
 	/// <param name="encoder">The encoder.</param>
 	/// <param name="request">The request.</param>
@@ -251,7 +251,7 @@ internal static class Interop
 	private static extern OpusError _OpusEncoderControl(IntPtr encoder, OpusControl request, int value);
 
 	/// <summary>
-	///     _S the opus create decoder.
+	///     Native binding for <c>opus_decoder_create</c>.
 	/// </summary>
 	/// <param name="sampleRate">The sample rate.</param>
 	/// <param name="channels">The channels.</param>
@@ -261,14 +261,14 @@ internal static class Interop
 	private static extern IntPtr _OpusCreateDecoder(int sampleRate, int channels, out OpusError error);
 
 	/// <summary>
-	///     Opuses the destroy decoder.
+	///     Destroys an Opus decoder instance.
 	/// </summary>
 	/// <param name="decoder">The decoder.</param>
 	[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_decoder_destroy")]
 	public static extern void OpusDestroyDecoder(IntPtr decoder);
 
 	/// <summary>
-	///     _S the opus decode.
+	///     Native binding for <c>opus_decode</c>.
 	/// </summary>
 	/// <param name="decoder">The decoder.</param>
 	/// <param name="opusData">The opus data.</param>
@@ -281,7 +281,7 @@ internal static class Interop
 	private static extern unsafe int _OpusDecode(IntPtr decoder, byte* opusData, int opusDataLength, byte* data, int frameSize, int decodeFec);
 
 	/// <summary>
-	///     _S the opus get packet channel count.
+	///     Native binding for <c>opus_packet_get_nb_channels</c>.
 	/// </summary>
 	/// <param name="opusData">The opus data.</param>
 	/// <returns>An int.</returns>
@@ -289,7 +289,7 @@ internal static class Interop
 	private static extern unsafe int _OpusGetPacketChannelCount(byte* opusData);
 
 	/// <summary>
-	///     _S the opus get packet frame count.
+	///     Native binding for <c>opus_packet_get_nb_frames</c>.
 	/// </summary>
 	/// <param name="opusData">The opus data.</param>
 	/// <param name="length">The length.</param>
@@ -298,7 +298,7 @@ internal static class Interop
 	private static extern unsafe int _OpusGetPacketFrameCount(byte* opusData, int length);
 
 	/// <summary>
-	///     _S the opus get packet sample per frame count.
+	///     Native binding for <c>opus_packet_get_samples_per_frame</c>.
 	/// </summary>
 	/// <param name="opusData">The opus data.</param>
 	/// <param name="samplingRate">The sampling rate.</param>
@@ -307,7 +307,7 @@ internal static class Interop
 	private static extern unsafe int _OpusGetPacketSamplePerFrameCount(byte* opusData, int samplingRate);
 
 	/// <summary>
-	///     _S the opus decoder control.
+	///     Native binding for <c>opus_decoder_ctl</c>.
 	/// </summary>
 	/// <param name="decoder">The decoder.</param>
 	/// <param name="request">The request.</param>
@@ -317,7 +317,7 @@ internal static class Interop
 	private static extern int _OpusDecoderControl(IntPtr decoder, OpusControl request, out int value);
 
 	/// <summary>
-	///     Opuses the create encoder.
+	///     Creates an Opus encoder for the specified audio format.
 	/// </summary>
 	/// <param name="audioFormat">The audio format.</param>
 	/// <returns>An IntPtr.</returns>
@@ -328,7 +328,7 @@ internal static class Interop
 	}
 
 	/// <summary>
-	///     Opuses the set encoder option.
+	///     Applies an encoder control option to a native Opus encoder.
 	/// </summary>
 	/// <param name="encoder">The encoder.</param>
 	/// <param name="option">The option.</param>
@@ -341,7 +341,7 @@ internal static class Interop
 	}
 
 	/// <summary>
-	///     Opuses the encode.
+	///     Encodes a PCM frame into Opus.
 	/// </summary>
 	/// <param name="encoder">The encoder.</param>
 	/// <param name="pcm">The pcm.</param>
@@ -367,7 +367,7 @@ internal static class Interop
 	}
 
 	/// <summary>
-	///     Opuses the create decoder.
+	///     Creates an Opus decoder for the specified audio format.
 	/// </summary>
 	/// <param name="audioFormat">The audio format.</param>
 	/// <returns>An IntPtr.</returns>
@@ -378,7 +378,7 @@ internal static class Interop
 	}
 
 	/// <summary>
-	///     Opuses the decode.
+	///     Decodes an Opus frame into PCM.
 	/// </summary>
 	/// <param name="decoder">The decoder.</param>
 	/// <param name="opus">The opus.</param>
@@ -406,7 +406,7 @@ internal static class Interop
 	}
 
 	/// <summary>
-	///     Opuses the decode.
+	///     Decodes a concealment (packet-loss) frame into PCM.
 	/// </summary>
 	/// <param name="decoder">The decoder.</param>
 	/// <param name="frameSize">The frame size.</param>
@@ -431,7 +431,7 @@ internal static class Interop
 	}
 
 	/// <summary>
-	///     Opuses the get packet metrics.
+	///     Extracts packet-level Opus metrics from an encoded frame.
 	/// </summary>
 	/// <param name="opus">The opus.</param>
 	/// <param name="samplingRate">The sampling rate.</param>
@@ -452,7 +452,7 @@ internal static class Interop
 	}
 
 	/// <summary>
-	///     Opuses the get last packet duration.
+	///     Reads the decoder's last packet duration (in samples).
 	/// </summary>
 	/// <param name="decoder">The decoder.</param>
 	/// <param name="sampleCount">The sample count.</param>

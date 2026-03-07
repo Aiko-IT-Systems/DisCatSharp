@@ -320,12 +320,12 @@ public sealed class VoiceConnection : IDisposable
 	/// <summary>
 	///     Initializes a new instance of the <see cref="VoiceConnection" /> class.
 	/// </summary>
-	/// <param name="client">The client.</param>
-	/// <param name="guild">The guild.</param>
-	/// <param name="channel">The channel.</param>
-	/// <param name="config">The config.</param>
-	/// <param name="server">The server.</param>
-	/// <param name="state">The state.</param>
+	/// <param name="client">Owning Discord client.</param>
+	/// <param name="guild">Guild that owns the voice session.</param>
+	/// <param name="channel">Initial target voice channel.</param>
+	/// <param name="config">Voice connection configuration.</param>
+	/// <param name="server">Initial voice server payload.</param>
+	/// <param name="state">Initial voice state payload for this client user.</param>
 	internal VoiceConnection(DiscordClient client, DiscordGuild guild, DiscordChannel channel, VoiceConfiguration config, VoiceServerUpdatePayload server, VoiceStateUpdatePayload state)
 	{
 		this._discord = client;
@@ -333,15 +333,15 @@ public sealed class VoiceConnection : IDisposable
 		this.TargetChannel = channel;
 		this._transmittingSsrCs = new();
 
-			this._userSpeaking = new("VOICE_USER_SPEAKING", TimeSpan.Zero, this._discord.EventErrorHandler);
-			this._userJoined = new("VOICE_USER_JOINED", TimeSpan.Zero, this._discord.EventErrorHandler);
-			this._userLeft = new("VOICE_USER_LEFT", TimeSpan.Zero, this._discord.EventErrorHandler);
-			this._voiceReceived = new("VOICE_VOICE_RECEIVED", TimeSpan.Zero, this._discord.EventErrorHandler);
-			this._voicePacketDropped = new("VOICE_PACKET_DROPPED", TimeSpan.Zero, this._discord.EventErrorHandler);
-			this._daveStateChanged = new("VOICE_DAVE_STATE_CHANGED", TimeSpan.Zero, this._discord.EventErrorHandler);
-			this._daveOpcodeObserved = new("VOICE_DAVE_OPCODE_OBSERVED", TimeSpan.Zero, this._discord.EventErrorHandler);
-			this._voiceSocketError = new("VOICE_WS_ERROR", TimeSpan.Zero, this._discord.EventErrorHandler);
-			this._tokenSource = new();
+		this._userSpeaking = new("VOICE_USER_SPEAKING", TimeSpan.Zero, this._discord.EventErrorHandler);
+		this._userJoined = new("VOICE_USER_JOINED", TimeSpan.Zero, this._discord.EventErrorHandler);
+		this._userLeft = new("VOICE_USER_LEFT", TimeSpan.Zero, this._discord.EventErrorHandler);
+		this._voiceReceived = new("VOICE_VOICE_RECEIVED", TimeSpan.Zero, this._discord.EventErrorHandler);
+		this._voicePacketDropped = new("VOICE_PACKET_DROPPED", TimeSpan.Zero, this._discord.EventErrorHandler);
+		this._daveStateChanged = new("VOICE_DAVE_STATE_CHANGED", TimeSpan.Zero, this._discord.EventErrorHandler);
+		this._daveOpcodeObserved = new("VOICE_DAVE_OPCODE_OBSERVED", TimeSpan.Zero, this._discord.EventErrorHandler);
+		this._voiceSocketError = new("VOICE_WS_ERROR", TimeSpan.Zero, this._discord.EventErrorHandler);
+		this._tokenSource = new();
 
 		this._configuration = config;
 		this._isInitialized = false;
@@ -693,7 +693,7 @@ public sealed class VoiceConnection : IDisposable
 	}
 
 	/// <summary>
-	///     Reconnects .
+	///     Reconnects the voice WebSocket using either resume or a fresh identify flow.
 	/// </summary>
 	/// <returns>A Task.</returns>
 	internal async Task ReconnectAsync()
@@ -729,12 +729,11 @@ public sealed class VoiceConnection : IDisposable
 	}
 
 	/// <summary>
-	///     Starts .
+	///     Sends either IDENTIFY (OP0) or RESUME (OP7) on the voice WebSocket.
 	/// </summary>
 	/// <returns>A Task.</returns>
 	internal async Task StartAsync()
 	{
-		// Let's announce our intentions to the server
 		var vdp = new VoiceDispatch();
 
 		// Capture whether this is a fresh session BEFORE mutating this.Resume,
@@ -776,18 +775,18 @@ public sealed class VoiceConnection : IDisposable
 	}
 
 	/// <summary>
-	///     Waits the for ready async.
+	///     Waits until the voice connection has completed handshake readiness.
 	/// </summary>
-	/// <returns>A Task.</returns>
+	/// <returns>A task that completes once voice transport is ready.</returns>
 	internal Task WaitForReadyAsync()
 		=> this._readyWait.Task;
 
 	/// <summary>
-	///     Enqueues the packet async.
+	///     Enqueues a raw PCM packet for outbound transmission.
 	/// </summary>
-	/// <param name="packet">The packet.</param>
-	/// <param name="token">The token.</param>
-	/// <returns>A Task.</returns>
+	/// <param name="packet">PCM packet payload and timing metadata.</param>
+	/// <param name="token">Cancellation token for queue write.</param>
+	/// <returns>A task representing the queue write operation.</returns>
 	internal async Task EnqueuePacketAsync(RawVoicePacket packet, CancellationToken token = default)
 	{
 		await this._transmitChannel.Writer.WriteAsync(packet, token).ConfigureAwait(false);
@@ -795,12 +794,12 @@ public sealed class VoiceConnection : IDisposable
 	}
 
 	/// <summary>
-	///     Prepares the packet.
+	///     Encodes, encrypts, and serializes an outbound RTP packet from PCM input.
 	/// </summary>
-	/// <param name="pcm">The pcm.</param>
-	/// <param name="target">The target.</param>
-	/// <param name="length">The length.</param>
-	/// <returns>A bool.</returns>
+	/// <param name="pcm">PCM frame buffer to encode.</param>
+	/// <param name="target">Rented output buffer containing the serialized packet on success.</param>
+	/// <param name="length">Valid byte length in <paramref name="target"/> on success.</param>
+	/// <returns><see langword="true"/> when a packet was prepared; otherwise <see langword="false"/>.</returns>
 	internal bool PreparePacket(ReadOnlySpan<byte> pcm, [NotNullWhen(true)] out byte[]? target, out int length)
 	{
 		target = null;
@@ -822,9 +821,7 @@ public sealed class VoiceConnection : IDisposable
 		this._opus.Encode(pcm, ref opus);
 
 		// DAVE E2EE: encrypt the Opus frame when the session is active.
-		// With NullMlsProvider (Phase 5), IsActive is always false — this is a no-op.
-		// Phase 6 will activate this path with a real MLS backend.
-		// Pass this._ssrc so libdave embeds the correct sender SSRC in the SFrame header.
+		// Pass this._ssrc so the encryptor can embed the correct sender SSRC in the SFrame header.
 
 		// One-shot DAVE encrypt diagnostic: logs session state before the first TryEncrypt attempt.
 		if (this._daveSession is not null && Interlocked.CompareExchange(ref this._davePrepDiagLogged, 1, 0) == 0)
@@ -977,7 +974,7 @@ public sealed class VoiceConnection : IDisposable
 	}
 
 	/// <summary>
-	///     Voices the sender task.
+	///     Runs the outbound audio sender loop.
 	/// </summary>
 	/// <returns>A Task.</returns>
 	private async Task VoiceSenderTask()
@@ -1009,19 +1006,6 @@ public sealed class VoiceConnection : IDisposable
 					if (Interlocked.CompareExchange(ref this._sendDiagLogged, 1, 0) == 0)
 						this._discord.Logger.VoiceDebug(VoiceEvents.Misc, "[VoiceSend] Dequeued PCM frame pcmLen={PcmLen}", rawPacket.Bytes.Length);
 				}
-
-				// Provided by Laura#0090 (214796473689178133); this is Python, but adaptable:
-				//
-				// delay = max(0, self.delay + ((start_time + self.delay * loops) + - time.time()))
-				//
-				// self.delay
-				//   sample size
-				// start_time
-				//   time since streaming started
-				// loops
-				//   number of samples sent
-				// time.time()
-				//   DateTime.Now
 
 				if (hasPacket)
 				{
@@ -1093,17 +1077,17 @@ public sealed class VoiceConnection : IDisposable
 	}
 
 	/// <summary>
-	///     Processes the packet.
+	///     Decrypts and decodes a received RTP packet into PCM.
 	/// </summary>
-	/// <param name="data">The data.</param>
-	/// <param name="opus">The opus.</param>
-	/// <param name="pcm">The pcm.</param>
-	/// <param name="pcmPackets">The pcm packets.</param>
-	/// <param name="voiceSender">The voice sender.</param>
-	/// <param name="outputFormat">The output format.</param>
+	/// <param name="data">Raw RTP packet bytes from UDP.</param>
+	/// <param name="opus">Scratch buffer used for decoded Opus payload data.</param>
+	/// <param name="pcm">Scratch buffer used for decoded PCM data.</param>
+	/// <param name="pcmPackets">Output list containing concealment frames plus the decoded frame.</param>
+	/// <param name="voiceSender">Resolved sender state for this packet.</param>
+	/// <param name="outputFormat">Output PCM format for decoded frames.</param>
 	/// <param name="missingFrames">Number of missing frames detected before the decoded packet.</param>
 	/// <param name="sequence">Unwrapped sequence number for the decoded packet.</param>
-	/// <returns>A bool.</returns>
+	/// <returns><see langword="true"/> when decode succeeded; otherwise <see langword="false"/>.</returns>
 	private bool ProcessPacket(ReadOnlySpan<byte> data, ref Memory<byte> opus, ref Memory<byte> pcm, List<ReadOnlyMemory<byte>> pcmPackets,
 		[NotNullWhen(true)] out AudioSender? voiceSender, out AudioFormat outputFormat, out int missingFrames, out ulong sequence)
 	{
@@ -1368,10 +1352,9 @@ public sealed class VoiceConnection : IDisposable
 					opusSpan = opusSpan[i..];
 				}
 
-			// TODO: consider implementing RFC 5285, 4.3. Two-Byte Header
+			// Handle the RFC 5285 two-byte extension header marker defensively by trimming it.
+			// The payload is treated as opaque here and removed before Opus decode.
 			if (opusSpan.Length >= 2 && opusSpan[0] is 0x90)
-				// I'm not 100% sure what this header is/does, however removing the data causes no
-				// real issues, and has the added benefit of removing a lot of noise.
 				opusSpan = opusSpan[2..];
 
 			switch (gap)
@@ -1427,10 +1410,10 @@ public sealed class VoiceConnection : IDisposable
 	}
 
 	/// <summary>
-	///     Processes the voice packet.
+	///     Handles a single inbound UDP voice packet and publishes decoded voice events.
 	/// </summary>
-	/// <param name="data">The data.</param>
-	/// <returns>A Task.</returns>
+	/// <param name="data">Raw UDP packet data.</param>
+	/// <returns>A task representing packet handling and event dispatch.</returns>
 	private async Task ProcessVoicePacket(byte[] data)
 	{
 		if (data.Length < 13) // minimum packet length
@@ -1483,9 +1466,9 @@ public sealed class VoiceConnection : IDisposable
 	}
 
 	/// <summary>
-	///     Processes the keepalive.
+	///     Handles an incoming UDP keepalive response and updates ping metrics.
 	/// </summary>
-	/// <param name="data">The data.</param>
+	/// <param name="data">Raw 8-byte UDP keepalive payload.</param>
 	private void ProcessKeepalive(byte[] data)
 	{
 		try
@@ -1506,9 +1489,9 @@ public sealed class VoiceConnection : IDisposable
 	}
 
 	/// <summary>
-	///     Udps the receiver task.
+	///     Runs the UDP receive loop for voice RTP and keepalive packets.
 	/// </summary>
-	/// <returns>A Task.</returns>
+	/// <returns>A task representing the lifetime of the receiver loop.</returns>
 	private async Task UdpReceiverTask()
 	{
 		var token = this.RECEIVER_TOKEN;
@@ -1599,7 +1582,7 @@ public sealed class VoiceConnection : IDisposable
 	/// <summary>
 	///     Asynchronously resumes playback.
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>A task that completes when playback is resumed.</returns>
 	public async Task ResumeAsync()
 		=> await this._pauseEvent.SetAsync().ConfigureAwait(false);
 
@@ -1610,9 +1593,9 @@ public sealed class VoiceConnection : IDisposable
 		=> this.Dispose();
 
 	/// <summary>
-	///     Heartbeats .
+	///     Runs the voice WebSocket heartbeat loop (OP3).
 	/// </summary>
-	/// <returns>A Task.</returns>
+	/// <returns>A task representing the heartbeat loop lifetime.</returns>
 	private async Task HeartbeatAsync()
 	{
 		await Task.Yield();
@@ -1651,9 +1634,9 @@ public sealed class VoiceConnection : IDisposable
 	}
 
 	/// <summary>
-	///     Keepalives .
+	///     Runs the UDP keepalive loop.
 	/// </summary>
-	/// <returns>A Task.</returns>
+	/// <returns>A task representing the keepalive loop lifetime.</returns>
 	private async Task KeepaliveAsync()
 	{
 		await Task.Yield();
@@ -1677,13 +1660,12 @@ public sealed class VoiceConnection : IDisposable
 	}
 
 	/// <summary>
-	///     Stage1S .
+	///     Performs UDP IP discovery and sends the voice SELECT_PROTOCOL payload (OP1).
 	/// </summary>
-	/// <param name="voiceReady">The voice ready.</param>
-	/// <returns>A Task.</returns>
+	/// <param name="voiceReady">Voice READY payload containing UDP endpoint and supported modes.</param>
+	/// <returns>A task representing stage 1 handshake work.</returns>
 	private async Task Stage1(VoiceReadyPayload voiceReady)
 	{
-		// IP Discovery
 		this._udpClient.Setup(this.UdpEndpoint);
 		this._discord.Logger.VoiceDebug(VoiceEvents.VoiceHandshake,
 			"[Voice] Stage1 UDP discovery started: endpoint={Host}:{Port}",
@@ -1723,11 +1705,8 @@ public sealed class VoiceConnection : IDisposable
 		};
 		this._discord.Logger.VoiceTrace(VoiceEvents.VoiceHandshake, "Endpoint discovery finished - discovered endpoint is {IP}:{Port}", ip, port);
 
-		// Select voice encryption mode
 		var selectedEncryptionMode = Sodium.SelectMode(voiceReady.Modes);
 		this._selectedEncryptionMode = selectedEncryptionMode.Value;
-
-		// Ready
 		this._discord.Logger.VoiceTrace(VoiceEvents.VoiceHandshake, "Selected encryption mode is {EncryptionMode}", selectedEncryptionMode.Key);
 		var vsp = new VoiceDispatch
 		{
@@ -1777,17 +1756,16 @@ public sealed class VoiceConnection : IDisposable
 	}
 
 	/// <summary>
-	///     Stage2S .
+	///     Finalizes transport setup after SESSION_DESCRIPTION (OP4).
 	/// </summary>
-	/// <param name="voiceSessionDescription">The voice session description.</param>
-	/// <returns>A Task.</returns>
+	/// <param name="voiceSessionDescription">Voice session description with selected crypto mode and key.</param>
+	/// <returns>A task representing stage 2 initialization work.</returns>
 	private async Task Stage2(VoiceSessionDescriptionPayload voiceSessionDescription)
 	{
 		this._selectedEncryptionMode = Sodium.SupportedModes[voiceSessionDescription.Mode.ToLowerInvariant()];
 		this._discord.Logger.VoiceTrace(VoiceEvents.VoiceHandshake, "Discord updated encryption mode - new mode is {EncryptionMode}", this._selectedEncryptionMode);
 		this._discord.Logger.VoiceDebug(VoiceEvents.VoiceHandshake, "[Voice] Selected encryption mode for send: {Mode}", this._selectedEncryptionMode);
 
-		// start keepalive
 		this._keepaliveTokenSource = new();
 		this._keepaliveTask = this.KeepaliveAsync();
 
@@ -1805,10 +1783,10 @@ public sealed class VoiceConnection : IDisposable
 	}
 
 	/// <summary>
-	///     Handles the dispatch.
+	///     Handles a JSON voice gateway dispatch message.
 	/// </summary>
-	/// <param name="jo">The jo.</param>
-	/// <returns>A Task.</returns>
+	/// <param name="jo">Parsed JSON payload for a voice gateway event.</param>
+	/// <returns>A task representing dispatch handling.</returns>
 	private async Task HandleDispatch(JObject jo)
 	{
 		var opc = (int?)jo["op"];
@@ -1829,9 +1807,7 @@ public sealed class VoiceConnection : IDisposable
 				var vrp = opp.ToObject<VoiceReadyPayload>()!;
 				this._ssrc = vrp.Ssrc;
 				this.UdpEndpoint = new(vrp.Address, vrp.Port);
-				// this is not the valid interval
-				// oh, discord
-				//this.HeartbeatInterval = vrp.HeartbeatInterval;
+				// Voice gateway heartbeat interval is supplied by HELLO (OP8), not READY (OP2).
 				this._heartbeatTask = Task.Run(this.HeartbeatAsync, CancellationToken.None);
 				await this.Stage1(vrp).ConfigureAwait(false);
 				break;
@@ -1856,7 +1832,6 @@ public sealed class VoiceConnection : IDisposable
 						var voiceChannelId = this.TargetChannel.Id;
 						this._daveSession = new DaveSession(
 							selfUserId: this.StateData.UserId ?? 0UL,
-							channelId: voiceChannelId,
 							protocolVersion: vsd.DaveProtocolVersion,
 							mlsProvider: new LibDaveMlsProvider(
 								authSessionId: this._discord.SessionId ?? string.Empty,
@@ -1911,8 +1886,6 @@ public sealed class VoiceConnection : IDisposable
 				break;
 
 			case 5: // SPEAKING
-					// Don't spam OP5
-					// No longer spam, Discord supposedly doesn't send many of these
 				this._discord.Logger.VoiceTrace(VoiceEvents.VoiceDispatch, "Received SPEAKING (OP5)");
 				ArgumentNullException.ThrowIfNull(opp);
 				var spd = opp.ToObject<VoiceSpeakingPayload>()!;
@@ -1962,8 +1935,6 @@ public sealed class VoiceConnection : IDisposable
 				break;
 
 			case 8: // HELLO
-					// this sends a heartbeat interval that we need to use for
-					// ArgumentNullException.ThrowIfNull(opp);
 				this._discord.Logger.VoiceTrace(VoiceEvents.VoiceDispatch, "Received HELLO (OP8)");
 				ArgumentNullException.ThrowIfNull(opp);
 				this._heartbeatInterval = opp["heartbeat_interval"].ToObject<int>();
@@ -2111,19 +2082,14 @@ public sealed class VoiceConnection : IDisposable
 	}
 
 	/// <summary>
-	///     Voices the w s_ socket closed.
+	///     Handles voice WebSocket close events and reconnect policy.
 	/// </summary>
-	/// <param name="client">The client.</param>
-	/// <param name="e">The e.</param>
-	/// <returns>A Task.</returns>
+	/// <param name="client">WebSocket client instance.</param>
+	/// <param name="e">Socket close event payload.</param>
+	/// <returns>A task representing close handling.</returns>
 	private async Task VoiceWS_SocketClosed(IWebSocketClient client, SocketCloseEventArgs e)
 	{
 		this._discord.Logger.VoiceDebug(VoiceEvents.VoiceConnectionClose, "Voice WebSocket closed ({Code}, '{Message}')", e.CloseCode, e.CloseMessage ?? "No reason given");
-
-		// generally this should not be disposed on all disconnects, only on requested ones
-		// or something
-		// otherwise problems happen
-		//this.Dispose();
 
 		var shouldAutoReconnect = this.Resume;
 		if (e.CloseCode is 4006 or 4009)
@@ -2161,11 +2127,11 @@ public sealed class VoiceConnection : IDisposable
 	}
 
 	/// <summary>
-	///     Voices the w s_ socket message.
+	///     Handles inbound voice WebSocket messages.
 	/// </summary>
-	/// <param name="client">The client.</param>
-	/// <param name="e">The e.</param>
-	/// <returns>A Task.</returns>
+	/// <param name="client">WebSocket client instance.</param>
+	/// <param name="e">Inbound message payload.</param>
+	/// <returns>A task representing message dispatch handling.</returns>
 	private Task VoiceWS_SocketMessage(IWebSocketClient client, SocketMessageEventArgs e)
 	{
 		if (e is SocketTextMessageEventArgs et)
@@ -2183,11 +2149,11 @@ public sealed class VoiceConnection : IDisposable
 	}
 
 	/// <summary>
-	///     Voices the w s_ socket opened.
+	///     Handles voice WebSocket open events.
 	/// </summary>
-	/// <param name="client">The client.</param>
-	/// <param name="e">The e.</param>
-	/// <returns>A Task.</returns>
+	/// <param name="client">WebSocket client instance.</param>
+	/// <param name="e">Socket open event payload.</param>
+	/// <returns>A task representing open handling.</returns>
 	private Task VoiceWS_SocketOpened(IWebSocketClient client, SocketEventArgs e)
 	{
 		this._discord.Logger.VoiceDebug(VoiceEvents.VoiceHandshake, "[Voice] Voice WS socket opened — sending IDENTIFY");
@@ -2195,11 +2161,11 @@ public sealed class VoiceConnection : IDisposable
 	}
 
 	/// <summary>
-	///     Voices the ws_ socket exception.
+	///     Handles voice WebSocket exceptions.
 	/// </summary>
-	/// <param name="client">The client.</param>
-	/// <param name="e">The e.</param>
-	/// <returns>A Task.</returns>
+	/// <param name="client">WebSocket client instance.</param>
+	/// <param name="e">Socket exception event payload.</param>
+	/// <returns>A task representing error event propagation.</returns>
 	private Task VoiceWs_SocketException(IWebSocketClient client, SocketErrorEventArgs e)
 		=> this._voiceSocketError.InvokeAsync(this, new(this._discord.ServiceProvider)
 		{
@@ -2207,10 +2173,10 @@ public sealed class VoiceConnection : IDisposable
 		});
 
 	/// <summary>
-	///     Ws the send async.
+	///     Sends a text payload to the voice WebSocket.
 	/// </summary>
-	/// <param name="payload">The payload.</param>
-	/// <returns>A Task.</returns>
+	/// <param name="payload">JSON payload to send.</param>
+	/// <returns>A task representing the send operation.</returns>
 	private async Task WsSendAsync(string payload)
 	{
 		this._discord.Logger.VoiceTrace(VoiceEvents.VoiceWsTx, payload);
@@ -2331,9 +2297,9 @@ public sealed class VoiceConnection : IDisposable
 		};
 
 	/// <summary>
-	///     Gets the unix timestamp.
+	///     Converts a <see cref="DateTime"/> to a Unix timestamp in seconds.
 	/// </summary>
-	/// <param name="dt">The datetime.</param>
+	/// <param name="dt">Date/time value to convert.</param>
 	private static uint UnixTimestamp(DateTime dt)
 	{
 		var ts = dt - s_unixEpoch;
@@ -2369,7 +2335,7 @@ public sealed class VoiceConnection : IDisposable
 	///     Server-sent binary messages use the framing: [seq: uint16 BE][opcode: uint8][payload...].
 	/// </summary>
 	/// <param name="data">The raw binary message data.</param>
-	/// <returns>A Task.</returns>
+	/// <returns>A task representing binary dispatch handling.</returns>
 	private async Task HandleBinaryDispatch(byte[] data)
 	{
 		// Minimum valid binary message: 2 bytes seq + 1 byte opcode = 3 bytes

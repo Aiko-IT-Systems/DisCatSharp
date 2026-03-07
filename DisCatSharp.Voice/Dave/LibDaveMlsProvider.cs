@@ -197,8 +197,7 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 			}
 		}
 
-		// TODO: confirm whether commitWelcome contains a combined commit+welcome
-		// bundle or commit only. For now the bytes are treated as the commit payload.
+		// Treat native output as commit payload; welcome processing is handled by OP30/ProcessWelcome.
 		// libdave allocated this buffer; free after copying to managed memory.
 		try
 		{

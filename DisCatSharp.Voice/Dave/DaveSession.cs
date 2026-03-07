@@ -32,8 +32,10 @@ namespace DisCatSharp.Voice.Dave;
 ///         (OPs 11, 21–25, 27–31). It does not touch WebSocket, RTP, Sodium, or any networking
 ///         type — those responsibilities belong to <c>VoiceConnection</c>.
 ///     </para>
-///     <para>Phase 4 uses <see cref="NullMlsProvider"/> so the session never reaches <see cref="DaveSessionState.Active"/>.</para>
-///     <para>Phase 6 replaces the MLS provider with a libdave-backed implementation.</para>
+///     <para>
+///         Session activation depends on <see cref="IMlsProvider"/> producing valid commit/welcome
+///         outcomes and ratchet installers.
+///     </para>
 /// </remarks>
 internal sealed class DaveSession : IDisposable
 {
@@ -59,10 +61,9 @@ internal sealed class DaveSession : IDisposable
 	public int ProtocolVersion { get; private set; }
 
 	/// <summary>
-	///     Initialises a new <see cref="DaveSession"/> for the specified voice channel and user.
+	///     Initialises a new <see cref="DaveSession"/> for the specified user and protocol context.
 	/// </summary>
 	/// <param name="selfUserId">The Discord user ID of the local participant.</param>
-	/// <param name="channelId">The voice channel ID (used for group identity).</param>
 	/// <param name="protocolVersion">The initial DAVE protocol version; 0 means DAVE is disabled.</param>
 	/// <param name="mlsProvider">The MLS provider to use for group operations.</param>
 	/// <param name="encryptorFactory">Factory producing the outbound <see cref="IDaveEncryptor"/>.</param>
@@ -71,7 +72,6 @@ internal sealed class DaveSession : IDisposable
 	/// <param name="stateChanged">Optional callback invoked for every state transition.</param>
 	internal DaveSession(
 		ulong selfUserId,
-		ulong channelId,
 		int protocolVersion,
 		IMlsProvider mlsProvider,
 		Func<IDaveEncryptor> encryptorFactory,
@@ -79,7 +79,6 @@ internal sealed class DaveSession : IDisposable
 		ILogger logger,
 		Action<int, DaveSessionState, DaveSessionState, string, string>? stateChanged = null)
 	{
-		_ = channelId; // stored for future group-id use in Phase 6
 		this._selfUserId = selfUserId;
 		this._mlsProvider = mlsProvider ?? throw new ArgumentNullException(nameof(mlsProvider));
 		this._encryptorFactory = encryptorFactory ?? throw new ArgumentNullException(nameof(encryptorFactory));

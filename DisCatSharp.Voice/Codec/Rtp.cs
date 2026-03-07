@@ -63,10 +63,10 @@ internal class Rtp : IDisposable
 	}
 
 	/// <summary>
-	///     Are the rtp header.
+	///     Determines whether the buffer starts with a valid RTP header.
 	/// </summary>
 	/// <param name="source">The source.</param>
-	/// <returns>A bool.</returns>
+	/// <returns><see langword="true"/> when a valid RTP header is present.</returns>
 	public bool IsRtpHeader(ReadOnlySpan<byte> source)
 		=> source.Length >= HEADER_SIZE && (source[0] is RTP_NO_EXTENSION || source[0] is RTP_EXTENSION) && source[1] is RTP_VERSION;
 

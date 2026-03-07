@@ -17,7 +17,6 @@ public class DaveSessionTests
 	private static DaveSession CreateSession(int protocolVersion = 1)
 		=> new(
 			selfUserId: 111_111_111UL,
-			channelId: 222_222_222UL,
 			protocolVersion: protocolVersion,
 			mlsProvider: new NullMlsProvider(),
 			encryptorFactory: () => new DaveEncryptor(key => new TestAeadCipher(key)),

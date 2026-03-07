@@ -41,7 +41,7 @@ public sealed class VoiceExtension : BaseExtension
 	/// <summary>
 	///     Initializes a new instance of the <see cref="VoiceExtension" /> class.
 	/// </summary>
-	/// <param name="config">The config.</param>
+	/// <param name="config">Voice extension configuration.</param>
 	internal VoiceExtension(VoiceConfiguration config)
 	{
 		this._configuration = new(config);
@@ -143,10 +143,10 @@ public sealed class VoiceExtension : BaseExtension
 	public VoiceConnection GetConnection(DiscordGuild guild) => this._activeConnections.TryGetValue(guild.Id, out var value) ? value : null;
 
 	/// <summary>
-	///     Vnc_S the voice disconnected.
+	///     Removes an active connection and signals gateway disconnect for the guild.
 	/// </summary>
-	/// <param name="guild">The guild.</param>
-	/// <returns>A Task.</returns>
+	/// <param name="guild">Guild whose voice connection was disconnected.</param>
+	/// <returns>A task representing disconnect propagation to the gateway.</returns>
 	private async Task Vnc_VoiceDisconnected(DiscordGuild guild)
 	{
 		if (this._activeConnections.ContainsKey(guild.Id))
@@ -166,11 +166,11 @@ public sealed class VoiceExtension : BaseExtension
 	}
 
 	/// <summary>
-	///     Client_S the voice state update.
+	///     Handles VOICE_STATE_UPDATE from the main gateway.
 	/// </summary>
-	/// <param name="client">The client.</param>
-	/// <param name="e">The e.</param>
-	/// <returns>A Task.</returns>
+	/// <param name="client">Owning Discord client instance.</param>
+	/// <param name="e">Voice state update event arguments.</param>
+	/// <returns>A completed task.</returns>
 	private Task Client_VoiceStateUpdate(DiscordClient client, VoiceStateUpdateEventArgs e)
 	{
 		var gld = e.Guild;
@@ -204,11 +204,11 @@ public sealed class VoiceExtension : BaseExtension
 	}
 
 	/// <summary>
-	///     Client_S the voice server update.
+	///     Handles VOICE_SERVER_UPDATE from the main gateway.
 	/// </summary>
-	/// <param name="client">The client.</param>
-	/// <param name="e">The e.</param>
-	/// <returns>A Task.</returns>
+	/// <param name="client">Owning Discord client instance.</param>
+	/// <param name="e">Voice server update event arguments.</param>
+	/// <returns>A completed task.</returns>
 	private Task Client_VoiceServerUpdate(DiscordClient client, VoiceServerUpdateEventArgs e)
 	{
 		var gld = e.Guild;

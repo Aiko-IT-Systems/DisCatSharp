@@ -237,7 +237,6 @@ public sealed class VoiceTransmitSink : IDisposable
 	{
 		var pcm16 = MemoryMarshal.Cast<byte, short>(pcmSpan.Span);
 
-		// pass through any filters, if applicable
 		lock (this._filters)
 		{
 			if (this._filters.Count is not 0)
@@ -248,7 +247,6 @@ public sealed class VoiceTransmitSink : IDisposable
 		if (this.VolumeModifier is 1)
 			return;
 
-		// alter volume
 		for (var i = 0; i < pcm16.Length; i++)
 			pcm16[i] = (short)(pcm16[i] * this.VolumeModifier);
 	}
