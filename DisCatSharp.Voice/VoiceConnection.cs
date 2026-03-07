@@ -1073,30 +1073,70 @@ public sealed class VoiceConnection : IDisposable
 			if (hasExtension)
 				// RFC 5285, 4.2 One-Byte header
 				// http://www.rfcreader.com/#rfc5285_line186
-				if (opusSpan[0] is 0xBE && opusSpan[1] is 0xDE)
+				if (opusSpan.Length >= 4 && opusSpan[0] is 0xBE && opusSpan[1] is 0xDE)
 				{
-					var headerLen = (opusSpan[2] << 8) | opusSpan[3];
-					var i = 4;
-					for (; i < headerLen + 4; i++)
+					var extWords = (opusSpan[2] << 8) | opusSpan[3];
+					var extBytes = extWords * 4;
+					var extEnd = 4 + extBytes;
+					if (extEnd > opusSpan.Length)
 					{
-						var @byte = opusSpan[i];
+						this._discord.Logger.LogDebug(VoiceEvents.VoiceReceiveFailure,
+							"[VoiceRecv] Dropping packet with malformed RTP extension length: ssrc={Ssrc} seq={Seq} extEnd={ExtEnd} payloadLen={PayloadLen}",
+							ssrc, sequence, extEnd, opusSpan.Length);
+						return false;
+					}
 
-						// ID is currently unused since we skip it anyway
-						//var id = (byte)(@byte >> 4);
-						var length = (byte)(@byte & 0x0F) + 1;
+					var i = 4;
+					while (i < extEnd)
+					{
+						var extByte = opusSpan[i];
 
-						i += length;
+						// 0 means padding between elements.
+						if (extByte == 0)
+						{
+							i++;
+							continue;
+						}
+
+						var id = (byte)(extByte >> 4);
+						var len = (extByte & 0x0F) + 1;
+
+						// 0xF is reserved by RFC 5285; skip defensively.
+						if (id == 0x0F)
+						{
+							i++;
+							continue;
+						}
+
+						i++;
+						if (i + len > extEnd)
+						{
+							this._discord.Logger.LogDebug(VoiceEvents.VoiceReceiveFailure,
+								"[VoiceRecv] Dropping packet with malformed RTP extension element: ssrc={Ssrc} seq={Seq} extIndex={Index} extEnd={ExtEnd}",
+								ssrc, sequence, i, extEnd);
+							return false;
+						}
+
+						i += len;
 					}
 
 					// Strip extension padding too
-					while (opusSpan[i] is 0)
+					while (i < opusSpan.Length && opusSpan[i] is 0)
 						i++;
+
+					if (i >= opusSpan.Length)
+					{
+						this._discord.Logger.LogDebug(VoiceEvents.VoiceReceiveFailure,
+							"[VoiceRecv] Dropping packet with no Opus payload after RTP extension strip: ssrc={Ssrc} seq={Seq}",
+							ssrc, sequence);
+						return false;
+					}
 
 					opusSpan = opusSpan[i..];
 				}
 
 			// TODO: consider implementing RFC 5285, 4.3. Two-Byte Header
-			if (opusSpan[0] is 0x90)
+			if (opusSpan.Length >= 2 && opusSpan[0] is 0x90)
 				// I'm not 100% sure what this header is/does, however removing the data causes no
 				// real issues, and has the added benefit of removing a lot of noise.
 				opusSpan = opusSpan[2..];
@@ -1128,7 +1168,18 @@ public sealed class VoiceConnection : IDisposable
 			}
 
 			var pcmSpan = pcm.Span;
-			this._opus.Decode(vtx.Decoder, opusSpan, ref pcmSpan, false, out outputFormat);
+			try
+			{
+				this._opus.Decode(vtx.Decoder, opusSpan, ref pcmSpan, false, out outputFormat);
+			}
+			catch (Exception ex)
+			{
+				this._discord.Logger.LogDebug(VoiceEvents.VoiceReceiveFailure, ex,
+					"[VoiceRecv] Dropping undecodable Opus packet: ssrc={Ssrc} seq={Seq} len={Len}",
+					ssrc, sequence, opusSpan.Length);
+				return false;
+			}
+
 			pcm = pcm[..pcmSpan.Length];
 		}
 		finally
@@ -1788,8 +1839,9 @@ public sealed class VoiceConnection : IDisposable
 			this._voiceWs.MessageReceived += this.VoiceWS_SocketMessage;
 			this._voiceWs.Connected += this.VoiceWS_SocketOpened;
 
-			if (this.Resume)
-				await this.ConnectAsync().ConfigureAwait(false);
+			// Always reconnect. StartAsync will choose IDENTIFY when Resume==false
+			// (e.g. after 4006/4009), otherwise RESUME.
+			await this.ConnectAsync().ConfigureAwait(false);
 		}
 	}
 
