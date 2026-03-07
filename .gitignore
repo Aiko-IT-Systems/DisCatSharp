@@ -139,3 +139,7 @@ DisCatSharp.Experimental/openapi_preview.json
 !DisCatSharp.Voice.Natives/runtimes/**/*.dll
 !DisCatSharp.Voice.Natives/runtimes/**/*.so
 !DisCatSharp.Voice.Natives/runtimes/**/*.dylib
+
+codex-resources/
+VoiceTestBot/
+logs/
