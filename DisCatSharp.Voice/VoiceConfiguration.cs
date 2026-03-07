@@ -24,6 +24,8 @@ public sealed class VoiceConfiguration
 		this.EnableIncoming = other.EnableIncoming;
 		this.PacketQueueSize = other.PacketQueueSize;
 		this.MaxDaveProtocolVersion = other.MaxDaveProtocolVersion;
+		this.EnableDebugLogging = other.EnableDebugLogging;
+		this.DavePendingAudioBehavior = other.DavePendingAudioBehavior;
 	}
 
 	/// <summary>
@@ -50,4 +52,17 @@ public sealed class VoiceConfiguration
 	///     <para>Defaults to 1.</para>
 	/// </summary>
 	public int MaxDaveProtocolVersion { internal get; set; } = 1;
+
+	/// <summary>
+	///     <para>Controls whether debug and trace logs from the <c>DisCatSharp.Voice</c> project are emitted.</para>
+	///     <para>Warnings and errors are always logged regardless of this value.</para>
+	///     <para>Defaults to false.</para>
+	/// </summary>
+	public bool EnableDebugLogging { internal get; set; } = false;
+
+	/// <summary>
+	///     <para>Controls outbound audio behavior while DAVE is negotiated but not yet active.</para>
+	///     <para>Defaults to <see cref="DavePendingAudioBehavior.PassThrough"/>.</para>
+	/// </summary>
+	public DavePendingAudioBehavior DavePendingAudioBehavior { internal get; set; } = DavePendingAudioBehavior.PassThrough;
 }

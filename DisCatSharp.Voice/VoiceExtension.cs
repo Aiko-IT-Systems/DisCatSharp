@@ -45,6 +45,7 @@ public sealed class VoiceExtension : BaseExtension
 	internal VoiceExtension(VoiceConfiguration config)
 	{
 		this._configuration = new(config);
+		VoiceRuntimeLogging.EnableDebugLogs = this._configuration.EnableDebugLogging;
 		this.IsIncomingEnabled = config.EnableIncoming;
 
 		this._activeConnections = new();
@@ -189,7 +190,7 @@ public sealed class VoiceExtension : BaseExtension
 
 			if (this._voiceStateUpdates.ContainsKey(gld.Id))
 			{
-				this.Client.Logger.LogDebug(VoiceEvents.VoiceHandshake,
+				this.Client.Logger.VoiceDebug(VoiceEvents.VoiceHandshake,
 					"[Voice] VOICE_STATE_UPDATE for bot: session_id={SessionId} channel={Channel} sessionNull={SNull} channelNull={CNull}",
 					e.SessionId ?? "(null)", e.Channel?.Name ?? "(null)",
 					string.IsNullOrWhiteSpace(e.SessionId), e.Channel is null);
@@ -260,3 +261,4 @@ public sealed class VoiceExtension : BaseExtension
 		return Task.CompletedTask;
 	}
 }
+

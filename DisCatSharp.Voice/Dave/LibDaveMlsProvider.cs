@@ -107,7 +107,7 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 			throw;
 		}
 
-		this._logger.LogDebug("[DAVE] MLS session initialized (channelId={ChannelId}, version={Version})",
+		this._logger.VoiceDebug("[DAVE] MLS session initialized (channelId={ChannelId}, version={Version})",
 			this._channelId, this._protocolVersion);
 	}
 
@@ -246,7 +246,7 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 		if (!failed && !ignored)
 		{
 			this._groupReady = true;
-			this._logger.LogDebug("[DAVE] MLS commit processed — group ready");
+			this._logger.VoiceDebug("[DAVE] MLS commit processed — group ready");
 		}
 		else
 		{
@@ -330,7 +330,7 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 		}
 
 		this._groupReady = true;
-		this._logger.LogDebug("[DAVE] MLS welcome processed — group ready");
+		this._logger.VoiceDebug("[DAVE] MLS welcome processed — group ready");
 	}
 
 	/// <inheritdoc/>
@@ -410,3 +410,4 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 			throw new InvalidOperationException("[DAVE] MLS session not initialized. Call InitGroup first.");
 	}
 }
+

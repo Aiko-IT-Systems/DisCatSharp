@@ -320,13 +320,13 @@ internal class Sodium : IDisposable
 			Span<byte> diagNonce = stackalloc byte[nonceLen]; // zero-initialized
 			BinaryPrimitives.WriteUInt32LittleEndian(diagNonce, counterValue);
 
-			this._logger.LogDebug(
+			this._logger.VoiceDebug(
 				"[AEAD decrypt diag] mode={Mode} ciphertextLen={CLen} aadLen={AadLen} keyLen={KeyLen}",
 				mode, ciphertext.Length, aad.Length, this._key.Length);
-			this._logger.LogDebug(
+			this._logger.VoiceDebug(
 				"[AEAD decrypt diag] counter bytes: {Bytes} = LE uint32 {Value}",
 				BitConverter.ToString(nonceCounter4.ToArray()), counterValue);
-			this._logger.LogDebug(
+			this._logger.VoiceDebug(
 				"[AEAD decrypt diag] nonce bytes ({NonceLen}): {Nonce}",
 				nonceLen, BitConverter.ToString(diagNonce.ToArray()));
 		}
@@ -434,3 +434,4 @@ public enum EncryptionMode
 	/// </summary>
 	XSalsa20Poly1305
 }
+

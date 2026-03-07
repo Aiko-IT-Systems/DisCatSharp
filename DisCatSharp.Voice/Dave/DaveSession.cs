@@ -111,7 +111,7 @@ internal sealed class DaveSession : IDisposable
 		foreach (var id in incoming)
 			this._recognizedUserIds.Add(id);
 
-		this._logger.LogDebug("[DAVE] ClientsConnect: recognized {Count} user(s)", this._recognizedUserIds.Count);
+		this._logger.VoiceDebug("[DAVE] ClientsConnect: recognized {Count} user(s)", this._recognizedUserIds.Count);
 	}
 
 	/// <summary>Handles OP 21 <c>dave_mls_prepare_transition</c>. Records the pending transition and enters <see cref="DaveSessionState.ReadyForTransition"/>.</summary>
@@ -119,7 +119,7 @@ internal sealed class DaveSession : IDisposable
 	{
 		this._transitionTracker.Record(payload.TransitionId, payload.ProtocolVersion);
 		this.TransitionTo(DaveSessionState.ReadyForTransition, nameof(HandlePrepareTransition), $"prepare transitionId={payload.TransitionId} version={payload.ProtocolVersion}");
-		this._logger.LogDebug("[DAVE] PrepareTransition: id={TransitionId} version={Version}", payload.TransitionId, payload.ProtocolVersion);
+		this._logger.VoiceDebug("[DAVE] PrepareTransition: id={TransitionId} version={Version}", payload.TransitionId, payload.ProtocolVersion);
 	}
 
 	/// <summary>
@@ -164,7 +164,7 @@ internal sealed class DaveSession : IDisposable
 	public void HandlePrepareEpoch(DavePrepareEpochPayload payload)
 	{
 		this._transitionTracker.Record(payload.TransitionId, payload.ProtocolVersion);
-		this._logger.LogDebug("[DAVE] PrepareEpoch: transitionId={TransitionId} epoch={Epoch} version={Version}",
+		this._logger.VoiceDebug("[DAVE] PrepareEpoch: transitionId={TransitionId} epoch={Epoch} version={Version}",
 			payload.TransitionId, payload.Epoch, payload.ProtocolVersion);
 	}
 
@@ -201,7 +201,7 @@ internal sealed class DaveSession : IDisposable
 	{
 		this._mlsProvider.InitGroup(this._selfUserId, this.ProtocolVersion, []);
 		var keyPackage = this._mlsProvider.GetKeyPackage();
-		this._logger.LogDebug("[DAVE] PrepareKeyPackage: {Len} bytes, protocolVersion={Version}", keyPackage.Length, this.ProtocolVersion);
+		this._logger.VoiceDebug("[DAVE] PrepareKeyPackage: {Len} bytes, protocolVersion={Version}", keyPackage.Length, this.ProtocolVersion);
 		this.TransitionTo(DaveSessionState.AwaitingResponse, nameof(PrepareKeyPackage), "key package prepared");
 		return keyPackage;
 	}
@@ -221,9 +221,9 @@ internal sealed class DaveSession : IDisposable
 	{
 		this._mlsProvider.InitGroup(this._selfUserId, this.ProtocolVersion, []);
 		this._mlsProvider.SetExternalSender(externalSenderBytes);
-		this._logger.LogDebug("[DAVE] HandleExternalSender: {ESLen} bytes", externalSenderBytes.Length);
+		this._logger.VoiceDebug("[DAVE] HandleExternalSender: {ESLen} bytes", externalSenderBytes.Length);
 		var keyPackage = this._mlsProvider.GetKeyPackage();
-		this._logger.LogDebug("[DAVE] HandleExternalSender: prepared key package {Len} bytes, protocolVersion={Version}", keyPackage.Length, this.ProtocolVersion);
+		this._logger.VoiceDebug("[DAVE] HandleExternalSender: prepared key package {Len} bytes, protocolVersion={Version}", keyPackage.Length, this.ProtocolVersion);
 		this.TransitionTo(DaveSessionState.AwaitingResponse, nameof(HandleExternalSender), "external sender processed and key package prepared");
 		return keyPackage;
 	}
@@ -241,7 +241,7 @@ internal sealed class DaveSession : IDisposable
 		// Mirrors libdave-jvm's recognizedUserIdArray() which unconditionally appends selfUserIdString.
 		var allRecognized = new HashSet<ulong>(this._recognizedUserIds) { this._selfUserId };
 		var result = this._mlsProvider.ProcessProposals(proposalsBytes, allRecognized);
-		this._logger.LogDebug("[DAVE] HandleProposals: commitBytes={CommitLen} welcomeBytes={WelcomeLen}",
+		this._logger.VoiceDebug("[DAVE] HandleProposals: commitBytes={CommitLen} welcomeBytes={WelcomeLen}",
 			result.CommitBytes?.Length ?? 0, result.WelcomeBytes?.Length ?? 0);
 
 		if (result.CommitBytes is not { Length: > 0 })
@@ -277,7 +277,7 @@ internal sealed class DaveSession : IDisposable
 
 		if (outcome.IsIgnored)
 		{
-			this._logger.LogDebug("[DAVE] AnnounceCommit: commit ignored (transitionId={TransId})", transitionId);
+			this._logger.VoiceDebug("[DAVE] AnnounceCommit: commit ignored (transitionId={TransId})", transitionId);
 			return DaveAnnounceAction.None;
 		}
 
@@ -288,7 +288,7 @@ internal sealed class DaveSession : IDisposable
 			return DaveAnnounceAction.Restart;
 		}
 
-		this._logger.LogDebug("[DAVE] AnnounceCommit: commit applied (transitionId={TransId}), groupReady={Ready}", transitionId, this._mlsProvider.IsGroupReady);
+		this._logger.VoiceDebug("[DAVE] AnnounceCommit: commit applied (transitionId={TransId}), groupReady={Ready}", transitionId, this._mlsProvider.IsGroupReady);
 
 		if (this._mlsProvider.IsGroupReady)
 		{
@@ -302,7 +302,7 @@ internal sealed class DaveSession : IDisposable
 		}
 		else
 		{
-			this._logger.LogDebug("[DAVE] AnnounceCommit: group not ready after commit");
+			this._logger.VoiceDebug("[DAVE] AnnounceCommit: group not ready after commit");
 			return DaveAnnounceAction.None;
 		}
 	}
@@ -320,13 +320,13 @@ internal sealed class DaveSession : IDisposable
 
 		if (this._mlsProvider.IsGroupReady)
 		{
-			this._logger.LogDebug("[DAVE] Welcome: group ready, installing ratchets");
+			this._logger.VoiceDebug("[DAVE] Welcome: group ready, installing ratchets");
 			this.InstallRatchets();
 			this.TransitionTo(DaveSessionState.Active, nameof(HandleWelcome), "welcome applied and group ready");
 		}
 		else
 		{
-			this._logger.LogDebug("[DAVE] Welcome: group not ready after welcome");
+			this._logger.VoiceDebug("[DAVE] Welcome: group not ready after welcome");
 		}
 	}
 
@@ -402,7 +402,7 @@ internal sealed class DaveSession : IDisposable
 		}
 
 		if (added > 0)
-			this._logger.LogDebug("[DAVE] PreSeedRecognizedUsers: added {Count} user(s) from guild voice states", added);
+			this._logger.VoiceDebug("[DAVE] PreSeedRecognizedUsers: added {Count} user(s) from guild voice states", added);
 	}
 
 	/// <summary>Removes a user's decryptor and recognised-user entry.</summary>
@@ -450,7 +450,7 @@ internal sealed class DaveSession : IDisposable
 			return;
 
 		this.State = newState;
-		this._logger.LogDebug("[DAVE FSM] {OldState} -> {NewState} via {Handler} ({Reason})", oldState, newState, handler, reason);
+		this._logger.VoiceDebug("[DAVE FSM] {OldState} -> {NewState} via {Handler} ({Reason})", oldState, newState, handler, reason);
 	}
 
 	/// <summary>Resets the MLS provider, transition tracker, decryptors, and encryptor passthrough.</summary>
@@ -496,7 +496,7 @@ internal sealed class DaveSession : IDisposable
 				toDispose.Add(old);
 
 			updated[userId] = dec;
-			this._logger.LogDebug("[DAVE] Installed ratchet for user {UserId}", userId);
+			this._logger.VoiceDebug("[DAVE] Installed ratchet for user {UserId}", userId);
 		}
 
 		// Atomically publish the new map.  After this point the audio thread will only see
@@ -544,3 +544,4 @@ internal sealed class DaveSession : IDisposable
 			dec.Dispose();
 	}
 }
+
