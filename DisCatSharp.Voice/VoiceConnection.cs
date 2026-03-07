@@ -1554,14 +1554,6 @@ public sealed class VoiceConnection : IDisposable
 							.Select(kv => kv.Value.UserId);
 						this._daveSession.PreSeedRecognizedUsers(preSeedIds);
 						this._daveProposalRestartSent = false;
-						// Canonical flow: send OP26 (key package) immediately after session creation, triggered by OP4.
-						// This mirrors DaveSessionManager.ts onSelectProtocolAck and godave OnSelectProtocolAck.
-						var kp4 = this._daveSession.PrepareKeyPackage();
-						if (kp4.Length > 0)
-						{
-							this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE] Sending key package OP26 ({Len} bytes) from OP4 handler", kp4.Length);
-							await this.WsSendBinaryAsync(BuildDaveBinaryMessage(26, kp4)).ConfigureAwait(false);
-						}
 					}
 					catch (Exception ex) when (ex is DllNotFoundException or EntryPointNotFoundException)
 					{
@@ -1682,6 +1674,7 @@ public sealed class VoiceConnection : IDisposable
 
 			case 11: // DAVE CLIENTS_CONNECT
 				this._discord.Logger.LogTrace(VoiceEvents.DaveHandshake, "Received DAVE CLIENTS_CONNECT (OP11)");
+				this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP11 received");
 				if (opp is not null && this._daveSession is not null)
 				{
 					var ccp = opp.ToObject<VoiceClientsConnectPayload>();
@@ -1693,6 +1686,7 @@ public sealed class VoiceConnection : IDisposable
 
 			case 21: // DAVE MLS_PREPARE_TRANSITION
 				this._discord.Logger.LogTrace(VoiceEvents.DaveHandshake, "Received DAVE MLS_PREPARE_TRANSITION (OP21)");
+				this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP21 received");
 				if (opp is not null && this._daveSession is not null)
 				{
 					var ptp = opp.ToObject<DavePrepareTransitionPayload>();
@@ -1704,6 +1698,7 @@ public sealed class VoiceConnection : IDisposable
 
 			case 22: // DAVE MLS_EXECUTE_TRANSITION
 				this._discord.Logger.LogTrace(VoiceEvents.DaveHandshake, "Received DAVE MLS_EXECUTE_TRANSITION (OP22)");
+				this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP22 received");
 				if (opp is not null && this._daveSession is not null)
 				{
 					var etp = opp.ToObject<DaveExecuteTransitionPayload>();
@@ -1711,7 +1706,10 @@ public sealed class VoiceConnection : IDisposable
 					{
 						var ack = this._daveSession.HandleExecuteTransition(etp);
 						if (ack is not null)
+						{
+							this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP23 sent");
 							await this.WsSendAsync(JsonConvert.SerializeObject(new VoiceDispatch { OpCode = 23, Payload = ack }, Formatting.None)).ConfigureAwait(false);
+						}
 					}
 				}
 
@@ -1719,6 +1717,7 @@ public sealed class VoiceConnection : IDisposable
 
 			case 24: // DAVE MLS_PREPARE_EPOCH
 				this._discord.Logger.LogTrace(VoiceEvents.DaveHandshake, "Received DAVE MLS_PREPARE_EPOCH (OP24)");
+				this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP24 received");
 				if (opp is not null && this._daveSession is not null)
 				{
 					var pep = opp.ToObject<DavePrepareEpochPayload>();
@@ -1735,6 +1734,7 @@ public sealed class VoiceConnection : IDisposable
 							if (kp24.Length > 0)
 							{
 								this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE] Sending key package OP26 ({Len} bytes) from OP24 handler", kp24.Length);
+								this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP26 sent");
 								await this.WsSendBinaryAsync(BuildDaveBinaryMessage(26, kp24)).ConfigureAwait(false);
 							}
 						}
@@ -1745,6 +1745,7 @@ public sealed class VoiceConnection : IDisposable
 
 			case 31: // DAVE MLS_INVALID_COMMIT_WELCOME
 				this._discord.Logger.LogTrace(VoiceEvents.DaveHandshake, "Received DAVE MLS_INVALID_COMMIT_WELCOME (OP31)");
+				this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP31 received");
 				if (this._daveSession is not null)
 				{
 					var icp = opp?.ToObject<DaveMlsInvalidCommitWelcomePayload>();
@@ -1899,26 +1900,34 @@ public sealed class VoiceConnection : IDisposable
 		switch (opcode)
 		{
 			case 25: // MLS_EXTERNAL_SENDER_PACKAGE
-					 // OP25 ONLY calls SetExternalSender — no Init, no GetKeyPackage, no OP26 from here.
-					 // The OP26 key package was already sent from the OP4 (or OP24) handler.
-					 // Mirrors: onDaveProtocolMLSExternalSenderPackage → SetExternalSender() only.
 				if (this._daveSession is not null)
 				{
+					this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP25 received");
 					this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE] OP25 external sender received, {Len} bytes", payload.Length);
-					this._daveSession.HandleExternalSender(payload.ToArray());
+					var kp25 = this._daveSession.HandleExternalSender(payload.ToArray());
+					if (kp25.Length > 0)
+					{
+						this._daveProposalRestartSent = false;
+						this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP26 sent");
+						this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE] Sending key package OP26 ({Len} bytes) from OP25 handler", kp25.Length);
+						await this.WsSendBinaryAsync(BuildDaveBinaryMessage(26, kp25)).ConfigureAwait(false);
+					}
 				}
 
 				break;
 			case 27: // MLS_PROPOSALS
 				if (this._daveSession is not null)
 				{
+					this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP27 received");
 					this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE] OP27 proposals received, {Len} bytes", payload.Length);
 					var commitResult = this._daveSession.HandleProposals(payload.ToArray());
 					if (commitResult is { CommitBytes.Length: > 0 })
 					{
 						this._daveProposalRestartSent = false; // reset guard on success
-						this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE] OP28 commit sent, {Len} bytes", commitResult.Value.CommitBytes.Length);
-						await this.WsSendBinaryAsync(BuildDaveBinaryMessage(28, commitResult.Value.CommitBytes)).ConfigureAwait(false);
+						var op28Payload = BuildOp28Payload(commitResult.Value);
+						this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP28 sent");
+						this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE] OP28 commit sent, {Len} bytes", op28Payload.Length);
+						await this.WsSendBinaryAsync(BuildDaveBinaryMessage(28, op28Payload)).ConfigureAwait(false);
 					}
 					else if (!this._daveProposalRestartSent)
 					{
@@ -1931,6 +1940,7 @@ public sealed class VoiceConnection : IDisposable
 						var kp27 = this._daveSession.PrepareKeyPackage();
 						if (kp27.Length > 0)
 						{
+							this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP26 sent");
 							this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE] Re-sending key package OP26 ({Len} bytes) after OP27 failure", kp27.Length);
 							await this.WsSendBinaryAsync(BuildDaveBinaryMessage(26, kp27)).ConfigureAwait(false);
 						}
@@ -1948,21 +1958,25 @@ public sealed class VoiceConnection : IDisposable
 				{
 					var transId29 = BinaryPrimitives.ReadUInt16BigEndian(payload.Span[..2]);
 					var commitPayload29 = payload.Slice(2).ToArray();
+					this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP29 received");
 					this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE] OP29 announce_commit received, transId={TransId} {Len} bytes", transId29, commitPayload29.Length);
 					var action29 = this._daveSession.HandleAnnounceCommit(commitPayload29, transId29);
 					switch (action29)
 					{
 						case DaveAnnounceAction.SendReadyForTransition:
 							this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE] OP29 → sending OP23 ReadyForTransition (transId={TransId})", transId29);
+							this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP23 sent");
 							await this.WsSendAsync(JsonConvert.SerializeObject(new VoiceDispatch { OpCode = 23, Payload = new DaveReadyForTransitionPayload { TransitionId = transId29 } }, Formatting.None)).ConfigureAwait(false);
 							break;
 						case DaveAnnounceAction.Restart:
 							this._discord.Logger.LogWarning(VoiceEvents.DaveHandshake, "[DAVE] OP29 commit failed — sending OP31 and re-initialising");
+							this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP31 sent");
 							await this.WsSendAsync(JsonConvert.SerializeObject(new VoiceDispatch { OpCode = 31, Payload = new DaveMlsInvalidCommitWelcomePayload() }, Formatting.None)).ConfigureAwait(false);
 							this._daveProposalRestartSent = false; // allow proposal restart again after OP29-triggered reset
 							var kp29 = this._daveSession.PrepareKeyPackage();
 							if (kp29.Length > 0)
 							{
+								this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP26 sent");
 								this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE] Sending key package OP26 ({Len} bytes) after OP29 restart", kp29.Length);
 								await this.WsSendBinaryAsync(BuildDaveBinaryMessage(26, kp29)).ConfigureAwait(false);
 							}
@@ -1977,6 +1991,7 @@ public sealed class VoiceConnection : IDisposable
 				{
 					var transId30 = BinaryPrimitives.ReadUInt16BigEndian(payload.Span[..2]);
 					var welcomePayload = payload.Slice(2).ToArray();
+					this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP30 received");
 					this._discord.Logger.LogDebug(VoiceEvents.DaveHandshake, "[DAVE] OP30 welcome received, transId={TransId} {Len} bytes", transId30, welcomePayload.Length);
 					this._daveSession.HandleWelcome(welcomePayload);
 				}
@@ -1986,6 +2001,17 @@ public sealed class VoiceConnection : IDisposable
 				this._discord.Logger.LogTrace(VoiceEvents.DaveHandshake, "Received unknown binary DAVE opcode {Opcode}", opcode);
 				break;
 		}
+	}
+
+	private static byte[] BuildOp28Payload(in MlsCommitResult commitResult)
+	{
+		if (commitResult.WelcomeBytes is not { Length: > 0 })
+			return commitResult.CommitBytes;
+
+		var payload = new byte[commitResult.CommitBytes.Length + commitResult.WelcomeBytes.Length];
+		Buffer.BlockCopy(commitResult.CommitBytes, 0, payload, 0, commitResult.CommitBytes.Length);
+		Buffer.BlockCopy(commitResult.WelcomeBytes, 0, payload, commitResult.CommitBytes.Length, commitResult.WelcomeBytes.Length);
+		return payload;
 	}
 
 	/// <summary>Builds a client-to-server DAVE binary message: [opcode: u8][payload].</summary>

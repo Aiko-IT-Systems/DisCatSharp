@@ -86,7 +86,7 @@ internal sealed class DaveSession : IDisposable
 		this.ProtocolVersion = protocolVersion;
 
 		if (protocolVersion > 0)
-			this.TransitionTo(DaveSessionState.Pending, "constructed with protocolVersion > 0");
+			this.TransitionTo(DaveSessionState.Pending, nameof(DaveSession), "constructed with protocolVersion > 0");
 	}
 
 	// -------------------------------------------------------------------------
@@ -118,7 +118,7 @@ internal sealed class DaveSession : IDisposable
 	public void HandlePrepareTransition(DavePrepareTransitionPayload payload)
 	{
 		this._transitionTracker.Record(payload.TransitionId, payload.ProtocolVersion);
-		this.TransitionTo(DaveSessionState.ReadyForTransition, $"prepare transitionId={payload.TransitionId} version={payload.ProtocolVersion}");
+		this.TransitionTo(DaveSessionState.ReadyForTransition, nameof(HandlePrepareTransition), $"prepare transitionId={payload.TransitionId} version={payload.ProtocolVersion}");
 		this._logger.LogDebug("[DAVE] PrepareTransition: id={TransitionId} version={Version}", payload.TransitionId, payload.ProtocolVersion);
 	}
 
@@ -140,20 +140,20 @@ internal sealed class DaveSession : IDisposable
 		if (targetVersion == 0)
 		{
 			this.ResetMls();
-			this.TransitionTo(DaveSessionState.Inactive, "targetVersion=0");
+			this.TransitionTo(DaveSessionState.Inactive, nameof(HandleExecuteTransition), "targetVersion=0");
 			return null;
 		}
 
 		if (targetVersion < this.ProtocolVersion)
 		{
 			this.ResetMls();
-			this.TransitionTo(DaveSessionState.Downgrading, $"downgrade from {this.ProtocolVersion} to {targetVersion}");
+			this.TransitionTo(DaveSessionState.Downgrading, nameof(HandleExecuteTransition), $"downgrade from {this.ProtocolVersion} to {targetVersion}");
 			return null;
 		}
 
 		this.ProtocolVersion = targetVersion;
 		this.ResetMls();
-		this.TransitionTo(DaveSessionState.Pending, $"transition to version {targetVersion}");
+		this.TransitionTo(DaveSessionState.Pending, nameof(HandleExecuteTransition), $"transition to version {targetVersion}");
 
 		return payload.TransitionId != 0
 			? new DaveReadyForTransitionPayload { TransitionId = payload.TransitionId }
@@ -178,7 +178,7 @@ internal sealed class DaveSession : IDisposable
 		this._mlsProvider.Reset();
 
 		if (this.ProtocolVersion > 0)
-			this.TransitionTo(DaveSessionState.Pending, "invalid commit");
+			this.TransitionTo(DaveSessionState.Pending, nameof(HandleInvalidCommit), "invalid commit");
 	}
 
 	/// <summary>
@@ -202,7 +202,7 @@ internal sealed class DaveSession : IDisposable
 		this._mlsProvider.InitGroup(this._selfUserId, this.ProtocolVersion, []);
 		var keyPackage = this._mlsProvider.GetKeyPackage();
 		this._logger.LogDebug("[DAVE] PrepareKeyPackage: {Len} bytes, protocolVersion={Version}", keyPackage.Length, this.ProtocolVersion);
-		this.TransitionTo(DaveSessionState.AwaitingResponse, "key package prepared");
+		this.TransitionTo(DaveSessionState.AwaitingResponse, nameof(PrepareKeyPackage), "key package prepared");
 		return keyPackage;
 	}
 
@@ -217,10 +217,15 @@ internal sealed class DaveSession : IDisposable
 	///     <c>SetExternalSender</c> only — no re-Init, no new key package, no OP 26.
 	///     The OP 26 key package is always sent from OP 4 or OP 24.
 	/// </remarks>
-	public void HandleExternalSender(byte[] externalSenderBytes)
+	public byte[] HandleExternalSender(byte[] externalSenderBytes)
 	{
+		this._mlsProvider.InitGroup(this._selfUserId, this.ProtocolVersion, []);
 		this._mlsProvider.SetExternalSender(externalSenderBytes);
 		this._logger.LogDebug("[DAVE] HandleExternalSender: {ESLen} bytes", externalSenderBytes.Length);
+		var keyPackage = this._mlsProvider.GetKeyPackage();
+		this._logger.LogDebug("[DAVE] HandleExternalSender: prepared key package {Len} bytes, protocolVersion={Version}", keyPackage.Length, this.ProtocolVersion);
+		this.TransitionTo(DaveSessionState.AwaitingResponse, nameof(HandleExternalSender), "external sender processed and key package prepared");
+		return keyPackage;
 	}
 
 	/// <summary>
@@ -239,7 +244,11 @@ internal sealed class DaveSession : IDisposable
 		this._logger.LogDebug("[DAVE] HandleProposals: commitBytes={CommitLen} welcomeBytes={WelcomeLen}",
 			result.CommitBytes?.Length ?? 0, result.WelcomeBytes?.Length ?? 0);
 
-		return result.CommitBytes is { Length: > 0 } ? result : null;
+		if (result.CommitBytes is not { Length: > 0 })
+			return null;
+
+		this.TransitionTo(DaveSessionState.AwaitingResponse, nameof(HandleProposals), "commit prepared from proposals");
+		return result;
 	}
 
 	/// <summary>
@@ -275,7 +284,7 @@ internal sealed class DaveSession : IDisposable
 		if (outcome.IsFailed)
 		{
 			this._logger.LogWarning("[DAVE] AnnounceCommit: commit FAILED (transitionId={TransId}), requesting restart", transitionId);
-			this.TransitionTo(DaveSessionState.Pending, "commit failed");
+			this.TransitionTo(DaveSessionState.Pending, nameof(HandleAnnounceCommit), "commit failed");
 			return DaveAnnounceAction.Restart;
 		}
 
@@ -284,18 +293,12 @@ internal sealed class DaveSession : IDisposable
 		if (this._mlsProvider.IsGroupReady)
 		{
 			this.InstallRatchets();
-			if (transitionId == 0)
-			{
-				// Initial epoch: activate immediately, no OP 23 needed.
-				this.TransitionTo(DaveSessionState.Active, "initial commit applied");
-				return DaveAnnounceAction.None;
-			}
-			else
-			{
-				// Non-initial epoch: transition is deferred until OP 22 activates the encryptor.
-				this.TransitionTo(DaveSessionState.ReadyForTransition, "commit applied, awaiting OP22");
-				return DaveAnnounceAction.SendReadyForTransition;
-			}
+			this.TransitionTo(DaveSessionState.Active, nameof(HandleAnnounceCommit), transitionId == 0
+				? "initial commit applied"
+				: $"commit applied (transitionId={transitionId})");
+			return transitionId != 0
+				? DaveAnnounceAction.SendReadyForTransition
+				: DaveAnnounceAction.None;
 		}
 		else
 		{
@@ -319,7 +322,7 @@ internal sealed class DaveSession : IDisposable
 		{
 			this._logger.LogDebug("[DAVE] Welcome: group ready, installing ratchets");
 			this.InstallRatchets();
-			this.TransitionTo(DaveSessionState.Active, "welcome applied and group ready");
+			this.TransitionTo(DaveSessionState.Active, nameof(HandleWelcome), "welcome applied and group ready");
 		}
 		else
 		{
@@ -419,9 +422,9 @@ internal sealed class DaveSession : IDisposable
 		this.ResetMls();
 
 		if (this.ProtocolVersion > 0)
-			this.TransitionTo(DaveSessionState.Pending, "reset");
+			this.TransitionTo(DaveSessionState.Pending, nameof(Reset), "reset");
 		else
-			this.TransitionTo(DaveSessionState.Inactive, "reset with version 0");
+			this.TransitionTo(DaveSessionState.Inactive, nameof(Reset), "reset with version 0");
 	}
 
 	/// <inheritdoc/>
@@ -432,19 +435,22 @@ internal sealed class DaveSession : IDisposable
 		this._disposed = true;
 		this.ResetMls();
 		this._encryptor.Dispose();
-		this.TransitionTo(DaveSessionState.Inactive, "disposed");
+		this.TransitionTo(DaveSessionState.Inactive, nameof(Dispose), "disposed");
 	}
 
 	// -------------------------------------------------------------------------
 	// Private helpers
 	// -------------------------------------------------------------------------
 
-	/// <summary>Transitions the session FSM to <paramref name="newState"/> and emits a trace log entry with the reason.</summary>
-	private void TransitionTo(DaveSessionState newState, string reason)
+	/// <summary>Transitions the session FSM and emits a standard state-transition log entry.</summary>
+	private void TransitionTo(DaveSessionState newState, string handler, string reason)
 	{
 		var oldState = this.State;
+		if (oldState == newState)
+			return;
+
 		this.State = newState;
-		this._logger.LogTrace("[DAVE] {Reason}: {OldState} → {NewState}", reason, oldState, newState);
+		this._logger.LogDebug("[DAVE FSM] {OldState} -> {NewState} via {Handler} ({Reason})", oldState, newState, handler, reason);
 	}
 
 	/// <summary>Resets the MLS provider, transition tracker, decryptors, and encryptor passthrough.</summary>
