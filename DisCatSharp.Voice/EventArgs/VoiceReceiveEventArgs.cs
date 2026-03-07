@@ -51,4 +51,19 @@ public class VoiceReceiveEventArgs : DiscordEventArgs
 	///     Gets the millisecond duration of the PCM audio sample.
 	/// </summary>
 	public int AudioDuration { get; internal set; }
+
+	/// <summary>
+	///     Gets the unwrapped RTP sequence number for this audio frame.
+	/// </summary>
+	public ulong Sequence { get; internal set; }
+
+	/// <summary>
+	///     Gets the number of missing frames detected before this frame.
+	/// </summary>
+	public int MissingFrames { get; internal set; }
+
+	/// <summary>
+	///     Gets whether this frame is concealment (packet-loss compensation) rather than a directly decoded packet.
+	/// </summary>
+	public bool IsConcealmentFrame { get; internal set; }
 }

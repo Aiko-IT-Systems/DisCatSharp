@@ -97,6 +97,8 @@ public sealed class VoiceConnection : IDisposable
 
 	private readonly AsyncEvent<VoiceConnection, VoiceReceiveEventArgs> _voiceReceived;
 
+	private readonly AsyncEvent<VoiceConnection, VoicePacketDroppedEventArgs> _voicePacketDropped;
+
 	private readonly AsyncEvent<VoiceConnection, DaveStateChangedEventArgs> _daveStateChanged;
 
 	private readonly AsyncEvent<VoiceConnection, DaveOpcodeEventArgs> _daveOpcodeObserved;
@@ -335,6 +337,7 @@ public sealed class VoiceConnection : IDisposable
 			this._userJoined = new("VOICE_USER_JOINED", TimeSpan.Zero, this._discord.EventErrorHandler);
 			this._userLeft = new("VOICE_USER_LEFT", TimeSpan.Zero, this._discord.EventErrorHandler);
 			this._voiceReceived = new("VOICE_VOICE_RECEIVED", TimeSpan.Zero, this._discord.EventErrorHandler);
+			this._voicePacketDropped = new("VOICE_PACKET_DROPPED", TimeSpan.Zero, this._discord.EventErrorHandler);
 			this._daveStateChanged = new("VOICE_DAVE_STATE_CHANGED", TimeSpan.Zero, this._discord.EventErrorHandler);
 			this._daveOpcodeObserved = new("VOICE_DAVE_OPCODE_OBSERVED", TimeSpan.Zero, this._discord.EventErrorHandler);
 			this._voiceSocketError = new("VOICE_WS_ERROR", TimeSpan.Zero, this._discord.EventErrorHandler);
@@ -587,6 +590,15 @@ public sealed class VoiceConnection : IDisposable
 	{
 		add => this._voiceReceived.Register(value);
 		remove => this._voiceReceived.Unregister(value);
+	}
+
+	/// <summary>
+	///     Triggered whenever an inbound voice packet is dropped.
+	/// </summary>
+	public event AsyncEventHandler<VoiceConnection, VoicePacketDroppedEventArgs> VoicePacketDropped
+	{
+		add => this._voicePacketDropped.Register(value);
+		remove => this._voicePacketDropped.Unregister(value);
 	}
 
 	/// <summary>
@@ -1089,14 +1101,22 @@ public sealed class VoiceConnection : IDisposable
 	/// <param name="pcmPackets">The pcm packets.</param>
 	/// <param name="voiceSender">The voice sender.</param>
 	/// <param name="outputFormat">The output format.</param>
+	/// <param name="missingFrames">Number of missing frames detected before the decoded packet.</param>
+	/// <param name="sequence">Unwrapped sequence number for the decoded packet.</param>
 	/// <returns>A bool.</returns>
-	private bool ProcessPacket(ReadOnlySpan<byte> data, ref Memory<byte> opus, ref Memory<byte> pcm, List<ReadOnlyMemory<byte>> pcmPackets, [NotNullWhen(true)] out AudioSender? voiceSender, out AudioFormat outputFormat)
+	private bool ProcessPacket(ReadOnlySpan<byte> data, ref Memory<byte> opus, ref Memory<byte> pcm, List<ReadOnlyMemory<byte>> pcmPackets,
+		[NotNullWhen(true)] out AudioSender? voiceSender, out AudioFormat outputFormat, out int missingFrames, out ulong sequence)
 	{
 		voiceSender = null;
 		outputFormat = default;
+		missingFrames = 0;
+		sequence = 0;
 
 		if (!this._rtp.IsRtpHeader(data))
+		{
+			this.PublishVoicePacketDropped(VoicePacketDropReason.MalformedRtp, 0, null, null, "invalid RTP header");
 			return false;
+		}
 
 		this._rtp.DecodeHeader(data, out var shortSequence, out _, out var ssrc, out var hasExtension);
 
@@ -1104,13 +1124,14 @@ public sealed class VoiceConnection : IDisposable
 		// Extension bytes are NOT part of AAD — they are inside the ciphertext.
 		var headerLength = Rtp.HEADER_SIZE; // Discord *_rtpsize: AAD is always the fixed 12-byte RTP header
 
-		if (headerLength >= data.Length)
-		{
-			this._discord.Logger.LogWarning(VoiceEvents.VoiceReceiveFailure,
-				"Dropping RTP packet: computed header length ({HeaderLength} bytes) >= packet length ({PacketLength} bytes)",
-				headerLength, data.Length);
-			return false;
-		}
+			if (headerLength >= data.Length)
+			{
+				this._discord.Logger.LogWarning(VoiceEvents.VoiceReceiveFailure,
+					"Dropping RTP packet: computed header length ({HeaderLength} bytes) >= packet length ({PacketLength} bytes)",
+					headerLength, data.Length);
+				this.PublishVoicePacketDropped(VoicePacketDropReason.MalformedRtp, ssrc, null, null, "header length exceeds packet length");
+				return false;
+			}
 
 		if (!this._transmittingSsrCs.TryGetValue(ssrc, out var vtx))
 		{
@@ -1125,18 +1146,22 @@ public sealed class VoiceConnection : IDisposable
 			this._transmittingSsrCs.TryAdd(ssrc, vtx);
 		}
 
-		voiceSender = vtx;
-		var sequence = vtx.GetTrueSequenceAfterWrapping(shortSequence);
-		ushort gap = 0;
-		if (vtx.LastTrueSequence is { } lastTrueSequence)
-		{
-			if (sequence <= lastTrueSequence) // out-of-order packet; discard
-				return false;
+			voiceSender = vtx;
+			sequence = vtx.GetTrueSequenceAfterWrapping(shortSequence);
+			ushort gap = 0;
+			if (vtx.LastTrueSequence is { } lastTrueSequence)
+			{
+				if (sequence <= lastTrueSequence) // out-of-order packet; discard
+				{
+					this.PublishVoicePacketDropped(VoicePacketDropReason.OutOfOrder, ssrc, sequence, vtx, "sequence older than last accepted packet");
+					return false;
+				}
 
-			gap = (ushort)(sequence - 1 - lastTrueSequence);
-			if (gap >= 5)
-				this._discord.Logger.LogWarning(VoiceEvents.VoiceReceiveFailure, "5 or more voice packets were dropped when receiving");
-		}
+				gap = (ushort)(sequence - 1 - lastTrueSequence);
+				missingFrames = gap;
+				if (gap >= 5)
+					this._discord.Logger.LogWarning(VoiceEvents.VoiceReceiveFailure, "5 or more voice packets were dropped when receiving");
+			}
 
 		var opusSpan = Span<byte>.Empty;
 		byte[]? daveDecrypted = null;
@@ -1164,9 +1189,12 @@ public sealed class VoiceConnection : IDisposable
 					extBodyLen = BinaryPrimitives.ReadUInt16BigEndian(data.Slice(14, 2)) * 4;
 				}
 
-				var minLen = aeadHeaderLen + Sodium.AES_GCM_TAG_SIZE + Sodium.AEAD_NONCE_SUFFIX_SIZE;
-				if (data.Length <= minLen)
-					return false;
+					var minLen = aeadHeaderLen + Sodium.AES_GCM_TAG_SIZE + Sodium.AEAD_NONCE_SUFFIX_SIZE;
+					if (data.Length <= minLen)
+					{
+						this.PublishVoicePacketDropped(VoicePacketDropReason.MalformedRtp, ssrc, sequence, vtx, "AEAD packet too small");
+						return false;
+					}
 
 				var ciphertextLen = data.Length - aeadHeaderLen - Sodium.AES_GCM_TAG_SIZE - Sodium.AEAD_NONCE_SUFFIX_SIZE;
 				var ciphertext = data.Slice(aeadHeaderLen, ciphertextLen);
@@ -1238,35 +1266,38 @@ public sealed class VoiceConnection : IDisposable
 			// can destabilize receive.
 			if (this._daveSession is not null)
 			{
-				if (!this._daveSession.IsActive)
-				{
-					if (Interlocked.CompareExchange(ref this._daveRecvPendingDropDiagLogged, 1, 0) == 0)
-						this._discord.Logger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
-							"[DAVE] Dropping inbound packet while session is pending");
+					if (!this._daveSession.IsActive)
+					{
+						if (Interlocked.CompareExchange(ref this._daveRecvPendingDropDiagLogged, 1, 0) == 0)
+							this._discord.Logger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
+								"[DAVE] Dropping inbound packet while session is pending");
 
-					return false;
-				}
+						this.PublishVoicePacketDropped(VoicePacketDropReason.DavePending, ssrc, sequence, vtx, "dave session is not active");
+						return false;
+					}
 
-				if (vtx.Id == 0)
-				{
-					if (Interlocked.CompareExchange(ref this._daveRecvMissingSenderDropDiagLogged, 1, 0) == 0)
-						this._discord.Logger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
-							"[DAVE] Dropping inbound packet for SSRC {Ssrc}: sender mapping not ready", ssrc);
+					if (vtx.Id == 0)
+					{
+						if (Interlocked.CompareExchange(ref this._daveRecvMissingSenderDropDiagLogged, 1, 0) == 0)
+							this._discord.Logger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
+								"[DAVE] Dropping inbound packet for SSRC {Ssrc}: sender mapping not ready", ssrc);
 
-					return false;
-				}
+						this.PublishVoicePacketDropped(VoicePacketDropReason.MissingSenderMapping, ssrc, sequence, vtx, "sender mapping missing for SSRC");
+						return false;
+					}
 
 				if (this._daveSession.TryDecrypt(vtx.Id, opusSpan, out daveDecrypted, out var daveLen))
 					opusSpan = daveDecrypted.AsSpan(0, daveLen);
-				else
-				{
-					if (Interlocked.CompareExchange(ref this._daveRecvMissingRatchetDropDiagLogged, 1, 0) == 0)
-						this._discord.Logger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
-							"[DAVE] Dropping inbound packet for SSRC {Ssrc}: no decryptor mapping for user {UserId}", ssrc, vtx.Id);
+					else
+					{
+						if (Interlocked.CompareExchange(ref this._daveRecvMissingRatchetDropDiagLogged, 1, 0) == 0)
+							this._discord.Logger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
+								"[DAVE] Dropping inbound packet for SSRC {Ssrc}: no decryptor mapping for user {UserId}", ssrc, vtx.Id);
 
-					return false;
+						this.PublishVoicePacketDropped(VoicePacketDropReason.MissingRatchet, ssrc, sequence, vtx, $"no decryptor mapping for user {vtx.Id}");
+						return false;
+					}
 				}
-			}
 
 			// Strip extensions, if any
 			if (hasExtension)
@@ -1277,13 +1308,14 @@ public sealed class VoiceConnection : IDisposable
 					var extWords = (opusSpan[2] << 8) | opusSpan[3];
 					var extBytes = extWords * 4;
 					var extEnd = 4 + extBytes;
-					if (extEnd > opusSpan.Length)
-					{
-						this._discord.Logger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
-							"[VoiceRecv] Dropping packet with malformed RTP extension length: ssrc={Ssrc} seq={Seq} extEnd={ExtEnd} payloadLen={PayloadLen}",
-							ssrc, sequence, extEnd, opusSpan.Length);
-						return false;
-					}
+						if (extEnd > opusSpan.Length)
+						{
+							this._discord.Logger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
+								"[VoiceRecv] Dropping packet with malformed RTP extension length: ssrc={Ssrc} seq={Seq} extEnd={ExtEnd} payloadLen={PayloadLen}",
+								ssrc, sequence, extEnd, opusSpan.Length);
+							this.PublishVoicePacketDropped(VoicePacketDropReason.MalformedExtension, ssrc, sequence, vtx, "malformed RTP extension length");
+							return false;
+						}
 
 					var i = 4;
 					while (i < extEnd)
@@ -1308,13 +1340,14 @@ public sealed class VoiceConnection : IDisposable
 						}
 
 						i++;
-						if (i + len > extEnd)
-						{
-							this._discord.Logger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
-								"[VoiceRecv] Dropping packet with malformed RTP extension element: ssrc={Ssrc} seq={Seq} extIndex={Index} extEnd={ExtEnd}",
-								ssrc, sequence, i, extEnd);
-							return false;
-						}
+							if (i + len > extEnd)
+							{
+								this._discord.Logger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
+									"[VoiceRecv] Dropping packet with malformed RTP extension element: ssrc={Ssrc} seq={Seq} extIndex={Index} extEnd={ExtEnd}",
+									ssrc, sequence, i, extEnd);
+								this.PublishVoicePacketDropped(VoicePacketDropReason.MalformedExtension, ssrc, sequence, vtx, "malformed RTP extension element");
+								return false;
+							}
 
 						i += len;
 					}
@@ -1323,13 +1356,14 @@ public sealed class VoiceConnection : IDisposable
 					while (i < opusSpan.Length && opusSpan[i] is 0)
 						i++;
 
-					if (i >= opusSpan.Length)
-					{
-						this._discord.Logger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
-							"[VoiceRecv] Dropping packet with no Opus payload after RTP extension strip: ssrc={Ssrc} seq={Seq}",
-							ssrc, sequence);
-						return false;
-					}
+						if (i >= opusSpan.Length)
+						{
+							this._discord.Logger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
+								"[VoiceRecv] Dropping packet with no Opus payload after RTP extension strip: ssrc={Ssrc} seq={Seq}",
+								ssrc, sequence);
+							this.PublishVoicePacketDropped(VoicePacketDropReason.MalformedExtension, ssrc, sequence, vtx, "no payload after extension strip");
+							return false;
+						}
 
 					opusSpan = opusSpan[i..];
 				}
@@ -1371,13 +1405,14 @@ public sealed class VoiceConnection : IDisposable
 			{
 				this._opus.Decode(vtx.Decoder, opusSpan, ref pcmSpan, false, out outputFormat);
 			}
-			catch (Exception ex)
-			{
-				this._discord.Logger.VoiceDebug(VoiceEvents.VoiceReceiveFailure, ex,
-					"[VoiceRecv] Dropping undecodable Opus packet: ssrc={Ssrc} seq={Seq} len={Len}",
-					ssrc, sequence, opusSpan.Length);
-				return false;
-			}
+				catch (Exception ex)
+				{
+					this._discord.Logger.VoiceDebug(VoiceEvents.VoiceReceiveFailure, ex,
+						"[VoiceRecv] Dropping undecodable Opus packet: ssrc={Ssrc} seq={Seq} len={Len}",
+						ssrc, sequence, opusSpan.Length);
+					this.PublishVoicePacketDropped(VoicePacketDropReason.DecodeFailure, ssrc, sequence, vtx, ex.GetType().Name);
+					return false;
+				}
 
 			pcm = pcm[..pcmSpan.Length];
 		}
@@ -1404,33 +1439,42 @@ public sealed class VoiceConnection : IDisposable
 		try
 		{
 			var pcm = new byte[this.AudioFormat.CalculateMaximumFrameSize()];
-			var pcmMem = pcm.AsMemory();
-			var opus = new byte[pcm.Length];
-			var opusMem = opus.AsMemory();
-			var pcmFillers = new List<ReadOnlyMemory<byte>>();
-			if (!this.ProcessPacket(data, ref opusMem, ref pcmMem, pcmFillers, out var vtx, out var audioFormat))
-				return;
+				var pcmMem = pcm.AsMemory();
+				var opus = new byte[pcm.Length];
+				var opusMem = opus.AsMemory();
+				var pcmFillers = new List<ReadOnlyMemory<byte>>();
+				if (!this.ProcessPacket(data, ref opusMem, ref pcmMem, pcmFillers, out var vtx, out var audioFormat, out var missingFrames, out var sequence))
+					return;
 
-			foreach (var pcmFiller in pcmFillers)
+				for (var i = 0; i < pcmFillers.Count; i++)
+				{
+					var pcmFiller = pcmFillers[i];
+					await this._voiceReceived.InvokeAsync(this, new(this._discord.ServiceProvider)
+					{
+						Ssrc = vtx.Ssrc,
+						User = vtx.User,
+						PcmData = pcmFiller,
+						OpusData = Array.Empty<byte>().AsMemory(),
+						AudioFormat = audioFormat,
+						AudioDuration = audioFormat.CalculateSampleDuration(pcmFiller.Length),
+						Sequence = sequence >= (ulong)(pcmFillers.Count - i) ? sequence - (ulong)(pcmFillers.Count - i) : 0,
+						MissingFrames = 1,
+						IsConcealmentFrame = true
+					}).ConfigureAwait(false);
+				}
+
 				await this._voiceReceived.InvokeAsync(this, new(this._discord.ServiceProvider)
 				{
 					Ssrc = vtx.Ssrc,
 					User = vtx.User,
-					PcmData = pcmFiller,
-					OpusData = Array.Empty<byte>().AsMemory(),
+					PcmData = pcmMem,
+					OpusData = opusMem,
 					AudioFormat = audioFormat,
-					AudioDuration = audioFormat.CalculateSampleDuration(pcmFiller.Length)
+					AudioDuration = audioFormat.CalculateSampleDuration(pcmMem.Length),
+					Sequence = sequence,
+					MissingFrames = missingFrames,
+					IsConcealmentFrame = false
 				}).ConfigureAwait(false);
-
-			await this._voiceReceived.InvokeAsync(this, new(this._discord.ServiceProvider)
-			{
-				Ssrc = vtx.Ssrc,
-				User = vtx.User,
-				PcmData = pcmMem,
-				OpusData = opusMem,
-				AudioFormat = audioFormat,
-				AudioDuration = audioFormat.CalculateSampleDuration(pcmMem.Length)
-			}).ConfigureAwait(false);
 		}
 		catch (Exception ex)
 		{
@@ -2253,6 +2297,21 @@ public sealed class VoiceConnection : IDisposable
 			PayloadLength = payloadLength,
 			Sequence = sequence,
 			IsBinary = isBinary
+		});
+	}
+
+	/// <summary>
+	///     Publishes an inbound voice packet-drop event.
+	/// </summary>
+	private void PublishVoicePacketDropped(VoicePacketDropReason reason, uint ssrc, ulong? sequence, AudioSender? sender, string? detail = null)
+	{
+		_ = this._voicePacketDropped.InvokeAsync(this, new(this._discord.ServiceProvider)
+		{
+			Reason = reason,
+			Ssrc = ssrc,
+			Sequence = sequence,
+			User = sender?.User,
+			Detail = detail
 		});
 	}
 
