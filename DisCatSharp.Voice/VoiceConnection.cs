@@ -1635,7 +1635,6 @@ public sealed class VoiceConnection : IDisposable
 			case 9: // RESUMED
 				this._discord.Logger.LogTrace(VoiceEvents.VoiceDispatch, "Received RESUMED (OP9)");
 				this._heartbeatTask = Task.Run(this.HeartbeatAsync, CancellationToken.None);
-				this._daveSession?.Reset();
 				break;
 
 			case 12: // CLIENT_CONNECTED
