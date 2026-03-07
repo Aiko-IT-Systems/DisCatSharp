@@ -1,152 +1,163 @@
 ---
 uid: modules_audio_voice_transmit
 title: Transmitting
+author: DisCatSharp Team
 ---
 
-## Transmitting with Voice
+# Transmitting with Voice
 
-### Enable Voice
-Install the `DisCatSharp.Voice` package from NuGet.
+## 1. Enable Voice
 
-![NuGet Package Manager](/images/voice_transmit_01.png)
+```csharp
+using DisCatSharp.Voice;
 
-Then use the `UseVoice` extension method on your instance of `DiscordClient`.
-```cs
-var discord = new DiscordClient();
-discord.UseVoice();
-```
-
-### Connect
-Joining a voice channel is *very* easy; simply use the `ConnectAsync` extension method on `DiscordChannel`.
-```cs
-DiscordChannel channel;
-VoiceConnection connection = await channel.ConnectAsync();
-```
-
-### Transmit
-Discord requires that we send Opus encoded stereo PCM audio data at a sample rate of 48,000 Hz.
-
-You'll need to convert your audio source to PCM S16LE using your preferred program for media conversion, then read
-that data into a `Stream` object or an array of `byte` to be used with Voice. Opus encoding of the PCM data will
-be done automatically by Voice before sending it to Discord.
-
-This example will use [ffmpeg](https://ffmpeg.org/about.html) to convert an MP3 file to a PCM stream.
-```cs
-var filePath = "funiculi_funicula.mp3";
-var ffmpeg = Process.Start(new ProcessStartInfo
+client.UseVoice(new VoiceConfiguration
 {
-    FileName = "ffmpeg",
-    Arguments = $@"-i ""{filePath}"" -ac 2 -f s16le -ar 48000 pipe:1",
-    RedirectStandardOutput = true,
-    UseShellExecute = false
+    EnableDebugLogging = false,
+    MaxDaveProtocolVersion = 1,
+    DavePendingAudioBehavior = DavePendingAudioBehavior.PassThrough
 });
-
-Stream pcm = ffmpeg.StandardOutput.BaseStream;
 ```
 
-Now that our audio is the correct format, we'll need to get a *transmit sink* for the channel we're connected to.
-You can think of the transmit stream as our direct interface with a voice channel; any data written to one will be
-processed by Voice, queued, and sent to Discord which will then be output to the connected voice channel.
-```cs
+## 2. Connect to a Voice Channel
+
+```csharp
+VoiceConnection connection = await channel.ConnectAsync();
 VoiceTransmitSink transmit = connection.GetTransmitSink();
 ```
 
-Once we have a transmit sink, we can 'play' our audio by copying our PCM data to the transmit sink buffer.
-```cs
-await pcm.CopyToAsync(transmit);
-```
-`Stream#CopyToAsync()` will copy PCM data from the input stream to the output sink, up to the sink's configured
-capacity, at which point it will wait until it can copy more. This means that the call will hold the task's execution,
-until such time that the entire input stream has been consumed, and enqueued in the sink.
+## 3. Send PCM Audio
 
-This operation cannot be cancelled. If you'd like to have finer control of the playback, you should instead consider
-using `Stream#ReadAsync()` and `VoiceTransmitSink#WriteAsync()` to manually copy small portions of PCM data to the
-transmit sink.
+Discord voice expects PCM S16LE, 48kHz, stereo before Opus encoding.
 
-### Disconnect
-Similar to joining, leaving a voice channel is rather straightforward.
-```cs
-var voice = discord.GetVoice();
-var connection = voice.GetConnection();
+Example using `ffmpeg` to convert an input file and stream PCM to the transmit sink:
 
-connection.Disconnect();
-```
+```csharp
+using System.Diagnostics;
+using DisCatSharp.Voice;
 
-## DAVE Encryption
-
-When a Discord voice channel has DAVE enabled, DisCatSharp.Voice automatically encrypts every outgoing audio packet using the **DAVE** end-to-end encryption protocol. No changes to your bot code are needed — encryption is fully transparent.
-
-### How It Works
-
-- After connecting, `VoiceConnection` negotiates the DAVE session via the voice gateway. When the MLS group is established, `DaveSession` installs a `LibDaveEncryptor` for the connection.
-- Each outgoing RTP frame is passed through `DaveSession.TryEncrypt()` before being dispatched over UDP.
-- Encryption uses **AES-128-GCM** with per-frame ratchet keys derived from the current MLS epoch key. The ratchet generation is advanced on every frame to provide forward secrecy.
-- The encryptor handles SSRC binding dynamically — if your bot's SSRC changes (e.g. after a reconnect), the encryptor is updated automatically.
-- When users join or leave the encrypted channel, a new MLS epoch is committed. The `DaveSession` installs a fresh `LibDaveEncryptor` for the new epoch seamlessly.
-
-```mermaid
-sequenceDiagram
-    participant App
-    participant VoiceConnection
-    participant DaveSession
-    participant LibDaveEncryptor
-    participant UDP
-
-    App->>VoiceConnection: WriteAsync(pcmData)
-    VoiceConnection->>VoiceConnection: Opus encode → RTP packet
-    VoiceConnection->>DaveSession: TryEncrypt(payload, ssrc)
-    DaveSession->>LibDaveEncryptor: TryEncrypt(frame, ssrc)
-    LibDaveEncryptor-->>DaveSession: encrypted frame
-    DaveSession-->>VoiceConnection: encrypted payload
-    VoiceConnection->>UDP: Send RTP packet
-```
-
-> [!NOTE]
-> If DAVE is not active (e.g. the channel does not use E2EE, or `libdave` failed to load), packets are sent without the DAVE layer — only the standard Discord transport encryption (XSalsa20-Poly1305) applies. Your code does not need to handle this distinction.
-
----
-
-## Example Commands
-```cs
-[Command("join")]
-public async Task JoinCommand(CommandContext ctx, DiscordChannel channel = null)
-{
-    channel ??= ctx.Member.VoiceState?.Channel;
-    await channel.ConnectAsync();
-}
-
-[Command("play")]
-public async Task PlayCommand(CommandContext ctx, string path)
-{
-    var voice = ctx.Client.GetVoice();
-    var connection = voice.GetConnection(ctx.Guild);
-
-    var transmit = connection.GetTransmitSink();
-
-    var pcm = ConvertAudioToPcm(path);
-    await pcm.CopyToAsync(transmit);
-    await pcm.DisposeAsync();
-}
-
-[Command("leave")]
-public async Task LeaveCommand(CommandContext ctx)
-{
-    var voice = ctx.Client.GetVoice();
-    var connection = voice.GetConnection(ctx.Guild);
-
-    connection.Disconnect();
-}
-
-private Stream ConvertAudioToPcm(string filePath)
+public static async Task PlayFileAsync(VoiceConnection connection, string filePath, CancellationToken ct = default)
 {
     var ffmpeg = Process.Start(new ProcessStartInfo
     {
         FileName = "ffmpeg",
-        Arguments = $@"-i ""{filePath}"" -ac 2 -f s16le -ar 48000 pipe:1",
+        Arguments = $"-hide_banner -loglevel warning -i \"{filePath}\" -ac 2 -ar 48000 -f s16le pipe:1",
         RedirectStandardOutput = true,
-        UseShellExecute = false
-    });
+        UseShellExecute = false,
+        CreateNoWindow = true
+    }) ?? throw new InvalidOperationException("Failed to start ffmpeg.");
 
-    return ffmpeg.StandardOutput.BaseStream;
+    await using var pcm = ffmpeg.StandardOutput.BaseStream;
+    var transmit = connection.GetTransmitSink();
+
+    await pcm.CopyToAsync(transmit, ct);
+    await transmit.FlushAsync(ct);
+    await connection.WaitForPlaybackFinishAsync();
 }
 ```
+
+## 4. DAVE Behavior During Handshake
+
+When DAVE is negotiated but not active yet, outbound handling is controlled by `VoiceConfiguration.DavePendingAudioBehavior`:
+
+- `PassThrough` (default): send without DAVE layer until active
+- `Drop`: drop outbound frames until active
+- `Throw`: throw `InvalidOperationException`
+
+If you want to gate playback on DAVE becoming active:
+
+```csharp
+bool daveReady = await connection.WaitForDaveActiveAsync(TimeSpan.FromSeconds(5));
+if (!daveReady)
+{
+    // Decide your fallback policy here.
+}
+```
+
+## 5. Send Filters
+
+```csharp
+using DisCatSharp.Voice;
+
+public sealed class SoftClipFilter : IVoiceFilter
+{
+    public void Transform(Span<short> pcmData, AudioFormat pcmFormat, int duration)
+    {
+        for (var i = 0; i < pcmData.Length; i++)
+        {
+            var sample = pcmData[i];
+            // Light soft-clip to reduce peaks before encode.
+            if (sample > 28000) sample = (short)(28000 + (sample - 28000) / 4);
+            if (sample < -28000) sample = (short)(-28000 + (sample + 28000) / 4);
+            pcmData[i] = sample;
+        }
+    }
+}
+
+var transmit = connection.GetTransmitSink();
+var filter = new SoftClipFilter();
+
+transmit.InstallFilter(filter);  // appended at end of filter chain
+transmit.VolumeModifier = 0.9;   // optional global gain
+
+// ... write PCM as usual ...
+
+transmit.UninstallFilter(filter);
+```
+
+Use `InstallFilter(filter, order)` if you need deterministic ordering.
+
+## 6. Playback Controls
+
+```csharp
+transmit.Pause();
+await transmit.ResumeAsync();
+await transmit.FlushAsync();
+await connection.WaitForPlaybackFinishAsync();
+```
+
+## 7. Disconnect
+
+```csharp
+connection.Disconnect();
+```
+
+## CommandsNext Example
+
+```csharp
+[Command("join")]
+public static async Task JoinAsync(CommandContext ctx)
+{
+    var channel = ctx.Member?.VoiceState?.Channel
+        ?? throw new InvalidOperationException("Join a voice channel first.");
+
+    await channel.ConnectAsync();
+}
+
+[Command("play")]
+public static async Task PlayAsync(CommandContext ctx, string path)
+{
+    var voice = ctx.Client.GetVoice()
+        ?? throw new InvalidOperationException("Voice is not enabled.");
+
+    var connection = voice.GetConnection(ctx.Guild)
+        ?? throw new InvalidOperationException("Bot is not connected.");
+
+    await PlayFileAsync(connection, path, CancellationToken.None);
+}
+
+[Command("leave")]
+public static Task LeaveAsync(CommandContext ctx)
+{
+    var connection = ctx.Client.GetVoice()?.GetConnection(ctx.Guild);
+    connection?.Disconnect();
+    return Task.CompletedTask;
+}
+```
+
+## See Also
+
+- [Voice Overview](xref:modules_audio_voice)
+- [Voice Prerequisites](xref:modules_audio_voice_prerequisites)
+- [Voice Events](xref:modules_audio_voice_events)
+- [Receiving Audio](xref:modules_audio_voice_receive)

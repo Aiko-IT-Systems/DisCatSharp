@@ -6,6 +6,7 @@ DisCatSharp Release Notes
 	- Support for .NET 10
 	- Improvements for OAuth2 operations
 	- Support for Lavalink 4.2.0 which supports [DAVE](https://daveprotocol.com/), Discord's new E2EE voice protocol
+	- New `DisCatSharp.Voice` and `DisCatSharp.Voice.Natives` packages with Discord voice send/receive and DAVE support
 
     Breaking
 
@@ -15,6 +16,7 @@ DisCatSharp Release Notes
     - **LavalinkGuildPlayer**: `RemoveQueue` renamed to [`RemoveFromQueue`]((xref:DisCatSharp.Lavalink.Entities.LavalinkGuildPlayer.RemoveFromQueue*)).
     - **Url fields**: Any `Url` fields on objects like `DiscordAttachment`, `DiscordEmbed`, etc., are now of type [`DiscordUri`](xref:DisCatSharp.Entities.DiscordUri) instead of `string`. Use `.ToUri()` to get a `Uri` object or use `.ToString()`.
     - We updated some namespaces in DisCatSharp.Interactivity. You might need to update your imports for some entities and enums.
+    - DisCatSharp.VoiceNext and DisCatSharp.VoiceNext.Natives were removed and replaced by DisCatSharp.Voice and DisCatSharp.Voice.Natives.
 
 
 DisCatSharp.Attributes Release Notes
@@ -48,8 +50,10 @@ DisCatSharp.Lavalink Release Notes
 
 DisCatSharp.Voice Release Notes
 
-    - DAVE Support
     - Replaced the old package `DisCatSharp.VoiceNext`
+    - Full Discord voice send/receive support
+    - DAVE support via `libdave`
+    - New native runtime package: `DisCatSharp.Voice.Natives`
 
 
 DisCatSharp.Experimental Release Notes

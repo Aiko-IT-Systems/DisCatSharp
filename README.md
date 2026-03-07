@@ -22,6 +22,7 @@
 - Support for .NET 10
 - Improvements for OAuth2 operations
 - Support for Lavalink 4.2.0 which supports [DAVE](https://daveprotocol.com/), Discord's new E2EE voice protocol
+- New `DisCatSharp.Voice` and `DisCatSharp.Voice.Natives` packages with Discord voice send/receive and DAVE support
 
 ## Breaking
 
@@ -31,7 +32,7 @@
 - **LavalinkGuildPlayer**: `RemoveQueue` renamed to [`RemoveFromQueue`]((xref:DisCatSharp.Lavalink.Entities.LavalinkGuildPlayer.RemoveFromQueue*)).
 - **Url fields**: Any `Url` fields on objects like `DiscordAttachment`, `DiscordEmbed`, etc., are now of type [`DiscordUri`](xref:DisCatSharp.Entities.DiscordUri) instead of `string`. Use `.ToUri()` to get a `Uri` object or use `.ToString()`.
 - We updated some namespaces in DisCatSharp.Interactivity. You might need to update your imports for some entities and enums.
-- DisCatSharp.VoiceNext & DisCatSharp.VoiceNext.Natives are now deprecated.
+- DisCatSharp.VoiceNext and DisCatSharp.VoiceNext.Natives were removed and replaced by DisCatSharp.Voice and DisCatSharp.Voice.Natives.
 
 ----
 
@@ -100,8 +101,8 @@ Either join our official support guild at https://discord.gg/RXA6u3jxdU, open an
 | Package                       | Stable                                                                                                         | Nightly                                                                                                                           |
 | ----------------------------- | -------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | DisCatSharp.Lavalink          | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Lavalink.svg?label=&logo=nuget&style=flat-square)          | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Lavalink.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)          |
-<!--| DisCatSharp.Voice         | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Voice.svg?label=&logo=nuget&style=flat-square)         | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Voice.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)         |
-| DisCatSharp.Voice.Natives | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Voice.Natives.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Voice.Natives.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |-->
+| DisCatSharp.Voice             | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Voice.svg?label=&logo=nuget&style=flat-square)             | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Voice.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)             |
+| DisCatSharp.Voice.Natives     | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Voice.Natives.svg?label=&logo=nuget&style=flat-square)     | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Voice.Natives.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)     |
 
 ### Hosting
 
