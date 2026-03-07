@@ -822,15 +822,23 @@ public sealed class VoiceConnection : IDisposable
 				false, this._daveSession.State, this._daveSession.IsActive);
 		}
 
-		if (this._daveSession is { IsActive: false } && this._configuration.DavePendingAudioBehavior == DavePendingAudioBehavior.Drop)
-		{
-			if (Interlocked.CompareExchange(ref this._daveInactiveDropDiagLogged, 1, 0) == 0)
-				this._discord.Logger.VoiceDebug(VoiceEvents.DaveHandshake,
-					"[DAVE] Dropping outbound frame while session is pending (DavePendingAudioBehavior=Drop)");
+			if (this._daveSession is { IsActive: false })
+			{
+				switch (this._configuration.DavePendingAudioBehavior)
+				{
+					case DavePendingAudioBehavior.Drop:
+						if (Interlocked.CompareExchange(ref this._daveInactiveDropDiagLogged, 1, 0) == 0)
+							this._discord.Logger.VoiceDebug(VoiceEvents.DaveHandshake,
+								"[DAVE] Dropping outbound frame while session is pending (DavePendingAudioBehavior=Drop)");
 
-			ArrayPool<byte>.Shared.Return(packetArray);
-			return false;
-		}
+						ArrayPool<byte>.Shared.Return(packetArray);
+						return false;
+
+					case DavePendingAudioBehavior.Throw:
+						ArrayPool<byte>.Shared.Return(packetArray);
+						throw new InvalidOperationException($"DAVE is not active (state={this._daveSession.State}); outbound audio cannot be sent with DavePendingAudioBehavior.Throw.");
+				}
+			}
 
 		byte[]? daveEncrypted = null;
 		var daveEncryptSucceeded = false;

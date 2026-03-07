@@ -61,7 +61,8 @@ public sealed class VoiceConfiguration
 	public bool EnableDebugLogging { internal get; set; } = false;
 
 	/// <summary>
-	///     <para>Controls outbound audio behavior while DAVE is negotiated but not yet active.</para>
+	///     <para>Controls outbound audio behavior while DAVE is negotiated but not active.</para>
+	///     <para>Use <see cref="DavePendingAudioBehavior.Throw"/> to fail fast when a producer attempts to send before DAVE is active.</para>
 	///     <para>Defaults to <see cref="DavePendingAudioBehavior.PassThrough"/>.</para>
 	/// </summary>
 	public DavePendingAudioBehavior DavePendingAudioBehavior { internal get; set; } = DavePendingAudioBehavior.PassThrough;

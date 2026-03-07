@@ -1,7 +1,9 @@
+using System;
+
 namespace DisCatSharp.Voice;
 
 /// <summary>
-///     Controls outbound audio behavior while DAVE is negotiated but not yet active.
+///     Controls outbound audio behavior while DAVE is negotiated but not active.
 /// </summary>
 public enum DavePendingAudioBehavior
 {
@@ -13,5 +15,10 @@ public enum DavePendingAudioBehavior
 	/// <summary>
 	///     Drop outbound audio frames until DAVE is active.
 	/// </summary>
-	Drop = 1
+	Drop = 1,
+
+	/// <summary>
+	///     Throw <see cref="InvalidOperationException"/> when an outbound frame is prepared while DAVE is not active.
+	/// </summary>
+	Throw = 2
 }
