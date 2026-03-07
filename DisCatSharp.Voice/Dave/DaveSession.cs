@@ -41,6 +41,7 @@ internal sealed class DaveSession : IDisposable
 	private readonly IMlsProvider _mlsProvider;
 	private readonly Func<IDaveEncryptor> _encryptorFactory;
 	private readonly Func<IDaveDecryptor> _decryptorFactory;
+	private readonly Action<int, DaveSessionState, DaveSessionState, string, string>? _stateChanged;
 	private readonly ILogger _logger;
 	private readonly IDaveEncryptor _encryptor;
 	private volatile Dictionary<ulong, IDaveDecryptor> _decryptors = [];
@@ -67,6 +68,7 @@ internal sealed class DaveSession : IDisposable
 	/// <param name="encryptorFactory">Factory producing the outbound <see cref="IDaveEncryptor"/>.</param>
 	/// <param name="decryptorFactory">Factory producing per-user inbound <see cref="IDaveDecryptor"/> instances.</param>
 	/// <param name="logger">Logger for state transitions and diagnostics.</param>
+	/// <param name="stateChanged">Optional callback invoked for every state transition.</param>
 	internal DaveSession(
 		ulong selfUserId,
 		ulong channelId,
@@ -74,7 +76,8 @@ internal sealed class DaveSession : IDisposable
 		IMlsProvider mlsProvider,
 		Func<IDaveEncryptor> encryptorFactory,
 		Func<IDaveDecryptor> decryptorFactory,
-		ILogger logger)
+		ILogger logger,
+		Action<int, DaveSessionState, DaveSessionState, string, string>? stateChanged = null)
 	{
 		_ = channelId; // stored for future group-id use in Phase 6
 		this._selfUserId = selfUserId;
@@ -82,6 +85,7 @@ internal sealed class DaveSession : IDisposable
 		this._encryptorFactory = encryptorFactory ?? throw new ArgumentNullException(nameof(encryptorFactory));
 		this._decryptorFactory = decryptorFactory ?? throw new ArgumentNullException(nameof(decryptorFactory));
 		this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
+		this._stateChanged = stateChanged;
 		this._encryptor = encryptorFactory();
 		this.ProtocolVersion = protocolVersion;
 
@@ -451,6 +455,7 @@ internal sealed class DaveSession : IDisposable
 
 		this.State = newState;
 		this._logger.VoiceDebug("[DAVE FSM] {OldState} -> {NewState} via {Handler} ({Reason})", oldState, newState, handler, reason);
+		this._stateChanged?.Invoke(this.ProtocolVersion, oldState, newState, handler, reason);
 	}
 
 	/// <summary>Resets the MLS provider, transition tracker, decryptors, and encryptor passthrough.</summary>
