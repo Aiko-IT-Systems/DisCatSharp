@@ -2,10 +2,27 @@ name: Build Voice Natives
 
 on:
     workflow_dispatch:
+        inputs:
+            libsodium_version:
+                description: "libsodium version (e.g. 1.0.21)"
+                required: false
+                default: "1.0.21"
+                type: string
+            opus_version:
+                description: "Opus version (e.g. 1.6.1)"
+                required: false
+                default: "1.6.1"
+                type: string
+            libdave_release:
+                description: "libdave release tag (e.g. v1.1.1/cpp) or latest"
+                required: false
+                default: "latest"
+                type: string
 
 env:
-    LIBSODIUM_VERSION: "1.0.21"
-    OPUS_VERSION: "1.5.2"
+    LIBSODIUM_VERSION: ${{ github.event.inputs.libsodium_version || '1.0.21' }}
+    OPUS_VERSION: ${{ github.event.inputs.opus_version || '1.6.1' }}
+    LIBDAVE_RELEASE: ${{ github.event.inputs.libdave_release || 'latest' }}
 
 permissions:
     contents: read
@@ -46,7 +63,7 @@ jobs:
 
             - name: Build libopus
               run: |
-                  curl -L "https://archive.mozilla.org/pub/opus/opus-${OPUS_VERSION}.tar.gz" -o opus.tar.gz
+                  curl -L "https://downloads.xiph.org/releases/opus/opus-${OPUS_VERSION}.tar.gz" -o opus.tar.gz
                   tar xzf opus.tar.gz
                   cmake -S opus-* -B opus-build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DOPUS_BUILD_PROGRAMS=OFF -DOPUS_BUILD_TESTING=OFF
                   cmake --build opus-build --config Release -j"$(nproc)"
@@ -55,10 +72,16 @@ jobs:
               env:
                   DAVE_ASSET_NAME: ${{ matrix.dave_asset }}
               run: |
+                  if [ "${LIBDAVE_RELEASE}" = "latest" ]; then
+                    DAVE_RELEASE_URL="https://api.github.com/repos/discord/libdave/releases/latest"
+                  else
+                    DAVE_RELEASE_URL="https://api.github.com/repos/discord/libdave/releases/tags/${LIBDAVE_RELEASE}"
+                  fi
+
                   curl -fsSL \
                     -H "Authorization: Bearer ${{ github.token }}" \
                     -H "Accept: application/vnd.github+json" \
-                    https://api.github.com/repos/discord/libdave/releases/latest > libdave-release.json
+                    "${DAVE_RELEASE_URL}" > libdave-release.json
 
                   python3 - <<'PY'
                   import json
@@ -147,7 +170,7 @@ jobs:
 
             - name: Build libopus
               run: |
-                  curl -L "https://archive.mozilla.org/pub/opus/opus-${OPUS_VERSION}.tar.gz" -o opus.tar.gz
+                  curl -L "https://downloads.xiph.org/releases/opus/opus-${OPUS_VERSION}.tar.gz" -o opus.tar.gz
                   tar xzf opus.tar.gz
                   cmake -S opus-* -B opus-build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DOPUS_BUILD_PROGRAMS=OFF -DOPUS_BUILD_TESTING=OFF
                   cmake --build opus-build --config Release -j"$(sysctl -n hw.ncpu)"
@@ -156,10 +179,16 @@ jobs:
               env:
                   DAVE_ASSET_NAME: ${{ matrix.dave_asset }}
               run: |
+                  if [ "${LIBDAVE_RELEASE}" = "latest" ]; then
+                    DAVE_RELEASE_URL="https://api.github.com/repos/discord/libdave/releases/latest"
+                  else
+                    DAVE_RELEASE_URL="https://api.github.com/repos/discord/libdave/releases/tags/${LIBDAVE_RELEASE}"
+                  fi
+
                   curl -fsSL \
                     -H "Authorization: Bearer ${{ github.token }}" \
                     -H "Accept: application/vnd.github+json" \
-                    https://api.github.com/repos/discord/libdave/releases/latest > libdave-release.json
+                    "${DAVE_RELEASE_URL}" > libdave-release.json
 
                   python3 - <<'PY'
                   import json
@@ -251,7 +280,7 @@ jobs:
             - name: Build libopus
               shell: pwsh
               run: |
-                  Invoke-WebRequest "https://archive.mozilla.org/pub/opus/opus-${env:OPUS_VERSION}.tar.gz" -OutFile opus.tar.gz
+                  Invoke-WebRequest "https://downloads.xiph.org/releases/opus/opus-${env:OPUS_VERSION}.tar.gz" -OutFile opus.tar.gz
                   tar -xzf opus.tar.gz
 
                   $opusSource = Get-ChildItem -Directory -Filter "opus-*" | Select-Object -First 1
@@ -275,12 +304,18 @@ jobs:
                   DAVE_ASSET_NAME: ${{ matrix.dave_asset }}
                   GITHUB_TOKEN: ${{ github.token }}
               run: |
+                  $daveReleaseUrl = if ($env:LIBDAVE_RELEASE -eq "latest") {
+                      "https://api.github.com/repos/discord/libdave/releases/latest"
+                  } else {
+                      "https://api.github.com/repos/discord/libdave/releases/tags/$($env:LIBDAVE_RELEASE)"
+                  }
+
                   $headers = @{
                       Authorization = "Bearer $env:GITHUB_TOKEN"
                       Accept = "application/vnd.github+json"
                   }
 
-                  $release = Invoke-RestMethod -Headers $headers -Uri "https://api.github.com/repos/discord/libdave/releases/latest"
+                  $release = Invoke-RestMethod -Headers $headers -Uri $daveReleaseUrl
                   $asset = $release.assets | Where-Object { $_.name -eq $env:DAVE_ASSET_NAME } | Select-Object -First 1
 
                   if (-not $asset) {
