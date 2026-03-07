@@ -186,6 +186,21 @@ public sealed class VoiceConnection : IDisposable
 	private volatile int _daveInactiveDropDiagLogged;
 
 	/// <summary>
+	///     One-shot flag: log when inbound packets are dropped while DAVE is pending.
+	/// </summary>
+	private volatile int _daveRecvPendingDropDiagLogged;
+
+	/// <summary>
+	///     One-shot flag: log when inbound DAVE packets are dropped because SSRC→user mapping is not ready.
+	/// </summary>
+	private volatile int _daveRecvMissingSenderDropDiagLogged;
+
+	/// <summary>
+	///     One-shot flag: log when inbound DAVE packets are dropped because no ratchet exists for the sender.
+	/// </summary>
+	private volatile int _daveRecvMissingRatchetDropDiagLogged;
+
+	/// <summary>
 	///     One-shot guard: when OP 27 proposals produce no commit (ProcessProposals returns 0 bytes),
 	///     the session is reset and a fresh OP 26 is sent exactly once per session-init cycle.
 	///     Prevents stale <c>stateWithProposals_</c> corruption in libdave from cascading across
@@ -1110,16 +1125,39 @@ public sealed class VoiceConnection : IDisposable
 			// This ordering must not be changed: DAVE encrypts from the payload start,
 			// and extension data lives in the unencrypted portion that DAVE passes through unchanged.
 
-			// DAVE E2EE: decrypt the Opus frame if a decryptor exists for this user.
-			// If no decryptor is installed (non-DAVE or handshake not complete), opusSpan passes through.
-			if (this._daveSession is not null && vtx.Id != 0)
+			// DAVE E2EE: once DAVE is negotiated, we should only attempt Opus decode on successfully
+			// decrypted SFrame payloads. Passing encrypted bytes to Opus causes invalid packets and
+			// can destabilize receive.
+			if (this._daveSession is not null)
 			{
+				if (!this._daveSession.IsActive)
+				{
+					if (Interlocked.CompareExchange(ref this._daveRecvPendingDropDiagLogged, 1, 0) == 0)
+						this._discord.Logger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
+							"[DAVE] Dropping inbound packet while session is pending");
+
+					return false;
+				}
+
+				if (vtx.Id == 0)
+				{
+					if (Interlocked.CompareExchange(ref this._daveRecvMissingSenderDropDiagLogged, 1, 0) == 0)
+						this._discord.Logger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
+							"[DAVE] Dropping inbound packet for SSRC {Ssrc}: sender mapping not ready", ssrc);
+
+					return false;
+				}
+
 				if (this._daveSession.TryDecrypt(vtx.Id, opusSpan, out daveDecrypted, out var daveLen))
 					opusSpan = daveDecrypted.AsSpan(0, daveLen);
 				else
-					this._discord.Logger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
-						"[DAVE] Received packet for SSRC {Ssrc} but no decryptor mapping exists; packet will be processed without DAVE decryption",
-						ssrc);
+				{
+					if (Interlocked.CompareExchange(ref this._daveRecvMissingRatchetDropDiagLogged, 1, 0) == 0)
+						this._discord.Logger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
+							"[DAVE] Dropping inbound packet for SSRC {Ssrc}: no decryptor mapping for user {UserId}", ssrc, vtx.Id);
+
+					return false;
+				}
 			}
 
 			// Strip extensions, if any
@@ -1683,6 +1721,9 @@ public sealed class VoiceConnection : IDisposable
 						this._daveSession.PreSeedRecognizedUsers(preSeedIds);
 						this._daveProposalRestartSent = false;
 						this._daveInactiveDropDiagLogged = 0;
+						this._daveRecvPendingDropDiagLogged = 0;
+						this._daveRecvMissingSenderDropDiagLogged = 0;
+						this._daveRecvMissingRatchetDropDiagLogged = 0;
 					}
 					catch (Exception ex) when (ex is DllNotFoundException or EntryPointNotFoundException)
 					{
@@ -1690,6 +1731,9 @@ public sealed class VoiceConnection : IDisposable
 						// rather than crashing the voice connection.  Audio will continue unencrypted.
 						this._daveSession = null;
 						this._daveInactiveDropDiagLogged = 0;
+						this._daveRecvPendingDropDiagLogged = 0;
+						this._daveRecvMissingSenderDropDiagLogged = 0;
+						this._daveRecvMissingRatchetDropDiagLogged = 0;
 						this._discord.Logger.LogError(VoiceEvents.DaveHandshake,
 							"[DAVE] Native libdave library not found or entry point missing — DAVE disabled for this connection. ({ExType}: {Message})",
 							ex.GetType().Name, ex.Message);
@@ -1701,6 +1745,9 @@ public sealed class VoiceConnection : IDisposable
 					this._daveSession?.Dispose();
 					this._daveSession = null;
 					this._daveInactiveDropDiagLogged = 0;
+					this._daveRecvPendingDropDiagLogged = 0;
+					this._daveRecvMissingSenderDropDiagLogged = 0;
+					this._daveRecvMissingRatchetDropDiagLogged = 0;
 				}
 
 				await this.Stage2(vsd).ConfigureAwait(false);
@@ -1714,7 +1761,9 @@ public sealed class VoiceConnection : IDisposable
 				var spd = opp.ToObject<VoiceSpeakingPayload>()!;
 				ArgumentNullException.ThrowIfNull(spd.Ssrc);
 				DiscordUser? resolvedUser = null;
-				var foundUserInCache = spd.UserId.HasValue && this._discord.TryGetCachedUserInternal(spd.UserId.Value, out resolvedUser);
+				if (spd.UserId.HasValue && !this._discord.TryGetCachedUserInternal(spd.UserId.Value, out resolvedUser))
+					resolvedUser = await this._discord.GetUserAsync(spd.UserId.Value, true).ConfigureAwait(false);
+
 				var spk = new UserSpeakingEventArgs(this._discord.ServiceProvider)
 				{
 					Speaking = spd.Speaking,
@@ -1722,18 +1771,26 @@ public sealed class VoiceConnection : IDisposable
 					User = resolvedUser
 				};
 
-				if (foundUserInCache && this._transmittingSsrCs.TryGetValue(spk.Ssrc, out var txssrc5) && txssrc5.Id is 0)
-					txssrc5.User = spk.User;
+				if (this._transmittingSsrCs.TryGetValue(spk.Ssrc, out var existingSender))
+				{
+					// Sender can be created by inbound RTP before OP5 arrives. Bind user id now.
+					if (existingSender.Id == 0 && spk.User is not null)
+						existingSender.User = spk.User;
+				}
 				else
 				{
 					var opus = this._opus.CreateDecoder();
 					var vtx = new AudioSender(spk.Ssrc, opus)
 					{
-						User = spd.UserId.HasValue ? await this._discord.GetUserAsync(spd.UserId.Value, true).ConfigureAwait(false) : null
+						User = spk.User
 					};
 
 					if (!this._transmittingSsrCs.TryAdd(spk.Ssrc, vtx))
+					{
 						this._opus.DestroyDecoder(opus);
+						if (spk.User is not null && this._transmittingSsrCs.TryGetValue(spk.Ssrc, out var racedSender) && racedSender.Id == 0)
+							racedSender.User = spk.User;
+					}
 				}
 
 				await this._userSpeaking.InvokeAsync(this, spk).ConfigureAwait(false);
