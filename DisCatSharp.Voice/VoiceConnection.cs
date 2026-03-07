@@ -558,7 +558,13 @@ public sealed class VoiceConnection : IDisposable
 	/// </summary>
 	/// <returns>A Task.</returns>
 	internal Task ReconnectAsync()
-		=> this._voiceWs.DisconnectAsync();
+	{
+		// Fresh session (e.g. channel/server move) should connect immediately.
+		// Resume=true path intentionally closes first so SocketClosed can rebuild/reconnect.
+		return this.Resume
+			? this._voiceWs.DisconnectAsync()
+			: this.ConnectAsync();
+	}
 
 	/// <summary>
 	///     Starts .
@@ -1276,7 +1282,7 @@ public sealed class VoiceConnection : IDisposable
 		{
 			try
 			{
-				var data = await this._udpClient.ReceiveAsync().ConfigureAwait(false);
+				var data = await this._udpClient.ReceiveAsync(token).ConfigureAwait(false);
 				if (data.Length is 8)
 					this.ProcessKeepalive(data);
 				else if (this._configuration.EnableIncoming)
@@ -1444,12 +1450,36 @@ public sealed class VoiceConnection : IDisposable
 	{
 		// IP Discovery
 		this._udpClient.Setup(this.UdpEndpoint);
+		this._discord.Logger.LogDebug(VoiceEvents.VoiceHandshake,
+			"[Voice] Stage1 UDP discovery started: endpoint={Host}:{Port}",
+			this.UdpEndpoint.Hostname, this.UdpEndpoint.Port);
 
 		var pck = new byte[74];
-		PreparePacketStage1(pck);
-		await this._udpClient.SendAsync(pck, pck.Length).ConfigureAwait(false);
+		byte[]? ipd = null;
+		for (var attempt = 1; attempt <= 3; attempt++)
+		{
+			PreparePacketStage1(pck);
+			await this._udpClient.SendAsync(pck, pck.Length).ConfigureAwait(false);
+			this._discord.Logger.LogDebug(VoiceEvents.VoiceHandshake,
+				"[Voice] Stage1 UDP discovery probe sent (attempt {Attempt}/3)", attempt);
 
-		var ipd = await this._udpClient.ReceiveAsync().ConfigureAwait(false);
+			try
+			{
+				using var discoveryTimeout = CancellationTokenSource.CreateLinkedTokenSource(this.TOKEN);
+				discoveryTimeout.CancelAfter(TimeSpan.FromSeconds(3));
+				ipd = await this._udpClient.ReceiveAsync(discoveryTimeout.Token).ConfigureAwait(false);
+				break;
+			}
+			catch (OperationCanceledException) when (!this.TOKEN.IsCancellationRequested)
+			{
+				this._discord.Logger.LogWarning(VoiceEvents.VoiceHandshake,
+					"[Voice] Stage1 UDP discovery timed out (attempt {Attempt}/3)", attempt);
+			}
+		}
+
+		if (ipd is null)
+			throw new TimeoutException("Voice UDP endpoint discovery timed out after 3 attempts.");
+
 		ReadPacket(ipd, out var ip, out var port);
 		this._discoveredEndpoint = new()
 		{

@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DisCatSharp.Net.Udp;
@@ -30,8 +31,9 @@ public abstract class BaseUdpClient
 	/// <summary>
 	///     Receives a datagram.
 	/// </summary>
+	/// <param name="cancellationToken">Optional cancellation token for aborting receive wait.</param>
 	/// <returns>The received bytes.</returns>
-	public abstract Task<byte[]> ReceiveAsync();
+	public abstract Task<byte[]> ReceiveAsync(CancellationToken cancellationToken = default);
 
 	/// <summary>
 	///     Closes and disposes the client.

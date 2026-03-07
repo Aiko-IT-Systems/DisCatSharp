@@ -101,7 +101,14 @@ internal class DcsUdpClient : BaseUdpClient
 	///     Receives a datagram.
 	/// </summary>
 	/// <returns>The received bytes.</returns>
-	public override Task<byte[]> ReceiveAsync() => Task.FromResult(this._packetQueue.Take(this.TOKEN));
+	public override Task<byte[]> ReceiveAsync(CancellationToken cancellationToken = default)
+	{
+		if (!cancellationToken.CanBeCanceled)
+			return Task.FromResult(this._packetQueue.Take(this.TOKEN));
+
+		using var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(this.TOKEN, cancellationToken);
+		return Task.FromResult(this._packetQueue.Take(linkedTokenSource.Token));
+	}
 
 	/// <summary>
 	///     Closes and disposes the client.
