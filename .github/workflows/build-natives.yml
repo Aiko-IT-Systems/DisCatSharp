@@ -12,9 +12,11 @@ jobs:
                     - arch: x64
                       runs_on: ubuntu-latest
                       expected_arch: x86-64
+                      extra_cflags: ""
                     - arch: arm64
                       runs_on: ubuntu-24.04-arm
                       expected_arch: aarch64
+                      extra_cflags: "-flax-vector-conversions"
 
         steps:
             - uses: actions/checkout@v6
@@ -32,18 +34,18 @@ jobs:
             - name: Build libsodium
               run: |
                   cd libsodium-*
-                  ./configure --enable-shared --disable-static
+                  ./configure --enable-shared --disable-static CFLAGS="${{ matrix.extra_cflags }}"
                   make -j$(nproc)
 
             - name: Verify binary architecture
               run: |
-                  file libsodium-*/src/libsodium/.libs/libsodium.so
-                  file libsodium-*/src/libsodium/.libs/libsodium.so | grep -qi "${{ matrix.expected_arch }}"
+                  file -L libsodium-*/src/libsodium/.libs/libsodium.so
+                  file -L libsodium-*/src/libsodium/.libs/libsodium.so | grep -qi "${{ matrix.expected_arch }}"
 
             - name: Copy binary
               run: |
                   mkdir -p DisCatSharp.Voice.Natives/runtimes/linux-${{ matrix.arch }}/native
-                  cp libsodium-*/src/libsodium/.libs/libsodium.so \
+                  cp -L libsodium-*/src/libsodium/.libs/libsodium.so \
                      DisCatSharp.Voice.Natives/runtimes/linux-${{ matrix.arch }}/native/
 
             - uses: actions/upload-artifact@v7
@@ -57,7 +59,7 @@ jobs:
             matrix:
                 include:
                     - arch: x64
-                      runs_on: macos-latest-large
+                      runs_on: macos-13
                       expected_arch: x86_64
                     - arch: arm64
                       runs_on: macos-latest
@@ -83,13 +85,13 @@ jobs:
 
             - name: Verify binary architecture
               run: |
-                  file libsodium-*/src/libsodium/.libs/libsodium.dylib
-                  file libsodium-*/src/libsodium/.libs/libsodium.dylib | grep -qi "${{ matrix.expected_arch }}"
+                  file -L libsodium-*/src/libsodium/.libs/libsodium.dylib
+                  file -L libsodium-*/src/libsodium/.libs/libsodium.dylib | grep -qi "${{ matrix.expected_arch }}"
 
             - name: Copy binary
               run: |
                   mkdir -p DisCatSharp.Voice.Natives/runtimes/osx-${{ matrix.arch }}/native
-                  cp libsodium-*/src/libsodium/.libs/libsodium.dylib \
+                  cp -L libsodium-*/src/libsodium/.libs/libsodium.dylib \
                      DisCatSharp.Voice.Natives/runtimes/osx-${{ matrix.arch }}/native/
 
             - uses: actions/upload-artifact@v7
