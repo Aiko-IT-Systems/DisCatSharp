@@ -74,6 +74,11 @@ public sealed class VoiceConnection : IDisposable
 	private readonly Channel<RawVoicePacket> _transmitChannel;
 
 	/// <summary>
+	///     Serializes reconnect attempts.
+	/// </summary>
+	private readonly SemaphoreSlim _reconnectSemaphore = new(1, 1);
+
+	/// <summary>
 	///     Gets the transmitting s s r cs.
 	/// </summary>
 	private readonly ConcurrentDictionary<uint, AudioSender> _transmittingSsrCs;
@@ -470,6 +475,7 @@ public sealed class VoiceConnection : IDisposable
 			this._daveSession = null;
 			this._rtp?.Dispose();
 			this._rtp = null;
+			this._reconnectSemaphore.Dispose();
 		}
 		catch (Exception ex)
 		{
@@ -557,13 +563,36 @@ public sealed class VoiceConnection : IDisposable
 	///     Reconnects .
 	/// </summary>
 	/// <returns>A Task.</returns>
-	internal Task ReconnectAsync()
+	internal async Task ReconnectAsync()
 	{
-		// Fresh session (e.g. channel/server move) should connect immediately.
-		// Resume=true path intentionally closes first so SocketClosed can rebuild/reconnect.
-		return this.Resume
-			? this._voiceWs.DisconnectAsync()
-			: this.ConnectAsync();
+		if (this._isDisposed)
+			return;
+
+		try
+		{
+			await this._reconnectSemaphore.WaitAsync().ConfigureAwait(false);
+		}
+		catch (ObjectDisposedException)
+		{
+			return;
+		}
+
+		try
+		{
+			if (this._isDisposed)
+				return;
+
+			// Fresh session (e.g. channel/server move) should connect immediately.
+			// Resume=true path intentionally closes first so SocketClosed can rebuild/reconnect.
+			if (this.Resume)
+				await this._voiceWs.DisconnectAsync().ConfigureAwait(false);
+			else
+				await this.ConnectAsync().ConfigureAwait(false);
+		}
+		finally
+		{
+			this._reconnectSemaphore.Release();
+		}
 	}
 
 	/// <summary>
@@ -1864,10 +1893,10 @@ public sealed class VoiceConnection : IDisposable
 			this.Resume = false;
 			shouldAutoReconnect = true;
 		}
-		else if (e.CloseCode == 4014)
+		else if (e.CloseCode is 4014 or 4022)
 		{
-			// Voice server move/channel move. Wait for VOICE_SERVER_UPDATE before reconnecting,
-			// otherwise we can reconnect to a stale endpoint and get stuck.
+			// Voice server move/channel move/region migration. Wait for VOICE_SERVER_UPDATE
+			// before reconnecting, otherwise we can reconnect to a stale endpoint and get stuck.
 			this.Resume = false;
 			shouldAutoReconnect = false;
 		}
