@@ -355,9 +355,28 @@ jobs:
         steps:
             - uses: actions/download-artifact@v8
               with:
-                  pattern: natives-*
-                  merge-multiple: true
-                  path: bundle/DisCatSharp.Voice.Natives/runtimes
+                  name: natives-linux-x64
+                  path: bundle/DisCatSharp.Voice.Natives/runtimes/linux-x64
+
+            - uses: actions/download-artifact@v8
+              with:
+                  name: natives-linux-arm64
+                  path: bundle/DisCatSharp.Voice.Natives/runtimes/linux-arm64
+
+            - uses: actions/download-artifact@v8
+              with:
+                  name: natives-osx-x64
+                  path: bundle/DisCatSharp.Voice.Natives/runtimes/osx-x64
+
+            - uses: actions/download-artifact@v8
+              with:
+                  name: natives-osx-arm64
+                  path: bundle/DisCatSharp.Voice.Natives/runtimes/osx-arm64
+
+            - uses: actions/download-artifact@v8
+              with:
+                  name: natives-win-x64
+                  path: bundle/DisCatSharp.Voice.Natives/runtimes/win-x64
 
             - name: Validate bundled layout
               run: |
