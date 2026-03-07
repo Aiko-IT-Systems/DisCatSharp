@@ -31,14 +31,14 @@ jobs:
 
             - name: Copy binary
               run: |
-                  mkdir -p DisCatSharp.VoiceNext.Natives/runtimes/linux-${{ matrix.arch }}/native
+                  mkdir -p DisCatSharp.Voice.Natives/runtimes/linux-${{ matrix.arch }}/native
                   cp libsodium-*/src/libsodium/.libs/libsodium.so \
-                     DisCatSharp.VoiceNext.Natives/runtimes/linux-${{ matrix.arch }}/native/
+                     DisCatSharp.Voice.Natives/runtimes/linux-${{ matrix.arch }}/native/
 
             - uses: actions/upload-artifact@v7
               with:
                   name: sodium-linux-${{ matrix.arch }}
-                  path: DisCatSharp.VoiceNext.Natives/runtimes/linux-${{ matrix.arch }}/native/libsodium.so
+                  path: DisCatSharp.Voice.Natives/runtimes/linux-${{ matrix.arch }}/native/libsodium.so
 
     build-macos:
         runs-on: macos-latest
@@ -66,14 +66,14 @@ jobs:
 
             - name: Copy binary
               run: |
-                  mkdir -p DisCatSharp.VoiceNext.Natives/runtimes/osx-${{ matrix.arch }}/native
+                  mkdir -p DisCatSharp.Voice.Natives/runtimes/osx-${{ matrix.arch }}/native
                   cp libsodium-*/src/libsodium/.libs/libsodium.dylib \
-                     DisCatSharp.VoiceNext.Natives/runtimes/osx-${{ matrix.arch }}/native/
+                     DisCatSharp.Voice.Natives/runtimes/osx-${{ matrix.arch }}/native/
 
             - uses: actions/upload-artifact@v7
               with:
                   name: sodium-macos-${{ matrix.arch }}
-                  path: DisCatSharp.VoiceNext.Natives/runtimes/osx-${{ matrix.arch }}/native/libsodium.dylib
+                  path: DisCatSharp.Voice.Natives/runtimes/osx-${{ matrix.arch }}/native/libsodium.dylib
 
     build-windows:
         runs-on: windows-latest
@@ -89,15 +89,15 @@ jobs:
             - name: Copy x64 release DLL
               shell: pwsh
               run: |
-                    New-Item -ItemType Directory -Force -Path DisCatSharp.VoiceNext.Natives/runtimes/win-x64/native
+                    New-Item -ItemType Directory -Force -Path DisCatSharp.Voice.Natives/runtimes/win-x64/native
 
                     $dll = Get-ChildItem -Recurse -Filter libsodium.dll | Where-Object {
                         $_.FullName -match "x64.*dynamic"
                     } | Select-Object -First 1
 
-                    Copy-Item $dll.FullName DisCatSharp.VoiceNext.Natives/runtimes/win-x64/native/libsodium.dll
+                    Copy-Item $dll.FullName DisCatSharp.Voice.Natives/runtimes/win-x64/native/libsodium.dll
 
             - uses: actions/upload-artifact@v7
               with:
                   name: sodium-win-x64
-                  path: DisCatSharp.VoiceNext.Natives/runtimes/win-x64/native/libsodium.dll
+                  path: DisCatSharp.Voice.Natives/runtimes/win-x64/native/libsodium.dll
