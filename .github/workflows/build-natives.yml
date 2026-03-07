@@ -3,125 +3,360 @@ name: Build Voice Natives
 on:
     workflow_dispatch:
 
+env:
+    LIBSODIUM_VERSION: "1.0.21"
+    OPUS_VERSION: "1.5.2"
+
+permissions:
+    contents: read
+
 jobs:
     build-linux:
         runs-on: ${{ matrix.runs_on }}
         strategy:
             matrix:
                 include:
-                    - arch: x64
+                    - rid: linux-x64
                       runs_on: ubuntu-latest
                       expected_arch: x86-64
                       extra_cflags: ""
-                    - arch: arm64
+                      dave_asset: libdave-Linux-X64-boringssl.zip
+                    - rid: linux-arm64
                       runs_on: ubuntu-24.04-arm
                       expected_arch: aarch64
                       extra_cflags: "-flax-vector-conversions"
+                      dave_asset: libdave-Linux-ARM64-boringssl.zip
 
         steps:
             - uses: actions/checkout@v6
 
-            - name: Install deps
+            - name: Install build dependencies
               run: |
                   sudo apt-get update
-                  sudo apt-get install -y build-essential autoconf automake libtool pkg-config
-
-            - name: Download libsodium
-              run: |
-                  curl -L https://download.libsodium.org/libsodium/releases/libsodium-1.0.21.tar.gz -o sodium.tar.gz
-                  tar xzf sodium.tar.gz
+                  sudo apt-get install -y build-essential autoconf automake libtool pkg-config cmake unzip python3
 
             - name: Build libsodium
               run: |
-                  cd libsodium-*
+                  curl -L "https://download.libsodium.org/libsodium/releases/libsodium-${LIBSODIUM_VERSION}.tar.gz" -o sodium.tar.gz
+                  tar xzf sodium.tar.gz
+                  pushd libsodium-*
                   ./configure --enable-shared --disable-static CFLAGS="${{ matrix.extra_cflags }}"
-                  make -j$(nproc)
+                  make -j"$(nproc)"
+                  popd
+
+            - name: Build libopus
+              run: |
+                  curl -L "https://archive.mozilla.org/pub/opus/opus-${OPUS_VERSION}.tar.gz" -o opus.tar.gz
+                  tar xzf opus.tar.gz
+                  cmake -S opus-* -B opus-build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DOPUS_BUILD_PROGRAMS=OFF -DOPUS_BUILD_TESTING=OFF
+                  cmake --build opus-build --config Release -j"$(nproc)"
+
+            - name: Download libdave release asset
+              env:
+                  DAVE_ASSET_NAME: ${{ matrix.dave_asset }}
+              run: |
+                  curl -fsSL \
+                    -H "Authorization: Bearer ${{ github.token }}" \
+                    -H "Accept: application/vnd.github+json" \
+                    https://api.github.com/repos/discord/libdave/releases/latest > libdave-release.json
+
+                  python3 - <<'PY'
+                  import json
+                  import os
+                  import sys
+                  import urllib.request
+
+                  asset_name = os.environ["DAVE_ASSET_NAME"]
+                  with open("libdave-release.json", "r", encoding="utf-8") as f:
+                      release = json.load(f)
+
+                  asset = next((a for a in release.get("assets", []) if a.get("name") == asset_name), None)
+                  if asset is None:
+                      raise SystemExit(f"Missing libdave asset: {asset_name}")
+
+                  print(f"Downloading {asset['name']}")
+                  urllib.request.urlretrieve(asset["browser_download_url"], "libdave.zip")
+                  PY
+
+                  unzip -q libdave.zip -d libdave
+
+            - name: Stage native binaries
+              run: |
+                  RID_DIR="DisCatSharp.Voice.Natives/runtimes/${{ matrix.rid }}/native"
+                  mkdir -p "$RID_DIR"
+
+                  cp -L libsodium-*/src/libsodium/.libs/libsodium.so "$RID_DIR/libsodium.so"
+
+                  OPUS_LIB=$(find opus-build -type f \( -name "libopus.so" -o -name "libopus.so.*" -o -name "opus.so" -o -name "opus.so.*" \) | head -n 1)
+                  if [ -z "$OPUS_LIB" ]; then
+                      echo "libopus shared object not found" >&2
+                      exit 1
+                  fi
+                  cp -L "$OPUS_LIB" "$RID_DIR/libopus.so"
+
+                  DAVE_LIB=$(find libdave -type f \( -name "libdave.so" -o -name "libdave.so.*" -o -name "*dave*.so" -o -name "*dave*.so.*" \) | head -n 1)
+                  if [ -z "$DAVE_LIB" ]; then
+                      echo "libdave shared object not found" >&2
+                      exit 1
+                  fi
+                  cp -L "$DAVE_LIB" "$RID_DIR/libdave.so"
 
             - name: Verify binary architecture
               run: |
-                  file -L libsodium-*/src/libsodium/.libs/libsodium.so
-                  file -L libsodium-*/src/libsodium/.libs/libsodium.so | grep -qi "${{ matrix.expected_arch }}"
-
-            - name: Copy binary
-              run: |
-                  mkdir -p DisCatSharp.Voice.Natives/runtimes/linux-${{ matrix.arch }}/native
-                  cp -L libsodium-*/src/libsodium/.libs/libsodium.so \
-                     DisCatSharp.Voice.Natives/runtimes/linux-${{ matrix.arch }}/native/
+                  RID_DIR="DisCatSharp.Voice.Natives/runtimes/${{ matrix.rid }}/native"
+                  for lib in libsodium libopus libdave; do
+                    file -L "$RID_DIR/$lib.so"
+                    file -L "$RID_DIR/$lib.so" | grep -qi "${{ matrix.expected_arch }}"
+                  done
 
             - uses: actions/upload-artifact@v7
               with:
-                  name: sodium-linux-${{ matrix.arch }}
-                  path: DisCatSharp.Voice.Natives/runtimes/linux-${{ matrix.arch }}/native/libsodium.so
+                  name: natives-${{ matrix.rid }}
+                  path: DisCatSharp.Voice.Natives/runtimes/${{ matrix.rid }}
+                  if-no-files-found: error
 
     build-macos:
         runs-on: ${{ matrix.runs_on }}
         strategy:
             matrix:
                 include:
-                    - arch: x64
+                    - rid: osx-x64
                       runs_on: macos-15-intel
                       expected_arch: x86_64
-                    - arch: arm64
+                      dave_asset: libdave-macOS-X64-boringssl.zip
+                    - rid: osx-arm64
                       runs_on: macos-latest
                       expected_arch: arm64
+                      dave_asset: libdave-macOS-ARM64-boringssl.zip
 
         steps:
             - uses: actions/checkout@v6
 
-            - name: Install deps
+            - name: Install build dependencies
               run: |
-                  brew install autoconf automake libtool
-
-            - name: Download libsodium
-              run: |
-                  curl -L https://download.libsodium.org/libsodium/releases/libsodium-1.0.21.tar.gz -o sodium.tar.gz
-                  tar xzf sodium.tar.gz
+                  brew install autoconf automake libtool cmake
 
             - name: Build libsodium
               run: |
-                  cd libsodium-*
+                  curl -L "https://download.libsodium.org/libsodium/releases/libsodium-${LIBSODIUM_VERSION}.tar.gz" -o sodium.tar.gz
+                  tar xzf sodium.tar.gz
+                  pushd libsodium-*
                   ./configure --enable-shared --disable-static
-                  make -j$(sysctl -n hw.ncpu)
+                  make -j"$(sysctl -n hw.ncpu)"
+                  popd
+
+            - name: Build libopus
+              run: |
+                  curl -L "https://archive.mozilla.org/pub/opus/opus-${OPUS_VERSION}.tar.gz" -o opus.tar.gz
+                  tar xzf opus.tar.gz
+                  cmake -S opus-* -B opus-build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DOPUS_BUILD_PROGRAMS=OFF -DOPUS_BUILD_TESTING=OFF
+                  cmake --build opus-build --config Release -j"$(sysctl -n hw.ncpu)"
+
+            - name: Download libdave release asset
+              env:
+                  DAVE_ASSET_NAME: ${{ matrix.dave_asset }}
+              run: |
+                  curl -fsSL \
+                    -H "Authorization: Bearer ${{ github.token }}" \
+                    -H "Accept: application/vnd.github+json" \
+                    https://api.github.com/repos/discord/libdave/releases/latest > libdave-release.json
+
+                  python3 - <<'PY'
+                  import json
+                  import os
+                  import sys
+                  import urllib.request
+
+                  asset_name = os.environ["DAVE_ASSET_NAME"]
+                  with open("libdave-release.json", "r", encoding="utf-8") as f:
+                      release = json.load(f)
+
+                  asset = next((a for a in release.get("assets", []) if a.get("name") == asset_name), None)
+                  if asset is None:
+                      raise SystemExit(f"Missing libdave asset: {asset_name}")
+
+                  print(f"Downloading {asset['name']}")
+                  urllib.request.urlretrieve(asset["browser_download_url"], "libdave.zip")
+                  PY
+
+                  unzip -q libdave.zip -d libdave
+
+            - name: Stage native binaries
+              run: |
+                  RID_DIR="DisCatSharp.Voice.Natives/runtimes/${{ matrix.rid }}/native"
+                  mkdir -p "$RID_DIR"
+
+                  cp -L libsodium-*/src/libsodium/.libs/libsodium.dylib "$RID_DIR/libsodium.dylib"
+
+                  OPUS_LIB=$(find opus-build -type f \( -name "libopus.dylib" -o -name "opus.dylib" \) | head -n 1)
+                  if [ -z "$OPUS_LIB" ]; then
+                      echo "libopus dylib not found" >&2
+                      exit 1
+                  fi
+                  cp -L "$OPUS_LIB" "$RID_DIR/libopus.dylib"
+
+                  DAVE_LIB=$(find libdave -type f \( -name "libdave.dylib" -o -name "*dave*.dylib" \) | head -n 1)
+                  if [ -z "$DAVE_LIB" ]; then
+                      echo "libdave dylib not found" >&2
+                      exit 1
+                  fi
+                  cp -L "$DAVE_LIB" "$RID_DIR/libdave.dylib"
 
             - name: Verify binary architecture
               run: |
-                  file -L libsodium-*/src/libsodium/.libs/libsodium.dylib
-                  file -L libsodium-*/src/libsodium/.libs/libsodium.dylib | grep -qi "${{ matrix.expected_arch }}"
-
-            - name: Copy binary
-              run: |
-                  mkdir -p DisCatSharp.Voice.Natives/runtimes/osx-${{ matrix.arch }}/native
-                  cp -L libsodium-*/src/libsodium/.libs/libsodium.dylib \
-                     DisCatSharp.Voice.Natives/runtimes/osx-${{ matrix.arch }}/native/
+                  RID_DIR="DisCatSharp.Voice.Natives/runtimes/${{ matrix.rid }}/native"
+                  for lib in libsodium libopus libdave; do
+                    file -L "$RID_DIR/$lib.dylib"
+                    file -L "$RID_DIR/$lib.dylib" | grep -qi "${{ matrix.expected_arch }}"
+                  done
 
             - uses: actions/upload-artifact@v7
               with:
-                  name: sodium-macos-${{ matrix.arch }}
-                  path: DisCatSharp.Voice.Natives/runtimes/osx-${{ matrix.arch }}/native/libsodium.dylib
+                  name: natives-${{ matrix.rid }}
+                  path: DisCatSharp.Voice.Natives/runtimes/${{ matrix.rid }}
+                  if-no-files-found: error
 
     build-windows:
         runs-on: windows-2025-vs2026
+        strategy:
+            matrix:
+                include:
+                    - rid: win-x64
+                      dave_asset: libdave-Windows-X64-boringssl.zip
 
         steps:
             - uses: actions/checkout@v6
 
-            - name: Download libsodium
-              run: |
-                  Invoke-WebRequest https://download.libsodium.org/libsodium/releases/libsodium-1.0.21-msvc.zip -OutFile sodium.zip
-                  Expand-Archive sodium.zip
-
-            - name: Copy x64 release DLL
+            - name: Prepare runtime directory
               shell: pwsh
               run: |
-                    New-Item -ItemType Directory -Force -Path DisCatSharp.Voice.Natives/runtimes/win-x64/native
+                  New-Item -ItemType Directory -Force -Path DisCatSharp.Voice.Natives/runtimes/${{ matrix.rid }}/native | Out-Null
 
-                    $dll = Get-ChildItem -Recurse -Filter libsodium.dll | Where-Object {
-                        $_.FullName -match "x64.*dynamic"
-                    } | Select-Object -First 1
+            - name: Download libsodium
+              shell: pwsh
+              run: |
+                  Invoke-WebRequest "https://download.libsodium.org/libsodium/releases/libsodium-${env:LIBSODIUM_VERSION}-msvc.zip" -OutFile sodium.zip
+                  Expand-Archive sodium.zip -DestinationPath sodium -Force
 
-                    Copy-Item $dll.FullName DisCatSharp.Voice.Natives/runtimes/win-x64/native/libsodium.dll
+                  $sodiumDll = Get-ChildItem -Path sodium -Recurse -Filter libsodium.dll | Where-Object {
+                      $_.FullName -match "x64.*dynamic"
+                  } | Select-Object -First 1
+
+                  if (-not $sodiumDll) {
+                      throw "libsodium.dll (x64 dynamic) not found"
+                  }
+
+                  Copy-Item $sodiumDll.FullName "DisCatSharp.Voice.Natives/runtimes/${{ matrix.rid }}/native/libsodium.dll"
+
+            - name: Build libopus
+              shell: pwsh
+              run: |
+                  Invoke-WebRequest "https://archive.mozilla.org/pub/opus/opus-${env:OPUS_VERSION}.tar.gz" -OutFile opus.tar.gz
+                  tar -xzf opus.tar.gz
+
+                  $opusSource = Get-ChildItem -Directory -Filter "opus-*" | Select-Object -First 1
+                  if (-not $opusSource) {
+                      throw "Opus source directory not found"
+                  }
+
+                  cmake -S $opusSource.FullName -B opus-build -A x64 -DBUILD_SHARED_LIBS=ON -DOPUS_BUILD_PROGRAMS=OFF -DOPUS_BUILD_TESTING=OFF
+                  cmake --build opus-build --config Release
+
+                  $opusDll = Get-ChildItem -Path opus-build -Recurse -File -Include libopus.dll,opus.dll | Select-Object -First 1
+                  if (-not $opusDll) {
+                      throw "Opus DLL not found in build output"
+                  }
+
+                  Copy-Item $opusDll.FullName "DisCatSharp.Voice.Natives/runtimes/${{ matrix.rid }}/native/libopus.dll"
+
+            - name: Download libdave release asset
+              shell: pwsh
+              env:
+                  DAVE_ASSET_NAME: ${{ matrix.dave_asset }}
+                  GITHUB_TOKEN: ${{ github.token }}
+              run: |
+                  $headers = @{
+                      Authorization = "Bearer $env:GITHUB_TOKEN"
+                      Accept = "application/vnd.github+json"
+                  }
+
+                  $release = Invoke-RestMethod -Headers $headers -Uri "https://api.github.com/repos/discord/libdave/releases/latest"
+                  $asset = $release.assets | Where-Object { $_.name -eq $env:DAVE_ASSET_NAME } | Select-Object -First 1
+
+                  if (-not $asset) {
+                      throw "Missing libdave asset: $env:DAVE_ASSET_NAME"
+                  }
+
+                  Invoke-WebRequest $asset.browser_download_url -OutFile libdave.zip
+                  Expand-Archive libdave.zip -DestinationPath libdave -Force
+
+                  $daveDll = Get-ChildItem -Path libdave -Recurse -File -Filter *.dll | Where-Object {
+                      $_.Name -match "dave"
+                  } | Select-Object -First 1
+
+                  if (-not $daveDll) {
+                      throw "libdave DLL not found in release asset"
+                  }
+
+                  Copy-Item $daveDll.FullName "DisCatSharp.Voice.Natives/runtimes/${{ matrix.rid }}/native/libdave.dll"
 
             - uses: actions/upload-artifact@v7
               with:
-                  name: sodium-win-x64
-                  path: DisCatSharp.Voice.Natives/runtimes/win-x64/native/libsodium.dll
+                  name: natives-${{ matrix.rid }}
+                  path: DisCatSharp.Voice.Natives/runtimes/${{ matrix.rid }}
+                  if-no-files-found: error
+
+    bundle-natives:
+        runs-on: ubuntu-latest
+        needs:
+            - build-linux
+            - build-macos
+            - build-windows
+
+        steps:
+            - uses: actions/download-artifact@v8
+              with:
+                  pattern: natives-*
+                  merge-multiple: true
+                  path: bundle/DisCatSharp.Voice.Natives/runtimes
+
+            - name: Validate bundled layout
+              run: |
+                  required=(
+                    "bundle/DisCatSharp.Voice.Natives/runtimes/linux-x64/native/libsodium.so"
+                    "bundle/DisCatSharp.Voice.Natives/runtimes/linux-x64/native/libopus.so"
+                    "bundle/DisCatSharp.Voice.Natives/runtimes/linux-x64/native/libdave.so"
+                    "bundle/DisCatSharp.Voice.Natives/runtimes/linux-arm64/native/libsodium.so"
+                    "bundle/DisCatSharp.Voice.Natives/runtimes/linux-arm64/native/libopus.so"
+                    "bundle/DisCatSharp.Voice.Natives/runtimes/linux-arm64/native/libdave.so"
+                    "bundle/DisCatSharp.Voice.Natives/runtimes/osx-x64/native/libsodium.dylib"
+                    "bundle/DisCatSharp.Voice.Natives/runtimes/osx-x64/native/libopus.dylib"
+                    "bundle/DisCatSharp.Voice.Natives/runtimes/osx-x64/native/libdave.dylib"
+                    "bundle/DisCatSharp.Voice.Natives/runtimes/osx-arm64/native/libsodium.dylib"
+                    "bundle/DisCatSharp.Voice.Natives/runtimes/osx-arm64/native/libopus.dylib"
+                    "bundle/DisCatSharp.Voice.Natives/runtimes/osx-arm64/native/libdave.dylib"
+                    "bundle/DisCatSharp.Voice.Natives/runtimes/win-x64/native/libsodium.dll"
+                    "bundle/DisCatSharp.Voice.Natives/runtimes/win-x64/native/libopus.dll"
+                    "bundle/DisCatSharp.Voice.Natives/runtimes/win-x64/native/libdave.dll"
+                  )
+
+                  for f in "${required[@]}"; do
+                    if [ ! -f "$f" ]; then
+                      echo "Missing required file: $f" >&2
+                      exit 1
+                    fi
+                  done
+
+            - name: Create drop-in zip
+              run: |
+                  pushd bundle
+                  zip -r ../DisCatSharp.Voice.Natives-runtime-bundle.zip DisCatSharp.Voice.Natives
+                  popd
+
+            - uses: actions/upload-artifact@v7
+              with:
+                  name: DisCatSharp.Voice.Natives-runtime-bundle
+                  path: |
+                      DisCatSharp.Voice.Natives-runtime-bundle.zip
+                      bundle/DisCatSharp.Voice.Natives/runtimes
+                  if-no-files-found: error
