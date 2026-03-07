@@ -31,6 +31,7 @@ jobs:
     build-linux:
         runs-on: ${{ matrix.runs_on }}
         strategy:
+            fail-fast: false
             matrix:
                 include:
                     - rid: linux-x64
@@ -65,7 +66,7 @@ jobs:
               run: |
                   curl -L "https://downloads.xiph.org/releases/opus/opus-${OPUS_VERSION}.tar.gz" -o opus.tar.gz
                   tar xzf opus.tar.gz
-                  cmake -S opus-* -B opus-build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DOPUS_BUILD_PROGRAMS=OFF -DOPUS_BUILD_TESTING=OFF
+                  cmake -S opus-* -B opus-build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DOPUS_BUILD_SHARED_LIBRARY=ON -DOPUS_BUILD_STATIC_LIBRARY=OFF -DOPUS_BUILD_PROGRAMS=OFF -DOPUS_BUILD_TESTING=OFF
                   cmake --build opus-build --config Release -j"$(nproc)"
 
             - name: Download libdave release asset
@@ -141,6 +142,7 @@ jobs:
     build-macos:
         runs-on: ${{ matrix.runs_on }}
         strategy:
+            fail-fast: false
             matrix:
                 include:
                     - rid: osx-x64
@@ -172,7 +174,7 @@ jobs:
               run: |
                   curl -L "https://downloads.xiph.org/releases/opus/opus-${OPUS_VERSION}.tar.gz" -o opus.tar.gz
                   tar xzf opus.tar.gz
-                  cmake -S opus-* -B opus-build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DOPUS_BUILD_PROGRAMS=OFF -DOPUS_BUILD_TESTING=OFF
+                  cmake -S opus-* -B opus-build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DOPUS_BUILD_SHARED_LIBRARY=ON -DOPUS_BUILD_STATIC_LIBRARY=OFF -DOPUS_BUILD_PROGRAMS=OFF -DOPUS_BUILD_TESTING=OFF
                   cmake --build opus-build --config Release -j"$(sysctl -n hw.ncpu)"
 
             - name: Download libdave release asset
@@ -217,9 +219,11 @@ jobs:
 
                   cp -L libsodium-*/src/libsodium/.libs/libsodium.dylib "$RID_DIR/libsodium.dylib"
 
-                  OPUS_LIB=$(find opus-build -type f \( -name "libopus.dylib" -o -name "opus.dylib" \) | head -n 1)
+                  OPUS_LIB=$(find opus-build -type f \( -name "libopus*.dylib" -o -name "opus*.dylib" \) | head -n 1)
                   if [ -z "$OPUS_LIB" ]; then
                       echo "libopus dylib not found" >&2
+                      echo "Dumping opus-build files for diagnostics:" >&2
+                      find opus-build -type f | head -n 200 >&2
                       exit 1
                   fi
                   cp -L "$OPUS_LIB" "$RID_DIR/libopus.dylib"
