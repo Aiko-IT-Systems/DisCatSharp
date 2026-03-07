@@ -47,8 +47,8 @@ public sealed class VoiceTransmitSink : IDisposable
 	/// <summary>
 	///     Initializes a new instance of the <see cref="VoiceTransmitSink" /> class.
 	/// </summary>
-	/// <param name="vnc">The vnc.</param>
-	/// <param name="pcmBufferDuration">The pcm buffer duration.</param>
+	/// <param name="vnc">Owning voice connection.</param>
+	/// <param name="pcmBufferDuration">PCM buffer duration in milliseconds.</param>
 	internal VoiceTransmitSink(VoiceConnection vnc, int pcmBufferDuration)
 	{
 		this._connection = vnc;
@@ -88,7 +88,7 @@ public sealed class VoiceTransmitSink : IDisposable
 	} = 1.0;
 
 	/// <summary>
-	///     Disposes .
+	///     Releases resources used by this transmit sink.
 	/// </summary>
 	public void Dispose()
 		=> this._writeSemaphore?.Dispose();
@@ -156,16 +156,28 @@ public sealed class VoiceTransmitSink : IDisposable
 	/// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
 	public async Task FlushAsync(CancellationToken cancellationToken = default)
 	{
-		var pcm = this._pcmMemory;
-		Helpers.ZeroFill(pcm[this._pcmBufferLength..].Span);
+		await this._writeSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
+		try
+		{
+			if (this._pcmBufferLength == 0)
+				return;
 
-		this.ApplyFiltersSync(pcm);
+			var pcm = this._pcmMemory;
+			Helpers.ZeroFill(pcm[this._pcmBufferLength..].Span);
 
-		var packet = ArrayPool<byte>.Shared.Rent(pcm.Length);
-		var packetMemory = packet.AsMemory()[..pcm.Length];
-		pcm.CopyTo(packetMemory);
+			this.ApplyFiltersSync(pcm);
 
-		await this._connection.EnqueuePacketAsync(new(packetMemory, this.SampleDuration, false, packet), cancellationToken).ConfigureAwait(false);
+			var packet = ArrayPool<byte>.Shared.Rent(pcm.Length);
+			var packetMemory = packet.AsMemory()[..pcm.Length];
+			pcm.CopyTo(packetMemory);
+
+			await this._connection.EnqueuePacketAsync(new(packetMemory, this.SampleDuration, false, packet), cancellationToken).ConfigureAwait(false);
+			this._pcmBufferLength = 0;
+		}
+		finally
+		{
+			this._writeSemaphore.Release();
+		}
 	}
 
 	/// <summary>
@@ -177,7 +189,7 @@ public sealed class VoiceTransmitSink : IDisposable
 	/// <summary>
 	///     Resumes playback.
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>A task representing the resume operation.</returns>
 	public async Task ResumeAsync()
 		=> await this._connection.ResumeAsync().ConfigureAwait(false);
 
@@ -189,7 +201,7 @@ public sealed class VoiceTransmitSink : IDisposable
 	{
 		lock (this._filters)
 		{
-			return this._filters;
+			return this._filters.ToArray();
 		}
 	}
 
@@ -230,9 +242,9 @@ public sealed class VoiceTransmitSink : IDisposable
 	}
 
 	/// <summary>
-	///     Applies the filters sync.
+	///     Applies installed filters and volume scaling to a PCM frame.
 	/// </summary>
-	/// <param name="pcmSpan">The pcm span.</param>
+	/// <param name="pcmSpan">PCM frame buffer.</param>
 	private void ApplyFiltersSync(Memory<byte> pcmSpan)
 	{
 		var pcm16 = MemoryMarshal.Cast<byte, short>(pcmSpan.Span);
@@ -248,6 +260,9 @@ public sealed class VoiceTransmitSink : IDisposable
 			return;
 
 		for (var i = 0; i < pcm16.Length; i++)
-			pcm16[i] = (short)(pcm16[i] * this.VolumeModifier);
+		{
+			var scaled = (int)(pcm16[i] * this.VolumeModifier);
+			pcm16[i] = (short)Math.Clamp(scaled, short.MinValue, short.MaxValue);
+		}
 	}
 }
