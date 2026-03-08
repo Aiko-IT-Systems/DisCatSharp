@@ -45,7 +45,6 @@ public sealed class VoiceExtension : BaseExtension
 	internal VoiceExtension(VoiceConfiguration config)
 	{
 		this._configuration = new(config);
-		VoiceRuntimeLogging.EnableDebugLogs = this._configuration.EnableDebugLogging;
 		this.IsIncomingEnabled = config.EnableIncoming;
 
 		this._activeConnections = new();
@@ -69,6 +68,7 @@ public sealed class VoiceExtension : BaseExtension
 			throw new InvalidOperationException("What did I tell you?");
 
 		this.Client = client;
+		VoiceRuntimeLogging.SetEnableDebugLogs(this.Client.Logger, this._configuration.EnableDebugLogging);
 
 		this.Client.VoiceStateUpdated += this.Client_VoiceStateUpdate;
 		this.Client.VoiceServerUpdated += this.Client_VoiceServerUpdate;

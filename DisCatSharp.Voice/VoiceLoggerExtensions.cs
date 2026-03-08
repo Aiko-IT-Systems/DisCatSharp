@@ -10,7 +10,7 @@ internal static class VoiceLoggerExtensions
 {
 	public static void VoiceDebug(this ILogger logger, string message, params object?[] args)
 	{
-		if (!VoiceRuntimeLogging.EnableDebugLogs)
+		if (!VoiceRuntimeLogging.IsDebugEnabled(logger))
 			return;
 
 		logger.LogDebug(message, args);
@@ -18,7 +18,7 @@ internal static class VoiceLoggerExtensions
 
 	public static void VoiceDebug(this ILogger logger, EventId eventId, string message, params object?[] args)
 	{
-		if (!VoiceRuntimeLogging.EnableDebugLogs)
+		if (!VoiceRuntimeLogging.IsDebugEnabled(logger))
 			return;
 
 		logger.LogDebug(eventId, message, args);
@@ -26,7 +26,7 @@ internal static class VoiceLoggerExtensions
 
 	public static void VoiceDebug(this ILogger logger, EventId eventId, Exception exception, string message, params object?[] args)
 	{
-		if (!VoiceRuntimeLogging.EnableDebugLogs)
+		if (!VoiceRuntimeLogging.IsDebugEnabled(logger))
 			return;
 
 		logger.LogDebug(eventId, exception, message, args);
@@ -34,7 +34,7 @@ internal static class VoiceLoggerExtensions
 
 	public static void VoiceTrace(this ILogger logger, string message, params object?[] args)
 	{
-		if (!VoiceRuntimeLogging.EnableDebugLogs)
+		if (!VoiceRuntimeLogging.IsDebugEnabled(logger))
 			return;
 
 		logger.LogTrace(message, args);
@@ -42,7 +42,7 @@ internal static class VoiceLoggerExtensions
 
 	public static void VoiceTrace(this ILogger logger, EventId eventId, string message, params object?[] args)
 	{
-		if (!VoiceRuntimeLogging.EnableDebugLogs)
+		if (!VoiceRuntimeLogging.IsDebugEnabled(logger))
 			return;
 
 		logger.LogTrace(eventId, message, args);
