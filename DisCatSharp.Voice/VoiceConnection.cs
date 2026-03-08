@@ -2374,7 +2374,14 @@ public sealed class VoiceConnection : IDisposable
 				{
 					this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP25 received");
 					this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] OP25 external sender received, {Len} bytes", payload.Length);
-					this._daveSession.HandleExternalSender(payload.ToArray());
+					var kp25 = this._daveSession.HandleExternalSender(payload.ToArray());
+					if (kp25.Length > 0)
+					{
+						this._daveProposalRestartSent = false;
+						this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP26 sent");
+						this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] Sending key package OP26 ({Len} bytes) from OP25 lazy-init handler", kp25.Length);
+						await this.SendDaveBinaryOpcodeAsync(26, kp25).ConfigureAwait(false);
+					}
 					}
 
 				break;

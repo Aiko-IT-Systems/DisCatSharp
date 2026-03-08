@@ -10,6 +10,9 @@ namespace DisCatSharp.Voice.Dave;
 internal sealed class NullMlsProvider : IMlsProvider
 {
 	/// <inheritdoc/>
+	public bool IsSessionInitialized => true;
+
+	/// <inheritdoc/>
 	public bool IsGroupReady => false;
 
 	/// <inheritdoc/>

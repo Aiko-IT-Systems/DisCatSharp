@@ -219,11 +219,33 @@ internal sealed class DaveSession : IDisposable
 	///     Per the canonical libdave TypeScript sample and godave, OP 25 calls
 	///     <c>SetExternalSender</c> only — no re-Init, no new key package, no OP 26.
 	///     The OP 26 key package is always sent from OP 4 or OP 24.
+	///
+	///     Some gateway orderings can deliver OP 25 before any InitGroup-triggering path.
+	///     In that case we lazily initialize once here so SetExternalSender can be applied.
+	///     We only emit a key package from this handler for that lazy-init path.
 	/// </remarks>
-	public void HandleExternalSender(byte[] externalSenderBytes)
+	public byte[] HandleExternalSender(byte[] externalSenderBytes)
 	{
+		var lazyInitialized = false;
+		if (!this._mlsProvider.IsSessionInitialized)
+		{
+			this._mlsProvider.InitGroup(this._selfUserId, this.ProtocolVersion, []);
+			lazyInitialized = true;
+			this._logger.VoiceDebug("[DAVE] HandleExternalSender: lazily initialized MLS session for OP25");
+		}
+
 		this._mlsProvider.SetExternalSender(externalSenderBytes);
 		this._logger.VoiceDebug("[DAVE] HandleExternalSender: external sender stored ({ESLen} bytes)", externalSenderBytes.Length);
+
+		if (!lazyInitialized)
+			return [];
+
+		var keyPackage = this._mlsProvider.GetKeyPackage();
+		this._logger.VoiceDebug("[DAVE] HandleExternalSender: prepared key package {Len} bytes after lazy init", keyPackage.Length);
+		if (keyPackage.Length > 0)
+			this.TransitionTo(DaveSessionState.AwaitingResponse, nameof(HandleExternalSender), "key package prepared after lazy init");
+
+		return keyPackage;
 	}
 
 	/// <summary>

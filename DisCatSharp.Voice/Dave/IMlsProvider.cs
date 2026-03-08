@@ -11,6 +11,9 @@ namespace DisCatSharp.Voice.Dave;
 /// </remarks>
 internal interface IMlsProvider
 {
+	/// <summary>Gets whether the MLS session has already been initialized via <see cref="InitGroup"/>.</summary>
+	bool IsSessionInitialized { get; }
+
 	/// <summary>Gets whether the MLS group has been successfully established and is ready for use.</summary>
 	bool IsGroupReady { get; }
 

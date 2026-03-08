@@ -36,6 +36,7 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 	private DaveSessionSafeHandle? _session;
 	private bool _disposed;
 	private bool _groupReady;
+	private bool _sessionInitialized;
 	private ulong _selfUserId;
 	// Accessed only on the voice gateway thread. Not thread-safe by design.
 	private readonly List<ulong> _knownUserIds = [];
@@ -54,6 +55,9 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 		this._protocolVersion = protocolVersion;
 		this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
 	}
+
+	/// <inheritdoc/>
+	public bool IsSessionInitialized => this._sessionInitialized;
 
 	/// <inheritdoc/>
 	public bool IsGroupReady => this._groupReady;
@@ -99,9 +103,11 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 				(ushort)this._protocolVersion,
 				this._channelId,
 				selfUserId.ToString());
+			this._sessionInitialized = true;
 		}
 		catch
 		{
+			this._sessionInitialized = false;
 			this._session.Dispose();
 			this._session = null;
 			throw;
@@ -386,6 +392,7 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 			return;
 		if (this._session is not null && !this._session.IsInvalid)
 			DaveNative.SessionReset(this._session);
+		this._sessionInitialized = false;
 		this._groupReady = false;
 		this._knownUserIds.Clear();
 	}
@@ -396,6 +403,7 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 		if (this._disposed)
 			return;
 		this._disposed = true;
+		this._sessionInitialized = false;
 		this._session?.Dispose();
 		this._session = null;
 	}
