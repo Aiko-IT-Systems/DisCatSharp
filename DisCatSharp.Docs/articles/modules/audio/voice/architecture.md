@@ -55,7 +55,7 @@ sequenceDiagram
 Typical gateway flow:
 
 - OP21 `prepare_transition`
-- OP22 `execute_transition` (optional per transition)
+- OP22 `execute_transition` (used to execute staged non-zero transitions)
 - OP24 `prepare_epoch`
 - OP25 binary `external_sender`
 - OP26 binary key package (client send)
@@ -84,15 +84,22 @@ sequenceDiagram
     VG-->>VC: OP24 prepare_epoch
     VC->>MLS: Transition to Pending
     VG-->>VC: OP25 external_sender (binary)
-    VC->>MLS: InitGroup + SetExternalSender + GetKeyPackage
-    VC->>VG: OP26 key_package (binary)
+    VC->>MLS: Ensure group initialized + SetExternalSender
+    VC->>VG: OP26 key_package (binary, when prepared)
     VG-->>VC: OP27 proposals (binary)
     VC->>MLS: ProcessProposals -> CreateCommit
     VC->>VG: OP28 commit (binary)
     VG-->>VC: OP29 announce_commit (binary)
-    VG-->>VC: OP30 welcome (binary)
-    VC->>MLS: InstallRatchets()
-    MLS-->>VC: State Active
+    alt transition_id == 0
+        VG-->>VC: OP30 welcome (binary)
+        VC->>MLS: InstallRatchets()
+        MLS-->>VC: State Active
+    else transition_id != 0
+        VC->>MLS: Stage commit (pre-active)
+        VC->>VG: OP23 ready_for_transition
+        VG-->>VC: OP22 execute_transition
+        VC->>MLS: Transition to Pending (next epoch)
+    end
 ```
 
 ### Join state progression
@@ -104,7 +111,10 @@ stateDiagram-v2
     Pending --> ReadyForTransition: OP21
     ReadyForTransition --> Pending: OP24
     Pending --> AwaitingResponse: OP25 handled + OP26 sent
-    AwaitingResponse --> Active: OP29/OP30 + InstallRatchets
+    AwaitingResponse --> Active: OP29/OP30 + InstallRatchets (transition_id=0)
+    AwaitingResponse --> ReadyForTransition: OP29 staged (transition_id!=0)
+    ReadyForTransition --> Pending: OP22 execute_transition
+    Pending --> Active: Subsequent OP29/OP30 + InstallRatchets
 ```
 
 If no proposals arrive (for example, bot alone in channel), DAVE can remain `Pending`/`AwaitingResponse` until another participant triggers group activity.
@@ -171,6 +181,7 @@ Use these for application-level gating and diagnostics:
 - `IsE2eeUsableForSend`
 - `IsE2eeUsableForReceive`
 - `WaitForDaveActiveAsync(...)`
+- `EnableDebugLogging` (per connection toggle)
 - `DaveStateChanged` event
 - `DaveOpcodeObserved` event
 

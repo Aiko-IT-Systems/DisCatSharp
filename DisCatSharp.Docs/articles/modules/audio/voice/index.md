@@ -47,6 +47,9 @@ client.UseVoice(new VoiceConfiguration
 // Later, once you have a DiscordChannel (voice/stage):
 VoiceConnection connection = await channel.ConnectAsync();
 VoiceTransmitSink sink = connection.GetTransmitSink();
+
+// Optional: enable extra diagnostics only for this specific connection.
+connection.EnableDebugLogging = true;
 ```
 
 ## DAVE and Runtime Behavior
@@ -65,6 +68,17 @@ You can also wait for DAVE activation explicitly:
 
 ```csharp
 bool active = await connection.WaitForDaveActiveAsync(TimeSpan.FromSeconds(5));
+```
+
+## Debug Logging Scope
+
+`VoiceConfiguration.EnableDebugLogging` sets the default debug/trace behavior for voice connections.
+
+You can override this at runtime per connection using `VoiceConnection.EnableDebugLogging`.
+
+```csharp
+connection.EnableDebugLogging = true;  // enable only this connection
+connection.EnableDebugLogging = false; // disable again
 ```
 
 ## Next Steps

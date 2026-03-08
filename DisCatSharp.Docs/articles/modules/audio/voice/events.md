@@ -118,3 +118,14 @@ Related configuration:
 - `VoiceConfiguration.MaxDaveProtocolVersion`
 - `VoiceConfiguration.DavePendingAudioBehavior`
 - `VoiceConfiguration.EnableDebugLogging`
+- `VoiceConnection.EnableDebugLogging`
+
+## Runtime Logging Control
+
+If you only want deep diagnostics for one problematic call, toggle logging on that connection instead of globally:
+
+```csharp
+connection.EnableDebugLogging = true;
+// reproduce issue, inspect logs
+connection.EnableDebugLogging = false;
+```
