@@ -258,7 +258,7 @@ internal sealed class DaveSession : IDisposable
 	///     The transition ID prefix extracted by the caller from the raw OP 29 frame.
 	///     When <c>0</c> (initial epoch), ratchets are installed immediately and the session transitions
 	///     to <see cref="DaveSessionState.Active"/> without requiring an OP 23 acknowledgement.
-	///     When non-zero, only decryptors are installed; the encryptor is activated on OP 22,
+	///     When non-zero, the session remains pre-active until OP 22 executes the transition,
 	///     and the caller must send OP 23 to the server.
 	/// </param>
 	/// <returns>
@@ -290,13 +290,16 @@ internal sealed class DaveSession : IDisposable
 
 		if (this._mlsProvider.IsGroupReady)
 		{
-			this.InstallRatchets();
-			this.TransitionTo(DaveSessionState.Active, nameof(HandleAnnounceCommit), transitionId == 0
-				? "initial commit applied"
-				: $"commit applied (transitionId={transitionId})");
-			return transitionId != 0
-				? DaveAnnounceAction.SendReadyForTransition
-				: DaveAnnounceAction.None;
+			if (transitionId == 0)
+			{
+				this.InstallRatchets();
+				this.TransitionTo(DaveSessionState.Active, nameof(HandleAnnounceCommit), "initial commit applied");
+				return DaveAnnounceAction.None;
+			}
+
+			this.InstallRatchets(installOwnRatchet: false);
+			this.TransitionTo(DaveSessionState.ReadyForTransition, nameof(HandleAnnounceCommit), $"commit staged (transitionId={transitionId})");
+			return DaveAnnounceAction.SendReadyForTransition;
 		}
 		else
 		{
@@ -471,7 +474,7 @@ internal sealed class DaveSession : IDisposable
 	///     replaced decryptor instances.  The audio-receive thread always reads a consistent snapshot
 	///     via the volatile field, so no lock is needed on the hot decrypt path.
 	/// </remarks>
-	private void InstallRatchets()
+	private void InstallRatchets(bool installOwnRatchet = true)
 	{
 		var current = this._decryptors;
 		var updated = new Dictionary<ulong, IDaveDecryptor>(current);
@@ -508,6 +511,9 @@ internal sealed class DaveSession : IDisposable
 
 		foreach (var dec in toDispose)
 			dec.Dispose();
+
+		if (!installOwnRatchet)
+			return;
 
 		var ownInstaller = this._mlsProvider.GetOwnRatchetInstaller();
 		if (ownInstaller.IsNative || (ownInstaller.ManagedSecret?.Length ?? 0) >= 32)
