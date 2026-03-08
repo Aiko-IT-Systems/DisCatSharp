@@ -143,3 +143,4 @@ DisCatSharp.Experimental/openapi_preview.json
 codex-resources/
 VoiceTestBot/
 logs/
+*.mp3
