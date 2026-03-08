@@ -220,15 +220,10 @@ internal sealed class DaveSession : IDisposable
 	///     <c>SetExternalSender</c> only — no re-Init, no new key package, no OP 26.
 	///     The OP 26 key package is always sent from OP 4 or OP 24.
 	/// </remarks>
-	public byte[] HandleExternalSender(byte[] externalSenderBytes)
+	public void HandleExternalSender(byte[] externalSenderBytes)
 	{
-		this._mlsProvider.InitGroup(this._selfUserId, this.ProtocolVersion, []);
 		this._mlsProvider.SetExternalSender(externalSenderBytes);
-		this._logger.VoiceDebug("[DAVE] HandleExternalSender: {ESLen} bytes", externalSenderBytes.Length);
-		var keyPackage = this._mlsProvider.GetKeyPackage();
-		this._logger.VoiceDebug("[DAVE] HandleExternalSender: prepared key package {Len} bytes, protocolVersion={Version}", keyPackage.Length, this.ProtocolVersion);
-		this.TransitionTo(DaveSessionState.AwaitingResponse, nameof(HandleExternalSender), "external sender processed and key package prepared");
-		return keyPackage;
+		this._logger.VoiceDebug("[DAVE] HandleExternalSender: external sender stored ({ESLen} bytes)", externalSenderBytes.Length);
 	}
 
 	/// <summary>
