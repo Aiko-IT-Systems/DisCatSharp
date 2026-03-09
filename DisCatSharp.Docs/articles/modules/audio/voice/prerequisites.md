@@ -81,6 +81,9 @@ If `libdave` is unavailable at runtime, voice transport still works, but DAVE fe
 ## 5. Voice Configuration Defaults
 
 ```csharp
+using DisCatSharp.Voice;
+using DisCatSharp.Voice.Enums;
+
 client.UseVoice(new VoiceConfiguration
 {
     EnableIncoming = false,

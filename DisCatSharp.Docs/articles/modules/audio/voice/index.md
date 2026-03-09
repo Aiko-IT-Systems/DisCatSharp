@@ -30,6 +30,7 @@ Install `DisCatSharp.Voice` from NuGet.
 ```csharp
 using DisCatSharp;
 using DisCatSharp.Voice;
+using DisCatSharp.Voice.Entities;
 
 var client = new DiscordClient(new DiscordConfiguration
 {

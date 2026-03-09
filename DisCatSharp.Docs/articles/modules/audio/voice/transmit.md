@@ -10,6 +10,8 @@ author: DisCatSharp Team
 
 ```csharp
 using DisCatSharp.Voice;
+using DisCatSharp.Voice.Entities;
+using DisCatSharp.Voice.Enums;
 
 client.UseVoice(new VoiceConfiguration
 {
@@ -22,6 +24,9 @@ client.UseVoice(new VoiceConfiguration
 ## 2. Connect to a Voice Channel
 
 ```csharp
+using DisCatSharp.Voice;
+using DisCatSharp.Voice.Entities;
+
 VoiceConnection connection = await channel.ConnectAsync();
 VoiceTransmitSink transmit = connection.GetTransmitSink();
 ```
@@ -78,6 +83,8 @@ if (!daveReady)
 
 ```csharp
 using DisCatSharp.Voice;
+using DisCatSharp.Voice.Entities;
+using DisCatSharp.Voice.Interfaces;
 
 public sealed class SoftClipFilter : IVoiceFilter
 {

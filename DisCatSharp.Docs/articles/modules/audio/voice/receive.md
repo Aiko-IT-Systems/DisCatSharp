@@ -23,6 +23,8 @@ client.UseVoice(new VoiceConfiguration
 ## 2. Connect and Subscribe
 
 ```csharp
+using DisCatSharp.Voice;
+
 VoiceConnection connection = await channel.ConnectAsync();
 connection.VoiceReceived += OnVoiceReceived;
 connection.VoicePacketDropped += OnVoicePacketDropped;
@@ -60,6 +62,9 @@ Useful fields:
 ## 4. Monitor Packet Drops
 
 ```csharp
+using DisCatSharp.Voice;
+using DisCatSharp.Voice.EventArgs;
+
 private static Task OnVoicePacketDropped(VoiceConnection _, VoicePacketDroppedEventArgs e)
 {
     Console.WriteLine($"DROP reason={e.Reason} user={e.User?.Id} ssrc={e.Ssrc} seq={e.Sequence} detail={e.Detail}");

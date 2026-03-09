@@ -42,6 +42,27 @@ using DisCatSharp.VoiceNext;
 using DisCatSharp.Voice;
 ```
 
+### DisCatSharp.Voice namespace layout updates
+
+Starting with the namespace cleanup in the `DisCatSharp.Voice` package, several public types moved out of the root namespace.
+
+| Old namespace | New namespace | Public types |
+|---|---|---|
+| `DisCatSharp.Voice` | `DisCatSharp.Voice.Entities` | `AudioFormat`, `VoiceTransmitSink` |
+| `DisCatSharp.Voice` | `DisCatSharp.Voice.Interfaces` | `IVoiceFilter` |
+| `DisCatSharp.Voice` | `DisCatSharp.Voice.Enums` | `VoiceApplication`, `VoicePacketDropReason`, `DavePendingAudioBehavior`, `DaveConnectionState`, `DaveOpcodeDirection` |
+| `DisCatSharp.Voice` | `DisCatSharp.Voice.Logging` | `VoiceEvents` |
+
+Typical updated usings:
+
+```csharp
+using DisCatSharp.Voice;
+using DisCatSharp.Voice.Entities;
+using DisCatSharp.Voice.Interfaces;
+using DisCatSharp.Voice.Enums;
+using DisCatSharp.Voice.Logging;
+```
+
 ---
 
 ## API Changes
@@ -53,7 +74,7 @@ All public types are renamed. The behavior is identical.
 | `VoiceNextExtension` | `VoiceExtension` |
 | `VoiceNextConnection` | `VoiceConnection` |
 | `VoiceNextConfiguration` | `VoiceConfiguration` |
-| `VoiceNextEvents` | `VoiceEvents` |
+| `VoiceNextEvents` | `VoiceEvents` (`DisCatSharp.Voice.Logging`) |
 
 ### Extension method registration
 
