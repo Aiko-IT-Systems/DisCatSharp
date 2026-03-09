@@ -5,13 +5,19 @@ namespace DisCatSharp.Voice.Enums.Dave;
 /// </summary>
 internal enum DaveSessionState
 {
-	/// <summary>DAVE is not active. All audio passes through unencrypted.</summary>
+	/// <summary>
+	///     DAVE is not active. All audio passes through unencrypted.
+	/// </summary>
 	Inactive,
 
-	/// <summary>DAVE has been activated but the MLS group has not yet been established.</summary>
+	/// <summary>
+	///     DAVE has been activated but the MLS group has not yet been established.
+	/// </summary>
 	Pending,
 
-	/// <summary>MLS group establishment is in progress (proposals sent, awaiting commit).</summary>
+	/// <summary>
+	///     MLS group establishment is in progress (proposals sent, awaiting commit).
+	/// </summary>
 	AwaitingResponse,
 
 	/// <summary>
@@ -20,9 +26,13 @@ internal enum DaveSessionState
 	/// </summary>
 	ReadyForTransition,
 
-	/// <summary>MLS group is established and audio is end-to-end encrypted.</summary>
+	/// <summary>
+	///     MLS group is established and audio is end-to-end encrypted.
+	/// </summary>
 	Active,
 
-	/// <summary>DAVE is being downgraded; transitioning back to a lower or no-op protocol version.</summary>
+	/// <summary>
+	///     DAVE is being downgraded; transitioning back to a lower or no-op protocol version.
+	/// </summary>
 	Downgrading,
 }

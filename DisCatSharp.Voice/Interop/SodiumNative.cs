@@ -3,6 +3,9 @@ using System.Runtime.InteropServices;
 
 namespace DisCatSharp.Voice.Interop;
 
+/// <summary>
+///     Native libsodium bindings and helpers used by the voice encryption pipeline.
+/// </summary>
 internal static class SodiumNative
 {
 	/// <summary>
@@ -117,7 +120,9 @@ internal static class SodiumNative
 		return status;
 	}
 
-	/// <summary>Encrypts using XChaCha20-Poly1305-IETF (detached MAC).</summary>
+	/// <summary>
+	///     Encrypts using XChaCha20-Poly1305-IETF (detached MAC).
+	/// </summary>
 	[DllImport(SODIUM_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl,
 		EntryPoint = "crypto_aead_xchacha20poly1305_ietf_encrypt_detached")]
 	private static extern unsafe int _XChaCha20EncryptDetached(
@@ -126,7 +131,9 @@ internal static class SodiumNative
 		byte* ad, ulong adlen,
 		byte* nsec, byte* npub, byte* k);
 
-	/// <summary>Decrypts using XChaCha20-Poly1305-IETF (detached MAC).</summary>
+	/// <summary>
+	///     Decrypts using XChaCha20-Poly1305-IETF (detached MAC).
+	/// </summary>
 	[DllImport(SODIUM_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl,
 		EntryPoint = "crypto_aead_xchacha20poly1305_ietf_decrypt_detached")]
 	private static extern unsafe int _XChaCha20DecryptDetached(

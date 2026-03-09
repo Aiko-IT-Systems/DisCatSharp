@@ -2,6 +2,9 @@ using System;
 
 namespace DisCatSharp.Voice.Entities;
 
+/// <summary>
+///     Represents an encoded voice packet together with duration metadata.
+/// </summary>
 internal struct VoicePacket
 {
 	/// <summary>

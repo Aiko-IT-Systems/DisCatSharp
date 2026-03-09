@@ -186,7 +186,9 @@ public sealed partial class DiscordShardedClient
 	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
 	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
-	/// <remarks>[alias="GuildJoined"][alias="JoinedGuild"]</remarks>
+	/// <remarks>
+	///     [alias="GuildJoined"][alias="JoinedGuild"]
+	/// </remarks>
 	public event AsyncEventHandler<DiscordClient, GuildCreateEventArgs> GuildCreated
 	{
 		add => this._guildCreated.Register(value);

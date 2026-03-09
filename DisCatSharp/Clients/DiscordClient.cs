@@ -123,7 +123,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public int Ping
 		=> Volatile.Read(ref this._ping);
 
-	/// <summary>Gets the current main-gateway session ID (populated on READY).</summary>
+	/// <summary>
+	///     Gets the current main-gateway session ID (populated on READY).
+	/// </summary>
 	public string? SessionId => this._sessionId;
 
 	/// <summary>

@@ -53,13 +53,19 @@ internal sealed class DaveSession : IDisposable
 	private readonly DaveTransitionTracker _transitionTracker = new();
 	private bool _disposed;
 
-	/// <summary>Gets the current FSM state of this DAVE session.</summary>
+	/// <summary>
+	///     Gets the current FSM state of this DAVE session.
+	/// </summary>
 	public DaveSessionState State { get; private set; } = DaveSessionState.Inactive;
 
-	/// <summary>Gets whether this session is fully established and encrypting audio.</summary>
+	/// <summary>
+	///     Gets whether this session is fully established and encrypting audio.
+	/// </summary>
 	public bool IsActive => this.State == DaveSessionState.Active;
 
-	/// <summary>Gets the negotiated DAVE protocol version.</summary>
+	/// <summary>
+	///     Gets the negotiated DAVE protocol version.
+	/// </summary>
 	public int ProtocolVersion { get; private set; }
 
 	/// <summary>
@@ -119,7 +125,9 @@ internal sealed class DaveSession : IDisposable
 		this._logger.VoiceDebug("[DAVE] ClientsConnect: recognized {Count} user(s)", this._recognizedUserIds.Count);
 	}
 
-	/// <summary>Handles OP 21 <c>dave_mls_prepare_transition</c>. Records the pending transition and enters <see cref="DaveSessionState.ReadyForTransition"/>.</summary>
+	/// <summary>
+	///     Handles OP 21 <c>dave_mls_prepare_transition</c>. Records the pending transition and enters <see cref="DaveSessionState.ReadyForTransition"/>.
+	/// </summary>
 	public void HandlePrepareTransition(DavePrepareTransitionPayload payload)
 	{
 		this._transitionTracker.Record(payload.TransitionId, payload.ProtocolVersion);
@@ -165,7 +173,9 @@ internal sealed class DaveSession : IDisposable
 			: null;
 	}
 
-	/// <summary>Handles OP 24 <c>dave_mls_prepare_epoch</c>. Stores transition info for the upcoming epoch.</summary>
+	/// <summary>
+	///     Handles OP 24 <c>dave_mls_prepare_epoch</c>. Stores transition info for the upcoming epoch.
+	/// </summary>
 	public void HandlePrepareEpoch(DavePrepareEpochPayload payload)
 	{
 		this._transitionTracker.Record(payload.TransitionId, payload.ProtocolVersion);
@@ -430,7 +440,9 @@ internal sealed class DaveSession : IDisposable
 			this._logger.VoiceDebug("[DAVE] PreSeedRecognizedUsers: added {Count} user(s) from guild voice states", added);
 	}
 
-	/// <summary>Removes a user's decryptor and recognised-user entry.</summary>
+	/// <summary>
+	///     Removes a user's decryptor and recognised-user entry.
+	/// </summary>
 	public void RemoveUser(ulong userId)
 	{
 		this.DisposeDecryptor(userId);
@@ -467,7 +479,9 @@ internal sealed class DaveSession : IDisposable
 	// Private helpers
 	// -------------------------------------------------------------------------
 
-	/// <summary>Transitions the session FSM and emits a standard state-transition log entry.</summary>
+	/// <summary>
+	///     Transitions the session FSM and emits a standard state-transition log entry.
+	/// </summary>
 	private void TransitionTo(DaveSessionState newState, string handler, string reason)
 	{
 		var oldState = this.State;
@@ -479,7 +493,9 @@ internal sealed class DaveSession : IDisposable
 		this._stateChanged?.Invoke(this.ProtocolVersion, oldState, newState, handler, reason);
 	}
 
-	/// <summary>Resets the MLS provider, transition tracker, decryptors, and encryptor passthrough.</summary>
+	/// <summary>
+	///     Resets the MLS provider, transition tracker, decryptors, and encryptor passthrough.
+	/// </summary>
 	private void ResetMls()
 	{
 		this._mlsProvider.Reset();
@@ -546,7 +562,9 @@ internal sealed class DaveSession : IDisposable
 			ownInstaller.NativeHandle?.Dispose();
 	}
 
-	/// <summary>Atomically removes and disposes the decryptor for the specified user.</summary>
+	/// <summary>
+	///     Atomically removes and disposes the decryptor for the specified user.
+	/// </summary>
 	private void DisposeDecryptor(ulong userId)
 	{
 		var current = this._decryptors;
@@ -563,7 +581,9 @@ internal sealed class DaveSession : IDisposable
 		dec.Dispose();
 	}
 
-	/// <summary>Atomically replaces <c>_decryptors</c> with an empty map and disposes all previous decryptor instances.</summary>
+	/// <summary>
+	///     Atomically replaces <c>_decryptors</c> with an empty map and disposes all previous decryptor instances.
+	/// </summary>
 	private void ClearDecryptors()
 	{
 #pragma warning disable CS0420

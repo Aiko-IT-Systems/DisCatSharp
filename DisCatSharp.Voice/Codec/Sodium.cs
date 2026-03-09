@@ -17,7 +17,6 @@ namespace DisCatSharp.Voice.Codec;
 /// <summary>
 ///     The sodium.
 /// </summary>
-// ReSharper disable once ClassCanBeSealed.Global - This class can be used by other projects.
 internal class Sodium : IDisposable
 {
 	/// <summary>
@@ -106,7 +105,9 @@ internal class Sodium : IDisposable
 	/// </summary>
 	public static int NonceSize => SodiumNative.SodiumNonceSize;
 
-	/// <summary>Gets the length of the secret key held by this instance.</summary>
+	/// <summary>
+	///     Gets the length of the secret key held by this instance.
+	/// </summary>
 	public int KeyLength => this._key.Length;
 
 	/// <summary>

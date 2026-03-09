@@ -482,7 +482,9 @@ public class InteractivityExtension : BaseExtension
 	/// <summary>
 	///     Waits for a dropdown to be interacted with.
 	/// </summary>
-	/// <remarks>This is here for backwards-compatibility and will internally create a cancellation token.</remarks>
+	/// <remarks>
+	///     This is here for backwards-compatibility and will internally create a cancellation token.
+	/// </remarks>
 	/// <param name="message">The message to wait on.</param>
 	/// <param name="id">The Id of the dropdown to wait on.</param>
 	/// <param name="selectType">The <see cref="ComponentType">type</see> of the select menu.</param>

@@ -20,7 +20,9 @@ internal static unsafe class DaveNative
 	// Session
 	// -------------------------------------------------------------------------
 
-	/// <summary>Creates a new libdave MLS session. The returned handle must be destroyed with <see cref="SessionDestroy"/>.</summary>
+	/// <summary>
+	///     Creates a new libdave MLS session. The returned handle must be destroyed with <see cref="SessionDestroy"/>.
+	/// </summary>
 	[DllImport(LibName, EntryPoint = "daveSessionCreate", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 	internal static extern DaveSessionSafeHandle SessionCreate(
 		IntPtr context,
@@ -28,11 +30,15 @@ internal static unsafe class DaveNative
 		IntPtr failureCallback,
 		IntPtr userData);
 
-	/// <summary>Destroys a libdave MLS session and frees all associated native memory. Called automatically by <see cref="DaveSessionSafeHandle"/>.</summary>
+	/// <summary>
+	///     Destroys a libdave MLS session and frees all associated native memory. Called automatically by <see cref="DaveSessionSafeHandle"/>.
+	/// </summary>
 	[DllImport(LibName, EntryPoint = "daveSessionDestroy", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 	internal static extern void SessionDestroy(IntPtr session);
 
-	/// <summary>Initialises a libdave MLS session for the given protocol version, group (channel) ID, and local user ID.</summary>
+	/// <summary>
+	///     Initialises a libdave MLS session for the given protocol version, group (channel) ID, and local user ID.
+	/// </summary>
 	[DllImport(LibName, EntryPoint = "daveSessionInit", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 	internal static extern void SessionInit(
 		DaveSessionSafeHandle session,
@@ -40,11 +46,15 @@ internal static unsafe class DaveNative
 		ulong groupId,
 		[MarshalAs(UnmanagedType.LPUTF8Str)] string selfUserId);
 
-	/// <summary>Resets the MLS session state without destroying the session handle. Used on reconnect or invalid commit.</summary>
+	/// <summary>
+	///     Resets the MLS session state without destroying the session handle. Used on reconnect or invalid commit.
+	/// </summary>
 	[DllImport(LibName, EntryPoint = "daveSessionReset", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 	internal static extern void SessionReset(DaveSessionSafeHandle session);
 
-	/// <summary>Passes the external sender credential (binary OP 25 payload) to the libdave session.</summary>
+	/// <summary>
+	///     Passes the external sender credential (binary OP 25 payload) to the libdave session.
+	/// </summary>
 	[DllImport(LibName, EntryPoint = "daveSessionSetExternalSender", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 	internal static extern void SessionSetExternalSender(
 		DaveSessionSafeHandle session,
@@ -110,7 +120,9 @@ internal static unsafe class DaveNative
 	// Key ratchet
 	// -------------------------------------------------------------------------
 
-	/// <summary>Destroys a libdave key ratchet handle. Called automatically by <see cref="DaveKeyRatchetSafeHandle"/>.</summary>
+	/// <summary>
+	///     Destroys a libdave key ratchet handle. Called automatically by <see cref="DaveKeyRatchetSafeHandle"/>.
+	/// </summary>
 	[DllImport(LibName, EntryPoint = "daveKeyRatchetDestroy", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 	internal static extern void KeyRatchetDestroy(IntPtr handle);
 
@@ -118,17 +130,23 @@ internal static unsafe class DaveNative
 	// Commit result
 	// -------------------------------------------------------------------------
 
-	/// <summary>Returns <see langword="true"/> when the commit result indicates a failure.</summary>
+	/// <summary>
+	///     Returns <see langword="true"/> when the commit result indicates a failure.
+	/// </summary>
 	[DllImport(LibName, EntryPoint = "daveCommitResultIsFailed", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 	[return: MarshalAs(UnmanagedType.I1)]
 	internal static extern bool CommitResultIsFailed(IntPtr handle);
 
-	/// <summary>Returns <see langword="true"/> when the commit result was ignored (e.g., duplicate or out-of-order).</summary>
+	/// <summary>
+	///     Returns <see langword="true"/> when the commit result was ignored (e.g., duplicate or out-of-order).
+	/// </summary>
 	[DllImport(LibName, EntryPoint = "daveCommitResultIsIgnored", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 	[return: MarshalAs(UnmanagedType.I1)]
 	internal static extern bool CommitResultIsIgnored(IntPtr handle);
 
-	/// <summary>Destroys the opaque commit result handle returned by <see cref="SessionProcessCommit"/>.</summary>
+	/// <summary>
+	///     Destroys the opaque commit result handle returned by <see cref="SessionProcessCommit"/>.
+	/// </summary>
 	[DllImport(LibName, EntryPoint = "daveCommitResultDestroy", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 	internal static extern void CommitResultDestroy(IntPtr handle);
 
@@ -136,7 +154,9 @@ internal static unsafe class DaveNative
 	// Welcome result
 	// -------------------------------------------------------------------------
 
-	/// <summary>Destroys the opaque welcome result handle returned by <see cref="SessionProcessWelcome"/>.</summary>
+	/// <summary>
+	///     Destroys the opaque welcome result handle returned by <see cref="SessionProcessWelcome"/>.
+	/// </summary>
 	[DllImport(LibName, EntryPoint = "daveWelcomeResultDestroy", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 	internal static extern void WelcomeResultDestroy(IntPtr handle);
 
@@ -144,28 +164,38 @@ internal static unsafe class DaveNative
 	// Encryptor
 	// -------------------------------------------------------------------------
 
-	/// <summary>Creates a new native libdave encryptor. The returned handle must be destroyed with <see cref="EncryptorDestroy"/>.</summary>
+	/// <summary>
+	///     Creates a new native libdave encryptor. The returned handle must be destroyed with <see cref="EncryptorDestroy"/>.
+	/// </summary>
 	[DllImport(LibName, EntryPoint = "daveEncryptorCreate", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 	internal static extern DaveEncryptorSafeHandle EncryptorCreate();
 
-	/// <summary>Destroys a libdave encryptor and frees all associated native memory. Called automatically by <see cref="DaveEncryptorSafeHandle"/>.</summary>
+	/// <summary>
+	///     Destroys a libdave encryptor and frees all associated native memory. Called automatically by <see cref="DaveEncryptorSafeHandle"/>.
+	/// </summary>
 	[DllImport(LibName, EntryPoint = "daveEncryptorDestroy", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 	internal static extern void EncryptorDestroy(IntPtr handle);
 
-	/// <summary>Installs a key ratchet into the encryptor, enabling frame encryption. libdave copies the ratchet internally.</summary>
+	/// <summary>
+	///     Installs a key ratchet into the encryptor, enabling frame encryption. libdave copies the ratchet internally.
+	/// </summary>
 	[DllImport(LibName, EntryPoint = "daveEncryptorSetKeyRatchet", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 	internal static extern void EncryptorSetKeyRatchet(
 		DaveEncryptorSafeHandle encryptor,
 		DaveKeyRatchetSafeHandle ratchet);
 
-	/// <summary>Associates an SSRC with a codec type so the encryptor applies correct frame partitioning. Must be called before the first <see cref="EncryptorEncrypt"/> for the given SSRC.</summary>
+	/// <summary>
+	///     Associates an SSRC with a codec type so the encryptor applies correct frame partitioning. Must be called before the first <see cref="EncryptorEncrypt"/> for the given SSRC.
+	/// </summary>
 	[DllImport(LibName, EntryPoint = "daveEncryptorAssignSsrcToCodec", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 	internal static extern void EncryptorAssignSsrcToCodec(
 		DaveEncryptorSafeHandle encryptor,
 		uint ssrc,
 		int codecType);
 
-	/// <summary>Enables or disables passthrough mode on the encryptor. In passthrough mode frames are forwarded unencrypted.</summary>
+	/// <summary>
+	///     Enables or disables passthrough mode on the encryptor. In passthrough mode frames are forwarded unencrypted.
+	/// </summary>
 	[DllImport(LibName, EntryPoint = "daveEncryptorSetPassthroughMode", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 	internal static extern void EncryptorSetPassthroughMode(
 		DaveEncryptorSafeHandle encryptor,
@@ -190,21 +220,29 @@ internal static unsafe class DaveNative
 	// Decryptor
 	// -------------------------------------------------------------------------
 
-	/// <summary>Creates a new native libdave decryptor. The returned handle must be destroyed with <see cref="DecryptorDestroy"/>.</summary>
+	/// <summary>
+	///     Creates a new native libdave decryptor. The returned handle must be destroyed with <see cref="DecryptorDestroy"/>.
+	/// </summary>
 	[DllImport(LibName, EntryPoint = "daveDecryptorCreate", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 	internal static extern DaveDecryptorSafeHandle DecryptorCreate();
 
-	/// <summary>Destroys a libdave decryptor and frees all associated native memory. Called automatically by <see cref="DaveDecryptorSafeHandle"/>.</summary>
+	/// <summary>
+	///     Destroys a libdave decryptor and frees all associated native memory. Called automatically by <see cref="DaveDecryptorSafeHandle"/>.
+	/// </summary>
 	[DllImport(LibName, EntryPoint = "daveDecryptorDestroy", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 	internal static extern void DecryptorDestroy(IntPtr handle);
 
-	/// <summary>Transitions the decryptor to a new key ratchet epoch. The previous ratchet is retained briefly for in-flight frames.</summary>
+	/// <summary>
+	///     Transitions the decryptor to a new key ratchet epoch. The previous ratchet is retained briefly for in-flight frames.
+	/// </summary>
 	[DllImport(LibName, EntryPoint = "daveDecryptorTransitionToKeyRatchet", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 	internal static extern void DecryptorTransitionToKeyRatchet(
 		DaveDecryptorSafeHandle decryptor,
 		DaveKeyRatchetSafeHandle ratchet);
 
-	/// <summary>Enables or disables passthrough mode on the decryptor. In passthrough mode frames that lack a DAVE footer are forwarded as-is.</summary>
+	/// <summary>
+	///     Enables or disables passthrough mode on the decryptor. In passthrough mode frames that lack a DAVE footer are forwarded as-is.
+	/// </summary>
 	[DllImport(LibName, EntryPoint = "daveDecryptorTransitionToPassthroughMode", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 	internal static extern void DecryptorTransitionToPassthroughMode(
 		DaveDecryptorSafeHandle decryptor,
@@ -227,7 +265,9 @@ internal static unsafe class DaveNative
 	// Memory
 	// -------------------------------------------------------------------------
 
-	/// <summary>Frees a buffer that was allocated by libdave (e.g., the key package, commit/welcome bytes).</summary>
+	/// <summary>
+	///     Frees a buffer that was allocated by libdave (e.g., the key package, commit/welcome bytes).
+	/// </summary>
 	[DllImport(LibName, EntryPoint = "daveFree", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
 	internal static extern void Free(IntPtr ptr);
 }

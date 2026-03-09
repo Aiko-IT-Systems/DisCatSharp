@@ -19,7 +19,9 @@ public class HashRatchetTests
 		0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20
 	];
 
-	/// <summary>Re-derives the same key/nonce as HashRatchet.Get using raw HKDF so tests are self-contained.</summary>
+	/// <summary>
+	///     Re-derives the same key/nonce as HashRatchet.Get using raw HKDF so tests are self-contained.
+	/// </summary>
 	private static byte[] ReferenceDeriveKey(byte[] secret, string labelName, uint generation, int length)
 	{
 		var label = "MLS 1.0 " + labelName;

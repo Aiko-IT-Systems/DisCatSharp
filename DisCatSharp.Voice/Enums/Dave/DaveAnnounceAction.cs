@@ -7,7 +7,9 @@ namespace DisCatSharp.Voice.Enums.Dave;
 /// </summary>
 internal enum DaveAnnounceAction
 {
-	/// <summary>Nothing to send; state has been handled internally.</summary>
+	/// <summary>
+	///     Nothing to send; state has been handled internally.
+	/// </summary>
 	None,
 
 	/// <summary>

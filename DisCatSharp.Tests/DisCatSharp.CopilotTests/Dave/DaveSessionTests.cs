@@ -8,7 +8,9 @@ using Xunit;
 
 namespace DisCatSharp.Copilot.Tests.Dave;
 
-/// <summary>Unit tests for <see cref="DaveSession"/> and <see cref="DaveTransitionTracker"/>.</summary>
+/// <summary>
+///     Unit tests for <see cref="DaveSession"/> and <see cref="DaveTransitionTracker"/>.
+/// </summary>
 public class DaveSessionTests
 {
 	// -------------------------------------------------------------------------

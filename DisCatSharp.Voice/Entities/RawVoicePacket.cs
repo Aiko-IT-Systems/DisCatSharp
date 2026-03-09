@@ -3,6 +3,9 @@ using System;
 
 namespace DisCatSharp.Voice.Entities;
 
+/// <summary>
+///     Represents a raw outbound voice packet before transport framing.
+/// </summary>
 internal readonly struct RawVoicePacket
 {
 	/// <summary>
@@ -32,9 +35,21 @@ internal readonly struct RawVoicePacket
 		this.RentedBuffer = rentedBuffer;
 	}
 
+	/// <summary>
+	///     Packet payload bytes.
+	/// </summary>
 	public readonly Memory<byte> Bytes;
+	/// <summary>
+	///     Packet duration in milliseconds.
+	/// </summary>
 	public readonly int Duration;
+	/// <summary>
+	///     Indicates whether this packet contains generated silence.
+	/// </summary>
 	public readonly bool Silence;
 
+	/// <summary>
+	///     Optional rented backing buffer that should be returned to the pool by the consumer when no longer needed.
+	/// </summary>
 	public readonly byte[] RentedBuffer;
 }

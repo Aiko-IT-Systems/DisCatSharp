@@ -11,7 +11,6 @@ namespace DisCatSharp.Voice.Codec;
 /// <summary>
 ///     The opus.
 /// </summary>
-// ReSharper disable once ClassCanBeSealed.Global - This class can be used by other projects.
 public class Opus : IDisposable
 {
 	/// <summary>

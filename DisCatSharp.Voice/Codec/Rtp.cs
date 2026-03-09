@@ -9,7 +9,6 @@ namespace DisCatSharp.Voice.Codec;
 /// <summary>
 ///     The rtp.
 /// </summary>
-// ReSharper disable once ClassCanBeSealed.Global - This class can be used by other projects.
 internal class Rtp : IDisposable
 {
 	/// <summary>

@@ -277,7 +277,9 @@ public sealed class VoiceConnection : IDisposable
 	/// </summary>
 	private Sodium _sodium;
 
-	/// <summary>The active DAVE session, or <c>null</c> when DAVE is not negotiated.</summary>
+	/// <summary>
+	///     The active DAVE session, or <c>null</c> when DAVE is not negotiated.
+	/// </summary>
 	private DaveSession? _daveSession;
 
 	/// <summary>
@@ -2488,7 +2490,9 @@ public sealed class VoiceConnection : IDisposable
 		return payload;
 	}
 
-	/// <summary>Builds a client-to-server DAVE binary message: [opcode: u8][payload].</summary>
+	/// <summary>
+	///     Builds a client-to-server DAVE binary message: [opcode: u8][payload].
+	/// </summary>
 	private static byte[] BuildDaveBinaryMessage(byte opcode, byte[] payload)
 	{
 		var msg = new byte[1 + payload.Length];

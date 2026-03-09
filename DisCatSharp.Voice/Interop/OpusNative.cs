@@ -266,30 +266,78 @@ internal static class OpusNative
 	public static void OpusGetLastPacketDuration(IntPtr decoder, out int sampleCount)
 		=> _OpusDecoderControl(decoder, OpusControl.GetLastPacketDuration, out sampleCount);
 
+	/// <summary>
+	///     Compatibility wrapper that creates an encoder from primitive values.
+	/// </summary>
+	/// <param name="sampleRate">Target sample rate.</param>
+	/// <param name="channelCount">Channel count.</param>
+	/// <param name="application">Application mode cast to <see cref="VoiceApplication"/>.</param>
+	/// <returns>Native Opus encoder handle.</returns>
 	public static IntPtr CreateEncoder(int sampleRate, int channelCount, int application)
 	{
 		var format = new AudioFormat(sampleRate, channelCount, (VoiceApplication)application);
 		return OpusCreateEncoder(format);
 	}
 
+	/// <summary>
+	///     Compatibility wrapper for setting encoder options.
+	/// </summary>
+	/// <param name="encoder">Native encoder handle.</param>
+	/// <param name="option">Control option.</param>
+	/// <param name="value">Option value.</param>
 	public static void SetEncoderOption(IntPtr encoder, OpusControl option, int value)
 		=> OpusSetEncoderOption(encoder, option, value);
 
+	/// <summary>
+	///     Compatibility wrapper for encoding PCM into Opus.
+	/// </summary>
+	/// <param name="encoder">Native encoder handle.</param>
+	/// <param name="pcm">PCM input.</param>
+	/// <param name="frameSize">Opus frame size in samples per channel.</param>
+	/// <param name="data">Destination buffer for encoded Opus bytes.</param>
 	public static void Encode(IntPtr encoder, ReadOnlySpan<byte> pcm, int frameSize, ref Span<byte> data)
 		=> OpusEncode(encoder, pcm, frameSize, ref data);
 
+	/// <summary>
+	///     Compatibility wrapper that creates a decoder from primitive values.
+	/// </summary>
+	/// <param name="sampleRate">Target sample rate.</param>
+	/// <param name="channelCount">Channel count.</param>
+	/// <returns>Native Opus decoder handle.</returns>
 	public static IntPtr CreateDecoder(int sampleRate, int channelCount)
 	{
 		var format = new AudioFormat(sampleRate, channelCount);
 		return OpusCreateDecoder(format);
 	}
 
+	/// <summary>
+	///     Compatibility wrapper for decoding Opus into PCM.
+	/// </summary>
+	/// <param name="decoder">Native decoder handle.</param>
+	/// <param name="data">Opus payload.</param>
+	/// <param name="frameSize">Expected frame size in samples per channel.</param>
+	/// <param name="pcm">PCM output buffer.</param>
+	/// <param name="useFec">Whether to request FEC decoding.</param>
+	/// <returns>Number of decoded samples per channel.</returns>
 	public static int Decode(IntPtr decoder, ReadOnlySpan<byte> data, int frameSize, Span<byte> pcm, bool useFec)
 		=> OpusDecode(decoder, data, frameSize, pcm, useFec);
 
+	/// <summary>
+	///     Compatibility wrapper for packet-loss concealment decoding.
+	/// </summary>
+	/// <param name="decoder">Native decoder handle.</param>
+	/// <param name="frameSize">Expected frame size in samples per channel.</param>
+	/// <param name="pcm">PCM output buffer.</param>
+	/// <returns>Number of decoded samples per channel.</returns>
 	public static int Decode(IntPtr decoder, int frameSize, Span<byte> pcm)
 		=> OpusDecode(decoder, frameSize, pcm);
 
+	/// <summary>
+	///     Compatibility wrapper for extracting packet metrics.
+	/// </summary>
+	/// <param name="data">Opus payload.</param>
+	/// <param name="samplingRate">Sampling rate used for frame-size calculation.</param>
+	/// <returns>Decoded packet metrics.</returns>
 	public static OpusPacketMetrics GetPacketMetrics(ReadOnlySpan<byte> data, int samplingRate)
 	{
 		OpusGetPacketMetrics(data, samplingRate, out var channels, out var frames, out var samplesPerFrame, out var frameSize);
@@ -302,6 +350,11 @@ internal static class OpusNative
 		};
 	}
 
+	/// <summary>
+	///     Compatibility wrapper for querying the decoder's last packet duration.
+	/// </summary>
+	/// <param name="decoder">Native decoder handle.</param>
+	/// <param name="sampleCount">Last packet duration in samples per channel.</param>
 	public static void GetLastPacketDuration(IntPtr decoder, out int sampleCount)
 		=> OpusGetLastPacketDuration(decoder, out sampleCount);
 }

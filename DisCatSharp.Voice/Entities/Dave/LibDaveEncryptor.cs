@@ -14,13 +14,19 @@ namespace DisCatSharp.Voice.Entities.Dave;
 /// </summary>
 internal sealed class LibDaveEncryptor : IDaveEncryptor
 {
-	/// <summary>Integer constant passed to libdave to identify audio media frames.</summary>
+	/// <summary>
+	///     Integer constant passed to libdave to identify audio media frames.
+	/// </summary>
 	private const int DaveMediaTypeAudio = 0;
 
-	/// <summary>Codec constant for Opus audio (matches DAVECodec enum in dave.h).</summary>
+	/// <summary>
+	///     Codec constant for Opus audio (matches DAVECodec enum in dave.h).
+	/// </summary>
 	private const int DaveCodecOpus = 1;
 
-	/// <summary>Maximum number of overhead bytes the native encryptor may add beyond the plaintext length.</summary>
+	/// <summary>
+	///     Maximum number of overhead bytes the native encryptor may add beyond the plaintext length.
+	/// </summary>
 	private const int MaxEncryptedOverhead = 256;
 
 	private readonly DaveEncryptorSafeHandle _handle;

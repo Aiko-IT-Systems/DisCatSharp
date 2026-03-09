@@ -32,7 +32,9 @@ public static class DiscordJson
 		ContractResolver = new DisCatSharpContractResolver()
 	});
 
-	/// <summary>Serializes the specified object to a JSON string.</summary>
+	/// <summary>
+	///     Serializes the specified object to a JSON string.
+	/// </summary>
 	/// <param name="value">The object to serialize.</param>
 	/// <returns>A JSON string representation of the object.</returns>
 	public static string SerializeObject(object value)
@@ -66,7 +68,9 @@ public static class DiscordJson
 	public static Dictionary<TKey, TValue> DeserializeDictionaryObject<TKey, TValue>(string? json, BaseDiscordClient? discord)
 		=> DeserializeDictionaryObjectInternal<TKey, TValue>(json, discord);
 
-	/// <summary>Populates an object with the values from a JSON node.</summary>
+	/// <summary>
+	///     Populates an object with the values from a JSON node.
+	/// </summary>
 	/// <param name="value">The token to populate the object with.</param>
 	/// <param name="target">The object to populate.</param>
 	public static void PopulateObject(JToken value, object target)

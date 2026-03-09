@@ -410,7 +410,9 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 		this._session = null;
 	}
 
-	/// <summary>Throws <see cref="ObjectDisposedException"/> if this instance has been disposed, or <see cref="InvalidOperationException"/> if the session has not been initialized.</summary>
+	/// <summary>
+	///     Throws <see cref="ObjectDisposedException"/> if this instance has been disposed, or <see cref="InvalidOperationException"/> if the session has not been initialized.
+	/// </summary>
 	private void EnsureSession()
 	{
 		if (this._disposed)

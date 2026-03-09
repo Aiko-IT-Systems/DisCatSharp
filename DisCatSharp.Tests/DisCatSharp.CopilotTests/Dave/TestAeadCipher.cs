@@ -69,7 +69,9 @@ internal sealed class TestAeadCipher : IAeadCipher
 
 	// -------------------------------------------------------------------------
 
-	/// <summary>tag = HMAC-SHA256(_key, nonce ‖ aad ‖ data)[0..8]</summary>
+	/// <summary>
+	///     tag = HMAC-SHA256(_key, nonce ‖ aad ‖ data)[0..8]
+	/// </summary>
 	private void ComputeTag(ReadOnlySpan<byte> nonce, ReadOnlySpan<byte> aad, ReadOnlySpan<byte> data, Span<byte> tag)
 	{
 		var input = new byte[nonce.Length + aad.Length + data.Length];
