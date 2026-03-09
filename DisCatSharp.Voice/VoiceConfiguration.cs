@@ -1,5 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 
+using DisCatSharp.Voice.Enums;
+using DisCatSharp.Voice.Entities;
+
 namespace DisCatSharp.Voice;
 
 /// <summary>

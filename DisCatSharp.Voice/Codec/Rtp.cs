@@ -1,6 +1,9 @@
 using System;
 using System.Buffers.Binary;
 
+using DisCatSharp.Voice.Enums.Interop;
+using DisCatSharp.Voice.Interop;
+
 namespace DisCatSharp.Voice.Codec;
 
 /// <summary>
@@ -100,15 +103,15 @@ internal class Rtp : IDisposable
 	/// <param name="encryptedLength">The encrypted length.</param>
 	/// <param name="encryptionMode">The encryption mode.</param>
 	/// <returns>An int.</returns>
-	public int CalculatePacketSize(int encryptedLength, EncryptionMode encryptionMode) =>
+	public int CalculatePacketSize(int encryptedLength, SodiumEncryptionMode encryptionMode) =>
 		encryptionMode switch
 		{
 			// AEAD: ciphertext (same length as plaintext) + 16-byte detached tag + 4-byte nonce counter suffix
-			EncryptionMode.AeadAes256GcmRtpSize or EncryptionMode.AeadXChaCha20Poly1305RtpSize
+			SodiumEncryptionMode.AeadAes256GcmRtpSize or SodiumEncryptionMode.AeadXChaCha20Poly1305RtpSize
 				=> HEADER_SIZE + encryptedLength + Sodium.AES_GCM_TAG_SIZE + Sodium.AEAD_NONCE_SUFFIX_SIZE,
-			EncryptionMode.XSalsa20Poly1305 => HEADER_SIZE + encryptedLength,
-			EncryptionMode.XSalsa20Poly1305Suffix => HEADER_SIZE + encryptedLength + Interop.SodiumNonceSize,
-			EncryptionMode.XSalsa20Poly1305Lite => HEADER_SIZE + encryptedLength + 4,
+			SodiumEncryptionMode.XSalsa20Poly1305 => HEADER_SIZE + encryptedLength,
+			SodiumEncryptionMode.XSalsa20Poly1305Suffix => HEADER_SIZE + encryptedLength + SodiumNative.SodiumNonceSize,
+			SodiumEncryptionMode.XSalsa20Poly1305Lite => HEADER_SIZE + encryptedLength + 4,
 			_ => throw new ArgumentException("Unsupported encryption mode.", nameof(encryptionMode))
 		};
 
@@ -118,27 +121,27 @@ internal class Rtp : IDisposable
 	/// <param name="packet">The packet.</param>
 	/// <param name="data">The data.</param>
 	/// <param name="encryptionMode">The encryption mode.</param>
-	public void GetDataFromPacket(ReadOnlySpan<byte> packet, out ReadOnlySpan<byte> data, EncryptionMode encryptionMode)
+	public void GetDataFromPacket(ReadOnlySpan<byte> packet, out ReadOnlySpan<byte> data, SodiumEncryptionMode encryptionMode)
 	{
 		switch (encryptionMode)
 		{
 			// AEAD: ciphertext = packet[HEADER_SIZE .. ^(TAG_SIZE + NONCE_SUFFIX)]
 			// tag  = packet[^(TAG_SIZE + NONCE_SUFFIX) .. ^NONCE_SUFFIX]  (last 20..4 bytes)
 			// counter = packet[^NONCE_SUFFIX ..]                           (last 4 bytes)
-			case EncryptionMode.AeadAes256GcmRtpSize:
-			case EncryptionMode.AeadXChaCha20Poly1305RtpSize:
+			case SodiumEncryptionMode.AeadAes256GcmRtpSize:
+			case SodiumEncryptionMode.AeadXChaCha20Poly1305RtpSize:
 				data = packet.Slice(HEADER_SIZE, packet.Length - HEADER_SIZE - Sodium.AES_GCM_TAG_SIZE - Sodium.AEAD_NONCE_SUFFIX_SIZE);
 				return;
 
-			case EncryptionMode.XSalsa20Poly1305:
+			case SodiumEncryptionMode.XSalsa20Poly1305:
 				data = packet[HEADER_SIZE..];
 				return;
 
-			case EncryptionMode.XSalsa20Poly1305Suffix:
-				data = packet.Slice(HEADER_SIZE, packet.Length - HEADER_SIZE - Interop.SodiumNonceSize);
+			case SodiumEncryptionMode.XSalsa20Poly1305Suffix:
+				data = packet.Slice(HEADER_SIZE, packet.Length - HEADER_SIZE - SodiumNative.SodiumNonceSize);
 				return;
 
-			case EncryptionMode.XSalsa20Poly1305Lite:
+			case SodiumEncryptionMode.XSalsa20Poly1305Lite:
 				data = packet.Slice(HEADER_SIZE, packet.Length - HEADER_SIZE - 4);
 				return;
 

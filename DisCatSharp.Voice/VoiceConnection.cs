@@ -20,10 +20,14 @@ using DisCatSharp.Net;
 using DisCatSharp.Net.Udp;
 using DisCatSharp.Net.WebSocket;
 using DisCatSharp.Voice.Codec;
-using DisCatSharp.Voice.Dave;
 using DisCatSharp.Voice.Entities;
 using DisCatSharp.Voice.Entities.Dave;
+using DisCatSharp.Voice.Payloads;
+using DisCatSharp.Voice.Enums;
+using DisCatSharp.Voice.Enums.Dave;
+using DisCatSharp.Voice.Enums.Interop;
 using DisCatSharp.Voice.EventArgs;
+using DisCatSharp.Voice.Logging;
 
 using Microsoft.Extensions.Logging;
 
@@ -251,7 +255,7 @@ public sealed class VoiceConnection : IDisposable
 	/// <summary>
 	///     Gets or sets the selected encryption mode.
 	/// </summary>
-	private EncryptionMode _selectedEncryptionMode;
+	private SodiumEncryptionMode _selectedEncryptionMode;
 
 	/// <summary>
 	///     Gets or sets the sender task.
@@ -746,7 +750,7 @@ public sealed class VoiceConnection : IDisposable
 	/// <returns>A Task.</returns>
 	internal async Task StartAsync()
 	{
-		var vdp = new VoiceDispatch();
+		var vdp = new VoiceDispatchPayload();
 
 		// Capture whether this is a fresh session BEFORE mutating this.Resume,
 		// so the log message below is correct.
@@ -957,15 +961,15 @@ public sealed class VoiceConnection : IDisposable
 		Span<byte> nonce = stackalloc byte[Sodium.NonceSize];
 		switch (this._selectedEncryptionMode)
 		{
-			case EncryptionMode.XSalsa20Poly1305:
+			case SodiumEncryptionMode.XSalsa20Poly1305:
 				this._sodium.GenerateNonce(packet[..Rtp.HEADER_SIZE], nonce);
 				break;
 
-			case EncryptionMode.XSalsa20Poly1305Suffix:
+			case SodiumEncryptionMode.XSalsa20Poly1305Suffix:
 				this._sodium.GenerateNonce(nonce);
 				break;
 
-			case EncryptionMode.XSalsa20Poly1305Lite:
+			case SodiumEncryptionMode.XSalsa20Poly1305Lite:
 				this._sodium.GenerateNonce(this._nonce++, nonce);
 				break;
 
@@ -1542,7 +1546,7 @@ public sealed class VoiceConnection : IDisposable
 		if (this._speakingFlags != flags)
 		{
 			this._speakingFlags = flags;
-			var pld = new VoiceDispatch
+			var pld = new VoiceDispatchPayload
 			{
 				OpCode = 5,
 				Payload = new VoiceSpeakingPayload
@@ -1621,7 +1625,7 @@ public sealed class VoiceConnection : IDisposable
 				var dt = DateTime.Now;
 				this._voiceLogger.VoiceTrace(VoiceEvents.VoiceHeartbeat, "Sent heartbeat");
 
-				var hbd = new VoiceDispatch
+				var hbd = new VoiceDispatchPayload
 				{
 					OpCode = 3,
 					// Voice gateway v8: heartbeat must be {"t": nonce, "seq_ack": lastSeq}
@@ -1720,7 +1724,7 @@ public sealed class VoiceConnection : IDisposable
 		var selectedEncryptionMode = Sodium.SelectMode(voiceReady.Modes);
 		this._selectedEncryptionMode = selectedEncryptionMode.Value;
 		this._voiceLogger.VoiceTrace(VoiceEvents.VoiceHandshake, "Selected encryption mode is {EncryptionMode}", selectedEncryptionMode.Key);
-		var vsp = new VoiceDispatch
+		var vsp = new VoiceDispatchPayload
 		{
 			OpCode = 1,
 			Payload = new VoiceSelectProtocolPayload
@@ -2220,7 +2224,7 @@ public sealed class VoiceConnection : IDisposable
 	/// </summary>
 	private async Task SendDaveJsonOpcodeAsync(int opcode, object payload)
 	{
-		var dispatch = JsonConvert.SerializeObject(new VoiceDispatch { OpCode = opcode, Payload = payload }, Formatting.None);
+		var dispatch = JsonConvert.SerializeObject(new VoiceDispatchPayload { OpCode = opcode, Payload = payload }, Formatting.None);
 		this.PublishDaveOpcodeObserved((byte)opcode, DaveOpcodeDirection.Sent, Encoding.UTF8.GetByteCount(dispatch), sequence: null, isBinary: false);
 		await this.WsSendAsync(dispatch).ConfigureAwait(false);
 	}
@@ -2493,5 +2497,3 @@ public sealed class VoiceConnection : IDisposable
 		return msg;
 	}
 }
-
-

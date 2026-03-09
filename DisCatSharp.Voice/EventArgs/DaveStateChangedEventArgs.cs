@@ -1,6 +1,7 @@
 using System;
 
 using DisCatSharp.EventArgs;
+using DisCatSharp.Voice.Enums;
 
 namespace DisCatSharp.Voice.EventArgs;
 

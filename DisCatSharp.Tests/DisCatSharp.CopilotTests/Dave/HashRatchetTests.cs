@@ -3,7 +3,7 @@ using System.Buffers.Binary;
 using System.Security.Cryptography;
 using System.Text;
 
-using DisCatSharp.Voice.Dave;
+using DisCatSharp.Voice.Entities.Dave;
 
 using Xunit;
 

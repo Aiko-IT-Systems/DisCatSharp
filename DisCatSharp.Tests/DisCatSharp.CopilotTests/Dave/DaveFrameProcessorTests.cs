@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 
-using DisCatSharp.Voice.Dave;
+using DisCatSharp.Voice.Entities.Dave;
+using DisCatSharp.Voice.Enums.Dave;
 
 using Xunit;
 
@@ -138,5 +139,4 @@ public class DaveFrameProcessorTests
 		Assert.Equal(nonce, footer.TruncatedNonce);
 	}
 }
-
 

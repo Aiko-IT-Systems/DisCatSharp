@@ -2,6 +2,7 @@ using System;
 
 using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
+using DisCatSharp.Voice.Entities;
 
 namespace DisCatSharp.Voice.EventArgs;
 

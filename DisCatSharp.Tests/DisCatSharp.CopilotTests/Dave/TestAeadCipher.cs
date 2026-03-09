@@ -1,7 +1,8 @@
 using System;
 using System.Security.Cryptography;
 
-using DisCatSharp.Voice.Dave;
+using DisCatSharp.Voice.Entities.Dave;
+using DisCatSharp.Voice.Interfaces.Dave;
 
 namespace DisCatSharp.Copilot.Tests.Dave;
 

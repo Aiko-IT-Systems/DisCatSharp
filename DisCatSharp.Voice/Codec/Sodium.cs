@@ -9,6 +9,9 @@ using System.Threading;
 
 using Microsoft.Extensions.Logging;
 
+using DisCatSharp.Voice.Interop;
+using DisCatSharp.Voice.Enums.Interop;
+
 namespace DisCatSharp.Voice.Codec;
 
 /// <summary>
@@ -17,10 +20,14 @@ namespace DisCatSharp.Voice.Codec;
 // ReSharper disable once ClassCanBeSealed.Global - This class can be used by other projects.
 internal class Sodium : IDisposable
 {
-	/// <summary>The size of the AEAD authentication tag in bytes.</summary>
+	/// <summary>
+	/// 	The size of the AEAD authentication tag in bytes.
+	/// </summary>
 	public const int AES_GCM_TAG_SIZE = 16;
 
-	/// <summary>The size of the nonce counter suffix appended to AEAD packets in bytes.</summary>
+	/// <summary>
+	/// 	The size of the nonce counter suffix appended to AEAD packets in bytes.
+	/// </summary>
 	public const int AEAD_NONCE_SUFFIX_SIZE = 4;
 
 	/// <summary>
@@ -29,7 +36,7 @@ internal class Sodium : IDisposable
 	private readonly byte[] _buffer;
 
 	/// <summary>
-	///     Gets the c s p r n g.
+	///     Gets the random number generator.
 	/// </summary>
 	private readonly RandomNumberGenerator _csprng;
 
@@ -38,13 +45,19 @@ internal class Sodium : IDisposable
 	/// </summary>
 	private readonly ReadOnlyMemory<byte> _key;
 
-	/// <summary>AES-256-GCM instance for AEAD encryption/decryption.</summary>
+	/// <summary>
+	/// 	AES-256-GCM instance for AEAD encryption/decryption.
+	/// </summary>
 	private readonly AesGcm? _aesGcm;
 
-	/// <summary>Optional logger for one-shot diagnostics.</summary>
+	/// <summary>
+	/// 	Optional logger for one-shot diagnostics.
+	/// </summary>
 	private readonly ILogger? _logger;
 
-	/// <summary>One-shot guard for DecryptAead diagnostics (0 = not yet logged, 1 = logged).</summary>
+	/// <summary>
+	/// 	One-shot guard for DecryptAead diagnostics (0 = not yet logged, 1 = logged).
+	/// </summary>
 	private static volatile int _decryptDiagLogged;
 
 	/// <summary>
@@ -52,16 +65,16 @@ internal class Sodium : IDisposable
 	/// </summary>
 	static Sodium()
 	{
-		SupportedModes = new ReadOnlyDictionary<string, EncryptionMode>(new Dictionary<string, EncryptionMode>
+		SupportedModes = new ReadOnlyDictionary<string, SodiumEncryptionMode>(new Dictionary<string, SodiumEncryptionMode>
 		{
 			// AEAD modes listed first — Discord exclusively offers these as of November 2024.
 			// Explicit insertion order ensures AES-256-GCM is preferred over XChaCha20 when both are offered.
 			// Do not reorder: SelectMode iterates this dict and returns the first match.
-			["aead_aes256_gcm_rtpsize"] = EncryptionMode.AeadAes256GcmRtpSize,
-			["aead_xchacha20_poly1305_rtpsize"] = EncryptionMode.AeadXChaCha20Poly1305RtpSize,
-			["xsalsa20_poly1305_lite"] = EncryptionMode.XSalsa20Poly1305Lite,
-			["xsalsa20_poly1305_suffix"] = EncryptionMode.XSalsa20Poly1305Suffix,
-			["xsalsa20_poly1305"] = EncryptionMode.XSalsa20Poly1305
+			["aead_aes256_gcm_rtpsize"] = SodiumEncryptionMode.AeadAes256GcmRtpSize,
+			["aead_xchacha20_poly1305_rtpsize"] = SodiumEncryptionMode.AeadXChaCha20Poly1305RtpSize,
+			["xsalsa20_poly1305_lite"] = SodiumEncryptionMode.XSalsa20Poly1305Lite,
+			["xsalsa20_poly1305_suffix"] = SodiumEncryptionMode.XSalsa20Poly1305Suffix,
+			["xsalsa20_poly1305"] = SodiumEncryptionMode.XSalsa20Poly1305
 		});
 	}
 
@@ -72,26 +85,26 @@ internal class Sodium : IDisposable
 	/// <param name="logger">Optional logger for one-shot AEAD diagnostics.</param>
 	public Sodium(ReadOnlyMemory<byte> key, ILogger? logger = null)
 	{
-		if (key.Length != Interop.SodiumKeySize)
-			throw new ArgumentException($"Invalid Sodium key size. Key needs to have a length of {Interop.SodiumKeySize} bytes.", nameof(key));
+		if (key.Length != SodiumNative.SodiumKeySize)
+			throw new ArgumentException($"Invalid Sodium key size. Key needs to have a length of {SodiumNative.SodiumKeySize} bytes.", nameof(key));
 
 		this._key = key;
 		this._logger = logger;
 
 		this._csprng = RandomNumberGenerator.Create();
-		this._buffer = new byte[Interop.SodiumNonceSize];
+		this._buffer = new byte[SodiumNative.SodiumNonceSize];
 		this._aesGcm = new AesGcm(key.Span, AES_GCM_TAG_SIZE);
 	}
 
 	/// <summary>
 	///     Gets the supported modes.
 	/// </summary>
-	public static IReadOnlyDictionary<string, EncryptionMode> SupportedModes { get; }
+	public static IReadOnlyDictionary<string, SodiumEncryptionMode> SupportedModes { get; }
 
 	/// <summary>
 	///     Gets the nonce size.
 	/// </summary>
-	public static int NonceSize => Interop.SodiumNonceSize;
+	public static int NonceSize => SodiumNative.SodiumNonceSize;
 
 	/// <summary>Gets the length of the secret key held by this instance.</summary>
 	public int KeyLength => this._key.Length;
@@ -115,8 +128,8 @@ internal class Sodium : IDisposable
 		if (rtpHeader.Length is not Rtp.HEADER_SIZE)
 			throw new ArgumentException($"RTP header needs to have a length of exactly {Rtp.HEADER_SIZE} bytes.", nameof(rtpHeader));
 
-		if (target.Length != Interop.SodiumNonceSize)
-			throw new ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {Interop.SodiumNonceSize} bytes.", nameof(target));
+		if (target.Length != SodiumNative.SodiumNonceSize)
+			throw new ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {SodiumNative.SodiumNonceSize} bytes.", nameof(target));
 
 		// Write the header to the beginning of the span.
 		rtpHeader.CopyTo(target);
@@ -131,8 +144,8 @@ internal class Sodium : IDisposable
 	/// <param name="target">The target.</param>
 	public void GenerateNonce(Span<byte> target)
 	{
-		if (target.Length != Interop.SodiumNonceSize)
-			throw new ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {Interop.SodiumNonceSize} bytes.", nameof(target));
+		if (target.Length != SodiumNative.SodiumNonceSize)
+			throw new ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {SodiumNative.SodiumNonceSize} bytes.", nameof(target));
 
 		this._csprng.GetBytes(this._buffer);
 		this._buffer.AsSpan().CopyTo(target);
@@ -145,8 +158,8 @@ internal class Sodium : IDisposable
 	/// <param name="target">The target.</param>
 	public void GenerateNonce(uint nonce, Span<byte> target)
 	{
-		if (target.Length != Interop.SodiumNonceSize)
-			throw new ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {Interop.SodiumNonceSize} bytes.", nameof(target));
+		if (target.Length != SodiumNative.SodiumNonceSize)
+			throw new ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {SodiumNative.SodiumNonceSize} bytes.", nameof(target));
 
 		// Write the uint to memory
 		BinaryPrimitives.WriteUInt32BigEndian(target, nonce);
@@ -161,18 +174,18 @@ internal class Sodium : IDisposable
 	/// <param name="nonce">The nonce.</param>
 	/// <param name="target">The target.</param>
 	/// <param name="encryptionMode">The encryption mode.</param>
-	public void AppendNonce(ReadOnlySpan<byte> nonce, Span<byte> target, EncryptionMode encryptionMode)
+	public void AppendNonce(ReadOnlySpan<byte> nonce, Span<byte> target, SodiumEncryptionMode encryptionMode)
 	{
 		switch (encryptionMode)
 		{
-			case EncryptionMode.XSalsa20Poly1305:
+			case SodiumEncryptionMode.XSalsa20Poly1305:
 				return;
 
-			case EncryptionMode.XSalsa20Poly1305Suffix:
+			case SodiumEncryptionMode.XSalsa20Poly1305Suffix:
 				nonce.CopyTo(target[^12..]);
 				return;
 
-			case EncryptionMode.XSalsa20Poly1305Lite:
+			case SodiumEncryptionMode.XSalsa20Poly1305Lite:
 				nonce[..4].CopyTo(target[^4..]);
 				return;
 
@@ -187,22 +200,22 @@ internal class Sodium : IDisposable
 	/// <param name="source">The source.</param>
 	/// <param name="target">The target.</param>
 	/// <param name="encryptionMode">The encryption mode.</param>
-	public void GetNonce(ReadOnlySpan<byte> source, Span<byte> target, EncryptionMode encryptionMode)
+	public void GetNonce(ReadOnlySpan<byte> source, Span<byte> target, SodiumEncryptionMode encryptionMode)
 	{
-		if (target.Length != Interop.SodiumNonceSize)
-			throw new ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {Interop.SodiumNonceSize} bytes.", nameof(target));
+		if (target.Length != SodiumNative.SodiumNonceSize)
+			throw new ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {SodiumNative.SodiumNonceSize} bytes.", nameof(target));
 
 		switch (encryptionMode)
 		{
-			case EncryptionMode.XSalsa20Poly1305:
+			case SodiumEncryptionMode.XSalsa20Poly1305:
 				source[..12].CopyTo(target);
 				return;
 
-			case EncryptionMode.XSalsa20Poly1305Suffix:
-				source[^Interop.SodiumNonceSize..].CopyTo(target);
+			case SodiumEncryptionMode.XSalsa20Poly1305Suffix:
+				source[^SodiumNative.SodiumNonceSize..].CopyTo(target);
 				return;
 
-			case EncryptionMode.XSalsa20Poly1305Lite:
+			case SodiumEncryptionMode.XSalsa20Poly1305Lite:
 				source[^4..].CopyTo(target);
 				return;
 
@@ -219,14 +232,14 @@ internal class Sodium : IDisposable
 	/// <param name="nonce">The nonce.</param>
 	public void Encrypt(ReadOnlySpan<byte> source, Span<byte> target, ReadOnlySpan<byte> nonce)
 	{
-		if (nonce.Length != Interop.SodiumNonceSize)
-			throw new ArgumentException($"Invalid nonce size. Nonce needs to have a length of {Interop.SodiumNonceSize} bytes.", nameof(nonce));
+		if (nonce.Length != SodiumNative.SodiumNonceSize)
+			throw new ArgumentException($"Invalid nonce size. Nonce needs to have a length of {SodiumNative.SodiumNonceSize} bytes.", nameof(nonce));
 
-		if (target.Length != Interop.SodiumMacSize + source.Length)
-			throw new ArgumentException($"Invalid target buffer size. Target buffer needs to have a length that is a sum of input buffer length and Sodium MAC size ({Interop.SodiumMacSize} bytes).", nameof(target));
+		if (target.Length != SodiumNative.SodiumMacSize + source.Length)
+			throw new ArgumentException($"Invalid target buffer size. Target buffer needs to have a length that is a sum of input buffer length and Sodium MAC size ({SodiumNative.SodiumMacSize} bytes).", nameof(target));
 
 		int result;
-		if ((result = Interop.Encrypt(source, target, this._key.Span, nonce)) is not 0)
+		if ((result = SodiumNative.Encrypt(source, target, this._key.Span, nonce)) is not 0)
 			throw new CryptographicException($"Could not encrypt the buffer. Sodium returned code {result}.");
 	}
 
@@ -238,14 +251,14 @@ internal class Sodium : IDisposable
 	/// <param name="nonce">The nonce.</param>
 	public void Decrypt(ReadOnlySpan<byte> source, Span<byte> target, ReadOnlySpan<byte> nonce)
 	{
-		if (nonce.Length != Interop.SodiumNonceSize)
-			throw new ArgumentException($"Invalid nonce size. Nonce needs to have a length of {Interop.SodiumNonceSize} bytes.", nameof(nonce));
+		if (nonce.Length != SodiumNative.SodiumNonceSize)
+			throw new ArgumentException($"Invalid nonce size. Nonce needs to have a length of {SodiumNative.SodiumNonceSize} bytes.", nameof(nonce));
 
-		if (target.Length != source.Length - Interop.SodiumMacSize)
-			throw new ArgumentException($"Invalid target buffer size. Target buffer needs to have a length that is input buffer decreased by Sodium MAC size ({Interop.SodiumMacSize} bytes).", nameof(target));
+		if (target.Length != source.Length - SodiumNative.SodiumMacSize)
+			throw new ArgumentException($"Invalid target buffer size. Target buffer needs to have a length that is input buffer decreased by Sodium MAC size ({SodiumNative.SodiumMacSize} bytes).", nameof(target));
 
 		int result;
-		if ((result = Interop.Decrypt(source, target, this._key.Span, nonce)) is not 0)
+		if ((result = SodiumNative.Decrypt(source, target, this._key.Span, nonce)) is not 0)
 			throw new CryptographicException($"Could not decrypt the buffer. Sodium returned code {result}.");
 	}
 
@@ -259,7 +272,7 @@ internal class Sodium : IDisposable
 	/// <param name="aad">Additional authenticated data — must be the RTP header bytes.</param>
 	/// <param name="mode">The AEAD encryption mode.</param>
 	/// <exception cref="CryptographicException">Thrown when encryption fails.</exception>
-	public void EncryptAead(ReadOnlySpan<byte> source, Span<byte> ciphertextDest, Span<byte> tagDest, ReadOnlySpan<byte> nonceCounter4, ReadOnlySpan<byte> aad, EncryptionMode mode)
+	public void EncryptAead(ReadOnlySpan<byte> source, Span<byte> ciphertextDest, Span<byte> tagDest, ReadOnlySpan<byte> nonceCounter4, ReadOnlySpan<byte> aad, SodiumEncryptionMode mode)
 	{
 		if (tagDest.Length != AES_GCM_TAG_SIZE)
 			throw new ArgumentException($"Tag buffer must be exactly {AES_GCM_TAG_SIZE} bytes.", nameof(tagDest));
@@ -268,7 +281,7 @@ internal class Sodium : IDisposable
 
 		switch (mode)
 		{
-			case EncryptionMode.AeadAes256GcmRtpSize:
+			case SodiumEncryptionMode.AeadAes256GcmRtpSize:
 			{
 				// 12-byte AES-GCM nonce: [4-byte LE counter][8 zero bytes]
 				// Read as LE uint32 then write back LE so the intent is explicit.
@@ -278,14 +291,14 @@ internal class Sodium : IDisposable
 				this._aesGcm!.Encrypt(nonce, source, ciphertextDest, tagDest, aad);
 				break;
 			}
-			case EncryptionMode.AeadXChaCha20Poly1305RtpSize:
+			case SodiumEncryptionMode.AeadXChaCha20Poly1305RtpSize:
 			{
 				// 24-byte XChaCha20 nonce: [4-byte LE counter][20 zero bytes]
 				var counterValue = BinaryPrimitives.ReadUInt32LittleEndian(nonceCounter4);
 				Span<byte> nonce = stackalloc byte[24]; // zero-initialized
 				BinaryPrimitives.WriteUInt32LittleEndian(nonce, counterValue);
 				int result;
-				if ((result = Interop.EncryptXChaCha20(source, ciphertextDest, tagDest, nonce, aad, this._key.Span)) != 0)
+				if ((result = SodiumNative.EncryptXChaCha20(source, ciphertextDest, tagDest, nonce, aad, this._key.Span)) != 0)
 					throw new CryptographicException($"XChaCha20 encryption failed with code {result}.");
 				break;
 			}
@@ -304,7 +317,7 @@ internal class Sodium : IDisposable
 	/// <param name="aad">Additional authenticated data — must be the RTP header bytes (including any CSRC extension).</param>
 	/// <param name="mode">The AEAD encryption mode.</param>
 	/// <exception cref="CryptographicException">Thrown when decryption or authentication fails.</exception>
-	public void DecryptAead(ReadOnlySpan<byte> ciphertext, Span<byte> plaintextDest, ReadOnlySpan<byte> tag, ReadOnlySpan<byte> nonceCounter4, ReadOnlySpan<byte> aad, EncryptionMode mode)
+	public void DecryptAead(ReadOnlySpan<byte> ciphertext, Span<byte> plaintextDest, ReadOnlySpan<byte> tag, ReadOnlySpan<byte> nonceCounter4, ReadOnlySpan<byte> aad, SodiumEncryptionMode mode)
 	{
 		if (tag.Length != AES_GCM_TAG_SIZE)
 			throw new ArgumentException($"Tag must be exactly {AES_GCM_TAG_SIZE} bytes.", nameof(tag));
@@ -316,7 +329,7 @@ internal class Sodium : IDisposable
 			var counterValue = BinaryPrimitives.ReadUInt32LittleEndian(nonceCounter4);
 
 			// Build the full nonce so we can log the exact bytes passed to the cipher.
-			var nonceLen = mode == EncryptionMode.AeadAes256GcmRtpSize ? 12 : 24;
+			var nonceLen = mode == SodiumEncryptionMode.AeadAes256GcmRtpSize ? 12 : 24;
 			Span<byte> diagNonce = stackalloc byte[nonceLen]; // zero-initialized
 			BinaryPrimitives.WriteUInt32LittleEndian(diagNonce, counterValue);
 
@@ -333,7 +346,7 @@ internal class Sodium : IDisposable
 
 		switch (mode)
 		{
-			case EncryptionMode.AeadAes256GcmRtpSize:
+			case SodiumEncryptionMode.AeadAes256GcmRtpSize:
 			{
 				// 12-byte AES-GCM nonce: [4-byte LE counter][8 zero bytes]
 				// Read as LE uint32 then write back LE so the intent is explicit.
@@ -343,14 +356,14 @@ internal class Sodium : IDisposable
 				this._aesGcm!.Decrypt(nonce, ciphertext, tag, plaintextDest, aad);
 				break;
 			}
-			case EncryptionMode.AeadXChaCha20Poly1305RtpSize:
+			case SodiumEncryptionMode.AeadXChaCha20Poly1305RtpSize:
 			{
 				// 24-byte XChaCha20 nonce: [4-byte LE counter][20 zero bytes]
 				var counterValue = BinaryPrimitives.ReadUInt32LittleEndian(nonceCounter4);
 				Span<byte> nonce = stackalloc byte[24]; // zero-initialized
 				BinaryPrimitives.WriteUInt32LittleEndian(nonce, counterValue);
 				int result;
-				if ((result = Interop.DecryptXChaCha20(ciphertext, plaintextDest, tag, nonce, aad, this._key.Span)) != 0)
+				if ((result = SodiumNative.DecryptXChaCha20(ciphertext, plaintextDest, tag, nonce, aad, this._key.Span)) != 0)
 					throw new CryptographicException($"XChaCha20 decryption/authentication failed with code {result}.");
 				break;
 			}
@@ -361,11 +374,11 @@ internal class Sodium : IDisposable
 
 	/// <summary>
 	///     Returns <see langword="true" /> when <paramref name="mode" /> is an AEAD mode
-	///     (<see cref="EncryptionMode.AeadAes256GcmRtpSize" /> or <see cref="EncryptionMode.AeadXChaCha20Poly1305RtpSize" />).
+	///     (<see cref="SodiumEncryptionMode.AeadAes256GcmRtpSize" /> or <see cref="SodiumEncryptionMode.AeadXChaCha20Poly1305RtpSize" />).
 	/// </summary>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static bool IsAeadMode(EncryptionMode mode)
-		=> mode is EncryptionMode.AeadAes256GcmRtpSize or EncryptionMode.AeadXChaCha20Poly1305RtpSize;
+	public static bool IsAeadMode(SodiumEncryptionMode mode)
+		=> mode is SodiumEncryptionMode.AeadAes256GcmRtpSize or SodiumEncryptionMode.AeadXChaCha20Poly1305RtpSize;
 
 	/// <summary>
 	///     Selects the mode.
@@ -373,7 +386,7 @@ internal class Sodium : IDisposable
 	/// <param name="availableModes">The available modes.</param>
 	/// <returns>A KeyValuePair.</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static KeyValuePair<string, EncryptionMode> SelectMode(IEnumerable<string> availableModes)
+	public static KeyValuePair<string, SodiumEncryptionMode> SelectMode(IEnumerable<string> availableModes)
 	{
 		foreach (var kvMode in SupportedModes)
 			if (availableModes.Contains(kvMode.Key))
@@ -389,7 +402,7 @@ internal class Sodium : IDisposable
 	/// <returns>An int.</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int CalculateTargetSize(ReadOnlySpan<byte> source)
-		=> source.Length + Interop.SodiumMacSize;
+		=> source.Length + SodiumNative.SodiumMacSize;
 
 	/// <summary>
 	///     Calculates the source size.
@@ -398,40 +411,5 @@ internal class Sodium : IDisposable
 	/// <returns>An int.</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int CalculateSourceSize(ReadOnlySpan<byte> source)
-		=> source.Length - Interop.SodiumMacSize;
+		=> source.Length - SodiumNative.SodiumMacSize;
 }
-
-/// <summary>
-///     Specifies an encryption mode to use with Sodium.
-/// </summary>
-public enum EncryptionMode
-{
-	/// <summary>
-	///     AES-256-GCM AEAD mode with RTP-size framing. The 4-byte LE nonce counter followed by the 16-byte auth tag are appended to the payload.
-	///     This is the preferred mode when offered by Discord.
-	/// </summary>
-	AeadAes256GcmRtpSize,
-
-	/// <summary>
-	///     XChaCha20-Poly1305 AEAD mode with RTP-size framing. The 4-byte LE nonce counter followed by the 16-byte auth tag are appended to the payload.
-	///     Required fallback when AES-256-GCM is not offered.
-	/// </summary>
-	AeadXChaCha20Poly1305RtpSize,
-
-	/// <summary>
-	///     The nonce is an incrementing uint32 value. It is encoded as big endian value at the beginning of the nonce buffer.
-	///     The 4 bytes are also appended at the end of the packet.
-	/// </summary>
-	XSalsa20Poly1305Lite,
-
-	/// <summary>
-	///     The nonce consists of random bytes. It is appended at the end of a packet.
-	/// </summary>
-	XSalsa20Poly1305Suffix,
-
-	/// <summary>
-	///     The nonce consists of the RTP header. Nothing is appended to the packet.
-	/// </summary>
-	XSalsa20Poly1305
-}
-

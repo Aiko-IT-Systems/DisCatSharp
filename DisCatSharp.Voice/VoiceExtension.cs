@@ -6,6 +6,8 @@ using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Voice.Entities;
+using DisCatSharp.Voice.Payloads;
+using DisCatSharp.Voice.Logging;
 
 using Microsoft.Extensions.Logging;
 
@@ -99,7 +101,7 @@ public sealed class VoiceExtension : BaseExtension
 		this._voiceStateUpdates[gld.Id] = vstut;
 		this._voiceServerUpdates[gld.Id] = vsrut;
 
-		var vsd = new VoiceDispatch
+		var vsd = new VoiceDispatchPayload
 		{
 			OpCode = 4,
 			Payload = new VoiceStateUpdatePayload
@@ -152,7 +154,7 @@ public sealed class VoiceExtension : BaseExtension
 		if (this._activeConnections.ContainsKey(guild.Id))
 			this._activeConnections.TryRemove(guild.Id, out _);
 
-		var vsd = new VoiceDispatch
+		var vsd = new VoiceDispatchPayload
 		{
 			OpCode = 4,
 			Payload = new VoiceStateUpdatePayload
@@ -261,4 +263,3 @@ public sealed class VoiceExtension : BaseExtension
 		return Task.CompletedTask;
 	}
 }
-
