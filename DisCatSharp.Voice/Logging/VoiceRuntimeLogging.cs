@@ -22,7 +22,10 @@ internal static class VoiceRuntimeLogging
 		public int Enabled;
 	}
 
-	private static readonly ConditionalWeakTable<ILogger, DebugFlag> _loggerDebugFlags = [];
+	/// <summary>
+	///		Global mapping of loggers to their debug flag containers.
+	/// </summary>
+	private static readonly ConditionalWeakTable<ILogger, DebugFlag> s_loggerDebugFlags = [];
 
 	/// <summary>
 	///     Sets whether voice debug logs are enabled for a logger instance.
@@ -32,7 +35,7 @@ internal static class VoiceRuntimeLogging
 	internal static void SetEnableDebugLogs(ILogger logger, bool enabled)
 	{
 		ArgumentNullException.ThrowIfNull(logger);
-		var state = _loggerDebugFlags.GetValue(logger, static _ => new DebugFlag());
+		var state = s_loggerDebugFlags.GetValue(logger, static _ => new DebugFlag());
 		Volatile.Write(ref state.Enabled, enabled ? 1 : 0);
 	}
 
@@ -44,6 +47,6 @@ internal static class VoiceRuntimeLogging
 	internal static bool IsDebugEnabled(ILogger logger)
 	{
 		ArgumentNullException.ThrowIfNull(logger);
-		return _loggerDebugFlags.TryGetValue(logger, out var state) && Volatile.Read(ref state.Enabled) == 1;
+		return s_loggerDebugFlags.TryGetValue(logger, out var state) && Volatile.Read(ref state.Enabled) == 1;
 	}
 }
