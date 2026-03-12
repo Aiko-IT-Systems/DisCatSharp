@@ -101,7 +101,7 @@ jobs:
               working-directory: GitHub/DisCatSharp.Docs
             - name: Add PR Comment
               if: always()
-              uses: mshick/add-pr-comment@v2
+              uses: mshick/add-pr-comment@v3
               with:
                   refresh-message-position: true
                   message-success: |
