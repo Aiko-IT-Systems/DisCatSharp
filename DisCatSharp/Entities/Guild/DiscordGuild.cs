@@ -491,6 +491,99 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		=> this._currentMemberLazy.Value;
 
 	/// <summary>
+	/// 	Checks whether the current member's top role is higher than another member's top role in the role hierarchy.
+	/// </summary>
+	/// <param name="member">The member to compare against.</param>
+	/// <returns>True if the current member's top role is higher; otherwise, false.</returns>
+	/// <exception cref="InvalidOperationException">Thrown if the current member is not available.</exception>
+	/// <exception cref="ArgumentException">Thrown if the provided member does not belong to this guild.</exception>
+	public bool CurrentMemberIsHigherThan(DiscordMember member)
+	{
+		ArgumentNullException.ThrowIfNull(member);
+
+		return this.CurrentMember is null
+			? throw new InvalidOperationException("Current member is not available.")
+			: member.GuildId != this.Id
+			? throw new ArgumentException("The provided member does not belong to this guild.", nameof(member))
+			: this.CurrentMember.Hierarchy > member.Hierarchy;
+	}
+
+	/// <summary>
+	/// 	Checks whether the current member's top role is higher than a role in the role hierarchy.
+	/// </summary>
+	/// <param name="role">The role to compare against.</param>
+	/// <returns>True if the current member's top role is higher; otherwise, false.</returns>
+	/// <exception cref="InvalidOperationException">Thrown if the current member is not available.</exception>
+	/// <exception cref="ArgumentException">Thrown if the provided role does not belong to this guild.</exception>
+	public bool CurrentMemberIsHigherThan(DiscordRole role)
+	{
+		ArgumentNullException.ThrowIfNull(role);
+
+		return this.CurrentMember is null
+			? throw new InvalidOperationException("Current member is not available.")
+			: role.GuildId != this.Id
+			? throw new ArgumentException("The provided role does not belong to this guild.", nameof(role))
+			: this.CurrentMember.Hierarchy > role.Position;
+	}
+
+	/// <summary>
+	/// 	Checks whether a role is higher than another role in the role hierarchy.
+	/// </summary>
+	/// <param name="role">The role to compare.</param>
+	/// <param name="other">The role to compare against.</param>
+	/// <returns>True if the first role is higher; otherwise, false.</returns>
+	/// <exception cref="ArgumentException">Thrown if either role does not belong to this guild.</exception>
+	public bool RoleIsHigherThan(DiscordRole role, DiscordRole other)
+	{
+		ArgumentNullException.ThrowIfNull(role);
+		ArgumentNullException.ThrowIfNull(other);
+
+		return role.GuildId != this.Id
+			? throw new ArgumentException("The provided role does not belong to this guild.", nameof(role))
+			: other.GuildId != this.Id
+			? throw new ArgumentException("The provided role does not belong to this guild.", nameof(other))
+			: role.Position > other.Position;
+	}
+
+	/// <summary>
+	/// 	Checks whether a member's top role is higher than another member's top role in the role hierarchy.
+	/// </summary>
+	/// <param name="member">The member to compare.</param>
+	/// <param name="other">The member to compare against.</param>
+	/// <returns>True if the first member's top role is higher; otherwise, false.</returns>
+	/// <exception cref="ArgumentException">Thrown if either member does not belong to this guild.</exception>
+	public bool MemberIsHigherThan(DiscordMember member, DiscordMember other)
+	{
+		ArgumentNullException.ThrowIfNull(member);
+		ArgumentNullException.ThrowIfNull(other);
+
+		return member.GuildId != this.Id
+			? throw new ArgumentException("The provided member does not belong to this guild.", nameof(member))
+			: other.GuildId != this.Id
+			? throw new ArgumentException("The provided member does not belong to this guild.", nameof(other))
+			: member.Hierarchy > other.Hierarchy;
+	}
+
+	/// <summary>
+	/// 	Checks whether a member's top role is higher than a role in the role hierarchy.
+	/// </summary>
+	/// <param name="member">The member to compare.</param>
+	/// <param name="role">The role to compare against.</param>
+	/// <returns>True if the member's top role is higher; otherwise, false.</returns>
+	/// <exception cref="ArgumentException">Thrown if either the member or role does not belong to this guild.</exception>
+	public bool MemberIsHigherThan(DiscordMember member, DiscordRole role)
+	{
+		ArgumentNullException.ThrowIfNull(member);
+		ArgumentNullException.ThrowIfNull(role);
+
+		return member.GuildId != this.Id
+			? throw new ArgumentException("The provided member does not belong to this guild.", nameof(member))
+			: role.GuildId != this.Id
+			? throw new ArgumentException("The provided role does not belong to this guild.", nameof(role))
+			: member.Hierarchy > role.Position;
+	}
+
+	/// <summary>
 	///     Gets the @everyone role for this guild.
 	/// </summary>
 	[JsonIgnore]
