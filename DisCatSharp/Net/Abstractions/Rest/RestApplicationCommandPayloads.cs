@@ -81,7 +81,7 @@ internal sealed class RestApplicationCommandCreatePayload : ObservableApiObject
 	/// <summary>
 	///    Gets the handler type for this command. Only used for primary entry point commands.
 	/// </summary>
-	[JsonProperty("handler_type", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("handler", NullValueHandling = NullValueHandling.Ignore)]
 	public ApplicationCommandHandlerType? HandlerType { get; set; } = null;
 }
 
@@ -153,7 +153,7 @@ internal sealed class RestApplicationCommandEditPayload : ObservableApiObject
 	/// <summary>
 	///    Gets the handler type for this command. Only used for primary entry point commands.
 	/// </summary>
-	[JsonProperty("handler_type", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("handler", NullValueHandling = NullValueHandling.Ignore)]
 	public Optional<ApplicationCommandHandlerType?> HandlerType { get; set; }
 }
 
