@@ -81,7 +81,7 @@ jobs:
             - name: Deleze zip
               run: rm dcs-docs.zip
             - name: Delete packed docs
-              uses: geekyeggo/delete-artifact@v5
+              uses: geekyeggo/delete-artifact@v6
               with:
                   name: dcs-docs.zip
             - name: Add .htaccess
