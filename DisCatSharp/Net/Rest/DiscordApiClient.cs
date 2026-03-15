@@ -7152,7 +7152,8 @@ public sealed class DiscordApiClient
 				DefaultMemberPermission = command.DefaultMemberPermissions,
 				Nsfw = command.IsNsfw,
 				AllowedContexts = command.AllowedContexts,
-				IntegrationTypes = command.IntegrationTypes
+				IntegrationTypes = command.IntegrationTypes,
+				HandlerType = command.HandlerType
 			}));
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
@@ -7186,7 +7187,8 @@ public sealed class DiscordApiClient
 			DefaultMemberPermission = command.DefaultMemberPermissions,
 			Nsfw = command.IsNsfw,
 			AllowedContexts = command.AllowedContexts,
-			IntegrationTypes = command.IntegrationTypes
+			IntegrationTypes = command.IntegrationTypes,
+				HandlerType = command.HandlerType
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
@@ -7241,6 +7243,7 @@ public sealed class DiscordApiClient
 	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
 	/// <param name="allowedContexts">The allowed contexts.</param>
 	/// <param name="integrationTypes">The allowed integration types.</param>
+	/// <param name="handlerType">The handler type.</param>
 	internal async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(
 		ulong applicationId,
 		ulong commandId,
@@ -7252,7 +7255,8 @@ public sealed class DiscordApiClient
 		Optional<Permissions?> defaultMemberPermission,
 		Optional<bool> isNsfw,
 		Optional<List<InteractionContextType>?> allowedContexts,
-		Optional<List<ApplicationCommandIntegrationTypes>?> integrationTypes
+		Optional<List<ApplicationCommandIntegrationTypes>?> integrationTypes,
+		Optional<ApplicationCommandHandlerType?> handlerType
 	)
 	{
 		var pld = new RestApplicationCommandEditPayload
@@ -7265,7 +7269,8 @@ public sealed class DiscordApiClient
 			DescriptionLocalizations = descriptionLocalization.ValueOrDefault()?.GetKeyValuePairs(),
 			Nsfw = isNsfw,
 			AllowedContexts = allowedContexts,
-			IntegrationTypes = integrationTypes
+			IntegrationTypes = integrationTypes,
+			HandlerType = handlerType
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}/:command_id";

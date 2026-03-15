@@ -258,7 +258,7 @@ internal class NestedCommandWorker
 
 				//Creates the subcommand and adds it to the main command
 				var subpayload = new DiscordApplicationCommandOption(commandAttribute.Name, commandAttribute.Description, ApplicationCommandOptionType.SubCommand, false, null, localizedOptions ?? options, nameLocalizations: subNameLocalizations, descriptionLocalizations: subDescriptionLocalizations);
-				payload = new(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations, defaultMemberPermissions: payload.DefaultMemberPermissions, isNsfw: payload.IsNsfw, allowedContexts: payload.AllowedContexts, integrationTypes: payload.IntegrationTypes);
+				payload = new(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations, defaultMemberPermissions: payload.DefaultMemberPermissions, isNsfw: payload.IsNsfw, allowedContexts: payload.AllowedContexts, integrationTypes: payload.IntegrationTypes, handlerType: payload.HandlerType);
 				commandTypeSources.Add(new(subclassInfo, type));
 
 				//Adds it to the method lists
@@ -353,7 +353,7 @@ internal class NestedCommandWorker
 					Name = subgroupAttribute.Name,
 					Methods = currentMethods
 				});
-				payload = new(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations, defaultMemberPermissions: payload.DefaultMemberPermissions, isNsfw: payload.IsNsfw, allowedContexts: payload.AllowedContexts, integrationTypes: payload.IntegrationTypes);
+				payload = new(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations, defaultMemberPermissions: payload.DefaultMemberPermissions, isNsfw: payload.IsNsfw, allowedContexts: payload.AllowedContexts, integrationTypes: payload.IntegrationTypes, handlerType: payload.HandlerType);
 				commandTypeSources.Add(new(subclass, type));
 
 				//Accounts for lifespans for the sub group

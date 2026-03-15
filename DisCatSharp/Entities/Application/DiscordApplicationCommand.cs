@@ -218,7 +218,7 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	/// </summary>
 	[JsonIgnore]
 	public string Mention
-		=> this.Type == ApplicationCommandType.ChatInput ? $"</{this.Name}:{this.Id}>" : this.Name;
+		=> this.Type is ApplicationCommandType.ChatInput ? $"</{this.Name}:{this.Id}>" : this.Name;
 
 	/// <summary>
 	///     Checks whether this <see cref="DiscordApplicationCommand" /> object is equal to another object.

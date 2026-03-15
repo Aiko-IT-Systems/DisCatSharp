@@ -43,6 +43,7 @@ public sealed class RegisteredDiscordApplicationCommand : DiscordApplicationComm
 		this.Version = parent.Version;
 		this.AllowedContexts = parent.AllowedContexts;
 		this.IntegrationTypes = parent.IntegrationTypes;
+		this.HandlerType = parent.HandlerType;
 
 		try
 		{

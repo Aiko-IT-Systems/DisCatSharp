@@ -53,6 +53,7 @@ internal class RegistrationWorker
 					action.IsNsfw = command.IsNsfw;
 					action.AllowedContexts = command.AllowedContexts;
 					action.IntegrationTypes = command.IntegrationTypes;
+					action.HandlerType = command.HandlerType;
 				}).ConfigureAwait(false);
 
 				commands.Add(discordBackendCommand);
@@ -85,6 +86,7 @@ internal class RegistrationWorker
 						action.IsNsfw = command.IsNsfw;
 						action.AllowedContexts = command.AllowedContexts;
 						action.IntegrationTypes = command.IntegrationTypes;
+						action.HandlerType = command.HandlerType;
 					}).ConfigureAwait(false);
 
 					commands.Add(discordBackendCommand);
@@ -111,6 +113,7 @@ internal class RegistrationWorker
 					action.IsNsfw = command.IsNsfw;
 					action.AllowedContexts = command.AllowedContexts;
 					action.IntegrationTypes = command.IntegrationTypes;
+					action.HandlerType = command.HandlerType;
 				}).ConfigureAwait(false);
 
 				commands.Add(discordBackendCommand);

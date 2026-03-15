@@ -76,4 +76,9 @@ public class ApplicationCommandEditModel : ObservableApiObject
 	///     Sets whether the command is marked as NSFW.
 	/// </summary>
 	public Optional<bool> IsNsfw { internal get; set; }
+
+	/// <summary>
+	///    Sets the command's handler type.
+	/// </summary>
+	public Optional<ApplicationCommandHandlerType?> HandlerType { internal get; set; }
 }

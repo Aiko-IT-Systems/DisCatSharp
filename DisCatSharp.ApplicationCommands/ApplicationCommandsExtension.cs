@@ -592,6 +592,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				if (this.Client.Configuration.HasActivitiesEnabled)
 				{
 					var entryPointCommand = globalCommands.First(command => command.Name == "launch");
+					entryPointCommand.HandlerType = this.Client.Configuration.ActivityHandlerType;
 					EntryPointCommand = entryPointCommand;
 				}
 			}

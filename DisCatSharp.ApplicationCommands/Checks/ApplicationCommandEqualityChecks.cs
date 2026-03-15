@@ -37,7 +37,7 @@ internal static class ApplicationCommandEqualityChecks
 			ac1.Type,
 			ac1.NameLocalizations, ac1.DescriptionLocalizations,
 			ac1.DefaultMemberPermissions,
-			ac1.IsNsfw, ac1.AllowedContexts, ac1.IntegrationTypes
+			ac1.IsNsfw, ac1.AllowedContexts, ac1.IntegrationTypes, ac1.HandlerType
 		);
 
 		if (sourceApplicationCommand.DefaultMemberPermissions == Permissions.None &&
@@ -55,6 +55,12 @@ internal static class ApplicationCommandEqualityChecks
 		{
 			sourceApplicationCommand.IntegrationTypes ??= [ApplicationCommandIntegrationTypes.GuildInstall];
 			targetApplicationCommand.IntegrationTypes ??= [ApplicationCommandIntegrationTypes.GuildInstall];
+		}
+
+		if (sourceApplicationCommand.Type is not ApplicationCommandType.PrimaryEntryPoint)
+		{
+			sourceApplicationCommand.HandlerType = null;
+			targetApplicationCommand.HandlerType = null;
 		}
 
 		client.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel,
@@ -90,6 +96,12 @@ internal static class ApplicationCommandEqualityChecks
 				? type switch
 				{
 					ApplicationCommandType.ChatInput => DeepEqual(source, target, client, true),
+					ApplicationCommandType.PrimaryEntryPoint => source.Name == target.Name
+						 && source.Type == target.Type && source.NameLocalizations == target.NameLocalizations
+						 && source.IsNsfw == target.IsNsfw
+						 && source.AllowedContexts.NullableSequenceEqual(target.AllowedContexts)
+						 && source.IntegrationTypes.NullableSequenceEqual(target.IntegrationTypes)
+						 && source.HandlerType == target.HandlerType,
 					_ => source.Name == target.Name
 						 && source.Type == target.Type && source.NameLocalizations == target.NameLocalizations
 						 && source.DefaultMemberPermissions == target.DefaultMemberPermissions
@@ -101,6 +113,12 @@ internal static class ApplicationCommandEqualityChecks
 				: type switch
 				{
 					ApplicationCommandType.ChatInput => DeepEqual(source, target, client),
+					ApplicationCommandType.PrimaryEntryPoint => source.Name == target.Name
+						 && source.Type == target.Type && source.NameLocalizations == target.NameLocalizations
+						 && source.IsNsfw == target.IsNsfw
+						 && source.AllowedContexts.NullableSequenceEqual(target.AllowedContexts)
+						 && source.IntegrationTypes.NullableSequenceEqual(target.IntegrationTypes)
+						 && source.HandlerType == target.HandlerType,
 					_ => source.Name == target.Name
 						 && source.Type == target.Type
 						 && source.DefaultMemberPermissions == target.DefaultMemberPermissions
