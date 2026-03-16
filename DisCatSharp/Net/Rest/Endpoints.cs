@@ -545,6 +545,11 @@ public static class Endpoints
 	public const string ATTACHMENTS = "/attachments";
 
 	/// <summary>
+	///     The attachment endpoint.
+	/// </summary>
+	public const string ATTACHMENT = "/attachment";
+
+	/// <summary>
 	///     The rpc endpoint.
 	/// </summary>
 	public const string RPC = "/rpc";

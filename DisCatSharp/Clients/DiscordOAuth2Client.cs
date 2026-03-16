@@ -439,6 +439,22 @@ public sealed class DiscordOAuth2Client : IDisposable
 	}
 
 	/// <summary>
+	///     Creates an activity attachment for moment sharing.
+	/// </summary>
+	/// <param name="accessToken">The discord access token.</param>
+	/// <param name="stream">The file stream.</param>
+	/// <param name="fileName">The file name.</param>
+	/// <param name="contentType">The MIME content type.</param>
+	public async Task<DiscordActivityAttachmentUpload> CreateActivityAttachmentAsync(DiscordAccessToken accessToken, Stream stream, string fileName, string? contentType = null)
+	{
+		ArgumentNullException.ThrowIfNull(accessToken);
+		ArgumentNullException.ThrowIfNull(stream);
+		ArgumentException.ThrowIfNullOrWhiteSpace(fileName);
+
+		return await this.ApiClient.CreateActivityAttachmentAsync(accessToken.AccessToken, stream, fileName, contentType).ConfigureAwait(false);
+	}
+
+	/// <summary>
 	///     Fired whenever an error occurs within an event handler.
 	/// </summary>
 	public event AsyncEventHandler<DiscordOAuth2Client, ClientErrorEventArgs> OAuth2ClientErrored

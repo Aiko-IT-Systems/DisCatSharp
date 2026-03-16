@@ -325,6 +325,25 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
+	///     Wraps a stream into a Discord file for uploads.
+	/// </summary>
+	/// <param name="stream">The upload stream.</param>
+	/// <param name="fileName">The file name.</param>
+	/// <param name="contentType">The content type.</param>
+	/// <returns>A <see cref="DiscordMessageFile" /> using the provided stream.</returns>
+	private static DiscordMessageFile CreateUploadFile(Stream stream, string fileName, string? contentType = null)
+	{
+		long? resetPositionTo = null;
+		if (stream.CanSeek)
+		{
+			resetPositionTo = stream.Position;
+			stream.Position = 0;
+		}
+
+		return new(fileName, stream, resetPositionTo, contentType: contentType);
+	}
+
+	/// <summary>
 	///     Merges explicit ids and user objects into a distinct list of target user ids.
 	/// </summary>
 	/// <param name="targetUserIds">The explicit target user ids.</param>
@@ -481,6 +500,43 @@ public sealed class DiscordApiClient
 			this.Rest.ExecuteRequestAsync(req, targetDebug).LogTaskFault(this.Discord.Logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
 		else
 			_ = this.Rest.ExecuteRequestAsync(req, targetDebug);
+
+		return req.WaitForCompletionAsync();
+	}
+
+	/// <summary>
+	///     Executes a multipart request.
+	/// </summary>
+	/// <param name="client">The oauth2 client.</param>
+	/// <param name="bucket">The bucket.</param>
+	/// <param name="url">The url.</param>
+	/// <param name="method">The method.</param>
+	/// <param name="route">The route.</param>
+	/// <param name="headers">The headers.</param>
+	/// <param name="values">The values.</param>
+	/// <param name="files">The files.</param>
+	/// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
+	/// <param name="targetDebug">Enables a possible breakpoint in the rest client for debugging purposes.</param>
+	/// <param name="overwriteFileIdStart">The file id start to overwrite.</param>
+	/// <param name="fileFieldNameFactory">The factory function to generate file field names.</param>
+	private Task<RestResponse> DoMultipartAsync(
+		DiscordOAuth2Client client,
+		RateLimitBucket bucket,
+		Uri url,
+		RestRequestMethod method,
+		string route,
+		IReadOnlyDictionary<string, string>? headers = null,
+		IReadOnlyDictionary<string, string>? values = null,
+		IEnumerable<DiscordMessageFile>? files = null,
+		double? ratelimitWaitOverride = null,
+		bool targetDebug = false,
+		int? overwriteFileIdStart = null,
+		Func<int, string>? fileFieldNameFactory = null
+	)
+	{
+		var req = new MultipartWebRequest(client, bucket, url, method, route, headers, values, files, ratelimitWaitOverride, overwriteFileIdStart, fileFieldNameFactory);
+
+		this.Rest.ExecuteRequestAsync(req, targetDebug).LogTaskFault(this.OAuth2Client.Logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
 
 		return req.WaitForCompletionAsync();
 	}
@@ -8546,6 +8602,77 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
 		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 		return DiscordJson.DeserializeObject<DiscordActivityQuickLink>(res.Response, null);
+	}
+
+	/// <summary>
+	///     Creates an activity quick link for a specific application.
+	/// </summary>
+	internal async Task<DiscordActivityQuickLink> CreateActivityQuickLinkAsync(ulong applicationId, string accessToken, string customId, string description, string title, string image)
+	{
+		RestActivityQuickLinkPayload pld = new()
+		{
+			CustomId = customId,
+			Description = description,
+			Title = title,
+			Image = image
+		};
+
+		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.QUICK_LINKS}/";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
+		{
+			application_id = applicationId.ToString(CultureInfo.InvariantCulture)
+		}, out var path);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add("Bearer", accessToken);
+
+		var config = this.Discord is not null ? this.Discord.Configuration : this.OAuth2Client.DiscordConfiguration;
+		var url = Utilities.GetApiUriFor(path, config);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		return DiscordJson.DeserializeObject<DiscordActivityQuickLink>(res.Response, this.Discord);
+	}
+
+	/// <summary>
+	///     Creates an application attachment for activity sharing.
+	/// </summary>
+	internal async Task<DiscordActivityAttachmentUpload> CreateActivityAttachmentAsync(string accessToken, Stream stream, string fileName, string? contentType = null)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.ATTACHMENT}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
+		{
+			application_id = this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture)
+		}, out var path);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add("Bearer", accessToken);
+
+		var file = CreateUploadFile(stream, fileName, contentType);
+		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
+		var res = await this.DoMultipartAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, headers, files: [file], fileFieldNameFactory: _ => "file").ConfigureAwait(false);
+		return DiscordJson.DeserializeObject<DiscordActivityAttachmentUpload>(res.Response, null);
+	}
+
+	/// <summary>
+	///     Creates an application attachment for activity sharing.
+	/// </summary>
+	internal async Task<DiscordActivityAttachmentUpload> CreateActivityAttachmentAsync(ulong applicationId, string accessToken, Stream stream, string fileName, string? contentType = null)
+	{
+		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.ATTACHMENT}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
+		{
+			application_id = applicationId.ToString(CultureInfo.InvariantCulture)
+		}, out var path);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add("Bearer", accessToken);
+
+		var file = CreateUploadFile(stream, fileName, contentType);
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, files: [file], fileFieldNameFactory: _ => "file").ConfigureAwait(false);
+		return DiscordJson.DeserializeObject<DiscordActivityAttachmentUpload>(res.Response, this.Discord);
 	}
 
 	/// <summary>

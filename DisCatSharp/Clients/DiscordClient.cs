@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Entities.Core;
+using DisCatSharp.Entities.OAuth2;
 using DisCatSharp.Enums;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
@@ -640,6 +641,43 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		ArgumentException.ThrowIfNullOrWhiteSpace(instanceId);
 		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync().ConfigureAwait(false)).Id;
 		return await this.ApiClient.GetActivityInstanceAsync(applicationId, instanceId).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Creates a custom activity quick link using a raw bearer access token.
+	/// </summary>
+	/// <param name="accessToken">The bearer access token.</param>
+	/// <param name="customId">The caller-defined quick link identifier.</param>
+	/// <param name="description">The quick link description.</param>
+	/// <param name="title">The quick link title.</param>
+	/// <param name="image">The base64-encoded image.</param>
+	public async Task<DiscordActivityQuickLink> CreateActivityQuickLinkAsync(string accessToken, string customId, string description, string title, string image)
+	{
+		ArgumentException.ThrowIfNullOrWhiteSpace(accessToken);
+		ArgumentException.ThrowIfNullOrWhiteSpace(customId);
+		ArgumentException.ThrowIfNullOrWhiteSpace(description);
+		ArgumentException.ThrowIfNullOrWhiteSpace(title);
+		ArgumentException.ThrowIfNullOrWhiteSpace(image);
+
+		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync().ConfigureAwait(false)).Id;
+		return await this.ApiClient.CreateActivityQuickLinkAsync(applicationId, accessToken, customId, description, title, image).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Creates an activity attachment using a raw bearer access token.
+	/// </summary>
+	/// <param name="accessToken">The bearer access token.</param>
+	/// <param name="stream">The file stream.</param>
+	/// <param name="fileName">The file name.</param>
+	/// <param name="contentType">The MIME content type.</param>
+	public async Task<DiscordActivityAttachmentUpload> CreateActivityAttachmentAsync(string accessToken, Stream stream, string fileName, string? contentType = null)
+	{
+		ArgumentException.ThrowIfNullOrWhiteSpace(accessToken);
+		ArgumentNullException.ThrowIfNull(stream);
+		ArgumentException.ThrowIfNullOrWhiteSpace(fileName);
+
+		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync().ConfigureAwait(false)).Id;
+		return await this.ApiClient.CreateActivityAttachmentAsync(applicationId, accessToken, stream, fileName, contentType).ConfigureAwait(false);
 	}
 
 	/// <summary>

@@ -43,7 +43,42 @@ internal sealed class MultipartWebRequest : BaseRestRequest
 	{
 		this.Values = values;
 		this.OverwriteFileIdStart = overwriteFileIdStart;
-		this.Files = files?.ToDictionary(x => x.Filename, x => x.Stream);
+		this.Files = files?.ToList();
+		this.FileFieldNameFactory = fileFieldNameFactory;
+	}
+
+	/// <summary>
+	///     Initializes a new instance of the <see cref="MultipartWebRequest" /> class.
+	/// </summary>
+	/// <param name="client">The oauth2 client.</param>
+	/// <param name="bucket">The bucket.</param>
+	/// <param name="url">The url.</param>
+	/// <param name="method">The method.</param>
+	/// <param name="route">The route.</param>
+	/// <param name="headers">The headers.</param>
+	/// <param name="values">The values.</param>
+	/// <param name="files">The files.</param>
+	/// <param name="ratelimitWaitOverride">The ratelimit_wait_override.</param>
+	/// <param name="overwriteFileIdStart">The file id start.</param>
+	/// <param name="fileFieldNameFactory">The file field name factory.</param>
+	internal MultipartWebRequest(
+		DiscordOAuth2Client client,
+		RateLimitBucket bucket,
+		Uri url,
+		RestRequestMethod method,
+		string route,
+		IReadOnlyDictionary<string, string>? headers = null,
+		IReadOnlyDictionary<string, string>? values = null,
+		IEnumerable<DiscordMessageFile>? files = null,
+		double? ratelimitWaitOverride = null,
+		int? overwriteFileIdStart = null,
+		Func<int, string>? fileFieldNameFactory = null
+	)
+		: base(client, bucket, url, method, route, headers, ratelimitWaitOverride)
+	{
+		this.Values = values;
+		this.OverwriteFileIdStart = overwriteFileIdStart;
+		this.Files = files?.ToList();
 		this.FileFieldNameFactory = fileFieldNameFactory;
 	}
 
@@ -55,7 +90,7 @@ internal sealed class MultipartWebRequest : BaseRestRequest
 	/// <summary>
 	///     Gets the dictionary of files attached to this request.
 	/// </summary>
-	public IReadOnlyDictionary<string, Stream>? Files { get; }
+	public IReadOnlyList<DiscordMessageFile>? Files { get; }
 
 	/// <summary>
 	///     Overwrites the file id start.
