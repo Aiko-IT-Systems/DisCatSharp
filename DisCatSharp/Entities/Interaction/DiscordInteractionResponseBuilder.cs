@@ -59,6 +59,12 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	}
 
 	/// <summary>
+	/// 	<para>Whether the user is eligible for a social layer SKU purchase.</para>
+	/// 	<para><note type="warning">Can only be used for applications using the social layer sdk and interaction response type <see cref="Enums.InteractionResponseType.SocialLayerSkuPurchaseEligibility"/></note></para>
+	/// </summary>
+	public bool IsEligible { get; set; }
+
+	/// <summary>
 	///     Gets or sets a value indicating whether the followup message is ephemeral.
 	/// </summary>
 	/// <remarks>
@@ -184,6 +190,18 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	public DiscordInteractionResponseBuilder WithTts(bool tts)
 	{
 		this.IsTts = tts;
+		return this;
+	}
+
+	/// <summary>
+	///    <para>Sets whether the user is eligible for a social layer SKU purchase.</para>
+	/// 	<para><note type="warning">Can only be used for applications using the social layer sdk and interaction response type <see cref="Enums.InteractionResponseType.SocialLayerSkuPurchaseEligibility"/></note></para>
+	/// </summary>
+	/// <param name="isEligible">Whether the user is eligible.</param>
+	/// <returns>The current builder to chain calls with.</returns>
+	public DiscordInteractionResponseBuilder WithIsEligible(bool isEligible)
+	{
+		this.IsEligible = isEligible;
 		return this;
 	}
 

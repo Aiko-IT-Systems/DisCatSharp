@@ -64,6 +64,12 @@ internal sealed class DiscordInteractionApplicationCommandCallbackData : Observa
 	/// </summary>
 	[JsonProperty("poll", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordPollRequest? DiscordPollRequest { get; internal set; }
+
+	/// <summary>
+	///     Gets or sets whether the user is eligible for a social layer SKU purchase.
+	/// </summary>
+	[JsonProperty("eligible", NullValueHandling = NullValueHandling.Ignore)]
+	public bool? Eligible { get; internal set; }
 }
 
 /// <summary>

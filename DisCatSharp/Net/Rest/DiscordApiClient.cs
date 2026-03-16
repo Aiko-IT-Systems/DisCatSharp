@@ -7553,7 +7553,8 @@ public sealed class DiscordApiClient
 					Mentions = builder.Mentions?.Any() ?? false ? new(builder.Mentions, builder.Mentions.Count is not 0) : null,
 					Flags = flags,
 					Choices = null,
-					DiscordPollRequest = builder?.Poll?.Build()
+					DiscordPollRequest = builder?.Poll?.Build(),
+					Eligible = builder?.IsEligible
 				}
 				: null;
 

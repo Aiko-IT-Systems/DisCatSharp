@@ -73,5 +73,14 @@ public enum InteractionResponseType
 	///         <note type="warning">Can only be used if the app has activities enabled.</note>
 	///     </para>
 	/// </summary>
-	LaunchActivity = 12
+	LaunchActivity = 12,
+
+	// SOCIAL_LAYER_SKU_PURCHASE_ELIGIBILITY
+	/// <summary>
+	///    <para>Responds to the interaction with a message indicating that the user is eligible to purchase a SKU.</para>
+	///  <para>
+	/// 	   <note type="warning">Can only be used for applications using the social layer sdk.</note>
+	///     </para>
+	/// </summary>
+	SocialLayerSkuPurchaseEligibility = 13
 }
