@@ -8514,6 +8514,41 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
+	///     Creates an activity quick link for the current application.
+	/// </summary>
+	/// <param name="accessToken">The access token.</param>
+	/// <param name="customId">The caller-defined quick link identifier.</param>
+	/// <param name="description">The quick link description.</param>
+	/// <param name="title">The quick link title.</param>
+	/// <param name="image">The base64-encoded image.</param>
+	internal async Task<DiscordActivityQuickLink> CreateActivityQuickLinkAsync(string accessToken, string customId, string description, string title, string image)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		RestActivityQuickLinkPayload pld = new()
+		{
+			CustomId = customId,
+			Description = description,
+			Title = title,
+			Image = image
+		};
+
+		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.QUICK_LINKS}/";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
+		{
+			application_id = this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture)
+		}, out var path);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add("Bearer", accessToken);
+
+		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
+		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		return DiscordJson.DeserializeObject<DiscordActivityQuickLink>(res.Response, null);
+	}
+
+	/// <summary>
 	///     Exchanges a code for an access token.
 	/// </summary>
 	/// <param name="code">The code.</param>

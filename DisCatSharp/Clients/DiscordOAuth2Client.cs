@@ -420,6 +420,25 @@ public sealed class DiscordOAuth2Client : IDisposable
 		=> accessToken.Scope.Split(' ').Any(x => x == "role_connections.write") ? await this.ApiClient.ModifyCurrentUserApplicationRoleConnectionAsync(accessToken.AccessToken, platformName, platformUsername, metadata) : throw new AccessViolationException("Access token does not include role_connections.write scope");
 
 	/// <summary>
+	///     Creates a custom activity quick link for the current application.
+	/// </summary>
+	/// <param name="accessToken">The discord access token.</param>
+	/// <param name="customId">The caller-defined quick link identifier.</param>
+	/// <param name="description">The quick link description.</param>
+	/// <param name="title">The quick link title.</param>
+	/// <param name="image">The base64-encoded image.</param>
+	public async Task<DiscordActivityQuickLink> CreateActivityQuickLinkAsync(DiscordAccessToken accessToken, string customId, string description, string title, string image)
+	{
+		ArgumentNullException.ThrowIfNull(accessToken);
+		ArgumentException.ThrowIfNullOrWhiteSpace(customId);
+		ArgumentException.ThrowIfNullOrWhiteSpace(description);
+		ArgumentException.ThrowIfNullOrWhiteSpace(title);
+		ArgumentException.ThrowIfNullOrWhiteSpace(image);
+
+		return await this.ApiClient.CreateActivityQuickLinkAsync(accessToken.AccessToken, customId, description, title, image).ConfigureAwait(false);
+	}
+
+	/// <summary>
 	///     Fired whenever an error occurs within an event handler.
 	/// </summary>
 	public event AsyncEventHandler<DiscordOAuth2Client, ClientErrorEventArgs> OAuth2ClientErrored

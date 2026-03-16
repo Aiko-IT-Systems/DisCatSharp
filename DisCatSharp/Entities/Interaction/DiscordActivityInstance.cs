@@ -19,7 +19,7 @@ public sealed class DiscordActivityInstance : ObservableApiObject
 	///     Gets the instance ID of the activity.
 	/// </summary>
 	public string? Id
-		=> this.InstanceId ?? this.InteractionResourceId;
+		=> this.InstanceId;
 
 	/// <summary>
 	///     Gets the application id that owns this activity instance, if available.
@@ -31,7 +31,11 @@ public sealed class DiscordActivityInstance : ObservableApiObject
 	///     Gets the activity instance id from interaction resource payloads.
 	/// </summary>
 	[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
-	internal string? InteractionResourceId { get; set; }
+	internal string? InteractionResourceId
+	{
+		get => this.InstanceId;
+		set => this.InstanceId ??= value;
+	}
 
 	/// <summary>
 	///     Gets the activity instance id from validation payloads.

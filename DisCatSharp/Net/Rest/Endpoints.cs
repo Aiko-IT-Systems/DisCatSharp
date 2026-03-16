@@ -525,6 +525,11 @@ public static class Endpoints
 	public const string ACTIVITY_INSTANCES = "/activity-instances";
 
 	/// <summary>
+	///     The quick links endpoint.
+	/// </summary>
+	public const string QUICK_LINKS = "/quick-links";
+
+	/// <summary>
 	///     The config endpoint.
 	/// </summary>
 	public const string CONFIG = "/config";
