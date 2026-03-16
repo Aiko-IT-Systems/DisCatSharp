@@ -8129,6 +8129,27 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
+	///     Validates an activity instance for an application.
+	/// </summary>
+	/// <param name="applicationId">The application id that owns the activity instance.</param>
+	/// <param name="instanceId">The activity instance id to validate.</param>
+	/// <returns>The validated activity instance.</returns>
+	internal async Task<DiscordActivityInstance> GetActivityInstanceAsync(ulong applicationId, string instanceId)
+	{
+		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.ACTIVITY_INSTANCES}/:instance_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+		{
+			application_id = applicationId,
+			instance_id = instanceId
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		return DiscordJson.DeserializeObject<DiscordActivityInstance>(res.Response, this.Discord);
+	}
+
+	/// <summary>
 	///     Deletes a test entitlement.
 	/// </summary>
 	/// <param name="applicationId">The application id to delete the entitlement for.</param>

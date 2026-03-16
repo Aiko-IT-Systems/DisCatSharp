@@ -628,6 +628,21 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> await this.ApiClient.GetPublishedListingsAsync(applicationId).ConfigureAwait(false);
 
 	/// <summary>
+	///     Validates an activity instance for the current application.
+	/// </summary>
+	/// <param name="instanceId">The activity instance id to validate.</param>
+	/// <returns>The validated <see cref="DiscordActivityInstance" />.</returns>
+	/// <exception cref="NotFoundException">Thrown when the activity instance does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordActivityInstance> GetActivityInstanceAsync(string instanceId)
+	{
+		ArgumentException.ThrowIfNullOrWhiteSpace(instanceId);
+		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync().ConfigureAwait(false)).Id;
+		return await this.ApiClient.GetActivityInstanceAsync(applicationId, instanceId).ConfigureAwait(false);
+	}
+
+	/// <summary>
 	///     Gets the applications skus.
 	/// </summary>
 	/// <returns>A list of published listings with <see cref="DiscordSku" />s.</returns>

@@ -520,6 +520,11 @@ public static class Endpoints
 	public const string ACTIVITIES = "/activities";
 
 	/// <summary>
+	///     The activity instances endpoint.
+	/// </summary>
+	public const string ACTIVITY_INSTANCES = "/activity-instances";
+
+	/// <summary>
 	///     The config endpoint.
 	/// </summary>
 	public const string CONFIG = "/config";
