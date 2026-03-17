@@ -19,7 +19,7 @@ public sealed class DiscordInteractionCallback : SnowflakeObject
 	///     Gets the instance ID of the Activity if one was launched or joined.
 	/// </summary>
 	[JsonProperty("activity_instance_id", NullValueHandling = NullValueHandling.Ignore)]
-	public ulong? ActivityInstanceId { get; internal set; }
+	public string? ActivityInstanceId { get; internal set; }
 
 	/// <summary>
 	///     Gets the message id of the created response, if any.
