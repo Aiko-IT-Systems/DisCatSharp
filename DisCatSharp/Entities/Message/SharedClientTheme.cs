@@ -9,7 +9,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 ///     Represents the shared client theme for a message.
 /// </summary>
-public class SharedClientTheme
+public class DiscordSharedClientTheme
 {
 	/// <summary>
 	///     Gets or sets the colors for the theme.

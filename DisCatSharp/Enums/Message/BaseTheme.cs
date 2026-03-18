@@ -13,5 +13,15 @@ public enum BaseTheme
 	/// <summary>
 	///    Light theme.
 	/// </summary>
-	Light = 2
+	Light = 2,
+
+	/// <summary>
+	///   Darker theme.
+	/// </summary>
+	Darker = 3,
+
+	/// <summary>
+	///    Midnight theme.
+	/// </summary>
+	Midnight = 4
 }

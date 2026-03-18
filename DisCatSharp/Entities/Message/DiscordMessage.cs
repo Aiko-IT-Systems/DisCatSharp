@@ -494,8 +494,8 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <summary>
 	///    Gets the shared client theme in this message, if applicable.
 	/// </summary>
-	[JsonProperty("shared_client_theme")]
-	public SharedClientTheme? SharedClientTheme { get; set; }
+	[JsonProperty("shared_client_theme", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordSharedClientTheme? SharedClientTheme { get; set; }
 
 	/// <summary>
 	///     Checks whether this <see cref="DiscordMessage" /> is equal to another <see cref="DiscordMessage" />.
