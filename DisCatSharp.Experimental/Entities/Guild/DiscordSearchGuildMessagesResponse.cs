@@ -18,10 +18,10 @@ public sealed class DiscordSearchGuildMessagesResponse : ObservableApiObject
 	public string? AnalyticsId { get; internal set; }
 
 	/// <summary>
-	/// Gets the list of messages found in the search.
+	/// Gets the nested list of messages found in the search.
 	/// </summary>
 	[JsonProperty("messages")]
-	public List<DiscordMessage> Messages { get; internal set; } = [];
+	public List<List<DiscordMessage>> Messages { get; internal set; } = [];
 
 	/// <summary>
 	/// Gets a value indicating whether a deep historical index is being performed.
@@ -42,10 +42,10 @@ public sealed class DiscordSearchGuildMessagesResponse : ObservableApiObject
 	public List<DiscordThreadChannel> Threads { get; internal set; } = [];
 
 	/// <summary>
-	/// Gets the list of members found in the search.
+	/// Gets the list of thread members found in the search.
 	/// </summary>
 	[JsonProperty("members", NullValueHandling = NullValueHandling.Ignore)]
-	public List<DiscordMember> Members { get; internal set; } = [];
+	public List<DiscordThreadChannelMember> Members { get; internal set; } = [];
 
 	/// <summary>
 	/// Gets the number of documents indexed.
