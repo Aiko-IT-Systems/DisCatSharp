@@ -45,8 +45,32 @@ internal sealed class DiscordApiClientHook
 	/// <returns>A list of messages that match the search criteria.</returns>
 	internal async Task<DiscordSearchGuildMessagesResponse?> SearchGuildMessagesAsync(ulong guildId, DiscordGuildMessageSearchParams searchParams)
 	{
-		await Task.Delay(1000);
-		return null;
+		/*
+		// TODO: Implement proper validation for message search params.
+		var (isValid, errorMessage) = searchParams.Validate();
+		if (!isValid)
+			throw new ValidationException(
+				typeof(DiscordGuildMessageSearchParams),
+				"DiscordGuild.SearchMessagesAsync(DiscordGuildMessageSearchParams searchParams)",
+				errorMessage!
+			);*/
+
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MESSAGES}{Endpoints.SEARCH}";
+
+		var bucket = this.ApiClient.Rest.GetBucket(RestRequestMethod.POST, route, new
+		{
+			guild_id = guildId
+		}, out var path);
+
+		var pld = DiscordJson.SerializeObject(searchParams);
+
+		var url = Utilities.GetApiUriFor(path, this.ApiClient.Discord.Configuration);
+
+		var res = await this.ApiClient.DoRequestAsync(this.ApiClient.Discord, bucket, url, RestRequestMethod.POST, route, payload: pld).ConfigureAwait(false);
+
+		return res.ResponseCode is HttpStatusCode.Accepted
+			? throw new NotIndexedException(res)
+			: DiscordJson.DeserializeObject<DiscordSearchGuildMessagesResponse>(res.Response, this.ApiClient.Discord);
 	}
 
 	/// <summary>

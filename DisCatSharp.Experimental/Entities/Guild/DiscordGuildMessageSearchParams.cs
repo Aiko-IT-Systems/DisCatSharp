@@ -161,4 +161,10 @@ public sealed class DiscordGuildMessageSearchParams
 	/// </summary>
 	[JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
 	public List<ulong>? ChannelIds { get; set; }
+
+	/// <summary>
+	/// Gets or sets the list of guild IDs to filter by.
+	/// </summary>
+	[JsonProperty("replied_to_message_id", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong? RepliedToMessageId { get; set; }
 }
