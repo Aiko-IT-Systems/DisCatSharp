@@ -39,6 +39,7 @@ Please install it to ensure we can do our changes, and you can receive our updat
 		<RepositoryType>git</RepositoryType>
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
 	</PropertyGroup>
 
 	<ItemGroup>

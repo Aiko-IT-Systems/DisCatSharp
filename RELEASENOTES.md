@@ -3,7 +3,7 @@ DisCatSharp Release Notes
 	- Full support for Components V2
 	- Stability Improvements
 	- Build-in Statistics
-	- Support for .NET 10
+	- Support for .NET 10 & .NET 11
 	- Improvements for OAuth2 operations
 	- Support for Lavalink 4.2.0 which supports [DAVE](https://daveprotocol.com/), Discord's new E2EE voice protocol
 	- New `DisCatSharp.Voice` and `DisCatSharp.Voice.Natives` packages with Discord voice send/receive and DAVE support

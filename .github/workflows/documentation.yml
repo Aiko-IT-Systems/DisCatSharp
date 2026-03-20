@@ -22,6 +22,7 @@ jobs:
               uses: actions/setup-dotnet@v5.2.0
               with:
                   dotnet-version: |
+                      11.x
                       10.x
                       9.x
                       8.x
@@ -32,7 +33,7 @@ jobs:
             - name: Restore packages
               run: dotnet restore --no-cache -f -v minimal DisCatSharp.slnx
             - name: Build library
-              run: dotnet build -c Release --no-restore -v minimal -f net8.0 DisCatSharp.slnx
+              run: dotnet build -c Release --no-restore -v minimal -f net10.0 DisCatSharp.slnx
               timeout-minutes: 7
               continue-on-error: true
             - name: Build Docs

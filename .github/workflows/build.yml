@@ -37,6 +37,7 @@ jobs:
               uses: actions/setup-dotnet@v5.2.0
               with:
                   dotnet-version: |
+                      11.x
                       10.x
                       9.x
                       8.x
@@ -63,6 +64,7 @@ jobs:
               uses: actions/setup-dotnet@v5.2.0
               with:
                   dotnet-version: |
+                      11.x
                       10.x
                       9.x
                       8.x

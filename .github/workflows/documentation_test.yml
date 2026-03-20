@@ -22,14 +22,15 @@ jobs:
             - name: Checkout docs repository
               uses: actions/checkout@v6
               with:
-                repository: Aiko-IT-Systems/DisCatSharp.Docs
-                token: ${{ secrets.NYUW_TOKEN_GH }}
-                path: GitHub/DisCatSharp.Docs
-                ref: main
+                  repository: Aiko-IT-Systems/DisCatSharp.Docs
+                  token: ${{ secrets.NYUW_TOKEN_GH }}
+                  path: GitHub/DisCatSharp.Docs
+                  ref: main
             - name: Setup .NET
               uses: actions/setup-dotnet@v5.2.0
               with:
                   dotnet-version: |
+                      11.x
                       10.x
                       9.x
                       8.x
@@ -40,7 +41,7 @@ jobs:
               run: dotnet restore --no-cache -f -v minimal DisCatSharp.slnx
               working-directory: GitHub/DisCatSharp
             - name: Build library
-              run: dotnet build -c Release -v minimal -f net8.0 --no-restore DisCatSharp.slnx
+              run: dotnet build -c Release -v minimal -f net10.0 --no-restore DisCatSharp.slnx
               timeout-minutes: 7
               continue-on-error: true
               working-directory: GitHub/DisCatSharp

@@ -25,6 +25,7 @@ jobs:
               uses: actions/setup-dotnet@v5.2.0
               with:
                   dotnet-version: |
+                      11.x
                       10.x
                       9.x
                       8.x
@@ -39,9 +40,9 @@ jobs:
               shell: pwsh
               run: ./DisCatSharp.Tools/rebuild-lib.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release -VersionSuffix ${{ steps.vars.outputs.sha }}
               env:
-                SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-                SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-                SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+                  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+                  SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+                  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
             #      - name: Build tools as pre-release
             #        shell: pwsh
             #        run: ./DisCatSharp.Tools/rebuild-tools.ps1 -ArtifactLocation ./dcs-tools-artifacts -Configuration Release -VersionSuffix ${{ steps.vars.outputs.sha }}
