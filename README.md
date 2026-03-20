@@ -23,6 +23,7 @@
 - Improvements for OAuth2 operations
 - Support for Lavalink 4.2.0 which supports [DAVE](https://daveprotocol.com/), Discord's new E2EE voice protocol
 - New `DisCatSharp.Voice` and `DisCatSharp.Voice.Natives` packages with Discord voice send/receive and DAVE support
+- Auditlog has been completely rewritten from scratch. Check out [the article](https://docs.dcs.aitsys.dev/articles/topics/audit_logs).
 
 ## Breaking
 
