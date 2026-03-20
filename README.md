@@ -3,7 +3,7 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/Aiko-IT-Systems/DisCatSharp?label=Last%20Commit&style=flat-square&logo=github)](https://aitsys.dev/source/DisCatSharp/history/) [![GitHub commit activity](https://img.shields.io/github/commit-activity/w/Aiko-IT-Systems/DisCatSharp?label=Commit%20Activity&style=flat-square&logo=github)](https://github.com/Aiko-IT-Systems/DisCatSharp/commits/main)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/Aiko-IT-Systems/DisCatSharp?label=PRs&style=flat-square&logo=github&logo=gitub)](https://github.com/Aiko-IT-Systems/DisCatSharp/pulls) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Aiko-IT-Systems/DisCatSharp?label=Size&style=flat-square&logo=github)
 
-![LTS](https://img.shields.io/nuget/v/DisCatSharp?color=1F8B4C&label=LTS&style=flat-square&logo=Nuget) ![Stable](https://img.shields.io/nuget/vpre/DisCatSharp?color=AD1457&label=Stable&style=flat-square&logo=Nuget)
+![LTS](https://img.shields.io/nuget/v/DisCatSharp?color=1F8B4C&label=LTS&style=flat-square&logo=Nuget) ![Latest](https://img.shields.io/nuget/vpre/DisCatSharp?color=AD1457&label=Latest&style=flat-square&logo=Nuget)
 
 ----
 
@@ -90,7 +90,7 @@ Either join our official support guild at https://discord.gg/RXA6u3jxdU, open an
 
 ### Main
 
-| Package                         | LTS                                                                                                             | Stable                                                                                                                                |
+| Package                         | LTS                                                                                                             | Latest                                                                                                                                |
 | ------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | DisCatSharp                     | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.svg?label=&logo=nuget&style=flat-square)                     | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)                     |
 | DisCatSharp.ApplicationCommands | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.ApplicationCommands.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.ApplicationCommands.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
@@ -99,7 +99,7 @@ Either join our official support guild at https://discord.gg/RXA6u3jxdU, open an
 
 ### Voice
 
-| Package                       | LTS                                                                                                         | Stable                                                                                                                           |
+| Package                       | LTS                                                                                                         | Latest                                                                                                                           |
 | ----------------------------- | -------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | DisCatSharp.Lavalink          | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Lavalink.svg?label=&logo=nuget&style=flat-square)          | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Lavalink.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)          |
 | DisCatSharp.Voice             | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Voice.svg?label=&logo=nuget&style=flat-square)             | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Voice.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)             |
@@ -107,7 +107,7 @@ Either join our official support guild at https://discord.gg/RXA6u3jxdU, open an
 
 ### Hosting
 
-| Package                                 | LTS                                                                                                                   | Stable                                                                                                                                     |
+| Package                                 | LTS                                                                                                                   | Latest                                                                                                                                     |
 | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | DisCatSharp.Configuration               | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Configuration.svg?label=&logo=nuget&style=flat-square)               | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Configuration.svg?label=&logo=nuget&color=%23ff1493&style=flat-square)               |
 | DisCatSharp.Hosting                     | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Hosting.svg?label=&logo=nuget&style=flat-square)                     | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Hosting.svg?label=&logo=nuget&color=%23ff1493&style=flat-square)                     |
@@ -115,13 +115,13 @@ Either join our official support guild at https://discord.gg/RXA6u3jxdU, open an
 
 ### Templates
 
-| Package                                                                                         | LTS                                                                                                        | Stable                                                                                                                          |
+| Package                                                                                         | LTS                                                                                                        | Latest                                                                                                                          |
 | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | [DisCatSharp.ProjectTemplates](https://github.com/Aiko-IT-Systems/DisCatSharp.ProjectTemplates) | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.ProjectTemplates.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.ProjectTemplates.svg?label=&logo=nuget&color=%23ff1493&style=flat-square) |
 
 ### Development / Commons
 
-| Package                | LTS                                                                                                  | Stable                                                                                                                    |
+| Package                | LTS                                                                                                  | Latest                                                                                                                    |
 | ---------------------- | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
 | DisCatSharp.Attributes | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Attributes.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Attributes.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
 | DisCatSharp.Common     | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Common.svg?label=&logo=nuget&style=flat-square)     | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Common.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)     |
@@ -129,7 +129,7 @@ Either join our official support guild at https://discord.gg/RXA6u3jxdU, open an
 
 ### [Extensions](https://github.com/Aiko-IT-Systems/DisCatSharp.Extensions)
 
-| Package                                    | LTS                                                                                                                      | Stable                                                                                                                                        |
+| Package                                    | LTS                                                                                                                      | Latest                                                                                                                                        |
 | ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | DisCatSharp.Extensions.TwoFactorCommands   | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Extensions.TwoFactorCommands.svg?label=&logo=nuget&style=flat-square)   | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Extensions.TwoFactorCommands.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)   |
 | DisCatSharp.Extensions.OAuth2Web           | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Extensions.OAuth2Web.svg?label=&logo=nuget&style=flat-square)           | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Extensions.OAuth2Web.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)           |
