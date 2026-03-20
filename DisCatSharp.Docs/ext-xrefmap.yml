@@ -1289,6 +1289,621 @@ references:
   commentId: Overload:DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.Setup
   fullName: DisCatSharp.Extensions.SimpleMusicCommands.SimpleMusicCommandsExtension.Setup
   nameWithType: SimpleMusicCommandsExtension.Setup
+- uid: DisCatSharp.Extensions.Translations
+  name: DisCatSharp.Extensions.Translations
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.html
+  commentId: N:DisCatSharp.Extensions.Translations
+  fullName: DisCatSharp.Extensions.Translations
+  nameWithType: DisCatSharp.Extensions.Translations
+- uid: DisCatSharp.Extensions.Translations.ApplicationCommands
+  name: DisCatSharp.Extensions.Translations.ApplicationCommands
+  href: api/DisCatSharp.Extensions.Translations.ApplicationCommands/DisCatSharp.Extensions.Translations.ApplicationCommands.html
+  commentId: N:DisCatSharp.Extensions.Translations.ApplicationCommands
+  fullName: DisCatSharp.Extensions.Translations.ApplicationCommands
+  nameWithType: DisCatSharp.Extensions.Translations.ApplicationCommands
+- uid: DisCatSharp.Extensions.Translations.ApplicationCommands.ExtensionMethods
+  name: ExtensionMethods
+  href: api/DisCatSharp.Extensions.Translations.ApplicationCommands/DisCatSharp.Extensions.Translations.ApplicationCommands.ExtensionMethods.html
+  commentId: T:DisCatSharp.Extensions.Translations.ApplicationCommands.ExtensionMethods
+  fullName: DisCatSharp.Extensions.Translations.ApplicationCommands.ExtensionMethods
+  nameWithType: ExtensionMethods
+- uid: DisCatSharp.Extensions.Translations.ApplicationCommands.ExtensionMethods.T(DisCatSharp.ApplicationCommands.Context.AutocompleteContext,System.String,System.Object,System.Boolean)
+  name: T(AutocompleteContext, string, object?, bool)
+  href: api/DisCatSharp.Extensions.Translations.ApplicationCommands/DisCatSharp.Extensions.Translations.ApplicationCommands.ExtensionMethods.T.html#DisCatSharp_Extensions_Translations_ApplicationCommands_ExtensionMethods_T_DisCatSharp_ApplicationCommands_Context_AutocompleteContext_System_String_System_Object_System_Boolean_
+  commentId: M:DisCatSharp.Extensions.Translations.ApplicationCommands.ExtensionMethods.T(DisCatSharp.ApplicationCommands.Context.AutocompleteContext,System.String,System.Object,System.Boolean)
+  name.vb: T(AutocompleteContext, String, Object, Boolean)
+  fullName: DisCatSharp.Extensions.Translations.ApplicationCommands.ExtensionMethods.T(DisCatSharp.ApplicationCommands.Context.AutocompleteContext, string, object?, bool)
+  fullName.vb: DisCatSharp.Extensions.Translations.ApplicationCommands.ExtensionMethods.T(DisCatSharp.ApplicationCommands.Context.AutocompleteContext, String, Object, Boolean)
+  nameWithType: ExtensionMethods.T(AutocompleteContext, string, object?, bool)
+  nameWithType.vb: ExtensionMethods.T(AutocompleteContext, String, Object, Boolean)
+- uid: DisCatSharp.Extensions.Translations.ApplicationCommands.ExtensionMethods.T(DisCatSharp.ApplicationCommands.Context.ContextMenuContext,System.String,System.Object,System.Boolean)
+  name: T(ContextMenuContext, string, object?, bool)
+  href: api/DisCatSharp.Extensions.Translations.ApplicationCommands/DisCatSharp.Extensions.Translations.ApplicationCommands.ExtensionMethods.T.html#DisCatSharp_Extensions_Translations_ApplicationCommands_ExtensionMethods_T_DisCatSharp_ApplicationCommands_Context_ContextMenuContext_System_String_System_Object_System_Boolean_
+  commentId: M:DisCatSharp.Extensions.Translations.ApplicationCommands.ExtensionMethods.T(DisCatSharp.ApplicationCommands.Context.ContextMenuContext,System.String,System.Object,System.Boolean)
+  name.vb: T(ContextMenuContext, String, Object, Boolean)
+  fullName: DisCatSharp.Extensions.Translations.ApplicationCommands.ExtensionMethods.T(DisCatSharp.ApplicationCommands.Context.ContextMenuContext, string, object?, bool)
+  fullName.vb: DisCatSharp.Extensions.Translations.ApplicationCommands.ExtensionMethods.T(DisCatSharp.ApplicationCommands.Context.ContextMenuContext, String, Object, Boolean)
+  nameWithType: ExtensionMethods.T(ContextMenuContext, string, object?, bool)
+  nameWithType.vb: ExtensionMethods.T(ContextMenuContext, String, Object, Boolean)
+- uid: DisCatSharp.Extensions.Translations.ApplicationCommands.ExtensionMethods.T(DisCatSharp.ApplicationCommands.Context.InteractionContext,System.String,System.Object,System.Boolean)
+  name: T(InteractionContext, string, object?, bool)
+  href: api/DisCatSharp.Extensions.Translations.ApplicationCommands/DisCatSharp.Extensions.Translations.ApplicationCommands.ExtensionMethods.T.html#DisCatSharp_Extensions_Translations_ApplicationCommands_ExtensionMethods_T_DisCatSharp_ApplicationCommands_Context_InteractionContext_System_String_System_Object_System_Boolean_
+  commentId: M:DisCatSharp.Extensions.Translations.ApplicationCommands.ExtensionMethods.T(DisCatSharp.ApplicationCommands.Context.InteractionContext,System.String,System.Object,System.Boolean)
+  name.vb: T(InteractionContext, String, Object, Boolean)
+  fullName: DisCatSharp.Extensions.Translations.ApplicationCommands.ExtensionMethods.T(DisCatSharp.ApplicationCommands.Context.InteractionContext, string, object?, bool)
+  fullName.vb: DisCatSharp.Extensions.Translations.ApplicationCommands.ExtensionMethods.T(DisCatSharp.ApplicationCommands.Context.InteractionContext, String, Object, Boolean)
+  nameWithType: ExtensionMethods.T(InteractionContext, string, object?, bool)
+  nameWithType.vb: ExtensionMethods.T(InteractionContext, String, Object, Boolean)
+- uid: DisCatSharp.Extensions.Translations.ApplicationCommands.ExtensionMethods.T*
+  name: T
+  href: api/DisCatSharp.Extensions.Translations.ApplicationCommands/DisCatSharp.Extensions.Translations.ApplicationCommands.ExtensionMethods.T.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.ApplicationCommands.ExtensionMethods.T
+  fullName: DisCatSharp.Extensions.Translations.ApplicationCommands.ExtensionMethods.T
+  nameWithType: ExtensionMethods.T
+- uid: DisCatSharp.Extensions.Translations.CommandsNext
+  name: DisCatSharp.Extensions.Translations.CommandsNext
+  href: api/DisCatSharp.Extensions.Translations.CommandsNext/DisCatSharp.Extensions.Translations.CommandsNext.html
+  commentId: N:DisCatSharp.Extensions.Translations.CommandsNext
+  fullName: DisCatSharp.Extensions.Translations.CommandsNext
+  nameWithType: DisCatSharp.Extensions.Translations.CommandsNext
+- uid: DisCatSharp.Extensions.Translations.CommandsNext.ExtensionMethods
+  name: ExtensionMethods
+  href: api/DisCatSharp.Extensions.Translations.CommandsNext/DisCatSharp.Extensions.Translations.CommandsNext.ExtensionMethods.html
+  commentId: T:DisCatSharp.Extensions.Translations.CommandsNext.ExtensionMethods
+  fullName: DisCatSharp.Extensions.Translations.CommandsNext.ExtensionMethods
+  nameWithType: ExtensionMethods
+- uid: DisCatSharp.Extensions.Translations.CommandsNext.ExtensionMethods.T(DisCatSharp.CommandsNext.CommandContext,System.String,System.Object,System.Boolean)
+  name: T(CommandContext, string, object?, bool)
+  href: api/DisCatSharp.Extensions.Translations.CommandsNext/DisCatSharp.Extensions.Translations.CommandsNext.ExtensionMethods.T.html#DisCatSharp_Extensions_Translations_CommandsNext_ExtensionMethods_T_DisCatSharp_CommandsNext_CommandContext_System_String_System_Object_System_Boolean_
+  commentId: M:DisCatSharp.Extensions.Translations.CommandsNext.ExtensionMethods.T(DisCatSharp.CommandsNext.CommandContext,System.String,System.Object,System.Boolean)
+  name.vb: T(CommandContext, String, Object, Boolean)
+  fullName: DisCatSharp.Extensions.Translations.CommandsNext.ExtensionMethods.T(DisCatSharp.CommandsNext.CommandContext, string, object?, bool)
+  fullName.vb: DisCatSharp.Extensions.Translations.CommandsNext.ExtensionMethods.T(DisCatSharp.CommandsNext.CommandContext, String, Object, Boolean)
+  nameWithType: ExtensionMethods.T(CommandContext, string, object?, bool)
+  nameWithType.vb: ExtensionMethods.T(CommandContext, String, Object, Boolean)
+- uid: DisCatSharp.Extensions.Translations.CommandsNext.ExtensionMethods.T*
+  name: T
+  href: api/DisCatSharp.Extensions.Translations.CommandsNext/DisCatSharp.Extensions.Translations.CommandsNext.ExtensionMethods.T.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.CommandsNext.ExtensionMethods.T
+  fullName: DisCatSharp.Extensions.Translations.CommandsNext.ExtensionMethods.T
+  nameWithType: ExtensionMethods.T
+- uid: DisCatSharp.Extensions.Translations.ExtensionMethods
+  name: ExtensionMethods
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.ExtensionMethods.html
+  commentId: T:DisCatSharp.Extensions.Translations.ExtensionMethods
+  fullName: DisCatSharp.Extensions.Translations.ExtensionMethods
+  nameWithType: ExtensionMethods
+- uid: DisCatSharp.Extensions.Translations.ExtensionMethods.GetTranslationsExtension(DisCatSharp.DiscordClient)
+  name: GetTranslationsExtension(DiscordClient)
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.ExtensionMethods.GetTranslationsExtension.html#DisCatSharp_Extensions_Translations_ExtensionMethods_GetTranslationsExtension_DisCatSharp_DiscordClient_
+  commentId: M:DisCatSharp.Extensions.Translations.ExtensionMethods.GetTranslationsExtension(DisCatSharp.DiscordClient)
+  fullName: DisCatSharp.Extensions.Translations.ExtensionMethods.GetTranslationsExtension(DisCatSharp.DiscordClient)
+  nameWithType: ExtensionMethods.GetTranslationsExtension(DiscordClient)
+- uid: DisCatSharp.Extensions.Translations.ExtensionMethods.GetTranslationsExtension(DisCatSharp.DiscordShardedClient)
+  name: GetTranslationsExtension(DiscordShardedClient)
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.ExtensionMethods.GetTranslationsExtension.html#DisCatSharp_Extensions_Translations_ExtensionMethods_GetTranslationsExtension_DisCatSharp_DiscordShardedClient_
+  commentId: M:DisCatSharp.Extensions.Translations.ExtensionMethods.GetTranslationsExtension(DisCatSharp.DiscordShardedClient)
+  fullName: DisCatSharp.Extensions.Translations.ExtensionMethods.GetTranslationsExtension(DisCatSharp.DiscordShardedClient)
+  nameWithType: ExtensionMethods.GetTranslationsExtension(DiscordShardedClient)
+- uid: DisCatSharp.Extensions.Translations.ExtensionMethods.GetTranslationsExtension*
+  name: GetTranslationsExtension
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.ExtensionMethods.GetTranslationsExtension.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.ExtensionMethods.GetTranslationsExtension
+  fullName: DisCatSharp.Extensions.Translations.ExtensionMethods.GetTranslationsExtension
+  nameWithType: ExtensionMethods.GetTranslationsExtension
+- uid: DisCatSharp.Extensions.Translations.ExtensionMethods.T(DisCatSharp.Entities.DiscordInteraction,System.String,System.Object,System.Boolean)
+  name: T(DiscordInteraction, string, object?, bool)
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.ExtensionMethods.T.html#DisCatSharp_Extensions_Translations_ExtensionMethods_T_DisCatSharp_Entities_DiscordInteraction_System_String_System_Object_System_Boolean_
+  commentId: M:DisCatSharp.Extensions.Translations.ExtensionMethods.T(DisCatSharp.Entities.DiscordInteraction,System.String,System.Object,System.Boolean)
+  name.vb: T(DiscordInteraction, String, Object, Boolean)
+  fullName: DisCatSharp.Extensions.Translations.ExtensionMethods.T(DisCatSharp.Entities.DiscordInteraction, string, object?, bool)
+  fullName.vb: DisCatSharp.Extensions.Translations.ExtensionMethods.T(DisCatSharp.Entities.DiscordInteraction, String, Object, Boolean)
+  nameWithType: ExtensionMethods.T(DiscordInteraction, string, object?, bool)
+  nameWithType.vb: ExtensionMethods.T(DiscordInteraction, String, Object, Boolean)
+- uid: DisCatSharp.Extensions.Translations.ExtensionMethods.T*
+  name: T
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.ExtensionMethods.T.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.ExtensionMethods.T
+  fullName: DisCatSharp.Extensions.Translations.ExtensionMethods.T
+  nameWithType: ExtensionMethods.T
+- uid: DisCatSharp.Extensions.Translations.ExtensionMethods.UseTranslations(DisCatSharp.DiscordClient,DisCatSharp.Extensions.Translations.TranslationsConfiguration)
+  name: UseTranslations(DiscordClient, TranslationsConfiguration?)
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.ExtensionMethods.UseTranslations.html#DisCatSharp_Extensions_Translations_ExtensionMethods_UseTranslations_DisCatSharp_DiscordClient_DisCatSharp_Extensions_Translations_TranslationsConfiguration_
+  commentId: M:DisCatSharp.Extensions.Translations.ExtensionMethods.UseTranslations(DisCatSharp.DiscordClient,DisCatSharp.Extensions.Translations.TranslationsConfiguration)
+  name.vb: UseTranslations(DiscordClient, TranslationsConfiguration)
+  fullName: DisCatSharp.Extensions.Translations.ExtensionMethods.UseTranslations(DisCatSharp.DiscordClient, DisCatSharp.Extensions.Translations.TranslationsConfiguration?)
+  fullName.vb: DisCatSharp.Extensions.Translations.ExtensionMethods.UseTranslations(DisCatSharp.DiscordClient, DisCatSharp.Extensions.Translations.TranslationsConfiguration)
+  nameWithType: ExtensionMethods.UseTranslations(DiscordClient, TranslationsConfiguration?)
+  nameWithType.vb: ExtensionMethods.UseTranslations(DiscordClient, TranslationsConfiguration)
+- uid: DisCatSharp.Extensions.Translations.ExtensionMethods.UseTranslations*
+  name: UseTranslations
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.ExtensionMethods.UseTranslations.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.ExtensionMethods.UseTranslations
+  fullName: DisCatSharp.Extensions.Translations.ExtensionMethods.UseTranslations
+  nameWithType: ExtensionMethods.UseTranslations
+- uid: DisCatSharp.Extensions.Translations.ExtensionMethods.UseTranslationsAsync(DisCatSharp.DiscordShardedClient,DisCatSharp.Extensions.Translations.TranslationsConfiguration)
+  name: UseTranslationsAsync(DiscordShardedClient, TranslationsConfiguration?)
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.ExtensionMethods.UseTranslationsAsync.html#DisCatSharp_Extensions_Translations_ExtensionMethods_UseTranslationsAsync_DisCatSharp_DiscordShardedClient_DisCatSharp_Extensions_Translations_TranslationsConfiguration_
+  commentId: M:DisCatSharp.Extensions.Translations.ExtensionMethods.UseTranslationsAsync(DisCatSharp.DiscordShardedClient,DisCatSharp.Extensions.Translations.TranslationsConfiguration)
+  name.vb: UseTranslationsAsync(DiscordShardedClient, TranslationsConfiguration)
+  fullName: DisCatSharp.Extensions.Translations.ExtensionMethods.UseTranslationsAsync(DisCatSharp.DiscordShardedClient, DisCatSharp.Extensions.Translations.TranslationsConfiguration?)
+  fullName.vb: DisCatSharp.Extensions.Translations.ExtensionMethods.UseTranslationsAsync(DisCatSharp.DiscordShardedClient, DisCatSharp.Extensions.Translations.TranslationsConfiguration)
+  nameWithType: ExtensionMethods.UseTranslationsAsync(DiscordShardedClient, TranslationsConfiguration?)
+  nameWithType.vb: ExtensionMethods.UseTranslationsAsync(DiscordShardedClient, TranslationsConfiguration)
+- uid: DisCatSharp.Extensions.Translations.ExtensionMethods.UseTranslationsAsync*
+  name: UseTranslationsAsync
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.ExtensionMethods.UseTranslationsAsync.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.ExtensionMethods.UseTranslationsAsync
+  fullName: DisCatSharp.Extensions.Translations.ExtensionMethods.UseTranslationsAsync
+  nameWithType: ExtensionMethods.UseTranslationsAsync
+- uid: DisCatSharp.Extensions.Translations.Manager
+  name: DisCatSharp.Extensions.Translations.Manager
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.html
+  commentId: N:DisCatSharp.Extensions.Translations.Manager
+  fullName: DisCatSharp.Extensions.Translations.Manager
+  nameWithType: DisCatSharp.Extensions.Translations.Manager
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationManager
+  name: TranslationManager
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationManager.html
+  commentId: T:DisCatSharp.Extensions.Translations.Manager.TranslationManager
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationManager
+  nameWithType: TranslationManager
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationManager.#ctor(DisCatSharp.DiscordClient,DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration)
+  name: TranslationManager(DiscordClient, TranslationsManagerConfiguration)
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationManager.-ctor.html#DisCatSharp_Extensions_Translations_Manager_TranslationManager__ctor_DisCatSharp_DiscordClient_DisCatSharp_Extensions_Translations_Manager_TranslationsManagerConfiguration_
+  commentId: M:DisCatSharp.Extensions.Translations.Manager.TranslationManager.#ctor(DisCatSharp.DiscordClient,DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration)
+  name.vb: New(DiscordClient, TranslationsManagerConfiguration)
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationManager.TranslationManager(DisCatSharp.DiscordClient, DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration)
+  fullName.vb: DisCatSharp.Extensions.Translations.Manager.TranslationManager.New(DisCatSharp.DiscordClient, DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration)
+  nameWithType: TranslationManager.TranslationManager(DiscordClient, TranslationsManagerConfiguration)
+  nameWithType.vb: TranslationManager.New(DiscordClient, TranslationsManagerConfiguration)
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationManager.#ctor(DisCatSharp.DiscordShardedClient,DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration)
+  name: TranslationManager(DiscordShardedClient, TranslationsManagerConfiguration)
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationManager.-ctor.html#DisCatSharp_Extensions_Translations_Manager_TranslationManager__ctor_DisCatSharp_DiscordShardedClient_DisCatSharp_Extensions_Translations_Manager_TranslationsManagerConfiguration_
+  commentId: M:DisCatSharp.Extensions.Translations.Manager.TranslationManager.#ctor(DisCatSharp.DiscordShardedClient,DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration)
+  name.vb: New(DiscordShardedClient, TranslationsManagerConfiguration)
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationManager.TranslationManager(DisCatSharp.DiscordShardedClient, DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration)
+  fullName.vb: DisCatSharp.Extensions.Translations.Manager.TranslationManager.New(DisCatSharp.DiscordShardedClient, DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration)
+  nameWithType: TranslationManager.TranslationManager(DiscordShardedClient, TranslationsManagerConfiguration)
+  nameWithType.vb: TranslationManager.New(DiscordShardedClient, TranslationsManagerConfiguration)
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationManager.#ctor*
+  name: TranslationManager
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationManager.-ctor.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.Manager.TranslationManager.#ctor
+  name.vb: New
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationManager.TranslationManager
+  fullName.vb: DisCatSharp.Extensions.Translations.Manager.TranslationManager.New
+  nameWithType: TranslationManager.TranslationManager
+  nameWithType.vb: TranslationManager.New
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationManager.DisposeAsync
+  name: DisposeAsync()
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationManager.DisposeAsync.html#DisCatSharp_Extensions_Translations_Manager_TranslationManager_DisposeAsync
+  commentId: M:DisCatSharp.Extensions.Translations.Manager.TranslationManager.DisposeAsync
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationManager.DisposeAsync()
+  nameWithType: TranslationManager.DisposeAsync()
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationManager.DisposeAsync*
+  name: DisposeAsync
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationManager.DisposeAsync.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.Manager.TranslationManager.DisposeAsync
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationManager.DisposeAsync
+  nameWithType: TranslationManager.DisposeAsync
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationManager.RunAsync(System.Threading.CancellationToken)
+  name: RunAsync(CancellationToken)
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationManager.RunAsync.html#DisCatSharp_Extensions_Translations_Manager_TranslationManager_RunAsync_System_Threading_CancellationToken_
+  commentId: M:DisCatSharp.Extensions.Translations.Manager.TranslationManager.RunAsync(System.Threading.CancellationToken)
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationManager.RunAsync(System.Threading.CancellationToken)
+  nameWithType: TranslationManager.RunAsync(CancellationToken)
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationManager.RunAsync*
+  name: RunAsync
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationManager.RunAsync.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.Manager.TranslationManager.RunAsync
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationManager.RunAsync
+  nameWithType: TranslationManager.RunAsync
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationManager.StartAsync(System.Threading.CancellationToken)
+  name: StartAsync(CancellationToken)
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationManager.StartAsync.html#DisCatSharp_Extensions_Translations_Manager_TranslationManager_StartAsync_System_Threading_CancellationToken_
+  commentId: M:DisCatSharp.Extensions.Translations.Manager.TranslationManager.StartAsync(System.Threading.CancellationToken)
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationManager.StartAsync(System.Threading.CancellationToken)
+  nameWithType: TranslationManager.StartAsync(CancellationToken)
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationManager.StartAsync*
+  name: StartAsync
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationManager.StartAsync.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.Manager.TranslationManager.StartAsync
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationManager.StartAsync
+  nameWithType: TranslationManager.StartAsync
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationManager.StopAsync(System.Threading.CancellationToken)
+  name: StopAsync(CancellationToken)
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationManager.StopAsync.html#DisCatSharp_Extensions_Translations_Manager_TranslationManager_StopAsync_System_Threading_CancellationToken_
+  commentId: M:DisCatSharp.Extensions.Translations.Manager.TranslationManager.StopAsync(System.Threading.CancellationToken)
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationManager.StopAsync(System.Threading.CancellationToken)
+  nameWithType: TranslationManager.StopAsync(CancellationToken)
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationManager.StopAsync*
+  name: StopAsync
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationManager.StopAsync.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.Manager.TranslationManager.StopAsync
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationManager.StopAsync
+  nameWithType: TranslationManager.StopAsync
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationsManager
+  name: TranslationsManager
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationsManager.html
+  commentId: T:DisCatSharp.Extensions.Translations.Manager.TranslationsManager
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationsManager
+  nameWithType: TranslationsManager
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration
+  name: TranslationsManagerConfiguration
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.html
+  commentId: T:DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration
+  nameWithType: TranslationsManagerConfiguration
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.#ctor
+  name: TranslationsManagerConfiguration()
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.-ctor.html#DisCatSharp_Extensions_Translations_Manager_TranslationsManagerConfiguration__ctor
+  commentId: M:DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.#ctor
+  name.vb: New()
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.TranslationsManagerConfiguration()
+  fullName.vb: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.New()
+  nameWithType: TranslationsManagerConfiguration.TranslationsManagerConfiguration()
+  nameWithType.vb: TranslationsManagerConfiguration.New()
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.#ctor(DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration)
+  name: TranslationsManagerConfiguration(TranslationsManagerConfiguration)
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.-ctor.html#DisCatSharp_Extensions_Translations_Manager_TranslationsManagerConfiguration__ctor_DisCatSharp_Extensions_Translations_Manager_TranslationsManagerConfiguration_
+  commentId: M:DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.#ctor(DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration)
+  name.vb: New(TranslationsManagerConfiguration)
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.TranslationsManagerConfiguration(DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration)
+  fullName.vb: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.New(DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration)
+  nameWithType: TranslationsManagerConfiguration.TranslationsManagerConfiguration(TranslationsManagerConfiguration)
+  nameWithType.vb: TranslationsManagerConfiguration.New(TranslationsManagerConfiguration)
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.#ctor(System.IServiceProvider)
+  name: TranslationsManagerConfiguration(IServiceProvider)
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.-ctor.html#DisCatSharp_Extensions_Translations_Manager_TranslationsManagerConfiguration__ctor_System_IServiceProvider_
+  commentId: M:DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.#ctor(System.IServiceProvider)
+  name.vb: New(IServiceProvider)
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.TranslationsManagerConfiguration(System.IServiceProvider)
+  fullName.vb: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.New(System.IServiceProvider)
+  nameWithType: TranslationsManagerConfiguration.TranslationsManagerConfiguration(IServiceProvider)
+  nameWithType.vb: TranslationsManagerConfiguration.New(IServiceProvider)
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.#ctor*
+  name: TranslationsManagerConfiguration
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.-ctor.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.#ctor
+  name.vb: New
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.TranslationsManagerConfiguration
+  fullName.vb: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.New
+  nameWithType: TranslationsManagerConfiguration.TranslationsManagerConfiguration
+  nameWithType.vb: TranslationsManagerConfiguration.New
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.AuditOutputPath
+  name: AuditOutputPath
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.AuditOutputPath.html#DisCatSharp_Extensions_Translations_Manager_TranslationsManagerConfiguration_AuditOutputPath
+  commentId: P:DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.AuditOutputPath
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.AuditOutputPath
+  nameWithType: TranslationsManagerConfiguration.AuditOutputPath
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.AuditOutputPath*
+  name: AuditOutputPath
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.AuditOutputPath.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.AuditOutputPath
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.AuditOutputPath
+  nameWithType: TranslationsManagerConfiguration.AuditOutputPath
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.RepoRoot
+  name: RepoRoot
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.RepoRoot.html#DisCatSharp_Extensions_Translations_Manager_TranslationsManagerConfiguration_RepoRoot
+  commentId: P:DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.RepoRoot
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.RepoRoot
+  nameWithType: TranslationsManagerConfiguration.RepoRoot
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.RepoRoot*
+  name: RepoRoot
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.RepoRoot.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.RepoRoot
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.RepoRoot
+  nameWithType: TranslationsManagerConfiguration.RepoRoot
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.ReportCacheDuration
+  name: ReportCacheDuration
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.ReportCacheDuration.html#DisCatSharp_Extensions_Translations_Manager_TranslationsManagerConfiguration_ReportCacheDuration
+  commentId: P:DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.ReportCacheDuration
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.ReportCacheDuration
+  nameWithType: TranslationsManagerConfiguration.ReportCacheDuration
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.ReportCacheDuration*
+  name: ReportCacheDuration
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.ReportCacheDuration.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.ReportCacheDuration
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.ReportCacheDuration
+  nameWithType: TranslationsManagerConfiguration.ReportCacheDuration
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.ServerPort
+  name: ServerPort
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.ServerPort.html#DisCatSharp_Extensions_Translations_Manager_TranslationsManagerConfiguration_ServerPort
+  commentId: P:DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.ServerPort
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.ServerPort
+  nameWithType: TranslationsManagerConfiguration.ServerPort
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.ServerPort*
+  name: ServerPort
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.ServerPort.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.ServerPort
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.ServerPort
+  nameWithType: TranslationsManagerConfiguration.ServerPort
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.SourceDirectory
+  name: SourceDirectory
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.SourceDirectory.html#DisCatSharp_Extensions_Translations_Manager_TranslationsManagerConfiguration_SourceDirectory
+  commentId: P:DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.SourceDirectory
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.SourceDirectory
+  nameWithType: TranslationsManagerConfiguration.SourceDirectory
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.SourceDirectory*
+  name: SourceDirectory
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.SourceDirectory.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.SourceDirectory
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.SourceDirectory
+  nameWithType: TranslationsManagerConfiguration.SourceDirectory
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.WriteAuditToDisk
+  name: WriteAuditToDisk
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.WriteAuditToDisk.html#DisCatSharp_Extensions_Translations_Manager_TranslationsManagerConfiguration_WriteAuditToDisk
+  commentId: P:DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.WriteAuditToDisk
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.WriteAuditToDisk
+  nameWithType: TranslationsManagerConfiguration.WriteAuditToDisk
+- uid: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.WriteAuditToDisk*
+  name: WriteAuditToDisk
+  href: api/DisCatSharp.Extensions.Translations.Manager/DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.WriteAuditToDisk.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.WriteAuditToDisk
+  fullName: DisCatSharp.Extensions.Translations.Manager.TranslationsManagerConfiguration.WriteAuditToDisk
+  nameWithType: TranslationsManagerConfiguration.WriteAuditToDisk
+- uid: DisCatSharp.Extensions.Translations.TranslationEngine
+  name: TranslationEngine
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationEngine.html
+  commentId: T:DisCatSharp.Extensions.Translations.TranslationEngine
+  fullName: DisCatSharp.Extensions.Translations.TranslationEngine
+  nameWithType: TranslationEngine
+- uid: DisCatSharp.Extensions.Translations.TranslationEngine.#ctor(DisCatSharp.Extensions.Translations.TranslationsConfiguration)
+  name: TranslationEngine(TranslationsConfiguration)
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationEngine.-ctor.html#DisCatSharp_Extensions_Translations_TranslationEngine__ctor_DisCatSharp_Extensions_Translations_TranslationsConfiguration_
+  commentId: M:DisCatSharp.Extensions.Translations.TranslationEngine.#ctor(DisCatSharp.Extensions.Translations.TranslationsConfiguration)
+  name.vb: New(TranslationsConfiguration)
+  fullName: DisCatSharp.Extensions.Translations.TranslationEngine.TranslationEngine(DisCatSharp.Extensions.Translations.TranslationsConfiguration)
+  fullName.vb: DisCatSharp.Extensions.Translations.TranslationEngine.New(DisCatSharp.Extensions.Translations.TranslationsConfiguration)
+  nameWithType: TranslationEngine.TranslationEngine(TranslationsConfiguration)
+  nameWithType.vb: TranslationEngine.New(TranslationsConfiguration)
+- uid: DisCatSharp.Extensions.Translations.TranslationEngine.#ctor*
+  name: TranslationEngine
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationEngine.-ctor.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.TranslationEngine.#ctor
+  name.vb: New
+  fullName: DisCatSharp.Extensions.Translations.TranslationEngine.TranslationEngine
+  fullName.vb: DisCatSharp.Extensions.Translations.TranslationEngine.New
+  nameWithType: TranslationEngine.TranslationEngine
+  nameWithType.vb: TranslationEngine.New
+- uid: DisCatSharp.Extensions.Translations.TranslationEngine.Reload
+  name: Reload()
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationEngine.Reload.html#DisCatSharp_Extensions_Translations_TranslationEngine_Reload
+  commentId: M:DisCatSharp.Extensions.Translations.TranslationEngine.Reload
+  fullName: DisCatSharp.Extensions.Translations.TranslationEngine.Reload()
+  nameWithType: TranslationEngine.Reload()
+- uid: DisCatSharp.Extensions.Translations.TranslationEngine.Reload*
+  name: Reload
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationEngine.Reload.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.TranslationEngine.Reload
+  fullName: DisCatSharp.Extensions.Translations.TranslationEngine.Reload
+  nameWithType: TranslationEngine.Reload
+- uid: DisCatSharp.Extensions.Translations.TranslationEngine.TLocale(System.String,System.String,System.Object)
+  name: TLocale(string?, string, object?)
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationEngine.TLocale.html#DisCatSharp_Extensions_Translations_TranslationEngine_TLocale_System_String_System_String_System_Object_
+  commentId: M:DisCatSharp.Extensions.Translations.TranslationEngine.TLocale(System.String,System.String,System.Object)
+  name.vb: TLocale(String, String, Object)
+  fullName: DisCatSharp.Extensions.Translations.TranslationEngine.TLocale(string?, string, object?)
+  fullName.vb: DisCatSharp.Extensions.Translations.TranslationEngine.TLocale(String, String, Object)
+  nameWithType: TranslationEngine.TLocale(string?, string, object?)
+  nameWithType.vb: TranslationEngine.TLocale(String, String, Object)
+- uid: DisCatSharp.Extensions.Translations.TranslationEngine.TLocale*
+  name: TLocale
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationEngine.TLocale.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.TranslationEngine.TLocale
+  fullName: DisCatSharp.Extensions.Translations.TranslationEngine.TLocale
+  nameWithType: TranslationEngine.TLocale
+- uid: DisCatSharp.Extensions.Translations.TranslationEngine.UseFile(System.String)
+  name: UseFile(string)
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationEngine.UseFile.html#DisCatSharp_Extensions_Translations_TranslationEngine_UseFile_System_String_
+  commentId: M:DisCatSharp.Extensions.Translations.TranslationEngine.UseFile(System.String)
+  name.vb: UseFile(String)
+  fullName: DisCatSharp.Extensions.Translations.TranslationEngine.UseFile(string)
+  fullName.vb: DisCatSharp.Extensions.Translations.TranslationEngine.UseFile(String)
+  nameWithType: TranslationEngine.UseFile(string)
+  nameWithType.vb: TranslationEngine.UseFile(String)
+- uid: DisCatSharp.Extensions.Translations.TranslationEngine.UseFile*
+  name: UseFile
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationEngine.UseFile.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.TranslationEngine.UseFile
+  fullName: DisCatSharp.Extensions.Translations.TranslationEngine.UseFile
+  nameWithType: TranslationEngine.UseFile
+- uid: DisCatSharp.Extensions.Translations.TranslationsConfiguration
+  name: TranslationsConfiguration
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationsConfiguration.html
+  commentId: T:DisCatSharp.Extensions.Translations.TranslationsConfiguration
+  fullName: DisCatSharp.Extensions.Translations.TranslationsConfiguration
+  nameWithType: TranslationsConfiguration
+- uid: DisCatSharp.Extensions.Translations.TranslationsConfiguration.#ctor
+  name: TranslationsConfiguration()
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationsConfiguration.-ctor.html#DisCatSharp_Extensions_Translations_TranslationsConfiguration__ctor
+  commentId: M:DisCatSharp.Extensions.Translations.TranslationsConfiguration.#ctor
+  name.vb: New()
+  fullName: DisCatSharp.Extensions.Translations.TranslationsConfiguration.TranslationsConfiguration()
+  fullName.vb: DisCatSharp.Extensions.Translations.TranslationsConfiguration.New()
+  nameWithType: TranslationsConfiguration.TranslationsConfiguration()
+  nameWithType.vb: TranslationsConfiguration.New()
+- uid: DisCatSharp.Extensions.Translations.TranslationsConfiguration.#ctor(DisCatSharp.Extensions.Translations.TranslationsConfiguration)
+  name: TranslationsConfiguration(TranslationsConfiguration)
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationsConfiguration.-ctor.html#DisCatSharp_Extensions_Translations_TranslationsConfiguration__ctor_DisCatSharp_Extensions_Translations_TranslationsConfiguration_
+  commentId: M:DisCatSharp.Extensions.Translations.TranslationsConfiguration.#ctor(DisCatSharp.Extensions.Translations.TranslationsConfiguration)
+  name.vb: New(TranslationsConfiguration)
+  fullName: DisCatSharp.Extensions.Translations.TranslationsConfiguration.TranslationsConfiguration(DisCatSharp.Extensions.Translations.TranslationsConfiguration)
+  fullName.vb: DisCatSharp.Extensions.Translations.TranslationsConfiguration.New(DisCatSharp.Extensions.Translations.TranslationsConfiguration)
+  nameWithType: TranslationsConfiguration.TranslationsConfiguration(TranslationsConfiguration)
+  nameWithType.vb: TranslationsConfiguration.New(TranslationsConfiguration)
+- uid: DisCatSharp.Extensions.Translations.TranslationsConfiguration.#ctor(System.IServiceProvider)
+  name: TranslationsConfiguration(IServiceProvider)
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationsConfiguration.-ctor.html#DisCatSharp_Extensions_Translations_TranslationsConfiguration__ctor_System_IServiceProvider_
+  commentId: M:DisCatSharp.Extensions.Translations.TranslationsConfiguration.#ctor(System.IServiceProvider)
+  name.vb: New(IServiceProvider)
+  fullName: DisCatSharp.Extensions.Translations.TranslationsConfiguration.TranslationsConfiguration(System.IServiceProvider)
+  fullName.vb: DisCatSharp.Extensions.Translations.TranslationsConfiguration.New(System.IServiceProvider)
+  nameWithType: TranslationsConfiguration.TranslationsConfiguration(IServiceProvider)
+  nameWithType.vb: TranslationsConfiguration.New(IServiceProvider)
+- uid: DisCatSharp.Extensions.Translations.TranslationsConfiguration.#ctor*
+  name: TranslationsConfiguration
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationsConfiguration.-ctor.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.TranslationsConfiguration.#ctor
+  name.vb: New
+  fullName: DisCatSharp.Extensions.Translations.TranslationsConfiguration.TranslationsConfiguration
+  fullName.vb: DisCatSharp.Extensions.Translations.TranslationsConfiguration.New
+  nameWithType: TranslationsConfiguration.TranslationsConfiguration
+  nameWithType.vb: TranslationsConfiguration.New
+- uid: DisCatSharp.Extensions.Translations.TranslationsConfiguration.DefaultLocale
+  name: DefaultLocale
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationsConfiguration.DefaultLocale.html#DisCatSharp_Extensions_Translations_TranslationsConfiguration_DefaultLocale
+  commentId: P:DisCatSharp.Extensions.Translations.TranslationsConfiguration.DefaultLocale
+  fullName: DisCatSharp.Extensions.Translations.TranslationsConfiguration.DefaultLocale
+  nameWithType: TranslationsConfiguration.DefaultLocale
+- uid: DisCatSharp.Extensions.Translations.TranslationsConfiguration.DefaultLocale*
+  name: DefaultLocale
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationsConfiguration.DefaultLocale.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.TranslationsConfiguration.DefaultLocale
+  fullName: DisCatSharp.Extensions.Translations.TranslationsConfiguration.DefaultLocale
+  nameWithType: TranslationsConfiguration.DefaultLocale
+- uid: DisCatSharp.Extensions.Translations.TranslationsConfiguration.ServiceProvider
+  name: ServiceProvider
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationsConfiguration.ServiceProvider.html#DisCatSharp_Extensions_Translations_TranslationsConfiguration_ServiceProvider
+  commentId: P:DisCatSharp.Extensions.Translations.TranslationsConfiguration.ServiceProvider
+  fullName: DisCatSharp.Extensions.Translations.TranslationsConfiguration.ServiceProvider
+  nameWithType: TranslationsConfiguration.ServiceProvider
+- uid: DisCatSharp.Extensions.Translations.TranslationsConfiguration.ServiceProvider*
+  name: ServiceProvider
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationsConfiguration.ServiceProvider.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.TranslationsConfiguration.ServiceProvider
+  fullName: DisCatSharp.Extensions.Translations.TranslationsConfiguration.ServiceProvider
+  nameWithType: TranslationsConfiguration.ServiceProvider
+- uid: DisCatSharp.Extensions.Translations.TranslationsConfiguration.TranslationsFileName
+  name: TranslationsFileName
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationsConfiguration.TranslationsFileName.html#DisCatSharp_Extensions_Translations_TranslationsConfiguration_TranslationsFileName
+  commentId: P:DisCatSharp.Extensions.Translations.TranslationsConfiguration.TranslationsFileName
+  fullName: DisCatSharp.Extensions.Translations.TranslationsConfiguration.TranslationsFileName
+  nameWithType: TranslationsConfiguration.TranslationsFileName
+- uid: DisCatSharp.Extensions.Translations.TranslationsConfiguration.TranslationsFileName*
+  name: TranslationsFileName
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationsConfiguration.TranslationsFileName.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.TranslationsConfiguration.TranslationsFileName
+  fullName: DisCatSharp.Extensions.Translations.TranslationsConfiguration.TranslationsFileName
+  nameWithType: TranslationsConfiguration.TranslationsFileName
+- uid: DisCatSharp.Extensions.Translations.TranslationsConfiguration.TranslationsFolder
+  name: TranslationsFolder
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationsConfiguration.TranslationsFolder.html#DisCatSharp_Extensions_Translations_TranslationsConfiguration_TranslationsFolder
+  commentId: P:DisCatSharp.Extensions.Translations.TranslationsConfiguration.TranslationsFolder
+  fullName: DisCatSharp.Extensions.Translations.TranslationsConfiguration.TranslationsFolder
+  nameWithType: TranslationsConfiguration.TranslationsFolder
+- uid: DisCatSharp.Extensions.Translations.TranslationsConfiguration.TranslationsFolder*
+  name: TranslationsFolder
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationsConfiguration.TranslationsFolder.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.TranslationsConfiguration.TranslationsFolder
+  fullName: DisCatSharp.Extensions.Translations.TranslationsConfiguration.TranslationsFolder
+  nameWithType: TranslationsConfiguration.TranslationsFolder
+- uid: DisCatSharp.Extensions.Translations.TranslationsExtension
+  name: TranslationsExtension
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationsExtension.html
+  commentId: T:DisCatSharp.Extensions.Translations.TranslationsExtension
+  fullName: DisCatSharp.Extensions.Translations.TranslationsExtension
+  nameWithType: TranslationsExtension
+- uid: DisCatSharp.Extensions.Translations.TranslationsExtension.Setup(DisCatSharp.DiscordClient)
+  name: Setup(DiscordClient)
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationsExtension.Setup.html#DisCatSharp_Extensions_Translations_TranslationsExtension_Setup_DisCatSharp_DiscordClient_
+  commentId: M:DisCatSharp.Extensions.Translations.TranslationsExtension.Setup(DisCatSharp.DiscordClient)
+  fullName: DisCatSharp.Extensions.Translations.TranslationsExtension.Setup(DisCatSharp.DiscordClient)
+  nameWithType: TranslationsExtension.Setup(DiscordClient)
+- uid: DisCatSharp.Extensions.Translations.TranslationsExtension.Setup*
+  name: Setup
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationsExtension.Setup.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.TranslationsExtension.Setup
+  fullName: DisCatSharp.Extensions.Translations.TranslationsExtension.Setup
+  nameWithType: TranslationsExtension.Setup
+- uid: DisCatSharp.Extensions.Translations.TranslationsExtension.TranslationEngine
+  name: TranslationEngine
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationsExtension.TranslationEngine.html#DisCatSharp_Extensions_Translations_TranslationsExtension_TranslationEngine
+  commentId: P:DisCatSharp.Extensions.Translations.TranslationsExtension.TranslationEngine
+  fullName: DisCatSharp.Extensions.Translations.TranslationsExtension.TranslationEngine
+  nameWithType: TranslationsExtension.TranslationEngine
+- uid: DisCatSharp.Extensions.Translations.TranslationsExtension.TranslationEngine*
+  name: TranslationEngine
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.TranslationsExtension.TranslationEngine.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.TranslationsExtension.TranslationEngine
+  fullName: DisCatSharp.Extensions.Translations.TranslationsExtension.TranslationEngine
+  nameWithType: TranslationsExtension.TranslationEngine
+- uid: DisCatSharp.Extensions.Translations.Translator
+  name: Translator
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.Translator.html
+  commentId: T:DisCatSharp.Extensions.Translations.Translator
+  fullName: DisCatSharp.Extensions.Translations.Translator
+  nameWithType: Translator
+- uid: DisCatSharp.Extensions.Translations.Translator.DefaultLocale
+  name: DefaultLocale
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.Translator.DefaultLocale.html#DisCatSharp_Extensions_Translations_Translator_DefaultLocale
+  commentId: P:DisCatSharp.Extensions.Translations.Translator.DefaultLocale
+  fullName: DisCatSharp.Extensions.Translations.Translator.DefaultLocale
+  nameWithType: Translator.DefaultLocale
+- uid: DisCatSharp.Extensions.Translations.Translator.DefaultLocale*
+  name: DefaultLocale
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.Translator.DefaultLocale.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.Translator.DefaultLocale
+  fullName: DisCatSharp.Extensions.Translations.Translator.DefaultLocale
+  nameWithType: Translator.DefaultLocale
+- uid: DisCatSharp.Extensions.Translations.Translator.Reload
+  name: Reload()
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.Translator.Reload.html#DisCatSharp_Extensions_Translations_Translator_Reload
+  commentId: M:DisCatSharp.Extensions.Translations.Translator.Reload
+  fullName: DisCatSharp.Extensions.Translations.Translator.Reload()
+  nameWithType: Translator.Reload()
+- uid: DisCatSharp.Extensions.Translations.Translator.Reload*
+  name: Reload
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.Translator.Reload.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.Translator.Reload
+  fullName: DisCatSharp.Extensions.Translations.Translator.Reload
+  nameWithType: Translator.Reload
+- uid: DisCatSharp.Extensions.Translations.Translator.T(DisCatSharp.Entities.DiscordInteraction,System.String,System.Object,System.Boolean)
+  name: T(DiscordInteraction, string, object?, bool)
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.Translator.T.html#DisCatSharp_Extensions_Translations_Translator_T_DisCatSharp_Entities_DiscordInteraction_System_String_System_Object_System_Boolean_
+  commentId: M:DisCatSharp.Extensions.Translations.Translator.T(DisCatSharp.Entities.DiscordInteraction,System.String,System.Object,System.Boolean)
+  name.vb: T(DiscordInteraction, String, Object, Boolean)
+  fullName: DisCatSharp.Extensions.Translations.Translator.T(DisCatSharp.Entities.DiscordInteraction, string, object?, bool)
+  fullName.vb: DisCatSharp.Extensions.Translations.Translator.T(DisCatSharp.Entities.DiscordInteraction, String, Object, Boolean)
+  nameWithType: Translator.T(DiscordInteraction, string, object?, bool)
+  nameWithType.vb: Translator.T(DiscordInteraction, String, Object, Boolean)
+- uid: DisCatSharp.Extensions.Translations.Translator.T*
+  name: T
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.Translator.T.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.Translator.T
+  fullName: DisCatSharp.Extensions.Translations.Translator.T
+  nameWithType: Translator.T
+- uid: DisCatSharp.Extensions.Translations.Translator.TLocale(System.String,System.String,System.Object)
+  name: TLocale(string?, string, object?)
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.Translator.TLocale.html#DisCatSharp_Extensions_Translations_Translator_TLocale_System_String_System_String_System_Object_
+  commentId: M:DisCatSharp.Extensions.Translations.Translator.TLocale(System.String,System.String,System.Object)
+  name.vb: TLocale(String, String, Object)
+  fullName: DisCatSharp.Extensions.Translations.Translator.TLocale(string?, string, object?)
+  fullName.vb: DisCatSharp.Extensions.Translations.Translator.TLocale(String, String, Object)
+  nameWithType: Translator.TLocale(string?, string, object?)
+  nameWithType.vb: Translator.TLocale(String, String, Object)
+- uid: DisCatSharp.Extensions.Translations.Translator.TLocale*
+  name: TLocale
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.Translator.TLocale.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.Translator.TLocale
+  fullName: DisCatSharp.Extensions.Translations.Translator.TLocale
+  nameWithType: Translator.TLocale
+- uid: DisCatSharp.Extensions.Translations.Translator.UseFile(System.String)
+  name: UseFile(string)
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.Translator.UseFile.html#DisCatSharp_Extensions_Translations_Translator_UseFile_System_String_
+  commentId: M:DisCatSharp.Extensions.Translations.Translator.UseFile(System.String)
+  name.vb: UseFile(String)
+  fullName: DisCatSharp.Extensions.Translations.Translator.UseFile(string)
+  fullName.vb: DisCatSharp.Extensions.Translations.Translator.UseFile(String)
+  nameWithType: Translator.UseFile(string)
+  nameWithType.vb: Translator.UseFile(String)
+- uid: DisCatSharp.Extensions.Translations.Translator.UseFile*
+  name: UseFile
+  href: api/DisCatSharp.Extensions.Translations/DisCatSharp.Extensions.Translations.Translator.UseFile.html
+  commentId: Overload:DisCatSharp.Extensions.Translations.Translator.UseFile
+  fullName: DisCatSharp.Extensions.Translations.Translator.UseFile
+  nameWithType: Translator.UseFile
 - uid: DisCatSharp.Extensions.TwoFactorCommands
   name: DisCatSharp.Extensions.TwoFactorCommands
   href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.html
