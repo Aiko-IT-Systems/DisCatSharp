@@ -144,3 +144,57 @@ internal sealed class RestGuildScheduledEventModifyPayload : ObservableApiObject
 	[JsonProperty("privacy_level")]
 	public int PrivacyLevel { get; } = 2;
 }
+
+/// <summary>
+///     The rest guild scheduled event exception create payload.
+/// </summary>
+internal sealed class RestGuildScheduledEventExceptionCreatePayload : ObservableApiObject
+{
+	/// <summary>
+	///     Gets or sets the original scheduled start time for the recurrence being changed.
+	/// </summary>
+	[JsonProperty("original_scheduled_start_time")]
+	public DateTimeOffset OriginalScheduledStartTime { get; set; }
+
+	/// <summary>
+	///     Gets or sets the new scheduled start time for the exception.
+	/// </summary>
+	[JsonProperty("scheduled_start_time", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<DateTimeOffset> ScheduledStartTime { get; set; }
+
+	/// <summary>
+	///     Gets or sets the new scheduled end time for the exception.
+	/// </summary>
+	[JsonProperty("scheduled_end_time", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<DateTimeOffset> ScheduledEndTime { get; set; }
+
+	/// <summary>
+	///     Gets or sets whether the recurrence should be canceled.
+	/// </summary>
+	[JsonProperty("is_canceled", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<bool> IsCanceled { get; set; }
+}
+
+/// <summary>
+///     The rest guild scheduled event exception modify payload.
+/// </summary>
+internal sealed class RestGuildScheduledEventExceptionModifyPayload : ObservableApiObject
+{
+	/// <summary>
+	///     Gets or sets the new scheduled start time for the exception.
+	/// </summary>
+	[JsonProperty("scheduled_start_time", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<DateTimeOffset> ScheduledStartTime { get; set; }
+
+	/// <summary>
+	///     Gets or sets the new scheduled end time for the exception.
+	/// </summary>
+	[JsonProperty("scheduled_end_time", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<DateTimeOffset> ScheduledEndTime { get; set; }
+
+	/// <summary>
+	///     Gets or sets whether the recurrence should be canceled.
+	/// </summary>
+	[JsonProperty("is_canceled", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<bool> IsCanceled { get; set; }
+}

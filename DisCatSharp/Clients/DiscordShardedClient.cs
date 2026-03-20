@@ -687,6 +687,9 @@ public sealed partial class DiscordShardedClient
 		this._guildScheduledEventDeleted = new("GUILD_SCHEDULED_EVENT_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildScheduledEventUserAdded = new("GUILD_SCHEDULED_EVENT_USER_ADDED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildScheduledEventUserRemoved = new("GUILD_SCHEDULED_EVENT_USER_REMOVED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._guildScheduledEventExceptionCreated = new("GUILD_SCHEDULED_EVENT_EXCEPTION_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._guildScheduledEventExceptionUpdated = new("GUILD_SCHEDULED_EVENT_EXCEPTION_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._guildScheduledEventExceptionDeleted = new("GUILD_SCHEDULED_EVENT_EXCEPTION_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._embeddedActivityUpdated = new("EMBEDDED_ACTIVITY_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildMemberTimeoutAdded = new("GUILD_MEMBER_TIMEOUT_ADDED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildMemberTimeoutChanged = new("GUILD_MEMBER_TIMEOUT_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
@@ -798,6 +801,9 @@ public sealed partial class DiscordShardedClient
 		client.GuildScheduledEventDeleted += this.Client_GuildScheduledEventDeleted;
 		client.GuildScheduledEventUserAdded += this.Client_GuildScheduledEventUserAdded;
 		client.GuildScheduledEventUserRemoved += this.Client_GuildScheduledEventUserRemoved;
+		client.GuildScheduledEventExceptionCreated += this.Client_GuildScheduledEventExceptionCreated;
+		client.GuildScheduledEventExceptionUpdated += this.Client_GuildScheduledEventExceptionUpdated;
+		client.GuildScheduledEventExceptionDeleted += this.Client_GuildScheduledEventExceptionDeleted;
 		client.EmbeddedActivityUpdated += this.Client_EmbeddedActivityUpdated;
 		client.GuildMemberTimeoutAdded += this.Client_GuildMemberTimeoutAdded;
 		client.GuildMemberTimeoutChanged += this.Client_GuildMemberTimeoutChanged;
@@ -909,6 +915,9 @@ public sealed partial class DiscordShardedClient
 		client.GuildScheduledEventDeleted -= this.Client_GuildScheduledEventDeleted;
 		client.GuildScheduledEventUserAdded -= this.Client_GuildScheduledEventUserAdded;
 		client.GuildScheduledEventUserRemoved -= this.Client_GuildScheduledEventUserRemoved;
+		client.GuildScheduledEventExceptionCreated -= this.Client_GuildScheduledEventExceptionCreated;
+		client.GuildScheduledEventExceptionUpdated -= this.Client_GuildScheduledEventExceptionUpdated;
+		client.GuildScheduledEventExceptionDeleted -= this.Client_GuildScheduledEventExceptionDeleted;
 		client.EmbeddedActivityUpdated -= this.Client_EmbeddedActivityUpdated;
 		client.GuildMemberTimeoutAdded -= this.Client_GuildMemberTimeoutAdded;
 		client.GuildMemberTimeoutChanged -= this.Client_GuildMemberTimeoutChanged;

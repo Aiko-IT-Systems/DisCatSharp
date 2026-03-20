@@ -418,6 +418,11 @@ public static class Endpoints
 	public const string GUILD_EVENTS = "guild-events";
 
 	/// <summary>
+	///     The scheduled event exceptions endpoint.
+	/// </summary>
+	public const string EXCEPTIONS = "/exceptions";
+
+	/// <summary>
 	///     The stickers endpoint.
 	/// </summary>
 	public const string STICKERS = "/stickers";

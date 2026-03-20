@@ -48,6 +48,12 @@ public class DiscordScheduledEventUser : ObservableApiObject, IEquatable<Discord
 	internal ulong EventId { get; set; }
 
 	/// <summary>
+	///     Gets the scheduled event exception id, if applicable.
+	/// </summary>
+	[JsonProperty("guild_scheduled_event_exception_id", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong? ExceptionId { get; internal set; }
+
+	/// <summary>
 	///     Gets or sets the guild id.
 	/// </summary>
 	[JsonIgnore]

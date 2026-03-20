@@ -21,7 +21,7 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	///     Initializes a new instance of the <see cref="DiscordScheduledEvent" /> class.
 	/// </summary>
 	internal DiscordScheduledEvent()
-		: base(["sku_ids", "privacy_level", "guild_scheduled_event_exceptions"])
+		: base(["sku_ids", "privacy_level"])
 	{ }
 
 	/// <summary>
@@ -162,6 +162,12 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// </summary>
 	[JsonProperty("recurrence_rule", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordScheduledEventRecurrenceRule? RecurrenceRule { get; internal set; }
+
+	/// <summary>
+	///     Gets the exceptions for this scheduled event's recurrence rule.
+	/// </summary>
+	[JsonProperty("guild_scheduled_event_exceptions", NullValueHandling = NullValueHandling.Ignore)]
+	public List<DiscordScheduledEventException> Exceptions { get; internal set; } = [];
 
 	/// <summary>
 	///     Gets the total number of users subscribed to the scheduled event.
@@ -310,6 +316,48 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<IReadOnlyDictionary<ulong, DiscordScheduledEventUser>> GetUsersAsync(int? limit = null, ulong? before = null, ulong? after = null, bool? withMember = null)
 		=> await this.Discord.ApiClient.GetGuildScheduledEventRspvUsersAsync(this.GuildId, this.Id, limit, before, after, withMember).ConfigureAwait(false);
+
+	/// <summary>
+	///     Creates an exception for this scheduled event.
+	/// </summary>
+	/// <param name="action">Action to perform on the exception create model.</param>
+	/// <returns>The created exception.</returns>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the correct permissions.</exception>
+	/// <exception cref="NotFoundException">Thrown when the event does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordScheduledEventException> CreateExceptionAsync(Action<ScheduledEventExceptionCreateModel> action)
+	{
+		var mdl = new ScheduledEventExceptionCreateModel();
+		action(mdl);
+		return await this.Discord.ApiClient.CreateGuildScheduledEventExceptionAsync(this.GuildId, this.Id, mdl.OriginalScheduledStartTime, mdl.ScheduledStartTime, mdl.ScheduledEndTime, mdl.IsCanceled, mdl.AuditLogReason).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Gets users subscribed to a specific exception.
+	/// </summary>
+	/// <param name="exceptionId">The exception id.</param>
+	/// <param name="limit">The maximum number of users to return.</param>
+	/// <param name="before">Get users before this user id.</param>
+	/// <param name="after">Get users after this user id.</param>
+	/// <param name="withMember">Whether to include guild member data.</param>
+	/// <returns>A map of subscribed users by user id.</returns>
+	/// <exception cref="NotFoundException">Thrown when the event exception does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<IReadOnlyDictionary<ulong, DiscordScheduledEventUser>> GetExceptionUsersAsync(ulong exceptionId, int? limit = null, ulong? before = null, ulong? after = null, bool? withMember = null)
+		=> this.Discord.ApiClient.GetGuildScheduledEventExceptionUsersAsync(this.GuildId, this.Id, exceptionId, limit, before, after, withMember);
+
+	/// <summary>
+	///     Gets user counts for this scheduled event and optionally specific exceptions.
+	/// </summary>
+	/// <param name="exceptionIds">The exception ids to get counts for. Optional, if not provided only the count for the scheduled event will be returned.</param>
+	/// <returns>User counts for the scheduled event and optionally the specified exceptions.</returns>
+	/// <exception cref="NotFoundException">Thrown when the event does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<DiscordScheduledEventUserCounts> GetUserCountsAsync(IEnumerable<ulong>? exceptionIds = null)
+		=> this.Discord.ApiClient.GetGuildScheduledEventUserCountsAsync(this.GuildId, this.Id, exceptionIds);
 
 	/// <summary>
 	///     Deletes a scheduled event.

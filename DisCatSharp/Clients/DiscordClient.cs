@@ -278,6 +278,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._guildScheduledEventDeleted = new("GUILD_SCHEDULED_EVENT_DELETED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildScheduledEventUserAdded = new("GUILD_SCHEDULED_EVENT_USER_ADDED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildScheduledEventUserRemoved = new("GUILD_SCHEDULED_EVENT_USER_REMOVED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildScheduledEventExceptionCreated = new("GUILD_SCHEDULED_EVENT_EXCEPTION_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildScheduledEventExceptionUpdated = new("GUILD_SCHEDULED_EVENT_EXCEPTION_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildScheduledEventExceptionDeleted = new("GUILD_SCHEDULED_EVENT_EXCEPTION_DELETED", EventExecutionLimit, this.EventErrorHandler);
 		this._embeddedActivityUpdated = new("EMBEDDED_ACTIVITY_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildMemberTimeoutAdded = new("GUILD_MEMBER_TIMEOUT_ADDED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildMemberTimeoutChanged = new("GUILD_MEMBER_TIMEOUT_UPDATED", EventExecutionLimit, this.EventErrorHandler);
@@ -1749,10 +1752,44 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				old.UserCount = scheduledEvent.UserCount;
 				old.ScheduledStartTimeRaw = scheduledEvent.ScheduledStartTimeRaw;
 				old.ScheduledEndTimeRaw = scheduledEvent.ScheduledEndTimeRaw;
+				old.Exceptions = scheduledEvent.Exceptions;
 				return old;
 			});
 
 		return scheduledEvent;
+	}
+
+	/// <summary>
+	///     Upserts a scheduled event exception in a cached scheduled event, if present.
+	/// </summary>
+	/// <param name="exception">The exception to upsert.</param>
+	/// <param name="guild">The guild to update.</param>
+	/// <returns>The old exception, if it was updated, otherwise null.</returns>
+	private DiscordScheduledEventException? UpsertScheduledEventException(DiscordScheduledEventException exception, DiscordGuild guild)
+	{
+		ObjectDisposedException.ThrowIf(this._disposed, this);
+
+		if (!guild.ScheduledEventsInternal.TryGetValue(exception.EventId, out var scheduledEvent))
+			return null;
+
+		var oldException = scheduledEvent.Exceptions.FirstOrDefault(x => x.Id == exception.Id);
+		scheduledEvent.Exceptions = scheduledEvent.Exceptions.Where(x => x.Id != exception.Id).Append(exception).ToList();
+		return oldException;
+	}
+
+	/// <summary>
+	///     Removes a scheduled event exception from a cached scheduled event, if present.
+	/// </summary>
+	/// <param name="exception">The exception to remove.</param>
+	/// <param name="guild">The guild to update.</param>
+	private void RemoveScheduledEventException(DiscordScheduledEventException exception, DiscordGuild guild)
+	{
+		ObjectDisposedException.ThrowIf(this._disposed, this);
+
+		if (!guild.ScheduledEventsInternal.TryGetValue(exception.EventId, out var scheduledEvent))
+			return;
+
+		scheduledEvent.Exceptions = scheduledEvent.Exceptions.Where(x => x.Id != exception.Id).ToList();
 	}
 
 	/// <summary>
@@ -1857,6 +1894,11 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				var xtm = xj.ToDiscordObject<DiscordScheduledEvent>();
 
 				xtm.Discord = this;
+				foreach (var exception in xtm.Exceptions)
+				{
+					exception.Discord = this;
+					exception.GuildId ??= guild.Id;
+				}
 
 				guild.ScheduledEventsInternal[xtm.Id] = xtm;
 			}

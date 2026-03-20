@@ -35,4 +35,9 @@ public class GuildScheduledEventUserAddEventArgs : DiscordEventArgs
 	///     Gets the member which has subscribed to this scheduled event.
 	/// </summary>
 	public DiscordMember Member { get; internal set; }
+
+	/// <summary>
+	///     Gets the scheduled event exception id, if the subscription applies to a specific recurrence.
+	/// </summary>
+	public ulong? ExceptionId { get; internal set; }
 }

@@ -512,6 +512,39 @@ public sealed partial class DiscordClient
 
 	private AsyncEvent<DiscordClient, GuildScheduledEventUserRemoveEventArgs> _guildScheduledEventUserRemoved;
 
+	/// <summary>
+	///     Fired when a scheduled event exception is created.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, GuildScheduledEventExceptionCreateEventArgs> GuildScheduledEventExceptionCreated
+	{
+		add => this._guildScheduledEventExceptionCreated.Register(value);
+		remove => this._guildScheduledEventExceptionCreated.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, GuildScheduledEventExceptionCreateEventArgs> _guildScheduledEventExceptionCreated;
+
+	/// <summary>
+	///     Fired when a scheduled event exception is updated.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, GuildScheduledEventExceptionUpdateEventArgs> GuildScheduledEventExceptionUpdated
+	{
+		add => this._guildScheduledEventExceptionUpdated.Register(value);
+		remove => this._guildScheduledEventExceptionUpdated.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, GuildScheduledEventExceptionUpdateEventArgs> _guildScheduledEventExceptionUpdated;
+
+	/// <summary>
+	///     Fired when a scheduled event exception is deleted.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, GuildScheduledEventExceptionDeleteEventArgs> GuildScheduledEventExceptionDeleted
+	{
+		add => this._guildScheduledEventExceptionDeleted.Register(value);
+		remove => this._guildScheduledEventExceptionDeleted.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, GuildScheduledEventExceptionDeleteEventArgs> _guildScheduledEventExceptionDeleted;
+
 	#endregion
 
 	#region Guild Integration

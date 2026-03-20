@@ -61,6 +61,7 @@ public sealed partial class DiscordClient
 		DiscordThreadChannel trd = default;
 		DiscordThreadChannelMember trdm = default;
 		DiscordScheduledEvent gse = default;
+		DiscordScheduledEventException gsee = default;
 		TransportUser usr = default;
 		TransportMember mbr = default;
 		TransportUser refUsr = default;
@@ -277,13 +278,31 @@ public sealed partial class DiscordClient
 			case "guild_scheduled_event_user_add":
 				gid = (ulong)dat["guild_id"]!;
 				uid = (ulong)dat["user_id"]!;
-				await this.OnGuildScheduledEventUserAddedEventAsync((ulong)dat["guild_scheduled_event_id"]!, uid, this.GuildsInternal[gid]).ConfigureAwait(false);
+				await this.OnGuildScheduledEventUserAddedEventAsync((ulong)dat["guild_scheduled_event_id"]!, uid, (ulong?)dat["guild_scheduled_event_exception_id"], this.GuildsInternal[gid]).ConfigureAwait(false);
 				break;
 
 			case "guild_scheduled_event_user_remove":
 				gid = (ulong)dat["guild_id"]!;
 				uid = (ulong)dat["user_id"]!;
-				await this.OnGuildScheduledEventUserRemovedEventAsync((ulong)dat["guild_scheduled_event_id"]!, uid, this.GuildsInternal[gid]).ConfigureAwait(false);
+				await this.OnGuildScheduledEventUserRemovedEventAsync((ulong)dat["guild_scheduled_event_id"]!, uid, (ulong?)dat["guild_scheduled_event_exception_id"], this.GuildsInternal[gid]).ConfigureAwait(false);
+				break;
+
+			case "guild_scheduled_event_exception_create":
+				gsee = DiscordJson.DeserializeObject<DiscordScheduledEventException>(payloadString, this);
+				gid = (ulong)dat["guild_id"]!;
+				await this.OnGuildScheduledEventExceptionCreateEventAsync(gsee, this.GuildsInternal[gid]).ConfigureAwait(false);
+				break;
+
+			case "guild_scheduled_event_exception_update":
+				gsee = DiscordJson.DeserializeObject<DiscordScheduledEventException>(payloadString, this);
+				gid = (ulong)dat["guild_id"]!;
+				await this.OnGuildScheduledEventExceptionUpdateEventAsync(gsee, this.GuildsInternal[gid]).ConfigureAwait(false);
+				break;
+
+			case "guild_scheduled_event_exception_delete":
+				gsee = DiscordJson.DeserializeObject<DiscordScheduledEventException>(payloadString, this);
+				gid = (ulong)dat["guild_id"]!;
+				await this.OnGuildScheduledEventExceptionDeleteEventAsync(gsee, this.GuildsInternal[gid]).ConfigureAwait(false);
 				break;
 
 			#endregion
@@ -1791,6 +1810,11 @@ public sealed partial class DiscordClient
 	internal async Task OnGuildScheduledEventCreateEventAsync(DiscordScheduledEvent scheduledEvent, DiscordGuild guild)
 	{
 		scheduledEvent.Discord = this;
+		foreach (var exception in scheduledEvent.Exceptions)
+		{
+			exception.Discord = this;
+			exception.GuildId ??= guild.Id;
+		}
 
 		guild.ScheduledEventsInternal.AddOrUpdate(scheduledEvent.Id, scheduledEvent, (old, newScheduledEvent) => newScheduledEvent);
 
@@ -1848,7 +1872,8 @@ public sealed partial class DiscordClient
 				Status = ev.Status,
 				Name = ev.Name,
 				UserCount = ev.UserCount,
-				CoverImageHash = ev.CoverImageHash
+				CoverImageHash = ev.CoverImageHash,
+				Exceptions = [.. ev.Exceptions]
 			};
 		}
 
@@ -1864,6 +1889,12 @@ public sealed partial class DiscordClient
 				old.GlobalName = scheduledEvent.Creator.GlobalName;
 				return old;
 			});
+		}
+
+		foreach (var exception in scheduledEvent.Exceptions)
+		{
+			exception.Discord = this;
+			exception.GuildId ??= guild.Id;
 		}
 
 		if (scheduledEvent.Status == ScheduledEventStatus.Completed)
@@ -1907,6 +1938,11 @@ public sealed partial class DiscordClient
 	internal async Task OnGuildScheduledEventDeleteEventAsync(DiscordScheduledEvent scheduledEvent, DiscordGuild guild)
 	{
 		scheduledEvent.Discord = this;
+		foreach (var exception in scheduledEvent.Exceptions)
+		{
+			exception.Discord = this;
+			exception.GuildId ??= guild.Id;
+		}
 
 		if (scheduledEvent.Status == ScheduledEventStatus.Scheduled)
 			scheduledEvent.Status = ScheduledEventStatus.Canceled;
@@ -1938,9 +1974,10 @@ public sealed partial class DiscordClient
 	///     Handles the scheduled event user add event.
 	///     <param name="guildScheduledEventId">The event.</param>
 	///     <param name="userId">The added user id.</param>
+	///     <param name="exceptionId">The scheduled event exception id, if applicable.</param>
 	///     <param name="guild">The guild.</param>
 	/// </summary>
-	internal async Task OnGuildScheduledEventUserAddedEventAsync(ulong guildScheduledEventId, ulong userId, DiscordGuild guild)
+	internal async Task OnGuildScheduledEventUserAddedEventAsync(ulong guildScheduledEventId, ulong userId, ulong? exceptionId, DiscordGuild guild)
 	{
 		var scheduledEvent = this.InternalGetCachedScheduledEvent(guildScheduledEventId) ?? this.UpdateScheduledEvent(new()
 		{
@@ -1964,7 +2001,8 @@ public sealed partial class DiscordClient
 			ScheduledEvent = scheduledEvent,
 			Guild = guild,
 			User = user,
-			Member = member
+			Member = member,
+			ExceptionId = exceptionId
 		}).ConfigureAwait(false);
 	}
 
@@ -1972,9 +2010,10 @@ public sealed partial class DiscordClient
 	///     Handles the scheduled event user remove event.
 	///     <param name="guildScheduledEventId">The event.</param>
 	///     <param name="userId">The removed user id.</param>
+	///     <param name="exceptionId">The scheduled event exception id, if applicable.</param>
 	///     <param name="guild">The guild.</param>
 	/// </summary>
-	internal async Task OnGuildScheduledEventUserRemovedEventAsync(ulong guildScheduledEventId, ulong userId, DiscordGuild guild)
+	internal async Task OnGuildScheduledEventUserRemovedEventAsync(ulong guildScheduledEventId, ulong userId, ulong? exceptionId, DiscordGuild guild)
 	{
 		var scheduledEvent = this.InternalGetCachedScheduledEvent(guildScheduledEventId) ?? this.UpdateScheduledEvent(new()
 		{
@@ -1998,7 +2037,57 @@ public sealed partial class DiscordClient
 			ScheduledEvent = scheduledEvent,
 			Guild = guild,
 			User = user,
-			Member = member
+			Member = member,
+			ExceptionId = exceptionId
+		}).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Handles the scheduled event exception create event.
+	/// </summary>
+	internal async Task OnGuildScheduledEventExceptionCreateEventAsync(DiscordScheduledEventException exception, DiscordGuild guild)
+	{
+		exception.Discord = this;
+		exception.GuildId ??= guild.Id;
+		this.UpsertScheduledEventException(exception, guild);
+
+		await this._guildScheduledEventExceptionCreated.InvokeAsync(this, new(this.ServiceProvider)
+		{
+			Exception = exception,
+			Guild = guild
+		}).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Handles the scheduled event exception update event.
+	/// </summary>
+	internal async Task OnGuildScheduledEventExceptionUpdateEventAsync(DiscordScheduledEventException exception, DiscordGuild guild)
+	{
+		exception.Discord = this;
+		exception.GuildId ??= guild.Id;
+		var oldException = this.UpsertScheduledEventException(exception, guild);
+
+		await this._guildScheduledEventExceptionUpdated.InvokeAsync(this, new(this.ServiceProvider)
+		{
+			ExceptionBefore = oldException,
+			ExceptionAfter = exception,
+			Guild = guild
+		}).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Handles the scheduled event exception delete event.
+	/// </summary>
+	internal async Task OnGuildScheduledEventExceptionDeleteEventAsync(DiscordScheduledEventException exception, DiscordGuild guild)
+	{
+		exception.Discord = this;
+		exception.GuildId ??= guild.Id;
+		this.RemoveScheduledEventException(exception, guild);
+
+		await this._guildScheduledEventExceptionDeleted.InvokeAsync(this, new(this.ServiceProvider)
+		{
+			Exception = exception,
+			Guild = guild
 		}).ConfigureAwait(false);
 	}
 

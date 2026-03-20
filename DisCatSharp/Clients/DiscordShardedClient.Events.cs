@@ -505,6 +505,39 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, GuildScheduledEventUserRemoveEventArgs> _guildScheduledEventUserRemoved;
 
+	/// <summary>
+	///     Fired when a scheduled event exception is created.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, GuildScheduledEventExceptionCreateEventArgs> GuildScheduledEventExceptionCreated
+	{
+		add => this._guildScheduledEventExceptionCreated.Register(value);
+		remove => this._guildScheduledEventExceptionCreated.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, GuildScheduledEventExceptionCreateEventArgs> _guildScheduledEventExceptionCreated;
+
+	/// <summary>
+	///     Fired when a scheduled event exception is updated.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, GuildScheduledEventExceptionUpdateEventArgs> GuildScheduledEventExceptionUpdated
+	{
+		add => this._guildScheduledEventExceptionUpdated.Register(value);
+		remove => this._guildScheduledEventExceptionUpdated.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, GuildScheduledEventExceptionUpdateEventArgs> _guildScheduledEventExceptionUpdated;
+
+	/// <summary>
+	///     Fired when a scheduled event exception is deleted.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, GuildScheduledEventExceptionDeleteEventArgs> GuildScheduledEventExceptionDeleted
+	{
+		add => this._guildScheduledEventExceptionDeleted.Register(value);
+		remove => this._guildScheduledEventExceptionDeleted.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, GuildScheduledEventExceptionDeleteEventArgs> _guildScheduledEventExceptionDeleted;
+
 	#endregion
 
 	#region Guild Integration
@@ -2103,6 +2136,30 @@ public sealed partial class DiscordShardedClient
 	/// <param name="e">The event args.</param>
 	private Task Client_GuildScheduledEventUserRemoved(DiscordClient client, GuildScheduledEventUserRemoveEventArgs e)
 		=> this._guildScheduledEventUserRemoved.InvokeAsync(client, e);
+
+	/// <summary>
+	///    Handles the scheduled event exception created event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_GuildScheduledEventExceptionCreated(DiscordClient client, GuildScheduledEventExceptionCreateEventArgs e)
+		=> this._guildScheduledEventExceptionCreated.InvokeAsync(client, e);
+
+	/// <summary>
+	///     Handles the scheduled event exception updated event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_GuildScheduledEventExceptionUpdated(DiscordClient client, GuildScheduledEventExceptionUpdateEventArgs e)
+		=> this._guildScheduledEventExceptionUpdated.InvokeAsync(client, e);
+
+	/// <summary>
+	///    Handles the scheduled event exception deleted event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_GuildScheduledEventExceptionDeleted(DiscordClient client, GuildScheduledEventExceptionDeleteEventArgs e)
+		=> this._guildScheduledEventExceptionDeleted.InvokeAsync(client, e);
 
 	/// <summary>
 	///     Handles the automod rule created event.

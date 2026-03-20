@@ -35,4 +35,9 @@ public class GuildScheduledEventUserRemoveEventArgs : DiscordEventArgs
 	///     Gets the member which has unsubscribed from this scheduled event.
 	/// </summary>
 	public DiscordMember Member { get; internal set; }
+
+	/// <summary>
+	///     Gets the scheduled event exception id, if the unsubscription applies to a specific recurrence.
+	/// </summary>
+	public ulong? ExceptionId { get; internal set; }
 }
