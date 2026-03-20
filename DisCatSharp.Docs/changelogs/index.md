@@ -9,3 +9,6 @@ author: DisCatSharp Team
 Please select the changelog you want to view from the left side.
 
 Current: [v10.7.0](xref:changelogs_v10_10_7_0)
+
+> [!NOTE]
+> The changelog is currently not complete. Refer to the note in the v10.7.0 changelog for more information.
