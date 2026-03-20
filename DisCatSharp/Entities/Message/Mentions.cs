@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace DisCatSharp.Entities;
@@ -116,5 +115,5 @@ public static class Mentions
 	/// <summary>
 	///     No mentions allowed.
 	/// </summary>
-	public static IReadOnlyList<IMention> None { get; } = Array.Empty<IMention>();
+	public static IReadOnlyList<IMention> None { get; } = [];
 }

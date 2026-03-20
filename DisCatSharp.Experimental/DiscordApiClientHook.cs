@@ -78,9 +78,9 @@ internal sealed class DiscordApiClientHook
 		{
 			if (result.Messages.Count is not 0)
 			{
-				foreach(var msgs in result.Messages)
+				foreach (var msgs in result.Messages)
 					if (msgs.Count is not 0)
-						foreach(var msg in msgs)
+						foreach (var msg in msgs)
 							msg.Discord = this.ApiClient.Discord;
 				foreach (var thread in result.Threads)
 					thread.Discord = this.ApiClient.Discord;

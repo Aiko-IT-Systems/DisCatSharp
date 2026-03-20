@@ -7,10 +7,10 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Threading;
 
-using Microsoft.Extensions.Logging;
-
-using DisCatSharp.Voice.Interop;
 using DisCatSharp.Voice.Enums.Interop;
+using DisCatSharp.Voice.Interop;
+
+using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp.Voice.Codec;
 

@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 
-using DisCatSharp.Voice.Interfaces.Dave;
-
 using DisCatSharp.Voice.Enums.Dave;
+using DisCatSharp.Voice.Interfaces.Dave;
 
 namespace DisCatSharp.Voice.Entities.Dave;
 

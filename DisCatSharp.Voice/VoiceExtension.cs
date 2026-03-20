@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
-using DisCatSharp.Voice.Entities;
-using DisCatSharp.Voice.Payloads;
 using DisCatSharp.Voice.Logging;
+using DisCatSharp.Voice.Payloads;
 
 using Microsoft.Extensions.Logging;
 

@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using DisCatSharp.Enums;
 
@@ -44,7 +42,7 @@ public sealed class DiscordStringSelectComponent : DiscordBaseSelectComponent
 	///     The options to pick from on this component.
 	/// </summary>
 	[JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyList<DiscordStringSelectComponentOption> Options { get; internal set; } = Array.Empty<DiscordStringSelectComponentOption>();
+	public IReadOnlyList<DiscordStringSelectComponentOption> Options { get; internal set; } = [];
 
 	/// <summary>
 	///     Enables this component if it was disabled before.

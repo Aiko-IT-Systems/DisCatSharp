@@ -22,12 +22,12 @@ using DisCatSharp.Net.WebSocket;
 using DisCatSharp.Voice.Codec;
 using DisCatSharp.Voice.Entities;
 using DisCatSharp.Voice.Entities.Dave;
-using DisCatSharp.Voice.Payloads;
 using DisCatSharp.Voice.Enums;
 using DisCatSharp.Voice.Enums.Dave;
 using DisCatSharp.Voice.Enums.Interop;
 using DisCatSharp.Voice.EventArgs;
 using DisCatSharp.Voice.Logging;
+using DisCatSharp.Voice.Payloads;
 
 using Microsoft.Extensions.Logging;
 
@@ -556,13 +556,13 @@ public sealed class VoiceConnection : IDisposable
 			this._keepaliveTokenSource?.Dispose();
 			this._opus?.Dispose();
 			this._opus = null;
-				this._sodium?.Dispose();
-				this._sodium = null;
-				this._daveSession?.Dispose();
-				this._daveSession = null;
-				this.PublishDaveStateChanged(DaveConnectionState.NotNegotiated, nameof(Dispose), "voice connection disposed", 0);
-				this._rtp?.Dispose();
-				this._rtp = null;
+			this._sodium?.Dispose();
+			this._sodium = null;
+			this._daveSession?.Dispose();
+			this._daveSession = null;
+			this.PublishDaveStateChanged(DaveConnectionState.NotNegotiated, nameof(Dispose), "voice connection disposed", 0);
+			this._rtp?.Dispose();
+			this._rtp = null;
 			this._reconnectSemaphore.Dispose();
 		}
 		catch (Exception ex)
@@ -849,23 +849,23 @@ public sealed class VoiceConnection : IDisposable
 				false, this._daveSession.State, this._daveSession.IsActive);
 		}
 
-			if (this._daveSession is { IsActive: false })
+		if (this._daveSession is { IsActive: false })
+		{
+			switch (this._configuration.DavePendingAudioBehavior)
 			{
-				switch (this._configuration.DavePendingAudioBehavior)
-				{
-					case DavePendingAudioBehavior.Drop:
-						if (Interlocked.CompareExchange(ref this._daveInactiveDropDiagLogged, 1, 0) == 0)
-							this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake,
-								"[DAVE] Dropping outbound frame while session is pending (DavePendingAudioBehavior=Drop)");
+				case DavePendingAudioBehavior.Drop:
+					if (Interlocked.CompareExchange(ref this._daveInactiveDropDiagLogged, 1, 0) == 0)
+						this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake,
+							"[DAVE] Dropping outbound frame while session is pending (DavePendingAudioBehavior=Drop)");
 
-						ArrayPool<byte>.Shared.Return(packetArray);
-						return false;
+					ArrayPool<byte>.Shared.Return(packetArray);
+					return false;
 
-					case DavePendingAudioBehavior.Throw:
-						ArrayPool<byte>.Shared.Return(packetArray);
-						throw new InvalidOperationException($"DAVE is not active (state={this._daveSession.State}); outbound audio cannot be sent with DavePendingAudioBehavior.Throw.");
-				}
+				case DavePendingAudioBehavior.Throw:
+					ArrayPool<byte>.Shared.Return(packetArray);
+					throw new InvalidOperationException($"DAVE is not active (state={this._daveSession.State}); outbound audio cannot be sent with DavePendingAudioBehavior.Throw.");
 			}
+		}
 
 		byte[]? daveEncrypted = null;
 		var daveEncryptSucceeded = false;
@@ -1126,14 +1126,14 @@ public sealed class VoiceConnection : IDisposable
 		// Extension bytes are NOT part of AAD — they are inside the ciphertext.
 		var headerLength = Rtp.HEADER_SIZE; // Discord *_rtpsize: AAD is always the fixed 12-byte RTP header
 
-			if (headerLength >= data.Length)
-			{
-				this._discord.Logger.LogWarning(VoiceEvents.VoiceReceiveFailure,
-					"Dropping RTP packet: computed header length ({HeaderLength} bytes) >= packet length ({PacketLength} bytes)",
-					headerLength, data.Length);
-				this.PublishVoicePacketDropped(VoicePacketDropReason.MalformedRtp, ssrc, null, null, "header length exceeds packet length");
-				return false;
-			}
+		if (headerLength >= data.Length)
+		{
+			this._discord.Logger.LogWarning(VoiceEvents.VoiceReceiveFailure,
+				"Dropping RTP packet: computed header length ({HeaderLength} bytes) >= packet length ({PacketLength} bytes)",
+				headerLength, data.Length);
+			this.PublishVoicePacketDropped(VoicePacketDropReason.MalformedRtp, ssrc, null, null, "header length exceeds packet length");
+			return false;
+		}
 
 		if (!this._transmittingSsrCs.TryGetValue(ssrc, out var vtx))
 		{
@@ -1148,22 +1148,22 @@ public sealed class VoiceConnection : IDisposable
 			this._transmittingSsrCs.TryAdd(ssrc, vtx);
 		}
 
-			voiceSender = vtx;
-			sequence = vtx.GetTrueSequenceAfterWrapping(shortSequence);
-			ushort gap = 0;
-			if (vtx.LastTrueSequence is { } lastTrueSequence)
+		voiceSender = vtx;
+		sequence = vtx.GetTrueSequenceAfterWrapping(shortSequence);
+		ushort gap = 0;
+		if (vtx.LastTrueSequence is { } lastTrueSequence)
+		{
+			if (sequence <= lastTrueSequence) // out-of-order packet; discard
 			{
-				if (sequence <= lastTrueSequence) // out-of-order packet; discard
-				{
-					this.PublishVoicePacketDropped(VoicePacketDropReason.OutOfOrder, ssrc, sequence, vtx, "sequence older than last accepted packet");
-					return false;
-				}
-
-				gap = (ushort)(sequence - 1 - lastTrueSequence);
-				missingFrames = gap;
-				if (gap >= 5)
-					this._discord.Logger.LogWarning(VoiceEvents.VoiceReceiveFailure, "5 or more voice packets were dropped when receiving");
+				this.PublishVoicePacketDropped(VoicePacketDropReason.OutOfOrder, ssrc, sequence, vtx, "sequence older than last accepted packet");
+				return false;
 			}
+
+			gap = (ushort)(sequence - 1 - lastTrueSequence);
+			missingFrames = gap;
+			if (gap >= 5)
+				this._discord.Logger.LogWarning(VoiceEvents.VoiceReceiveFailure, "5 or more voice packets were dropped when receiving");
+		}
 
 		var opusSpan = Span<byte>.Empty;
 		byte[]? daveDecrypted = null;
@@ -1191,12 +1191,12 @@ public sealed class VoiceConnection : IDisposable
 					extBodyLen = BinaryPrimitives.ReadUInt16BigEndian(data.Slice(14, 2)) * 4;
 				}
 
-					var minLen = aeadHeaderLen + Sodium.AES_GCM_TAG_SIZE + Sodium.AEAD_NONCE_SUFFIX_SIZE;
-					if (data.Length <= minLen)
-					{
-						this.PublishVoicePacketDropped(VoicePacketDropReason.MalformedRtp, ssrc, sequence, vtx, "AEAD packet too small");
-						return false;
-					}
+				var minLen = aeadHeaderLen + Sodium.AES_GCM_TAG_SIZE + Sodium.AEAD_NONCE_SUFFIX_SIZE;
+				if (data.Length <= minLen)
+				{
+					this.PublishVoicePacketDropped(VoicePacketDropReason.MalformedRtp, ssrc, sequence, vtx, "AEAD packet too small");
+					return false;
+				}
 
 				var ciphertextLen = data.Length - aeadHeaderLen - Sodium.AES_GCM_TAG_SIZE - Sodium.AEAD_NONCE_SUFFIX_SIZE;
 				var ciphertext = data.Slice(aeadHeaderLen, ciphertextLen);
@@ -1268,38 +1268,38 @@ public sealed class VoiceConnection : IDisposable
 			// can destabilize receive.
 			if (this._daveSession is not null)
 			{
-					if (!this._daveSession.IsActive)
-					{
-						if (Interlocked.CompareExchange(ref this._daveRecvPendingDropDiagLogged, 1, 0) == 0)
-							this._voiceLogger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
-								"[DAVE] Dropping inbound packet while session is pending");
+				if (!this._daveSession.IsActive)
+				{
+					if (Interlocked.CompareExchange(ref this._daveRecvPendingDropDiagLogged, 1, 0) == 0)
+						this._voiceLogger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
+							"[DAVE] Dropping inbound packet while session is pending");
 
-						this.PublishVoicePacketDropped(VoicePacketDropReason.DavePending, ssrc, sequence, vtx, "dave session is not active");
-						return false;
-					}
+					this.PublishVoicePacketDropped(VoicePacketDropReason.DavePending, ssrc, sequence, vtx, "dave session is not active");
+					return false;
+				}
 
-					if (vtx.Id == 0)
-					{
-						if (Interlocked.CompareExchange(ref this._daveRecvMissingSenderDropDiagLogged, 1, 0) == 0)
-							this._voiceLogger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
-								"[DAVE] Dropping inbound packet for SSRC {Ssrc}: sender mapping not ready", ssrc);
+				if (vtx.Id == 0)
+				{
+					if (Interlocked.CompareExchange(ref this._daveRecvMissingSenderDropDiagLogged, 1, 0) == 0)
+						this._voiceLogger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
+							"[DAVE] Dropping inbound packet for SSRC {Ssrc}: sender mapping not ready", ssrc);
 
-						this.PublishVoicePacketDropped(VoicePacketDropReason.MissingSenderMapping, ssrc, sequence, vtx, "sender mapping missing for SSRC");
-						return false;
-					}
+					this.PublishVoicePacketDropped(VoicePacketDropReason.MissingSenderMapping, ssrc, sequence, vtx, "sender mapping missing for SSRC");
+					return false;
+				}
 
 				if (this._daveSession.TryDecrypt(vtx.Id, opusSpan, out daveDecrypted, out var daveLen))
 					opusSpan = daveDecrypted.AsSpan(0, daveLen);
-					else
-					{
-						if (Interlocked.CompareExchange(ref this._daveRecvMissingRatchetDropDiagLogged, 1, 0) == 0)
-							this._voiceLogger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
-								"[DAVE] Dropping inbound packet for SSRC {Ssrc}: no decryptor mapping for user {UserId}", ssrc, vtx.Id);
+				else
+				{
+					if (Interlocked.CompareExchange(ref this._daveRecvMissingRatchetDropDiagLogged, 1, 0) == 0)
+						this._voiceLogger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
+							"[DAVE] Dropping inbound packet for SSRC {Ssrc}: no decryptor mapping for user {UserId}", ssrc, vtx.Id);
 
-						this.PublishVoicePacketDropped(VoicePacketDropReason.MissingRatchet, ssrc, sequence, vtx, $"no decryptor mapping for user {vtx.Id}");
-						return false;
-					}
+					this.PublishVoicePacketDropped(VoicePacketDropReason.MissingRatchet, ssrc, sequence, vtx, $"no decryptor mapping for user {vtx.Id}");
+					return false;
 				}
+			}
 
 			// Strip extensions, if any
 			if (hasExtension)
@@ -1310,14 +1310,14 @@ public sealed class VoiceConnection : IDisposable
 					var extWords = (opusSpan[2] << 8) | opusSpan[3];
 					var extBytes = extWords * 4;
 					var extEnd = 4 + extBytes;
-						if (extEnd > opusSpan.Length)
-						{
-							this._voiceLogger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
-								"[VoiceRecv] Dropping packet with malformed RTP extension length: ssrc={Ssrc} seq={Seq} extEnd={ExtEnd} payloadLen={PayloadLen}",
-								ssrc, sequence, extEnd, opusSpan.Length);
-							this.PublishVoicePacketDropped(VoicePacketDropReason.MalformedExtension, ssrc, sequence, vtx, "malformed RTP extension length");
-							return false;
-						}
+					if (extEnd > opusSpan.Length)
+					{
+						this._voiceLogger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
+							"[VoiceRecv] Dropping packet with malformed RTP extension length: ssrc={Ssrc} seq={Seq} extEnd={ExtEnd} payloadLen={PayloadLen}",
+							ssrc, sequence, extEnd, opusSpan.Length);
+						this.PublishVoicePacketDropped(VoicePacketDropReason.MalformedExtension, ssrc, sequence, vtx, "malformed RTP extension length");
+						return false;
+					}
 
 					var i = 4;
 					while (i < extEnd)
@@ -1342,14 +1342,14 @@ public sealed class VoiceConnection : IDisposable
 						}
 
 						i++;
-							if (i + len > extEnd)
-							{
-								this._voiceLogger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
-									"[VoiceRecv] Dropping packet with malformed RTP extension element: ssrc={Ssrc} seq={Seq} extIndex={Index} extEnd={ExtEnd}",
-									ssrc, sequence, i, extEnd);
-								this.PublishVoicePacketDropped(VoicePacketDropReason.MalformedExtension, ssrc, sequence, vtx, "malformed RTP extension element");
-								return false;
-							}
+						if (i + len > extEnd)
+						{
+							this._voiceLogger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
+								"[VoiceRecv] Dropping packet with malformed RTP extension element: ssrc={Ssrc} seq={Seq} extIndex={Index} extEnd={ExtEnd}",
+								ssrc, sequence, i, extEnd);
+							this.PublishVoicePacketDropped(VoicePacketDropReason.MalformedExtension, ssrc, sequence, vtx, "malformed RTP extension element");
+							return false;
+						}
 
 						i += len;
 					}
@@ -1358,14 +1358,14 @@ public sealed class VoiceConnection : IDisposable
 					while (i < opusSpan.Length && opusSpan[i] is 0)
 						i++;
 
-						if (i >= opusSpan.Length)
-						{
-							this._voiceLogger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
-								"[VoiceRecv] Dropping packet with no Opus payload after RTP extension strip: ssrc={Ssrc} seq={Seq}",
-								ssrc, sequence);
-							this.PublishVoicePacketDropped(VoicePacketDropReason.MalformedExtension, ssrc, sequence, vtx, "no payload after extension strip");
-							return false;
-						}
+					if (i >= opusSpan.Length)
+					{
+						this._voiceLogger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
+							"[VoiceRecv] Dropping packet with no Opus payload after RTP extension strip: ssrc={Ssrc} seq={Seq}",
+							ssrc, sequence);
+						this.PublishVoicePacketDropped(VoicePacketDropReason.MalformedExtension, ssrc, sequence, vtx, "no payload after extension strip");
+						return false;
+					}
 
 					opusSpan = opusSpan[i..];
 				}
@@ -1406,14 +1406,14 @@ public sealed class VoiceConnection : IDisposable
 			{
 				this._opus.Decode(vtx.Decoder, opusSpan, ref pcmSpan, false, out outputFormat);
 			}
-				catch (Exception ex)
-				{
-					this._voiceLogger.VoiceDebug(VoiceEvents.VoiceReceiveFailure, ex,
-						"[VoiceRecv] Dropping undecodable Opus packet: ssrc={Ssrc} seq={Seq} len={Len}",
-						ssrc, sequence, opusSpan.Length);
-					this.PublishVoicePacketDropped(VoicePacketDropReason.DecodeFailure, ssrc, sequence, vtx, ex.GetType().Name);
-					return false;
-				}
+			catch (Exception ex)
+			{
+				this._voiceLogger.VoiceDebug(VoiceEvents.VoiceReceiveFailure, ex,
+					"[VoiceRecv] Dropping undecodable Opus packet: ssrc={Ssrc} seq={Seq} len={Len}",
+					ssrc, sequence, opusSpan.Length);
+				this.PublishVoicePacketDropped(VoicePacketDropReason.DecodeFailure, ssrc, sequence, vtx, ex.GetType().Name);
+				return false;
+			}
 
 			pcm = pcm[..pcmSpan.Length];
 		}
@@ -1440,42 +1440,42 @@ public sealed class VoiceConnection : IDisposable
 		try
 		{
 			var pcm = new byte[this.AudioFormat.CalculateMaximumFrameSize()];
-				var pcmMem = pcm.AsMemory();
-				var opus = new byte[pcm.Length];
-				var opusMem = opus.AsMemory();
-				var pcmFillers = new List<ReadOnlyMemory<byte>>();
-				if (!this.ProcessPacket(data, ref opusMem, ref pcmMem, pcmFillers, out var vtx, out var audioFormat, out var missingFrames, out var sequence))
-					return;
+			var pcmMem = pcm.AsMemory();
+			var opus = new byte[pcm.Length];
+			var opusMem = opus.AsMemory();
+			var pcmFillers = new List<ReadOnlyMemory<byte>>();
+			if (!this.ProcessPacket(data, ref opusMem, ref pcmMem, pcmFillers, out var vtx, out var audioFormat, out var missingFrames, out var sequence))
+				return;
 
-				for (var i = 0; i < pcmFillers.Count; i++)
-				{
-					var pcmFiller = pcmFillers[i];
-					await this._voiceReceived.InvokeAsync(this, new(this._discord.ServiceProvider)
-					{
-						Ssrc = vtx.Ssrc,
-						User = vtx.User,
-						PcmData = pcmFiller,
-						OpusData = Array.Empty<byte>().AsMemory(),
-						AudioFormat = audioFormat,
-						AudioDuration = audioFormat.CalculateSampleDuration(pcmFiller.Length),
-						Sequence = sequence >= (ulong)(pcmFillers.Count - i) ? sequence - (ulong)(pcmFillers.Count - i) : 0,
-						MissingFrames = 1,
-						IsConcealmentFrame = true
-					}).ConfigureAwait(false);
-				}
-
+			for (var i = 0; i < pcmFillers.Count; i++)
+			{
+				var pcmFiller = pcmFillers[i];
 				await this._voiceReceived.InvokeAsync(this, new(this._discord.ServiceProvider)
 				{
 					Ssrc = vtx.Ssrc,
 					User = vtx.User,
-					PcmData = pcmMem,
-					OpusData = opusMem,
+					PcmData = pcmFiller,
+					OpusData = Array.Empty<byte>().AsMemory(),
 					AudioFormat = audioFormat,
-					AudioDuration = audioFormat.CalculateSampleDuration(pcmMem.Length),
-					Sequence = sequence,
-					MissingFrames = missingFrames,
-					IsConcealmentFrame = false
+					AudioDuration = audioFormat.CalculateSampleDuration(pcmFiller.Length),
+					Sequence = sequence >= (ulong)(pcmFillers.Count - i) ? sequence - (ulong)(pcmFillers.Count - i) : 0,
+					MissingFrames = 1,
+					IsConcealmentFrame = true
 				}).ConfigureAwait(false);
+			}
+
+			await this._voiceReceived.InvokeAsync(this, new(this._discord.ServiceProvider)
+			{
+				Ssrc = vtx.Ssrc,
+				User = vtx.User,
+				PcmData = pcmMem,
+				OpusData = opusMem,
+				AudioFormat = audioFormat,
+				AudioDuration = audioFormat.CalculateSampleDuration(pcmMem.Length),
+				Sequence = sequence,
+				MissingFrames = missingFrames,
+				IsConcealmentFrame = false
+			}).ConfigureAwait(false);
 		}
 		catch (Exception ex)
 		{
@@ -1837,13 +1837,13 @@ public sealed class VoiceConnection : IDisposable
 				this._key = vsd.SecretKey;
 				this._sodium = new(this._key.AsMemory(), this._voiceLogger);
 				// Create a DAVE session if the server has activated DAVE for this channel.
-					if (vsd.DaveProtocolVersion > 0)
+				if (vsd.DaveProtocolVersion > 0)
+				{
+					this._daveSession?.Dispose();
+					this._daveSession = null;
+					this.PublishDaveStateChanged(DaveConnectionState.NotNegotiated, nameof(HandleDispatch), "session description re-initialization", 0);
+					try
 					{
-						this._daveSession?.Dispose();
-						this._daveSession = null;
-						this.PublishDaveStateChanged(DaveConnectionState.NotNegotiated, nameof(HandleDispatch), "session description re-initialization", 0);
-						try
-						{
 						// MLS group ID must be the voice CHANNEL ID, not the guild ID.
 						// Discord derives the MLS group_id from the channel ID; using the guild ID
 						// causes "PublicMessage not for this group" when processing OP27 proposals.
@@ -1873,32 +1873,32 @@ public sealed class VoiceConnection : IDisposable
 						this._daveRecvMissingSenderDropDiagLogged = 0;
 						this._daveRecvMissingRatchetDropDiagLogged = 0;
 					}
-						catch (Exception ex) when (ex is DllNotFoundException or EntryPointNotFoundException)
-						{
+					catch (Exception ex) when (ex is DllNotFoundException or EntryPointNotFoundException)
+					{
 						// libdave is not available on this platform/RID.  Disable DAVE gracefully
 						// rather than crashing the voice connection.  Audio will continue unencrypted.
 						this._daveSession = null;
 						this._daveInactiveDropDiagLogged = 0;
 						this._daveRecvPendingDropDiagLogged = 0;
-							this._daveRecvMissingSenderDropDiagLogged = 0;
-							this._daveRecvMissingRatchetDropDiagLogged = 0;
-							this.PublishDaveStateChanged(DaveConnectionState.NotNegotiated, nameof(HandleDispatch), "libdave unavailable", 0);
-							this._discord.Logger.LogError(VoiceEvents.DaveHandshake,
-								"[DAVE] Native libdave library not found or entry point missing — DAVE disabled for this connection. ({ExType}: {Message})",
-								ex.GetType().Name, ex.Message);
-					}
-				}
-					else
-					{
-						// Non-DAVE channel — dispose any stale session
-						this._daveSession?.Dispose();
-						this._daveSession = null;
-					this._daveInactiveDropDiagLogged = 0;
-						this._daveRecvPendingDropDiagLogged = 0;
 						this._daveRecvMissingSenderDropDiagLogged = 0;
 						this._daveRecvMissingRatchetDropDiagLogged = 0;
-						this.PublishDaveStateChanged(DaveConnectionState.NotNegotiated, nameof(HandleDispatch), "session description without dave protocol", 0);
+						this.PublishDaveStateChanged(DaveConnectionState.NotNegotiated, nameof(HandleDispatch), "libdave unavailable", 0);
+						this._discord.Logger.LogError(VoiceEvents.DaveHandshake,
+							"[DAVE] Native libdave library not found or entry point missing — DAVE disabled for this connection. ({ExType}: {Message})",
+							ex.GetType().Name, ex.Message);
 					}
+				}
+				else
+				{
+					// Non-DAVE channel — dispose any stale session
+					this._daveSession?.Dispose();
+					this._daveSession = null;
+					this._daveInactiveDropDiagLogged = 0;
+					this._daveRecvPendingDropDiagLogged = 0;
+					this._daveRecvMissingSenderDropDiagLogged = 0;
+					this._daveRecvMissingRatchetDropDiagLogged = 0;
+					this.PublishDaveStateChanged(DaveConnectionState.NotNegotiated, nameof(HandleDispatch), "session description without dave protocol", 0);
+				}
 
 				await this.Stage2(vsd).ConfigureAwait(false);
 				break;
@@ -2006,11 +2006,11 @@ public sealed class VoiceConnection : IDisposable
 				}).ConfigureAwait(false);
 				break;
 
-				case 11: // DAVE CLIENTS_CONNECT
-					this._voiceLogger.VoiceTrace(VoiceEvents.DaveHandshake, "Received DAVE CLIENTS_CONNECT (OP11)");
-					this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP11 received");
-					this.PublishDaveOpcodeObserved(11, DaveOpcodeDirection.Received, dispatchPayloadLength, sequence: null, isBinary: false);
-					if (opp is not null && this._daveSession is not null)
+			case 11: // DAVE CLIENTS_CONNECT
+				this._voiceLogger.VoiceTrace(VoiceEvents.DaveHandshake, "Received DAVE CLIENTS_CONNECT (OP11)");
+				this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP11 received");
+				this.PublishDaveOpcodeObserved(11, DaveOpcodeDirection.Received, dispatchPayloadLength, sequence: null, isBinary: false);
+				if (opp is not null && this._daveSession is not null)
 				{
 					var ccp = opp.ToObject<VoiceClientsConnectPayload>();
 					if (ccp is not null)
@@ -2019,11 +2019,11 @@ public sealed class VoiceConnection : IDisposable
 
 				break;
 
-				case 21: // DAVE MLS_PREPARE_TRANSITION
-					this._voiceLogger.VoiceTrace(VoiceEvents.DaveHandshake, "Received DAVE MLS_PREPARE_TRANSITION (OP21)");
-					this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP21 received");
-					this.PublishDaveOpcodeObserved(21, DaveOpcodeDirection.Received, dispatchPayloadLength, sequence: null, isBinary: false);
-					if (opp is not null && this._daveSession is not null)
+			case 21: // DAVE MLS_PREPARE_TRANSITION
+				this._voiceLogger.VoiceTrace(VoiceEvents.DaveHandshake, "Received DAVE MLS_PREPARE_TRANSITION (OP21)");
+				this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP21 received");
+				this.PublishDaveOpcodeObserved(21, DaveOpcodeDirection.Received, dispatchPayloadLength, sequence: null, isBinary: false);
+				if (opp is not null && this._daveSession is not null)
 				{
 					var ptp = opp.ToObject<DavePrepareTransitionPayload>();
 					if (ptp is not null)
@@ -2032,31 +2032,31 @@ public sealed class VoiceConnection : IDisposable
 
 				break;
 
-				case 22: // DAVE MLS_EXECUTE_TRANSITION
-					this._voiceLogger.VoiceTrace(VoiceEvents.DaveHandshake, "Received DAVE MLS_EXECUTE_TRANSITION (OP22)");
-					this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP22 received");
-					this.PublishDaveOpcodeObserved(22, DaveOpcodeDirection.Received, dispatchPayloadLength, sequence: null, isBinary: false);
-					if (opp is not null && this._daveSession is not null)
+			case 22: // DAVE MLS_EXECUTE_TRANSITION
+				this._voiceLogger.VoiceTrace(VoiceEvents.DaveHandshake, "Received DAVE MLS_EXECUTE_TRANSITION (OP22)");
+				this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP22 received");
+				this.PublishDaveOpcodeObserved(22, DaveOpcodeDirection.Received, dispatchPayloadLength, sequence: null, isBinary: false);
+				if (opp is not null && this._daveSession is not null)
 				{
 					var etp = opp.ToObject<DaveExecuteTransitionPayload>();
 					if (etp is not null)
 					{
 						var ack = this._daveSession.HandleExecuteTransition(etp);
-							if (ack is not null)
-							{
-								this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP23 sent");
-								await this.SendDaveJsonOpcodeAsync(23, ack).ConfigureAwait(false);
-							}
+						if (ack is not null)
+						{
+							this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP23 sent");
+							await this.SendDaveJsonOpcodeAsync(23, ack).ConfigureAwait(false);
 						}
 					}
+				}
 
 				break;
 
-				case 24: // DAVE MLS_PREPARE_EPOCH
-					this._voiceLogger.VoiceTrace(VoiceEvents.DaveHandshake, "Received DAVE MLS_PREPARE_EPOCH (OP24)");
-					this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP24 received");
-					this.PublishDaveOpcodeObserved(24, DaveOpcodeDirection.Received, dispatchPayloadLength, sequence: null, isBinary: false);
-					if (opp is not null && this._daveSession is not null)
+			case 24: // DAVE MLS_PREPARE_EPOCH
+				this._voiceLogger.VoiceTrace(VoiceEvents.DaveHandshake, "Received DAVE MLS_PREPARE_EPOCH (OP24)");
+				this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP24 received");
+				this.PublishDaveOpcodeObserved(24, DaveOpcodeDirection.Received, dispatchPayloadLength, sequence: null, isBinary: false);
+				if (opp is not null && this._daveSession is not null)
 				{
 					var pep = opp.ToObject<DavePrepareEpochPayload>();
 					if (pep is not null)
@@ -2069,23 +2069,23 @@ public sealed class VoiceConnection : IDisposable
 						{
 							this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] OP24 epoch=1 (new group expected), re-initialising and re-sending OP26");
 							var kp24 = this._daveSession.PrepareKeyPackage();
-								if (kp24.Length > 0)
-								{
-									this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] Sending key package OP26 ({Len} bytes) from OP24 handler", kp24.Length);
-									this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP26 sent");
-									await this.SendDaveBinaryOpcodeAsync(26, kp24).ConfigureAwait(false);
-								}
+							if (kp24.Length > 0)
+							{
+								this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] Sending key package OP26 ({Len} bytes) from OP24 handler", kp24.Length);
+								this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP26 sent");
+								await this.SendDaveBinaryOpcodeAsync(26, kp24).ConfigureAwait(false);
 							}
 						}
+					}
 				}
 
 				break;
 
-				case 31: // DAVE MLS_INVALID_COMMIT_WELCOME
-					this._voiceLogger.VoiceTrace(VoiceEvents.DaveHandshake, "Received DAVE MLS_INVALID_COMMIT_WELCOME (OP31)");
-					this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP31 received");
-					this.PublishDaveOpcodeObserved(31, DaveOpcodeDirection.Received, dispatchPayloadLength, sequence: null, isBinary: false);
-					if (this._daveSession is not null)
+			case 31: // DAVE MLS_INVALID_COMMIT_WELCOME
+				this._voiceLogger.VoiceTrace(VoiceEvents.DaveHandshake, "Received DAVE MLS_INVALID_COMMIT_WELCOME (OP31)");
+				this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP31 received");
+				this.PublishDaveOpcodeObserved(31, DaveOpcodeDirection.Received, dispatchPayloadLength, sequence: null, isBinary: false);
+				if (this._daveSession is not null)
 				{
 					var icp = opp?.ToObject<DaveMlsInvalidCommitWelcomePayload>();
 					this._daveSession.HandleInvalidCommit(icp);
@@ -2367,11 +2367,11 @@ public sealed class VoiceConnection : IDisposable
 		var opcode = data[2];
 		var payload = data.AsMemory(3);
 
-			// Voice gateway v8: track the last sequence number for seq_ack heartbeats and buffered resume.
-			this._lastSeq = (int)seq;
+		// Voice gateway v8: track the last sequence number for seq_ack heartbeats and buffered resume.
+		this._lastSeq = (int)seq;
 
-			this._voiceLogger.VoiceTrace(VoiceEvents.DaveHandshake, "Received binary DAVE opcode {Opcode} seq={Seq} payload={PayloadLength} bytes", opcode, seq, payload.Length);
-			this.PublishDaveOpcodeObserved(opcode, DaveOpcodeDirection.Received, payload.Length, seq, isBinary: true);
+		this._voiceLogger.VoiceTrace(VoiceEvents.DaveHandshake, "Received binary DAVE opcode {Opcode} seq={Seq} payload={PayloadLength} bytes", opcode, seq, payload.Length);
+		this.PublishDaveOpcodeObserved(opcode, DaveOpcodeDirection.Received, payload.Length, seq, isBinary: true);
 
 		switch (opcode)
 		{
@@ -2388,7 +2388,7 @@ public sealed class VoiceConnection : IDisposable
 						this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] Sending key package OP26 ({Len} bytes) from OP25 lazy-init handler", kp25.Length);
 						await this.SendDaveBinaryOpcodeAsync(26, kp25).ConfigureAwait(false);
 					}
-					}
+				}
 
 				break;
 			case 27: // MLS_PROPOSALS
@@ -2397,14 +2397,14 @@ public sealed class VoiceConnection : IDisposable
 					this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP27 received");
 					this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] OP27 proposals received, {Len} bytes", payload.Length);
 					var commitResult = this._daveSession.HandleProposals(payload.ToArray());
-						if (commitResult is { CommitBytes.Length: > 0 })
-						{
-							this._daveProposalRestartSent = false; // reset guard on success
-							var op28Payload = BuildOp28Payload(commitResult.Value);
-							this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP28 sent");
-							this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] OP28 commit sent, {Len} bytes", op28Payload.Length);
-							await this.SendDaveBinaryOpcodeAsync(28, op28Payload).ConfigureAwait(false);
-						}
+					if (commitResult is { CommitBytes.Length: > 0 })
+					{
+						this._daveProposalRestartSent = false; // reset guard on success
+						var op28Payload = BuildOp28Payload(commitResult.Value);
+						this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP28 sent");
+						this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] OP28 commit sent, {Len} bytes", op28Payload.Length);
+						await this.SendDaveBinaryOpcodeAsync(28, op28Payload).ConfigureAwait(false);
+					}
 					else if (!this._daveProposalRestartSent)
 					{
 						// ProcessProposals returned 0 bytes — stateWithProposals_ inside libdave may be
@@ -2414,12 +2414,12 @@ public sealed class VoiceConnection : IDisposable
 						this._discord.Logger.LogWarning(VoiceEvents.DaveHandshake,
 							"[DAVE] OP27 proposals produced no commit — resetting MLS state and re-sending OP26 (one-shot restart)");
 						var kp27 = this._daveSession.PrepareKeyPackage();
-							if (kp27.Length > 0)
-							{
-								this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP26 sent");
-								this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] Re-sending key package OP26 ({Len} bytes) after OP27 failure", kp27.Length);
-								await this.SendDaveBinaryOpcodeAsync(26, kp27).ConfigureAwait(false);
-							}
+						if (kp27.Length > 0)
+						{
+							this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP26 sent");
+							this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] Re-sending key package OP26 ({Len} bytes) after OP27 failure", kp27.Length);
+							await this.SendDaveBinaryOpcodeAsync(26, kp27).ConfigureAwait(false);
+						}
 					}
 					else
 					{
@@ -2439,23 +2439,23 @@ public sealed class VoiceConnection : IDisposable
 					var action29 = this._daveSession.HandleAnnounceCommit(commitPayload29, transId29);
 					switch (action29)
 					{
-							case DaveAnnounceAction.SendReadyForTransition:
-								this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] OP29 → sending OP23 ReadyForTransition (transId={TransId})", transId29);
-								this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP23 sent");
-								await this.SendDaveJsonOpcodeAsync(23, new DaveReadyForTransitionPayload { TransitionId = transId29 }).ConfigureAwait(false);
-								break;
-							case DaveAnnounceAction.Restart:
-								this._discord.Logger.LogWarning(VoiceEvents.DaveHandshake, "[DAVE] OP29 commit failed — sending OP31 and re-initialising");
-								this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP31 sent");
-								await this.SendDaveJsonOpcodeAsync(31, new DaveMlsInvalidCommitWelcomePayload()).ConfigureAwait(false);
-								this._daveProposalRestartSent = false; // allow proposal restart again after OP29-triggered reset
-								var kp29 = this._daveSession.PrepareKeyPackage();
-								if (kp29.Length > 0)
-								{
-									this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP26 sent");
-									this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] Sending key package OP26 ({Len} bytes) after OP29 restart", kp29.Length);
-									await this.SendDaveBinaryOpcodeAsync(26, kp29).ConfigureAwait(false);
-								}
+						case DaveAnnounceAction.SendReadyForTransition:
+							this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] OP29 → sending OP23 ReadyForTransition (transId={TransId})", transId29);
+							this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP23 sent");
+							await this.SendDaveJsonOpcodeAsync(23, new DaveReadyForTransitionPayload { TransitionId = transId29 }).ConfigureAwait(false);
+							break;
+						case DaveAnnounceAction.Restart:
+							this._discord.Logger.LogWarning(VoiceEvents.DaveHandshake, "[DAVE] OP29 commit failed — sending OP31 and re-initialising");
+							this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP31 sent");
+							await this.SendDaveJsonOpcodeAsync(31, new DaveMlsInvalidCommitWelcomePayload()).ConfigureAwait(false);
+							this._daveProposalRestartSent = false; // allow proposal restart again after OP29-triggered reset
+							var kp29 = this._daveSession.PrepareKeyPackage();
+							if (kp29.Length > 0)
+							{
+								this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP26 sent");
+								this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] Sending key package OP26 ({Len} bytes) after OP29 restart", kp29.Length);
+								await this.SendDaveBinaryOpcodeAsync(26, kp29).ConfigureAwait(false);
+							}
 
 							break;
 					}

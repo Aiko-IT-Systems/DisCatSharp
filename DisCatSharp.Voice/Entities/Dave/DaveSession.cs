@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using DisCatSharp.Voice.Interfaces.Dave;
 
 using DisCatSharp.Voice.Enums.Dave;
+using DisCatSharp.Voice.Interfaces.Dave;
+using DisCatSharp.Voice.Payloads;
 
 using Microsoft.Extensions.Logging;
-using DisCatSharp.Voice.Payloads;
 
 namespace DisCatSharp.Voice.Entities.Dave;
 

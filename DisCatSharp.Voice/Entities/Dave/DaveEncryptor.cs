@@ -3,9 +3,8 @@ using System.Buffers;
 using System.Security.Cryptography;
 using System.Threading;
 
-using DisCatSharp.Voice.Interfaces.Dave;
-
 using DisCatSharp.Voice.Enums.Dave;
+using DisCatSharp.Voice.Interfaces.Dave;
 
 namespace DisCatSharp.Voice.Entities.Dave;
 
