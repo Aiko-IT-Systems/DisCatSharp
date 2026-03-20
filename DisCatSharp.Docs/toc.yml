@@ -9,8 +9,6 @@ items:
       uid: changelogs
     - name: Extensions
       href: https://ext-docs.dcs.aitsys.dev/
-    - name: Voice Natives
-      uid: natives
     - name: Visual Studio Tools
       uid: vs
     - name: Discord API

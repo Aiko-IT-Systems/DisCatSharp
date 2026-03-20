@@ -64,8 +64,8 @@ public sealed partial class DiscordShardedClient
 #pragma warning restore CS0618 // Type or member is obsolete
 				x.LogToStandardErrorThreshold = this._configuration.MinimumLogLevel;
 			});
-			var optionsFactory = new OptionsFactory<ConsoleLoggerOptions>(new[] { configureNamedOptions }, Enumerable.Empty<IPostConfigureOptions<ConsoleLoggerOptions>>());
-			var optionsMonitor = new OptionsMonitor<ConsoleLoggerOptions>(optionsFactory, Enumerable.Empty<IOptionsChangeTokenSource<ConsoleLoggerOptions>>(), new OptionsCache<ConsoleLoggerOptions>());
+			var optionsFactory = new OptionsFactory<ConsoleLoggerOptions>([configureNamedOptions], []);
+			var optionsMonitor = new OptionsMonitor<ConsoleLoggerOptions>(optionsFactory, [], new OptionsCache<ConsoleLoggerOptions>());
 			/*
 			var configureFormatterOptions = new ConfigureNamedOptions<ConsoleFormatterOptions>(string.Empty, x => { x.TimestampFormat = this.Configuration.LogTimestampFormat; });
 			var formatterFactory = new OptionsFactory<ConsoleFormatterOptions>(new[] { configureFormatterOptions }, Enumerable.Empty<IPostConfigureOptions<ConsoleFormatterOptions>>());
@@ -273,8 +273,7 @@ public sealed partial class DiscordShardedClient
 	{
 		get
 		{
-			var combinedStats = Enum.GetValues(typeof(DisCatSharpStatisticType))
-				.Cast<DisCatSharpStatisticType>()
+			var combinedStats = Enum.GetValues<DisCatSharpStatisticType>()
 				.ToDictionary(stat => stat, _ => 0);
 			foreach (var client in this.ShardClients.Values)
 			{

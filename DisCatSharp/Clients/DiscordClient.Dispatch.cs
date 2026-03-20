@@ -14,6 +14,7 @@ using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net.Abstractions;
+using DisCatSharp.Net.AuditLogs;
 using DisCatSharp.Net.Serialization;
 
 using Microsoft.Extensions.Logging;
@@ -1535,25 +1536,14 @@ public sealed partial class DiscordClient
 	{
 		try
 		{
-			var auditLogAction = auditLogCreateEntry.ToDiscordObject<AuditLogAction>();
-			List<AuditLog> workaroundAuditLogEntryList =
-			[
-				new()
-				{
-					Entries = new List<AuditLogAction>
-					{
-						auditLogAction
-					}
-				}
-			];
+			var rawAuditLogEntry = auditLogCreateEntry.ToDiscordObject<RawAuditLogEntry>();
+			var parsedEntry = AuditLogEntryParserRegistry.Instance.ParseEntry(guild, new(guild, null), rawAuditLogEntry);
 
-			var dataList = await guild.ProcessAuditLog(workaroundAuditLogEntryList).ConfigureAwait(false);
-
-			if (dataList.Count > 0)
+			if (parsedEntry is not null)
 				await this._guildAuditLogEntryCreated.InvokeAsync(this, new(this.ServiceProvider)
 				{
 					Guild = guild,
-					AuditLogEntry = dataList.FirstOrDefault()
+					AuditLogEntry = parsedEntry
 				}).ConfigureAwait(false);
 		}
 		catch (Exception)

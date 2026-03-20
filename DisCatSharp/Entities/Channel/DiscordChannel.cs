@@ -1014,7 +1014,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 			throw new ArgumentException("Cannot get a negative number of messages.");
 
 		if (limit == 0)
-			return Array.Empty<DiscordMessage>();
+			return [];
 
 		//return this.Discord.ApiClient.GetChannelMessagesAsync(this.Id, limit, before, after, around);
 		if (limit > 100 && around != null)

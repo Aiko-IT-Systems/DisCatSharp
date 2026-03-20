@@ -13,6 +13,7 @@ using DisCatSharp.Enums;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
 using DisCatSharp.Net.Abstractions;
+using DisCatSharp.Net.AuditLogs;
 using DisCatSharp.Net.Models;
 using DisCatSharp.Net.Serialization;
 
@@ -23,7 +24,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 ///     Represents a Discord guild.
 /// </summary>
-public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
+public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 {
 	[JsonIgnore]
 	private readonly Lazy<DiscordMember?> _currentMemberLazy;
@@ -872,6 +873,109 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		=> !(e1 == e2);
 
 	#region Guild Methods
+
+	/// <summary>
+	///     Fetches audit log entries for this guild.
+	/// </summary>
+	/// <param name="query">The audit log query. If <see langword="null" />, Discord's default ordering and limit are used.</param>
+	/// <returns>A parsed audit log page.</returns>
+	/// <exception cref="ArgumentException">Thrown when both <see cref="DiscordAuditLogQuery.Before" /> and <see cref="DiscordAuditLogQuery.After" /> are supplied.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have <see cref="Permissions.ViewAuditLog" /> in this guild.
+	/// </exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord fails to process the request.</exception>
+	/// <remarks>
+	///     <para>
+	///         Discord returns descending pages when using <c>before</c> and ascending pages when using <c>after</c>.
+	///     </para>
+	///     <para>
+	///         Some audit log actions do not emit <see cref="DiscordAuditLogEntry.Changes" /> and instead only provide
+	///         <see cref="DiscordAuditLogEntry.Options" />.
+	///     </para>
+	///     <para>
+	///         Undocumented or internal Discord action types are preserved and returned as <see cref="DiscordRawAuditLogEntry" />
+	///         unless DisCatSharp has a dedicated typed family for them.
+	///     </para>
+	/// </remarks>
+	public async Task<DiscordAuditLogPage> GetAuditLogEntriesAsync(DiscordAuditLogQuery? query = null)
+	{
+		query ??= new();
+
+		if (query.Before.HasValue && query.After.HasValue)
+			throw new ArgumentException("Audit log queries cannot specify both Before and After cursors at the same time.", nameof(query));
+
+		var limit = Math.Clamp(query.Limit ?? 50, 1, 100);
+
+		var rawAuditLog = await this.Discord.ApiClient
+			.GetAuditLogsAsync(this.Id, limit, query.After, query.Before, query.UserId, (int?)query.ActionType)
+			.ConfigureAwait(false);
+
+		return AuditLogEntryParserRegistry.Instance.ParsePage(this, rawAuditLog, query.After.HasValue);
+	}
+
+	/// <summary>
+	///     Fetches audit log entries for this guild.
+	/// </summary>
+	/// <param name="limit">
+	///     The maximum number of entries to fetch. Values above <c>100</c> are fetched in multiple requests for
+	///     compatibility with the legacy overload. <see langword="null" /> fetches all available entries.
+	/// </param>
+	/// <param name="byMember">The acting member filter.</param>
+	/// <param name="actionType">The action type filter.</param>
+	/// <returns>A read-only list of parsed audit log entries.</returns>
+	/// <exception cref="ArgumentException">Thrown when the compatibility wrapper produces an invalid audit log query.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have <see cref="Permissions.ViewAuditLog" /> in this guild.
+	/// </exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord fails to process the request.</exception>
+	/// <remarks>
+	///     <para>
+	///         This overload is retained as a compatibility wrapper around
+	///         <see cref="GetAuditLogEntriesAsync(DiscordAuditLogQuery?)" />.
+	///     </para>
+	///     <para>
+	///         The returned list may contain <see cref="DiscordRawAuditLogEntry" /> instances for action types that are not yet
+	///         modeled as dedicated typed families.
+	///     </para>
+	/// </remarks>
+	[Deprecated("Use GetAuditLogEntriesAsync(DiscordAuditLogQuery? query = null) instead.")]
+	public async Task<IReadOnlyList<DiscordAuditLogEntry>> GetAuditLogsAsync(int? limit = null, DiscordMember? byMember = null, AuditLogActionType? actionType = null)
+	{
+		List<DiscordAuditLogEntry> entries = [];
+		ulong? before = null;
+		int? remaining = limit;
+
+		while (!remaining.HasValue || remaining.Value > 0)
+		{
+			var requestLimit = Math.Clamp(remaining ?? 100, 1, 100);
+			var page = await this.GetAuditLogEntriesAsync(new()
+			{
+				Limit = requestLimit,
+				UserId = byMember?.Id,
+				ActionType = actionType,
+				Before = before
+			}).ConfigureAwait(false);
+
+			if (page.Entries.Count is 0)
+				break;
+
+			entries.AddRange(page.Entries);
+
+			if (remaining.HasValue)
+			{
+				remaining -= page.Entries.Count;
+				if (remaining.Value <= 0)
+					break;
+			}
+
+			if (page.Entries.Count < requestLimit || !page.LastEntryId.HasValue)
+				break;
+
+			before = page.LastEntryId.Value;
+		}
+
+		return entries;
+	}
 
 	/// <summary>
 	///     Gets this guilds onboarding configuration.

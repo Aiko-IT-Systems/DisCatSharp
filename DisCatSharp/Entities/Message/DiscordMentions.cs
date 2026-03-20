@@ -42,7 +42,7 @@ internal class DiscordMentions : ObservableApiObject
 
 		if (!mentions.Any())
 		{
-			this.Parse = Array.Empty<string>();
+			this.Parse = [];
 			this.RepliedUser = repliedUser;
 			return;
 		}

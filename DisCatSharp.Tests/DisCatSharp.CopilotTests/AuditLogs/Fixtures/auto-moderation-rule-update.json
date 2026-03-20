@@ -1,0 +1,30 @@
+{
+  "users": [
+    {
+      "id": 42,
+      "username": "FixtureMod",
+      "discriminator": "0",
+      "global_name": "Fixture Mod"
+    }
+  ],
+  "audit_log_entries": [
+    {
+      "target_id": "555",
+      "id": 90101,
+      "action_type": 141,
+      "user_id": 42,
+      "changes": [
+        {
+          "key": "enabled",
+          "old_value": false,
+          "new_value": true
+        },
+        {
+          "key": "exempt_roles",
+          "old_value": ["404"],
+          "new_value": ["404", "405"]
+        }
+      ]
+    }
+  ]
+}
