@@ -10,7 +10,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 ///		Represents the display name styles for a user.
 /// </summary>
-public class DisplayNameStyles
+public class DiscordDisplayNameStyles
 {
 	/// <summary>
 	///		Represents the font style for the display name.

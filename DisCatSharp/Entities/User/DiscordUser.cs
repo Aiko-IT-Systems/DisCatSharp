@@ -278,7 +278,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	///		Gets the user's display name styles.
 	/// </summary>
 	[JsonProperty("display_name_styles", NullValueHandling = NullValueHandling.Ignore)]
-	public virtual DisplayNameStyles? DisplayNameStyles { get; internal set; }
+	public virtual DiscordDisplayNameStyles? DisplayNameStyles { get; internal set; }
 
 	/// <summary>
 	///    Gets the user's nameplate.

@@ -134,7 +134,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	///     Gets the member's guild display name styles.
 	/// </summary>
 	[JsonProperty("display_name_styles", NullValueHandling = NullValueHandling.Ignore)]
-	public DisplayNameStyles? GuildDisplayNameStyles { get; internal set; }
+	public DiscordDisplayNameStyles? GuildDisplayNameStyles { get; internal set; }
 
 	/// <summary>
 	///     The color of this member's banner. Mutually exclusive with <see cref="GuildBannerHash" />.
@@ -312,7 +312,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 
 	/// <inheritdoc />
 	[JsonIgnore]
-	public override DisplayNameStyles? DisplayNameStyles
+	public override DiscordDisplayNameStyles? DisplayNameStyles
 		=> this.User.DisplayNameStyles;
 
 	/// <inheritdoc />

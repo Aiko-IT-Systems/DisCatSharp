@@ -47,7 +47,7 @@ internal class TransportMember : ObservableApiObject
 	///     Gets the guild display name styles.
 	/// </summary>
 	[JsonProperty("display_name_styles", NullValueHandling = NullValueHandling.Ignore)]
-	public DisplayNameStyles? GuildDisplayNameStyles { get; internal set; }
+	public DiscordDisplayNameStyles? GuildDisplayNameStyles { get; internal set; }
 
 	/// <summary>
 	///     Gets the guild bio.

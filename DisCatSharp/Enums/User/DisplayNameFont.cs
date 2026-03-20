@@ -41,9 +41,9 @@ public enum DisplayNameFont
 	NeoCastel = 7,
 
 	/// <summary>
-	/// Pixelify font.
+	/// PixelifySans font.
 	/// </summary>
-	Pixelify = 8,
+	PixelifySans = 8,
 
 	/// <summary>
 	/// Ribes font.
@@ -56,9 +56,9 @@ public enum DisplayNameFont
 	Sinistre = 10,
 
 	/// <summary>
-	/// Default font.
+	/// GGSans font.
 	/// </summary>
-	Default = 11,
+	GGSans = 11,
 
 	/// <summary>
 	/// ZillaSlab font.

@@ -200,5 +200,5 @@ internal class TransportUser : ObservableApiObject
 	///		Gets the user's display name styles.
 	/// </summary>
 	[JsonProperty("display_name_styles", NullValueHandling = NullValueHandling.Ignore)]
-	public DisplayNameStyles? DisplayNameStyles { get; internal set; }
+	public DiscordDisplayNameStyles? DisplayNameStyles { get; internal set; }
 }
