@@ -1,34 +1,32 @@
 DisCatSharp Release Notes
 
-	- Full support for Components V2
-	- Stability Improvements
-	- Build-in Statistics
-	- Support for .NET 10 & .NET 11
-	- Improvements for OAuth2 operations
-	- Support for Lavalink 4.2.0 which supports [DAVE](https://daveprotocol.com/), Discord's new E2EE voice protocol
-	- New `DisCatSharp.Voice` and `DisCatSharp.Voice.Natives` packages with Discord voice send/receive and DAVE support
-	- Auditlog has been completely rewritten from scratch. Check out [the article](https://docs.dcs.aitsys.dev/articles/topics/audit_logs).
+    - Full support for Components V2
+    - Stability improvements across gateway, interactivity and voice
+    - Built-in statistics support
+    - Support for .NET 10 & .NET 11
+    - Improvements for OAuth2 operations
+    - Support for Lavalink 4.2.0 (including LavaLyrics)
+    - New voice implementation with DAVE (E2EE) support
+    - New packages: DisCatSharp.Voice & DisCatSharp.Voice.Natives
+    - AuditLog has been completely rewritten from scratch
 
     Breaking
 
-    - **DiscordAttachment**: Renamed `MediaType` to `ContentType` to align with Discord's API.
-    - **DiscordTextComponent**: Switched the position of `customId` and `label` because of nullability.
-    - **Application Commands**: Removed `dmPermission` fields, causing DisCatSharp to do weird bulk-updates. Use `allowedContexts` instead.
-    - **LavalinkGuildPlayer**: `RemoveQueue` renamed to [`RemoveFromQueue`]((xref:DisCatSharp.Lavalink.Entities.LavalinkGuildPlayer.RemoveFromQueue*)).
-    - **Url fields**: Any `Url` fields on objects like `DiscordAttachment`, `DiscordEmbed`, etc., are now of type [`DiscordUri`](xref:DisCatSharp.Entities.DiscordUri) instead of `string`. Use `.ToUri()` to get a `Uri` object or use `.ToString()`.
-    - We updated some namespaces in DisCatSharp.Interactivity. You might need to update your imports for some entities and enums.
-    - DisCatSharp.VoiceNext and DisCatSharp.VoiceNext.Natives were removed and replaced by DisCatSharp.Voice and DisCatSharp.Voice.Natives.
-
+    - DiscordAttachment: MediaType renamed to ContentType
+    - DiscordTextComponent: switched parameter order (customId, label)
+    - Application Commands: removed dmPermission, use allowedContexts instead
+    - LavalinkGuildPlayer: RemoveQueue renamed to RemoveFromQueue
+    - Url fields now use DiscordUri instead of string
+    - Updated namespaces in DisCatSharp.Interactivity
+    - Removed DisCatSharp.VoiceNext and DisCatSharp.VoiceNext.Natives
 
 DisCatSharp.Attributes Release Notes
 
     - None
 
-
 DisCatSharp.ApplicationCommands Release Notes
 
-    - Some optimizations
-
+    - Internal improvements and fixes
 
 DisCatSharp.CommandsNext Release Notes
 
@@ -36,42 +34,39 @@ DisCatSharp.CommandsNext Release Notes
 
 DisCatSharp.Interactivity Release Notes
 
-    - None
+    - Added full Components V2 support
+    - Improved pagination and component handling
+    - Modal improvements (checkboxes, radio groups)
 
 DisCatSharp.Common Release Notes
 
     - None
 
-
 DisCatSharp.Lavalink Release Notes
 
-    - New queue system. See https://docs.dcs.aitsys.dev/articles/modules/audio/lavalink_v4/queue
+    - New queue system
     - Support for LavaLyrics plugin
-
 
 DisCatSharp.Voice Release Notes
 
-    - Replaced the old package `DisCatSharp.VoiceNext`
+    - Replaces DisCatSharp.VoiceNext
     - Full Discord voice send/receive support
-    - DAVE support via `libdave`
-    - New native runtime package: `DisCatSharp.Voice.Natives`
-
+    - DAVE protocol support
+    - New native runtime package: DisCatSharp.Voice.Natives
 
 DisCatSharp.Experimental Release Notes
 
-    - GCP Attachments
-    - Guild Member Search powered by elasticsearch
-
+    - Message search support
+    - Guild member search (Elasticsearch-based)
+    - GCP attachments
 
 DisCatSharp.Configuration Release Notes
 
-    - None
-
+    - Added proxy support via appsettings.json
 
 DisCatSharp.Hosting Release Notes
 
     - None
-
 
 DisCatSharp.Hosting.DependencyInjection Release Notes
 
