@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Experimental.Enums;
 
 using Newtonsoft.Json;
@@ -39,7 +40,7 @@ public sealed class DiscordGuildMessageSearchParams
 	/// <summary>
 	/// Gets or sets the list of contents to search for.
 	/// </summary>
-	[JsonProperty("contents", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("contents", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
 	public List<string>? Contents { get; set; }
 
 	/// <summary>
@@ -141,13 +142,13 @@ public sealed class DiscordGuildMessageSearchParams
 	/// <summary>
 	/// Gets or sets the command ID to filter by.
 	/// </summary>
-	[JsonProperty("command_id", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("command_id", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
 	public ulong? CommandId { get; set; }
 
 	/// <summary>
 	/// Gets or sets the command name to filter by.
 	/// </summary>
-	[JsonProperty("command_name", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("command_name", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
 	public string? CommandName { get; set; }
 
 	/// <summary>

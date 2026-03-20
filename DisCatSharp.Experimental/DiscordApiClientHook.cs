@@ -105,6 +105,7 @@ internal sealed class DiscordApiClientHook
 		AppendQueryParam(query, "sort_by", searchParams.SortBy);
 		AppendQueryParam(query, "sort_order", searchParams.SortOrder);
 		AppendQueryParam(query, "content", searchParams.Content);
+		AppendQueryParams(query, "contents", searchParams.Contents);
 		AppendQueryParam(query, "slop", searchParams.Slop);
 		AppendQueryParams(query, "author_id", searchParams.AuthorIds);
 		AppendQueryParams(query, "author_type", searchParams.AuthorTypes);
@@ -121,6 +122,8 @@ internal sealed class DiscordApiClientHook
 		AppendQueryParams(query, "attachment_extension", searchParams.AttachmentExtensions);
 		AppendQueryParam(query, "attachment_filename", searchParams.AttachmentFilename);
 		AppendQueryParam(query, "pinned", searchParams.Pinned);
+		AppendQueryParam(query, "command_id", searchParams.CommandId);
+		AppendQueryParam(query, "command_name", searchParams.CommandName);
 		AppendQueryParam(query, "include_nsfw", searchParams.IncludeNsfw);
 		AppendQueryParams(query, "channel_id", searchParams.ChannelIds);
 		AppendQueryParam(query, "replied_to_message_id", searchParams.RepliedToMessageId);

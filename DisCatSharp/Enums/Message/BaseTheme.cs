@@ -6,6 +6,14 @@ namespace DisCatSharp.Enums;
 public enum BaseTheme
 {
 	/// <summary>
+	///   Unset theme.
+	/// </summary>
+	/// <remarks>
+	///   This is equal to <see cref="Dark"/> and is used when the theme is not explicitly set.
+	/// </remarks>
+	Unset = 0,
+
+	/// <summary>
 	///     Dark theme.
 	/// </summary>
 	Dark = 1,
