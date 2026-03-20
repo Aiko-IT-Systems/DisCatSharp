@@ -15,6 +15,7 @@ using DisCatSharp.Entities.OAuth2;
 using DisCatSharp.Enums;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net.Abstractions;
+using DisCatSharp.Net.AuditLogs;
 using DisCatSharp.Net.Serialization;
 
 using Microsoft.Extensions.Logging;
@@ -1529,7 +1530,7 @@ public sealed class DiscordApiClient
 	/// <param name="before">The before.</param>
 	/// <param name="responsible">The responsible.</param>
 	/// <param name="actionType">The action_type.</param>
-	internal async Task<AuditLog> GetAuditLogsAsync(ulong guildId, int limit, ulong? after, ulong? before, ulong? responsible, int? actionType)
+	internal async Task<RawAuditLog> GetAuditLogsAsync(ulong guildId, int limit, ulong? after, ulong? before, ulong? responsible, int? actionType)
 	{
 		var urlParams = new Dictionary<string, string>
 		{
@@ -1553,7 +1554,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, urlParams.Count != 0 ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var auditLogDataRaw = DiscordJson.DeserializeObject<AuditLog>(res.Response, this.Discord);
+		var auditLogDataRaw = DiscordJson.DeserializeObject<RawAuditLog>(res.Response, this.Discord);
 
 		return auditLogDataRaw;
 	}

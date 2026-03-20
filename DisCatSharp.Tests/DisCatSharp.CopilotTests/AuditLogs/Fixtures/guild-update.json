@@ -1,0 +1,29 @@
+{
+  "users": [
+    {
+      "id": 42,
+      "username": "FixtureMod",
+      "discriminator": "0",
+      "global_name": "Fixture Mod"
+    }
+  ],
+  "audit_log_entries": [
+    {
+      "id": 90100,
+      "action_type": 1,
+      "user_id": 42,
+      "changes": [
+        {
+          "key": "name",
+          "old_value": "Old Guild",
+          "new_value": "New Guild"
+        },
+        {
+          "key": "verification_level",
+          "old_value": 0,
+          "new_value": 3
+        }
+      ]
+    }
+  ]
+}

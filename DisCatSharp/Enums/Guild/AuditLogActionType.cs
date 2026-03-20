@@ -128,7 +128,7 @@ public enum AuditLogActionType
 	WebhookCreate = 50,
 
 	/// <summary>
-	///     Indicates that the webook was updated.
+	///     Indicates that the webhook was updated.
 	/// </summary>
 	WebhookUpdate = 51,
 
@@ -188,72 +188,83 @@ public enum AuditLogActionType
 	IntegrationDelete = 82,
 
 	/// <summary>
-	///     Indicates that an stage instance was created.
+	///     Indicates that a stage instance was created.
 	/// </summary>
 	StageInstanceCreate = 83,
 
 	/// <summary>
-	///     Indicates that an stage instance was updated.
+	///     Indicates that a stage instance was updated.
 	/// </summary>
 	StageInstanceUpdate = 84,
 
 	/// <summary>
-	///     Indicates that an stage instance was deleted.
+	///     Indicates that a stage instance was deleted.
 	/// </summary>
 	StageInstanceDelete = 85,
 
 	/// <summary>
-	///     Indicates that an sticker was created.
+	///     Indicates that a sticker was created.
 	/// </summary>
 	StickerCreate = 90,
 
 	/// <summary>
-	///     Indicates that an sticker was updated.
+	///     Indicates that a sticker was updated.
 	/// </summary>
 	StickerUpdate = 91,
 
 	/// <summary>
-	///     Indicates that an sticker was deleted.
+	///     Indicates that a sticker was deleted.
 	/// </summary>
 	StickerDelete = 92,
 
 	/// <summary>
-	///     Indicates that an event was created.
+	///     Indicates that a guild scheduled event was created.
 	/// </summary>
 	GuildScheduledEventCreate = 100,
 
 	/// <summary>
-	///     Indicates that an event was updated.
+	///     Indicates that a guild scheduled event was updated.
 	/// </summary>
 	GuildScheduledEventUpdate = 101,
 
 	/// <summary>
-	///     Indicates that an event was deleted.
+	///     Indicates that a guild scheduled event was deleted.
 	/// </summary>
 	GuildScheduledEventDelete = 102,
 
 	/// <summary>
-	///     Indicates that an thread was created.
+	///     Indicates that a thread was created.
 	/// </summary>
 	ThreadCreate = 110,
 
 	/// <summary>
-	///     Indicates that an thread was updated.
+	///     Indicates that a thread was updated.
 	/// </summary>
 	ThreadUpdate = 111,
 
 	/// <summary>
-	///     Indicates that an thread was deleted.
+	///     Indicates that a thread was deleted.
 	/// </summary>
 	ThreadDelete = 112,
 
 	/// <summary>
-	///     Indicates that the permissions for an application command was updated.
+	///     Indicates that the permissions for an application command were updated.
 	/// </summary>
 	ApplicationCommandPermissionUpdate = 121,
 
+	/// <summary>
+	///     Indicates that a soundboard sound was created.
+	/// </summary>
 	SoundboardSoundCreate = 130,
+
+	/// <summary>
+	///     Indicates that a soundboard sound was updated.
+	/// </summary>
 	SoundboardSoundUpdate = 131,
+
+	/// <summary>
+	///     Indicates that a soundboard sound was deleted.
+	/// </summary>
 	SoundboardSoundDelete = 132,
 
 	/// <summary>
@@ -262,12 +273,12 @@ public enum AuditLogActionType
 	AutoModerationRuleCreate = 140,
 
 	/// <summary>
-	///     Indicates that a automod rule has been updated.
+	///     Indicates that an automod rule was updated.
 	/// </summary>
 	AutoModerationRuleUpdate = 141,
 
 	/// <summary>
-	///     Indicates that a automod rule has been deleted.
+	///     Indicates that an automod rule was deleted.
 	/// </summary>
 	AutoModerationRuleDelete = 142,
 
@@ -290,44 +301,113 @@ public enum AuditLogActionType
 	///     Indicates that automod quarantined a user.
 	/// </summary>
 	AutoModerationQuarantineUser = 146,
+
+	/// <summary>
+	///     Indicates that a creator monetization request was created for the guild.
+	/// </summary>
 	CreatorMonetizationRequestCreated = 150,
 
+	/// <summary>
+	///     Indicates that the guild accepted creator monetization terms.
+	/// </summary>
 	CreatorMonetizationTermsAccepted = 151,
 
+	/// <summary>
+	///     Indicates that an onboarding prompt was created.
+	/// </summary>
 	OnboardingPromptCreate = 163,
 
+	/// <summary>
+	///     Indicates that an onboarding prompt was updated.
+	/// </summary>
 	OnboardingPromptUpdate = 164,
 
+	/// <summary>
+	///     Indicates that an onboarding prompt was deleted.
+	/// </summary>
 	OnboardingPromptDelete = 165,
 
+	/// <summary>
+	///     Indicates that guild onboarding was initialized.
+	/// </summary>
 	OnboardingCreate = 166,
 
+	/// <summary>
+	///     Indicates that guild onboarding was updated.
+	/// </summary>
 	OnboardingUpdate = 167,
 
+	/// <summary>
+	///     Alias for <see cref="ServerGuideCreate" /> retained for Discord naming compatibility.
+	/// </summary>
 	HomeSettingsCreate = ServerGuideCreate,
 
+	/// <summary>
+	///     Indicates that guild home or server guide settings were created.
+	/// </summary>
 	ServerGuideCreate = 190,
 
+	/// <summary>
+	///     Alias for <see cref="ServerGuideUpdate" /> retained for Discord naming compatibility.
+	/// </summary>
 	HomeSettingsUpdate = ServerGuideUpdate,
 
+	/// <summary>
+	///     Indicates that guild home or server guide settings were updated.
+	/// </summary>
 	ServerGuideUpdate = 191,
 
+	/// <summary>
+	///     Indicates that a voice channel status entry was created or updated.
+	/// </summary>
 	VoiceChannelStatusCreate = 192,
 
+	/// <summary>
+	///     Indicates that a voice channel status entry was deleted.
+	/// </summary>
 	VoiceChannelStatusDelete = 193,
 
+	/// <summary>
+	///     Indicates that Clyde AI profile settings were updated.
+	/// </summary>
+	/// <remarks>
+	///     This action is deprecated and is not expected to appear in modern audit log payloads.
+	/// </remarks>
 	[DiscordDeprecated]
 	ClydeAiProfileUpdate = 194,
 
+	/// <summary>
+	///     Indicates that a guild scheduled event exception was created.
+	/// </summary>
 	GuildScheduledEventExceptionCreate = 200,
 
+	/// <summary>
+	///     Indicates that a guild scheduled event exception was updated.
+	/// </summary>
 	GuildScheduledEventExceptionUpdate = 201,
 
+	/// <summary>
+	///     Indicates that a guild scheduled event exception was deleted.
+	/// </summary>
 	GuildScheduledEventExceptionDelete = 202,
 
+	/// <summary>
+	///     Indicates that the guild's member verification configuration was updated.
+	/// </summary>
 	GuildMemberVerificationUpdate = 210,
 
+	/// <summary>
+	///     Indicates that the guild's public profile configuration was updated.
+	/// </summary>
 	GuildProfileUpdate = 211,
 
-	GuildMigratePinPermission = 212
+	/// <summary>
+	///     Indicates that the guild migrated to the dedicated pin messages permission.
+	/// </summary>
+	GuildMigratePinPermission = 212,
+
+	/// <summary>
+	///     Indicates that the guild migrated to the dedicated bypass slowmode permission.
+	/// </summary>
+	GuildMigrateBypassSlowmodePermission = 213
 }

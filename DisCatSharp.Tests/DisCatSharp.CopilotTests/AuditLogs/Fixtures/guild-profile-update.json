@@ -1,0 +1,24 @@
+{
+  "users": [
+    {
+      "id": 42,
+      "username": "FixtureMod",
+      "discriminator": "0",
+      "global_name": "Fixture Mod"
+    }
+  ],
+  "audit_log_entries": [
+    {
+      "id": 9002,
+      "action_type": 211,
+      "user_id": 42,
+      "changes": [
+        {
+          "key": "game_application_ids",
+          "old_value": [111],
+          "new_value": [111, 222]
+        }
+      ]
+    }
+  ]
+}

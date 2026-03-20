@@ -52,7 +52,7 @@ public sealed class DiscordRadioGroupComponent : DiscordComponent, ILabelCompone
 	///     The available options.
 	/// </summary>
 	[JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyList<DiscordRadioGroupComponentOption> Options { get; internal set; } = Array.Empty<DiscordRadioGroupComponentOption>();
+	public IReadOnlyList<DiscordRadioGroupComponentOption> Options { get; internal set; } = [];
 
 	/// <summary>
 	///     Whether the component requires a selection.

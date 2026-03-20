@@ -99,6 +99,8 @@ items:
       items:
           - name: Events
             uid: topics_events
+          - name: Audit Logs
+            uid: topics_audit_logs
           - name: Logging
             items:
                 - name: The Default Logger

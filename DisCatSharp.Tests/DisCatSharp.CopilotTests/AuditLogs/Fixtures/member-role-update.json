@@ -1,0 +1,44 @@
+{
+  "users": [
+    {
+      "id": 42,
+      "username": "FixtureMod",
+      "discriminator": "0",
+      "global_name": "Fixture Mod"
+    },
+    {
+      "id": 808,
+      "username": "RoleKitty",
+      "discriminator": "0",
+      "global_name": "Role Kitty"
+    }
+  ],
+  "audit_log_entries": [
+    {
+      "target_id": "808",
+      "id": 9008,
+      "action_type": 25,
+      "user_id": 42,
+      "changes": [
+        {
+          "key": "$add",
+          "new_value": [
+            {
+              "id": "404",
+              "name": "Raid Team"
+            }
+          ]
+        },
+        {
+          "key": "$remove",
+          "new_value": [
+            {
+              "id": "505",
+              "name": "Muted"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

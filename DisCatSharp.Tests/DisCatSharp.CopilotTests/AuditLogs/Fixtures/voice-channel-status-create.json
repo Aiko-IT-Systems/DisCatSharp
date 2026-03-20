@@ -1,0 +1,22 @@
+{
+  "users": [
+    {
+      "id": 42,
+      "username": "FixtureMod",
+      "discriminator": "0",
+      "global_name": "Fixture Mod"
+    }
+  ],
+  "audit_log_entries": [
+    {
+      "target_id": "101",
+      "id": 9001,
+      "action_type": 192,
+      "user_id": 42,
+      "options": {
+        "channel_id": 101,
+        "status": "active"
+      }
+    }
+  ]
+}

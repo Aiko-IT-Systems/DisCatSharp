@@ -1,0 +1,23 @@
+{
+  "users": [
+    {
+      "id": 42,
+      "username": "FixtureMod",
+      "discriminator": "0",
+      "global_name": "Fixture Mod"
+    }
+  ],
+  "audit_log_entries": [
+    {
+      "id": 9005,
+      "action_type": 14,
+      "user_id": 42,
+      "options": {
+        "channel_id": 303,
+        "id": 404,
+        "type": "0",
+        "role_name": "Raid Team"
+      }
+    }
+  ]
+}

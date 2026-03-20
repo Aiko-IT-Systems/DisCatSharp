@@ -66,7 +66,7 @@ public sealed class DiscordCheckboxGroupComponent : DiscordComponent, ILabelComp
 	///     The available options.
 	/// </summary>
 	[JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyList<DiscordCheckboxGroupComponentOption> Options { get; internal set; } = Array.Empty<DiscordCheckboxGroupComponentOption>();
+	public IReadOnlyList<DiscordCheckboxGroupComponentOption> Options { get; internal set; } = [];
 
 	/// <summary>
 	///     The minimum number of selections.

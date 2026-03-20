@@ -22,4 +22,8 @@
 		<ProjectReference Include="..\..\DisCatSharp.Voice\DisCatSharp.Voice.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<None Update="AuditLogs\Fixtures\**\*.json" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
+
 </Project>

@@ -31,9 +31,6 @@ items:
   - uid: DisCatSharp.Formatter
     name: Formatter
     type: Class
-  - uid: DisCatSharp.GlobalExceptionEventArgs
-    name: GlobalExceptionEventArgs
-    type: Class
   - uid: DisCatSharp.Internals
     name: Internals
     type: Class
@@ -92,8 +89,14 @@ items:
   - uid: DisCatSharp.Entities.DiscordActivity
     name: DiscordActivity
     type: Class
+  - uid: DisCatSharp.Entities.DiscordActivityAttachmentUpload
+    name: DiscordActivityAttachmentUpload
+    type: Class
   - uid: DisCatSharp.Entities.DiscordActivityInstance
     name: DiscordActivityInstance
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordActivityInstanceLocation
+    name: DiscordActivityInstanceLocation
     type: Class
   - uid: DisCatSharp.Entities.DiscordApplication
     name: DiscordApplication
@@ -103,6 +106,9 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.DiscordApplicationCommand
     name: DiscordApplicationCommand
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordApplicationCommandAuditLogEntry
+    name: DiscordApplicationCommandAuditLogEntry
     type: Class
   - uid: DisCatSharp.Entities.DiscordApplicationCommandAutocompleteChoice
     name: DiscordApplicationCommandAutocompleteChoice
@@ -137,71 +143,35 @@ items:
   - uid: DisCatSharp.Entities.DiscordAttachment
     name: DiscordAttachment
     type: Class
-  - uid: DisCatSharp.Entities.DiscordAuditLogBanEntry
-    name: DiscordAuditLogBanEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogChange
+    name: DiscordAuditLogChange
     type: Class
-  - uid: DisCatSharp.Entities.DiscordAuditLogBotAddEntry
-    name: DiscordAuditLogBotAddEntry
-    type: Class
-  - uid: DisCatSharp.Entities.DiscordAuditLogChannelEntry
-    name: DiscordAuditLogChannelEntry
-    type: Class
-  - uid: DisCatSharp.Entities.DiscordAuditLogEmojiEntry
-    name: DiscordAuditLogEmojiEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogCollectionChange`1
+    name: DiscordAuditLogCollectionChange<T>
     type: Class
   - uid: DisCatSharp.Entities.DiscordAuditLogEntry
     name: DiscordAuditLogEntry
     type: Class
-  - uid: DisCatSharp.Entities.DiscordAuditLogGuildEntry
-    name: DiscordAuditLogGuildEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogEntryOptions
+    name: DiscordAuditLogEntryOptions
     type: Class
-  - uid: DisCatSharp.Entities.DiscordAuditLogGuildScheduledEventEntry
-    name: DiscordAuditLogGuildScheduledEventEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogPage
+    name: DiscordAuditLogPage
     type: Class
-  - uid: DisCatSharp.Entities.DiscordAuditLogIntegrationEntry
-    name: DiscordAuditLogIntegrationEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogPartialRole
+    name: DiscordAuditLogPartialRole
     type: Class
-  - uid: DisCatSharp.Entities.DiscordAuditLogInviteEntry
-    name: DiscordAuditLogInviteEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogQuery
+    name: DiscordAuditLogQuery
     type: Class
-  - uid: DisCatSharp.Entities.DiscordAuditLogKickEntry
-    name: DiscordAuditLogKickEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogValueChange`1
+    name: DiscordAuditLogValueChange<T>
     type: Class
-  - uid: DisCatSharp.Entities.DiscordAuditLogMemberDisconnectEntry
-    name: DiscordAuditLogMemberDisconnectEntry
+  - uid: DisCatSharp.Entities.DiscordAutoModerationRuleAuditLogChanges
+    name: DiscordAutoModerationRuleAuditLogChanges
     type: Class
-  - uid: DisCatSharp.Entities.DiscordAuditLogMemberMoveEntry
-    name: DiscordAuditLogMemberMoveEntry
-    type: Class
-  - uid: DisCatSharp.Entities.DiscordAuditLogMemberUpdateEntry
-    name: DiscordAuditLogMemberUpdateEntry
-    type: Class
-  - uid: DisCatSharp.Entities.DiscordAuditLogMessageEntry
-    name: DiscordAuditLogMessageEntry
-    type: Class
-  - uid: DisCatSharp.Entities.DiscordAuditLogMessagePinEntry
-    name: DiscordAuditLogMessagePinEntry
-    type: Class
-  - uid: DisCatSharp.Entities.DiscordAuditLogOverwriteEntry
-    name: DiscordAuditLogOverwriteEntry
-    type: Class
-  - uid: DisCatSharp.Entities.DiscordAuditLogPruneEntry
-    name: DiscordAuditLogPruneEntry
-    type: Class
-  - uid: DisCatSharp.Entities.DiscordAuditLogRoleUpdateEntry
-    name: DiscordAuditLogRoleUpdateEntry
-    type: Class
-  - uid: DisCatSharp.Entities.DiscordAuditLogStageEntry
-    name: DiscordAuditLogStageEntry
-    type: Class
-  - uid: DisCatSharp.Entities.DiscordAuditLogStickerEntry
-    name: DiscordAuditLogStickerEntry
-    type: Class
-  - uid: DisCatSharp.Entities.DiscordAuditLogThreadEntry
-    name: DiscordAuditLogThreadEntry
-    type: Class
-  - uid: DisCatSharp.Entities.DiscordAuditLogWebhookEntry
-    name: DiscordAuditLogWebhookEntry
+  - uid: DisCatSharp.Entities.DiscordAutoModerationRuleAuditLogEntry
+    name: DiscordAutoModerationRuleAuditLogEntry
     type: Class
   - uid: DisCatSharp.Entities.DiscordBan
     name: DiscordBan
@@ -220,6 +190,12 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.DiscordChannel
     name: DiscordChannel
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordChannelAuditLogChanges
+    name: DiscordChannelAuditLogChanges
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordChannelAuditLogEntry
+    name: DiscordChannelAuditLogEntry
     type: Class
   - uid: DisCatSharp.Entities.DiscordChannelMention
     name: DiscordChannelMention
@@ -257,8 +233,14 @@ items:
   - uid: DisCatSharp.Entities.DiscordContainerComponent
     name: DiscordContainerComponent
     type: Class
+  - uid: DisCatSharp.Entities.DiscordCreatorMonetizationAuditLogEntry
+    name: DiscordCreatorMonetizationAuditLogEntry
+    type: Class
   - uid: DisCatSharp.Entities.DiscordCustomStatus
     name: DiscordCustomStatus
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordDisplayNameStyles
+    name: DiscordDisplayNameStyles
     type: Class
   - uid: DisCatSharp.Entities.DiscordDmChannel
     name: DiscordDmChannel
@@ -302,6 +284,9 @@ items:
   - uid: DisCatSharp.Entities.DiscordEmoji
     name: DiscordEmoji
     type: Class
+  - uid: DisCatSharp.Entities.DiscordEmojiAuditLogEntry
+    name: DiscordEmojiAuditLogEntry
+    type: Class
   - uid: DisCatSharp.Entities.DiscordEntitlement
     name: DiscordEntitlement
     type: Class
@@ -328,6 +313,12 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.DiscordGuildApplicationCommandPermission
     name: DiscordGuildApplicationCommandPermission
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordGuildAuditLogChanges
+    name: DiscordGuildAuditLogChanges
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordGuildAuditLogEntry
+    name: DiscordGuildAuditLogEntry
     type: Class
   - uid: DisCatSharp.Entities.DiscordGuildDirectoryChannel
     name: DiscordGuildDirectoryChannel
@@ -362,6 +353,15 @@ items:
   - uid: DisCatSharp.Entities.DiscordGuildProfile
     name: DiscordGuildProfile
     type: Class
+  - uid: DisCatSharp.Entities.DiscordGuildProfileAuditLogEntry
+    name: DiscordGuildProfileAuditLogEntry
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordGuildScheduledEventAuditLogEntry
+    name: DiscordGuildScheduledEventAuditLogEntry
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordGuildScheduledEventExceptionAuditLogEntry
+    name: DiscordGuildScheduledEventExceptionAuditLogEntry
+    type: Class
   - uid: DisCatSharp.Entities.DiscordGuildTemplate
     name: DiscordGuildTemplate
     type: Class
@@ -379,6 +379,9 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.DiscordIntegrationAccount
     name: DiscordIntegrationAccount
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordIntegrationAuditLogEntry
+    name: DiscordIntegrationAuditLogEntry
     type: Class
   - uid: DisCatSharp.Entities.DiscordIntegrationTypesConfig
     name: DiscordIntegrationTypesConfig
@@ -416,6 +419,9 @@ items:
   - uid: DisCatSharp.Entities.DiscordInvite
     name: DiscordInvite
     type: Class
+  - uid: DisCatSharp.Entities.DiscordInviteAuditLogEntry
+    name: DiscordInviteAuditLogEntry
+    type: Class
   - uid: DisCatSharp.Entities.DiscordInviteChannel
     name: DiscordInviteChannel
     type: Class
@@ -446,6 +452,15 @@ items:
   - uid: DisCatSharp.Entities.DiscordMember
     name: DiscordMember
     type: Class
+  - uid: DisCatSharp.Entities.DiscordMemberAuditLogChanges
+    name: DiscordMemberAuditLogChanges
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordMemberAuditLogEntry
+    name: DiscordMemberAuditLogEntry
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordMemberVerificationAuditLogEntry
+    name: DiscordMemberVerificationAuditLogEntry
+    type: Class
   - uid: DisCatSharp.Entities.DiscordMentionableSelectComponent
     name: DiscordMentionableSelectComponent
     type: Class
@@ -457,6 +472,12 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.DiscordMessageApplication
     name: DiscordMessageApplication
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordMessageAuditLogChanges
+    name: DiscordMessageAuditLogChanges
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordMessageAuditLogEntry
+    name: DiscordMessageAuditLogEntry
     type: Class
   - uid: DisCatSharp.Entities.DiscordMessageBuilder
     name: DiscordMessageBuilder
@@ -482,6 +503,9 @@ items:
   - uid: DisCatSharp.Entities.DiscordOnboarding
     name: DiscordOnboarding
     type: Class
+  - uid: DisCatSharp.Entities.DiscordOnboardingAuditLogEntry
+    name: DiscordOnboardingAuditLogEntry
+    type: Class
   - uid: DisCatSharp.Entities.DiscordOnboardingPrompt
     name: DiscordOnboardingPrompt
     type: Class
@@ -491,11 +515,17 @@ items:
   - uid: DisCatSharp.Entities.DiscordOverwrite
     name: DiscordOverwrite
     type: Class
+  - uid: DisCatSharp.Entities.DiscordOverwriteAuditLogEntry
+    name: DiscordOverwriteAuditLogEntry
+    type: Class
   - uid: DisCatSharp.Entities.DiscordOverwriteBuilder
     name: DiscordOverwriteBuilder
     type: Class
   - uid: DisCatSharp.Entities.DiscordOverwriteBuilderExtensions
     name: DiscordOverwriteBuilderExtensions
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordPermissionMigrationAuditLogEntry
+    name: DiscordPermissionMigrationAuditLogEntry
     type: Class
   - uid: DisCatSharp.Entities.DiscordPoll
     name: DiscordPoll
@@ -533,6 +563,9 @@ items:
   - uid: DisCatSharp.Entities.DiscordRadioGroupComponentOption
     name: DiscordRadioGroupComponentOption
     type: Class
+  - uid: DisCatSharp.Entities.DiscordRawAuditLogEntry
+    name: DiscordRawAuditLogEntry
+    type: Class
   - uid: DisCatSharp.Entities.DiscordReaction
     name: DiscordReaction
     type: Class
@@ -544,6 +577,12 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.DiscordRole
     name: DiscordRole
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordRoleAuditLogChanges
+    name: DiscordRoleAuditLogChanges
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordRoleAuditLogEntry
+    name: DiscordRoleAuditLogEntry
     type: Class
   - uid: DisCatSharp.Entities.DiscordRoleColors
     name: DiscordRoleColors
@@ -563,6 +602,9 @@ items:
   - uid: DisCatSharp.Entities.DiscordScheduledEventEntityMetadata
     name: DiscordScheduledEventEntityMetadata
     type: Class
+  - uid: DisCatSharp.Entities.DiscordScheduledEventException
+    name: DiscordScheduledEventException
+    type: Class
   - uid: DisCatSharp.Entities.DiscordScheduledEventRecurrenceRule
     name: DiscordScheduledEventRecurrenceRule
     type: Class
@@ -571,6 +613,9 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.DiscordScheduledEventUser
     name: DiscordScheduledEventUser
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordScheduledEventUserCounts
+    name: DiscordScheduledEventUserCounts
     type: Class
   - uid: DisCatSharp.Entities.DiscordSectionAccessory
     name: DiscordSectionAccessory
@@ -587,6 +632,12 @@ items:
   - uid: DisCatSharp.Entities.DiscordServerGuide
     name: DiscordServerGuide
     type: Class
+  - uid: DisCatSharp.Entities.DiscordServerGuideAuditLogEntry
+    name: DiscordServerGuideAuditLogEntry
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordSharedClientTheme
+    name: DiscordSharedClientTheme
+    type: Class
   - uid: DisCatSharp.Entities.DiscordSignedLink
     name: DiscordSignedLink
     type: Class
@@ -596,14 +647,23 @@ items:
   - uid: DisCatSharp.Entities.DiscordSoundboardSound
     name: DiscordSoundboardSound
     type: Class
+  - uid: DisCatSharp.Entities.DiscordSoundboardSoundAuditLogEntry
+    name: DiscordSoundboardSoundAuditLogEntry
+    type: Class
   - uid: DisCatSharp.Entities.DiscordSpotifyAsset
     name: DiscordSpotifyAsset
     type: Class
   - uid: DisCatSharp.Entities.DiscordStageInstance
     name: DiscordStageInstance
     type: Class
+  - uid: DisCatSharp.Entities.DiscordStageInstanceAuditLogEntry
+    name: DiscordStageInstanceAuditLogEntry
+    type: Class
   - uid: DisCatSharp.Entities.DiscordSticker
     name: DiscordSticker
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordStickerAuditLogEntry
+    name: DiscordStickerAuditLogEntry
     type: Class
   - uid: DisCatSharp.Entities.DiscordStickerPack
     name: DiscordStickerPack
@@ -634,6 +694,12 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.DiscordTextInputComponent
     name: DiscordTextInputComponent
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordThreadAuditLogChanges
+    name: DiscordThreadAuditLogChanges
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordThreadAuditLogEntry
+    name: DiscordThreadAuditLogEntry
     type: Class
   - uid: DisCatSharp.Entities.DiscordThreadChannel
     name: DiscordThreadChannel
@@ -671,6 +737,9 @@ items:
   - uid: DisCatSharp.Entities.DiscordUserSelectComponent
     name: DiscordUserSelectComponent
     type: Class
+  - uid: DisCatSharp.Entities.DiscordVoiceChannelStatusAuditLogEntry
+    name: DiscordVoiceChannelStatusAuditLogEntry
+    type: Class
   - uid: DisCatSharp.Entities.DiscordVoiceRegion
     name: DiscordVoiceRegion
     type: Class
@@ -679,6 +748,9 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.DiscordWebhook
     name: DiscordWebhook
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordWebhookAuditLogEntry
+    name: DiscordWebhookAuditLogEntry
     type: Class
   - uid: DisCatSharp.Entities.DiscordWebhookBuilder
     name: DiscordWebhookBuilder
@@ -691,9 +763,6 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.DiscordWidgetSettings
     name: DiscordWidgetSettings
-    type: Class
-  - uid: DisCatSharp.Entities.DisplayNameStyles
-    name: DisplayNameStyles
     type: Class
   - uid: DisCatSharp.Entities.EveryoneMention
     name: EveryoneMention
@@ -746,9 +815,6 @@ items:
   - uid: DisCatSharp.Entities.PartialEmoji
     name: PartialEmoji
     type: Class
-  - uid: DisCatSharp.Entities.PropertyChange`1
-    name: PropertyChange<T>
-    type: Class
   - uid: DisCatSharp.Entities.RepliedUserMention
     name: RepliedUserMention
     type: Struct
@@ -758,9 +824,6 @@ items:
   - uid: DisCatSharp.Entities.RoleMention
     name: RoleMention
     type: Struct
-  - uid: DisCatSharp.Entities.SharedClientTheme
-    name: SharedClientTheme
-    type: Class
   - uid: DisCatSharp.Entities.SkuPrice
     name: SkuPrice
     type: Class
@@ -816,6 +879,9 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.OAuth2.DiscordAccessToken
     name: DiscordAccessToken
+    type: Class
+  - uid: DisCatSharp.Entities.OAuth2.DiscordActivityQuickLink
+    name: DiscordActivityQuickLink
     type: Class
   - uid: DisCatSharp.Entities.OAuth2.DiscordApplicationRoleConnection
     name: DiscordApplicationRoleConnection
@@ -898,6 +964,12 @@ items:
     type: Enum
   - uid: DisCatSharp.Enums.AuditLogActionType
     name: AuditLogActionType
+    type: Enum
+  - uid: DisCatSharp.Enums.AuditLogHydrationTargets
+    name: AuditLogHydrationTargets
+    type: Enum
+  - uid: DisCatSharp.Enums.AuditLogOverwriteTargetType
+    name: AuditLogOverwriteTargetType
     type: Enum
   - uid: DisCatSharp.Enums.AutomodActionType
     name: AutomodActionType
@@ -1315,6 +1387,9 @@ items:
   - uid: DisCatSharp.EventArgs.EntitlementUpdateEventArgs
     name: EntitlementUpdateEventArgs
     type: Class
+  - uid: DisCatSharp.EventArgs.GlobalExceptionEventArgs
+    name: GlobalExceptionEventArgs
+    type: Class
   - uid: DisCatSharp.EventArgs.GuildApplicationCommandCountEventArgs
     name: GuildApplicationCommandCountEventArgs
     type: Class
@@ -1398,6 +1473,15 @@ items:
     type: Class
   - uid: DisCatSharp.EventArgs.GuildScheduledEventDeleteEventArgs
     name: GuildScheduledEventDeleteEventArgs
+    type: Class
+  - uid: DisCatSharp.EventArgs.GuildScheduledEventExceptionCreateEventArgs
+    name: GuildScheduledEventExceptionCreateEventArgs
+    type: Class
+  - uid: DisCatSharp.EventArgs.GuildScheduledEventExceptionDeleteEventArgs
+    name: GuildScheduledEventExceptionDeleteEventArgs
+    type: Class
+  - uid: DisCatSharp.EventArgs.GuildScheduledEventExceptionUpdateEventArgs
+    name: GuildScheduledEventExceptionUpdateEventArgs
     type: Class
   - uid: DisCatSharp.EventArgs.GuildScheduledEventUpdateEventArgs
     name: GuildScheduledEventUpdateEventArgs
@@ -1686,6 +1770,12 @@ items:
     type: Class
   - uid: DisCatSharp.Net.Models.ScheduledEventEditModel
     name: ScheduledEventEditModel
+    type: Class
+  - uid: DisCatSharp.Net.Models.ScheduledEventExceptionCreateModel
+    name: ScheduledEventExceptionCreateModel
+    type: Class
+  - uid: DisCatSharp.Net.Models.ScheduledEventExceptionEditModel
+    name: ScheduledEventExceptionEditModel
     type: Class
   - uid: DisCatSharp.Net.Models.SoundboardSoundEditModel
     name: SoundboardSoundEditModel
