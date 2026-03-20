@@ -26,7 +26,7 @@
 			https://docs.dcs.aitsys.dev/articles/modules/audio/voice/prerequisites.html
 		</Description>
 		<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord
-			Bots,AITSYS,Net8,Net9,Net10,Voice,Audio Player,DAVE</PackageTags>
+			Bots,AITSYS,Net8,Net9,Net10,Net11,Voice,Audio Player,DAVE</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup
