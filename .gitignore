@@ -145,3 +145,4 @@ VoiceTestBot/
 logs/
 *.mp3
 .codex/
+temp-works/
