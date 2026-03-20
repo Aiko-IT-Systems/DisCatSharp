@@ -100,7 +100,7 @@ internal class ComponentEventWaiter : IDisposable
 			this._collectRequests.TryRemove(request);
 		}
 
-		return request.Collected.ToArray();
+		return [.. request.Collected];
 	}
 
 	/// <summary>

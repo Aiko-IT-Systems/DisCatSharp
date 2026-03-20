@@ -31,9 +31,9 @@ public class ConfigurationExtensionTests
 
 	private class ClassWithEnumerable
 	{
-		public IEnumerable<int> Values { get; set; } = new[] { 1, 2, 3, 4, 5 };
+		public IEnumerable<int> Values { get; set; } = [1, 2, 3, 4, 5];
 
-		public IEnumerable<string> Strings { get; set; } = new[] { "1", "2", "3", "4", "5" };
+		public IEnumerable<string> Strings { get; set; } = ["1", "2", "3", "4", "5"];
 	}
 
 	private class ClassWithList

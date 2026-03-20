@@ -175,8 +175,7 @@ public sealed partial class DiscordClient
 	/// <param name="wasRegisteredWithStatic">Whether it considereded static methods.</param>
 	private void UnregisterEventHandlerImpl(object? handler, Type type, bool wasRegisteredWithStatic = true)
 	{
-		if (this._registeredEventhandlers.ContainsKey(type))
-			this._registeredEventhandlers.Remove(type);
+		this._registeredEventhandlers.Remove(type);
 
 		if (!this._registrationToDelegate.TryGetValue((handler, type, wasRegisteredWithStatic), out var delegateLists) || delegateLists.Count == 0)
 			return;

@@ -730,10 +730,10 @@ public static class Utilities
 				IgnoreFailedSources = true,
 				NoCache = true
 			};
-			var latestVersions = (await resource.GetLatestVersions(new List<string>
-			{
+			var latestVersions = (await resource.GetLatestVersions(
+			[
 				packageId.ToLowerInvariant()
-			}, includePrerelease, false, sourceCache, new NullLogger(), CancellationToken.None))?.ToList();
+			], includePrerelease, false, sourceCache, new NullLogger(), CancellationToken.None))?.ToList();
 
 			if (latestVersions is null)
 			{

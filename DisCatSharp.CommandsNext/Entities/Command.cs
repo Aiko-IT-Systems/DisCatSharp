@@ -157,13 +157,7 @@ public class Command
 		var o1 = cmd1 as object;
 		var o2 = cmd2 as object;
 
-		return o1 == null && o2 != null
-			? false
-			: o1 != null && o2 == null
-				? false
-				: o1 == null && o2 == null
-					? true
-					: cmd1.QualifiedName == cmd2.QualifiedName;
+		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || cmd1.QualifiedName == cmd2.QualifiedName);
 	}
 
 	/// <summary>
@@ -185,13 +179,7 @@ public class Command
 		var o1 = obj;
 		var o2 = this as object;
 
-		return o1 == null && o2 != null
-			? false
-			: o1 != null && o2 == null
-				? false
-				: o1 == null && o2 == null
-					? true
-					: obj is Command cmd && cmd.QualifiedName == this.QualifiedName;
+		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || (obj is Command cmd && cmd.QualifiedName == this.QualifiedName));
 	}
 
 	/// <summary>

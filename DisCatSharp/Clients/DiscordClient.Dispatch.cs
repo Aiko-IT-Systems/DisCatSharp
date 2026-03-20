@@ -4139,7 +4139,7 @@ public sealed partial class DiscordClient
 
 		var ea = new ApplicationCommandPermissionsUpdateEventArgs(this.ServiceProvider)
 		{
-			Permissions = perms.ToList(),
+			Permissions = [.. perms],
 			Command = cmd,
 			ApplicationId = applicationId,
 			Guild = guild

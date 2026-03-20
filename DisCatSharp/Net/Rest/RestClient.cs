@@ -547,7 +547,7 @@ internal sealed class RestClient : IDisposable
 					if (delay < TimeSpan.Zero)
 						delay = TimeSpan.FromMilliseconds(100);
 
-					this._logger.LogWarning(LoggerEvents.RatelimitPreemptive, "Preemptive ratelimit triggered - waiting until {0:yyyy-MM-dd HH:mm:ss zzz} ({1:c}).", resetDate, delay);
+					this._logger.LogWarning(LoggerEvents.RatelimitPreemptive, "Preemptive ratelimit triggered - waiting until {time:yyyy-MM-dd HH:mm:ss zzz} ({delay:c}).", resetDate, delay);
 					Task.Delay(delay)
 						.ContinueWith(_ => this.ExecuteRequestAsync(request, null, null))
 						.LogTaskFault(this._logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");

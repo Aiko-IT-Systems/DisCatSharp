@@ -71,9 +71,6 @@ public sealed class DiscordRoleTags : ObservableApiObject
 		if (this.IntegrationId.HasValue)
 			return RoleType.ExternalPlatformOrPremiumSubscriber; // We need to wait for discord to fix this bullshit, to return RoleType.ExternalPlatform or RoleType.PremiumSubscriber.
 
-		if (this.GuildConnections.HasValue)
-			return RoleType.RoleConnection;
-
-		return RoleType.Normal;
+		return this.GuildConnections.HasValue ? RoleType.RoleConnection : RoleType.Normal;
 	}
 }

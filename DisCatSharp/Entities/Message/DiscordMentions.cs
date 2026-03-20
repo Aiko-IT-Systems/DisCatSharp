@@ -84,13 +84,13 @@ internal class DiscordMentions : ObservableApiObject
 			}
 
 		if (!parse.Contains(PARSE_USERS) && users.Count > 0)
-			this.Users = users.ToArray();
+			this.Users = [.. users];
 
 		if (!parse.Contains(PARSE_ROLES) && roles.Count > 0)
-			this.Roles = roles.ToArray();
+			this.Roles = [.. roles];
 
 		if (parse.Count > 0)
-			this.Parse = parse.ToArray();
+			this.Parse = [.. parse];
 	}
 
 	/// <summary>

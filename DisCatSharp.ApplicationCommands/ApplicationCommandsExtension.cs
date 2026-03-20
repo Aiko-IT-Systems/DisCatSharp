@@ -1448,7 +1448,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					throw new InvalidOperationException("A context menu command was executed, but no command was registered for it.");
 				}
 
-				await this.RunCommandAsync(context, method.Method, new[] { context }).ConfigureAwait(false);
+				await this.RunCommandAsync(context, method.Method, [context]).ConfigureAwait(false);
 
 				await this._contextMenuExecuted.InvokeAsync(this, new(this.Client.ServiceProvider)
 				{

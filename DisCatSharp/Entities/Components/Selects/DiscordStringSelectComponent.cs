@@ -29,7 +29,7 @@ public sealed class DiscordStringSelectComponent : DiscordBaseSelectComponent
 	public DiscordStringSelectComponent(string placeholder, IEnumerable<DiscordStringSelectComponentOption> options, string customId = null, int minOptions = 0, int maxOptions = 1, bool disabled = false, bool? required = null)
 		: base(ComponentType.StringSelect, placeholder, customId, minOptions, maxOptions, disabled, required: required)
 	{
-		this.Options = options.ToArray();
+		this.Options = [.. options];
 	}
 
 	/// <summary>

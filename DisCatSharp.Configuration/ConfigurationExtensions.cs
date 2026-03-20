@@ -114,20 +114,19 @@ internal static class ConfigurationExtensions
 					targetType = Nullable.GetUnderlyingType(targetType);
 
 				// Primitive types and common types conversion
-				if (targetType.IsPrimitive)
-					value = Convert.ChangeType(entry, targetType, CultureInfo.InvariantCulture);
-				else if (targetType.IsEnum)
-					value = Enum.Parse(targetType, entry.Replace('|', ','));
-				else if (targetType == typeof(TimeSpan))
-					value = TimeSpan.Parse(entry, CultureInfo.InvariantCulture);
-				else if (targetType == typeof(DateTime))
-					value = DateTime.Parse(entry, CultureInfo.InvariantCulture);
-				else if (targetType == typeof(DateTimeOffset))
-					value = DateTimeOffset.Parse(entry, CultureInfo.InvariantCulture);
-				else if (typeof(IWebProxy).IsAssignableFrom(targetType))
-					value = TryCreateWebProxy(section, prop.Name, entry) ?? throw new NotSupportedException($"Unable to parse proxy from '{entry}'.");
-				else
-					value = TryHydrateComplexType(section, prop.Name, targetType, entry) ?? throw new NotSupportedException($"Type '{targetType.Name}' is not supported.");
+				value = targetType.IsPrimitive
+					? Convert.ChangeType(entry, targetType, CultureInfo.InvariantCulture)
+					: targetType.IsEnum
+					? Enum.Parse(targetType, entry.Replace('|', ','))
+					: targetType == typeof(TimeSpan)
+					? TimeSpan.Parse(entry, CultureInfo.InvariantCulture)
+					: targetType == typeof(DateTime)
+					? DateTime.Parse(entry, CultureInfo.InvariantCulture)
+					: targetType == typeof(DateTimeOffset)
+					? DateTimeOffset.Parse(entry, CultureInfo.InvariantCulture)
+					: typeof(IWebProxy).IsAssignableFrom(targetType)
+					? TryCreateWebProxy(section, prop.Name, entry) ?? throw new NotSupportedException($"Unable to parse proxy from '{entry}'.")
+					: TryHydrateComplexType(section, prop.Name, targetType, entry) ?? throw new NotSupportedException($"Type '{targetType.Name}' is not supported.");
 
 				// Update value within our config instance
 				prop.SetValue(config, value);

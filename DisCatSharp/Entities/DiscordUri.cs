@@ -16,7 +16,7 @@ public class DiscordUri
 	/// <summary>
 	///     Gets the raw value.
 	/// </summary>
-	internal readonly object? _value;
+	internal readonly object? Value;
 
 	/// <summary>
 	///     Initializes a new instance of the <see cref="DiscordUri" /> class.
@@ -24,7 +24,7 @@ public class DiscordUri
 	/// <param name="value">The value.</param>
 	internal DiscordUri(Uri value)
 	{
-		this._value = value ?? throw new ArgumentNullException(nameof(value));
+		this.Value = value ?? throw new ArgumentNullException(nameof(value));
 		this.Type = DiscordUriType.Standard;
 	}
 
@@ -38,12 +38,12 @@ public class DiscordUri
 
 		if (IsStandard(value))
 		{
-			this._value = new Uri(value);
+			this.Value = new Uri(value);
 			this.Type = DiscordUriType.Standard;
 		}
 		else
 		{
-			this._value = value;
+			this.Value = value;
 			this.Type = DiscordUriType.NonStandard;
 		}
 	}
@@ -66,7 +66,7 @@ public class DiscordUri
 	/// </summary>
 	/// <returns>This <see cref="DiscordUri"/>, as a string.</returns>
 	public override string? ToString()
-		=> this._value?.ToString();
+		=> this.Value?.ToString();
 
 	/// <summary>
 	///    Converts a <see cref="DiscordUri" /> to a <see cref="Uri" /> implicitly, if possible.
@@ -86,9 +86,9 @@ public class DiscordUri
 	/// </exception>
 	public Uri? ToUri()
 		=> this.Type is DiscordUriType.Standard
-			? this._value as Uri
+			? this.Value as Uri
 			: throw new UriFormatException(
-				$"""DiscordUri "{this._value}" would be invalid as a regular URI, please set the correct {nameof(this.Type)} property first.""");
+				$"""DiscordUri "{this.Value}" would be invalid as a regular URI, please set the correct {nameof(this.Type)} property first.""");
 
 	/// <summary>
 	///     Represents a uri json converter.
@@ -102,7 +102,7 @@ public class DiscordUri
 		/// <param name="value">The value.</param>
 		/// <param name="serializer">The serializer.</param>
 		public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
-			=> writer.WriteValue((value as DiscordUri)?._value);
+			=> writer.WriteValue((value as DiscordUri)?.Value);
 
 		/// <summary>
 		///     Reads the json.

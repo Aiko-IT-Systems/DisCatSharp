@@ -23,7 +23,7 @@ internal static class DaveFrameProcessor
 	///     <c>[0xF8, 0xFF, 0xFE]</c>. These frames must bypass encryption entirely.
 	/// </summary>
 	public static bool IsSignalFrame(ReadOnlySpan<byte> frame)
-		=> frame.Length == 3 && frame[0] == 0xF8 && frame[1] == 0xFF && frame[2] == 0xFE;
+		=> frame.Length is 3 && frame[0] is 0xF8 && frame[1] is 0xFF && frame[2] is 0xFE;
 
 	/// <summary>
 	///     Returns the byte ranges within the plaintext that must remain unencrypted
@@ -35,12 +35,7 @@ internal static class DaveFrameProcessor
 	///     handling for video codecs is not implemented yet.
 	/// </remarks>
 	public static IReadOnlyList<(int Offset, int Length)> GetUnencryptedRanges(DaveCodec codec, ReadOnlySpan<byte> frame)
-	{
-		if (codec == DaveCodec.Opus && frame.Length > 0)
-			return [(0, 1)];
-
-		return [];
-	}
+		=> codec is DaveCodec.Opus && frame.Length > 0 ? [(0, 1)] : [];
 
 	/// <summary>
 	///     Writes a DAVE frame footer into <paramref name="dest"/> starting at offset 0.
@@ -66,7 +61,7 @@ internal static class DaveFrameProcessor
 		uint truncatedNonce,
 		IReadOnlyList<(int Offset, int Length)> unencryptedRanges)
 	{
-		if (tag.Length != TAG_SIZE)
+		if (tag.Length is not TAG_SIZE)
 			throw new ArgumentException($"Tag must be exactly {TAG_SIZE} bytes.", nameof(tag));
 
 		var pos = 0;
@@ -115,7 +110,7 @@ internal static class DaveFrameProcessor
 			return false;
 
 		// Validate magic marker
-		if (frame[^2] != MAGIC || frame[^1] != MAGIC)
+		if (frame[^2] is not MAGIC || frame[^1] is not MAGIC)
 			return false;
 
 		int supplementalSize = frame[^3];

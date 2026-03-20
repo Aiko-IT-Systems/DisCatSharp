@@ -83,13 +83,13 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 					member.Role = "owner";
 
 			var users = members
-				.Where(x => x.MembershipStatus == DiscordTeamMembershipStatus.Accepted)
+				.Where(x => x.MembershipStatus is DiscordTeamMembershipStatus.Accepted)
 				.Select(x => x.User)
 				.ToArray();
 
 			this.Members = [.. users];
-			this.Team.Owner = members.First(x => x.Role == "owner").User;
-			this.Team.Members = new List<DiscordTeamMember>(members);
+			this.Team.Owner = members.First(x => x.Role is "owner").User;
+			this.Team.Members = [.. members];
 			this.TeamName = this.Team.Name;
 			this.Owner = new(tapp.Owner);
 		}

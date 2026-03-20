@@ -15,6 +15,7 @@ using DisCatSharp.Entities;
 using DisCatSharp.Entities.Core;
 using DisCatSharp.Enums;
 using DisCatSharp.Enums.Core;
+using DisCatSharp.EventArgs;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
 

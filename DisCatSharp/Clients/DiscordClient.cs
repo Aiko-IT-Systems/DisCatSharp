@@ -1773,7 +1773,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			return null;
 
 		var oldException = scheduledEvent.Exceptions.FirstOrDefault(x => x.Id == exception.Id);
-		scheduledEvent.Exceptions = scheduledEvent.Exceptions.Where(x => x.Id != exception.Id).Append(exception).ToList();
+		scheduledEvent.Exceptions = [.. scheduledEvent.Exceptions.Where(x => x.Id != exception.Id), exception];
 		return oldException;
 	}
 
@@ -1789,7 +1789,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		if (!guild.ScheduledEventsInternal.TryGetValue(exception.EventId, out var scheduledEvent))
 			return;
 
-		scheduledEvent.Exceptions = scheduledEvent.Exceptions.Where(x => x.Id != exception.Id).ToList();
+		scheduledEvent.Exceptions = [.. scheduledEvent.Exceptions.Where(x => x.Id != exception.Id)];
 	}
 
 	/// <summary>

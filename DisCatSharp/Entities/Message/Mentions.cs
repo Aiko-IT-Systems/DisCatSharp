@@ -111,7 +111,7 @@ public static class Mentions
 	/// <summary>
 	///     All possible mentions - @everyone + @here, users, and roles.
 	/// </summary>
-	public static IReadOnlyList<IMention> All { get; } = new IMention[] { EveryoneMention.All, UserMention.All, RoleMention.All };
+	public static IReadOnlyList<IMention> All { get; } = [EveryoneMention.All, UserMention.All, RoleMention.All];
 
 	/// <summary>
 	///     No mentions allowed.

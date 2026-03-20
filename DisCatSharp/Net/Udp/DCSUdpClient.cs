@@ -91,10 +91,9 @@ internal class DcsUdpClient : BaseUdpClient
 	/// <returns></returns>
 	public override Task SendAsync(byte[] data, int dataLength)
 	{
-		if (this._client is null)
-			throw new InvalidOperationException("UDP client is not configured. Call Setup() first.");
-
-		return this._client.SendAsync(data, dataLength, this._endPoint.Hostname, this._endPoint.Port);
+		return this._client is null
+			? throw new InvalidOperationException("UDP client is not configured. Call Setup() first.")
+			: (Task)this._client.SendAsync(data, dataLength, this._endPoint.Hostname, this._endPoint.Port);
 	}
 
 	/// <summary>

@@ -22,7 +22,7 @@ public class ChecksFailedException : Exception
 	{
 		this.Command = command;
 		this.Context = ctx;
-		this.FailedChecks = new ReadOnlyCollection<CheckBaseAttribute>(new List<CheckBaseAttribute>(failedChecks));
+		this.FailedChecks = new ReadOnlyCollection<CheckBaseAttribute>([.. failedChecks]);
 	}
 
 	/// <summary>

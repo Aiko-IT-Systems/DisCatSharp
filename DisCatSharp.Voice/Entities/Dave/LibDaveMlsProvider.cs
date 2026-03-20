@@ -374,14 +374,14 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 	public DaveRatchetInstaller GetOwnRatchetInstaller()
 	{
 		if (this._session is null || this._session.IsInvalid || this._selfUserId == 0)
-			return DaveRatchetInstaller.FromManaged(Array.Empty<byte>());
+			return DaveRatchetInstaller.FromManaged([]);
 
 		var ratchetHandle = DaveNative.SessionGetKeyRatchet(this._session, this._selfUserId.ToString());
 		if (ratchetHandle.IsInvalid)
 		{
 			ratchetHandle.Dispose();
 			this._logger.LogWarning("[DAVE] Own ratchet unavailable; falling back to managed empty installer.");
-			return DaveRatchetInstaller.FromManaged(Array.Empty<byte>());
+			return DaveRatchetInstaller.FromManaged([]);
 		}
 
 		return DaveRatchetInstaller.FromNative(ratchetHandle);
@@ -415,8 +415,7 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 	/// </summary>
 	private void EnsureSession()
 	{
-		if (this._disposed)
-			throw new ObjectDisposedException(nameof(LibDaveMlsProvider));
+		ObjectDisposedException.ThrowIf(this._disposed, this);
 		if (this._session is null || this._session.IsInvalid)
 			throw new InvalidOperationException("[DAVE] MLS session not initialized. Call InitGroup first.");
 	}

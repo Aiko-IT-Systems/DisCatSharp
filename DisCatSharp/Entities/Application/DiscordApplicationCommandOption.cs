@@ -70,9 +70,9 @@ public class DiscordApplicationCommandOption
 		this.Description = description;
 		this.Type = type;
 		this.Required = required;
-		this.Choices = choices is not null && choices.Any() ? choices.ToList() : null;
-		this.Options = options is not null && options.Any() ? options.ToList() : null;
-		this.ChannelTypes = channelTypes is not null && channelTypes.Any() ? channelTypes.ToList() : null;
+		this.Choices = choices is not null && choices.Any() ? [.. choices] : null;
+		this.Options = options is not null && options.Any() ? [.. options] : null;
+		this.ChannelTypes = channelTypes is not null && channelTypes.Any() ? [.. channelTypes] : null;
 		this.AutoComplete = autocomplete;
 		this.MinimumValue = minimumValue;
 		this.MaximumValue = maximumValue;

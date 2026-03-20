@@ -122,7 +122,7 @@ internal sealed class LibDaveEncryptor : IDaveEncryptor
 
 					if (rc != 0 || written == 0)
 					{
-						result = Array.Empty<byte>();
+						result = [];
 						resultLength = 0;
 						return false;
 					}

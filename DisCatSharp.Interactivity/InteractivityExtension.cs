@@ -102,7 +102,7 @@ public class InteractivityExtension : BaseExtension
 		if (pollBehaviour == PollBehaviour.DeleteEmojis && m.Channel.PermissionsFor(thisMember).HasPermission(Permissions.ManageMessages))
 			await m.DeleteAllReactionsAsync().ConfigureAwait(false);
 
-		return new(res.ToList());
+		return new([.. res]);
 	}
 
 	/// <summary>
@@ -241,14 +241,14 @@ public class InteractivityExtension : BaseExtension
 			if (message.Components.OfType<DiscordContainerComponent>().SelectMany(c => c.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components)).All(c => c.Type != ComponentType.Button))
 				throw new ArgumentException("Message does not contain any button components.");
 
-			ids = message.Components.OfType<DiscordContainerComponent>().SelectMany(c => c.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components)).Select(c => c.CustomId).ToArray();
+			ids = [.. message.Components.OfType<DiscordContainerComponent>().SelectMany(c => c.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components)).Select(c => c.CustomId)];
 		}
 		else
 		{
 			if (message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).All(c => c.Type != ComponentType.Button))
 				throw new ArgumentException("Message does not contain any button components.");
 
-			ids = message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).Select(c => c.CustomId).ToArray();
+			ids = [.. message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).Select(c => c.CustomId)];
 		}
 
 		var result =

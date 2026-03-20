@@ -105,14 +105,14 @@ public class NullValueHandlingTests
 		Assert.Contains("\"components\":null", json);
 
 		// Case 3: Components = [], HasComponents = true
-		obj = new ComponentTestClass { Components = new List<string>(), HasComponents = true };
+		obj = new ComponentTestClass { Components = [], HasComponents = true };
 		DumpCase("Case 3 (empty list, HasComponents=true)", obj);
 		json = JsonConvert.SerializeObject(obj, settings);
 		Assert.Contains("components", json);
 		Assert.Contains("[]", json);
 
 		// Case 4: Components = ["foo"], HasComponents = true
-		obj = new ComponentTestClass { Components = new List<string> { "foo" }, HasComponents = true };
+		obj = new ComponentTestClass { Components = ["foo"], HasComponents = true };
 		DumpCase("Case 4 (non-empty, HasComponents=true)", obj);
 		json = JsonConvert.SerializeObject(obj, settings);
 		Assert.Contains("components", json);

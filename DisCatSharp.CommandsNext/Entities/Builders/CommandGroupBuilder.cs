@@ -64,7 +64,7 @@ public sealed class CommandGroupBuilder : CommandBuilder
 			ExecutionChecks = this.ExecutionChecks,
 			IsHidden = this.IsHidden,
 			Parent = parent,
-			Overloads = new ReadOnlyCollection<CommandOverload>(this.Overloads.Select(xo => xo.Build()).ToList()),
+			Overloads = new ReadOnlyCollection<CommandOverload>([.. this.Overloads.Select(xo => xo.Build())]),
 			Module = this.Module,
 			CustomAttributes = this.CustomAttributes
 		};

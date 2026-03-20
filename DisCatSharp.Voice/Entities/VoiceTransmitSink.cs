@@ -203,7 +203,7 @@ public sealed class VoiceTransmitSink : IDisposable
 	{
 		lock (this._filters)
 		{
-			return this._filters.ToArray();
+			return [.. this._filters];
 		}
 	}
 

@@ -52,9 +52,7 @@ public sealed class MemoryBuffer<T> : IMemoryBuffer<T> where T : unmanaged
 		this._lastSegmentLength = 0;
 		this._clear = clearOnDispose;
 
-		this._segments = Enumerable.Range(0, initialSegmentCount)
-			.Select(x => this._pool.Rent(this._segmentSize))
-			.ToList();
+		this._segments = [.. Enumerable.Range(0, initialSegmentCount).Select(x => this._pool.Rent(this._segmentSize))];
 
 		this.Length = 0;
 

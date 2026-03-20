@@ -59,7 +59,7 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 			this.Type = type;
 			this.Name = name;
 			this.Description = description;
-			this.Options = options != null && options.Any() ? options.ToList() : null;
+			this.Options = options != null && options.Any() ? [.. options] : null;
 			this.DefaultMemberPermissions = defaultMemberPermissions;
 			this.IsNsfw = isNsfw;
 			this.AllowedContexts = allowedContexts;

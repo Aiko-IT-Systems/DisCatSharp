@@ -2433,7 +2433,7 @@ public sealed class VoiceConnection : IDisposable
 				if (payload.Length >= 2 && this._daveSession is not null)
 				{
 					var transId29 = BinaryPrimitives.ReadUInt16BigEndian(payload.Span[..2]);
-					var commitPayload29 = payload.Slice(2).ToArray();
+					var commitPayload29 = payload[2..].ToArray();
 					this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP29 received");
 					this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] OP29 announce_commit received, transId={TransId} {Len} bytes", transId29, commitPayload29.Length);
 					var action29 = this._daveSession.HandleAnnounceCommit(commitPayload29, transId29);
@@ -2466,7 +2466,7 @@ public sealed class VoiceConnection : IDisposable
 				if (payload.Length >= 2 && this._daveSession is not null)
 				{
 					var transId30 = BinaryPrimitives.ReadUInt16BigEndian(payload.Span[..2]);
-					var welcomePayload = payload.Slice(2).ToArray();
+					var welcomePayload = payload[2..].ToArray();
 					this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP30 received");
 					this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] OP30 welcome received, transId={TransId} {Len} bytes", transId30, welcomePayload.Length);
 					this._daveSession.HandleWelcome(welcomePayload);

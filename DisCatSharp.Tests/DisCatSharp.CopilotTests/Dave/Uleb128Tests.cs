@@ -101,7 +101,7 @@ public class Uleb128Tests
 	[Fact]
 	public void Write_BufferTooSmall_Throws()
 	{
-		byte[] buf = new byte[1];
+		var buf = new byte[1];
 		Assert.Throws<ArgumentException>(() => Uleb128.Write(128, buf));
 	}
 }

@@ -227,7 +227,7 @@ public class CommandBuilder
 	public CommandBuilder WithOverload(CommandOverloadBuilder overload)
 	{
 		if (this._overloadArgumentSets.Contains(overload.ArgumentSet))
-			throw new DuplicateOverloadException(this.Name, overload.Arguments.Select(x => x.Type).ToList(), overload.ArgumentSet);
+			throw new DuplicateOverloadException(this.Name, [.. overload.Arguments.Select(x => x.Type)], overload.ArgumentSet);
 
 		this._overloadArgumentSets.Add(overload.ArgumentSet);
 		this._overloadList.Add(overload);
@@ -274,7 +274,7 @@ public class CommandBuilder
 			ExecutionChecks = this.ExecutionChecks,
 			IsHidden = this.IsHidden,
 			Parent = parent,
-			Overloads = new ReadOnlyCollection<CommandOverload>(this.Overloads.Select(xo => xo.Build()).ToList()),
+			Overloads = new ReadOnlyCollection<CommandOverload>([.. this.Overloads.Select(xo => xo.Build())]),
 			Module = this.Module,
 			CustomAttributes = this.CustomAttributes
 		};

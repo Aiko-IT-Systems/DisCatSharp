@@ -297,9 +297,9 @@ public sealed class DiscordForwardedMessage : ObservableApiObject
 		if (!string.IsNullOrWhiteSpace(this.Content))
 		{
 			if (guild is not null)
-				this.MentionedRolesInternal = this.MentionedRolesInternal.Union(this.MentionedRoleIds.Select(xid => guild.GetRole(xid))).ToList();
+				this.MentionedRolesInternal = [.. this.MentionedRolesInternal.Union(this.MentionedRoleIds.Select(xid => guild.GetRole(xid)))];
 
-			this.MentionedChannelsInternal = this.MentionedChannelsInternal.Union(Utilities.GetChannelMentions(this.Content).Select(xid => guild.GetChannel(xid))).ToList();
+			this.MentionedChannelsInternal = [.. this.MentionedChannelsInternal.Union(Utilities.GetChannelMentions(this.Content).Select(xid => guild.GetChannel(xid)))];
 		}
 
 		this.MentionedUsersInternal = [.. mentionedUsers];

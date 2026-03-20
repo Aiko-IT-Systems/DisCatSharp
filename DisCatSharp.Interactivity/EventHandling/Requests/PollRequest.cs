@@ -33,7 +33,7 @@ public class PollRequest
 		this.Ct = new(timeout);
 		this.Ct.Token.Register(() => this.Tcs.TrySetResult(true));
 		this.Timeout = timeout;
-		this.Emojis = emojis.ToList();
+		this.Emojis = [.. emojis];
 		this.Collected = [];
 		this.Message = message;
 

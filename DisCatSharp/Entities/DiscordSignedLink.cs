@@ -104,7 +104,7 @@ public sealed class DiscordSignedLink : DiscordUri
 	/// </summary>
 	/// <returns>This <see cref="DiscordSignedLink"/>, as a string.</returns>
 	public override string? ToString()
-		=> this._value?.ToString();
+		=> this.Value?.ToString();
 
 	/// <summary>
 	///    Converts a <see cref="DiscordSignedLink" /> to a <see cref="Uri" /> implicitly, if possible.
@@ -125,7 +125,7 @@ public sealed class DiscordSignedLink : DiscordUri
 		/// <param name="value">The value.</param>
 		/// <param name="serializer">The serializer.</param>
 		public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
-			=> writer.WriteValue((value as DiscordSignedLink)?._value);
+			=> writer.WriteValue((value as DiscordSignedLink)?.Value);
 
 		/// <summary>
 		///     Reads the json.

@@ -140,14 +140,13 @@ public sealed class MediaTool : IDisposable
 		}
 
 		// Check for MP3 magic number
-		if ((bgn32 & 0xFFE0) == MP3_MAGIC) // MP3 has a 11-bit sync word: 0xFFE
+		if ((bgn32 & 0xFFE0) is MP3_MAGIC) // MP3 has a 11-bit sync word: 0xFFE
 			return this._mfCache = MediaFormat.Mp3;
 
 		// Check for OGG magic number
-		if (bgn32 == OGG_MAGIC)
-			return this._mfCache = MediaFormat.Ogg;
-
-		throw new InvalidDataException("The data within the stream was not valid media data.");
+		return bgn32 is OGG_MAGIC
+			? (this._mfCache = MediaFormat.Ogg)
+			: throw new InvalidDataException("The data within the stream was not valid media data.");
 	}
 
 	/// <summary>
@@ -156,7 +155,7 @@ public sealed class MediaTool : IDisposable
 	/// <returns>Data-scheme base64 string.</returns>
 	public string GetBase64()
 	{
-		if (this._b64Cache != null)
+		if (this._b64Cache is not null)
 			return this._b64Cache;
 
 		var fmt = this.GetFormat();

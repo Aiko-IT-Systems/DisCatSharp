@@ -44,7 +44,7 @@ internal sealed class NullMlsProvider : IMlsProvider
 
 	/// <inheritdoc/>
 	public DaveRatchetInstaller GetOwnRatchetInstaller()
-		=> DaveRatchetInstaller.FromManaged(Array.Empty<byte>());
+		=> DaveRatchetInstaller.FromManaged([]);
 
 	/// <inheritdoc/>
 	public void Reset() { }

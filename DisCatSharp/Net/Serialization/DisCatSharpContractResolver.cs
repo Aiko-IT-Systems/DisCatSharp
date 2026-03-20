@@ -38,25 +38,24 @@ public sealed class DisCatSharpContractResolver : DefaultContractResolver
 		{
 			var declaringMember = property.DeclaringType.GetTypeInfo().DeclaredMembers
 				.FirstOrDefault(e => e.Name == property.UnderlyingName);
-			switch (declaringMember)
+			property.ShouldSerialize = declaringMember switch
 			{
-				case PropertyInfo declaringProp:
-					property.ShouldSerialize = instance =>
-					{
-						var optionalValue = declaringProp.GetValue(instance);
-						return (optionalValue as DisCatSharp.Entities.IOptional).HasValue;
-					};
-					break;
-				case FieldInfo declaringField:
-					property.ShouldSerialize = instance =>
+				PropertyInfo declaringProp => instance =>
+									{
+										var optionalValue = declaringProp.GetValue(instance);
+										return (optionalValue as DisCatSharp.Entities.IOptional).HasValue;
+									}
+
+				,
+				FieldInfo declaringField => instance =>
 					{
 						var optionalValue = declaringField.GetValue(instance);
 						return (optionalValue as DisCatSharp.Entities.IOptional).HasValue;
-					};
-					break;
-				default:
-					throw new InvalidOperationException("Can only serialize Optional<T> members that are fields or properties");
-			}
+					}
+
+				,
+				_ => throw new InvalidOperationException("Can only serialize Optional<T> members that are fields or properties"),
+			};
 		}
 
 		return property;

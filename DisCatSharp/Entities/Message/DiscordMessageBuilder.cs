@@ -535,7 +535,7 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 
 		if (!isModify)
 		{
-			if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && (!this.Embeds?.Any() ?? true) && (!this.StickerIds?.Any() ?? true) && (!this.Components?.Any() ?? true) && this.Poll is null && this?.Attachments.Count is 0)
+			if (this.Files?.Count is 0 && string.IsNullOrEmpty(this.Content) && (!this.Embeds?.Any() ?? true) && (!this.StickerIds?.Any() ?? true) && (!this.Components?.Any() ?? true) && this.Poll is null && this?.Attachments.Count is 0)
 				throw new ArgumentException("You must specify content, an embed, a sticker, a component, a poll or at least one file.");
 
 			if (this.IsComponentsV2 && (!string.IsNullOrEmpty(this.Content) || (this.Embeds?.Any() ?? false)))

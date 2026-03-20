@@ -56,7 +56,7 @@ public class RingBuffer<T> : ICollection<T>
 			throw new ArgumentException("The collection cannot be null or empty.", nameof(elements));
 
 		this.CurrentIndex = index;
-		this.InternalBuffer = elements.ToArray();
+		this.InternalBuffer = [.. elements];
 		this.Capacity = this.InternalBuffer.Length;
 
 		if (this.CurrentIndex >= this.InternalBuffer.Length || this.CurrentIndex < 0)

@@ -1,9 +1,7 @@
 // Add the missing event args type
 using System;
 
-using DisCatSharp.EventArgs;
-
-namespace DisCatSharp;
+namespace DisCatSharp.EventArgs;
 
 /// <summary>
 /// Provides data for global exception events.
