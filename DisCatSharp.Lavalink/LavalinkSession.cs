@@ -86,6 +86,11 @@ public sealed class LavalinkSession
 	private readonly ConcurrentDictionary<ulong, TaskCompletionSource<VoiceStateUpdateEventArgs>> _voiceStateUpdates;
 
 	/// <summary>
+	///     Stores partially received Discord voice-state data until both the state and server halves are available.
+	/// </summary>
+	private readonly ConcurrentDictionary<ulong, LavalinkVoiceState> _pendingVoiceStates;
+
+	/// <summary>
 	///     Triggers when the Lavalink websocket is closed.
 	/// </summary>
 	private readonly AsyncEvent<LavalinkSession, LavalinkWebsocketClosedEventArgs> _websocketClosed;
@@ -144,6 +149,7 @@ public sealed class LavalinkSession
 
 		this._voiceServerUpdates = new();
 		this._voiceStateUpdates = new();
+		this._pendingVoiceStates = new();
 		this.Discord.VoiceStateUpdated += this.Discord_VoiceStateUpdated;
 		this.Discord.VoiceServerUpdated += this.Discord_VoiceServerUpdated;
 		this.GuildPlayerDestroyed += this.LavalinkGuildPlayerDestroyed;
@@ -331,6 +337,7 @@ public sealed class LavalinkSession
 	/// <param name="args">The guild player destroyed event args containing the destroyed <see cref="LavalinkGuildPlayer" />.</param>
 	private Task LavalinkGuildPlayerDestroyed(LavalinkSession sender, GuildPlayerDestroyedEventArgs args)
 	{
+		this._pendingVoiceStates.TryRemove(args.Player.GuildId, out _);
 		this.ConnectedPlayersInternal.Remove(args.Player.GuildId, out _);
 		args.Handled = false;
 		return Task.CompletedTask;
@@ -792,6 +799,7 @@ public sealed class LavalinkSession
 			{
 				await Task.Delay(this.Config.WebSocketCloseTimeout).ConfigureAwait(false);
 				await this.Rest.DestroyPlayerAsync(this.Config.SessionId!, dGuildPlayer.GuildId).ConfigureAwait(false);
+				this._pendingVoiceStates.TryRemove(gld.Id, out _);
 				_ = Task.Run(async () =>
 				{
 					if (this.ConnectedPlayersInternal.TryRemove(gld.Id, out _))
@@ -801,15 +809,17 @@ public sealed class LavalinkSession
 		else if (!string.IsNullOrWhiteSpace(args.SessionId) && this.ConnectedPlayersInternal.TryGetValue(gld.Id, out var guildPlayer))
 			_ = Task.Run(async () =>
 			{
-				var state = new LavalinkVoiceState
-				{
-					Endpoint = guildPlayer.Player.VoiceState.Endpoint,
-					Token = guildPlayer.Player.VoiceState.Token,
-					SessionId = args.After.SessionId,
-					ChannelId = args.After.ChannelId ?? guildPlayer.ChannelId
-				};
-				guildPlayer.UpdateVoiceState(state);
-				await this.Rest.UpdatePlayerVoiceStateAsync(this.Config.SessionId!, guildPlayer.GuildId, state).ConfigureAwait(false);
+				var state = this.MergePendingVoiceState(
+					guildPlayer.GuildId,
+					currentState =>
+					{
+						currentState.Endpoint = currentState.Endpoint ?? guildPlayer.Player.VoiceState.Endpoint;
+						currentState.Token = currentState.Token ?? guildPlayer.Player.VoiceState.Token;
+						currentState.SessionId = args.After.SessionId;
+						currentState.ChannelId = args.After.ChannelId ?? guildPlayer.ChannelId;
+					});
+
+				await this.TryApplyVoiceStateUpdateAsync(guildPlayer, state).ConfigureAwait(false);
 				this.ConnectedPlayersInternal[gld.Id].ChannelId = args.After?.ChannelId ?? guildPlayer.ChannelId;
 			});
 
@@ -833,14 +843,17 @@ public sealed class LavalinkSession
 		if (this.ConnectedPlayersInternal.TryGetValue(args.Guild.Id, out var guildPlayer))
 			_ = Task.Run(async () =>
 			{
-				var state = new LavalinkVoiceState
-				{
-					Endpoint = args.Endpoint,
-					Token = args.VoiceToken,
-					SessionId = guildPlayer.Player.VoiceState.SessionId
-				};
-				await this.Rest.UpdatePlayerVoiceStateAsync(this.Config.SessionId!, guildPlayer.GuildId, state).ConfigureAwait(false);
-				guildPlayer.UpdateVoiceState(state);
+				var state = this.MergePendingVoiceState(
+					guildPlayer.GuildId,
+					currentState =>
+					{
+						currentState.Endpoint = args.Endpoint;
+						currentState.Token = args.VoiceToken;
+						currentState.SessionId = currentState.SessionId ?? guildPlayer.Player.VoiceState.SessionId;
+						currentState.ChannelId ??= guildPlayer.ChannelId;
+					});
+
+				await this.TryApplyVoiceStateUpdateAsync(guildPlayer, state).ConfigureAwait(false);
 			});
 
 		if (this._voiceServerUpdates.TryRemove(gld.Id, out var xe))
@@ -848,4 +861,63 @@ public sealed class LavalinkSession
 
 		return Task.CompletedTask;
 	}
+
+	/// <summary>
+	///     Merges newly received Discord voice-state data into the per-guild pending state cache.
+	/// </summary>
+	/// <param name="guildId">The guild id whose pending voice state is being updated.</param>
+	/// <param name="updateAction">The mutation that applies the newly received event data.</param>
+	/// <returns>The merged voice state snapshot.</returns>
+	private LavalinkVoiceState MergePendingVoiceState(ulong guildId, Action<LavalinkVoiceState> updateAction)
+	{
+		var state = this._pendingVoiceStates.AddOrUpdate(
+			guildId,
+			_ => new(),
+			(_, currentState) => currentState);
+
+		lock (state)
+		{
+			updateAction(state);
+			return new LavalinkVoiceState
+			{
+				Endpoint = state.Endpoint,
+				Token = state.Token,
+				SessionId = state.SessionId,
+				ChannelId = state.ChannelId
+			};
+		}
+	}
+
+	/// <summary>
+	///     Applies a merged voice-state update to Lavalink only when all required fields are available.
+	/// </summary>
+	/// <param name="guildPlayer">The guild player whose voice state is being refreshed.</param>
+	/// <param name="state">The merged voice-state snapshot.</param>
+	/// <returns>A task representing the asynchronous update operation.</returns>
+	private async Task TryApplyVoiceStateUpdateAsync(LavalinkGuildPlayer guildPlayer, LavalinkVoiceState state)
+	{
+		if (!this.IsVoiceStateComplete(state))
+		{
+			this.Discord.Logger.LogDebug(
+				LavalinkEvents.Misc,
+				"Deferring Lavalink voice-state update for guild {guildId} until token, endpoint, session id, and channel id are all present.",
+				guildPlayer.GuildId);
+			return;
+		}
+
+		await this.Rest.UpdatePlayerVoiceStateAsync(this.Config.SessionId!, guildPlayer.GuildId, state).ConfigureAwait(false);
+		guildPlayer.UpdateVoiceState(state);
+		this._pendingVoiceStates.TryRemove(guildPlayer.GuildId, out _);
+	}
+
+	/// <summary>
+	///     Determines whether a merged Discord voice-state snapshot contains the full set of values Lavalink requires.
+	/// </summary>
+	/// <param name="state">The voice-state snapshot to validate.</param>
+	/// <returns><see langword="true" /> when the snapshot is complete; otherwise <see langword="false" />.</returns>
+	private bool IsVoiceStateComplete(LavalinkVoiceState state)
+		=> !string.IsNullOrWhiteSpace(state.Token)
+			&& !string.IsNullOrWhiteSpace(state.Endpoint)
+			&& !string.IsNullOrWhiteSpace(state.SessionId)
+			&& state.ChannelId.HasValue;
 }
