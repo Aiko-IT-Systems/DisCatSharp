@@ -1642,11 +1642,52 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			else
 			{
 				var option = options.Single(x => x.Name == parameter.GetCustomAttribute<OptionAttribute>()?.Name.ToLower());
+				// Handle enum parameters (including nullable enums). We map enums to Integer option
+				// types so Discord will send numeric values. Accept numeric (boxed) and numeric-string
+				// values and convert them into the proper enum instance. Also accept named-string
+				// values and parse by name for backward compatibility.
+				var paramType = parameter.ParameterType;
+				var underlying = Nullable.GetUnderlyingType(paramType);
+				Type enumType = null;
+				if (paramType.IsEnum)
+					enumType = paramType;
+				else if (underlying is not null && underlying.IsEnum)
+					enumType = underlying;
 
-				if (parameter.ParameterType == typeof(string))
-					args.Add(option.Value.ToString());
-				else if (parameter.ParameterType.IsEnum)
-					args.Add(Enum.Parse(parameter.ParameterType, (string)option.Value));
+				if (enumType is not null)
+				{
+					var underlyingType = Enum.GetUnderlyingType(enumType);
+
+					if (option.Value is null)
+					{
+						args.Add(null);
+					}
+					else if (option.Value is string s)
+					{
+						// If string contains digits, treat as numeric; otherwise parse as enum name
+						if (long.TryParse(s, out var parsedNum))
+						{
+							var conv = Convert.ChangeType(parsedNum, underlyingType);
+							var enumObj = Enum.ToObject(enumType, conv);
+							args.Add(enumObj);
+						}
+						else
+						{
+							var parsed = Enum.Parse(enumType, s);
+							args.Add(parsed);
+						}
+					}
+					else
+					{
+						var numeric = Convert.ChangeType(option.Value, underlyingType);
+						var enumObj = Enum.ToObject(enumType, numeric);
+						args.Add(enumObj);
+					}
+				}
+				else if (parameter.ParameterType == typeof(string))
+				{
+					args.Add(option.Value?.ToString());
+				}
 				else if (parameter.ParameterType == typeof(ulong) || parameter.ParameterType == typeof(ulong?))
 					args.Add((ulong?)option.Value);
 				else if (parameter.ParameterType == typeof(int) || parameter.ParameterType == typeof(int?))
@@ -1805,7 +1846,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	/// <param name="customAttributes">The custom attributes.</param>
 	/// <param name="guildId">The optional guild id</param>
-	private static async Task<List<DiscordApplicationCommandOptionChoice>> GetChoiceAttributesFromProvider(List<ChoiceProviderAttribute> customAttributes, ulong? guildId = null)
+    private static async Task<List<DiscordApplicationCommandOptionChoice>> GetChoiceAttributesFromProvider(List<ChoiceProviderAttribute> customAttributes, ulong? guildId = null, ApplicationCommandOptionType optionType = ApplicationCommandOptionType.String, Type? numericTargetType = null)
 	{
 		var choices = new List<DiscordApplicationCommandOptionChoice>();
 		foreach (var choiceProviderAttribute in customAttributes)
@@ -1826,8 +1867,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			//Gets the choices from the method
 			var result = (await ((Task<IEnumerable<DiscordApplicationCommandOptionChoice>>)method.Invoke(instance, null)!).ConfigureAwait(false)).ToList();
 
-			if (result.Count is not 0)
-				choices.AddRange(result);
+            if (result.Count is not 0)
+			{
+				// Preserve numeric types for integer/number options, stringify for string options.
+				choices.AddRange(result.Select(r => new DiscordApplicationCommandOptionChoice(r.Name, ConvertChoiceValue(r.Value, optionType, numericTargetType))));
+			}
 		}
 
 		return choices;
@@ -1837,8 +1881,25 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	///     Gets the choice attributes from enum parameter.
 	/// </summary>
 	/// <param name="enumParam">The enum parameter.</param>
-	private static List<DiscordApplicationCommandOptionChoice> GetChoiceAttributesFromEnumParameter(Type enumParam)
-		=> (from Enum enumValue in Enum.GetValues(enumParam) select new DiscordApplicationCommandOptionChoice(enumValue.GetName(), enumValue.ToString())).ToList();
+	private static List<DiscordApplicationCommandOptionChoice> GetChoiceAttributesFromEnumParameter(Type enumParam, ApplicationCommandOptionType optionType)
+	{
+		var list = new List<DiscordApplicationCommandOptionChoice>();
+		var underlying = Enum.GetUnderlyingType(enumParam);
+		foreach (Enum enumValue in Enum.GetValues(enumParam))
+		{
+			var name = enumValue.GetName();
+			object value = optionType switch
+			{
+				ApplicationCommandOptionType.Integer => Convert.ChangeType(enumValue, underlying),
+				ApplicationCommandOptionType.Number => Convert.ToDouble(Convert.ChangeType(enumValue, underlying)),
+				_ => enumValue.ToString()
+			};
+
+			list.Add(new DiscordApplicationCommandOptionChoice(name, value));
+		}
+
+		return list;
+	}
 
 	/// <summary>
 	///     Gets the parameter type.
@@ -1864,8 +1925,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 										? ApplicationCommandOptionType.Role
 										: type == typeof(SnowflakeObject)
 											? ApplicationCommandOptionType.Mentionable
+											// Map enums to Integer so Discord sends numeric values for enum choices.
 											: type.IsEnum
-												? ApplicationCommandOptionType.String
+												? ApplicationCommandOptionType.Integer
 												: throw new ArgumentException("Cannot convert type! Argument types must be string, int, long, bool, double, DiscordChannel, DiscordUser, DiscordRole, SnowflakeObject, DiscordAttachment or an Enum.");
 		return parameterType;
 	}
@@ -1874,10 +1936,31 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	///     Gets the choice attributes from parameter.
 	/// </summary>
 	/// <param name="choiceAttributes">The choice attributes.</param>
-	private static List<DiscordApplicationCommandOptionChoice> GetChoiceAttributesFromParameter(List<ChoiceAttribute> choiceAttributes) =>
-		choiceAttributes.Count is 0
+    private static List<DiscordApplicationCommandOptionChoice> GetChoiceAttributesFromParameter(List<ChoiceAttribute> choiceAttributes, ApplicationCommandOptionType optionType, Type? numericTargetType = null)
+		=> choiceAttributes.Count is 0
 			? []
-			: choiceAttributes.Select(att => new DiscordApplicationCommandOptionChoice(att.Name, att.Value)).ToList();
+			: choiceAttributes.Select(att => new DiscordApplicationCommandOptionChoice(att.Name, ConvertChoiceValue(att.Value, optionType, numericTargetType))).ToList();
+
+    private static object? ConvertChoiceValue(object? value, ApplicationCommandOptionType optionType, Type? numericTargetType = null)
+	{
+		if (value is null)
+			return null;
+
+		try
+		{
+            return optionType switch
+			{
+				ApplicationCommandOptionType.Integer => numericTargetType is not null ? Convert.ChangeType(value, numericTargetType) : Convert.ToInt64(value),
+				ApplicationCommandOptionType.Number => numericTargetType is not null ? Convert.ChangeType(value, numericTargetType) : Convert.ToDouble(value),
+				_ => value.ToString()
+			};
+		}
+		catch
+		{
+			// Fallback to string if conversion fails
+			return value.ToString();
+		}
+	}
 
 	/// <summary>
 	///     Parses the parameters.
@@ -1907,9 +1990,19 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					throw new ArgumentException($"The command '{commandName}' has an autocomplete provider but the option to have autocomplete set to false!");
 			}
 
-			//Sets the type
+            //Sets the type
 			var type = parameter.ParameterType;
 			var parameterType = GetParameterType(type);
+			// Determine numeric target type for integer choices (use enum underlying type when applicable)
+			Type? numericTargetType = null;
+			if (type.IsEnum)
+				numericTargetType = Enum.GetUnderlyingType(type);
+			else
+			{
+				var nullableUnderlying = Nullable.GetUnderlyingType(type);
+				if (nullableUnderlying is not null && nullableUnderlying.IsEnum)
+					numericTargetType = Enum.GetUnderlyingType(nullableUnderlying);
+			}
 
 			switch (parameterType)
 			{
@@ -1927,16 +2020,16 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					break;
 			}
 
-			//Handles choices
+            //Handles choices
 			//From attributes
-			var choices = GetChoiceAttributesFromParameter(parameter.GetCustomAttributes<ChoiceAttribute>().ToList());
+			var choices = GetChoiceAttributesFromParameter(parameter.GetCustomAttributes<ChoiceAttribute>().ToList(), parameterType, numericTargetType);
 			//From enums
 			if (parameter.ParameterType.IsEnum)
-				choices = GetChoiceAttributesFromEnumParameter(parameter.ParameterType);
+				choices = GetChoiceAttributesFromEnumParameter(parameter.ParameterType, parameterType);
 			//From choice provider
 			var choiceProviders = parameter.GetCustomAttributes<ChoiceProviderAttribute>().ToList();
 			if (choiceProviders.Count is not 0)
-				choices = await GetChoiceAttributesFromProvider(choiceProviders, guildId).ConfigureAwait(false);
+				choices = await GetChoiceAttributesFromProvider(choiceProviders, guildId, parameterType, numericTargetType).ConfigureAwait(false);
 
 			options.Add(new(optionAttribute.Name, optionAttribute.Description, parameterType, !parameter.IsOptional, choices, null, channelTypes, optionAttribute.Autocomplete, minimumValue, maximumValue, minimumLength: minimumLength, maximumLength: maximumLength));
 		}
