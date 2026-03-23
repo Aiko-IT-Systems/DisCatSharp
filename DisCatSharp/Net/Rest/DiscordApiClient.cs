@@ -7755,9 +7755,9 @@ public sealed class DiscordApiClient
 	/// <param name="builder">The builder.</param>
 	internal async Task<DiscordInteractionCallbackResponse> CreateInteractionResponseAsync(ulong interactionId, string interactionToken, InteractionResponseType type, DiscordInteractionResponseBuilder? builder)
 	{
-		if (builder?.Embeds != null)
+		if (builder?.Embeds is not null)
 			foreach (var embed in builder.Embeds)
-				if (embed.Timestamp != null)
+				if (embed.Timestamp is not null)
 					embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
 
 		RestInteractionResponsePayload pld;
@@ -7873,7 +7873,7 @@ public sealed class DiscordApiClient
 		RestResponse response;
 
 		var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "false").AddParameter("with_response", "true").Build();
-		if (builder is not null && values.Count is not 0)
+		if (builder is not null && builder.Files is not null && values.Count is not 0)
 		{
 			response = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files).ConfigureAwait(false);
 
