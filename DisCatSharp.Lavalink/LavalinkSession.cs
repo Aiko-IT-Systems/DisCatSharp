@@ -378,13 +378,15 @@ public sealed class LavalinkSession
 		await this.Discord.WsSendAsync(LavalinkJson.SerializeObject(vsd)).ConfigureAwait(false); // Send voice dispatch to trigger voice state & voice server update
 		var vst = await vstut.Task.ConfigureAwait(false); // Wait for voice state update to get session_id
 		var vsr = await vsrut.Task.ConfigureAwait(false); // Wait for voice server update to get token, guild_id & endpoint
-		await this.Rest.UpdatePlayerVoiceStateAsync(this.Config.SessionId!, channel.Guild.Id, new()
+
+		var voiceState = new LavalinkVoiceState
 		{
 			Endpoint = vsr.Endpoint,
 			Token = vsr.VoiceToken,
 			SessionId = vst.SessionId,
 			ChannelId = channel.Id
-		})
+		};
+		await this.Rest.UpdatePlayerVoiceStateAsync(this.Config.SessionId!, channel.Guild.Id, voiceState)
 			.ConfigureAwait(false);
 		var player = await this.Rest.GetPlayerAsync(this.Config.SessionId!, channel.Guild.Id).ConfigureAwait(false);
 
@@ -823,7 +825,9 @@ public sealed class LavalinkSession
 				this.ConnectedPlayersInternal[gld.Id].ChannelId = args.After?.ChannelId ?? guildPlayer.ChannelId;
 			});
 
-		if (!string.IsNullOrWhiteSpace(args.SessionId) && args.Channel != null! && this._voiceStateUpdates.TryRemove(gld.Id, out var xe))
+		var hasChannel = args.Channel != null! || args.After?.ChannelId.HasValue == true;
+
+		if (!string.IsNullOrWhiteSpace(args.SessionId) && hasChannel && this._voiceStateUpdates.TryRemove(gld.Id, out var xe))
 			xe.SetResult(args);
 
 		return Task.CompletedTask;
@@ -840,7 +844,9 @@ public sealed class LavalinkSession
 		if (gld == null!)
 			return Task.CompletedTask;
 
-		if (this.ConnectedPlayersInternal.TryGetValue(args.Guild.Id, out var guildPlayer))
+		var hadGuildPlayer = this.ConnectedPlayersInternal.TryGetValue(args.Guild.Id, out var guildPlayer);
+
+		if (hadGuildPlayer)
 			_ = Task.Run(async () =>
 			{
 				var state = this.MergePendingVoiceState(
@@ -897,14 +903,7 @@ public sealed class LavalinkSession
 	private async Task TryApplyVoiceStateUpdateAsync(LavalinkGuildPlayer guildPlayer, LavalinkVoiceState state)
 	{
 		if (!this.IsVoiceStateComplete(state))
-		{
-			this.Discord.Logger.LogDebug(
-				LavalinkEvents.Misc,
-				"Deferring Lavalink voice-state update for guild {guildId} until token, endpoint, session id, and channel id are all present.",
-				guildPlayer.GuildId);
 			return;
-		}
-
 		await this.Rest.UpdatePlayerVoiceStateAsync(this.Config.SessionId!, guildPlayer.GuildId, state).ConfigureAwait(false);
 		guildPlayer.UpdateVoiceState(state);
 		this._pendingVoiceStates.TryRemove(guildPlayer.GuildId, out _);
