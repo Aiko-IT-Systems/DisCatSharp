@@ -129,6 +129,8 @@ items:
             uid: experimental_preamble
           - name: ElasticSearch-Based Member Search
             uid: experimental_search_guild_members
+          - name: ElasticSearch-Based Message Search
+            uid: experimental_search_guild_messages
           - name: GCP Attachments
             uid: experimental_gcp_attachments
     - name: Miscellaneous
