@@ -181,6 +181,50 @@ public class StoreGatewayEventRegressionTests
 		Assert.Equal(EntitlementSourceType.GuildPowerup, captured.Entitlements[0].SourceType);
 	}
 
+	[Fact]
+	public async Task GuildSoundboardSoundsUpdateEvent_RefreshesGuildCache()
+	{
+		var client = CreateClient();
+		var guild = new DiscordGuild
+		{
+			Id = 804032421678153819,
+			Discord = client
+		};
+		client.GuildsInternal[guild.Id] = guild;
+		guild.SoundboardSoundsInternal[1] = new DiscordSoundboardSound
+		{
+			Id = 1,
+			Name = "Old sound",
+			Discord = client,
+			GuildId = guild.Id
+		};
+
+		var sounds = new List<DiscordSoundboardSound>
+		{
+			new()
+			{
+				Id = 2,
+				Name = "Fresh sound",
+				Discord = client
+			},
+			new()
+			{
+				Id = 3,
+				Name = "Another sound",
+				Discord = client
+			}
+		};
+
+		await client.OnGuildSoundboardSoundsUpdateEventAsync(sounds, guild.Id);
+
+		Assert.Equal(2, guild.SoundboardSoundsInternal.Count);
+		Assert.False(guild.SoundboardSoundsInternal.ContainsKey(1));
+		Assert.True(guild.SoundboardSoundsInternal.ContainsKey(2));
+		Assert.True(guild.SoundboardSoundsInternal.ContainsKey(3));
+		Assert.Equal(guild.Id, guild.SoundboardSoundsInternal[2].GuildId);
+		Assert.Equal(guild.Id, guild.SoundboardSoundsInternal[3].GuildId);
+	}
+
 	private static DiscordClient CreateClient()
 		=> new(new DiscordConfiguration
 		{

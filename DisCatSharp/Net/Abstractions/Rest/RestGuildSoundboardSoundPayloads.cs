@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 using DisCatSharp.Entities;
 
 using Newtonsoft.Json;
@@ -87,4 +89,16 @@ internal sealed class RestSendSoundboardSoundPayload : ObservableApiObject
 	/// </summary>
 	[JsonProperty("source_guild_id", NullValueHandling = NullValueHandling.Ignore)]
 	public Optional<ulong?> SourceGuildId { get; set; }
+}
+
+/// <summary>
+///     Represents the response payload for listing guild soundboard sounds.
+/// </summary>
+internal sealed class RestGuildSoundboardSoundsResponse : ObservableApiObject
+{
+	/// <summary>
+	///     Gets the guild's soundboard sounds.
+	/// </summary>
+	[JsonProperty("items")]
+	public List<DiscordSoundboardSound> Items { get; set; } = [];
 }
