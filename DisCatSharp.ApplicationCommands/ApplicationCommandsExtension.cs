@@ -1172,8 +1172,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								var method = methods.First().Method;
 								context.SubCommandName = null;
 								context.SubSubCommandName = null;
-								if (DebugEnabled)
-									this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
 								var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options).ConfigureAwait(false);
 
 								commandExecuted = await this.RunCommandAsync(context, method, args).ConfigureAwait(false);
@@ -1185,8 +1183,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								var method = groups.First().Methods.First(x => x.Key == command.Name).Value;
 								context.SubCommandName = command.Name;
 								context.SubSubCommandName = null;
-								if (DebugEnabled)
-									this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
 								var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options[0].Options).ConfigureAwait(false);
 
 								commandExecuted = await this.RunCommandAsync(context, method, args).ConfigureAwait(false);
@@ -1201,8 +1197,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								context.SubCommandName = command.Name;
 								context.SubSubCommandName = command.Options[0].Name;
 
-								if (DebugEnabled)
-									this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
 								var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options[0].Options[0].Options).ConfigureAwait(false);
 
 								commandExecuted = await this.RunCommandAsync(context, method, args).ConfigureAwait(false);
