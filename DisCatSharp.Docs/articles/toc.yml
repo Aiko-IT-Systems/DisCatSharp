@@ -111,6 +111,8 @@ items:
                   uid: topics_logging_di
           - name: Intents
             uid: topics_intents
+          - name: Presence Caching
+            uid: topics_presence_caching
           - name: Sharding
             uid: topics_sharding
           - name: Message Builder

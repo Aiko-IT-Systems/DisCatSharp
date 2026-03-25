@@ -141,9 +141,45 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> this._presencesLazy.Value;
 
 	/// <summary>
+	///     Gets the cached presences for a user keyed by guild id.
+	/// </summary>
+	/// <param name="userId">The user id.</param>
+	/// <returns>
+	///     A read-only dictionary of presences keyed by guild id. A key of <c>0</c> represents a non-guild aggregate
+	///     presence if one is cached.
+	/// </returns>
+	public IReadOnlyDictionary<ulong, DiscordPresence> GetPresences(ulong userId)
+	{
+		Dictionary<ulong, DiscordPresence> presences = [];
+		if (this.PresencesInternal.TryGetValue(userId, out var aggregatePresence) && aggregatePresence.GuildId == 0)
+			presences[0] = aggregatePresence;
+
+		foreach (var guild in this.GuildsInternal.Values)
+			if (guild.PresencesInternal.TryGetValue(userId, out var guildPresence))
+				presences[guild.Id] = guildPresence;
+
+		return new ReadOnlyDictionary<ulong, DiscordPresence>(presences);
+	}
+
+	/// <summary>
 	///     Gets the internal collection of presences.
 	/// </summary>
 	internal ConcurrentDictionary<ulong, DiscordPresence> PresencesInternal = [];
+
+	/// <summary>
+	///     Synchronizes aggregate presence cache eviction state.
+	/// </summary>
+	private readonly Lock _presenceCacheLock = new();
+
+	/// <summary>
+	///     Tracks aggregate presence usage in insertion/update order.
+	/// </summary>
+	private readonly LinkedList<ulong> _presenceCacheOrder = [];
+
+	/// <summary>
+	///     Maps aggregate presence entries to their tracking nodes.
+	/// </summary>
+	private readonly Dictionary<ulong, LinkedListNode<ulong>> _presenceCacheNodes = [];
 
 	/// <summary>
 	///     Lazily gets the collection of presences held by this client.
@@ -316,6 +352,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 		this.GuildsInternal.Clear();
 		this.EmojisInternal.Clear();
+		this.ClearAggregatePresenceCache();
 
 		this._presencesLazy = new(() => new ReadOnlyDictionary<ulong, DiscordPresence>(this.PresencesInternal));
 		this._embeddedActivitiesLazy = new(() => new ReadOnlyDictionary<string, DiscordActivity>(this.EmbeddedActivitiesInternal));
@@ -1690,6 +1727,175 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
+	///     Tries to get a cached presence for a user, optionally scoped to a guild.
+	/// </summary>
+	/// <param name="userId">The target user id.</param>
+	/// <param name="guildId">The optional guild id.</param>
+	/// <param name="presence">The cached presence, if any.</param>
+	/// <returns>Whether a presence was found.</returns>
+	internal bool TryGetPresence(ulong userId, ulong? guildId, [NotNullWhen(true)] out DiscordPresence? presence)
+	{
+		if (guildId.HasValue &&
+			this.GuildsInternal.TryGetValue(guildId.Value, out var guild) &&
+			guild.PresencesInternal.TryGetValue(userId, out presence))
+			return true;
+
+		return this.PresencesInternal.TryGetValue(userId, out presence);
+	}
+
+	/// <summary>
+	///     Clears the aggregate presence cache and its eviction state.
+	/// </summary>
+	internal void ClearAggregatePresenceCache()
+	{
+		this.PresencesInternal.Clear();
+
+		lock (this._presenceCacheLock)
+		{
+			this._presenceCacheOrder.Clear();
+			this._presenceCacheNodes.Clear();
+		}
+	}
+
+	/// <summary>
+	///     Caches a latest-known aggregate presence.
+	/// </summary>
+	/// <param name="presence">The presence to cache.</param>
+	internal void CacheAggregatePresence(DiscordPresence presence)
+	{
+		var userId = presence.InternalUser.Id;
+		this.PresencesInternal[userId] = presence;
+
+		lock (this._presenceCacheLock)
+		{
+			if (this._presenceCacheNodes.TryGetValue(userId, out var existingNode))
+				this._presenceCacheOrder.Remove(existingNode);
+
+			this._presenceCacheNodes[userId] = this._presenceCacheOrder.AddLast(userId);
+			this.TrimAggregatePresenceCacheUnsafe();
+		}
+	}
+
+	/// <summary>
+	///     Removes a latest-known aggregate presence.
+	/// </summary>
+	/// <param name="userId">The user id.</param>
+	internal void RemoveAggregatePresence(ulong userId)
+	{
+		this.PresencesInternal.TryRemove(userId, out _);
+
+		lock (this._presenceCacheLock)
+		{
+			if (!this._presenceCacheNodes.TryGetValue(userId, out var node))
+				return;
+
+			this._presenceCacheOrder.Remove(node);
+			this._presenceCacheNodes.Remove(userId);
+		}
+	}
+
+	/// <summary>
+	///     Trims the aggregate presence cache to the configured capacity.
+	/// </summary>
+	private void TrimAggregatePresenceCacheUnsafe()
+	{
+		var capacity = this.Configuration.PresenceCacheSize;
+		if (capacity <= 0)
+			return;
+
+		while (this._presenceCacheOrder.Count > capacity)
+		{
+			var oldestNode = this._presenceCacheOrder.First;
+			if (oldestNode is null)
+				return;
+
+			this._presenceCacheOrder.RemoveFirst();
+			this._presenceCacheNodes.Remove(oldestNode.Value);
+			this.PresencesInternal.TryRemove(oldestNode.Value, out _);
+		}
+	}
+
+	/// <summary>
+	///     Normalizes a presence before it is cached.
+	/// </summary>
+	/// <param name="presence">The presence to normalize.</param>
+	/// <param name="guild">The optional guild for the presence.</param>
+	/// <returns>The normalized presence instance.</returns>
+	internal DiscordPresence PreparePresence(DiscordPresence presence, DiscordGuild? guild = null)
+	{
+		presence.Discord = this;
+		if (guild is not null)
+			presence.GuildId = guild.Id;
+
+		presence.Activity = presence.RawActivity is not null
+			? new(presence.RawActivity)
+			: presence.RawActivities is { Count: > 0 }
+				? new(presence.RawActivities[0])
+				: null;
+
+		presence.InternalActivities = presence.RawActivities?
+			.Select(x => new DiscordActivity(x))
+			.ToList();
+
+		return presence;
+	}
+
+	/// <summary>
+	///     Caches a presence for a guild and refreshes the aggregate presence view.
+	/// </summary>
+	/// <param name="guild">The guild the presence belongs to.</param>
+	/// <param name="presence">The presence to cache.</param>
+	/// <returns>The cached presence instance.</returns>
+	internal DiscordPresence CachePresence(DiscordGuild? guild, DiscordPresence presence)
+	{
+		presence.Discord = this;
+		if (guild is not null)
+		{
+			presence.GuildId = guild.Id;
+			guild.PresencesInternal[presence.InternalUser.Id] = presence;
+		}
+
+		this.CacheAggregatePresence(presence);
+		return presence;
+	}
+
+	/// <summary>
+	///     Removes all cached presences for a guild and repairs the aggregate presence view.
+	/// </summary>
+	/// <param name="guild">The guild whose presences should be removed.</param>
+	internal void RemovePresences(DiscordGuild guild)
+	{
+		foreach (var userId in guild.PresencesInternal.Keys.ToList())
+			this.RemovePresence(guild.Id, userId);
+
+		guild.PresencesInternal.Clear();
+	}
+
+	/// <summary>
+	///     Removes a cached presence for a guild and repairs the aggregate presence view.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="userId">The user id.</param>
+	internal void RemovePresence(ulong guildId, ulong userId)
+	{
+		if (this.GuildsInternal.TryGetValue(guildId, out var guild))
+			guild.PresencesInternal.TryRemove(userId, out _);
+
+		if (!this.PresencesInternal.TryGetValue(userId, out var aggregate) || aggregate.GuildId != guildId)
+			return;
+
+		var replacement = this.GuildsInternal.Values
+			.Where(x => x.Id != guildId)
+			.SelectMany(x => x.PresencesInternal.Values)
+			.FirstOrDefault(x => x.InternalUser.Id == userId);
+
+		if (replacement is null)
+			this.RemoveAggregatePresence(userId);
+		else
+			this.CacheAggregatePresence(replacement);
+	}
+
+	/// <summary>
 	///     Updates a message.
 	/// </summary>
 	/// <param name="message">The message to update.</param>
@@ -1748,6 +1954,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				old.Discord = this;
 				old.Description = scheduledEvent.Description;
 				old.ChannelId = scheduledEvent.ChannelId;
+				old.CreatorId = scheduledEvent.CreatorId;
+				old.Creator = scheduledEvent.Creator;
+				old.CoverImageHash = scheduledEvent.CoverImageHash;
 				old.EntityId = scheduledEvent.EntityId;
 				old.EntityType = scheduledEvent.EntityType;
 				old.EntityMetadata = scheduledEvent.EntityMetadata;
@@ -1989,30 +2198,44 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		if (newGuild.ChannelsInternal is { IsEmpty: false })
 			foreach (var channel in newGuild.ChannelsInternal.Values)
 			{
-				if (guild.ChannelsInternal.TryGetValue(channel.Id, out _))
-					continue;
-
 				channel.Initialize(this);
-
 				guild.ChannelsInternal[channel.Id] = channel;
 			}
 
 		if (newGuild.ThreadsInternal is { IsEmpty: false })
 			foreach (var thread in newGuild.ThreadsInternal.Values)
 			{
-				if (guild.ThreadsInternal.TryGetValue(thread.Id, out _))
-					continue;
-
+				thread.Discord = this;
+				thread.GuildId ??= guild.Id;
 				guild.ThreadsInternal[thread.Id] = thread;
 			}
 
 		if (newGuild.ScheduledEventsInternal is { IsEmpty: false })
 			foreach (var @event in newGuild.ScheduledEventsInternal.Values)
 			{
-				if (guild.ScheduledEventsInternal.TryGetValue(@event.Id, out _))
-					continue;
+				@event.Discord = this;
+				@event.GuildId = guild.Id;
+				if (@event.Creator is not null)
+				{
+					@event.Creator.Discord = this;
+					_ = this.UserCache.AddOrUpdate(@event.Creator.Id, @event.Creator, (id, old) =>
+					{
+						old.Username = @event.Creator.Username;
+						old.Discriminator = @event.Creator.Discriminator;
+						old.AvatarHash = @event.Creator.AvatarHash;
+						old.Flags = @event.Creator.Flags;
+						old.GlobalName = @event.Creator.GlobalName;
+						return old;
+					});
+				}
 
-				guild.ScheduledEventsInternal[@event.Id] = @event;
+				foreach (var exception in @event.Exceptions)
+				{
+					exception.Discord = this;
+					exception.GuildId ??= guild.Id;
+				}
+
+				_ = this.UpdateScheduledEvent(@event, guild);
 			}
 
 		if (hasSoundboardSounds)
@@ -2030,20 +2253,31 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			{
 				sound.Discord = this;
 				sound.GuildId ??= guild.Id;
-				if (guild.SoundboardSoundsInternal.TryGetValue(sound.Id, out _))
-					continue;
-
 				guild.SoundboardSoundsInternal[sound.Id] = sound;
 			}
 
 		foreach (var newEmoji in newGuild.EmojisInternal.Values)
-			_ = guild.EmojisInternal.GetOrAdd(newEmoji.Id, newEmoji);
+		{
+			newEmoji.Discord = this;
+			if (newEmoji is DiscordGuildEmoji guildEmoji)
+				guildEmoji.Guild = guild;
+
+			guild.EmojisInternal[newEmoji.Id] = newEmoji;
+		}
 
 		foreach (var newSticker in newGuild.StickersInternal.Values)
-			_ = guild.StickersInternal.GetOrAdd(newSticker.Id, newSticker);
+		{
+			newSticker.Discord = this;
+			newSticker.GuildId ??= guild.Id;
+			guild.StickersInternal[newSticker.Id] = newSticker;
+		}
 
 		foreach (var newStageInstance in newGuild.StageInstancesInternal.Values)
-			_ = guild.StageInstancesInternal.GetOrAdd(newStageInstance.Id, newStageInstance);
+		{
+			newStageInstance.Discord = this;
+			newStageInstance.GuildId = guild.Id;
+			guild.StageInstancesInternal[newStageInstance.Id] = newStageInstance;
+		}
 
 		if (rawMembers is not null)
 		{
@@ -2087,9 +2321,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 		foreach (var role in newGuild.RolesInternal.Values)
 		{
-			if (guild.RolesInternal.TryGetValue(role.Id, out _))
-				continue;
-
+			role.Discord = this;
 			role.GuildId = guild.Id;
 			guild.RolesInternal[role.Id] = role;
 		}

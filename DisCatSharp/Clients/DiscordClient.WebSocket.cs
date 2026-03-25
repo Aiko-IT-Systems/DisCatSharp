@@ -150,7 +150,7 @@ public sealed partial class DiscordClient
 		}
 
 		if (!this.Presences.ContainsKey(this.CurrentUser.Id))
-			this.PresencesInternal[this.CurrentUser.Id] = new()
+			this.CacheAggregatePresence(new()
 			{
 				Discord = this,
 				RawActivity = new(),
@@ -160,13 +160,14 @@ public sealed partial class DiscordClient
 				{
 					Id = this.CurrentUser.Id
 				}
-			};
+			});
 		else
 		{
 			var pr = this.PresencesInternal[this.CurrentUser.Id];
 			pr.RawActivity = new();
 			pr.Activity = new();
 			pr.Status = UserStatus.Online;
+			this.CacheAggregatePresence(pr);
 		}
 
 		Volatile.Write(ref this._skippedHeartbeats, 0);
@@ -509,7 +510,7 @@ public sealed partial class DiscordClient
 		await this.WsSendAsync(statusstr).ConfigureAwait(false);
 
 		if (!this.PresencesInternal.TryGetValue(this.CurrentUser.Id, out var value))
-			this.PresencesInternal[this.CurrentUser.Id] = new()
+			this.CacheAggregatePresence(new()
 			{
 				Discord = this,
 				Activity = acts.First(),
@@ -519,12 +520,13 @@ public sealed partial class DiscordClient
 				{
 					Id = this.CurrentUser.Id
 				}
-			};
+			});
 		else
 		{
 			value.Activity = acts.First();
 			value.InternalActivities = acts;
 			value.Status = userStatus ?? value.Status;
+			this.CacheAggregatePresence(value);
 		}
 	}
 

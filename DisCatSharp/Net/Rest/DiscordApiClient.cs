@@ -4511,18 +4511,6 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var duser = DiscordJson.DeserializeObject<DiscordUser>(res.Response, this.Discord);
-		if (this.Discord.Configuration.Intents.HasIntent(DiscordIntents.GuildPresences) && duser.Presence == null && this.Discord is DiscordClient dc)
-			dc.PresencesInternal[duser.Id] = new()
-			{
-				Discord = dc,
-				RawActivity = new(),
-				Activity = new(),
-				Status = UserStatus.Offline,
-				InternalUser = new()
-				{
-					Id = duser.Id
-				}
-			};
 		return duser;
 	}
 
@@ -4557,15 +4545,6 @@ public sealed class DiscordApiClient
 			old.GlobalName = usr.GlobalName;
 			return old;
 		});
-
-		if (this.Discord.Configuration.Intents.HasIntent(DiscordIntents.GuildPresences) && usr.Presence == null && this.Discord is DiscordClient dc)
-			dc.PresencesInternal[usr.Id] = new()
-			{
-				Discord = dc,
-				RawActivity = new(),
-				Activity = new(),
-				Status = UserStatus.Offline
-			};
 
 		return new(tm)
 		{

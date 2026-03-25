@@ -58,6 +58,7 @@ public sealed class DiscordConfiguration
 		this.ShardCount = other.ShardCount;
 		this.GatewayCompressionLevel = other.GatewayCompressionLevel;
 		this.MessageCacheSize = other.MessageCacheSize;
+		this.PresenceCacheSize = other.PresenceCacheSize;
 		this.WebSocketClientFactory = other.WebSocketClientFactory;
 		this.UdpClientFactory = other.UdpClientFactory;
 		this.Proxy = other.Proxy;
@@ -206,6 +207,26 @@ public sealed class DiscordConfiguration
 	///     <para>Defaults to 1024.</para>
 	/// </summary>
 	public int MessageCacheSize { internal get; set; } = 1024;
+
+	/// <summary>
+	///     <para>Sets the maximum size of the client-wide aggregate presence cache.</para>
+	///     <para>
+	///         This only affects <see cref="DiscordClient.Presences" />. Guild-scoped presence caches remain authoritative
+	///         and are not evicted by this setting.
+	///     </para>
+	///     <para>Set to 0 to disable the cap. Defaults to 0.</para>
+	/// </summary>
+	public int PresenceCacheSize
+	{
+		internal get;
+		set
+		{
+			if (value < 0)
+				throw new ArgumentOutOfRangeException(nameof(value), "Presence cache size cannot be negative.");
+
+			field = value;
+		}
+	} = 0;
 
 	/// <summary>
 	///     <para>Sets the proxy to use for HTTP and WebSocket connections to Discord.</para>

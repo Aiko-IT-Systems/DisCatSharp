@@ -33,6 +33,8 @@ public sealed class DiscordPresence : ObservableApiObject
 		this.RawActivities = other.RawActivities;
 		this.Status = other.Status;
 		this.InternalUser = other.InternalUser;
+		this.GuildId = other.GuildId;
+		this.ClientStatus = other.ClientStatus;
 	}
 
 	/// <summary>
@@ -142,4 +144,16 @@ public sealed class DiscordClientStatus : ObservableApiObject
 	/// </summary>
 	[JsonProperty("web", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Populate)]
 	public Optional<UserStatus> Web { get; internal set; } = UserStatus.Offline;
+
+	/// <summary>
+	///     Gets the user's status set for an active embedded (Xbox, PlayStation) session.
+	/// </summary>
+	[JsonProperty("embedded", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Populate)]
+	public Optional<UserStatus> Embedded { get; internal set; } = UserStatus.Offline;
+
+	/// <summary>
+	///     Gets the user's status set for an active VR session.
+	/// </summary>
+	[JsonProperty("vr", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Populate)]
+	public Optional<UserStatus> Vr { get; internal set; } = UserStatus.Offline;
 }
