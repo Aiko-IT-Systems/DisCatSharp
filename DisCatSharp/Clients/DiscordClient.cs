@@ -1977,6 +1977,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="newGuild">The new guild.</param>
 	/// <param name="rawMembers">The raw members.</param>
+	/// <param name="hasSoundboardSounds">Whether the incoming payload explicitly included soundboard sounds.</param>
 	private void UpdateCachedGuild(DiscordGuild newGuild, JArray? rawMembers, bool hasSoundboardSounds = false)
 	{
 		ObjectDisposedException.ThrowIf(this._disposed, this);

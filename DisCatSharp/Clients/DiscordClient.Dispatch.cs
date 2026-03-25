@@ -1231,6 +1231,7 @@ public sealed partial class DiscordClient
 	/// <param name="guild">The guild.</param>
 	/// <param name="rawMembers">The raw members.</param>
 	/// <param name="presences">The presences.</param>
+	/// <param name="hasSoundboardSounds">Whether the incoming payload explicitly included soundboard sounds.</param>
 	internal async Task OnGuildCreateEventAsync(DiscordGuild guild, JArray rawMembers, IEnumerable<DiscordPresence>? presences, bool hasSoundboardSounds = false)
 	{
 		if (presences != null)
@@ -1367,6 +1368,7 @@ public sealed partial class DiscordClient
 	/// </summary>
 	/// <param name="guild">The guild.</param>
 	/// <param name="rawMembers">The raw members.</param>
+	/// <param name="hasSoundboardSounds">Whether the incoming payload explicitly included soundboard sounds.</param>
 	internal async Task OnGuildUpdateEventAsync(DiscordGuild guild, JArray rawMembers, bool hasSoundboardSounds = false)
 	{
 		DiscordGuild oldGuild;

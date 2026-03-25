@@ -1790,8 +1790,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	///     Runs the pre-execution checks.
 	/// </summary>
-	/// <param name="method">The method info.</param>
 	/// <param name="context">The base context.</param>
+	/// <param name="failedChecks">The checks that failed for the current context.</param>
 	private async Task InvokeChecksFailedAsync(BaseContext context, IReadOnlyList<ApplicationCommandCheckBaseAttribute> failedChecks)
 	{
 		switch (context)
@@ -1875,7 +1875,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	///     Gets the choice attributes from choice provider.
 	/// </summary>
 	/// <param name="customAttributes">The custom attributes.</param>
-	/// <param name="guildId">The optional guild id</param>
+	/// <param name="guildId">The optional guild id.</param>
+	/// <param name="optionType">The application command option type the choices are being generated for.</param>
+	/// <param name="numericTargetType">The numeric target type to preserve for integer and number choices.</param>
 	private static async Task<List<DiscordApplicationCommandOptionChoice>> GetChoiceAttributesFromProvider(List<ChoiceProviderAttribute> customAttributes, ulong? guildId = null, ApplicationCommandOptionType optionType = ApplicationCommandOptionType.String, Type? numericTargetType = null)
 	{
 		var choices = new List<DiscordApplicationCommandOptionChoice>();
@@ -1911,6 +1913,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	///     Gets the choice attributes from enum parameter.
 	/// </summary>
 	/// <param name="enumParam">The enum parameter.</param>
+	/// <param name="optionType">The application command option type the enum choices should use.</param>
 	private static List<DiscordApplicationCommandOptionChoice> GetChoiceAttributesFromEnumParameter(Type enumParam, ApplicationCommandOptionType optionType)
 	{
 		var list = new List<DiscordApplicationCommandOptionChoice>();
@@ -1966,6 +1969,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	///     Gets the choice attributes from parameter.
 	/// </summary>
 	/// <param name="choiceAttributes">The choice attributes.</param>
+	/// <param name="optionType">The application command option type the choices should use.</param>
+	/// <param name="numericTargetType">The numeric target type to preserve for integer and number choices.</param>
 	private static List<DiscordApplicationCommandOptionChoice> GetChoiceAttributesFromParameter(List<ChoiceAttribute> choiceAttributes, ApplicationCommandOptionType optionType, Type? numericTargetType = null)
 		=> choiceAttributes.Count is 0
 			? []
