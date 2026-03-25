@@ -111,6 +111,18 @@ public sealed class DiscordEntitlement : SnowflakeObject
 	public EntitlementSourceType? SourceType { get; internal set; }
 
 	/// <summary>
+	///     Gets this entitlement's fulfillment status.
+	/// </summary>
+	[JsonProperty("fulfillment_status", NullValueHandling = NullValueHandling.Ignore)]
+	public EntitlementFulfillmentStatus? FulfillmentStatus { get; internal set; }
+
+	/// <summary>
+	///     Gets when this entitlement was fulfilled as raw string.
+	/// </summary>
+	[JsonProperty("fulfilled_at", NullValueHandling = NullValueHandling.Ignore)]
+	public string? FulfilledAtRaw { get; internal set; }
+
+	/// <summary>
 	///     Gets this entitlement's tenant metadata.
 	/// </summary>
 	[JsonProperty("tenant_metadata", NullValueHandling = NullValueHandling.Ignore)]
@@ -148,6 +160,13 @@ public sealed class DiscordEntitlement : SnowflakeObject
 	[JsonIgnore]
 	public DateTimeOffset? EndsAt
 		=> !string.IsNullOrWhiteSpace(this.EndsAtRaw) && DateTimeOffset.TryParse(this.EndsAtRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ? dto : null;
+
+	/// <summary>
+	///     Gets when this entitlement was fulfilled.
+	/// </summary>
+	[JsonIgnore]
+	public DateTimeOffset? FulfilledAt
+		=> !string.IsNullOrWhiteSpace(this.FulfilledAtRaw) && DateTimeOffset.TryParse(this.FulfilledAtRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ? dto : null;
 
 	/// <summary>
 	///     Gets this entitlement's bound guild.

@@ -102,6 +102,8 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 		this.Guild = tapp.Guild.ValueOrDefault();
 		this.ApproximateGuildCount = tapp.ApproximateGuildCount.ValueOrDefault();
 		this.ApproximateUserInstallCount = tapp.ApproximateUserInstallCount.ValueOrDefault();
+		this.ApproximateUserAuthorizationCount = tapp.ApproximateUserAuthorizationCount;
+		this.BotApproximateGuildCount = tapp.BotApproximateGuildCount;
 		this.RequiresCodeGrant = tapp.BotRequiresCodeGrant.ValueOrDefault();
 		this.IsPublic = tapp.IsPublicBot.ValueOrDefault();
 		this.RedirectUris = tapp.RedirectUris.HasValue ? tapp.RedirectUris.Value : [];
@@ -129,6 +131,10 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 		this.StorefrontAvailable = tapp.StorefrontAvailable;
 		this.IsMonetized = tapp.IsMonetized;
 		this.IsVerified = tapp.IsVerified;
+		this.IsDiscoverable = tapp.IsDiscoverable;
+		this.MaxParticipants = tapp.MaxParticipants;
+		this.ApprovedConsoles = [.. tapp.ApprovedConsoles];
+		this.PricingLocalizationStrategy = tapp.PricingLocalizationStrategy;
 	}
 
 	/// <summary>
@@ -283,6 +289,18 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	public int? ApproximateUserInstallCount { get; internal set; }
 
 	/// <summary>
+	///     Gets the approximate user authorization count.
+	/// </summary>
+	[JsonProperty("approximate_user_authorization_count", NullValueHandling = NullValueHandling.Ignore)]
+	public int? ApproximateUserAuthorizationCount { get; internal set; }
+
+	/// <summary>
+	///     Gets the approximate guild count for the application's bot.
+	/// </summary>
+	[JsonProperty("bot_approximate_guild_count", NullValueHandling = NullValueHandling.Ignore)]
+	public int? BotApproximateGuildCount { get; internal set; }
+
+	/// <summary>
 	///     Gets the interactions endpoint url.
 	/// </summary>
 	public string InteractionsEndpointUrl { get; set; }
@@ -306,6 +324,12 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	///     Gets whether the application is verified.
 	/// </summary>
 	public bool IsVerified { get; internal set; }
+
+	/// <summary>
+	///     Gets whether the application is discoverable.
+	/// </summary>
+	[JsonProperty("is_discoverable", NullValueHandling = NullValueHandling.Ignore)]
+	public bool IsDiscoverable { get; internal set; }
 
 	/// <summary>
 	///     Gets whether the storefront is available.
@@ -381,6 +405,24 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	///     Gets the internal guild restriction level.
 	/// </summary>
 	public int InternalGuildRestriction { get; internal set; }
+
+	/// <summary>
+	///     Gets the maximum participants for the application's embedded activity.
+	/// </summary>
+	[JsonProperty("max_participants", NullValueHandling = NullValueHandling.Include)]
+	public int? MaxParticipants { get; internal set; }
+
+	/// <summary>
+	///     Gets the approved console types for the application's social SDK builds.
+	/// </summary>
+	[JsonProperty("approved_consoles", NullValueHandling = NullValueHandling.Ignore)]
+	public IReadOnlyList<ApprovableConsoleType> ApprovedConsoles { get; internal set; } = [];
+
+	/// <summary>
+	///     Gets the pricing localization strategy used for the application's store presence.
+	/// </summary>
+	[JsonProperty("pricing_localization_strategy", NullValueHandling = NullValueHandling.Ignore)]
+	public string? PricingLocalizationStrategy { get; internal set; }
 
 	/// <summary>
 	///     Checks whether this <see cref="DiscordApplication" /> is equal to another <see cref="DiscordApplication" />.
