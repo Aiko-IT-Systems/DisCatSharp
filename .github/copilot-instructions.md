@@ -14,7 +14,7 @@ applyTo: '**'
 ## Developer Workflows
 - Build: Use `dotnet build` on the solution or individual projects. Solution files: `DisCatSharp.slnx`, `DisCatSharp.Tools.slnx`.
 - Test: Use `dotnet test` on test projects in `/DisCatSharp.Tests` (xUnit).
-- Analyzer: Custom Roslyn analyzers are in `/DisCatSharp.Analyzer` and can be packaged as NuGet or VSIX.
+- Analyzer: Custom Roslyn analyzers are in `/DisCatSharp.Analyzer` and are delivered through the `DisCatSharp.Analyzer` NuGet package.
 - Docs: Run DocFX using `docfx docfx.json` in `/DisCatSharp.Docs`.
 - PowerShell scripts for rebuilds and packaging are in `/DisCatSharp.Tools`.
 - If you use copilot, add Co-Authored-By to the commit message to credit the AI assistant. The line should be `Co-Authored-By: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>`

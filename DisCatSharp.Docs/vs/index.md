@@ -18,6 +18,8 @@ DisCatSharp can be extended with a set of analyzers that can help you write bett
 
 To use the DisCatSharp Analyzer, you need to install the [DisCatSharp.Analyzer](https://www.nuget.org/packages/DisCatSharp.Analyzer) NuGet package.
 
+The NuGet package is the supported delivery model for analyzers and code fixes.
+
 ##### Visual Studio Code
 
 Enable `omnisharp.enableRoslynAnalyzers` in your settings.
