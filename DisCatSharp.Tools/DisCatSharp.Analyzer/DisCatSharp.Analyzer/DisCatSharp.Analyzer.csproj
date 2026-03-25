@@ -1,11 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
-		<IsPackable>false</IsPackable>
-		<PackageId>*$(MSBuildProjectFile)*</PackageId>
-		<EmbedUntrackedSources>true</EmbedUntrackedSources>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+ 	<PropertyGroup>
+ 		<TargetFramework>netstandard2.0</TargetFramework>
+ 		<IsPackable>false</IsPackable>
+ 		<PackageId>*$(MSBuildProjectFile)*</PackageId>
+ 		<LangVersion>latest</LangVersion>
+ 		<Nullable>enable</Nullable>
+ 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+ 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
 		<GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
 		<GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
