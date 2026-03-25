@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
+using DisCatSharp.Net.Serialization;
 
 using Newtonsoft.Json;
 
@@ -53,7 +54,7 @@ public sealed class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 	/// <summary>
 	///     Gets the sku name.
 	/// </summary>
-	[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore), JsonConverter(typeof(DiscordSkuNameJsonConverter))]
 	internal DiscordSkuName? RawName { get; set; }
 
 	/// <summary>

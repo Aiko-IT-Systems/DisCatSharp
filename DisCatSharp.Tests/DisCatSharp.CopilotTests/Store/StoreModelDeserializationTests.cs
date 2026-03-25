@@ -201,6 +201,31 @@ public class StoreModelDeserializationTests
 		Assert.Equal(new DateTimeOffset(2025, 8, 5, 22, 53, 39, 133, TimeSpan.FromHours(2)).AddTicks(8300), sku.CreatedAt);
 	}
 
+	[Fact]
+	public void SkuPayload_DeserializesLegacyStringName()
+	{
+		const string json = """
+		                    {
+		                      "id": "1395150923734581339",
+		                      "application_id": "1340102344645283891",
+		                      "type": 2,
+		                      "name": "Legacy Nitro Monthly",
+		                      "slug": "legacy-nitro-monthly",
+		                      "flags": 4,
+		                      "access_type": 1,
+		                      "product_line": 1,
+		                      "premium": true
+		                    }
+		                    """;
+
+		var sku = Deserialize<DiscordSku>(json);
+
+		Assert.Equal("Legacy Nitro Monthly", sku.Name);
+		Assert.NotNull(sku.NameData);
+		Assert.Equal("Legacy Nitro Monthly", sku.NameData!.Default);
+		Assert.Empty(sku.NameData.Localizations);
+	}
+
 	private static T Deserialize<T>(string json)
 	{
 		var settings = new JsonSerializerSettings

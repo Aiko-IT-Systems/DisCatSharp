@@ -105,7 +105,11 @@ public class StoreGatewayEventRegressionTests
 				UserId = 856780995629154305,
 				Type = EntitlementType.GuildPowerup,
 				SourceType = EntitlementSourceType.GuildPowerup,
-				SkuId = 1395150923734581339
+				SkuId = 1395150923734581339,
+				Sku = new DiscordSku
+				{
+					Id = 1395150923734581339
+				}
 			}
 		};
 
@@ -123,6 +127,8 @@ public class StoreGatewayEventRegressionTests
 		Assert.Single(captured.Entitlements);
 		Assert.Equal(guild.Id, captured.Entitlements[0].GuildId);
 		Assert.Same(client, captured.Entitlements[0].Discord);
+		Assert.NotNull(captured.Entitlements[0].Sku);
+		Assert.Same(client, captured.Entitlements[0].Sku!.Discord);
 		Assert.Equal(EntitlementType.GuildPowerup, captured.Entitlements[0].Type);
 		Assert.Equal(EntitlementSourceType.GuildPowerup, captured.Entitlements[0].SourceType);
 	}
@@ -147,7 +153,11 @@ public class StoreGatewayEventRegressionTests
 				UserId = 856780995629154305,
 				Type = EntitlementType.GuildPowerup,
 				SourceType = EntitlementSourceType.GuildPowerup,
-				SkuId = 1395150923734581339
+				SkuId = 1395150923734581339,
+				Sku = new DiscordSku
+				{
+					Id = 1395150923734581339
+				}
 			}
 		};
 
@@ -165,6 +175,8 @@ public class StoreGatewayEventRegressionTests
 		Assert.Single(captured.Entitlements);
 		Assert.Equal(guild.Id, captured.Entitlements[0].GuildId);
 		Assert.Same(client, captured.Entitlements[0].Discord);
+		Assert.NotNull(captured.Entitlements[0].Sku);
+		Assert.Same(client, captured.Entitlements[0].Sku!.Discord);
 		Assert.Equal(EntitlementType.GuildPowerup, captured.Entitlements[0].Type);
 		Assert.Equal(EntitlementSourceType.GuildPowerup, captured.Entitlements[0].SourceType);
 	}

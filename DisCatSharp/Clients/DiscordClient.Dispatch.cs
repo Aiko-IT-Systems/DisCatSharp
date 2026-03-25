@@ -2259,6 +2259,8 @@ public sealed partial class DiscordClient
 		{
 			entitlement.Discord = this;
 			entitlement.GuildId ??= guildId;
+			if (entitlement.Sku is not null)
+				entitlement.Sku.Discord = this;
 		}
 
 		var ea = new GuildPowerupEntitlementsCreateEventArgs(this.ServiceProvider)
@@ -2288,6 +2290,8 @@ public sealed partial class DiscordClient
 		{
 			entitlement.Discord = this;
 			entitlement.GuildId ??= guildId;
+			if (entitlement.Sku is not null)
+				entitlement.Sku.Discord = this;
 		}
 
 		var ea = new GuildPowerupEntitlementsDeleteEventArgs(this.ServiceProvider)
