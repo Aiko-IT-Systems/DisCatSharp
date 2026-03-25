@@ -169,7 +169,7 @@ internal sealed class AuditLogReferenceStore
 	/// </summary>
 	/// <param name="channelId">The channel id from the entry or its options object.</param>
 	/// <returns>
-		///     The cached or side-loaded channel when available; otherwise a partial channel containing only identifiers.
+	///     The cached or side-loaded channel when available; otherwise a partial channel containing only identifiers.
 	/// </returns>
 	/// <remarks>
 	///     Guild cache is preferred over the side-loaded thread collection so already-cached

@@ -18,7 +18,7 @@ public sealed class DiscordApplicationCommandOptionChoice
 	/// <param name="nameLocalizations">The localizations of the parameter choice name.</param>
 	public DiscordApplicationCommandOptionChoice(string name, object value, DiscordApplicationCommandLocalization nameLocalizations = null)
 	{
-     // Accept strings, enums and any common numeric types (byte/short/int/long/uint/ulong/float/double/decimal)
+		// Accept strings, enums and any common numeric types (byte/short/int/long/uint/ulong/float/double/decimal)
 		if (value is not (string or Enum or sbyte or byte or short or ushort or int or uint or long or ulong or float or double or decimal))
 			throw new InvalidOperationException($"Only string, numeric types (byte/short/int/long/float/double/decimal, signed/unsigned) or Enum values may be passed to a command option choice. Received: {value.GetType()}");
 
