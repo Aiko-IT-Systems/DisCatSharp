@@ -102,6 +102,16 @@ If you want to handle errors for slash commands, subscribe to the [SlashCommandE
 
 A separate event exists for context menus as [ContextMenuErrored](xref:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.ContextMenuErrored) event.
 
-It contains a castable field `Exception` with the exception that was thrown during the execution of the command.
+It contains the `Exception` that was thrown during the execution of the command itself.
 
-As example it can be a type of [SlashExecutionChecksFailedException](xref:DisCatSharp.ApplicationCommands.Exceptions.SlashExecutionChecksFailedException) or [ContextMenuExecutionChecksFailedException](xref:DisCatSharp.ApplicationCommands.Exceptions.ContextMenuExecutionChecksFailedException) which contains a list of failed checks.
+## Pre-execution check failures
+
+If you want to handle failed slash command checks, subscribe to the [SlashCommandChecksFailed](xref:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.SlashCommandChecksFailed) event.
+
+A separate event exists for context menus as [ContextMenuChecksFailed](xref:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.ContextMenuChecksFailed).
+
+These events fire when one or more pre-execution checks fail and the command is aborted before execution.
+
+They expose the current context and the `FailedChecks` collection, and they do **not** flow through the `...Errored` events.
+
+This means pre-execution check failures no longer behave like command execution errors and do not produce the same library-side error logging noise.

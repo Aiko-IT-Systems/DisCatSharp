@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -11,7 +12,6 @@ using DisCatSharp.ApplicationCommands.Context;
 using DisCatSharp.ApplicationCommands.Entities;
 using DisCatSharp.ApplicationCommands.Enums;
 using DisCatSharp.ApplicationCommands.EventArgs;
-using DisCatSharp.ApplicationCommands.Exceptions;
 using DisCatSharp.ApplicationCommands.Workers;
 using DisCatSharp.Common;
 using DisCatSharp.Common.Utilities;
@@ -85,6 +85,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	private readonly AsyncEvent<ApplicationCommandsExtension, ContextMenuExecutedEventArgs> _contextMenuExecuted;
 
 	/// <summary>
+	///     Fires the context menu checks failed event.
+	/// </summary>
+	private readonly AsyncEvent<ApplicationCommandsExtension, ContextMenuChecksFailedEventArgs> _contextMenuChecksFailed;
+
+	/// <summary>
 	///     Fires the global application command registered event.
 	/// </summary>
 	private readonly AsyncEvent<ApplicationCommandsExtension, GlobalApplicationCommandsRegisteredEventArgs> _globalApplicationCommandsRegistered;
@@ -103,6 +108,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	///     Fires the slash command executed event.
 	/// </summary>
 	private readonly AsyncEvent<ApplicationCommandsExtension, SlashCommandExecutedEventArgs> _slashExecuted;
+
+	/// <summary>
+	///     Fires the slash command checks failed event.
+	/// </summary>
+	private readonly AsyncEvent<ApplicationCommandsExtension, SlashCommandChecksFailedEventArgs> _slashChecksFailed;
 
 	/// <summary>
 	///     List of modules to register.
@@ -124,8 +134,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 		this._slashError = new("SLASHCOMMAND_ERRORED", TimeSpan.Zero, null!);
 		this._slashExecuted = new("SLASHCOMMAND_EXECUTED", TimeSpan.Zero, null!);
+		this._slashChecksFailed = new("SLASHCOMMAND_CHECKS_FAILED", TimeSpan.Zero, null!);
 		this._contextMenuErrored = new("CONTEXTMENU_ERRORED", TimeSpan.Zero, null!);
 		this._contextMenuExecuted = new("CONTEXTMENU_EXECUTED", TimeSpan.Zero, null!);
+		this._contextMenuChecksFailed = new("CONTEXTMENU_CHECKS_FAILED", TimeSpan.Zero, null!);
 		this._applicationCommandsModuleReady = new("APPLICATION_COMMANDS_MODULE_READY", TimeSpan.Zero, null!);
 		this._applicationCommandsModuleStartupFinished = new("APPLICATION_COMMANDS_MODULE_STARTUP_FINISHED", TimeSpan.Zero, null!);
 		this._globalApplicationCommandsRegistered = new("GLOBAL_COMMANDS_REGISTERED", TimeSpan.Zero, null!);
@@ -1135,6 +1147,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						AttachmentSizeLimit = e.Interaction.AttachmentSizeLimit
 					};
 
+					var commandExecuted = false;
 					try
 					{
 						if (s_errored)
@@ -1163,7 +1176,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 									this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
 								var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options).ConfigureAwait(false);
 
-								await this.RunCommandAsync(context, method, args).ConfigureAwait(false);
+								commandExecuted = await this.RunCommandAsync(context, method, args).ConfigureAwait(false);
 								break;
 							}
 							case ApplicationCommandFinalType.SubCommand when groups.Count is not 0:
@@ -1176,7 +1189,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 									this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
 								var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options[0].Options).ConfigureAwait(false);
 
-								await this.RunCommandAsync(context, method, args).ConfigureAwait(false);
+								commandExecuted = await this.RunCommandAsync(context, method, args).ConfigureAwait(false);
 								break;
 							}
 							case ApplicationCommandFinalType.SubCommandGroup when subgroups.Count is not 0:
@@ -1192,7 +1205,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 									this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
 								var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options[0].Options[0].Options).ConfigureAwait(false);
 
-								await this.RunCommandAsync(context, method, args).ConfigureAwait(false);
+								commandExecuted = await this.RunCommandAsync(context, method, args).ConfigureAwait(false);
 								break;
 							}
 							case ApplicationCommandFinalType.NotDetermined:
@@ -1200,10 +1213,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								throw new ArgumentOutOfRangeException(null, "Could not determine application command type");
 						}
 
-						await this._slashExecuted.InvokeAsync(this, new(this.Client.ServiceProvider)
-						{
-							Context = context
-						}).ConfigureAwait(false);
+						if (commandExecuted)
+							await this._slashExecuted.InvokeAsync(this, new(this.Client.ServiceProvider)
+							{
+								Context = context
+							}).ConfigureAwait(false);
 					}
 					catch (Exception ex)
 					{
@@ -1448,12 +1462,13 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					throw new InvalidOperationException("A context menu command was executed, but no command was registered for it.");
 				}
 
-				await this.RunCommandAsync(context, method.Method, [context]).ConfigureAwait(false);
+				var commandExecuted = await this.RunCommandAsync(context, method.Method, [context]).ConfigureAwait(false);
 
-				await this._contextMenuExecuted.InvokeAsync(this, new(this.Client.ServiceProvider)
-				{
-					Context = context
-				}).ConfigureAwait(false);
+				if (commandExecuted)
+					await this._contextMenuExecuted.InvokeAsync(this, new(this.Client.ServiceProvider)
+					{
+						Context = context
+					}).ConfigureAwait(false);
 			}
 			catch (Exception ex)
 			{
@@ -1474,9 +1489,16 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <param name="context">The base context.</param>
 	/// <param name="method">The method info.</param>
 	/// <param name="args">The arguments.</param>
-	internal async Task RunCommandAsync(BaseContext context, MethodInfo method, IEnumerable<object> args)
+	internal async Task<bool> RunCommandAsync(BaseContext context, MethodInfo method, IEnumerable<object> args)
 	{
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Executing {cmd}", method.Name);
+
+		var failedChecks = await GetFailedPreexecutionChecksAsync(method, context).ConfigureAwait(false);
+		if (failedChecks.Count > 0)
+		{
+			await this.InvokeChecksFailedAsync(context, failedChecks).ConfigureAwait(false);
+			return false;
+		}
 
 		try
 		{
@@ -1517,8 +1539,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				// Slash commands
 				case InteractionContext slashContext:
 				{
-					await RunPreexecutionChecksAsync(method, slashContext).ConfigureAwait(false);
-
 					var shouldExecute = await (module?.BeforeSlashExecutionAsync(slashContext) ?? Task.FromResult(true)).ConfigureAwait(false);
 
 					if (shouldExecute)
@@ -1530,13 +1550,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						await (module?.AfterSlashExecutionAsync(slashContext) ?? Task.CompletedTask).ConfigureAwait(false);
 					}
 
-					break;
+					return shouldExecute;
 				}
 				// Context menus
 				case ContextMenuContext contextMenuContext:
 				{
-					await RunPreexecutionChecksAsync(method, contextMenuContext).ConfigureAwait(false);
-
 					var shouldExecute = await (module?.BeforeContextMenuExecutionAsync(contextMenuContext) ?? Task.FromResult(true)).ConfigureAwait(false);
 
 					if (shouldExecute)
@@ -1548,9 +1566,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						await (module?.AfterContextMenuExecutionAsync(contextMenuContext) ?? Task.CompletedTask).ConfigureAwait(false);
 					}
 
-					break;
+					return shouldExecute;
 				}
 			}
+
+			return false;
 		}
 		finally
 		{
@@ -1772,7 +1792,29 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	/// <param name="method">The method info.</param>
 	/// <param name="context">The base context.</param>
-	private static async Task RunPreexecutionChecksAsync(MemberInfo method, BaseContext context)
+	private async Task InvokeChecksFailedAsync(BaseContext context, IReadOnlyList<ApplicationCommandCheckBaseAttribute> failedChecks)
+	{
+		switch (context)
+		{
+			case InteractionContext interactionContext:
+				await this._slashChecksFailed.InvokeAsync(this, new(this.Client.ServiceProvider)
+				{
+					Context = interactionContext,
+					FailedChecks = failedChecks
+				}).ConfigureAwait(false);
+				break;
+
+			case ContextMenuContext contextMenuContext:
+				await this._contextMenuChecksFailed.InvokeAsync(this, new(this.Client.ServiceProvider)
+				{
+					Context = contextMenuContext,
+					FailedChecks = failedChecks
+				}).ConfigureAwait(false);
+				break;
+		}
+	}
+
+	private static async Task<IReadOnlyList<ApplicationCommandCheckBaseAttribute>> GetFailedPreexecutionChecksAsync(MemberInfo method, BaseContext context)
 	{
 		switch (context)
 		{
@@ -1798,14 +1840,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					dict.Add(att, result);
 				}
 
-				//Checks if any failed, and throws an exception
-				if (dict.Any(x => x.Value is false))
-					throw new SlashExecutionChecksFailedException
-					{
-						FailedChecks = dict.Where(x => x.Value is false).Select(x => x.Key).ToList()
-					};
-
-				break;
+				return new ReadOnlyCollection<ApplicationCommandCheckBaseAttribute>([.. dict.Where(x => x.Value is false).Select(x => x.Key)]);
 			}
 			case ContextMenuContext cMctx:
 			{
@@ -1829,16 +1864,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					dict.Add(att, result);
 				}
 
-				//Checks if any failed, and throws an exception
-				if (dict.Any(x => x.Value is false))
-					throw new ContextMenuExecutionChecksFailedException
-					{
-						FailedChecks = dict.Where(x => x.Value is false).Select(x => x.Key).ToList()
-					};
-
-				break;
+				return new ReadOnlyCollection<ApplicationCommandCheckBaseAttribute>([.. dict.Where(x => x.Value is false).Select(x => x.Key)]);
 			}
 		}
+
+		return [];
 	}
 
 	/// <summary>
@@ -2083,6 +2113,15 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
+	///     Fires when slash command execution is aborted because one or more pre-execution checks failed.
+	/// </summary>
+	public event AsyncEventHandler<ApplicationCommandsExtension, SlashCommandChecksFailedEventArgs> SlashCommandChecksFailed
+	{
+		add => this._slashChecksFailed.Register(value);
+		remove => this._slashChecksFailed.Unregister(value);
+	}
+
+	/// <summary>
 	///     Fires when the execution of a context menu fails.
 	/// </summary>
 	public event AsyncEventHandler<ApplicationCommandsExtension, ContextMenuErrorEventArgs> ContextMenuErrored
@@ -2098,6 +2137,15 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	{
 		add => this._contextMenuExecuted.Register(value);
 		remove => this._contextMenuExecuted.Unregister(value);
+	}
+
+	/// <summary>
+	///     Fires when context menu execution is aborted because one or more pre-execution checks failed.
+	/// </summary>
+	public event AsyncEventHandler<ApplicationCommandsExtension, ContextMenuChecksFailedEventArgs> ContextMenuChecksFailed
+	{
+		add => this._contextMenuChecksFailed.Register(value);
+		remove => this._contextMenuChecksFailed.Unregister(value);
 	}
 }
 
