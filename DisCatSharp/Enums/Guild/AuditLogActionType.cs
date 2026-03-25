@@ -338,6 +338,16 @@ public enum AuditLogActionType
 	OnboardingUpdate = 167,
 
 	/// <summary>
+	///     Indicates that a message was featured in guild home.
+	/// </summary>
+	GuildHomeFeatureItem = 171,
+
+	/// <summary>
+	///     Indicates that a message was removed from guild home.
+	/// </summary>
+	GuildHomeRemoveItem = 172,
+
+	/// <summary>
 	///     Alias for <see cref="ServerGuideCreate" /> retained for Discord naming compatibility.
 	/// </summary>
 	HomeSettingsCreate = ServerGuideCreate,

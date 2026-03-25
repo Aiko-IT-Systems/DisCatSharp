@@ -38,6 +38,12 @@ public enum AutomodTriggerType
 	MentionSpam = 5,
 
 	/// <summary>
+	///     Checks if a user's profile contains words from a user-defined list of keywords.
+	///     Max. 1 per guild.
+	/// </summary>
+	UserProfile = 6,
+
+	/// <summary>
 	///     Flag messages that may break server rules using OpenAI technology.
 	/// </summary>
 	[DiscordInExperiment, DiscordUnreleased]

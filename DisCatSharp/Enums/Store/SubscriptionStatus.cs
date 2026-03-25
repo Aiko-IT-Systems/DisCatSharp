@@ -13,7 +13,7 @@ public enum SubscriptionStatus
 	/// <summary>
 	///     Subscription is ending.
 	/// </summary>
-	Ending = 21,
+	Ending = 1,
 
 	/// <summary>
 	///     Subscription is inactive.

@@ -35,4 +35,15 @@ public class SurfaceRegressionTests
 		Assert.Equal(64, (int)MessageType.PremiumGroupInvite);
 		Assert.Equal("/channels/@me/dms", Endpoints.ME_DMS);
 	}
+
+	[Fact]
+	public void GuildAndSubscriptionEnumValues_RemainStable()
+	{
+		Assert.Equal(171, (int)AuditLogActionType.GuildHomeFeatureItem);
+		Assert.Equal(172, (int)AuditLogActionType.GuildHomeRemoveItem);
+		Assert.Equal(4, (int)AutomodActionType.QuarantineUser);
+		Assert.Equal(2, (int)AutomodEventType.GuildMemberEvent);
+		Assert.Equal(6, (int)AutomodTriggerType.UserProfile);
+		Assert.Equal(1, (int)SubscriptionStatus.Ending);
+	}
 }

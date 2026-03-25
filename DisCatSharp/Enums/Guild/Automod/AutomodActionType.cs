@@ -19,5 +19,11 @@ public enum AutomodActionType
 	///     Timeout user for a specified duration.
 	///     Only valid for Keyword and MentionSpam rules
 	/// </summary>
-	Timeout = 3
+	Timeout = 3,
+
+	/// <summary>
+	///     Quarantine a user indefinitely.
+	///     Only valid for user profile rules.
+	/// </summary>
+	QuarantineUser = 4
 }
