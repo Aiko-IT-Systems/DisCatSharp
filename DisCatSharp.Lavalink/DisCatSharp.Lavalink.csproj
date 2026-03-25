@@ -27,7 +27,7 @@
 
 			Documentation: https://docs.dcs.aitsys.dev/articles/modules/audio/lavalink_v4/intro.html
 		</Description>
-		<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net8,Net9,Net10,Net11,Voice,Lavalink,Lavalink V4,Audio Player,Music,YouTube,Spotify,SoundCloud,Twitch,Vimeo,BandCamp,Apple Music,Yandex Music,Spotify,Spotify Recommendations,Deezer,Deezer ISRC,Local Music,Direct Url Music</PackageTags>
+		<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net9,Net10,Net11,Voice,Lavalink,Lavalink V4,Audio Player,Music,YouTube,Spotify,SoundCloud,Twitch,Vimeo,BandCamp,Apple Music,Yandex Music,Spotify,Spotify Recommendations,Deezer,Deezer ISRC,Local Music,Direct Url Music</PackageTags>
 
 	</PropertyGroup>
 
@@ -49,9 +49,4 @@
 		<PackageReference Include="System.Memory" Version="4.6.3" />
 		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="10.0.5" />
 	</ItemGroup>
-
-	<ItemGroup Condition="!$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net9.0'))">
-		<PackageReference Include="Backport.System.Threading.Lock" Version="3.1.8" />
-	</ItemGroup>
-
 </Project>

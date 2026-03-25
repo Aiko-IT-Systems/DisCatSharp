@@ -27,7 +27,7 @@
 			Manual Download: https://docs.dcs.aitsys.dev/natives/index.html
 		</Description>
 		<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord
-			Bots,AITSYS,Net8,Net9,Net10,Voice,Audio Player</PackageTags>
+			Bots,AITSYS,Net9,Net10,Voice,Audio Player</PackageTags>
 
 	</PropertyGroup>
 

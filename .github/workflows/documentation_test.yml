@@ -33,7 +33,6 @@ jobs:
                       11.x
                       10.x
                       9.x
-                      8.x
             - name: Install DocFX
               run: dotnet tool update -g docfx
               continue-on-error: true

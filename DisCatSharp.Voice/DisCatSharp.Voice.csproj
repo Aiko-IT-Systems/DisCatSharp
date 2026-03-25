@@ -26,13 +26,8 @@
 			https://docs.dcs.aitsys.dev/articles/modules/audio/voice/prerequisites.html
 		</Description>
 		<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord
-			Bots,AITSYS,Net8,Net9,Net10,Net11,Voice,Audio Player,DAVE</PackageTags>
+			Bots,AITSYS,Net9,Net10,Net11,Voice,Audio Player,DAVE</PackageTags>
 	</PropertyGroup>
-
-	<ItemGroup
-		Condition="!$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net9.0'))">
-		<PackageReference Include="Backport.System.Threading.Lock" Version="3.1.8" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="DisCatSharp.Analyzer" Version="1.0.0">

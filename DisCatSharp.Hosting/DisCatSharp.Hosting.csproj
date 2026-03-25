@@ -12,7 +12,7 @@
 	<PropertyGroup>
 		<PackageId>DisCatSharp.Hosting</PackageId>
 		<Description>Hosting Extension for DisCatSharp.</Description>
-		<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net8,Net9,Net10,Net11,Hosting,Web</PackageTags>
+		<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net9,Net10,Net11,Hosting,Web</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -20,11 +20,6 @@
 		<ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
 		<PackageReference Include="DisCatSharp.Attributes" Version="2025.3.27" />
 	</ItemGroup>
-
-	<ItemGroup Condition="!$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net9.0'))">
-		<PackageReference Include="Backport.System.Threading.Lock" Version="3.1.8" />
-	</ItemGroup>
-
 	<ItemGroup>
 		<PackageReference Include="DisCatSharp.Analyzer" Version="1.0.0">
 			<PrivateAssets>all</PrivateAssets>

@@ -4,15 +4,15 @@
 		"local>Aiko-IT-Systems/renovate-config",
 		":dependencyDashboard"
 	],
-	"ignoreDeps": ["Microsoft.VisualStudio.SDK"],
+	"ignoreDeps": [
+		"Microsoft.VisualStudio.SDK"
+	],
 	"packageRules": [
 		{
-			"matchManagers": ["npm"],
+			"matchManagers": [
+				"npm"
+			],
 			"enabled": false
-		},
-		{
-			"matchPackageNames": ["Backport.System.Threading.Lock"],
-			"addLabels": ["manual-review"]
 		}
 	],
 	"ignorePaths": [

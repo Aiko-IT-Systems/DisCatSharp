@@ -22,13 +22,8 @@
 			Your library to write discord bots in C# with a focus on always providing access to the latest discord features.
 			Written with love and for everyone.
 		</Description>
-		<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net8,Net9,Net10,Net11</PackageTags>
+		<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net9,Net10,Net11</PackageTags>
 	</PropertyGroup>
-
-	<ItemGroup Condition="!$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net9.0'))">
-		<PackageReference Include="Backport.System.Threading.Lock" Version="3.1.8" />
-	</ItemGroup>
-
 	<ItemGroup>
 		<PackageReference Include="DisCatSharp.Analyzer" Version="1.0.0">
 			<PrivateAssets>all</PrivateAssets>
