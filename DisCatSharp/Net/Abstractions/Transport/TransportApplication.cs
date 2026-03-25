@@ -188,6 +188,18 @@ internal sealed class TransportApplication : ObservableApiObject
 	public Optional<int> ApproximateUserInstallCount { get; set; }
 
 	/// <summary>
+	///     Gets or sets the approximate user authorization count.
+	/// </summary>
+	[JsonProperty("approximate_user_authorization_count", NullValueHandling = NullValueHandling.Ignore)]
+	public int? ApproximateUserAuthorizationCount { get; set; }
+
+	/// <summary>
+	///     Gets or sets the approximate guild count for the application's bot.
+	/// </summary>
+	[JsonProperty("bot_approximate_guild_count", NullValueHandling = NullValueHandling.Ignore)]
+	public int? BotApproximateGuildCount { get; set; }
+
+	/// <summary>
 	///     Gets or sets the interactions endpoint url.
 	/// </summary>
 	[JsonProperty("interactions_endpoint_url", NullValueHandling = NullValueHandling.Include)]
@@ -216,6 +228,12 @@ internal sealed class TransportApplication : ObservableApiObject
 	/// </summary>
 	[JsonProperty("is_verified", NullValueHandling = NullValueHandling.Ignore)]
 	public bool IsVerified { get; set; }
+
+	/// <summary>
+	///     Gets or sets whether the application is discoverable.
+	/// </summary>
+	[JsonProperty("is_discoverable", NullValueHandling = NullValueHandling.Ignore)]
+	public bool IsDiscoverable { get; set; }
 
 	/// <summary>
 	///     Gets or sets whether the storefront is available.
@@ -306,4 +324,22 @@ internal sealed class TransportApplication : ObservableApiObject
 	/// </summary>
 	[JsonProperty("internal_guild_restriction", NullValueHandling = NullValueHandling.Ignore)]
 	public int InternalGuildRestriction { get; set; }
+
+	/// <summary>
+	///     Gets or sets the maximum participants for the embedded activity.
+	/// </summary>
+	[JsonProperty("max_participants", NullValueHandling = NullValueHandling.Include)]
+	public int? MaxParticipants { get; set; }
+
+	/// <summary>
+	///     Gets or sets the approved console types for social SDK builds.
+	/// </summary>
+	[JsonProperty("approved_consoles", NullValueHandling = NullValueHandling.Ignore)]
+	public List<ApprovableConsoleType> ApprovedConsoles { get; set; } = [];
+
+	/// <summary>
+	///     Gets or sets the pricing localization strategy.
+	/// </summary>
+	[JsonProperty("pricing_localization_strategy", NullValueHandling = NullValueHandling.Ignore)]
+	public string? PricingLocalizationStrategy { get; set; }
 }

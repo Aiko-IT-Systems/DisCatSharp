@@ -31,6 +31,8 @@ public class StoreModelDeserializationTests
 		                      },
 		                      "starts_at": null,
 		                      "source_type": 6,
+		                      "fulfillment_status": 3,
+		                      "fulfilled_at": "2025-10-11T08:15:00+00:00",
 		                      "sku_id": "1395150923734581339",
 		                      "sku": {
 		                        "updated_at": "2025-10-10T16:55:25.560337+02:00",
@@ -108,6 +110,8 @@ public class StoreModelDeserializationTests
 
 		Assert.Equal(EntitlementType.GuildPowerup, entitlement.Type);
 		Assert.Equal(EntitlementSourceType.GuildPowerup, entitlement.SourceType);
+		Assert.Equal(EntitlementFulfillmentStatus.Fulfilled, entitlement.FulfillmentStatus);
+		Assert.Equal(new DateTimeOffset(2025, 10, 11, 8, 15, 0, TimeSpan.Zero), entitlement.FulfilledAt);
 		Assert.NotNull(entitlement.TenantMetadata?.GuildMonetization?.Powerup);
 		Assert.Equal(5, entitlement.TenantMetadata!.GuildMonetization!.Powerup!.BoostPrice);
 		Assert.NotNull(entitlement.Sku);
