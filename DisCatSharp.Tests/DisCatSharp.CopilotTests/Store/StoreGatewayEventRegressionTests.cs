@@ -225,6 +225,141 @@ public class StoreGatewayEventRegressionTests
 		Assert.Equal(guild.Id, guild.SoundboardSoundsInternal[3].GuildId);
 	}
 
+	[Fact]
+	public async Task GuildSoundboardSoundCreateEvent_CachesSoundAndBackfillsGuildContext()
+	{
+		var client = CreateClient();
+		var guild = new DiscordGuild
+		{
+			Id = 804032421678153819,
+			Discord = client
+		};
+		client.GuildsInternal[guild.Id] = guild;
+
+		var sound = new DiscordSoundboardSound
+		{
+			Id = 2,
+			Name = "Fresh sound"
+		};
+
+		await client.OnGuildSoundboardSoundCreateEventAsync(sound, guild.Id);
+
+		Assert.True(guild.SoundboardSoundsInternal.ContainsKey(sound.Id));
+		Assert.Same(client, guild.SoundboardSoundsInternal[sound.Id].Discord);
+		Assert.Equal(guild.Id, guild.SoundboardSoundsInternal[sound.Id].GuildId);
+	}
+
+	[Fact]
+	public async Task GuildSoundboardSoundUpdateEvent_ReplacesCachedSoundAndBackfillsGuildContext()
+	{
+		var client = CreateClient();
+		var guild = new DiscordGuild
+		{
+			Id = 804032421678153819,
+			Discord = client
+		};
+		client.GuildsInternal[guild.Id] = guild;
+		guild.SoundboardSoundsInternal[2] = new DiscordSoundboardSound
+		{
+			Id = 2,
+			Name = "Old sound",
+			Discord = client,
+			GuildId = guild.Id
+		};
+
+		var sound = new DiscordSoundboardSound
+		{
+			Id = 2,
+			Name = "Fresh sound"
+		};
+
+		await client.OnGuildSoundboardSoundUpdateEventAsync(sound, guild.Id);
+
+		Assert.Single(guild.SoundboardSoundsInternal);
+		Assert.Equal("Fresh sound", guild.SoundboardSoundsInternal[2].Name);
+		Assert.Same(client, guild.SoundboardSoundsInternal[2].Discord);
+		Assert.Equal(guild.Id, guild.SoundboardSoundsInternal[2].GuildId);
+	}
+
+	[Fact]
+	public async Task GuildSoundboardSoundDeleteEvent_RemovesCachedSound()
+	{
+		var client = CreateClient();
+		var guild = new DiscordGuild
+		{
+			Id = 804032421678153819,
+			Discord = client
+		};
+		client.GuildsInternal[guild.Id] = guild;
+		guild.SoundboardSoundsInternal[2] = new DiscordSoundboardSound
+		{
+			Id = 2,
+			Name = "Old sound",
+			Discord = client,
+			GuildId = guild.Id
+		};
+
+		await client.OnGuildSoundboardSoundDeleteEventAsync(2, guild.Id);
+
+		Assert.Empty(guild.SoundboardSoundsInternal);
+	}
+
+	[Fact]
+	public async Task GuildAvailableEvent_RefreshesSoundboardCacheAuthoritatively()
+	{
+		var client = CreateClient();
+		var guild = new DiscordGuild
+		{
+			Id = 804032421678153819,
+			Discord = client
+		};
+		client.GuildsInternal[guild.Id] = guild;
+		guild.SoundboardSoundsInternal[1] = new DiscordSoundboardSound
+		{
+			Id = 1,
+			Name = "Old sound",
+			Discord = client,
+			GuildId = guild.Id
+		};
+
+		var incomingGuild = new DiscordGuild
+		{
+			Id = guild.Id,
+			Discord = client,
+			MemberCount = 0
+		};
+		incomingGuild.SoundboardSoundsInternal[2] = new DiscordSoundboardSound
+		{
+			Id = 2,
+			Name = "Fresh sound"
+		};
+		incomingGuild.SoundboardSoundsInternal[3] = new DiscordSoundboardSound
+		{
+			Id = 3,
+			Name = "Another sound"
+		};
+
+		GuildCreateEventArgs? captured = null;
+		client.GuildAvailable += (_, args) =>
+		{
+			captured = args;
+			return Task.CompletedTask;
+		};
+
+		await client.OnGuildCreateEventAsync(incomingGuild, [], null, hasSoundboardSounds: true);
+
+		Assert.NotNull(captured);
+		Assert.Same(guild, captured!.Guild);
+		Assert.Equal(2, guild.SoundboardSoundsInternal.Count);
+		Assert.False(guild.SoundboardSoundsInternal.ContainsKey(1));
+		Assert.True(guild.SoundboardSoundsInternal.ContainsKey(2));
+		Assert.True(guild.SoundboardSoundsInternal.ContainsKey(3));
+		Assert.Equal(guild.Id, guild.SoundboardSoundsInternal[2].GuildId);
+		Assert.Equal(guild.Id, guild.SoundboardSoundsInternal[3].GuildId);
+		Assert.Same(client, guild.SoundboardSoundsInternal[2].Discord);
+		Assert.Same(client, guild.SoundboardSoundsInternal[3].Discord);
+	}
+
 	private static DiscordClient CreateClient()
 		=> new(new DiscordConfiguration
 		{

@@ -137,11 +137,11 @@ public sealed partial class DiscordClient
 			#region Guild
 
 			case "guild_create":
-				await this.OnGuildCreateEventAsync(dat.ToDiscordObject<DiscordGuild>(), (JArray)dat["members"]!, dat["presences"]!.ToDiscordObject<IEnumerable<DiscordPresence>>()).ConfigureAwait(false);
+				await this.OnGuildCreateEventAsync(dat.ToDiscordObject<DiscordGuild>(), (JArray)dat["members"]!, dat["presences"]!.ToDiscordObject<IEnumerable<DiscordPresence>>(), dat["soundboard_sounds"] is not null).ConfigureAwait(false);
 				break;
 
 			case "guild_update":
-				await this.OnGuildUpdateEventAsync(dat.ToDiscordObject<DiscordGuild>(), (JArray)dat["members"]!).ConfigureAwait(false);
+				await this.OnGuildUpdateEventAsync(dat.ToDiscordObject<DiscordGuild>(), (JArray)dat["members"]!, dat["soundboard_sounds"] is not null).ConfigureAwait(false);
 				break;
 
 			case "guild_delete":
@@ -1231,7 +1231,7 @@ public sealed partial class DiscordClient
 	/// <param name="guild">The guild.</param>
 	/// <param name="rawMembers">The raw members.</param>
 	/// <param name="presences">The presences.</param>
-	internal async Task OnGuildCreateEventAsync(DiscordGuild guild, JArray rawMembers, IEnumerable<DiscordPresence>? presences)
+	internal async Task OnGuildCreateEventAsync(DiscordGuild guild, JArray rawMembers, IEnumerable<DiscordPresence>? presences, bool hasSoundboardSounds = false)
 	{
 		if (presences != null)
 			foreach (var xp in presences)
@@ -1262,7 +1262,7 @@ public sealed partial class DiscordClient
 		guild.ScheduledEventsInternal ??= new();
 		guild.SoundboardSoundsInternal ??= new();
 
-		this.UpdateCachedGuild(eventGuild, rawMembers);
+		this.UpdateCachedGuild(eventGuild, rawMembers, hasSoundboardSounds);
 
 		guild.JoinedAt = eventGuild.JoinedAt;
 		guild.IsLarge = eventGuild.IsLarge;
@@ -1367,7 +1367,7 @@ public sealed partial class DiscordClient
 	/// </summary>
 	/// <param name="guild">The guild.</param>
 	/// <param name="rawMembers">The raw members.</param>
-	internal async Task OnGuildUpdateEventAsync(DiscordGuild guild, JArray rawMembers)
+	internal async Task OnGuildUpdateEventAsync(DiscordGuild guild, JArray rawMembers, bool hasSoundboardSounds = false)
 	{
 		DiscordGuild oldGuild;
 
@@ -1460,7 +1460,7 @@ public sealed partial class DiscordClient
 		guild.MembersInternal ??= new();
 		guild.ScheduledEventsInternal ??= new();
 
-		this.UpdateCachedGuild(eventGuild, rawMembers);
+		this.UpdateCachedGuild(eventGuild, rawMembers, hasSoundboardSounds);
 
 		foreach (var xc in guild.ChannelsInternal.Values)
 		{
@@ -2722,6 +2722,8 @@ public sealed partial class DiscordClient
 	internal async Task OnGuildSoundboardSoundCreateEventAsync(DiscordSoundboardSound sound, ulong guildId)
 	{
 		var guild = this.Guilds[guildId];
+		sound.Discord = this;
+		sound.GuildId ??= guildId;
 		guild.SoundboardSoundsInternal.TryAdd(sound.Id, sound);
 		var args = new GuildSoundboardSoundCreateEventArgs(this.ServiceProvider)
 		{
@@ -2739,6 +2741,8 @@ public sealed partial class DiscordClient
 	internal async Task OnGuildSoundboardSoundUpdateEventAsync(DiscordSoundboardSound sound, ulong guildId)
 	{
 		var guild = this.Guilds[guildId];
+		sound.Discord = this;
+		sound.GuildId ??= guildId;
 		guild.SoundboardSoundsInternal.TryRemove(sound.Id, out _);
 		guild.SoundboardSoundsInternal.TryAdd(sound.Id, sound);
 		var args = new GuildSoundboardSoundUpdateEventArgs(this.ServiceProvider)
@@ -2779,6 +2783,7 @@ public sealed partial class DiscordClient
 		guild.SoundboardSoundsInternal.Clear();
 		foreach (var sound in sounds)
 		{
+			sound.Discord = this;
 			sound.GuildId ??= guildId;
 			guild.SoundboardSoundsInternal[sound.Id] = sound;
 		}
@@ -2810,7 +2815,11 @@ public sealed partial class DiscordClient
 		{
 			this.Guilds[guildId].SoundboardSoundsInternal.Clear();
 			foreach (var sound in sounds)
+			{
+				sound.Discord = this;
+				sound.GuildId ??= guildId;
 				this.Guilds[guildId].SoundboardSoundsInternal.TryAdd(sound.Id, sound);
+			}
 		}
 
 		if (this._soundboardSounds is not null)

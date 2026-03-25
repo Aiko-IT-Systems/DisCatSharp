@@ -1977,7 +1977,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="newGuild">The new guild.</param>
 	/// <param name="rawMembers">The raw members.</param>
-	private void UpdateCachedGuild(DiscordGuild newGuild, JArray? rawMembers)
+	private void UpdateCachedGuild(DiscordGuild newGuild, JArray? rawMembers, bool hasSoundboardSounds = false)
 	{
 		ObjectDisposedException.ThrowIf(this._disposed, this);
 
@@ -2014,9 +2014,21 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				guild.ScheduledEventsInternal[@event.Id] = @event;
 			}
 
-		if (newGuild.SoundboardSoundsInternal is { IsEmpty: false })
+		if (hasSoundboardSounds)
+		{
+			guild.SoundboardSoundsInternal.Clear();
 			foreach (var sound in newGuild.SoundboardSoundsInternal.Values)
 			{
+				sound.Discord = this;
+				sound.GuildId ??= guild.Id;
+				guild.SoundboardSoundsInternal[sound.Id] = sound;
+			}
+		}
+		else if (newGuild.SoundboardSoundsInternal is { IsEmpty: false })
+			foreach (var sound in newGuild.SoundboardSoundsInternal.Values)
+			{
+				sound.Discord = this;
+				sound.GuildId ??= guild.Id;
 				if (guild.SoundboardSoundsInternal.TryGetValue(sound.Id, out _))
 					continue;
 
