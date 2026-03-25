@@ -2328,10 +2328,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 		var response = DiscordJson.DeserializeObject<RestGuildSoundboardSoundsResponse>(res.Response, this.Discord);
-		var sounds = response.Items;
-
-		foreach (var sound in sounds)
-			sound.GuildId ??= guildId;
+		var sounds = response.GetItems(this.Discord, guildId);
 
 		if (this.Discord.Guilds.TryGetValue(guildId, out var guild))
 		{
