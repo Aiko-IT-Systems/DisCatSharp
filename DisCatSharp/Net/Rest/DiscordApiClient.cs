@@ -2314,7 +2314,6 @@ public sealed class DiscordApiClient
 		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers).ConfigureAwait(false);
 	}
 
-	// TODO: This is bad. Rework later.
 	/// <summary>
 	///     Gets all soundboard sounds for a guild.
 	/// </summary>
@@ -2328,12 +2327,17 @@ public sealed class DiscordApiClient
 		}, out var path);
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
-		var parsed = JObject.Parse(res.Response);
-		var sounds = JArray.Parse(parsed.GetValue("items").ToString());
-		var deserializedSounds = DiscordJson.DeserializeIEnumerableObject<List<DiscordSoundboardSound>>(sounds.ToString(), this.Discord);
-		foreach (var sound in deserializedSounds)
-			this.Discord.Guilds[guildId].SoundboardSoundsInternal.AddOrUpdate(sound.Id, sound, (key, oldValue) => sound);
-		return deserializedSounds;
+		var response = DiscordJson.DeserializeObject<RestGuildSoundboardSoundsResponse>(res.Response, this.Discord);
+		var sounds = response.GetItems(this.Discord, guildId);
+
+		if (this.Discord.Guilds.TryGetValue(guildId, out var guild))
+		{
+			guild.SoundboardSoundsInternal.Clear();
+			foreach (var sound in sounds)
+				guild.SoundboardSoundsInternal[sound.Id] = sound;
+		}
+
+		return sounds;
 	}
 
 	/// <summary>

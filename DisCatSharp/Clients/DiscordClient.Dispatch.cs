@@ -2776,6 +2776,13 @@ public sealed partial class DiscordClient
 	internal async Task OnGuildSoundboardSoundsUpdateEventAsync(List<DiscordSoundboardSound> sounds, ulong guildId)
 	{
 		var guild = this.Guilds[guildId];
+		guild.SoundboardSoundsInternal.Clear();
+		foreach (var sound in sounds)
+		{
+			sound.GuildId ??= guildId;
+			guild.SoundboardSoundsInternal[sound.Id] = sound;
+		}
+
 		var args = new GuildSoundboardSoundsUpdateEventArgs(this.ServiceProvider)
 		{
 			Guild = guild,
