@@ -63,5 +63,10 @@ public enum EntitlementType
 	/// <summary>
 	///     Entitlement was redeemed using virtual currency.
 	/// </summary>
-	VirtualCurrencyRedemption = 12
+	VirtualCurrencyRedemption = 12,
+
+	/// <summary>
+	///     Entitlement was granted for a guild powerup purchase.
+	/// </summary>
+	GuildPowerup = 13
 }

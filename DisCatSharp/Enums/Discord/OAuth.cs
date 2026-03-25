@@ -38,6 +38,36 @@ public static class OAuth
 	private const string ROLE_CONNECTIONS_WRITE = "role_connections.write";
 
 	/// <summary>
+	///     The application identities write scope.
+	/// </summary>
+	private const string APPLICATION_IDENTITIES_WRITE = "application_identities.write";
+
+	/// <summary>
+	///     The social layer SDK presence scope.
+	/// </summary>
+	private const string SDK_SOCIAL_LAYER_PRESENCE = "sdk.social_layer_presence";
+
+	/// <summary>
+	///     The openid scope.
+	/// </summary>
+	private const string OPENID = "openid";
+
+	/// <summary>
+	///     The social layer SDK communications scope.
+	/// </summary>
+	private const string SDK_SOCIAL_LAYER = "sdk.social_layer";
+
+	/// <summary>
+	///     The social layer SDK default presence scopes.
+	/// </summary>
+	private const string SDK_DEFAULT_PRESENCE = OPENID + " " + SDK_SOCIAL_LAYER_PRESENCE;
+
+	/// <summary>
+	///     The social layer SDK default communication scopes.
+	/// </summary>
+	private const string SDK_DEFAULT_COMMUNICATION = OPENID + " " + SDK_SOCIAL_LAYER;
+
+	/// <summary>
 	///     All scopes for bots and identify.
 	/// </summary>
 	private const string ALL = BOT_DEFAULT + " " + IDENTIFY_EXTENDED + " " + ROLE_CONNECTIONS_WRITE;
@@ -56,6 +86,13 @@ public static class OAuth
 			OAuthScopes.IDENTIFY_BASIC => IDENTIFY_BASIC,
 			OAuthScopes.IDENTIFY_EXTENDED => IDENTIFY_EXTENDED,
 			OAuthScopes.ALL => ALL,
+			OAuthScopes.ROLE_CONNECTIONS_WRITE => ROLE_CONNECTIONS_WRITE,
+			OAuthScopes.APPLICATION_IDENTITIES_WRITE => APPLICATION_IDENTITIES_WRITE,
+			OAuthScopes.SDK_SOCIAL_LAYER_PRESENCE => SDK_SOCIAL_LAYER_PRESENCE,
+			OAuthScopes.OPENID => OPENID,
+			OAuthScopes.SDK_SOCIAL_LAYER => SDK_SOCIAL_LAYER,
+			OAuthScopes.SDK_DEFAULT_PRESENCE => SDK_DEFAULT_PRESENCE,
+			OAuthScopes.SDK_DEFAULT_COMMUNICATION => SDK_DEFAULT_COMMUNICATION,
 			_ => BOT_DEFAULT
 		};
 }
@@ -99,5 +136,35 @@ public enum OAuthScopes
 	/// <summary>
 	///     Scopes: role_connections.write
 	/// </summary>
-	ROLE_CONNECTIONS_WRITE = 6
+	ROLE_CONNECTIONS_WRITE = 6,
+
+	/// <summary>
+	///     Scopes: application_identities.write
+	/// </summary>
+	APPLICATION_IDENTITIES_WRITE = 7,
+
+	/// <summary>
+	///     Scopes: sdk.social_layer_presence
+	/// </summary>
+	SDK_SOCIAL_LAYER_PRESENCE = 8,
+
+	/// <summary>
+	///     Scopes: openid
+	/// </summary>
+	OPENID = 9,
+
+	/// <summary>
+	///     Scopes: sdk.social_layer
+	/// </summary>
+	SDK_SOCIAL_LAYER = 10,
+
+	/// <summary>
+	///     Scopes: openid sdk.social_layer_presence
+	/// </summary>
+	SDK_DEFAULT_PRESENCE = 11,
+
+	/// <summary>
+	///     Scopes: openid sdk.social_layer
+	/// </summary>
+	SDK_DEFAULT_COMMUNICATION = 12
 }

@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
+using DisCatSharp.Net.Serialization;
 
 using Newtonsoft.Json;
 
@@ -52,8 +54,22 @@ public sealed class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 	/// <summary>
 	///     Gets the sku name.
 	/// </summary>
-	[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
-	public string Name { get; internal set; }
+	[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore), JsonConverter(typeof(DiscordSkuNameJsonConverter))]
+	internal DiscordSkuName? RawName { get; set; }
+
+	/// <summary>
+	///     Gets the default sku name.
+	/// </summary>
+	[JsonIgnore]
+	public string Name
+		=> this.RawName?.Default ?? string.Empty;
+
+	/// <summary>
+	///     Gets the localized sku name payload.
+	/// </summary>
+	[JsonIgnore]
+	public DiscordSkuName? NameData
+		=> this.RawName;
 
 	/// <summary>
 	///     Gets the skus features.
@@ -71,7 +87,7 @@ public sealed class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 	///     Gets the skus release date.
 	/// </summary>
 	[JsonProperty("release_date", NullValueHandling = NullValueHandling.Ignore)]
-	public string ReleaseDate { get; internal set; }
+	public string? ReleaseDate { get; internal set; }
 
 	/// <summary>
 	///     Gets the skus legal notice.
@@ -92,6 +108,12 @@ public sealed class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 	public string Slug { get; internal set; }
 
 	/// <summary>
+	///     Gets when the sku was created as raw string.
+	/// </summary>
+	[JsonProperty("created_at", NullValueHandling = NullValueHandling.Ignore)]
+	public string? CreatedAtRaw { get; internal set; }
+
+	/// <summary>
 	///     Gets the sku price.
 	/// </summary>
 	[JsonProperty("price", NullValueHandling = NullValueHandling.Ignore)]
@@ -110,10 +132,54 @@ public sealed class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 	public ProductLine ProductLine { get; internal set; }
 
 	/// <summary>
+	///     Gets the product id.
+	/// </summary>
+	[JsonProperty("product_id", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong? ProductId { get; internal set; }
+
+	/// <summary>
+	///     Gets the selected sku options.
+	/// </summary>
+	[JsonProperty("selected_options", NullValueHandling = NullValueHandling.Ignore)]
+	public IReadOnlyList<DiscordSkuSelectedOption> SelectedOptions { get; internal set; } = [];
+
+	/// <summary>
 	///     Gets whether to show a age gate.
 	/// </summary>
 	[JsonProperty("show_age_gate", NullValueHandling = NullValueHandling.Ignore)]
 	public bool? ShowAgeGate { get; internal set; }
+
+	/// <summary>
+	///     Gets the sku tenant metadata.
+	/// </summary>
+	[JsonProperty("tenant_metadata", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordStoreTenantMetadata? TenantMetadata { get; internal set; }
+
+	/// <summary>
+	///     Gets richer guild powerup metadata for this sku.
+	/// </summary>
+	[JsonProperty("powerup_metadata", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordStorePowerupMetadata? PowerupMetadata { get; internal set; }
+
+	/// <summary>
+	///     Gets when the sku was updated as raw string.
+	/// </summary>
+	[JsonProperty("updated_at", NullValueHandling = NullValueHandling.Ignore)]
+	public string? UpdatedAtRaw { get; internal set; }
+
+	/// <summary>
+	///     Gets when the sku was created.
+	/// </summary>
+	[JsonIgnore]
+	public DateTimeOffset? CreatedAt
+		=> !string.IsNullOrWhiteSpace(this.CreatedAtRaw) && DateTimeOffset.TryParse(this.CreatedAtRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ? dto : null;
+
+	/// <summary>
+	///     Gets when the sku was updated.
+	/// </summary>
+	[JsonIgnore]
+	public DateTimeOffset? UpdatedAt
+		=> !string.IsNullOrWhiteSpace(this.UpdatedAtRaw) && DateTimeOffset.TryParse(this.UpdatedAtRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ? dto : null;
 
 	/// <summary>
 	///     Checks whether this <see cref="DiscordSku" /> is equal to another <see cref="DiscordSku" />.

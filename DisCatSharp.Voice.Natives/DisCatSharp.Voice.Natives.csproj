@@ -7,10 +7,11 @@
 	<Import Project="../DisCatSharp.Targets/Package.targets" />
 	<Import Project="../DisCatSharp.Targets/Library.targets" />
 
-	<PropertyGroup>
-		<IncludeBuildOutput>false</IncludeBuildOutput>
-		<RuntimeIdentifiers>win-x64;linux-x64;linux-arm64;osx-x64;osx-arm64</RuntimeIdentifiers>
-		<DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+ 	<PropertyGroup>
+ 		<IncludeBuildOutput>false</IncludeBuildOutput>
+ 		<SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+ 		<RuntimeIdentifiers>win-x64;linux-x64;linux-arm64;osx-x64;osx-arm64</RuntimeIdentifiers>
+ 		<DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
 		<IncludeSymbols>false</IncludeSymbols>
 		<SymbolPackageFormat>symbols.nupkg</SymbolPackageFormat>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>

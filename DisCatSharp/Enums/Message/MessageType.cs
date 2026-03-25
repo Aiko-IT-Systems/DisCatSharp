@@ -334,5 +334,10 @@ public enum MessageType
 	/// <summary>
 	///     Message indicating an emoji was added.
 	/// </summary>
-	EmojiAdded = 63
+	EmojiAdded = 63,
+
+	/// <summary>
+	///     Message indicating a premium group invite.
+	/// </summary>
+	PremiumGroupInvite = 64
 }

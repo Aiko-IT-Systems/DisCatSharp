@@ -38,5 +38,10 @@ public enum ProductLine
 	/// <summary>
 	///     Collectibles product line.
 	/// </summary>
-	Collectibles = 7
+	Collectibles = 7,
+
+	/// <summary>
+	///     Guild powerup product line.
+	/// </summary>
+	GuildPowerup = 13
 }

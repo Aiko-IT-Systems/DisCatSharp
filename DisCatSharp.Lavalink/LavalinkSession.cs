@@ -815,8 +815,8 @@ public sealed class LavalinkSession
 					guildPlayer.GuildId,
 					currentState =>
 					{
-						currentState.Endpoint = currentState.Endpoint ?? guildPlayer.Player.VoiceState.Endpoint;
-						currentState.Token = currentState.Token ?? guildPlayer.Player.VoiceState.Token;
+						currentState.Endpoint ??= guildPlayer.Player.VoiceState.Endpoint;
+						currentState.Token ??= guildPlayer.Player.VoiceState.Token;
 						currentState.SessionId = args.After.SessionId;
 						currentState.ChannelId = args.After.ChannelId ?? guildPlayer.ChannelId;
 					});
@@ -855,7 +855,7 @@ public sealed class LavalinkSession
 					{
 						currentState.Endpoint = args.Endpoint;
 						currentState.Token = args.VoiceToken;
-						currentState.SessionId = currentState.SessionId ?? guildPlayer.Player.VoiceState.SessionId;
+						currentState.SessionId ??= guildPlayer.Player.VoiceState.SessionId;
 						currentState.ChannelId ??= guildPlayer.ChannelId;
 					});
 

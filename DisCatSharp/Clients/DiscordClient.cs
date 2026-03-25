@@ -309,6 +309,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._guildJoinRequestUpdated = new("GUILD_JOIN_REQUEST_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildJoinRequestDeleted = new("GUILD_JOIN_REQUEST_DELETED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildAppliedBoostsUpdated = new("GUILD_APPLIED_BOOSTS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildAppliedBoostsCreated = new("GUILD_APPLIED_BOOSTS_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildAppliedBoostsDeleted = new("GUILD_APPLIED_BOOSTS_DELETED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildPowerupEntitlementsCreated = new("GUILD_POWERUP_ENTITLEMENTS_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildPowerupEntitlementsDeleted = new("GUILD_POWERUP_ENTITLEMENTS_DELETED", EventExecutionLimit, this.EventErrorHandler);
 
 		this.GuildsInternal.Clear();
 		this.EmojisInternal.Clear();

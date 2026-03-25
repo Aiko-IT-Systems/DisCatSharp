@@ -150,5 +150,9 @@ public enum DiscordEvent
 	GuildJoinRequestDeleted,
 	VoiceChannelStartTimeUpdated,
 	GuildAppliedBoostsUpdated,
+	GuildAppliedBoostsCreated,
+	GuildAppliedBoostsDeleted,
+	GuildPowerupEntitlementsCreated,
+	GuildPowerupEntitlementsDeleted,
 	GlobalExceptionOccurred
 }

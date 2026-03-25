@@ -2331,7 +2331,7 @@ public sealed class DiscordApiClient
 		var parsed = JObject.Parse(res.Response);
 		var sounds = JArray.Parse(parsed.GetValue("items").ToString());
 		var deserializedSounds = DiscordJson.DeserializeIEnumerableObject<List<DiscordSoundboardSound>>(sounds.ToString(), this.Discord);
-		foreach(var sound in deserializedSounds)
+		foreach (var sound in deserializedSounds)
 			this.Discord.Guilds[guildId].SoundboardSoundsInternal.AddOrUpdate(sound.Id, sound, (key, oldValue) => sound);
 		return deserializedSounds;
 	}
