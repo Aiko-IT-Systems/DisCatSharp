@@ -189,6 +189,9 @@ items:
   - uid: DisCatSharp.ApplicationCommands.EventArgs.ApplicationCommandsModuleStartupFinishedEventArgs
     name: ApplicationCommandsModuleStartupFinishedEventArgs
     type: Class
+  - uid: DisCatSharp.ApplicationCommands.EventArgs.ContextMenuChecksFailedEventArgs
+    name: ContextMenuChecksFailedEventArgs
+    type: Class
   - uid: DisCatSharp.ApplicationCommands.EventArgs.ContextMenuErrorEventArgs
     name: ContextMenuErrorEventArgs
     type: Class
@@ -200,6 +203,9 @@ items:
     type: Class
   - uid: DisCatSharp.ApplicationCommands.EventArgs.GuildApplicationCommandsRegisteredEventArgs
     name: GuildApplicationCommandsRegisteredEventArgs
+    type: Class
+  - uid: DisCatSharp.ApplicationCommands.EventArgs.SlashCommandChecksFailedEventArgs
+    name: SlashCommandChecksFailedEventArgs
     type: Class
   - uid: DisCatSharp.ApplicationCommands.EventArgs.SlashCommandErrorEventArgs
     name: SlashCommandErrorEventArgs

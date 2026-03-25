@@ -644,6 +644,12 @@ items:
   - uid: DisCatSharp.Entities.DiscordSku
     name: DiscordSku
     type: Class
+  - uid: DisCatSharp.Entities.DiscordSkuName
+    name: DiscordSkuName
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordSkuSelectedOption
+    name: DiscordSkuSelectedOption
+    type: Class
   - uid: DisCatSharp.Entities.DiscordSoundboardSound
     name: DiscordSoundboardSound
     type: Class
@@ -668,8 +674,20 @@ items:
   - uid: DisCatSharp.Entities.DiscordStickerPack
     name: DiscordStickerPack
     type: Class
+  - uid: DisCatSharp.Entities.DiscordStoreGuildFeatureBundle
+    name: DiscordStoreGuildFeatureBundle
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordStoreGuildMonetization
+    name: DiscordStoreGuildMonetization
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordStorePowerupMetadata
+    name: DiscordStorePowerupMetadata
+    type: Class
   - uid: DisCatSharp.Entities.DiscordStoreSku
     name: DiscordStoreSku
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordStoreTenantMetadata
+    name: DiscordStoreTenantMetadata
     type: Class
   - uid: DisCatSharp.Entities.DiscordStringSelectComponent
     name: DiscordStringSelectComponent
@@ -953,6 +971,9 @@ items:
   - uid: DisCatSharp.Enums.ApplicationVerificationState
     name: ApplicationVerificationState
     type: Enum
+  - uid: DisCatSharp.Enums.ApprovableConsoleType
+    name: ApprovableConsoleType
+    type: Enum
   - uid: DisCatSharp.Enums.AttachmentFlagExtensions
     name: AttachmentFlagExtensions
     type: Class
@@ -1055,8 +1076,14 @@ items:
   - uid: DisCatSharp.Enums.EmbedFlags
     name: EmbedFlags
     type: Enum
+  - uid: DisCatSharp.Enums.EntitlementFulfillmentStatus
+    name: EntitlementFulfillmentStatus
+    type: Enum
   - uid: DisCatSharp.Enums.EntitlementOwnerType
     name: EntitlementOwnerType
+    type: Enum
+  - uid: DisCatSharp.Enums.EntitlementSourceType
+    name: EntitlementSourceType
     type: Enum
   - uid: DisCatSharp.Enums.EntitlementType
     name: EntitlementType
@@ -1393,6 +1420,12 @@ items:
   - uid: DisCatSharp.EventArgs.GuildApplicationCommandCountEventArgs
     name: GuildApplicationCommandCountEventArgs
     type: Class
+  - uid: DisCatSharp.EventArgs.GuildAppliedBoostsCreateEventArgs
+    name: GuildAppliedBoostsCreateEventArgs
+    type: Class
+  - uid: DisCatSharp.EventArgs.GuildAppliedBoostsDeleteEventArgs
+    name: GuildAppliedBoostsDeleteEventArgs
+    type: Class
   - uid: DisCatSharp.EventArgs.GuildAppliedBoostsUpdateEventArgs
     name: GuildAppliedBoostsUpdateEventArgs
     type: Class
@@ -1458,6 +1491,12 @@ items:
     type: Class
   - uid: DisCatSharp.EventArgs.GuildMembersChunkEventArgs
     name: GuildMembersChunkEventArgs
+    type: Class
+  - uid: DisCatSharp.EventArgs.GuildPowerupEntitlementsCreateEventArgs
+    name: GuildPowerupEntitlementsCreateEventArgs
+    type: Class
+  - uid: DisCatSharp.EventArgs.GuildPowerupEntitlementsDeleteEventArgs
+    name: GuildPowerupEntitlementsDeleteEventArgs
     type: Class
   - uid: DisCatSharp.EventArgs.GuildRoleCreateEventArgs
     name: GuildRoleCreateEventArgs
