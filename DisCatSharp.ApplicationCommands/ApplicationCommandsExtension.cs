@@ -1800,10 +1800,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 				//Checks if any failed, and throws an exception
 				if (dict.Any(x => x.Value is false))
-					throw new SlashExecutionChecksFailedException
-					{
-						FailedChecks = dict.Where(x => x.Value is false).Select(x => x.Key).ToList()
-					};
+					throw new SlashExecutionChecksFailedException(ctx, dict.Where(x => x.Value is false).Select(x => x.Key));
 
 				break;
 			}
@@ -1831,10 +1828,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 				//Checks if any failed, and throws an exception
 				if (dict.Any(x => x.Value is false))
-					throw new ContextMenuExecutionChecksFailedException
-					{
-						FailedChecks = dict.Where(x => x.Value is false).Select(x => x.Key).ToList()
-					};
+					throw new ContextMenuExecutionChecksFailedException(cMctx, dict.Where(x => x.Value is false).Select(x => x.Key));
 
 				break;
 			}
