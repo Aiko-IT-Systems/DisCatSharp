@@ -199,6 +199,11 @@ public sealed partial class DiscordClient
 				break;
 
 			case "guild_applied_boosts_create":
+				gid = (ulong)dat["guild_id"]!;
+				uid = (ulong)dat["user_id"]!;
+				var createdPauseEndsAt = dat["pause_ends_at"]?.ToObject<DateTimeOffset?>();
+				var createdEndsAt = dat["ends_at"]?.ToObject<DateTimeOffset?>();
+				var createdEnded = dat["ended"]?.ToObject<bool>() ?? false;
 				if (this.CurrentApplication.Id is 822242444070092860)
 				{
 					_ = Task.Run(async () =>
@@ -207,9 +212,15 @@ public sealed partial class DiscordClient
 						await channel.SendMessageAsync(payload.EventName + "\n" + dat.ToString(Formatting.Indented).BlockCode("json"));
 					});
 				}
+				await this.OnGuildAppliedBoostsCreateEventAsync((ulong)dat["id"], gid, uid, createdPauseEndsAt, createdEndsAt, createdEnded).ConfigureAwait(false);
 				break;
 
 			case "guild_applied_boosts_delete":
+				gid = (ulong)dat["guild_id"]!;
+				uid = (ulong)dat["user_id"]!;
+				var deletedPauseEndsAt = dat["pause_ends_at"]?.ToObject<DateTimeOffset?>();
+				var deletedEndsAt = dat["ends_at"]?.ToObject<DateTimeOffset?>();
+				var deletedEnded = dat["ended"]?.ToObject<bool>() ?? false;
 				if (this.CurrentApplication.Id is 822242444070092860)
 				{
 					_ = Task.Run(async () =>
@@ -218,6 +229,17 @@ public sealed partial class DiscordClient
 						await channel.SendMessageAsync(payload.EventName + "\n" + dat.ToString(Formatting.Indented).BlockCode("json"));
 					});
 				}
+				await this.OnGuildAppliedBoostsDeleteEventAsync((ulong)dat["id"], gid, uid, deletedPauseEndsAt, deletedEndsAt, deletedEnded).ConfigureAwait(false);
+				break;
+
+			case "guild_powerup_entitlements_create":
+				gid = (ulong)dat["guild_id"]!;
+				await this.OnGuildPowerupEntitlementsCreateEventAsync(DiscordJson.DeserializeIEnumerableObject<List<DiscordEntitlement>>(dat["entitlements"]!.ToString(), this), gid).ConfigureAwait(false);
+				break;
+
+			case "guild_powerup_entitlements_delete":
+				gid = (ulong)dat["guild_id"]!;
+				await this.OnGuildPowerupEntitlementsDeleteEventAsync(DiscordJson.DeserializeIEnumerableObject<List<DiscordEntitlement>>(dat["entitlements"]!.ToString(), this), gid).ConfigureAwait(false);
 				break;
 
 			#endregion
@@ -2146,6 +2168,134 @@ public sealed partial class DiscordClient
 			Ended = ended
 		};
 		await this._guildAppliedBoostsUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Handles the guild applied boosts create event.
+	/// </summary>
+	/// <param name="boostId">The boost id.</param>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="userId">The user id.</param>
+	/// <param name="pauseEndsAt">The optional pause end time.</param>
+	/// <param name="endsAt">The optional boost end time.</param>
+	/// <param name="ended">Whether the boost already ended.</param>
+	internal async Task OnGuildAppliedBoostsCreateEventAsync(ulong boostId, ulong guildId, ulong userId, DateTimeOffset? pauseEndsAt, DateTimeOffset? endsAt, bool ended)
+	{
+		var guild = this.Guilds.TryGetValue(guildId, out var cachedGuild)
+			? cachedGuild
+			: new()
+			{
+				Id = guildId,
+				Discord = this
+			};
+
+		var ea = new GuildAppliedBoostsCreateEventArgs(this.ServiceProvider)
+		{
+			Guild = guild,
+			BoostId = boostId,
+			User = this.UserCache.GetValueOrDefault(userId) ?? new DiscordUser
+			{
+				Id = userId,
+				Discord = this
+			},
+			PauseEndsAt = pauseEndsAt,
+			EndsAt = endsAt,
+			Ended = ended
+		};
+		await this._guildAppliedBoostsCreated.InvokeAsync(this, ea).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Handles the guild applied boosts delete event.
+	/// </summary>
+	/// <param name="boostId">The boost id.</param>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="userId">The user id.</param>
+	/// <param name="pauseEndsAt">The optional pause end time.</param>
+	/// <param name="endsAt">The optional boost end time.</param>
+	/// <param name="ended">Whether the boost already ended.</param>
+	internal async Task OnGuildAppliedBoostsDeleteEventAsync(ulong boostId, ulong guildId, ulong userId, DateTimeOffset? pauseEndsAt, DateTimeOffset? endsAt, bool ended)
+	{
+		var guild = this.Guilds.TryGetValue(guildId, out var cachedGuild)
+			? cachedGuild
+			: new()
+			{
+				Id = guildId,
+				Discord = this
+			};
+
+		var ea = new GuildAppliedBoostsDeleteEventArgs(this.ServiceProvider)
+		{
+			Guild = guild,
+			BoostId = boostId,
+			User = this.UserCache.GetValueOrDefault(userId) ?? new DiscordUser
+			{
+				Id = userId,
+				Discord = this
+			},
+			PauseEndsAt = pauseEndsAt,
+			EndsAt = endsAt,
+			Ended = ended
+		};
+		await this._guildAppliedBoostsDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Handles the guild powerup entitlements create event.
+	/// </summary>
+	/// <param name="entitlements">The created entitlements.</param>
+	/// <param name="guildId">The guild id.</param>
+	internal async Task OnGuildPowerupEntitlementsCreateEventAsync(List<DiscordEntitlement> entitlements, ulong guildId)
+	{
+		var guild = this.Guilds.TryGetValue(guildId, out var cachedGuild)
+			? cachedGuild
+			: new()
+			{
+				Id = guildId,
+				Discord = this
+			};
+
+		foreach (var entitlement in entitlements)
+		{
+			entitlement.Discord = this;
+			entitlement.GuildId ??= guildId;
+		}
+
+		var ea = new GuildPowerupEntitlementsCreateEventArgs(this.ServiceProvider)
+		{
+			Guild = guild,
+			Entitlements = entitlements
+		};
+		await this._guildPowerupEntitlementsCreated.InvokeAsync(this, ea).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Handles the guild powerup entitlements delete event.
+	/// </summary>
+	/// <param name="entitlements">The deleted entitlements.</param>
+	/// <param name="guildId">The guild id.</param>
+	internal async Task OnGuildPowerupEntitlementsDeleteEventAsync(List<DiscordEntitlement> entitlements, ulong guildId)
+	{
+		var guild = this.Guilds.TryGetValue(guildId, out var cachedGuild)
+			? cachedGuild
+			: new()
+			{
+				Id = guildId,
+				Discord = this
+			};
+
+		foreach (var entitlement in entitlements)
+		{
+			entitlement.Discord = this;
+			entitlement.GuildId ??= guildId;
+		}
+
+		var ea = new GuildPowerupEntitlementsDeleteEventArgs(this.ServiceProvider)
+		{
+			Guild = guild,
+			Entitlements = entitlements
+		};
+		await this._guildPowerupEntitlementsDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>

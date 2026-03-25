@@ -22,4 +22,18 @@ public class EventsEnumIntegrityTests
 		foreach (var evtn in typeof(DiscordClient).GetEvents())
 			Assert.Contains(evtn.Name, enumNames);
 	}
+
+	[Fact]
+	private void TestNewGuildPowerupEventsExistOnShardedClient()
+	{
+		var shardedEventNames = typeof(DiscordShardedClient)
+			.GetEvents()
+			.Select(x => x.Name)
+			.ToHashSet();
+
+		Assert.Contains(nameof(DiscordClient.GuildAppliedBoostsCreated), shardedEventNames);
+		Assert.Contains(nameof(DiscordClient.GuildAppliedBoostsDeleted), shardedEventNames);
+		Assert.Contains(nameof(DiscordClient.GuildPowerupEntitlementsCreated), shardedEventNames);
+		Assert.Contains(nameof(DiscordClient.GuildPowerupEntitlementsDeleted), shardedEventNames);
+	}
 }

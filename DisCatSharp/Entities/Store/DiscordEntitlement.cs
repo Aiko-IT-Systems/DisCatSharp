@@ -87,6 +87,12 @@ public sealed class DiscordEntitlement : SnowflakeObject
 	public ulong SkuId { get; internal set; }
 
 	/// <summary>
+	///     Gets this entitlement's embedded sku payload.
+	/// </summary>
+	[JsonProperty("sku", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordSku? Sku { get; internal set; }
+
+	/// <summary>
 	///     Gets when this entitlement starts as raw string.
 	/// </summary>
 	[JsonProperty("starts_at", NullValueHandling = NullValueHandling.Ignore)]
@@ -97,6 +103,18 @@ public sealed class DiscordEntitlement : SnowflakeObject
 	/// </summary>
 	[JsonProperty("subscription_id", NullValueHandling = NullValueHandling.Ignore)]
 	public ulong? SubscriptionId { get; internal set; }
+
+	/// <summary>
+	///     Gets this entitlement's source type.
+	/// </summary>
+	[JsonProperty("source_type", NullValueHandling = NullValueHandling.Ignore)]
+	public EntitlementSourceType? SourceType { get; internal set; }
+
+	/// <summary>
+	///     Gets this entitlement's tenant metadata.
+	/// </summary>
+	[JsonProperty("tenant_metadata", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordStoreTenantMetadata? TenantMetadata { get; internal set; }
 
 	/// <summary>
 	///     Gets this entitlement's type.

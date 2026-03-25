@@ -716,6 +716,10 @@ public sealed partial class DiscordShardedClient
 		this._guildJoinRequestUpdated = new("GUILD_JOIN_REQUEST_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildJoinRequestDeleted = new("GUILD_JOIN_REQUEST_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildAppliedBoostsUpdated = new("GUILD_APPLIED_BOOSTS_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._guildAppliedBoostsCreated = new("GUILD_APPLIED_BOOSTS_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._guildAppliedBoostsDeleted = new("GUILD_APPLIED_BOOSTS_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._guildPowerupEntitlementsCreated = new("GUILD_POWERUP_ENTITLEMENTS_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._guildPowerupEntitlementsDeleted = new("GUILD_POWERUP_ENTITLEMENTS_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 	}
 
 	/// <summary>
@@ -830,6 +834,10 @@ public sealed partial class DiscordShardedClient
 		client.GuildJoinRequestUpdated += this.Client_GuildJoinRequestUpdated;
 		client.GuildJoinRequestDeleted += this.Client_GuildJoinRequestDeleted;
 		client.GuildAppliedBoostsUpdated += this.Client_GuildAppliedBoostsUpdated;
+		client.GuildAppliedBoostsCreated += this.Client_GuildAppliedBoostsCreated;
+		client.GuildAppliedBoostsDeleted += this.Client_GuildAppliedBoostsDeleted;
+		client.GuildPowerupEntitlementsCreated += this.Client_GuildPowerupEntitlementsCreated;
+		client.GuildPowerupEntitlementsDeleted += this.Client_GuildPowerupEntitlementsDeleted;
 	}
 
 	/// <summary>
@@ -944,6 +952,10 @@ public sealed partial class DiscordShardedClient
 		client.GuildJoinRequestUpdated -= this.Client_GuildJoinRequestUpdated;
 		client.GuildJoinRequestDeleted -= this.Client_GuildJoinRequestDeleted;
 		client.GuildAppliedBoostsUpdated -= this.Client_GuildAppliedBoostsUpdated;
+		client.GuildAppliedBoostsCreated -= this.Client_GuildAppliedBoostsCreated;
+		client.GuildAppliedBoostsDeleted -= this.Client_GuildAppliedBoostsDeleted;
+		client.GuildPowerupEntitlementsCreated -= this.Client_GuildPowerupEntitlementsCreated;
+		client.GuildPowerupEntitlementsDeleted -= this.Client_GuildPowerupEntitlementsDeleted;
 	}
 
 	/// <summary>

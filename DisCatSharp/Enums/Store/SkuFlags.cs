@@ -71,6 +71,11 @@ public enum SkuFlags : long
 	ApplicationUserSubscription = 1L << 8,
 
 	/// <summary>
+	///     Whether the SKU is available for application gifting.
+	/// </summary>
+	AvailableForApplicationGifting = 1L << 11,
+
+	/// <summary>
 	///      The flags are unknown.
 	/// </summary>
 	Unknown = long.MaxValue

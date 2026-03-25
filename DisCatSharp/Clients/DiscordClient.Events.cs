@@ -322,6 +322,50 @@ public sealed partial class DiscordClient
 
 	private AsyncEvent<DiscordClient, GuildAppliedBoostsUpdateEventArgs> _guildAppliedBoostsUpdated;
 
+	/// <summary>
+	///     Fired when guild applied boosts are created.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, GuildAppliedBoostsCreateEventArgs> GuildAppliedBoostsCreated
+	{
+		add => this._guildAppliedBoostsCreated.Register(value);
+		remove => this._guildAppliedBoostsCreated.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, GuildAppliedBoostsCreateEventArgs> _guildAppliedBoostsCreated;
+
+	/// <summary>
+	///     Fired when guild applied boosts are deleted.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, GuildAppliedBoostsDeleteEventArgs> GuildAppliedBoostsDeleted
+	{
+		add => this._guildAppliedBoostsDeleted.Register(value);
+		remove => this._guildAppliedBoostsDeleted.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, GuildAppliedBoostsDeleteEventArgs> _guildAppliedBoostsDeleted;
+
+	/// <summary>
+	///     Fired when guild powerup entitlements are created.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, GuildPowerupEntitlementsCreateEventArgs> GuildPowerupEntitlementsCreated
+	{
+		add => this._guildPowerupEntitlementsCreated.Register(value);
+		remove => this._guildPowerupEntitlementsCreated.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, GuildPowerupEntitlementsCreateEventArgs> _guildPowerupEntitlementsCreated;
+
+	/// <summary>
+	///     Fired when guild powerup entitlements are deleted.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, GuildPowerupEntitlementsDeleteEventArgs> GuildPowerupEntitlementsDeleted
+	{
+		add => this._guildPowerupEntitlementsDeleted.Register(value);
+		remove => this._guildPowerupEntitlementsDeleted.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, GuildPowerupEntitlementsDeleteEventArgs> _guildPowerupEntitlementsDeleted;
+
 	#endregion
 
 	#region Automod

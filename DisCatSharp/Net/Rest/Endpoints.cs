@@ -139,6 +139,11 @@ public static class Endpoints
 	public const string CHANNELS = "/channels";
 
 	/// <summary>
+	///     The direct messages endpoint for the current user.
+	/// </summary>
+	public const string ME_DMS = "/channels/@me/dms";
+
+	/// <summary>
 	///     The messages endpoint.
 	/// </summary>
 	public const string MESSAGES = "/messages";

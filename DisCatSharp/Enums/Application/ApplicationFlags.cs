@@ -159,6 +159,11 @@ public enum ApplicationFlags : long
 	Partner = 1L << 30,
 
 	/// <summary>
+	///     Indicates if the application is a parent application.
+	/// </summary>
+	Parent = 1L << 33,
+
+	/// <summary>
 	///      The flags are unknown.
 	/// </summary>
 	Unknown = long.MaxValue
