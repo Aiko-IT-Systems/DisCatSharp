@@ -138,9 +138,6 @@ namespace DisCatSharp.Analyzer
 		/// <param name="context">The symbol analysis context.</param>
 		private static void AnalyzeSymbol(SymbolAnalysisContext context)
 		{
-			var syntaxTrees = from x in context.Symbol.Locations
-			                  where x.IsInSource
-			                  select x.SourceTree;
 			var declaration = context.Symbol;
 
 			if (declaration == null)
@@ -151,15 +148,13 @@ namespace DisCatSharp.Analyzer
 			var name = declaration.Name;
 			var kind = declaration.Kind;
 
-			var model = context.Compilation.GetSemanticModel(syntaxTrees.First(), true);
-
-			var experimentalAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(ExperimentalAttribute)));
-			var deprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DeprecatedAttribute)));
-			var discordInExperimentAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DiscordInExperimentAttribute)));
-			var discordDeprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DiscordDeprecatedAttribute)));
-			var discordUnreleasedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DiscordUnreleasedAttribute)));
-			var requiresFeatureAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(RequiresFeatureAttribute)));
-			var requiresOverrideAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(RequiresOverrideAttribute)));
+			var experimentalAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.Compilation, attr, typeof(ExperimentalAttribute)));
+			var deprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.Compilation, attr, typeof(DeprecatedAttribute)));
+			var discordInExperimentAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.Compilation, attr, typeof(DiscordInExperimentAttribute)));
+			var discordDeprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.Compilation, attr, typeof(DiscordDeprecatedAttribute)));
+			var discordUnreleasedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.Compilation, attr, typeof(DiscordUnreleasedAttribute)));
+			var requiresFeatureAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.Compilation, attr, typeof(RequiresFeatureAttribute)));
+			var requiresOverrideAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.Compilation, attr, typeof(RequiresOverrideAttribute)));
 
 			if (experimentalAttributeData != null)
 			{
@@ -221,13 +216,13 @@ namespace DisCatSharp.Analyzer
 			var name = declaration.Name;
 			var kind = declaration.Kind;
 
-			var experimentalAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(ExperimentalAttribute)));
-			var deprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DeprecatedAttribute)));
-			var discordInExperimentAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DiscordInExperimentAttribute)));
-			var discordDeprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DiscordDeprecatedAttribute)));
-			var discordUnreleasedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DiscordUnreleasedAttribute)));
-			var requiresFeatureAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(RequiresFeatureAttribute)));
-			var requiresOverrideAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(RequiresOverrideAttribute)));
+			var experimentalAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(ExperimentalAttribute)));
+			var deprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(DeprecatedAttribute)));
+			var discordInExperimentAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(DiscordInExperimentAttribute)));
+			var discordDeprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(DiscordDeprecatedAttribute)));
+			var discordUnreleasedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(DiscordUnreleasedAttribute)));
+			var requiresFeatureAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(RequiresFeatureAttribute)));
+			var requiresOverrideAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(RequiresOverrideAttribute)));
 
 			if (experimentalAttributeData != null)
 			{
@@ -276,16 +271,16 @@ namespace DisCatSharp.Analyzer
 		/// <summary>
 		///     Checks if the attribute is the desired attribute.
 		/// </summary>
-		/// <param name="semanticModel">The current semantic model.</param>
+		/// <param name="compilation">The current compilation.</param>
 		/// <param name="attribute">>The current attribute data.</param>
 		/// <param name="desiredAttributeType">The target attribute type to check for.</param>
 		/// <returns>Whether the <paramref name="attribute" /> contains the <paramref name="desiredAttributeType" />.</returns>
-		private static bool IsRequiredAttribute(SemanticModel semanticModel, AttributeData attribute, Type desiredAttributeType)
+		private static bool IsRequiredAttribute(Compilation compilation, AttributeData attribute, Type desiredAttributeType)
 		{
 			if (desiredAttributeType.FullName == null)
 				return false;
 
-			var desiredTypeNamedSymbol = semanticModel.Compilation.GetTypeByMetadataName(desiredAttributeType.FullName);
+			var desiredTypeNamedSymbol = compilation.GetTypeByMetadataName(desiredAttributeType.FullName);
 
 			var result = attribute.AttributeClass?.Equals(desiredTypeNamedSymbol, SymbolEqualityComparer.Default) ?? false;
 			return result;
