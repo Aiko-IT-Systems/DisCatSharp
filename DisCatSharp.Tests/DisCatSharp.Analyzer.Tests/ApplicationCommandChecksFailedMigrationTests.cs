@@ -1,3 +1,5 @@
+using Microsoft.CodeAnalysis;
+
 namespace DisCatSharp.Analyzer.Tests;
 
 public sealed class ApplicationCommandChecksFailedMigrationTests
@@ -30,6 +32,7 @@ public sealed class ApplicationCommandChecksFailedMigrationTests
 		var diagnostics = await RoslynTestDocumentFactory.GetAnalyzerDiagnosticsAsync(source);
 
 		var diagnostic = Assert.Single(diagnostics, x => x.Id == DisCatSharpDiagnosticIds.ApplicationCommandChecksFailedMigration);
+		Assert.Equal(DiagnosticSeverity.Error, diagnostic.Severity);
 		Assert.Equal("SlashCommandErrored", diagnostic.Location.SourceTree?.GetRoot().FindNode(diagnostic.Location.SourceSpan).ToString());
 	}
 

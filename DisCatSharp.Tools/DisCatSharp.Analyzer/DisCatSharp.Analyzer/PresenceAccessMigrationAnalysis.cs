@@ -11,6 +11,8 @@ internal static class PresenceAccessMigrationAnalysis
 	private const string DiscordClientMetadataName = "DisCatSharp.DiscordClient";
 	private const string PresencesPropertyName = "Presences";
 	private const string UserIdPropertyName = "UserId";
+	private const string UserPropertyName = "User";
+	private const string IdPropertyName = "Id";
 	private const string ValuesPropertyName = "Values";
 	private const string ValuePropertyName = "Value";
 
@@ -19,6 +21,9 @@ internal static class PresenceAccessMigrationAnalysis
 		candidate = null!;
 
 		if (TryGetValuesWhereCandidate(semanticModel, invocation, cancellationToken, out candidate))
+			return true;
+
+		if (TryGetValuesTerminalCandidate(semanticModel, invocation, cancellationToken, out candidate))
 			return true;
 
 		return TryGetKeyValueSelectCandidate(semanticModel, invocation, cancellationToken, out candidate);
@@ -43,10 +48,37 @@ internal static class PresenceAccessMigrationAnalysis
 			return false;
 
 		if (!TryGetSingleLambda(invocation, out var parameterName, out var predicateBody) ||
-		    !TryMatchEqualityPredicate(predicateBody, parameterName, $"{parameterName}.{UserIdPropertyName}", out var userExpression))
+		    !TryMatchPresenceUserPredicate(predicateBody, parameterName, usesValueAccess: false, out var userExpression))
 			return false;
 
 		candidate = new(invocation, presencesAccess, clientExpression, userExpression);
+		return true;
+	}
+
+	private static bool TryGetValuesTerminalCandidate(SemanticModel semanticModel, InvocationExpressionSyntax invocation, CancellationToken cancellationToken, out PresenceAccessMigrationCandidate candidate)
+	{
+		candidate = null!;
+
+		if (invocation.Expression is not MemberAccessExpressionSyntax
+		    {
+			    Name.Identifier.ValueText: var methodName,
+			    Expression: MemberAccessExpressionSyntax
+			    {
+				    Name.Identifier.ValueText: ValuesPropertyName,
+				    Expression: MemberAccessExpressionSyntax presencesAccess
+			    }
+		    })
+			return false;
+
+		if (!IsSupportedValuesTerminalMethod(methodName) ||
+		    !TryGetDiscordClientPresencesAccess(semanticModel, presencesAccess, cancellationToken, out var clientExpression))
+			return false;
+
+		if (!TryGetSingleLambda(invocation, out var parameterName, out var predicateBody) ||
+		    !TryMatchPresenceUserPredicate(predicateBody, parameterName, usesValueAccess: false, out var userExpression))
+			return false;
+
+		candidate = new(invocation, presencesAccess, clientExpression, userExpression, methodName);
 		return true;
 	}
 
@@ -74,7 +106,7 @@ internal static class PresenceAccessMigrationAnalysis
 		    !TryGetSingleLambda(whereInvocation, out var whereParameterName, out var predicateBody))
 			return false;
 
-		if (!TryMatchEqualityPredicate(predicateBody, whereParameterName, $"{whereParameterName}.{ValuePropertyName}.{UserIdPropertyName}", out var userExpression))
+		if (!TryMatchPresenceUserPredicate(predicateBody, whereParameterName, usesValueAccess: true, out var userExpression))
 			return false;
 
 		candidate = new(invocation, presencesAccess, clientExpression, userExpression);
@@ -131,20 +163,31 @@ internal static class PresenceAccessMigrationAnalysis
 		}
 	}
 
-	private static bool TryMatchEqualityPredicate(ExpressionSyntax predicateBody, string parameterName, string expectedMemberAccess, out ExpressionSyntax userExpression)
+	private static bool TryMatchPresenceUserPredicate(ExpressionSyntax predicateBody, string parameterName, bool usesValueAccess, out ExpressionSyntax userExpression)
+		=> TryMatchEqualityPredicate(
+			predicateBody,
+			usesValueAccess
+				? $"{parameterName}.{ValuePropertyName}.{UserIdPropertyName}"
+				: $"{parameterName}.{UserIdPropertyName}",
+			usesValueAccess
+				? $"{parameterName}.{ValuePropertyName}.{UserPropertyName}.{IdPropertyName}"
+				: $"{parameterName}.{UserPropertyName}.{IdPropertyName}",
+			out userExpression);
+
+	private static bool TryMatchEqualityPredicate(ExpressionSyntax predicateBody, string expectedMemberAccess, string alternateExpectedMemberAccess, out ExpressionSyntax userExpression)
 	{
 		userExpression = null!;
 
 		if (predicateBody is not BinaryExpressionSyntax { RawKind: (int)SyntaxKind.EqualsExpression } equality)
 			return false;
 
-		if (IsMemberAccess(equality.Left, expectedMemberAccess))
+		if (IsMemberAccess(equality.Left, expectedMemberAccess) || IsMemberAccess(equality.Left, alternateExpectedMemberAccess))
 		{
 			userExpression = equality.Right;
 			return true;
 		}
 
-		if (IsMemberAccess(equality.Right, expectedMemberAccess))
+		if (IsMemberAccess(equality.Right, expectedMemberAccess) || IsMemberAccess(equality.Right, alternateExpectedMemberAccess))
 		{
 			userExpression = equality.Left;
 			return true;
@@ -152,6 +195,9 @@ internal static class PresenceAccessMigrationAnalysis
 
 		return false;
 	}
+
+	private static bool IsSupportedValuesTerminalMethod(string methodName)
+		=> methodName is "First" or "FirstOrDefault" or "Single" or "SingleOrDefault" or "Any";
 
 	private static bool IsMemberAccess(ExpressionSyntax expression, string expectedText)
 		=> expression is MemberAccessExpressionSyntax && expression.ToString() == expectedText;
@@ -169,7 +215,8 @@ internal static class PresenceAccessMigrationAnalysis
 		InvocationExpressionSyntax invocationToReplace,
 		MemberAccessExpressionSyntax presencesAccess,
 		ExpressionSyntax clientExpression,
-		ExpressionSyntax userExpression)
+		ExpressionSyntax userExpression,
+		string? terminalMethodName = null)
 	{
 		internal InvocationExpressionSyntax InvocationToReplace { get; } = invocationToReplace;
 
@@ -178,5 +225,7 @@ internal static class PresenceAccessMigrationAnalysis
 		internal ExpressionSyntax ClientExpression { get; } = clientExpression;
 
 		internal ExpressionSyntax UserExpression { get; } = userExpression;
+
+		internal string? TerminalMethodName { get; } = terminalMethodName;
 	}
 }

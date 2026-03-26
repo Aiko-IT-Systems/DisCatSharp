@@ -18,7 +18,7 @@ DCS0201 | Usage    | Warning  | Requires override APIs, [Documentation](https://
 
 Rule ID | Category | Severity | Notes
 --------|----------|----------|--------------------
-DCS2101 | Usage    | Info     | Application-command checks-failed migration prototype, [Documentation](https://docs.dcs.aitsys.dev/vs/analyzer/dcs/2101)
+DCS2101 | Usage    | Error    | Application-command checks-failed migration prototype; raised to error because legacy checks-failed handlers can break consumers if left on errored events, [Documentation](https://docs.dcs.aitsys.dev/vs/analyzer/dcs/2101)
 
 ## Release 1.0.2.0
 

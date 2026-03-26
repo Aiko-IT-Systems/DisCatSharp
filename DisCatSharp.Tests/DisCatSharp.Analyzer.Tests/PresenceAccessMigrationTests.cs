@@ -44,6 +44,26 @@ public sealed class PresenceAccessMigrationTests
 	}
 
 	[Fact]
+	public async Task Reports_diagnostic_for_values_first_user_pattern()
+	{
+		const string source =
+			"""
+			using System.Linq;
+			using DisCatSharp;
+
+			public sealed class Consumer
+			{
+			    public object GetPresence(DiscordClient client, ulong userId)
+			        => client.Presences.Values.First(p => p.User.Id == userId);
+			}
+			""";
+
+		var diagnostics = await RoslynTestDocumentFactory.GetAnalyzerDiagnosticsAsync(source);
+
+		Assert.Contains(diagnostics, x => x.Id == DisCatSharpDiagnosticIds.PresenceAccessMigration);
+	}
+
+	[Fact]
 	public async Task Does_not_report_diagnostic_for_key_based_filter()
 	{
 		const string source =
@@ -82,6 +102,27 @@ public sealed class PresenceAccessMigrationTests
 
 		Assert.Contains("client.GetPresences(userId).Values.ToList()", fixedSource);
 		Assert.DoesNotContain("Presences.Values.Where", fixedSource);
+	}
+
+	[Fact]
+	public async Task ApplyFixToDocumentAsync_rewrites_values_first_user_pattern()
+	{
+		const string source =
+			"""
+			using System.Linq;
+			using DisCatSharp;
+
+			public sealed class Consumer
+			{
+			    public object GetPresenceStatus(DiscordClient client, ulong userId)
+			        => client.Presences.Values.First(p => p.User.Id == userId).Status.ToString();
+			}
+			""";
+
+		var fixedSource = await RoslynTestDocumentFactory.ApplyPresenceAccessMigrationFixAsync(source);
+
+		Assert.Contains("client.GetPresences(userId).Values.First().Status.ToString()", fixedSource);
+		Assert.DoesNotContain("Presences.Values.First", fixedSource);
 	}
 
 	[Fact]

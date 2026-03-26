@@ -70,10 +70,21 @@ public sealed class DisCatSharpPresenceAccessMigrationCodeFix : SingleDiagnostic
 				SyntaxFactory.Argument(candidate.UserExpression.WithoutTrivia())
 			]));
 
-		return SyntaxFactory.MemberAccessExpression(
-				SyntaxKind.SimpleMemberAccessExpression,
-				getPresencesInvocation,
-				SyntaxFactory.IdentifierName("Values"))
+		var valuesAccess = SyntaxFactory.MemberAccessExpression(
+			SyntaxKind.SimpleMemberAccessExpression,
+			getPresencesInvocation,
+			SyntaxFactory.IdentifierName("Values"));
+
+		ExpressionSyntax replacement = candidate.TerminalMethodName is { Length: > 0 } terminalMethodName
+			? SyntaxFactory.InvocationExpression(
+				SyntaxFactory.MemberAccessExpression(
+					SyntaxKind.SimpleMemberAccessExpression,
+					valuesAccess,
+					SyntaxFactory.IdentifierName(terminalMethodName)),
+				SyntaxFactory.ArgumentList())
+			: valuesAccess;
+
+		return replacement
 			.WithTriviaFrom(candidate.InvocationToReplace)
 			.WithAdditionalAnnotations(Formatter.Annotation);
 	}

@@ -128,7 +128,7 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 		"[DCS] Application command checks-failed migration",
 		"Handler contains application-command checks-failed logic that should subscribe to '{0}' instead of '{1}' ({2})",
 		CATEGORY,
-		DiagnosticSeverity.Info,
+		DiagnosticSeverity.Error,
 		true,
 		"Application command check failures now raise dedicated checks-failed events instead of surfacing through errored events.",
 		"https://docs.dcs.aitsys.dev/vs/analyzer/dcs/2101");

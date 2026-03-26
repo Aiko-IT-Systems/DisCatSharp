@@ -18,8 +18,9 @@
 		<GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
 		<NuGetAuditSuppress>true</NuGetAuditSuppress>
 		<NuGetAudit>false</NuGetAudit>
-		<DebugType>embedded</DebugType>
-		<NoWarn>$(NoWarn);1701;1702;NU1701</NoWarn>
+  		<DebugType>embedded</DebugType>
+ 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+ 		<NoWarn>$(NoWarn);1701;1702;NU1701</NoWarn>
 		<IncludeSymbols>True</IncludeSymbols>
 		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
 	</PropertyGroup>
