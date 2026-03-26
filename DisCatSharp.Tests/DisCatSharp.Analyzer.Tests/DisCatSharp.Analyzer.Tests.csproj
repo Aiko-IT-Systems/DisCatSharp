@@ -1,20 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<OutputType>Exe</OutputType>
 		<TargetFramework>net9.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
-		<NoWarn>DV2001;CS8618;IDE0060</NoWarn>
+		<IsPackable>false</IsPackable>
+		<NoWarn>IDE0060;RS2008;DV2001</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\DisCatSharp\DisCatSharp.csproj" />
-		<PackageReference Include="DisCatSharp.Analyzer" Version="1.0.0">
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
+		<PackageReference Include="xunit" Version="2.9.3" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\DisCatSharp.Attributes\DisCatSharp.Attributes.csproj" />
+		<ProjectReference Include="..\..\DisCatSharp\DisCatSharp.csproj" />
+		<ProjectReference Include="..\..\DisCatSharp.Tools\DisCatSharp.Analyzer\DisCatSharp.Analyzer\DisCatSharp.Analyzer.csproj" />
+		<ProjectReference Include="..\..\DisCatSharp.Tools\DisCatSharp.Analyzer\DisCatSharp.Analyzer.CodeFixes\DisCatSharp.Analyzer.CodeFixes.csproj" />
 	</ItemGroup>
 
 </Project>

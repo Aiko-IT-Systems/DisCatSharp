@@ -146,7 +146,7 @@ public sealed class DisCatSharpRequiresOverrideCodeFix : CodeFixProvider
 			return document;
 
 		var newRoot = root.ReplaceNodes(replacementNodes.Keys, (original, _) => replacementNodes[original]);
-		return document.WithSyntaxRoot(newRoot);
+		return await Formatter.FormatAsync(document.WithSyntaxRoot(newRoot), cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	private static bool IsDiscordConfigurationCreation(SemanticModel semanticModel, INamedTypeSymbol discordConfigurationSymbol, ExpressionSyntax node, CancellationToken cancellationToken)
