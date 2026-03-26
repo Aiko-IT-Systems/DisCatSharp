@@ -15,7 +15,7 @@
 		<IncludeSymbols>false</IncludeSymbols>
 		<SymbolPackageFormat>symbols.nupkg</SymbolPackageFormat>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-		<NoWarn>CS2008;CS8021</NoWarn>
+		<NoWarn>$(NoWarn);CS2008;CS8021</NoWarn>
 		<IsPackable>true</IsPackable>
 	</PropertyGroup>
 

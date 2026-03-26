@@ -6,7 +6,7 @@
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
 		<IsPackable>false</IsPackable>
-		<NoWarn>IDE0060;RS2008;DV2001</NoWarn>
+		<NoWarn>$(NoWarn);IDE0060;RS2008;DV2001</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>

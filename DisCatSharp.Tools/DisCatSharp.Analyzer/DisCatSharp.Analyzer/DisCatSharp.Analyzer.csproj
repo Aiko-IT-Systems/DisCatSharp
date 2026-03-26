@@ -19,7 +19,7 @@
 		<NuGetAuditSuppress>true</NuGetAuditSuppress>
 		<NuGetAudit>false</NuGetAudit>
 		<DebugType>embedded</DebugType>
-		<NoWarn>1701;1702;NU1701</NoWarn>
+		<NoWarn>$(NoWarn);1701;1702;NU1701</NoWarn>
 		<IncludeSymbols>True</IncludeSymbols>
 		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
 	</PropertyGroup>

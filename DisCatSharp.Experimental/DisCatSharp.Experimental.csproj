@@ -19,7 +19,7 @@
 			Experimental changes for DisCatSharp.
 		</Description>
 		<PackageTags>DisCatSharp,Experimental,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net9,Net10,Net11</PackageTags>
-		<NoWarn>IDE0130;DV2001;CS8602;CS8618;CS8602</NoWarn>
+		<NoWarn>$(NoWarn);IDE0130;DV2001;CS8602;CS8618;CS8602</NoWarn>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Concentus" Version="2.2.2" />
