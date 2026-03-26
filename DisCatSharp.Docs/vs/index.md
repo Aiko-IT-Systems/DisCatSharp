@@ -20,6 +20,8 @@ To use the DisCatSharp Analyzer, you need to install the [DisCatSharp.Analyzer](
 
 The NuGet package is the supported delivery model for analyzers and code fixes.
 
+If you maintain the analyzer/tooling stack, see the [authoring guide](xref:vs_analyzer_authoring).
+
 ##### Visual Studio Code
 
 Enable `omnisharp.enableRoslynAnalyzers` in your settings.
