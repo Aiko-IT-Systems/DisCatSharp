@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - 'DisCatSharp.Tools/emojis.json'
+    branches:
+      - main
 
 jobs:
   emoji-autogen:
