@@ -39,7 +39,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
-		<PackageReference Include="DisCatSharp.Attributes" Version="2025.3.27" />
+		<PackageReference Include="DisCatSharp.Attributes" Version="2026.03.26" />
 	</ItemGroup>
 
 </Project>
