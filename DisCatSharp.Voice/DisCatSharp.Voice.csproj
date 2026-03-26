@@ -30,7 +30,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DisCatSharp.Analyzer" Version="1.0.1">
+		<PackageReference Include="DisCatSharp.Analyzer" Version="1.0.2">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -41,14 +41,12 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.5" />
 		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="10.0.5" />
 		<PackageReference Include="System.Threading.Channels" Version="10.0.5" />
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.201"
-			PrivateAssets="All" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.201" PrivateAssets="All" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
-		<ProjectReference Include="..\DisCatSharp.Voice.Natives\DisCatSharp.Voice.Natives.csproj"
-			ReferenceOutputAssembly="false" />
+		<ProjectReference Include="..\DisCatSharp.Voice.Natives\DisCatSharp.Voice.Natives.csproj" ReferenceOutputAssembly="false" />
 		<PackageReference Include="DisCatSharp.Attributes" Version="2026.03.26" />
 	</ItemGroup>
 
