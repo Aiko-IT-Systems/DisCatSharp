@@ -25,7 +25,7 @@ on:
                 options:
                     - "DisCatSharp"
                     - "DisCatSharp.Attributes"
-#            - "DisCatSharp.Tools" # This does not work currently
+                    - "DisCatSharp.Analyzer"
 
 env:
     DOTNET_NOLOGO: true
@@ -64,8 +64,8 @@ jobs:
             - name: Restore dependencies (DisCatSharp.Attributes)
               if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp.Attributes' }}
               run: dotnet restore --no-cache -f -v minimal DisCatSharp.Attributes/DisCatSharp.Attributes.csproj
-            - name: Restore dependencies (DisCatSharp.Tools)
-              if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp.Tools' }}
+            - name: Restore dependencies (DisCatSharp.Analyzer)
+              if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp.Analyzer' }}
               run: dotnet restore --no-cache -f -v minimal DisCatSharp.Tools/DisCatSharp.Tools.slnx
             - name: Build DisCatSharp as full release
               if: ${{!inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp'}}
@@ -91,12 +91,13 @@ jobs:
               if: ${{inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp.Attributes'}}
               shell: pwsh
               run: ./DisCatSharp.Tools/rebuild-attributes.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release -VersionSuffix ${{github.event.inputs.version_suffix}}
-            - name: Build DisCatSharp.Tools as full release
-              if: ${{!inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp.Tools'}}
+            - name: Build DisCatSharp.Analyzer as full release
+              if: ${{!inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp.Analyzer'}}
               shell: pwsh
               run: ./DisCatSharp.Tools/rebuild-tools.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release
-            - name: Build DisCatSharp.Tools as pre-release
-              if: ${{inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp.Tools'}}
+            - name: Build DisCatSharp.Analyzer as pre-release
+              if: ${{inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp.Analyzer'}}
+              shell: pwsh
               run: ./DisCatSharp.Tools/rebuild-tools.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release -VersionSuffix ${{github.event.inputs.version_suffix}}
             - name: Remove invalid packages
               if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp' }}

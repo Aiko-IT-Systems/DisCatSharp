@@ -1,11 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
-		<IsPackable>false</IsPackable>
-		<PackageId>*$(MSBuildProjectFile)*</PackageId>
-		<EmbedUntrackedSources>true</EmbedUntrackedSources>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+ 	<PropertyGroup>
+ 		<TargetFramework>netstandard2.0</TargetFramework>
+ 		<IsPackable>false</IsPackable>
+ 		<PackageId>*$(MSBuildProjectFile)*</PackageId>
+ 		<LangVersion>latest</LangVersion>
+ 		<Nullable>enable</Nullable>
+ 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+ 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
 		<GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
 		<GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
@@ -34,6 +36,11 @@
 	<ItemGroup>
 		<Compile Update="Resources.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Resources.resx" />
 		<EmbeddedResource Update="Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<AdditionalFiles Include="AnalyzerReleases.Shipped.md" />
+		<AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
 	</ItemGroup>
 
 </Project>

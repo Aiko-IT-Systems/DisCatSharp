@@ -8,6 +8,7 @@ using DisCatSharp.Attributes;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace DisCatSharp.Analyzer
@@ -90,29 +91,40 @@ namespace DisCatSharp.Analyzer
 		private static readonly LocalizableString s_descriptionRequiresOverride = new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionRequiresOverride), Resources.ResourceManager, typeof(Resources));
 
 		/// <inheritdoc cref="DiagnosticDescriptor" />
-		private static readonly DiagnosticDescriptor s_experimentalRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0001", s_titleExperimental, s_messageFormatExperimental, CATEGORY, DiagnosticSeverity.Info, true, s_descriptionExperimental, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0001");
+		private static readonly DiagnosticDescriptor s_experimentalRule = new DiagnosticDescriptor(DisCatSharpDiagnosticIds.Experimental, s_titleExperimental, s_messageFormatExperimental, CATEGORY, DiagnosticSeverity.Info, true, s_descriptionExperimental, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0001");
 
 		/// <inheritdoc cref="DiagnosticDescriptor" />
-		private static readonly DiagnosticDescriptor s_deprecatedRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0002", s_titleDeprecated, s_messageFormatDeprecated, CATEGORY, DiagnosticSeverity.Error, true, s_descriptionDeprecated, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0002");
+		private static readonly DiagnosticDescriptor s_deprecatedRule = new DiagnosticDescriptor(DisCatSharpDiagnosticIds.Deprecated, s_titleDeprecated, s_messageFormatDeprecated, CATEGORY, DiagnosticSeverity.Error, true, s_descriptionDeprecated, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0002");
 
 		/// <inheritdoc cref="DiagnosticDescriptor" />
-		private static readonly DiagnosticDescriptor s_discordInExperimentRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0101", s_titleDiscordInExperiment, s_messageFormatDiscordInExperiment, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionDiscordInExperiment, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0101");
+		private static readonly DiagnosticDescriptor s_discordInExperimentRule = new DiagnosticDescriptor(DisCatSharpDiagnosticIds.DiscordInExperiment, s_titleDiscordInExperiment, s_messageFormatDiscordInExperiment, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionDiscordInExperiment, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0101");
 
 		/// <inheritdoc cref="DiagnosticDescriptor" />
-		private static readonly DiagnosticDescriptor s_discordDeprecatedRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0102", s_titleDiscordDeprecated, s_messageFormatDiscordDeprecated, CATEGORY, DiagnosticSeverity.Error, true, s_descriptionDiscordDeprecated, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0102");
+		private static readonly DiagnosticDescriptor s_discordDeprecatedRule = new DiagnosticDescriptor(DisCatSharpDiagnosticIds.DiscordDeprecated, s_titleDiscordDeprecated, s_messageFormatDiscordDeprecated, CATEGORY, DiagnosticSeverity.Error, true, s_descriptionDiscordDeprecated, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0102");
 
 		/// <inheritdoc cref="DiagnosticDescriptor" />
-		private static readonly DiagnosticDescriptor s_discordUnreleasedRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0103", s_titleDiscordUnreleased, s_messageFormatDiscordUnreleased, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionDiscordUnreleased, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0103");
+		private static readonly DiagnosticDescriptor s_discordUnreleasedRule = new DiagnosticDescriptor(DisCatSharpDiagnosticIds.DiscordUnreleased, s_titleDiscordUnreleased, s_messageFormatDiscordUnreleased, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionDiscordUnreleased, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0103");
 
 		/// <inheritdoc cref="DiagnosticDescriptor" />
-		private static readonly DiagnosticDescriptor s_requiresFeatureRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0200", s_titleRequiresFeature, s_messageFormatRequiresFeature, CATEGORY, DiagnosticSeverity.Info, true, s_descriptionRequiresFeature, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0200");
+		private static readonly DiagnosticDescriptor s_requiresFeatureRule = new DiagnosticDescriptor(DisCatSharpDiagnosticIds.RequiresFeature, s_titleRequiresFeature, s_messageFormatRequiresFeature, CATEGORY, DiagnosticSeverity.Info, true, s_descriptionRequiresFeature, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0200");
 
 		/// <inheritdoc cref="DiagnosticDescriptor" />
-		private static readonly DiagnosticDescriptor s_requiresOverrideRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0201", s_titleRequiresOverride, s_messageFormatRequiresOverride, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionRequiresOverride, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0201");
+		private static readonly DiagnosticDescriptor s_requiresOverrideRule = new DiagnosticDescriptor(DisCatSharpDiagnosticIds.RequiresOverride, s_titleRequiresOverride, s_messageFormatRequiresOverride, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionRequiresOverride, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0201");
+
+		/// <inheritdoc cref="DiagnosticDescriptor" />
+		private static readonly DiagnosticDescriptor s_applicationCommandChecksFailedMigrationRule = new(
+			DisCatSharpDiagnosticIds.ApplicationCommandChecksFailedMigration,
+			"[DCS] Application command checks-failed migration",
+			"Handler contains application-command checks-failed logic that should subscribe to '{0}' instead of '{1}'",
+			CATEGORY,
+			DiagnosticSeverity.Info,
+			true,
+			"Application command check failures now raise dedicated checks-failed events instead of surfacing through errored events.",
+			"https://docs.dcs.aitsys.dev/vs/analyzer/dcs/2101");
 
 		/// <inheritdoc />
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
-			=> ImmutableArray.Create(s_experimentalRule, s_deprecatedRule, s_discordInExperimentRule, s_discordDeprecatedRule, s_discordUnreleasedRule, s_requiresFeatureRule, s_requiresOverrideRule);
+			=> ImmutableArray.Create(s_experimentalRule, s_deprecatedRule, s_discordInExperimentRule, s_discordDeprecatedRule, s_discordUnreleasedRule, s_requiresFeatureRule, s_requiresOverrideRule, s_applicationCommandChecksFailedMigrationRule);
 
 		/// <inheritdoc />
 		public override void Initialize(AnalysisContext context)
@@ -130,6 +142,7 @@ namespace DisCatSharp.Analyzer
 			context.RegisterSyntaxNodeAction(AnalyzeSyntaxNode, SyntaxKind.ObjectCreationExpression);
 			context.RegisterSyntaxNodeAction(AnalyzeSyntaxNode, SyntaxKind.ElementAccessExpression);
 			context.RegisterSyntaxNodeAction(AnalyzeSyntaxNode, SyntaxKind.SimpleMemberAccessExpression);
+			context.RegisterSyntaxNodeAction(AnalyzeApplicationCommandChecksFailedMigration, SyntaxKind.AddAssignmentExpression);
 		}
 
 		/// <summary>
@@ -138,9 +151,6 @@ namespace DisCatSharp.Analyzer
 		/// <param name="context">The symbol analysis context.</param>
 		private static void AnalyzeSymbol(SymbolAnalysisContext context)
 		{
-			var syntaxTrees = from x in context.Symbol.Locations
-			                  where x.IsInSource
-			                  select x.SourceTree;
 			var declaration = context.Symbol;
 
 			if (declaration == null)
@@ -151,15 +161,13 @@ namespace DisCatSharp.Analyzer
 			var name = declaration.Name;
 			var kind = declaration.Kind;
 
-			var model = context.Compilation.GetSemanticModel(syntaxTrees.First(), true);
-
-			var experimentalAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(ExperimentalAttribute)));
-			var deprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DeprecatedAttribute)));
-			var discordInExperimentAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DiscordInExperimentAttribute)));
-			var discordDeprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DiscordDeprecatedAttribute)));
-			var discordUnreleasedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DiscordUnreleasedAttribute)));
-			var requiresFeatureAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(RequiresFeatureAttribute)));
-			var requiresOverrideAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(RequiresOverrideAttribute)));
+			var experimentalAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.Compilation, attr, typeof(ExperimentalAttribute)));
+			var deprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.Compilation, attr, typeof(DeprecatedAttribute)));
+			var discordInExperimentAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.Compilation, attr, typeof(DiscordInExperimentAttribute)));
+			var discordDeprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.Compilation, attr, typeof(DiscordDeprecatedAttribute)));
+			var discordUnreleasedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.Compilation, attr, typeof(DiscordUnreleasedAttribute)));
+			var requiresFeatureAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.Compilation, attr, typeof(RequiresFeatureAttribute)));
+			var requiresOverrideAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.Compilation, attr, typeof(RequiresOverrideAttribute)));
 
 			if (experimentalAttributeData != null)
 			{
@@ -200,7 +208,7 @@ namespace DisCatSharp.Analyzer
 			if (requiresOverrideAttributeData != null)
 			{
 				var message = GetOverrideMessage(requiresOverrideAttributeData);
-				var properties = ImmutableDictionary.Create<string, string>().Add("LastKnownOverride", GetOverrideValue(requiresOverrideAttributeData)).Add("OverrideDate", GetOverrideDate(requiresOverrideAttributeData));
+				var properties = DisCatSharpDiagnosticProperties.CreateRequiresOverrideProperties(GetOverrideValue(requiresOverrideAttributeData), GetOverrideDate(requiresOverrideAttributeData));
 				context.ReportDiagnostic(Diagnostic.Create(s_requiresOverrideRule, context.Symbol.Locations.FirstOrDefault(), properties, kind, name, message));
 			}
 		}
@@ -221,13 +229,13 @@ namespace DisCatSharp.Analyzer
 			var name = declaration.Name;
 			var kind = declaration.Kind;
 
-			var experimentalAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(ExperimentalAttribute)));
-			var deprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DeprecatedAttribute)));
-			var discordInExperimentAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DiscordInExperimentAttribute)));
-			var discordDeprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DiscordDeprecatedAttribute)));
-			var discordUnreleasedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DiscordUnreleasedAttribute)));
-			var requiresFeatureAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(RequiresFeatureAttribute)));
-			var requiresOverrideAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(RequiresOverrideAttribute)));
+			var experimentalAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(ExperimentalAttribute)));
+			var deprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(DeprecatedAttribute)));
+			var discordInExperimentAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(DiscordInExperimentAttribute)));
+			var discordDeprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(DiscordDeprecatedAttribute)));
+			var discordUnreleasedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(DiscordUnreleasedAttribute)));
+			var requiresFeatureAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(RequiresFeatureAttribute)));
+			var requiresOverrideAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(RequiresOverrideAttribute)));
 
 			if (experimentalAttributeData != null)
 			{
@@ -268,24 +276,39 @@ namespace DisCatSharp.Analyzer
 			if (requiresOverrideAttributeData != null)
 			{
 				var message = GetOverrideMessage(requiresOverrideAttributeData);
-				var properties = ImmutableDictionary.Create<string, string>().Add("LastKnownOverride", GetOverrideValue(requiresOverrideAttributeData)).Add("OverrideDate", GetOverrideDate(requiresOverrideAttributeData));
+				var properties = DisCatSharpDiagnosticProperties.CreateRequiresOverrideProperties(GetOverrideValue(requiresOverrideAttributeData), GetOverrideDate(requiresOverrideAttributeData));
 				context.ReportDiagnostic(Diagnostic.Create(s_requiresOverrideRule, invocation.GetLocation(), properties, kind, name, message));
 			}
+		}
+
+		private static void AnalyzeApplicationCommandChecksFailedMigration(SyntaxNodeAnalysisContext context)
+		{
+			if (context.Node is not AssignmentExpressionSyntax assignment ||
+			    !ApplicationCommandChecksFailedMigrationAnalysis.TryGetDiagnosticCandidate(context.SemanticModel, assignment, context.CancellationToken, out var candidate))
+				return;
+
+			var properties = DisCatSharpDiagnosticProperties.CreateApplicationCommandChecksFailedMigrationProperties(candidate.TargetEventName, candidate.TargetEventArgsTypeName, candidate.CanAutoFix);
+			context.ReportDiagnostic(Diagnostic.Create(
+				s_applicationCommandChecksFailedMigrationRule,
+				candidate.EventAccess.Name.GetLocation(),
+				properties,
+				candidate.TargetEventName,
+				candidate.SourceEventName));
 		}
 
 		/// <summary>
 		///     Checks if the attribute is the desired attribute.
 		/// </summary>
-		/// <param name="semanticModel">The current semantic model.</param>
+		/// <param name="compilation">The current compilation.</param>
 		/// <param name="attribute">>The current attribute data.</param>
 		/// <param name="desiredAttributeType">The target attribute type to check for.</param>
 		/// <returns>Whether the <paramref name="attribute" /> contains the <paramref name="desiredAttributeType" />.</returns>
-		private static bool IsRequiredAttribute(SemanticModel semanticModel, AttributeData attribute, Type desiredAttributeType)
+		private static bool IsRequiredAttribute(Compilation compilation, AttributeData attribute, Type desiredAttributeType)
 		{
 			if (desiredAttributeType.FullName == null)
 				return false;
 
-			var desiredTypeNamedSymbol = semanticModel.Compilation.GetTypeByMetadataName(desiredAttributeType.FullName);
+			var desiredTypeNamedSymbol = compilation.GetTypeByMetadataName(desiredAttributeType.FullName);
 
 			var result = attribute.AttributeClass?.Equals(desiredTypeNamedSymbol, SymbolEqualityComparer.Default) ?? false;
 			return result;
@@ -299,7 +322,7 @@ namespace DisCatSharp.Analyzer
 		private static string GetMessage(AttributeData attributeData)
 			=> attributeData.ConstructorArguments.Length < 1
 				? "Do not use in production."
-				: attributeData.ConstructorArguments[0].Value as string;
+				: attributeData.ConstructorArguments[0].Value as string ?? "Do not use in production.";
 
 		/// <summary>
 		///     Retrieves a formatted message indicating the required override and additional information based on the provided
@@ -321,7 +344,7 @@ namespace DisCatSharp.Analyzer
 			var lastKnownOverride = GetOverrideValue(attributeData, true);
 			var overrideDate = GetOverrideDate(attributeData, true);
 			var description = attributeData.ConstructorArguments.Length > 2
-				? attributeData.ConstructorArguments[2].Value as string
+				? attributeData.ConstructorArguments[2].Value as string ?? "No additional information."
 				: "No additional information.";
 
 			return $"The following override is required (or newer if created after {overrideDate}): {lastKnownOverride} | {description}";
@@ -334,7 +357,9 @@ namespace DisCatSharp.Analyzer
 		/// <param name="fallback">Whether to return a default value if the attribute is <see langword="null" />.</param>
 		/// <returns>Returns the override value as a string or an empty string if the attribute is <see langword="null" />.</returns>
 		private static string GetOverrideValue(AttributeData attributeData, bool fallback = false)
-			=> attributeData == null ? fallback ? "No known Override" : string.Empty : attributeData.ConstructorArguments[0].Value as string;
+			=> attributeData == null
+				? fallback ? "No known Override" : string.Empty
+				: attributeData.ConstructorArguments[0].Value as string ?? (fallback ? "No known Override" : string.Empty);
 
 		/// <summary>
 		///     Retrieves the override date from an attribute, returning a default value if the attribute is <see langword="null" />.
@@ -343,7 +368,9 @@ namespace DisCatSharp.Analyzer
 		/// <param name="fallback">Whether to return a default value if the attribute is <see langword="null" />.</param>
 		/// <returns>Returns the override date as a string or an empty string if the attribute is <see langword="null" />.</returns>
 		private static string GetOverrideDate(AttributeData attributeData, bool fallback = false)
-			=> attributeData == null ? fallback ? "No known date" : string.Empty : attributeData.ConstructorArguments[1].Value as string;
+			=> attributeData == null
+				? fallback ? "No known date" : string.Empty
+				: attributeData.ConstructorArguments[1].Value as string ?? (fallback ? "No known date" : string.Empty);
 
 		/// <summary>
 		///     Gets the feature message from the attribute.
@@ -355,9 +382,11 @@ namespace DisCatSharp.Analyzer
 			if (attributeData == null)
 				return string.Empty;
 
-			var featureReqEnum = (Features)attributeData.ConstructorArguments[0].Value;
+			var featureReqEnum = attributeData.ConstructorArguments[0].Value is Features feature
+				? feature
+				: default;
 			var description = attributeData.ConstructorArguments.Length > 1
-				? attributeData.ConstructorArguments[1].Value as string
+				? attributeData.ConstructorArguments[1].Value as string ?? "No additional information."
 				: "No additional information.";
 
 			return $"{featureReqEnum.ToFeaturesString()} | {description}";
