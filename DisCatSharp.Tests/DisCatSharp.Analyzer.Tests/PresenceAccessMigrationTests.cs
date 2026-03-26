@@ -1,3 +1,5 @@
+using Microsoft.CodeAnalysis;
+
 namespace DisCatSharp.Analyzer.Tests;
 
 public sealed class PresenceAccessMigrationTests
@@ -20,6 +22,7 @@ public sealed class PresenceAccessMigrationTests
 		var diagnostics = await RoslynTestDocumentFactory.GetAnalyzerDiagnosticsAsync(source);
 
 		var diagnostic = Assert.Single(diagnostics, x => x.Id == DisCatSharpDiagnosticIds.PresenceAccessMigration);
+		Assert.Equal(DiagnosticSeverity.Warning, diagnostic.Severity);
 		Assert.Equal("Presences", diagnostic.Location.SourceTree?.GetRoot().FindNode(diagnostic.Location.SourceSpan).ToString());
 	}
 

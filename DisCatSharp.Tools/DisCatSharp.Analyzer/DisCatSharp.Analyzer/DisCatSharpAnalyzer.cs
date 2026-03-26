@@ -111,7 +111,7 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 		"[DCS] Presence access migration",
 		"Use 'GetPresences({0})' instead of filtering 'Presences' manually",
 		CATEGORY,
-		DiagnosticSeverity.Info,
+		DiagnosticSeverity.Warning,
 		true,
 		"Use DiscordClient.GetPresences(userId) for user-specific presence lookups instead of filtering the aggregate Presences cache manually.",
 		"https://docs.dcs.aitsys.dev/vs/analyzer/dcs/1101");
@@ -170,7 +170,7 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 
 		var attributes = declaration.GetAttributes();
 
-		var name = declaration.Name;
+		var name = GetDisplayName(declaration);
 		var kind = declaration.Kind;
 
 		var experimentalAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.Compilation, attr, typeof(ExperimentalAttribute)));
@@ -238,7 +238,7 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 
 		var attributes = declaration.GetAttributes();
 
-		var name = declaration.Name;
+		var name = GetDisplayName(declaration);
 		var kind = declaration.Kind;
 
 		var experimentalAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(ExperimentalAttribute)));
@@ -427,8 +427,8 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 		if (attributeData == null)
 			return string.Empty;
 
-		var featureReqEnum = attributeData.ConstructorArguments[0].Value is Features feature
-			? feature
+		var featureReqEnum = attributeData.ConstructorArguments.Length > 0 && attributeData.ConstructorArguments[0].Value is not null
+			? (Features)Convert.ToInt64(attributeData.ConstructorArguments[0].Value, System.Globalization.CultureInfo.InvariantCulture)
 			: default;
 		var description = attributeData.ConstructorArguments.Length > 1
 			? attributeData.ConstructorArguments[1].Value as string ?? "No additional information."
@@ -436,6 +436,14 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 
 		return $"{featureReqEnum.ToFeaturesString()} | {description}";
 	}
+
+	private static string GetDisplayName(ISymbol declaration)
+		=> declaration switch
+		{
+			IMethodSymbol { MethodKind: MethodKind.Constructor, ContainingType: not null } constructor => constructor.ContainingType.Name,
+			IMethodSymbol { MethodKind: MethodKind.StaticConstructor, ContainingType: not null } staticConstructor => staticConstructor.ContainingType.Name,
+			_ => declaration.Name
+		};
 }
 
 /// <summary>

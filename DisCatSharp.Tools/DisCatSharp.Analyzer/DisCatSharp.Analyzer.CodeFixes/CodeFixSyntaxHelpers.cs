@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.CodeAnalysis;
@@ -40,7 +41,14 @@ internal static class CodeFixSyntaxHelpers
 			return false;
 		}
 
-		updatedInitializer = initializer.WithExpressions(initializer.Expressions.Add(assignment));
+		var nodesAndTokens = new List<SyntaxNodeOrToken>(initializer.Expressions.GetWithSeparators());
+		var lastNodeIndex = nodesAndTokens.Count - 1;
+		var lastExpression = (ExpressionSyntax)nodesAndTokens[lastNodeIndex].AsNode()!;
+		nodesAndTokens[lastNodeIndex] = lastExpression.WithoutTrailingTrivia();
+		nodesAndTokens.Add(SyntaxFactory.Token(SyntaxKind.CommaToken).WithTrailingTrivia(SyntaxFactory.ElasticCarriageReturnLineFeed));
+		nodesAndTokens.Add(assignment);
+
+		updatedInitializer = initializer.WithExpressions(SyntaxFactory.SeparatedList<ExpressionSyntax>(nodesAndTokens));
 		return true;
 	}
 }

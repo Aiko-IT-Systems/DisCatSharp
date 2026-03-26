@@ -77,6 +77,34 @@ public sealed class RequiresOverrideCodeFixTests
 	}
 
 	[Fact]
+	public async Task ApplyFixToDocumentAsync_keeps_comma_on_previous_initializer_line()
+	{
+		const string source =
+			"""
+			using DisCatSharp;
+
+			public sealed class Consumer
+			{
+			    public void Test()
+			    {
+			        var client = new DiscordClient(new DiscordConfiguration
+			        {
+			            Token = string.Empty,
+			            EnableBadDomainCheckerSupport = true
+			        });
+			    }
+			}
+			""";
+
+		var fixedSource = await RoslynTestDocumentFactory.ApplyRequiresOverrideFixAsync(source, "formatted-override");
+		var normalizedSource = fixedSource.Replace("\r\n", "\n", StringComparison.Ordinal);
+
+		Assert.Contains("EnableBadDomainCheckerSupport = true,", fixedSource);
+		Assert.Contains("Override = \"formatted-override\"", fixedSource);
+		Assert.DoesNotContain("\n,", normalizedSource, StringComparison.Ordinal);
+	}
+
+	[Fact]
 	public async Task ApplyFixToDocumentAsync_does_not_duplicate_existing_override()
 	{
 		const string source =

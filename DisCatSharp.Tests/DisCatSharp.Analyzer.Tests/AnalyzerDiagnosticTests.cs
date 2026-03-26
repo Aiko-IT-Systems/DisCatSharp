@@ -88,6 +88,60 @@ public sealed class AnalyzerDiagnosticTests
 	}
 
 	[Fact]
+	public async Task Reports_requires_feature_diagnostic_with_feature_name()
+	{
+		const string source =
+			"""
+			using DisCatSharp.Attributes;
+
+			public sealed class TestType
+			{
+			    [RequiresFeature(Features.Community)]
+			    public void TestMethod() { }
+			}
+			""";
+
+		var diagnostics = await RoslynTestDocumentFactory.GetAnalyzerDiagnosticsAsync(source);
+		var diagnostic = Assert.Single(diagnostics, x => x.Id == "DCS0200");
+
+		Assert.Contains("community", diagnostic.GetMessage(), StringComparison.OrdinalIgnoreCase);
+		Assert.DoesNotContain("needs features:  |", diagnostic.GetMessage(), StringComparison.Ordinal);
+	}
+
+	[Fact]
+	public async Task Reports_requires_feature_diagnostic_with_constructor_type_name()
+	{
+		const string source =
+			"""
+			using DisCatSharp.Attributes;
+
+			public sealed class PremiumButton
+			{
+			    [RequiresFeature(Features.MonetizedApplication)]
+			    public PremiumButton(ulong skuId) { }
+			}
+
+			public sealed class Consumer
+			{
+			    public void Test()
+			    {
+			        _ = new PremiumButton(123);
+			    }
+			}
+			""";
+
+		var diagnostics = await RoslynTestDocumentFactory.GetAnalyzerDiagnosticsAsync(source);
+		var matchingDiagnostics = diagnostics.Where(x => x.Id == "DCS0200").ToArray();
+
+		Assert.NotEmpty(matchingDiagnostics);
+		Assert.All(matchingDiagnostics, diagnostic =>
+		{
+			Assert.Contains("Method 'PremiumButton' needs features:", diagnostic.GetMessage(), StringComparison.Ordinal);
+			Assert.DoesNotContain("Method '.ctor' needs features:", diagnostic.GetMessage(), StringComparison.Ordinal);
+		});
+	}
+
+	[Fact]
 	public async Task Reports_requires_override_diagnostic_when_consuming_annotated_member()
 	{
 		const string source =
