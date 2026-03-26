@@ -31,7 +31,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\DisCatSharp.Hosting\DisCatSharp.Hosting.csproj" />
-		<PackageReference Include="DisCatSharp.Attributes" Version="2025.3.27" />
+		<PackageReference Include="DisCatSharp.Attributes" Version="2026.3.26" />
 	</ItemGroup>
 
 </Project>
