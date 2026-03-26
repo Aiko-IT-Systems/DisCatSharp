@@ -26,4 +26,4 @@ DCS2101 | Usage    | Error    | Application-command checks-failed migration prot
 
 Rule ID | Category | Severity | Notes
 --------|----------|----------|--------------------
-DCS1101 | Usage    | Info     | Presence access migration guidance, [Documentation](https://docs.dcs.aitsys.dev/vs/analyzer/dcs/1101)
+DCS1101 | Usage    | Warning  | Presence access migration guidance, [Documentation](https://docs.dcs.aitsys.dev/vs/analyzer/dcs/1101)

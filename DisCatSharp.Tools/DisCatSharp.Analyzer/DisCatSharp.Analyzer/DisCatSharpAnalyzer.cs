@@ -171,7 +171,7 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 		var attributes = declaration.GetAttributes();
 
 		var name = GetDisplayName(declaration);
-		var kind = declaration.Kind;
+		var kind = GetDisplayKind(declaration);
 
 		var experimentalAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.Compilation, attr, typeof(ExperimentalAttribute)));
 		var deprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.Compilation, attr, typeof(DeprecatedAttribute)));
@@ -239,7 +239,7 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 		var attributes = declaration.GetAttributes();
 
 		var name = GetDisplayName(declaration);
-		var kind = declaration.Kind;
+		var kind = GetDisplayKind(declaration);
 
 		var experimentalAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(ExperimentalAttribute)));
 		var deprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(DeprecatedAttribute)));
@@ -443,6 +443,14 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 			IMethodSymbol { MethodKind: MethodKind.Constructor, ContainingType: not null } constructor => constructor.ContainingType.Name,
 			IMethodSymbol { MethodKind: MethodKind.StaticConstructor, ContainingType: not null } staticConstructor => staticConstructor.ContainingType.Name,
 			_ => declaration.Name
+		};
+
+	private static string GetDisplayKind(ISymbol declaration)
+		=> declaration switch
+		{
+			IMethodSymbol { MethodKind: MethodKind.Constructor } => "Constructor",
+			IMethodSymbol { MethodKind: MethodKind.StaticConstructor } => "Static constructor",
+			_ => declaration.Kind.ToString()
 		};
 }
 

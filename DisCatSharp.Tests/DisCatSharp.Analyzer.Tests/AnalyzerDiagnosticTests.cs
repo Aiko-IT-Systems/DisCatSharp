@@ -136,7 +136,7 @@ public sealed class AnalyzerDiagnosticTests
 		Assert.NotEmpty(matchingDiagnostics);
 		Assert.All(matchingDiagnostics, diagnostic =>
 		{
-			Assert.Contains("Method 'PremiumButton' needs features:", diagnostic.GetMessage(), StringComparison.Ordinal);
+			Assert.Contains("Constructor 'PremiumButton' needs features:", diagnostic.GetMessage(), StringComparison.Ordinal);
 			Assert.DoesNotContain("Method '.ctor' needs features:", diagnostic.GetMessage(), StringComparison.Ordinal);
 		});
 	}

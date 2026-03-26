@@ -129,6 +129,34 @@ public sealed class PresenceAccessMigrationTests
 	}
 
 	[Fact]
+	public async Task ApplyFixToDocumentAsync_rewrites_values_first_current_user_pattern()
+	{
+		const string source =
+			"""
+			using System.Linq;
+			using DisCatSharp;
+
+			public sealed class Consumer
+			{
+			    public DiscordClient Client { get; set; } = null!;
+
+			    public object GetPresenceStatus(CommandContext ctx)
+			        => ctx.Client.Presences.Values.First(g => g.User.Id == Client.CurrentUser.Id).Status.ToString();
+			}
+
+			public sealed class CommandContext
+			{
+			    public DiscordClient Client { get; set; } = null!;
+			}
+			""";
+
+		var fixedSource = await RoslynTestDocumentFactory.ApplyPresenceAccessMigrationFixAsync(source);
+
+		Assert.Contains("ctx.Client.GetPresences(Client.CurrentUser.Id).Values.First().Status.ToString()", fixedSource);
+		Assert.DoesNotContain("ctx.Client.Presences.Values.First(g => g.User.Id == Client.CurrentUser.Id)", fixedSource);
+	}
+
+	[Fact]
 	public async Task ApplyFixToDocumentAsync_rewrites_keyvalue_select_pattern()
 	{
 		const string source =
