@@ -1,47 +1,69 @@
 DisCatSharp Release Notes
 
-    - None
+    - Overhauled presence caching and added follow-up regression coverage around gateway cache behavior.
+    - Added Discord parity updates for store, entitlement, SKU, guild powerup / applied boost, application, audit-log, automod, message-type, and OAuth scope surfaces.
+    - Fixed interaction response posting, soundboard cache refresh/list behavior, duplicate application-command execution logging, and several gateway/store dispatch follow-ups.
+    - Removed .NET 8 support and aligned the core package with the current target framework matrix.
 
 DisCatSharp.Attributes Release Notes
 
-    - None
+    - No major API additions.
+    - Package metadata and target framework alignment were updated alongside the wider .NET 8 removal work.
 
 DisCatSharp.ApplicationCommands Release Notes
 
-    - None
+    - Added dedicated `SlashCommandChecksFailed` and `ContextMenuChecksFailed` events with new event args for modern checks-failed handling.
+    - Updated command error flow to use dedicated checks-failed events instead of the older errored-event-only pattern.
+    - Included follow-up fixes and regression coverage around application-command checks-failed behavior and execution logging.
 
 DisCatSharp.CommandsNext Release Notes
 
-    - None
+    - No notable feature changes.
+    - Package alignment was updated as part of the .NET 8 removal and current framework support refresh.
 
 DisCatSharp.Interactivity Release Notes
 
-    - None
+    - No notable feature changes.
+    - Package alignment was updated as part of the current framework support refresh.
 
 DisCatSharp.Common Release Notes
 
-    - None
+    - No dedicated end-user feature changes.
+    - Shared framework/package alignment was updated with the rest of the solution.
 
 DisCatSharp.Lavalink Release Notes
 
-    - None
+    - Fixed a regression affecting player updates when switching the bot's voice channel while using Lavalink.
+    - Included follow-up Lavalink session/internal cleanup and removed obsolete archived Lavalink v1 sources from the maintained tree.
 
 DisCatSharp.Voice Release Notes
 
-    - None
+    - Fixed voice/lavalink integration regressions around channel switching.
+    - Voice native packaging/build settings were refreshed with the wider framework alignment changes.
 
 DisCatSharp.Experimental Release Notes
 
-    - None
+    - Stabilized autocomplete interaction value handling.
+    - Added documentation/supporting work around newer experimental search-related behavior.
 
 DisCatSharp.Configuration Release Notes
 
-    - None
+    - No standalone package-specific API additions.
+    - Configuration-related framework alignment was refreshed with the rest of the solution.
 
 DisCatSharp.Hosting Release Notes
 
-    - None
+    - No notable feature changes.
+    - Hosting package alignment was updated as part of the current framework support refresh.
 
 DisCatSharp.Hosting.DependencyInjection Release Notes
 
-    - None
+    - No notable feature changes.
+    - Dependency injection/hosting package alignment was updated as part of the current framework support refresh.
+
+DisCatSharp.Analyzer Release Notes
+
+    - Reworked the analyzer/tooling stack into a NuGet-first workflow with real xUnit/Roslyn regression coverage.
+    - Added `DCS2101`, a migration analyzer/code fix for moving legacy application-command checks-failed handling to the dedicated events.
+    - Improved `DCS0201` so the override fixer can update `DiscordConfiguration` across project documents.
+    - Added analyzer authoring documentation, diagnostic family guidance, release tracking files, and release workflow support for publishing `DisCatSharp.Analyzer`.
