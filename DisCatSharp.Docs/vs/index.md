@@ -32,6 +32,16 @@ See https://www.jetbrains.com/help/rider/Settings_Roslyn_Analyzers.html
 
 #### Included Rules
 
+#### Diagnostic Families
+
+The analyzer currently contains a mix of legacy shipped IDs and newer family-based ranges.
+
+Use this as the quick orientation guide.
+
+##### Legacy shipped diagnostics
+
+These rules keep their historical IDs for compatibility.
+
 | Rule ID                              | Category | Severity | Notes                                  |
 | ------------------------------------ | -------- | -------- | -------------------------------------- |
 | [DCS0001](xref:vs_analyzer_dcs_0001) | Usage    | Info     | Experimental Attribute Analyzer        |
@@ -41,3 +51,23 @@ See https://www.jetbrains.com/help/rider/Settings_Roslyn_Analyzers.html
 | [DCS0103](xref:vs_analyzer_dcs_0103) | Usage    | Warning  | DiscordUnreleased Attribute Analyzer   |
 | [DCS0200](xref:vs_analyzer_dcs_0200) | Usage    | Info     | RequiresFeature Attribute Analyzer     |
 | [DCS0201](xref:vs_analyzer_dcs_0201) | Usage    | Warning  | RequiresOverride Attribute Analyzer    |
+
+##### Reserved families
+
+| Family | Purpose |
+| ------ | ------- |
+| `DCS1XXX` | Core `DisCatSharp` diagnostics, migrations, and cross-cutting code fixes |
+| `DCS2XXX` | `DisCatSharp.ApplicationCommands` diagnostics and code-fix families |
+| `DCS3XXX` | `DisCatSharp.CommandsNext` diagnostics and code-fix families |
+| `DCS4XXX` | `DisCatSharp.Interactivity` diagnostics and code-fix families |
+| `DCS5XXX` | `DisCatSharp.Voice` diagnostics and code-fix families |
+| `DCS6XXX` | `DisCatSharp.Lavalink` diagnostics and code-fix families |
+| `DCS7XXX` | `DisCatSharp.Common` diagnostics and code-fix families |
+| `DCS8XXX` | Hosting, dependency injection, and configuration diagnostics and code-fix families |
+| `DCS9XXX` | Reserved |
+
+##### Application command family
+
+| Rule ID                              | Category | Severity | Notes                                            |
+| ------------------------------------ | -------- | -------- | ------------------------------------------------ |
+| [DCS2101](xref:vs_analyzer_dcs_2101) | Usage    | Info     | Application command checks-failed migration prototype |

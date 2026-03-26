@@ -8,6 +8,7 @@ using DisCatSharp.Attributes;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace DisCatSharp.Analyzer
@@ -110,9 +111,20 @@ namespace DisCatSharp.Analyzer
 		/// <inheritdoc cref="DiagnosticDescriptor" />
 		private static readonly DiagnosticDescriptor s_requiresOverrideRule = new DiagnosticDescriptor(DisCatSharpDiagnosticIds.RequiresOverride, s_titleRequiresOverride, s_messageFormatRequiresOverride, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionRequiresOverride, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0201");
 
+		/// <inheritdoc cref="DiagnosticDescriptor" />
+		private static readonly DiagnosticDescriptor s_applicationCommandChecksFailedMigrationRule = new(
+			DisCatSharpDiagnosticIds.ApplicationCommandChecksFailedMigration,
+			"[DCS] Application command checks-failed migration",
+			"Handler should subscribe to '{0}' instead of '{1}' when it only handles application-command check failures",
+			CATEGORY,
+			DiagnosticSeverity.Info,
+			true,
+			"Application command check failures now raise dedicated checks-failed events instead of surfacing through errored events",
+			"https://docs.dcs.aitsys.dev/vs/analyzer/dcs/2101");
+
 		/// <inheritdoc />
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
-			=> ImmutableArray.Create(s_experimentalRule, s_deprecatedRule, s_discordInExperimentRule, s_discordDeprecatedRule, s_discordUnreleasedRule, s_requiresFeatureRule, s_requiresOverrideRule);
+			=> ImmutableArray.Create(s_experimentalRule, s_deprecatedRule, s_discordInExperimentRule, s_discordDeprecatedRule, s_discordUnreleasedRule, s_requiresFeatureRule, s_requiresOverrideRule, s_applicationCommandChecksFailedMigrationRule);
 
 		/// <inheritdoc />
 		public override void Initialize(AnalysisContext context)
@@ -130,6 +142,7 @@ namespace DisCatSharp.Analyzer
 			context.RegisterSyntaxNodeAction(AnalyzeSyntaxNode, SyntaxKind.ObjectCreationExpression);
 			context.RegisterSyntaxNodeAction(AnalyzeSyntaxNode, SyntaxKind.ElementAccessExpression);
 			context.RegisterSyntaxNodeAction(AnalyzeSyntaxNode, SyntaxKind.SimpleMemberAccessExpression);
+			context.RegisterSyntaxNodeAction(AnalyzeApplicationCommandChecksFailedMigration, SyntaxKind.AddAssignmentExpression);
 		}
 
 		/// <summary>
@@ -266,6 +279,21 @@ namespace DisCatSharp.Analyzer
 				var properties = DisCatSharpDiagnosticProperties.CreateRequiresOverrideProperties(GetOverrideValue(requiresOverrideAttributeData), GetOverrideDate(requiresOverrideAttributeData));
 				context.ReportDiagnostic(Diagnostic.Create(s_requiresOverrideRule, invocation.GetLocation(), properties, kind, name, message));
 			}
+		}
+
+		private static void AnalyzeApplicationCommandChecksFailedMigration(SyntaxNodeAnalysisContext context)
+		{
+			if (context.Node is not AssignmentExpressionSyntax assignment ||
+			    !ApplicationCommandChecksFailedMigrationAnalysis.TryGetCandidate(context.SemanticModel, assignment, context.CancellationToken, out var candidate))
+				return;
+
+			var properties = DisCatSharpDiagnosticProperties.CreateApplicationCommandChecksFailedMigrationProperties(candidate.TargetEventName, candidate.TargetEventArgsTypeName);
+			context.ReportDiagnostic(Diagnostic.Create(
+				s_applicationCommandChecksFailedMigrationRule,
+				candidate.EventAccess.Name.GetLocation(),
+				properties,
+				candidate.TargetEventName,
+				candidate.SourceEventName));
 		}
 
 		/// <summary>

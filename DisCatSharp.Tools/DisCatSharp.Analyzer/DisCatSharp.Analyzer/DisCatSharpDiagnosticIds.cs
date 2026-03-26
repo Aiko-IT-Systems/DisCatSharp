@@ -12,4 +12,5 @@ internal static class DisCatSharpDiagnosticIds
 	public const string DiscordUnreleased = DisCatSharpAnalyzer.DIAGNOSTIC_ID_PREFIX + "0103";
 	public const string RequiresFeature = DisCatSharpAnalyzer.DIAGNOSTIC_ID_PREFIX + "0200";
 	public const string RequiresOverride = DisCatSharpAnalyzer.DIAGNOSTIC_ID_PREFIX + "0201";
+	public const string ApplicationCommandChecksFailedMigration = DisCatSharpAnalyzer.DIAGNOSTIC_ID_PREFIX + "2101";
 }

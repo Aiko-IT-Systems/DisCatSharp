@@ -50,6 +50,8 @@ This is the preferred starting point for future rule-specific fixes.
 
 For one diagnostic, inherit from `SingleDiagnosticCodeFixProvider`.
 
+Every code-fix diagnostic must also get its own article under `DisCatSharp.Docs\vs\analyzer\dcs\`.
+
 Typical pattern:
 
 1. Read any analyzer-supplied metadata from `Diagnostic.Properties`.
@@ -57,6 +59,35 @@ Typical pattern:
 3. Use syntax helpers to rewrite initializers, assignments, or other syntax shapes.
 4. Keep transformations deterministic and idempotent.
 5. Cover both the analyzer diagnostic and the code-fix result with tests.
+
+## Diagnostic ID taxonomy
+
+The existing shipped diagnostics keep their historical IDs for compatibility, even if they predate the current categorization.
+
+For new diagnostics, prefer category-based ranges:
+
+- `DCS1XXX`
+  - core `DisCatSharp` diagnostics, migrations, and cross-cutting code-fix families
+- `DCS2XXX`
+  - `DisCatSharp.ApplicationCommands` diagnostics and code-fix families
+- `DCS3XXX`
+  - `DisCatSharp.CommandsNext` diagnostics and code-fix families
+- `DCS4XXX`
+  - `DisCatSharp.Interactivity` diagnostics and code-fix families
+- `DCS5XXX`
+  - `DisCatSharp.Voice` diagnostics and code-fix families
+- `DCS6XXX`
+  - `DisCatSharp.Lavalink` diagnostics and code-fix families
+- `DCS7XXX`
+  - `DisCatSharp.Common` diagnostics and code-fix families
+- `DCS8XXX`
+  - hosting, dependency injection, and configuration diagnostics and code-fix families
+- `DCS9XXX`
+  - reserved
+
+When adding a new code-fix diagnostic, choose an ID in the subsystem family rather than reusing the old mixed numbering style.
+
+If a future subsystem grows large enough, split a new dedicated family rather than overloading an unrelated existing one.
 
 ## Migration fixer guidance
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using DisCatSharp.ApplicationCommands;
 using DisCatSharp.Attributes;
 
 using Microsoft.CodeAnalysis;
@@ -52,6 +53,32 @@ internal static class RoslynTestDocumentFactory
 		return text.ToString();
 	}
 
+	public static async Task<string> ApplyApplicationCommandChecksFailedMigrationFixAsync(string source)
+	{
+		using var workspace = new AdhocWorkspace();
+		var projectId = ProjectId.CreateNewId();
+		var documentId = DocumentId.CreateNewId(projectId);
+
+		var solution = workspace.CurrentSolution
+			.AddProject(projectId, "DisCatSharp.Analyzer.Tests.Dynamic", "DisCatSharp.Analyzer.Tests.Dynamic", LanguageNames.CSharp)
+			.WithProjectParseOptions(projectId, new CSharpParseOptions(LanguageVersion.Latest))
+			.WithProjectCompilationOptions(projectId, new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary))
+			.WithProjectMetadataReferences(projectId, s_metadataReferences)
+			.AddDocument(documentId, "Test.cs", SourceText.From(source));
+
+		var document = solution.GetDocument(documentId)!;
+		var compilation = await document.Project.GetCompilationAsync().ConfigureAwait(false);
+		var diagnostics = await compilation!
+			.WithAnalyzers([new DisCatSharpAnalyzer()])
+			.GetAnalyzerDiagnosticsAsync()
+			.ConfigureAwait(false);
+		var diagnostic = Assert.Single(diagnostics, x => x.Id == DisCatSharpDiagnosticIds.ApplicationCommandChecksFailedMigration);
+
+		var fixedDocument = await DisCatSharpApplicationCommandChecksFailedMigrationCodeFix.ApplyFixToDocumentAsync(document, diagnostic, CancellationToken.None).ConfigureAwait(false);
+		var text = await fixedDocument.GetTextAsync().ConfigureAwait(false);
+		return text.ToString();
+	}
+
 	private static ImmutableArray<MetadataReference> CreateMetadataReferences()
 	{
 		var trustedPlatformAssemblies = ((string)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES")!)
@@ -60,6 +87,7 @@ internal static class RoslynTestDocumentFactory
 
 		return trustedPlatformAssemblies
 			.Append(MetadataReference.CreateFromFile(typeof(DiscordClient).Assembly.Location))
+			.Append(MetadataReference.CreateFromFile(typeof(ApplicationCommandsExtension).Assembly.Location))
 			.Append(MetadataReference.CreateFromFile(typeof(ExperimentalAttribute).Assembly.Location))
 			.GroupBy(x => x.Display, StringComparer.OrdinalIgnoreCase)
 			.Select(x => x.First())

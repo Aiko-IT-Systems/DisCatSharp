@@ -8,5 +8,6 @@
     <Rule Id="DCS0103" Action="Hidden" />
     <Rule Id="DCS0200" Action="Hidden" />
     <Rule Id="DCS0201" Action="Hidden" />
+    <Rule Id="DCS2101" Action="Hidden" />
   </Rules>
 </RuleSet>
