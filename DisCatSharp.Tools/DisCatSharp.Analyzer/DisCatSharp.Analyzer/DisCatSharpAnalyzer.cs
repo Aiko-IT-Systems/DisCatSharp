@@ -106,6 +106,17 @@ namespace DisCatSharp.Analyzer
 		private static readonly DiagnosticDescriptor s_discordUnreleasedRule = new DiagnosticDescriptor(DisCatSharpDiagnosticIds.DiscordUnreleased, s_titleDiscordUnreleased, s_messageFormatDiscordUnreleased, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionDiscordUnreleased, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0103");
 
 		/// <inheritdoc cref="DiagnosticDescriptor" />
+		private static readonly DiagnosticDescriptor s_presenceAccessMigrationRule = new(
+			DisCatSharpDiagnosticIds.PresenceAccessMigration,
+			"[DCS] Presence access migration",
+			"Use 'GetPresences({0})' instead of filtering 'Presences' manually",
+			CATEGORY,
+			DiagnosticSeverity.Info,
+			true,
+			"Use DiscordClient.GetPresences(userId) for user-specific presence lookups instead of filtering the aggregate Presences cache manually.",
+			"https://docs.dcs.aitsys.dev/vs/analyzer/dcs/1101");
+
+		/// <inheritdoc cref="DiagnosticDescriptor" />
 		private static readonly DiagnosticDescriptor s_requiresFeatureRule = new DiagnosticDescriptor(DisCatSharpDiagnosticIds.RequiresFeature, s_titleRequiresFeature, s_messageFormatRequiresFeature, CATEGORY, DiagnosticSeverity.Info, true, s_descriptionRequiresFeature, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0200");
 
 		/// <inheritdoc cref="DiagnosticDescriptor" />
@@ -115,7 +126,7 @@ namespace DisCatSharp.Analyzer
 		private static readonly DiagnosticDescriptor s_applicationCommandChecksFailedMigrationRule = new(
 			DisCatSharpDiagnosticIds.ApplicationCommandChecksFailedMigration,
 			"[DCS] Application command checks-failed migration",
-			"Handler contains application-command checks-failed logic that should subscribe to '{0}' instead of '{1}'",
+			"Handler contains application-command checks-failed logic that should subscribe to '{0}' instead of '{1}' ({2})",
 			CATEGORY,
 			DiagnosticSeverity.Info,
 			true,
@@ -124,7 +135,7 @@ namespace DisCatSharp.Analyzer
 
 		/// <inheritdoc />
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
-			=> ImmutableArray.Create(s_experimentalRule, s_deprecatedRule, s_discordInExperimentRule, s_discordDeprecatedRule, s_discordUnreleasedRule, s_requiresFeatureRule, s_requiresOverrideRule, s_applicationCommandChecksFailedMigrationRule);
+			=> ImmutableArray.Create(s_experimentalRule, s_deprecatedRule, s_discordInExperimentRule, s_discordDeprecatedRule, s_discordUnreleasedRule, s_presenceAccessMigrationRule, s_requiresFeatureRule, s_requiresOverrideRule, s_applicationCommandChecksFailedMigrationRule);
 
 		/// <inheritdoc />
 		public override void Initialize(AnalysisContext context)
@@ -142,6 +153,7 @@ namespace DisCatSharp.Analyzer
 			context.RegisterSyntaxNodeAction(AnalyzeSyntaxNode, SyntaxKind.ObjectCreationExpression);
 			context.RegisterSyntaxNodeAction(AnalyzeSyntaxNode, SyntaxKind.ElementAccessExpression);
 			context.RegisterSyntaxNodeAction(AnalyzeSyntaxNode, SyntaxKind.SimpleMemberAccessExpression);
+			context.RegisterSyntaxNodeAction(AnalyzePresenceAccessMigration, SyntaxKind.InvocationExpression);
 			context.RegisterSyntaxNodeAction(AnalyzeApplicationCommandChecksFailedMigration, SyntaxKind.AddAssignmentExpression);
 		}
 
@@ -287,13 +299,46 @@ namespace DisCatSharp.Analyzer
 			    !ApplicationCommandChecksFailedMigrationAnalysis.TryGetDiagnosticCandidate(context.SemanticModel, assignment, context.CancellationToken, out var candidate))
 				return;
 
-			var properties = DisCatSharpDiagnosticProperties.CreateApplicationCommandChecksFailedMigrationProperties(candidate.TargetEventName, candidate.TargetEventArgsTypeName, candidate.CanAutoFix);
+			var fixKind = GetApplicationCommandChecksFailedMigrationFixKind(candidate.FixKind);
+			var properties = DisCatSharpDiagnosticProperties.CreateApplicationCommandChecksFailedMigrationProperties(candidate.TargetEventName, candidate.TargetEventArgsTypeName, candidate.CanAutoFix, fixKind);
 			context.ReportDiagnostic(Diagnostic.Create(
 				s_applicationCommandChecksFailedMigrationRule,
 				candidate.EventAccess.Name.GetLocation(),
 				properties,
 				candidate.TargetEventName,
-				candidate.SourceEventName));
+				candidate.SourceEventName,
+				GetApplicationCommandChecksFailedMigrationMessageSuffix(candidate.FixKind)));
+		}
+
+		private static string GetApplicationCommandChecksFailedMigrationFixKind(ApplicationCommandChecksFailedMigrationAnalysis.ApplicationCommandChecksFailedMigrationFixKind fixKind)
+			=> fixKind switch
+			{
+				ApplicationCommandChecksFailedMigrationAnalysis.ApplicationCommandChecksFailedMigrationFixKind.Rewrite => DisCatSharpDiagnosticProperties.MigrationFixKindRewrite,
+				ApplicationCommandChecksFailedMigrationAnalysis.ApplicationCommandChecksFailedMigrationFixKind.Split => DisCatSharpDiagnosticProperties.MigrationFixKindSplit,
+				_ => DisCatSharpDiagnosticProperties.MigrationFixKindManual
+			};
+
+		private static string GetApplicationCommandChecksFailedMigrationMessageSuffix(ApplicationCommandChecksFailedMigrationAnalysis.ApplicationCommandChecksFailedMigrationFixKind fixKind)
+			=> fixKind switch
+			{
+				ApplicationCommandChecksFailedMigrationAnalysis.ApplicationCommandChecksFailedMigrationFixKind.Rewrite => "whole-handler rewrite available",
+				ApplicationCommandChecksFailedMigrationAnalysis.ApplicationCommandChecksFailedMigrationFixKind.Split => "branch extraction code fix available",
+				_ => "manual migration required"
+			};
+
+		private static void AnalyzePresenceAccessMigration(SyntaxNodeAnalysisContext context)
+		{
+			if (context.Node is not InvocationExpressionSyntax invocation ||
+			    !PresenceAccessMigrationAnalysis.TryGetCandidate(context.SemanticModel, invocation, context.CancellationToken, out var candidate))
+				return;
+
+			var userExpression = candidate.UserExpression.ToString();
+			var properties = DisCatSharpDiagnosticProperties.CreatePresenceAccessMigrationProperties(userExpression);
+			context.ReportDiagnostic(Diagnostic.Create(
+				s_presenceAccessMigrationRule,
+				candidate.PresencesAccess.Name.GetLocation(),
+				properties,
+				userExpression));
 		}
 
 		/// <summary>

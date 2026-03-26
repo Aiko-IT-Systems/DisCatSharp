@@ -71,3 +71,9 @@ These rules keep their historical IDs for compatibility.
 | Rule ID                              | Category | Severity | Notes                                            |
 | ------------------------------------ | -------- | -------- | ------------------------------------------------ |
 | [DCS2101](xref:vs_analyzer_dcs_2101) | Usage    | Info     | Application command checks-failed migration prototype |
+
+##### Core family
+
+| Rule ID                              | Category | Severity | Notes                                      |
+| ------------------------------------ | -------- | -------- | ------------------------------------------ |
+| [DCS1101](xref:vs_analyzer_dcs_1101) | Usage    | Info     | Prefer `DiscordClient.GetPresences(userId)` over manual `Presences` filtering |

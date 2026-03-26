@@ -19,3 +19,11 @@ DCS0201 | Usage    | Warning  | Requires override APIs, [Documentation](https://
 Rule ID | Category | Severity | Notes
 --------|----------|----------|--------------------
 DCS2101 | Usage    | Info     | Application-command checks-failed migration prototype, [Documentation](https://docs.dcs.aitsys.dev/vs/analyzer/dcs/2101)
+
+## Release 1.0.2.0
+
+### New Rules
+
+Rule ID | Category | Severity | Notes
+--------|----------|----------|--------------------
+DCS1101 | Usage    | Info     | Presence access migration guidance, [Documentation](https://docs.dcs.aitsys.dev/vs/analyzer/dcs/1101)

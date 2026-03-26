@@ -11,7 +11,7 @@
 	<PropertyGroup>
 		<Title>DisCatSharp Analyzer</Title>
 		<PackageId>DisCatSharp.Analyzer</PackageId>
-		<PackageVersion>1.0.1.0</PackageVersion>
+		<PackageVersion>1.0.2.0</PackageVersion>
 		<Authors>AITSYS</Authors>
 		<PackageIcon>logo-pride.png</PackageIcon>
 		<RepositoryUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</RepositoryUrl>
@@ -27,7 +27,7 @@ We also provide certain codefixes if we introduce breaking changes in the future
 
 Please install it to ensure we can do our changes, and you can receive our updates &lt;3</Description>
 		<PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/../../../RELEASENOTES.md"))</PackageReleaseNotes>
-		<Copyright>Copyright 2022-2025 AITSYS</Copyright>
+		<Copyright>Copyright 2022-2026 AITSYS</Copyright>
 		<PackageTags>Analyzer, analyzers, DisCatSharp, DCS</PackageTags>
 		<DevelopmentDependency>true</DevelopmentDependency>
 		<NoPackageAnalysis>true</NoPackageAnalysis>
@@ -76,7 +76,7 @@ Please install it to ensure we can do our changes, and you can receive our updat
 	<ItemGroup>
 		<ProjectReference Include="..\DisCatSharp.Analyzer.CodeFixes\DisCatSharp.Analyzer.CodeFixes.csproj" />
 		<ProjectReference Include="..\DisCatSharp.Analyzer\DisCatSharp.Analyzer.csproj" />
-		<PackageReference Include="DisCatSharp.Attributes" Version="2025.3.27" PrivateAssets="All" IncludeInPackage="true" />
+		<PackageReference Include="DisCatSharp.Attributes" Version="2026.03.26" PrivateAssets="All" IncludeInPackage="true" />
 	</ItemGroup>
 
 	<ItemGroup>

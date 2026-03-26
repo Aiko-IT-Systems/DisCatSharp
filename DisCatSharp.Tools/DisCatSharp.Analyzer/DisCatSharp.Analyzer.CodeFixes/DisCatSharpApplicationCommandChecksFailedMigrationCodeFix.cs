@@ -33,19 +33,31 @@ public sealed class DisCatSharpApplicationCommandChecksFailedMigrationCodeFix : 
 
 			var targetEventName = diagnostic.Properties.TryGetValue(DisCatSharpDiagnosticProperties.MigrationTargetEventName, out var configuredTargetEventName) &&
 			                      !string.IsNullOrWhiteSpace(configuredTargetEventName)
-				? configuredTargetEventName
+				? configuredTargetEventName!
 				: "the dedicated checks-failed event";
+			var fixKind = diagnostic.Properties.TryGetValue(DisCatSharpDiagnosticProperties.MigrationFixKind, out var configuredFixKind) &&
+			              !string.IsNullOrWhiteSpace(configuredFixKind)
+				? configuredFixKind!
+				: DisCatSharpDiagnosticProperties.MigrationFixKindManual;
 
 			context.RegisterCodeFix(
 				CodeAction.Create(
-					$"Migrate handler to '{targetEventName}'",
+					GetTitle(targetEventName, fixKind),
 					c => ApplyFixToDocumentAsync(context.Document, diagnostic, c),
-					$"{this.FixableDiagnosticId}:{targetEventName}"),
+					$"{this.FixableDiagnosticId}:{fixKind}:{targetEventName}"),
 				diagnostic);
 		}
 
 		return Task.CompletedTask;
 	}
+
+	private static string GetTitle(string targetEventName, string fixKind)
+		=> fixKind switch
+		{
+			DisCatSharpDiagnosticProperties.MigrationFixKindRewrite => $"Rewrite handler to '{targetEventName}'",
+			DisCatSharpDiagnosticProperties.MigrationFixKindSplit => $"Extract checks-failed branch to '{targetEventName}'",
+			_ => $"Migrate handler to '{targetEventName}'"
+		};
 
 	internal static async Task<Document> ApplyFixToDocumentAsync(Document document, Diagnostic diagnostic, CancellationToken cancellationToken)
 	{
@@ -60,7 +72,8 @@ public sealed class DisCatSharpApplicationCommandChecksFailedMigrationCodeFix : 
 		    !ApplicationCommandChecksFailedMigrationAnalysis.TryGetCodeFixCandidate(semanticModel, assignment, cancellationToken, out var candidate))
 			return document;
 
-		if (candidate.HandlerBlock.Statements.Count == 1)
+		if (candidate.FixKind == ApplicationCommandChecksFailedMigrationAnalysis.ApplicationCommandChecksFailedMigrationFixKind.Rewrite ||
+		    IsWholeHandlerRewriteCandidate(candidate))
 		{
 			var updatedAssignment = UpdateAssignment(candidate);
 			var replacedRoot = root.ReplaceNode(candidate.Assignment, updatedAssignment);
@@ -96,6 +109,22 @@ public sealed class DisCatSharpApplicationCommandChecksFailedMigrationCodeFix : 
 			.WithAdditionalAnnotations(Formatter.Annotation);
 	}
 
+	private static bool IsWholeHandlerRewriteCandidate(ApplicationCommandChecksFailedMigrationAnalysis.ApplicationCommandChecksFailedMigrationCandidate candidate)
+		=> candidate.BranchKind switch
+		{
+			ApplicationCommandChecksFailedMigrationAnalysis.ApplicationCommandChecksFailedMigrationBranchKind.IfStatement
+				=> candidate.GuardIfStatement?.Parent is BlockSyntax guardContainerBlock &&
+				   ReferenceEquals(guardContainerBlock, candidate.HandlerBlock),
+			ApplicationCommandChecksFailedMigrationAnalysis.ApplicationCommandChecksFailedMigrationBranchKind.SwitchSection
+				=> candidate.GuardSwitchStatement is not null &&
+				   candidate.GuardSwitchSection is not null &&
+				   candidate.HandlerBlock.Statements.Count == 1 &&
+				   ReferenceEquals(candidate.HandlerBlock.Statements[0], candidate.GuardSwitchStatement) &&
+				   candidate.GuardSwitchStatement.Sections.Count == 1 &&
+				   ReferenceEquals(candidate.GuardSwitchStatement.Sections[0], candidate.GuardSwitchSection),
+			_ => false
+		};
+
 	private static ExpressionSyntax UpdateHandler(ApplicationCommandChecksFailedMigrationAnalysis.ApplicationCommandChecksFailedMigrationCandidate candidate)
 	{
 		var updatedStatements = ApplicationCommandChecksFailedMigrationAnalysis.GetMigratedStatements(candidate);
@@ -126,7 +155,10 @@ public sealed class DisCatSharpApplicationCommandChecksFailedMigrationCodeFix : 
 		extractedAssignment = null!;
 		updatedSourceAssignment = null!;
 
-		if (candidate.GuardIfStatement.Parent is not BlockSyntax guardContainerBlock)
+		if (candidate.BranchKind == ApplicationCommandChecksFailedMigrationAnalysis.ApplicationCommandChecksFailedMigrationBranchKind.SwitchSection)
+			return TryCreateSwitchSplitAssignments(candidate, out extractedAssignment, out updatedSourceAssignment);
+
+		if (candidate.GuardIfStatement?.Parent is not BlockSyntax guardContainerBlock)
 			return false;
 
 		if (!TryBuildExtractedHandlerBlock(candidate, guardContainerBlock, out var extractedHandlerBlock))
@@ -137,6 +169,53 @@ public sealed class DisCatSharpApplicationCommandChecksFailedMigrationCodeFix : 
 			.WithAdditionalAnnotations(Formatter.Annotation);
 		var updatedSourceHandlerBlock = candidate.HandlerBlock
 			.ReplaceNode(guardContainerBlock, updatedGuardContainerBlock)
+			.WithAdditionalAnnotations(Formatter.Annotation);
+
+		var extractedHandler = UpdateHandler(candidate, extractedHandlerBlock);
+		var updatedSourceHandler = UpdateHandler(candidate, updatedSourceHandlerBlock, keepSourceEventArgs: true);
+
+		extractedAssignment = CreateAssignment(candidate, extractedHandler, candidate.TargetEventName);
+		updatedSourceAssignment = CreateAssignment(candidate, updatedSourceHandler, candidate.SourceEventName);
+		return true;
+	}
+
+	private static bool TryCreateSwitchSplitAssignments(
+		ApplicationCommandChecksFailedMigrationAnalysis.ApplicationCommandChecksFailedMigrationCandidate candidate,
+		out AssignmentExpressionSyntax extractedAssignment,
+		out AssignmentExpressionSyntax updatedSourceAssignment)
+	{
+		extractedAssignment = null!;
+		updatedSourceAssignment = null!;
+
+		if (candidate.GuardSwitchStatement is null ||
+		    candidate.GuardSwitchSection is null)
+			return false;
+
+		var remainingSections = candidate.GuardSwitchStatement.Sections.Remove(candidate.GuardSwitchSection);
+		if (remainingSections.Count == 0)
+			return false;
+
+		BlockSyntax extractedHandlerBlock;
+		if (candidate.GuardSwitchStatement.Parent is BlockSyntax guardContainerBlock &&
+		    ReferenceEquals(guardContainerBlock, candidate.HandlerBlock))
+		{
+			extractedHandlerBlock = SyntaxFactory.Block(ApplicationCommandChecksFailedMigrationAnalysis.GetMigratedStatements(candidate))
+				.WithTriviaFrom(candidate.HandlerBlock)
+				.WithAdditionalAnnotations(Formatter.Annotation);
+		}
+		else if (candidate.GuardSwitchStatement.Parent is BlockSyntax nestedGuardContainerBlock &&
+		         TryBuildExtractedHandlerBlock(candidate, nestedGuardContainerBlock, out var nestedExtractedHandlerBlock))
+		{
+			extractedHandlerBlock = nestedExtractedHandlerBlock;
+		}
+		else
+		{
+			return false;
+		}
+
+		var updatedSwitchStatement = candidate.GuardSwitchStatement.WithSections(remainingSections)
+			.WithAdditionalAnnotations(Formatter.Annotation);
+		var updatedSourceHandlerBlock = candidate.HandlerBlock.ReplaceNode(candidate.GuardSwitchStatement, updatedSwitchStatement)
 			.WithAdditionalAnnotations(Formatter.Annotation);
 
 		var extractedHandler = UpdateHandler(candidate, extractedHandlerBlock);
