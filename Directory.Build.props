@@ -5,6 +5,7 @@
 		<SourceRoot Include="$(MSBuildThisFileDirectory)/" />
 	</ItemGroup>
 	<PropertyGroup>
+		<NoWarn>$(NoWarn);NETSDK1188</NoWarn>
 		<RestoreEnablePackagePruning>false</RestoreEnablePackagePruning>
 	</PropertyGroup>
 </Project>
