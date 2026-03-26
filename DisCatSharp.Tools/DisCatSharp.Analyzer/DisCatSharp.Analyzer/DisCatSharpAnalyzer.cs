@@ -90,25 +90,25 @@ namespace DisCatSharp.Analyzer
 		private static readonly LocalizableString s_descriptionRequiresOverride = new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionRequiresOverride), Resources.ResourceManager, typeof(Resources));
 
 		/// <inheritdoc cref="DiagnosticDescriptor" />
-		private static readonly DiagnosticDescriptor s_experimentalRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0001", s_titleExperimental, s_messageFormatExperimental, CATEGORY, DiagnosticSeverity.Info, true, s_descriptionExperimental, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0001");
+		private static readonly DiagnosticDescriptor s_experimentalRule = new DiagnosticDescriptor(DisCatSharpDiagnosticIds.Experimental, s_titleExperimental, s_messageFormatExperimental, CATEGORY, DiagnosticSeverity.Info, true, s_descriptionExperimental, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0001");
 
 		/// <inheritdoc cref="DiagnosticDescriptor" />
-		private static readonly DiagnosticDescriptor s_deprecatedRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0002", s_titleDeprecated, s_messageFormatDeprecated, CATEGORY, DiagnosticSeverity.Error, true, s_descriptionDeprecated, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0002");
+		private static readonly DiagnosticDescriptor s_deprecatedRule = new DiagnosticDescriptor(DisCatSharpDiagnosticIds.Deprecated, s_titleDeprecated, s_messageFormatDeprecated, CATEGORY, DiagnosticSeverity.Error, true, s_descriptionDeprecated, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0002");
 
 		/// <inheritdoc cref="DiagnosticDescriptor" />
-		private static readonly DiagnosticDescriptor s_discordInExperimentRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0101", s_titleDiscordInExperiment, s_messageFormatDiscordInExperiment, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionDiscordInExperiment, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0101");
+		private static readonly DiagnosticDescriptor s_discordInExperimentRule = new DiagnosticDescriptor(DisCatSharpDiagnosticIds.DiscordInExperiment, s_titleDiscordInExperiment, s_messageFormatDiscordInExperiment, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionDiscordInExperiment, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0101");
 
 		/// <inheritdoc cref="DiagnosticDescriptor" />
-		private static readonly DiagnosticDescriptor s_discordDeprecatedRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0102", s_titleDiscordDeprecated, s_messageFormatDiscordDeprecated, CATEGORY, DiagnosticSeverity.Error, true, s_descriptionDiscordDeprecated, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0102");
+		private static readonly DiagnosticDescriptor s_discordDeprecatedRule = new DiagnosticDescriptor(DisCatSharpDiagnosticIds.DiscordDeprecated, s_titleDiscordDeprecated, s_messageFormatDiscordDeprecated, CATEGORY, DiagnosticSeverity.Error, true, s_descriptionDiscordDeprecated, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0102");
 
 		/// <inheritdoc cref="DiagnosticDescriptor" />
-		private static readonly DiagnosticDescriptor s_discordUnreleasedRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0103", s_titleDiscordUnreleased, s_messageFormatDiscordUnreleased, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionDiscordUnreleased, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0103");
+		private static readonly DiagnosticDescriptor s_discordUnreleasedRule = new DiagnosticDescriptor(DisCatSharpDiagnosticIds.DiscordUnreleased, s_titleDiscordUnreleased, s_messageFormatDiscordUnreleased, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionDiscordUnreleased, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0103");
 
 		/// <inheritdoc cref="DiagnosticDescriptor" />
-		private static readonly DiagnosticDescriptor s_requiresFeatureRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0200", s_titleRequiresFeature, s_messageFormatRequiresFeature, CATEGORY, DiagnosticSeverity.Info, true, s_descriptionRequiresFeature, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0200");
+		private static readonly DiagnosticDescriptor s_requiresFeatureRule = new DiagnosticDescriptor(DisCatSharpDiagnosticIds.RequiresFeature, s_titleRequiresFeature, s_messageFormatRequiresFeature, CATEGORY, DiagnosticSeverity.Info, true, s_descriptionRequiresFeature, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0200");
 
 		/// <inheritdoc cref="DiagnosticDescriptor" />
-		private static readonly DiagnosticDescriptor s_requiresOverrideRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0201", s_titleRequiresOverride, s_messageFormatRequiresOverride, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionRequiresOverride, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0201");
+		private static readonly DiagnosticDescriptor s_requiresOverrideRule = new DiagnosticDescriptor(DisCatSharpDiagnosticIds.RequiresOverride, s_titleRequiresOverride, s_messageFormatRequiresOverride, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionRequiresOverride, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0201");
 
 		/// <inheritdoc />
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
@@ -200,7 +200,7 @@ namespace DisCatSharp.Analyzer
 			if (requiresOverrideAttributeData != null)
 			{
 				var message = GetOverrideMessage(requiresOverrideAttributeData);
-				var properties = ImmutableDictionary.Create<string, string>().Add("LastKnownOverride", GetOverrideValue(requiresOverrideAttributeData)).Add("OverrideDate", GetOverrideDate(requiresOverrideAttributeData));
+				var properties = DisCatSharpDiagnosticProperties.CreateRequiresOverrideProperties(GetOverrideValue(requiresOverrideAttributeData), GetOverrideDate(requiresOverrideAttributeData));
 				context.ReportDiagnostic(Diagnostic.Create(s_requiresOverrideRule, context.Symbol.Locations.FirstOrDefault(), properties, kind, name, message));
 			}
 		}
@@ -268,7 +268,7 @@ namespace DisCatSharp.Analyzer
 			if (requiresOverrideAttributeData != null)
 			{
 				var message = GetOverrideMessage(requiresOverrideAttributeData);
-				var properties = ImmutableDictionary.Create<string, string>().Add("LastKnownOverride", GetOverrideValue(requiresOverrideAttributeData)).Add("OverrideDate", GetOverrideDate(requiresOverrideAttributeData));
+				var properties = DisCatSharpDiagnosticProperties.CreateRequiresOverrideProperties(GetOverrideValue(requiresOverrideAttributeData), GetOverrideDate(requiresOverrideAttributeData));
 				context.ReportDiagnostic(Diagnostic.Create(s_requiresOverrideRule, invocation.GetLocation(), properties, kind, name, message));
 			}
 		}
