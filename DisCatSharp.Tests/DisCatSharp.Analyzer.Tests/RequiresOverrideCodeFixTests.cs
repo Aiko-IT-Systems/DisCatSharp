@@ -102,6 +102,51 @@ public sealed class RequiresOverrideCodeFixTests
 		Assert.Equal(1, CountOccurrences(fixedSource, "Override = "));
 	}
 
+	[Fact]
+	public async Task ApplyFixToProjectAsync_updates_configuration_in_different_document()
+	{
+		var sources = ImmutableDictionary<string, string>.Empty
+			.Add(
+				"Consumer.cs",
+				"""
+				using DisCatSharp.Attributes;
+
+				public sealed class OverrideDependency
+				{
+				    [RequiresOverride("cross-file-override", "21/03/2025")]
+				    public string Profile => "value";
+				}
+
+				public sealed class Consumer
+				{
+				    public void Test(OverrideDependency dependency)
+				    {
+				        _ = dependency.Profile;
+				    }
+				}
+				""")
+			.Add(
+				"ConfigurationFactory.cs",
+				"""
+				using DisCatSharp;
+
+				public static class ConfigurationFactory
+				{
+				    public static DiscordClient CreateClient()
+				        => new(new DiscordConfiguration
+				        {
+				            Token = string.Empty
+				        });
+				}
+				""");
+
+		var fixedSources = await RoslynTestDocumentFactory.ApplyRequiresOverrideFixAsync(sources, "Consumer.cs", "cross-file-override");
+
+		Assert.DoesNotContain("Override = ", fixedSources["Consumer.cs"]);
+		Assert.Contains("Override = \"cross-file-override\"", fixedSources["ConfigurationFactory.cs"]);
+		Assert.Equal(1, CountOccurrences(fixedSources["ConfigurationFactory.cs"], "Override = \"cross-file-override\""));
+	}
+
 	private static Diagnostic CreateDiagnostic(string overrideValue, string overrideDate)
 	{
 		var properties = ImmutableDictionary<string, string?>.Empty

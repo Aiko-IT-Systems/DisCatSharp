@@ -63,6 +63,38 @@ public sealed class ApplicationCommandChecksFailedMigrationTests
 	}
 
 	[Fact]
+	public async Task Does_not_report_diagnostic_when_handler_has_trailing_statements_outside_guard()
+	{
+		const string source =
+			"""
+			using System.Threading.Tasks;
+			using DisCatSharp.ApplicationCommands;
+			using DisCatSharp.ApplicationCommands.Exceptions;
+
+			public sealed class Consumer
+			{
+			    public void Configure(ApplicationCommandsExtension extension)
+			    {
+			        extension.SlashCommandErrored += async (_, args) =>
+			        {
+			            if (args.Exception is SlashExecutionChecksFailedException failed)
+			            {
+			                _ = args.Context;
+			                _ = failed.FailedChecks;
+			            }
+
+			            _ = args.Exception;
+			        };
+			    }
+			}
+			""";
+
+		var diagnostics = await RoslynTestDocumentFactory.GetAnalyzerDiagnosticsAsync(source);
+
+		Assert.DoesNotContain(diagnostics, x => x.Id == DisCatSharpDiagnosticIds.ApplicationCommandChecksFailedMigration);
+	}
+
+	[Fact]
 	public async Task ApplyFixToDocumentAsync_rewrites_slash_command_handler_to_checks_failed_event()
 	{
 		const string source =
@@ -112,15 +144,14 @@ public sealed class ApplicationCommandChecksFailedMigrationTests
 			{
 			    public void Configure(ApplicationCommandsExtension extension)
 			    {
-			        extension.ContextMenuErrored += (ApplicationCommandsExtension _, ContextMenuErrorEventArgs args) =>
+			        extension.ContextMenuErrored += async (ApplicationCommandsExtension _, ContextMenuErrorEventArgs args) =>
 			        {
 			            if (args.Exception is ContextMenuExecutionChecksFailedException failed)
 			            {
 			                _ = args.Context;
 			                _ = failed.FailedChecks;
+			                await Task.CompletedTask;
 			            }
-
-			            return Task.CompletedTask;
 			        };
 			    }
 			}

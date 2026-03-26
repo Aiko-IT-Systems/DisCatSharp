@@ -36,35 +36,40 @@ internal static class RoslynTestDocumentFactory
 
 	public static async Task<string> ApplyRequiresOverrideFixAsync(string source, string overrideValue)
 	{
+		var fixedSources = await ApplyRequiresOverrideFixAsync(
+			ImmutableDictionary<string, string>.Empty.Add("Test.cs", source),
+			"Test.cs",
+			overrideValue).ConfigureAwait(false);
+		return fixedSources["Test.cs"];
+	}
+
+	public static async Task<ImmutableDictionary<string, string>> ApplyRequiresOverrideFixAsync(
+		ImmutableDictionary<string, string> sources,
+		string diagnosticDocumentName,
+		string overrideValue)
+	{
 		using var workspace = new AdhocWorkspace();
-		var projectId = ProjectId.CreateNewId();
-		var documentId = DocumentId.CreateNewId(projectId);
+		var (solution, documentIds) = CreateProjectSolution(workspace, sources);
+		var diagnosticDocumentId = documentIds[diagnosticDocumentName];
+		var diagnosticDocument = solution.GetDocument(diagnosticDocumentId)!;
+		var fixedSolution = await DisCatSharpRequiresOverrideCodeFix.ApplyFixToProjectAsync(diagnosticDocument.Project, overrideValue, CancellationToken.None).ConfigureAwait(false);
 
-		var solution = workspace.CurrentSolution
-			.AddProject(projectId, "DisCatSharp.Analyzer.Tests.Dynamic", "DisCatSharp.Analyzer.Tests.Dynamic", LanguageNames.CSharp)
-			.WithProjectParseOptions(projectId, new CSharpParseOptions(LanguageVersion.Latest))
-			.WithProjectCompilationOptions(projectId, new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary))
-			.WithProjectMetadataReferences(projectId, s_metadataReferences)
-			.AddDocument(documentId, "Test.cs", SourceText.From(source));
+		var builder = ImmutableDictionary.CreateBuilder<string, string>(StringComparer.Ordinal);
+		foreach (var (documentName, documentId) in documentIds)
+		{
+			var document = fixedSolution.GetDocument(documentId)!;
+			var text = await document.GetTextAsync().ConfigureAwait(false);
+			builder[documentName] = text.ToString();
+		}
 
-		var document = solution.GetDocument(documentId)!;
-		var fixedDocument = await DisCatSharpRequiresOverrideCodeFix.ApplyFixToDocumentAsync(document, overrideValue, CancellationToken.None).ConfigureAwait(false);
-		var text = await fixedDocument.GetTextAsync().ConfigureAwait(false);
-		return text.ToString();
+		return builder.ToImmutable();
 	}
 
 	public static async Task<string> ApplyApplicationCommandChecksFailedMigrationFixAsync(string source)
 	{
 		using var workspace = new AdhocWorkspace();
-		var projectId = ProjectId.CreateNewId();
-		var documentId = DocumentId.CreateNewId(projectId);
-
-		var solution = workspace.CurrentSolution
-			.AddProject(projectId, "DisCatSharp.Analyzer.Tests.Dynamic", "DisCatSharp.Analyzer.Tests.Dynamic", LanguageNames.CSharp)
-			.WithProjectParseOptions(projectId, new CSharpParseOptions(LanguageVersion.Latest))
-			.WithProjectCompilationOptions(projectId, new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary))
-			.WithProjectMetadataReferences(projectId, s_metadataReferences)
-			.AddDocument(documentId, "Test.cs", SourceText.From(source));
+		var (solution, documentIds) = CreateProjectSolution(workspace, ImmutableDictionary<string, string>.Empty.Add("Test.cs", source));
+		var documentId = documentIds["Test.cs"];
 
 		var document = solution.GetDocument(documentId)!;
 		var compilation = await document.Project.GetCompilationAsync().ConfigureAwait(false);
@@ -77,6 +82,28 @@ internal static class RoslynTestDocumentFactory
 		var fixedDocument = await DisCatSharpApplicationCommandChecksFailedMigrationCodeFix.ApplyFixToDocumentAsync(document, diagnostic, CancellationToken.None).ConfigureAwait(false);
 		var text = await fixedDocument.GetTextAsync().ConfigureAwait(false);
 		return text.ToString();
+	}
+
+	private static (Solution Solution, ImmutableDictionary<string, DocumentId> DocumentIds) CreateProjectSolution(
+		AdhocWorkspace workspace,
+		ImmutableDictionary<string, string> sources)
+	{
+		var projectId = ProjectId.CreateNewId();
+		var solution = workspace.CurrentSolution
+			.AddProject(projectId, "DisCatSharp.Analyzer.Tests.Dynamic", "DisCatSharp.Analyzer.Tests.Dynamic", LanguageNames.CSharp)
+			.WithProjectParseOptions(projectId, new CSharpParseOptions(LanguageVersion.Latest))
+			.WithProjectCompilationOptions(projectId, new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary))
+			.WithProjectMetadataReferences(projectId, s_metadataReferences);
+
+		var builder = ImmutableDictionary.CreateBuilder<string, DocumentId>(StringComparer.Ordinal);
+		foreach (var (documentName, source) in sources)
+		{
+			var documentId = DocumentId.CreateNewId(projectId);
+			solution = solution.AddDocument(documentId, documentName, SourceText.From(source));
+			builder[documentName] = documentId;
+		}
+
+		return (solution, builder.ToImmutable());
 	}
 
 	private static ImmutableArray<MetadataReference> CreateMetadataReferences()

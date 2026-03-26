@@ -77,17 +77,11 @@ internal static class ApplicationCommandChecksFailedMigrationAnalysis
 
 	internal static ImmutableArray<StatementSyntax> GetMigratedStatements(ApplicationCommandChecksFailedMigrationCandidate candidate)
 	{
-		var leadingStatements = candidate.GuardIfStatement.Statement switch
+		var statements = candidate.GuardIfStatement.Statement switch
 		{
 			BlockSyntax guardedBlock => guardedBlock.Statements.ToImmutableArray(),
 			StatementSyntax guardedStatement => [guardedStatement]
 		};
-
-		var trailingStatements = candidate.HandlerBlock.Statements
-			.Skip(1)
-			.ToImmutableArray();
-
-		var statements = leadingStatements.AddRange(trailingStatements);
 		if (candidate.FailedExceptionIdentifier is null)
 			return statements;
 
@@ -118,6 +112,7 @@ internal static class ApplicationCommandChecksFailedMigrationAnalysis
 				when parenthesizedLambda.Body is BlockSyntax handlerBlock &&
 				     parenthesizedLambda.ParameterList.Parameters.Count == 2 &&
 				     parenthesizedLambda.ParameterList.Parameters[1].Identifier.ValueText is { Length: > 0 } argumentsIdentifier &&
+				     handlerBlock.Statements.Count == 1 &&
 				     handlerBlock.Statements.FirstOrDefault() is IfStatementSyntax guardIfStatement &&
 				     guardIfStatement.Else is null:
 				handlerInfo = new(handlerBlock, guardIfStatement, argumentsIdentifier);
@@ -127,6 +122,7 @@ internal static class ApplicationCommandChecksFailedMigrationAnalysis
 				when anonymousMethod.Block is { } anonymousHandlerBlock &&
 				     anonymousMethod.ParameterList is { Parameters.Count: 2 } parameterList &&
 				     parameterList.Parameters[1].Identifier.ValueText is { Length: > 0 } anonymousArgumentsIdentifier &&
+				     anonymousHandlerBlock.Statements.Count == 1 &&
 				     anonymousHandlerBlock.Statements.FirstOrDefault() is IfStatementSyntax anonymousGuardIfStatement &&
 				     anonymousGuardIfStatement.Else is null:
 				handlerInfo = new(anonymousHandlerBlock, anonymousGuardIfStatement, anonymousArgumentsIdentifier);
@@ -178,13 +174,13 @@ internal static class ApplicationCommandChecksFailedMigrationAnalysis
 
 	private static ImmutableArray<StatementSyntax> GetProtectedStatements(IfStatementSyntax guardIfStatement, BlockSyntax handlerBlock)
 	{
-		var leadingStatements = guardIfStatement.Statement switch
+		_ = handlerBlock;
+
+		return guardIfStatement.Statement switch
 		{
 			BlockSyntax guardedBlock => guardedBlock.Statements.ToImmutableArray(),
 			StatementSyntax guardedStatement => [guardedStatement]
 		};
-
-		return leadingStatements.AddRange(handlerBlock.Statements.Skip(1));
 	}
 
 	private static bool AreStatementsSupported(ImmutableArray<StatementSyntax> statements, string argumentsIdentifier, string? failedExceptionIdentifier)

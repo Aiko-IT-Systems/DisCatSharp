@@ -21,7 +21,7 @@ public sealed class DisCatSharpRequiresOverrideCodeFix : SingleDiagnosticCodeFix
 {
 	private const string DiscordConfigurationMetadataName = "DisCatSharp.DiscordConfiguration";
 	private const string OverridePropertyName = "Override";
-	internal const string DefaultOverrideValue = "eyJvcyI6IldpbmRvd3MiLCJicm93c2VyIjoiRGlzY29yZCBDbGllbnQiLCJyZWxlYXNlX2NoYW5uZWwiOiJjYW5hcnkiLCJjbGllbnRfdmVyc2lvbiI6IjEuMC41NzgiLCJvc192ZXJzaW9uIjoiMTAuMC4yNjEyMCIsIm9zX2FyY2giOiJ4NjQiLCJhcHBfYXJjaCI6Ing2NCIsInN5c3RlbV9sb2NhbGUiOiJlbi1VUyIsImhhc19jbGllbnRfbW9kcyI6ZmFsc2UsImJyb3dzZXJfdXNlcl9hZ2VudCI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIGRpc2NvcmQvMS4wLjU3OCBDaHJvbWUvMTM0LjAuNjk5OC40NCBFbGVjdHJvbi8zNS4wLjIgU2FmYXJpLzUzNy4zNiIsImJyb3dzZXJfdXNlcl9hZ2VudCI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIGRpc2NvcmQvMS4wLjU3OCBDaHJvbWUvMTM0LjAuNjk5OC40NCBFbGVjdHJvbi8zNS4wLjIgU2FmYXJpLzUzNy4zNiIsImJyb3dzZXJfdmVyc2lvbiI6IjM1LjAuMiIsIm9zX3Nka192ZXJzaW9uIjoiMjYxMjAiLCJjbGllbnRfYnVpbGRfbnVtYmVyIjozODA2NzUsIm5hdGl2ZV9idWlsZF9udW1iZXIiOjYwNjYzLCJjbGllbnRfZXZlbnRfc291cmNlIjpudWxsfQ==";
+	internal const string DefaultOverrideValue = "eyJvcyI6IldpbmRvd3MiLCJicm93c2VyIjoiRGlzY29yZCBDbGllbnQiLCJyZWxlYXNlX2NoYW5uZWwiOiJjYW5hcnkiLCJjbGllbnRfdmVyc2lvbiI6IjEuMC44ODEiLCJvc192ZXJzaW9uIjoiMTAuMC4yNjIyMCIsIm9zX2FyY2giOiJ4NjQiLCJhcHBfYXJjaCI6Ing2NCIsInN5c3RlbV9sb2NhbGUiOiJlbi1VUyIsImhhc19jbGllbnRfbW9kcyI6ZmFsc2UsImNsaWVudF9sYXVuY2hfaWQiOiIwNDg1ZjY4Yi1iMTA1LTQ2MjgtOWJhNS1kYzA5YzM3YTc3MWYiLCJicm93c2VyX3VzZXJfYWdlbnQiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBkaXNjb3JkLzEuMC44ODEgQ2hyb21lLzEzOC4wLjcyMDQuMjUxIEVsZWN0cm9uLzM3LjYuMCBTYWZhcmkvNTM3LjM2IiwiYnJvd3Nlcl92ZXJzaW9uIjoiMzcuNi4wIiwib3Nfc2RrX3ZlcnNpb24iOiIyNjIyMCIsImNsaWVudF9idWlsZF9udW1iZXIiOjUxNjQ2NywibmF0aXZlX2J1aWxkX251bWJlciI6NzgzMjcsImNsaWVudF9ldmVudF9zb3VyY2UiOm51bGwsImxhdW5jaF9zaWduYXR1cmUiOiJiMDM3OGY2MC04NTY5LTQ2ZGQtOWY0Yy01Mjk3ZjgwYjMyNDciLCJjbGllbnRfaGVhcnRiZWF0X3Nlc3Npb25faWQiOiJkMTc3ZDQzNi02MzdmLTQzYzYtYTA5MS0wYTZlMGM3NDQ5NTUiLCJjbGllbnRfYXBwX3N0YXRlIjoidW5mb2N1c2VkIn0=";
 
 	private static readonly string[] s_supportedOverrideDateFormats =
 	[
@@ -43,7 +43,7 @@ public sealed class DisCatSharpRequiresOverrideCodeFix : SingleDiagnosticCodeFix
 		context.RegisterCodeFix(
 			CodeAction.Create(
 				"Add required Override to this DiscordConfiguration",
-				c => ApplyFixToDocumentAsync(context.Document, overrideValue, c),
+				c => ApplyFixToProjectAsync(context.Document.Project, overrideValue, c),
 				this.FixableDiagnosticId),
 			diagnostics);
 
@@ -93,6 +93,34 @@ public sealed class DisCatSharpRequiresOverrideCodeFix : SingleDiagnosticCodeFix
 			return true;
 
 		return DateTime.TryParse(rawOverrideDate, CultureInfo.InvariantCulture, DateTimeStyles.AllowWhiteSpaces, out overrideDate);
+	}
+
+	/// <summary>
+	///     Applies modifications to every document in a project, specifically targeting DiscordConfiguration object
+	///     creation expressions.
+	/// </summary>
+	/// <param name="project">The project whose documents should be updated.</param>
+	/// <param name="overrideValue">The override value to apply to matching DiscordConfiguration initializers.</param>
+	/// <param name="cancellationToken">Used to signal cancellation of the operation if needed.</param>
+	/// <returns>Returns the updated solution after all eligible documents have been processed.</returns>
+	public static async Task<Solution> ApplyFixToProjectAsync(Project project, string overrideValue, CancellationToken cancellationToken)
+	{
+		var solution = project.Solution;
+		var documentIds = project.DocumentIds.ToImmutableArray();
+
+		foreach (var documentId in documentIds)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+
+			var document = solution.GetDocument(documentId);
+			if (document is null || !document.SupportsSyntaxTree)
+				continue;
+
+			var updatedDocument = await ApplyFixToDocumentAsync(document, overrideValue, cancellationToken).ConfigureAwait(false);
+			solution = updatedDocument.Project.Solution;
+		}
+
+		return solution;
 	}
 
 	/// <summary>
