@@ -66,7 +66,7 @@ jobs:
               run: dotnet restore --no-cache -f -v minimal DisCatSharp.Attributes/DisCatSharp.Attributes.csproj
             - name: Restore dependencies (DisCatSharp.Analyzer)
               if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp.Analyzer' }}
-              run: dotnet restore --no-cache -f -v minimal DisCatSharp.Tools/DisCatSharp.Tools.slnx
+              run: dotnet restore --no-cache -f -v minimal DisCatSharp.Tools/DisCatSharp.Analyzer/DisCatSharp.Analyzer.Package/DisCatSharp.Analyzer.Package.csproj
             - name: Build DisCatSharp as full release
               if: ${{!inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp'}}
               shell: pwsh
