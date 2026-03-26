@@ -115,11 +115,11 @@ namespace DisCatSharp.Analyzer
 		private static readonly DiagnosticDescriptor s_applicationCommandChecksFailedMigrationRule = new(
 			DisCatSharpDiagnosticIds.ApplicationCommandChecksFailedMigration,
 			"[DCS] Application command checks-failed migration",
-			"Handler should subscribe to '{0}' instead of '{1}' when it only handles application-command check failures",
+			"Handler contains application-command checks-failed logic that should subscribe to '{0}' instead of '{1}'",
 			CATEGORY,
 			DiagnosticSeverity.Info,
 			true,
-			"Application command check failures now raise dedicated checks-failed events instead of surfacing through errored events",
+			"Application command check failures now raise dedicated checks-failed events instead of surfacing through errored events.",
 			"https://docs.dcs.aitsys.dev/vs/analyzer/dcs/2101");
 
 		/// <inheritdoc />
@@ -284,10 +284,10 @@ namespace DisCatSharp.Analyzer
 		private static void AnalyzeApplicationCommandChecksFailedMigration(SyntaxNodeAnalysisContext context)
 		{
 			if (context.Node is not AssignmentExpressionSyntax assignment ||
-			    !ApplicationCommandChecksFailedMigrationAnalysis.TryGetCandidate(context.SemanticModel, assignment, context.CancellationToken, out var candidate))
+			    !ApplicationCommandChecksFailedMigrationAnalysis.TryGetDiagnosticCandidate(context.SemanticModel, assignment, context.CancellationToken, out var candidate))
 				return;
 
-			var properties = DisCatSharpDiagnosticProperties.CreateApplicationCommandChecksFailedMigrationProperties(candidate.TargetEventName, candidate.TargetEventArgsTypeName);
+			var properties = DisCatSharpDiagnosticProperties.CreateApplicationCommandChecksFailedMigrationProperties(candidate.TargetEventName, candidate.TargetEventArgsTypeName, candidate.CanAutoFix);
 			context.ReportDiagnostic(Diagnostic.Create(
 				s_applicationCommandChecksFailedMigrationRule,
 				candidate.EventAccess.Name.GetLocation(),
@@ -322,7 +322,7 @@ namespace DisCatSharp.Analyzer
 		private static string GetMessage(AttributeData attributeData)
 			=> attributeData.ConstructorArguments.Length < 1
 				? "Do not use in production."
-				: attributeData.ConstructorArguments[0].Value as string;
+				: attributeData.ConstructorArguments[0].Value as string ?? "Do not use in production.";
 
 		/// <summary>
 		///     Retrieves a formatted message indicating the required override and additional information based on the provided
@@ -344,7 +344,7 @@ namespace DisCatSharp.Analyzer
 			var lastKnownOverride = GetOverrideValue(attributeData, true);
 			var overrideDate = GetOverrideDate(attributeData, true);
 			var description = attributeData.ConstructorArguments.Length > 2
-				? attributeData.ConstructorArguments[2].Value as string
+				? attributeData.ConstructorArguments[2].Value as string ?? "No additional information."
 				: "No additional information.";
 
 			return $"The following override is required (or newer if created after {overrideDate}): {lastKnownOverride} | {description}";
@@ -357,7 +357,9 @@ namespace DisCatSharp.Analyzer
 		/// <param name="fallback">Whether to return a default value if the attribute is <see langword="null" />.</param>
 		/// <returns>Returns the override value as a string or an empty string if the attribute is <see langword="null" />.</returns>
 		private static string GetOverrideValue(AttributeData attributeData, bool fallback = false)
-			=> attributeData == null ? fallback ? "No known Override" : string.Empty : attributeData.ConstructorArguments[0].Value as string;
+			=> attributeData == null
+				? fallback ? "No known Override" : string.Empty
+				: attributeData.ConstructorArguments[0].Value as string ?? (fallback ? "No known Override" : string.Empty);
 
 		/// <summary>
 		///     Retrieves the override date from an attribute, returning a default value if the attribute is <see langword="null" />.
@@ -366,7 +368,9 @@ namespace DisCatSharp.Analyzer
 		/// <param name="fallback">Whether to return a default value if the attribute is <see langword="null" />.</param>
 		/// <returns>Returns the override date as a string or an empty string if the attribute is <see langword="null" />.</returns>
 		private static string GetOverrideDate(AttributeData attributeData, bool fallback = false)
-			=> attributeData == null ? fallback ? "No known date" : string.Empty : attributeData.ConstructorArguments[1].Value as string;
+			=> attributeData == null
+				? fallback ? "No known date" : string.Empty
+				: attributeData.ConstructorArguments[1].Value as string ?? (fallback ? "No known date" : string.Empty);
 
 		/// <summary>
 		///     Gets the feature message from the attribute.
@@ -378,9 +382,11 @@ namespace DisCatSharp.Analyzer
 			if (attributeData == null)
 				return string.Empty;
 
-			var featureReqEnum = (Features)attributeData.ConstructorArguments[0].Value;
+			var featureReqEnum = attributeData.ConstructorArguments[0].Value is Features feature
+				? feature
+				: default;
 			var description = attributeData.ConstructorArguments.Length > 1
-				? attributeData.ConstructorArguments[1].Value as string
+				? attributeData.ConstructorArguments[1].Value as string ?? "No additional information."
 				: "No additional information.";
 
 			return $"{featureReqEnum.ToFeaturesString()} | {description}";

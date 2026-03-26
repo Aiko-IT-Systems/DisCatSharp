@@ -38,7 +38,7 @@ internal static class ApplicationCommandChecksFailedMigrationAnalysis
 					ContextMenuChecksFailedEventArgsTypeName))
 		]);
 
-	internal static bool TryGetCandidate(SemanticModel semanticModel, AssignmentExpressionSyntax assignment, CancellationToken cancellationToken, out ApplicationCommandChecksFailedMigrationCandidate candidate)
+	internal static bool TryGetDiagnosticCandidate(SemanticModel semanticModel, AssignmentExpressionSyntax assignment, CancellationToken cancellationToken, out ApplicationCommandChecksFailedMigrationCandidate candidate)
 	{
 		candidate = null!;
 
@@ -53,26 +53,40 @@ internal static class ApplicationCommandChecksFailedMigrationAnalysis
 		if (!TryGetHandlerInfo(handler, out var handlerInfo))
 			return false;
 
-		if (!TryMatchGuardCondition(semanticModel, handlerInfo.ArgumentsIdentifier, handlerInfo.GuardIfStatement.Condition, mapping.ExpectedExceptionMetadataName, cancellationToken, out var failedExceptionIdentifier))
+		if (!TryFindGuardIfStatement(semanticModel, handlerInfo.HandlerBlock, handlerInfo.ArgumentsIdentifier, mapping.ExpectedExceptionMetadataName, cancellationToken, out var guardIfStatement, out var failedExceptionIdentifier))
 			return false;
 
-		var protectedStatements = GetProtectedStatements(handlerInfo.GuardIfStatement, handlerInfo.HandlerBlock);
+		var protectedStatements = GetProtectedStatements(guardIfStatement);
 		if (!AreStatementsSupported(protectedStatements, handlerInfo.ArgumentsIdentifier, failedExceptionIdentifier))
 			return false;
+
+		var canAutoFix = IsFullyGuardedHandler(handlerInfo.HandlerBlock, guardIfStatement) ||
+		                 CanExtractGuardedBranch(handlerInfo.HandlerBlock, guardIfStatement, handlerInfo.ArgumentsIdentifier);
 
 		candidate = new(
 			assignment,
 			eventAccess,
 			handler,
 			handlerInfo.HandlerBlock,
-			handlerInfo.GuardIfStatement,
+			guardIfStatement,
 			handlerInfo.ArgumentsIdentifier,
 			mapping.SourceEventName,
 			mapping.TargetEventName,
 			mapping.TargetEventArgsTypeName,
-			failedExceptionIdentifier);
+			failedExceptionIdentifier,
+			canAutoFix);
 
 		return true;
+	}
+
+	internal static bool TryGetCodeFixCandidate(SemanticModel semanticModel, AssignmentExpressionSyntax assignment, CancellationToken cancellationToken, out ApplicationCommandChecksFailedMigrationCandidate candidate)
+	{
+		if (TryGetDiagnosticCandidate(semanticModel, assignment, cancellationToken, out candidate) &&
+		    candidate.CanAutoFix)
+			return true;
+
+		candidate = null!;
+		return false;
 	}
 
 	internal static ImmutableArray<StatementSyntax> GetMigratedStatements(ApplicationCommandChecksFailedMigrationCandidate candidate)
@@ -99,7 +113,11 @@ internal static class ApplicationCommandChecksFailedMigrationAnalysis
 		    eventSymbol.ContainingType.ToDisplayString() != ApplicationCommandsExtensionMetadataName)
 			return false;
 
-		return s_mappings.TryGetValue(eventSymbol.Name, out mapping) && mapping is not null;
+		if (!s_mappings.TryGetValue(eventSymbol.Name, out var resolvedMapping) || resolvedMapping is null)
+			return false;
+
+		mapping = resolvedMapping;
+		return true;
 	}
 
 	private static bool TryGetHandlerInfo(AnonymousFunctionExpressionSyntax handler, out ApplicationCommandChecksFailedMigrationHandlerInfo handlerInfo)
@@ -111,26 +129,40 @@ internal static class ApplicationCommandChecksFailedMigrationAnalysis
 			case ParenthesizedLambdaExpressionSyntax parenthesizedLambda
 				when parenthesizedLambda.Body is BlockSyntax handlerBlock &&
 				     parenthesizedLambda.ParameterList.Parameters.Count == 2 &&
-				     parenthesizedLambda.ParameterList.Parameters[1].Identifier.ValueText is { Length: > 0 } argumentsIdentifier &&
-				     handlerBlock.Statements.Count == 1 &&
-				     handlerBlock.Statements.FirstOrDefault() is IfStatementSyntax guardIfStatement &&
-				     guardIfStatement.Else is null:
-				handlerInfo = new(handlerBlock, guardIfStatement, argumentsIdentifier);
+				     parenthesizedLambda.ParameterList.Parameters[1].Identifier.ValueText is { Length: > 0 } argumentsIdentifier:
+				handlerInfo = new(handlerBlock, argumentsIdentifier);
 				return true;
 
 			case AnonymousMethodExpressionSyntax anonymousMethod
 				when anonymousMethod.Block is { } anonymousHandlerBlock &&
 				     anonymousMethod.ParameterList is { Parameters.Count: 2 } parameterList &&
-				     parameterList.Parameters[1].Identifier.ValueText is { Length: > 0 } anonymousArgumentsIdentifier &&
-				     anonymousHandlerBlock.Statements.Count == 1 &&
-				     anonymousHandlerBlock.Statements.FirstOrDefault() is IfStatementSyntax anonymousGuardIfStatement &&
-				     anonymousGuardIfStatement.Else is null:
-				handlerInfo = new(anonymousHandlerBlock, anonymousGuardIfStatement, anonymousArgumentsIdentifier);
+				     parameterList.Parameters[1].Identifier.ValueText is { Length: > 0 } anonymousArgumentsIdentifier:
+				handlerInfo = new(anonymousHandlerBlock, anonymousArgumentsIdentifier);
 				return true;
 
 			default:
 				return false;
 		}
+	}
+
+	private static bool TryFindGuardIfStatement(SemanticModel semanticModel, BlockSyntax handlerBlock, string argumentsIdentifier, string expectedExceptionMetadataName, CancellationToken cancellationToken, out IfStatementSyntax guardIfStatement, out string? failedExceptionIdentifier)
+	{
+		guardIfStatement = null!;
+		failedExceptionIdentifier = null;
+
+		foreach (var candidateGuard in handlerBlock.DescendantNodes().OfType<IfStatementSyntax>())
+		{
+			if (candidateGuard.Else is not null)
+				continue;
+
+			if (!TryMatchGuardCondition(semanticModel, argumentsIdentifier, candidateGuard.Condition, expectedExceptionMetadataName, cancellationToken, out failedExceptionIdentifier))
+				continue;
+
+			guardIfStatement = candidateGuard;
+			return true;
+		}
+
+		return false;
 	}
 
 	private static bool TryMatchGuardCondition(SemanticModel semanticModel, string argumentsIdentifier, ExpressionSyntax condition, string expectedExceptionMetadataName, CancellationToken cancellationToken, out string? failedExceptionIdentifier)
@@ -172,10 +204,67 @@ internal static class ApplicationCommandChecksFailedMigrationAnalysis
 	private static bool IsExpectedExceptionType(SemanticModel semanticModel, TypeSyntax typeSyntax, INamedTypeSymbol expectedExceptionType, CancellationToken cancellationToken)
 		=> SymbolEqualityComparer.Default.Equals(semanticModel.GetTypeInfo(typeSyntax, cancellationToken).Type, expectedExceptionType);
 
-	private static ImmutableArray<StatementSyntax> GetProtectedStatements(IfStatementSyntax guardIfStatement, BlockSyntax handlerBlock)
+	private static bool CanExtractGuardedBranch(BlockSyntax handlerBlock, IfStatementSyntax guardIfStatement, string argumentsIdentifier)
 	{
-		_ = handlerBlock;
+		if (guardIfStatement.Parent is not BlockSyntax currentBlock || currentBlock == handlerBlock)
+			return false;
 
+		StatementSyntax? topLevelPathStatement = null;
+		while (currentBlock != handlerBlock)
+		{
+			if (!TryGetContainingStatement(currentBlock, out var parentBlock, out var pathStatement))
+				return false;
+
+			if (parentBlock != handlerBlock && !ReferenceEquals(parentBlock.Statements.FirstOrDefault(), pathStatement))
+				return false;
+
+			if (parentBlock == handlerBlock)
+				topLevelPathStatement = pathStatement;
+
+			currentBlock = parentBlock;
+		}
+
+		if (topLevelPathStatement is null)
+			return false;
+
+		foreach (var statement in handlerBlock.Statements)
+		{
+			if (ReferenceEquals(statement, topLevelPathStatement) ||
+			    IsHandledAssignment(statement, argumentsIdentifier) ||
+			    IsSafeCompletionStatement(statement))
+				continue;
+
+			return false;
+		}
+
+		return true;
+	}
+
+	private static bool IsFullyGuardedHandler(BlockSyntax handlerBlock, IfStatementSyntax guardIfStatement)
+	{
+		return handlerBlock.Statements.Count == 1 &&
+		       ReferenceEquals(handlerBlock.Statements[0], guardIfStatement) &&
+		       guardIfStatement.Else is null;
+	}
+
+	internal static bool TryGetContainingStatement(BlockSyntax currentBlock, out BlockSyntax parentBlock, out StatementSyntax pathStatement)
+	{
+		parentBlock = null!;
+		pathStatement = null!;
+
+		pathStatement = currentBlock
+			.Ancestors()
+			.OfType<StatementSyntax>()
+			.FirstOrDefault(statement => statement.Parent is BlockSyntax block && block.Span.Contains(currentBlock.Span))!;
+		if (pathStatement is null || pathStatement.Parent is not BlockSyntax containingBlock)
+			return false;
+
+		parentBlock = containingBlock;
+		return true;
+	}
+
+	private static ImmutableArray<StatementSyntax> GetProtectedStatements(IfStatementSyntax guardIfStatement)
+	{
 		return guardIfStatement.Statement switch
 		{
 			BlockSyntax guardedBlock => guardedBlock.Statements.ToImmutableArray(),
@@ -212,6 +301,22 @@ internal static class ApplicationCommandChecksFailedMigrationAnalysis
 		   identifierName == argumentsIdentifier &&
 		   memberAccess.Name.Identifier.ValueText == ExceptionPropertyName;
 
+	private static bool IsHandledAssignment(StatementSyntax statement, string argumentsIdentifier)
+		=> statement is ExpressionStatementSyntax
+		{
+			Expression: AssignmentExpressionSyntax
+			{
+				Left: MemberAccessExpressionSyntax
+				{
+					Expression: IdentifierNameSyntax { Identifier.ValueText: var identifierName },
+					Name.Identifier.ValueText: "Handled"
+				}
+			}
+		} && identifierName == argumentsIdentifier;
+
+	private static bool IsSafeCompletionStatement(StatementSyntax statement)
+		=> statement is ReturnStatementSyntax;
+
 	internal sealed class ApplicationCommandChecksFailedMigrationCandidate
 	{
 		internal ApplicationCommandChecksFailedMigrationCandidate(
@@ -224,7 +329,8 @@ internal static class ApplicationCommandChecksFailedMigrationAnalysis
 			string sourceEventName,
 			string targetEventName,
 			string targetEventArgsTypeName,
-			string? failedExceptionIdentifier)
+			string? failedExceptionIdentifier,
+			bool canAutoFix)
 		{
 			this.Assignment = assignment;
 			this.EventAccess = eventAccess;
@@ -236,6 +342,7 @@ internal static class ApplicationCommandChecksFailedMigrationAnalysis
 			this.TargetEventName = targetEventName;
 			this.TargetEventArgsTypeName = targetEventArgsTypeName;
 			this.FailedExceptionIdentifier = failedExceptionIdentifier;
+			this.CanAutoFix = canAutoFix;
 		}
 
 		internal AssignmentExpressionSyntax Assignment { get; }
@@ -257,20 +364,19 @@ internal static class ApplicationCommandChecksFailedMigrationAnalysis
 		internal string TargetEventArgsTypeName { get; }
 
 		internal string? FailedExceptionIdentifier { get; }
+
+		internal bool CanAutoFix { get; }
 	}
 
 	private sealed class ApplicationCommandChecksFailedMigrationHandlerInfo
 	{
-		internal ApplicationCommandChecksFailedMigrationHandlerInfo(BlockSyntax handlerBlock, IfStatementSyntax guardIfStatement, string argumentsIdentifier)
+		internal ApplicationCommandChecksFailedMigrationHandlerInfo(BlockSyntax handlerBlock, string argumentsIdentifier)
 		{
 			this.HandlerBlock = handlerBlock;
-			this.GuardIfStatement = guardIfStatement;
 			this.ArgumentsIdentifier = argumentsIdentifier;
 		}
 
 		internal BlockSyntax HandlerBlock { get; }
-
-		internal IfStatementSyntax GuardIfStatement { get; }
 
 		internal string ArgumentsIdentifier { get; }
 	}
