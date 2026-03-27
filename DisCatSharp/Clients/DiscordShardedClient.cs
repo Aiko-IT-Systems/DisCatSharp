@@ -573,7 +573,7 @@ public sealed partial class DiscordShardedClient : IDisposable
 	/// <param name="enableLogger">Whether to enable the logger.</param>
 	private Task InternalStopAsync(bool enableLogger = true)
 	{
-		if (!this._isStarted)
+		if (!this._isStarted && this._shards.IsEmpty)
 			return Task.CompletedTask;
 
 		if (enableLogger)
