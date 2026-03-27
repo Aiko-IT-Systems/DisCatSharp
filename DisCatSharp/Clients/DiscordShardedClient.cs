@@ -2,12 +2,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
@@ -20,8 +17,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Options;
 
-using Newtonsoft.Json.Linq;
-
 using Sentry;
 
 namespace DisCatSharp;
@@ -29,7 +24,7 @@ namespace DisCatSharp;
 /// <summary>
 ///     A Discord client that shards automatically.
 /// </summary>
-public sealed partial class DiscordShardedClient
+public sealed partial class DiscordShardedClient : IDisposable
 {
 	#region Constructor
 
@@ -198,14 +193,42 @@ public sealed partial class DiscordShardedClient
 
 	#endregion
 
-	#region Destructor
+	#region Disposal
 
 	/// <summary>
-	///     Disposes the client.
+	///     Disposes the client and disconnects all shards.
+	/// </summary>
+	public void Dispose()
+	{
+		if (this._disposed)
+			return;
+
+		lock (this)
+		{
+			if (this._disposed)
+				return;
+
+			this._disposed = true;
+		}
+
+		try
+		{
+			this.InternalStopAsync(false).ConfigureAwait(false).GetAwaiter().GetResult();
+		}
+		catch
+		{
+			// Swallow exceptions during disposal to prevent masking original errors.
+		}
+
+		GC.SuppressFinalize(this);
+	}
+
+	/// <summary>
+	///     Releases unmanaged resources if <see cref="Dispose" /> was not called.
 	/// </summary>
 	~DiscordShardedClient()
 	{
-		this.InternalStopAsync(false).GetAwaiter().GetResult();
+		this.Dispose();
 	}
 
 	#endregion
@@ -225,12 +248,20 @@ public sealed partial class DiscordShardedClient
 	/// <summary>
 	///     Gets the gateway info for the client's session.
 	/// </summary>
-	public GatewayInfo GatewayInfo { get; private set; }
+	public GatewayInfo GatewayInfo
+	{
+		get => this._gatewayInfo;
+		private set => this._gatewayInfo = value;
+	}
 
 	/// <summary>
 	///     Gets the current user.
 	/// </summary>
-	public DiscordUser CurrentUser { get; private set; }
+	public DiscordUser CurrentUser
+	{
+		get => this._currentUser;
+		private set => this._currentUser = value;
+	}
 
 	/// <summary>
 	///     Gets the current api channel.
@@ -258,7 +289,11 @@ public sealed partial class DiscordShardedClient
 	/// <summary>
 	///     Gets the current application.
 	/// </summary>
-	public DiscordApplication CurrentApplication { get; private set; }
+	public DiscordApplication CurrentApplication
+	{
+		get => this._currentApplication;
+		private set => this._currentApplication = value;
+	}
 
 	/// <summary>
 	///     Gets the list of available voice regions. Note that this property will not contain VIP voice regions.
@@ -313,12 +348,32 @@ public sealed partial class DiscordShardedClient
 	/// <summary>
 	///     Whether the shard client is started.
 	/// </summary>
-	private bool _isStarted;
+	private volatile bool _isStarted;
+
+	/// <summary>
+	///     Whether the client has been disposed.
+	/// </summary>
+	private volatile bool _disposed;
 
 	/// <summary>
 	///     Whether manual sharding is enabled.
 	/// </summary>
 	private readonly bool _manuallySharding;
+
+	/// <summary>
+	///     Backing field for <see cref="GatewayInfo" />.
+	/// </summary>
+	private GatewayInfo _gatewayInfo;
+
+	/// <summary>
+	///     Backing field for <see cref="CurrentUser" />.
+	/// </summary>
+	private DiscordUser _currentUser;
+
+	/// <summary>
+	///     Backing field for <see cref="CurrentApplication" />.
+	/// </summary>
+	private DiscordApplication _currentApplication;
 
 	#endregion
 
@@ -331,10 +386,10 @@ public sealed partial class DiscordShardedClient
 	/// <exception cref="InvalidOperationException"></exception>
 	public async Task StartAsync()
 	{
+		ObjectDisposedException.ThrowIf(this._disposed, this);
+
 		if (this._isStarted)
 			throw new InvalidOperationException("This client has already been started.");
-
-		this._isStarted = true;
 
 		try
 		{
@@ -369,6 +424,12 @@ public sealed partial class DiscordShardedClient
 					}
 				}
 			}
+
+			// Await any remaining connection tasks from the final incomplete batch.
+			if (connectTasks.Count > 0)
+				await Task.WhenAll(connectTasks).ConfigureAwait(false);
+
+			this._isStarted = true;
 		}
 		catch (Exception ex)
 		{
@@ -386,7 +447,10 @@ public sealed partial class DiscordShardedClient
 	/// </summary>
 	/// <exception cref="InvalidOperationException"></exception>
 	public Task StopAsync()
-		=> this.InternalStopAsync();
+	{
+		ObjectDisposedException.ThrowIf(this._disposed, this);
+		return this.InternalStopAsync();
+	}
 
 	/// <summary>
 	///     Gets a shard from a guild id.
@@ -399,6 +463,8 @@ public sealed partial class DiscordShardedClient
 	/// <returns>The found <see cref="DiscordClient" /> shard. Otherwise null if the shard was not found for the guild id.</returns>
 	public DiscordClient GetShard(ulong guildId)
 	{
+		ObjectDisposedException.ThrowIf(this._disposed, this);
+
 		var index = this._manuallySharding ? this.GetShardIdFromGuilds(guildId) : Utilities.GetShardId(guildId, this.ShardClients.Count);
 
 		return index != -1 ? this._shards[index] : null;
@@ -414,7 +480,10 @@ public sealed partial class DiscordShardedClient
 	/// <param name="guild">The guild for the shard.</param>
 	/// <returns>The found <see cref="DiscordClient" /> shard. Otherwise null if the shard was not found for the guild.</returns>
 	public DiscordClient GetShard(DiscordGuild guild)
-		=> this.GetShard(guild.Id);
+	{
+		ObjectDisposedException.ThrowIf(this._disposed, this);
+		return this.GetShard(guild.Id);
+	}
 
 	/// <summary>
 	///     Updates the status on all shards.
@@ -425,6 +494,8 @@ public sealed partial class DiscordShardedClient
 	/// <returns>Asynchronous operation.</returns>
 	public async Task UpdateStatusAsync(DiscordActivity? activity = null, UserStatus? userStatus = null, DateTimeOffset? idleSince = null)
 	{
+		ObjectDisposedException.ThrowIf(this._disposed, this);
+
 		var tasks = this._shards.Values.Select(client => client.UpdateStatusAsync(activity, userStatus, idleSince)).ToList();
 
 		await Task.WhenAll(tasks).ConfigureAwait(false);
@@ -439,79 +510,10 @@ public sealed partial class DiscordShardedClient
 	/// </summary>
 	private async Task<GatewayInfo> GetGatewayInfoAsync()
 	{
-		var httphandler = new HttpClientHandler
-		{
-			UseCookies = false,
-			AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip,
-			UseProxy = this._configuration.Proxy != null,
-			Proxy = this._configuration.Proxy
-		};
-		var url = $"{Utilities.GetApiBaseUri(this._configuration)}{Endpoints.GATEWAY}{Endpoints.BOT}";
-		var http = new HttpClient(httphandler)
-		{
-			BaseAddress = new(Utilities.GetApiBaseUri(this._configuration)),
-			Timeout = this._configuration.HttpTimeout
-		};
+		this.Logger.LogDebug(LoggerEvents.ShardRest, "Obtaining gateway information from GET {Gateway}{Bot}...", Endpoints.GATEWAY, Endpoints.BOT);
 
-		http.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.USER_AGENT, Utilities.GetUserAgent());
-		http.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.AUTHORIZATION, Utilities.GetFormattedToken(this._configuration));
-		http.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.DISCORD_LOCALE, this._configuration.Locale);
-		if (!string.IsNullOrWhiteSpace(this._configuration.Timezone))
-			http.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.DISCORD_TIMEZONE, this._configuration.Timezone);
-		if (this._configuration.Override != null)
-			http.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.SUPER_PROPERTIES, this._configuration.Override);
-
-		this.Logger.LogDebug(LoggerEvents.ShardRest, $"Obtaining gateway information from GET {Endpoints.GATEWAY}{Endpoints.BOT}...");
-		var resp = await http.GetAsync(url).ConfigureAwait(false);
-
-		http.Dispose();
-
-		if (!resp.IsSuccessStatusCode)
-		{
-			var ratelimited = await HandleHttpError(url, resp).ConfigureAwait(false);
-
-			if (ratelimited)
-				return await this.GetGatewayInfoAsync().ConfigureAwait(false);
-		}
-
-		var timer = new Stopwatch();
-		timer.Start();
-
-		var jo = JObject.Parse(await resp.Content.ReadAsStringAsync().ConfigureAwait(false));
-		var info = jo.ToObject<GatewayInfo>();
-
-		//There is a delay from parsing here.
-		timer.Stop();
-
-		info.SessionBucket.ResetAfterInternal -= (int)timer.ElapsedMilliseconds;
-		info.SessionBucket.ResetAfter = DateTimeOffset.UtcNow + TimeSpan.FromMilliseconds(info.SessionBucket.ResetAfterInternal);
-
-		return info;
-
-		async Task<bool> HandleHttpError(string reqUrl, HttpResponseMessage msg)
-		{
-			var code = (int)msg.StatusCode;
-
-			if (code == 401 || code == 403)
-				throw new($"Authentication failed, check your token and try again: {code} {msg.ReasonPhrase}");
-			if (code == 429)
-			{
-				this.Logger.LogError(LoggerEvents.ShardClientError, $"Ratelimit hit, requeuing request to {reqUrl}");
-
-				var hs = msg.Headers.ToDictionary(xh => xh.Key, xh => string.Join("\n", xh.Value), StringComparer.OrdinalIgnoreCase);
-				var waitInterval = 0;
-
-				if (hs.TryGetValue("Retry-After", out var retryAfterRaw))
-					waitInterval = int.Parse(retryAfterRaw, CultureInfo.InvariantCulture);
-
-				await Task.Delay(waitInterval).ConfigureAwait(false);
-				return true;
-			}
-
-			if (code >= 500)
-				throw new($"Internal Server Error: {code} {msg.ReasonPhrase}");
-			throw new($"An unsuccessful HTTP status code was encountered: {code} {msg.ReasonPhrase}");
-		}
+		using var tempClient = new DiscordClient(this._configuration);
+		return await tempClient.ApiClient.GetGatewayInfoAsync().ConfigureAwait(false);
 	}
 
 	#endregion
@@ -551,18 +553,17 @@ public sealed partial class DiscordShardedClient
 		await client.ConnectAsync().ConfigureAwait(false);
 		this.Logger.LogInformation(LoggerEvents.ShardStartup, "Booted shard {0}.", i);
 
-		this.GatewayInfo ??= client.GatewayInfo;
-
-		if (this.CurrentUser == null)
-			this.CurrentUser = client.CurrentUser;
-
-		if (this.CurrentApplication == null)
-			this.CurrentApplication = client.CurrentApplication;
+		// Atomic compare-exchange to safely publish shared state from the first shard
+		// that connects, avoiding TOCTOU races when MaxConcurrency > 1.
+		Interlocked.CompareExchange(ref this._gatewayInfo, client.GatewayInfo, null);
+		Interlocked.CompareExchange(ref this._currentUser, client.CurrentUser, null);
+		Interlocked.CompareExchange(ref this._currentApplication, client.CurrentApplication, null);
 
 		if (this._internalVoiceRegions == null)
 		{
-			this._internalVoiceRegions = client.InternalVoiceRegions;
-			this._voiceRegionsLazy = new(() => new ReadOnlyDictionary<string, DiscordVoiceRegion>(this._internalVoiceRegions));
+			var regions = client.InternalVoiceRegions;
+			if (Interlocked.CompareExchange(ref this._internalVoiceRegions, regions, null) == null)
+				this._voiceRegionsLazy = new(() => new ReadOnlyDictionary<string, DiscordVoiceRegion>(this._internalVoiceRegions));
 		}
 	}
 
@@ -573,7 +574,7 @@ public sealed partial class DiscordShardedClient
 	private Task InternalStopAsync(bool enableLogger = true)
 	{
 		if (!this._isStarted)
-			throw new InvalidOperationException("This client has not been started.");
+			return Task.CompletedTask;
 
 		if (enableLogger)
 			this.Logger.LogInformation(LoggerEvents.ShardShutdown, "Disposing {0} shards.", this._shards.Count);
