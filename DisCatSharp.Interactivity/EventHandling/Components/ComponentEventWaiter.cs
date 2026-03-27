@@ -9,6 +9,7 @@ using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Interactivity.Enums;
+using DisCatSharp.Telemetry;
 
 using Microsoft.Extensions.Logging;
 
@@ -69,6 +70,7 @@ internal class ComponentEventWaiter : IDisposable
 		}
 		catch (Exception e)
 		{
+			this._client.DiagnosticsSink.CaptureException("DisCatSharp.Interactivity", e);
 			this._client.Logger.LogError(InteractivityEvents.InteractivityWaitError, e, "An exception was thrown while waiting for components.");
 			return null;
 		}
@@ -93,6 +95,7 @@ internal class ComponentEventWaiter : IDisposable
 		}
 		catch (Exception e)
 		{
+			this._client.DiagnosticsSink.CaptureException("DisCatSharp.Interactivity", e);
 			this._client.Logger.LogError(InteractivityEvents.InteractivityCollectorError, e, "There was an error while collecting component event args.");
 		}
 		finally

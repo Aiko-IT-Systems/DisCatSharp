@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
+using DisCatSharp.Telemetry;
 
 using Xunit;
 
@@ -112,6 +113,31 @@ public class ShardedClientLifecycleTests
 		await client.StopAsync();
 
 		Assert.Empty(shards);
+	}
+
+	[Fact]
+	public void CreateShardClient_UsesShardSpecificDiagnosticsSinkConfiguration()
+	{
+		var shardConfig = new DiscordConfiguration
+		{
+			Token = "dummy.token.for.testing",
+			TokenType = TokenType.Bot,
+			AutoReconnect = false,
+			EnableSentry = true,
+			HasShardLogger = true,
+			ShardId = 3,
+			ShardCount = 7
+		};
+
+		var shardClient = DiscordShardedClient.CreateShardClient(shardConfig);
+
+		var sink = Assert.IsType<SentryDiagnosticsSink>(shardClient.DiagnosticsSink);
+		var configField = typeof(SentryDiagnosticsSink).GetField("_config", BindingFlags.Instance | BindingFlags.NonPublic);
+		Assert.NotNull(configField);
+		var sinkConfig = Assert.IsType<DiscordConfiguration>(configField!.GetValue(sink));
+
+		Assert.Equal(3, sinkConfig.ShardId);
+		Assert.Equal(7, sinkConfig.ShardCount);
 	}
 
 	#endregion

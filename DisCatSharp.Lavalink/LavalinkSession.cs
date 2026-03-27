@@ -20,6 +20,8 @@ using DisCatSharp.Net;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.WebSocket;
 
+using DisCatSharp.Telemetry;
+
 using Microsoft.Extensions.Logging;
 
 using Newtonsoft.Json.Linq;
@@ -576,6 +578,11 @@ public sealed class LavalinkSession
 			}
 			catch (Exception ex)
 			{
+				this.Discord.DiagnosticsSink.CaptureException("DisCatSharp.Lavalink", ex, tags: new Dictionary<string, string>
+				{
+					[DiagnosticTags.ErrorOrigin] = DiagnosticTags.OriginUpstream,
+					[DiagnosticTags.UpstreamService] = "lavalink"
+				});
 				if (!this.Config.SocketAutoReconnect || this._backoff == MAXIMUM_BACKOFF)
 				{
 					this.Discord.Logger.LogCritical(LavalinkEvents.LavalinkConnectionError, ex, "Failed to connect to Lavalink .-.");
@@ -610,6 +617,8 @@ public sealed class LavalinkSession
 				var json = et.Message;
 				var jsonData = JObject.Parse(json);
 				var op = jsonData["op"]!.ToObject<OpType>();
+
+				this.Discord.DiagnosticsSink.AddBreadcrumb("DisCatSharp.Lavalink", "lavalink.ws", $"Received Lavalink OP: {op}", data: new Dictionary<string, string> { ["op"] = op.ToString() });
 
 				switch (op)
 				{
@@ -704,6 +713,11 @@ public sealed class LavalinkSession
 			}
 			catch (Exception ex)
 			{
+				this.Discord.DiagnosticsSink.CaptureException("DisCatSharp.Lavalink", ex, tags: new Dictionary<string, string>
+				{
+					[DiagnosticTags.ErrorOrigin] = DiagnosticTags.OriginUpstream,
+					[DiagnosticTags.UpstreamService] = "lavalink"
+				});
 				this.Discord.Logger.LogDebug("{message}", ex.Message);
 				this.Discord.Logger.LogDebug("{stacktrace}", ex.StackTrace);
 			}

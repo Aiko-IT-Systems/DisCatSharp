@@ -20,6 +20,7 @@ using DisCatSharp.Enums;
 using DisCatSharp.Enums.Core;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Exceptions;
+using DisCatSharp.Telemetry;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -640,6 +641,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		}
 		catch (Exception ex)
 		{
+			this.DiagnosticsSink.CaptureException("DisCatSharp.ApplicationCommands", ex);
 			this.Client.Logger.LogCritical(ex, "There was an error during the application commands setup");
 			this.Client.Logger.LogError(ex.Message);
 			this.Client.Logger.LogError(ex.StackTrace);
@@ -837,10 +839,12 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			}
 			catch (NullReferenceException ex)
 			{
+				this.DiagnosticsSink.CaptureException("DisCatSharp.ApplicationCommands", ex);
 				this.Client.Logger.LogCritical(ex, "NRE Exception thrown: {msg}\nStack: {stack}", ex.Message, ex.StackTrace);
 			}
 			catch (Exception ex)
 			{
+				this.DiagnosticsSink.CaptureException("DisCatSharp.ApplicationCommands", ex);
 				if (ex is BadRequestException brex)
 					this.Client.Logger.LogCritical(brex, @"There was an error registering application commands: {res}", brex.WebResponse.Response);
 				else
@@ -924,6 +928,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					}
 					catch (UnauthorizedException ex)
 					{
+						this.DiagnosticsSink.CaptureException("DisCatSharp.ApplicationCommands", ex);
 						this.Client.Logger.LogError("Could not register application commands for guild {guildId}.\nError: {exc}", guildId, ex.JsonMessage);
 						return;
 					}
@@ -971,10 +976,12 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				}
 				catch (NullReferenceException ex)
 				{
+					this.DiagnosticsSink.CaptureException("DisCatSharp.ApplicationCommands", ex);
 					this.Client.Logger.LogCritical(ex, "NRE Exception thrown: {msg}\nStack: {stack}", ex.Message, ex.StackTrace);
 				}
 				catch (Exception ex)
 				{
+					this.DiagnosticsSink.CaptureException("DisCatSharp.ApplicationCommands", ex);
 					if (ex is BadRequestException brex)
 						this.Client.Logger.LogCritical(brex, @"There was an error registering application commands: {res}", brex.WebResponse.Response);
 					else
@@ -1066,6 +1073,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			}
 			catch (Exception ex)
 			{
+				this.DiagnosticsSink.CaptureException("DisCatSharp.ApplicationCommands", ex);
 				this.Client.Logger.LogError(@"{msg}", ex.Message);
 				this.Client.Logger.LogError(@"{stack}", ex.StackTrace);
 			}
@@ -1215,6 +1223,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					}
 					catch (Exception ex)
 					{
+						this.DiagnosticsSink.CaptureException("DisCatSharp.ApplicationCommands", ex);
 						await this._slashError.InvokeAsync(this, new(this.Client.ServiceProvider)
 						{
 							Context = context,
@@ -1351,6 +1360,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					}
 					catch (Exception ex)
 					{
+						this.DiagnosticsSink.CaptureException("DisCatSharp.ApplicationCommands", ex);
 						this.Client.Logger.LogError(ex, "Error in autocomplete interaction");
 					}
 
@@ -1466,6 +1476,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			}
 			catch (Exception ex)
 			{
+				this.DiagnosticsSink.CaptureException("DisCatSharp.ApplicationCommands", ex);
 				await this._contextMenuErrored.InvokeAsync(this, new(this.Client.ServiceProvider)
 				{
 					Context = context,

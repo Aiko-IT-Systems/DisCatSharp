@@ -13,10 +13,9 @@ using System.Threading.Tasks;
 
 using DisCatSharp.Common.RegularExpressions;
 using DisCatSharp.Exceptions;
+using DisCatSharp.Telemetry;
 
 using Microsoft.Extensions.Logging;
-
-using Sentry;
 
 namespace DisCatSharp.Net;
 
@@ -360,6 +359,14 @@ internal sealed class RestClient : IDisposable
 
 			var req = this.BuildFormRequest(request);
 
+			if (this._discord?.DiagnosticsSink.IsEnabled ?? false)
+				this._discord.DiagnosticsSink.AddBreadcrumb("DisCatSharp", "rest", $"{req.Method} {request.Route} (form)", Telemetry.DiagnosticSeverity.Debug, new Dictionary<string, string>
+				{
+					["method"] = req.Method.Method,
+					["route"] = request.Route,
+					["type"] = "form"
+				});
+
 			if (this.Debug && req.Content is not null)
 				this._logger.Log(LogLevel.Trace, LoggerEvents.RestTx, "Rest Form Request Content:\n{Content}", await req.Content.ReadAsStringAsync()!);
 
@@ -379,6 +386,13 @@ internal sealed class RestClient : IDisposable
 				response.Headers = res.Headers?.ToDictionary(xh => xh.Key, xh => string.Join("\n", xh.Value), StringComparer.OrdinalIgnoreCase);
 				response.Response = txt;
 				response.ResponseCode = res.StatusCode;
+
+				if (this._discord?.DiagnosticsSink.IsEnabled ?? false)
+					this._discord.DiagnosticsSink.AddBreadcrumb("DisCatSharp", "rest", $"Form response {(int)res.StatusCode} {request.Route}", Telemetry.DiagnosticSeverity.Debug, new Dictionary<string, string>
+					{
+						["status_code"] = ((int)res.StatusCode).ToString(),
+						["route"] = request.Route
+					});
 			}
 			catch (HttpRequestException httpex)
 			{
@@ -417,6 +431,21 @@ internal sealed class RestClient : IDisposable
 
 					// check the limit info and requeue
 					this.Handle429(response, out var wait, out var global);
+
+					if (this._discord?.DiagnosticsSink.IsEnabled ?? false)
+						this._discord.DiagnosticsSink.CaptureReport(new()
+						{
+							Source = "DisCatSharp",
+							Severity = Telemetry.DiagnosticSeverity.Warning,
+							Logger = "RestClient",
+							Message = global ? "Global rate limit hit (form request)" : "Rate limit hit (form request)",
+							Tags = new Dictionary<string, string>
+							{
+								["dcs.rest_route"] = request.Route,
+								["dcs.rate_limit_global"] = global.ToString().ToLowerInvariant()
+							}
+						});
+
 					if (wait is not null)
 					{
 						if (global)
@@ -562,6 +591,13 @@ internal sealed class RestClient : IDisposable
 
 			var req = this.BuildRequest(request);
 
+			if (this._discord?.DiagnosticsSink.IsEnabled ?? false)
+				this._discord.DiagnosticsSink.AddBreadcrumb("DisCatSharp", "rest", $"{req.Method} {request.Route}", Telemetry.DiagnosticSeverity.Debug, new Dictionary<string, string>
+				{
+					["method"] = req.Method.Method,
+					["route"] = request.Route
+				});
+
 			if (this.Debug && req.Content is not null)
 				this._logger.Log(LogLevel.Trace, LoggerEvents.RestTx, "Rest Request Content:\n{Content}", await req.Content.ReadAsStringAsync());
 
@@ -589,6 +625,13 @@ internal sealed class RestClient : IDisposable
 				response.Headers = res.Headers?.ToDictionary(xh => xh.Key, xh => string.Join("\n", xh.Value), StringComparer.OrdinalIgnoreCase);
 				response.Response = txt;
 				response.ResponseCode = res.StatusCode;
+
+				if (this._discord?.DiagnosticsSink.IsEnabled ?? false)
+					this._discord.DiagnosticsSink.AddBreadcrumb("DisCatSharp", "rest", $"Response {(int)res.StatusCode} {request.Route}", Telemetry.DiagnosticSeverity.Debug, new Dictionary<string, string>
+					{
+						["status_code"] = ((int)res.StatusCode).ToString(),
+						["route"] = request.Route
+					});
 			}
 			catch (HttpRequestException httpex)
 			{
@@ -601,7 +644,7 @@ internal sealed class RestClient : IDisposable
 			this.UpdateBucket(request, response, ratelimitTcs);
 
 			Exception? ex = null;
-			Exception? senex = null;
+			SentryCapturableException? senex = null;
 			switch (response.ResponseCode)
 			{
 				case HttpStatusCode.BadRequest:
@@ -628,6 +671,21 @@ internal sealed class RestClient : IDisposable
 
 					// check the limit info and requeue
 					this.Handle429(response, out var wait, out var global);
+
+					if (this._discord?.DiagnosticsSink.IsEnabled ?? false)
+						this._discord.DiagnosticsSink.CaptureReport(new()
+						{
+							Source = "DisCatSharp",
+							Severity = Telemetry.DiagnosticSeverity.Warning,
+							Logger = "RestClient",
+							Message = global ? "Global rate limit hit" : "Rate limit hit",
+							Tags = new Dictionary<string, string>
+							{
+								["dcs.rest_route"] = request.Route,
+								["dcs.rate_limit_global"] = global.ToString().ToLowerInvariant()
+							}
+						});
+
 					if (wait is not null)
 					{
 						if (global)
@@ -678,7 +736,7 @@ internal sealed class RestClient : IDisposable
 
 			if (ex is not null)
 			{
-				if (this._discord?.Configuration?.EnableSentry ?? false)
+				if (this._discord?.DiagnosticsSink.IsEnabled ?? false)
 					if (senex is not null)
 					{
 						Dictionary<string, object> debugInfo = new()
@@ -686,9 +744,12 @@ internal sealed class RestClient : IDisposable
 							{ "route", request.Route },
 							{ "time", DateTimeOffset.UtcNow }
 						};
-						senex.AddSentryContext("Request", debugInfo);
-						this._discord.Sentry.CaptureException(senex);
-						_ = Task.Run(this._discord.Sentry.FlushAsync);
+						Dictionary<string, string> tags = new()
+						{
+							["dcs.rest_route"] = request.Route,
+							["dcs.rest_status"] = ((int)response.ResponseCode).ToString()
+						};
+						this._discord.DiagnosticsSink.CaptureException("DisCatSharp", senex, debugInfo, tags);
 					}
 
 				request.SetFaulted(ex);

@@ -43,6 +43,12 @@ public sealed partial class DiscordClient
 			return;
 		}
 
+		if (this.DiagnosticsSink.IsEnabled)
+			this.DiagnosticsSink.AddBreadcrumb("DisCatSharp", "dispatch", $"Dispatch: {payload.EventName}", Telemetry.DiagnosticSeverity.Debug, new Dictionary<string, string>
+			{
+				["event_name"] = payload.EventName ?? "unknown"
+			});
+
 		if ((this.Configuration?.EnableLibraryDeveloperMode ?? false) || (this.Configuration?.EnablePayloadReceivedEvent ?? false))
 			await this._payloadReceived.InvokeAsync(this, new(this.ServiceProvider)
 			{
@@ -967,6 +973,9 @@ public sealed partial class DiscordClient
 		}
 
 		await this.ReadyEv.InvokeAsync(this, new(this.ServiceProvider)).ConfigureAwait(false);
+
+		if (this.DiagnosticsSink.IsEnabled)
+			this.DiagnosticsSink.StartSession();
 	}
 
 	/// <summary>

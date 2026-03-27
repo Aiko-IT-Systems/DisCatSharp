@@ -28,6 +28,7 @@ using DisCatSharp.Voice.Enums.Interop;
 using DisCatSharp.Voice.EventArgs;
 using DisCatSharp.Voice.Logging;
 using DisCatSharp.Voice.Payloads;
+using DisCatSharp.Telemetry;
 
 using Microsoft.Extensions.Logging;
 
@@ -535,6 +536,7 @@ public sealed class VoiceConnection : IDisposable
 		}
 		catch (Exception ex)
 		{
+			this._discord.DiagnosticsSink.CaptureException("DisCatSharp.Voice", ex);
 			this._discord.Logger.LogError(ex, "{Message}", ex.Message);
 		}
 
@@ -567,6 +569,7 @@ public sealed class VoiceConnection : IDisposable
 		}
 		catch (Exception ex)
 		{
+			this._discord.DiagnosticsSink.CaptureException("DisCatSharp.Voice", ex);
 			this._discord.Logger.LogError(ex, "{Message}", ex.Message);
 		}
 
@@ -1082,6 +1085,7 @@ public sealed class VoiceConnection : IDisposable
 			}
 			catch (Exception ex)
 			{
+				this._discord.DiagnosticsSink.CaptureException("DisCatSharp.Voice", ex);
 				// Return any rented packet buffer before logging to avoid a pool leak.
 				if (data != null)
 				{
@@ -1479,6 +1483,7 @@ public sealed class VoiceConnection : IDisposable
 		}
 		catch (Exception ex)
 		{
+			this._discord.DiagnosticsSink.CaptureException("DisCatSharp.Voice", ex);
 			this._discord.Logger.LogError(VoiceEvents.VoiceReceiveFailure, ex, "Exception occurred when decoding incoming audio data");
 		}
 	}
@@ -1502,6 +1507,7 @@ public sealed class VoiceConnection : IDisposable
 		}
 		catch (Exception ex)
 		{
+			this._discord.DiagnosticsSink.CaptureException("DisCatSharp.Voice", ex);
 			this._discord.Logger.LogError(VoiceEvents.VoiceKeepalive, ex, "Exception occurred when handling keepalive");
 		}
 	}
@@ -1530,6 +1536,7 @@ public sealed class VoiceConnection : IDisposable
 			}
 			catch (Exception ex)
 			{
+				this._discord.DiagnosticsSink.CaptureException("DisCatSharp.Voice", ex);
 				this._discord.Logger.LogError(VoiceEvents.VoiceReceiveFailure, ex, "Exception in UDP receiver task");
 			}
 		}
@@ -1875,6 +1882,7 @@ public sealed class VoiceConnection : IDisposable
 					}
 					catch (Exception ex) when (ex is DllNotFoundException or EntryPointNotFoundException)
 					{
+						this._discord.DiagnosticsSink.CaptureException("DisCatSharp.Voice", ex);
 						// libdave is not available on this platform/RID.  Disable DAVE gracefully
 						// rather than crashing the voice connection.  Audio will continue unencrypted.
 						this._daveSession = null;

@@ -1,9 +1,12 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Net.Abstractions;
+using DisCatSharp.Telemetry;
 
 using Newtonsoft.Json.Linq;
 
@@ -316,6 +319,65 @@ public class StoreGatewayDispatchFollowupRegressionTests
 	}
 
 	[Fact]
+	public async Task HandleDispatchSafelyAsync_DispatchFailure_CapturesDiagnosticsSinkException()
+	{
+		var client = CreateClient();
+		var sink = new TestDiagnosticsSink();
+		client.DiagnosticsSink = sink;
+
+		// Use a null EventName so HandleDispatchAsync crashes immediately at
+		// EventName.ToLowerInvariant() — avoids the full invite_create deserialization
+		// pipeline that behaves differently across platforms.
+		var payload = new GatewayPayload
+		{
+			OpCode = GatewayOpCode.Dispatch,
+			EventName = null!,
+			Sequence = 42,
+			Data = JObject.Parse("""{"placeholder":true}""")
+		};
+
+		await client.HandleDispatchSafelyAsync(payload);
+
+		var captured = await sink.WaitForExceptionAsync();
+
+		Assert.NotNull(captured.Exception);
+		Assert.IsType<NullReferenceException>(captured.Exception);
+		Assert.Equal("DisCatSharp", captured.Source);
+		Assert.Equal("unknown", captured.Tags["dcs.gateway_event"]);
+		Assert.Equal("0", captured.Tags["dcs.gateway_opcode"]);
+		Assert.Equal(DiagnosticTags.OriginLibrary, captured.Tags[DiagnosticTags.ErrorOrigin]);
+		Assert.Equal("unknown", captured.Context["event_name"]);
+		Assert.Equal(0, captured.Context["opcode"]);
+		Assert.Equal(42, captured.Context["sequence"]);
+	}
+
+	[Fact]
+	public async Task HandleSocketMessageAsync_UnknownOpcode_CapturesDiagnosticsSinkReport()
+	{
+		var client = CreateClient();
+		var sink = new TestDiagnosticsSink();
+		client.DiagnosticsSink = sink;
+
+		const string payload = """
+		                       {"op":99,"t":"mystery_event","s":7,"d":{"foo":"bar"}}
+		                       """;
+
+		await client.HandleSocketMessageAsync(payload);
+
+		var report = await sink.WaitForReportAsync();
+
+		Assert.Equal("DisCatSharp", report.Source);
+		Assert.Equal(DiagnosticSeverity.Warning, report.Severity);
+		Assert.Equal("DiscordClient.WebSocket", report.Logger);
+		Assert.Equal("Unknown gateway opcode 99", report.Message);
+		Assert.Equal("99", report.Tags["dcs.gateway_opcode"]);
+		Assert.Equal("mystery_event", report.Tags["dcs.gateway_event"]);
+		Assert.Equal("99", report.Extra["opcode_name"]);
+		Assert.Equal(7, report.Extra["sequence"]);
+		Assert.Equal(payload, report.Extra["Scrubbed Payload"]);
+	}
+
+	[Fact]
 	public async Task ThreadCreateEvent_MissingGuildCache_DoesNotThrowAndStillRaisesEvent()
 	{
 		var client = CreateClient();
@@ -373,4 +435,54 @@ public class StoreGatewayDispatchFollowupRegressionTests
 		{
 			Token = "1"
 		});
+
+	private sealed class TestDiagnosticsSink : ILibraryDiagnosticsSink
+	{
+		private readonly TaskCompletionSource<CapturedException> _exceptionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
+		private readonly TaskCompletionSource<CapturedReport> _reportSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+		public bool IsEnabled => true;
+
+		public void CaptureException(string source, Exception exception, IDictionary<string, object>? context = null, IDictionary<string, string>? tags = null)
+			=> this._exceptionSource.TrySetResult(new(source, exception, context is null ? new Dictionary<string, object>() : new(context), tags is null ? new Dictionary<string, string>() : new(tags)));
+
+		public void CaptureReport(DiagnosticReport report)
+			=> this._reportSource.TrySetResult(new(report.Source, report.Severity, report.Logger, report.Message, report.Extra is null ? new Dictionary<string, object>() : new(report.Extra), report.Tags is null ? new Dictionary<string, string>() : new(report.Tags)));
+
+		public void StartSession()
+		{ }
+
+		public void EndSession()
+		{ }
+
+		public void AddBreadcrumb(string source, string category, string message, DiagnosticSeverity level = DiagnosticSeverity.Info, IDictionary<string, string>? data = null)
+		{ }
+
+		public void EmitMetric(string source, string name, double value, string unit, IDictionary<string, string>? tags = null)
+		{ }
+
+		public IDisposable StartTiming(string source, string name, IDictionary<string, string>? tags = null)
+			=> NoOpDisposable.Instance;
+
+		public void Flush()
+		{ }
+
+		public Task<CapturedException> WaitForExceptionAsync()
+			=> this._exceptionSource.Task.WaitAsync(TimeSpan.FromSeconds(15));
+
+		public Task<CapturedReport> WaitForReportAsync()
+			=> this._reportSource.Task.WaitAsync(TimeSpan.FromSeconds(15));
+	}
+
+	private sealed record CapturedException(string Source, Exception Exception, Dictionary<string, object> Context, Dictionary<string, string> Tags);
+
+	private sealed record CapturedReport(string Source, DiagnosticSeverity Severity, string Logger, string Message, Dictionary<string, object> Extra, Dictionary<string, string> Tags);
+
+	private sealed class NoOpDisposable : IDisposable
+	{
+		public static NoOpDisposable Instance { get; } = new();
+
+		public void Dispose()
+		{ }
+	}
 }

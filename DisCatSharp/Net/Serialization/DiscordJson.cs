@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
 using DisCatSharp.Exceptions;
@@ -12,8 +11,6 @@ using Microsoft.Extensions.Logging;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
-using Sentry;
 
 using ErrorEventArgs = Newtonsoft.Json.Serialization.ErrorEventArgs;
 
@@ -130,28 +127,21 @@ public static class DiscordJson
 		if (discord.Configuration.EnableLibraryDeveloperMode)
 			discord.Logger.LogError(e.ErrorContext.Error, "{msg}\n\n{raw}", sentryMessage, e.ErrorContext.OriginalObject);
 
-		SentryEvent sentryEvent = new(new DiscordJsonException(jre))
+		if (!discord.DiagnosticsSink.IsEnabled)
+			return;
+
+		discord.DiagnosticsSink.CaptureReport(new()
 		{
-			Level = SentryLevel.Error,
+			Source = "DisCatSharp",
+			Severity = Telemetry.DiagnosticSeverity.Error,
 			Logger = nameof(DiscordJson),
-			Message = Utilities.StripTokensAndOptIds(sentryMessage, discord.Configuration.EnableDiscordIdScrubber)
-		};
-		sentryEvent.SetFingerprint(BaseDiscordClient.GenerateSentryFingerPrint(sentryEvent));
-		if (discord.Configuration.AttachUserInfo && discord.CurrentUser is not null)
-			sentryEvent.User = new()
-			{
-				Id = discord.CurrentUser.Id.ToString(),
-				Username = discord.CurrentUser.UsernameWithDiscriminator,
-				Other = new Dictionary<string, string>
-				{
-					{ "developer", discord.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
-					{ "email", discord.Configuration.FeedbackEmail ?? "not_given" }
-				}
-			};
-		var sid = discord.Sentry.CaptureEvent(sentryEvent);
-		_ = Task.Run(discord.Sentry.FlushAsync);
+			Message = Utilities.StripTokensAndOptIds(sentryMessage, discord.Configuration.EnableDiscordIdScrubber)!,
+			Exception = new DiscordJsonException(jre),
+			UserInfo = Telemetry.TelemetryBootstrap.BuildUserInfo(discord.Configuration, discord.CurrentUser)
+		});
+
 		if (discord.Configuration.EnableLibraryDeveloperMode)
-			discord.Logger.LogInformation("DiscordJson exception reported to sentry with id {sid}", sid.ToString());
+			discord.Logger.LogInformation("DiscordJson exception reported to diagnostics sink");
 	}
 
 	/// <summary>
@@ -179,7 +169,7 @@ public static class DiscordJson
 			return obj;
 
 		var sentryMessage = "Found missing properties in api response for " + obj.GetType().Name;
-		List<string> sentryFields = [];
+		Dictionary<string, object> sentryFields = [];
 		var vals = 0;
 		foreach (var ap in obj.AdditionalProperties)
 		{
@@ -194,39 +184,50 @@ public static class DiscordJson
 					discord.Logger.LogDebug("{json}", json);
 				}
 
-			sentryFields.Add(ap.Key);
+			var fieldType = InferFieldType(ap.Value);
+			sentryFields[ap.Key] = fieldType;
 			if (discord.Configuration.EnableLibraryDeveloperMode)
-				discord.Logger.LogInformation("Found field {field} on {object}", ap.Key, obj.GetType().Name);
+				discord.Logger.LogInformation("Found field {field}: {type} on {object}", ap.Key, fieldType, obj.GetType().Name);
 		}
 
 		if (!discord.Configuration.EnableSentry || sentryFields.Count is 0)
 			return obj;
 
-		var sentryJson = JsonConvert.SerializeObject(sentryFields);
+		var sentryJson = JsonConvert.SerializeObject(sentryFields, Formatting.Indented);
 		sentryMessage += "\n\nNew fields: " + sentryJson;
-		SentryEvent sentryEvent = new()
+
+		// Scrub the raw payload for safe inclusion — strip tokens/IDs
+		var scrubbedPayload = Utilities.StripTokensAndOptIds(json, discord.Configuration.EnableDiscordIdScrubber);
+
+		// Large payloads: truncate inline extra but include full version as file payload
+		byte[]? filePayload = null;
+		string? filePayloadName = null;
+		if (scrubbedPayload is not null && scrubbedPayload.Length > 8192)
 		{
-			Level = SentryLevel.Warning,
+			filePayload = System.Text.Encoding.UTF8.GetBytes(scrubbedPayload);
+			filePayloadName = $"scrubbed-payload-{obj.GetType().Name}.json";
+			scrubbedPayload = scrubbedPayload[..8192] + "... (truncated, full payload in file)";
+		}
+
+		discord.DiagnosticsSink.CaptureReport(new()
+		{
+			Source = "DisCatSharp",
+			Severity = Telemetry.DiagnosticSeverity.Warning,
 			Logger = nameof(DiscordJson),
-			Message = sentryMessage
-		};
-		sentryEvent.SetFingerprint(BaseDiscordClient.GenerateSentryFingerPrint(sentryEvent));
-		sentryEvent.SetExtra("Found Fields", sentryJson);
-		if (discord.Configuration.AttachUserInfo && discord.CurrentUser is not null)
-			sentryEvent.User = new()
+			Message = sentryMessage,
+			Extra = new Dictionary<string, object>
 			{
-				Id = discord.CurrentUser.Id.ToString(),
-				Username = discord.CurrentUser.UsernameWithDiscriminator,
-				Other = new Dictionary<string, string>
-				{
-					{ "developer", discord.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
-					{ "email", discord.Configuration.FeedbackEmail ?? "not_given" }
-				}
-			};
-		var sid = discord.Sentry.CaptureEvent(sentryEvent);
-		_ = Task.Run(discord.Sentry.FlushAsync);
+				{ "Found Fields", sentryJson },
+				{ "Scrubbed Payload", scrubbedPayload ?? "null" }
+			},
+			Tags = new Dictionary<string, string> { ["dcs.entity_type"] = obj.GetType().Name },
+			FilePayload = filePayload,
+			FilePayloadName = filePayloadName,
+			UserInfo = Telemetry.TelemetryBootstrap.BuildUserInfo(discord.Configuration, discord.CurrentUser)
+		});
+
 		if (discord.Configuration.EnableLibraryDeveloperMode)
-			discord.Logger.LogInformation("Missing fields reported to sentry with id {sid}", sid.ToString());
+			discord.Logger.LogInformation("Missing fields reported to diagnostics sink");
 
 		return obj;
 	}
@@ -278,7 +279,7 @@ public static class DiscordJson
 
 		var first = obj.First();
 		var sentryMessage = "Found missing properties in api response for " + first.GetType().Name;
-		List<string> sentryFields = [];
+		Dictionary<string, object> sentryFields = [];
 		var vals = 0;
 		foreach (var ap in first.AdditionalProperties)
 		{
@@ -293,40 +294,119 @@ public static class DiscordJson
 					discord.Logger.LogDebug("{json}", json);
 				}
 
-			sentryFields.Add(ap.Key);
+			var fieldType = InferFieldType(ap.Value);
+			sentryFields[ap.Key] = fieldType;
 			if (discord.Configuration.EnableLibraryDeveloperMode)
-				discord.Logger.LogInformation("Found field {field} on {object}", ap.Key, first.GetType().Name);
+				discord.Logger.LogInformation("Found field {field}: {type} on {object}", ap.Key, fieldType, first.GetType().Name);
 		}
 
 		if (!discord.Configuration.EnableSentry || sentryFields.Count == 0)
 			return obj;
 
-		var sentryJson = JsonConvert.SerializeObject(sentryFields);
+		var sentryJson = JsonConvert.SerializeObject(sentryFields, Formatting.Indented);
 		sentryMessage += "\n\nNew fields: " + sentryJson;
-		SentryEvent sentryEvent = new()
+
+		var scrubbedPayload = Utilities.StripTokensAndOptIds(json, discord.Configuration.EnableDiscordIdScrubber);
+
+		byte[]? filePayload = null;
+		string? filePayloadName = null;
+		if (scrubbedPayload is not null && scrubbedPayload.Length > 8192)
 		{
-			Level = SentryLevel.Warning,
+			filePayload = System.Text.Encoding.UTF8.GetBytes(scrubbedPayload);
+			filePayloadName = $"scrubbed-payload-{first.GetType().Name}.json";
+			scrubbedPayload = scrubbedPayload[..8192] + "... (truncated, full payload in file)";
+		}
+
+		discord.DiagnosticsSink.CaptureReport(new()
+		{
+			Source = "DisCatSharp",
+			Severity = Telemetry.DiagnosticSeverity.Warning,
 			Logger = nameof(DiscordJson),
-			Message = sentryMessage
-		};
-		sentryEvent.SetFingerprint(BaseDiscordClient.GenerateSentryFingerPrint(sentryEvent));
-		sentryEvent.SetExtra("Found Fields", sentryJson);
-		if (discord.Configuration.AttachUserInfo && discord.CurrentUser is not null)
-			sentryEvent.User = new()
+			Message = sentryMessage,
+			Extra = new Dictionary<string, object>
 			{
-				Id = discord.CurrentUser.Id.ToString(),
-				Username = discord.CurrentUser.UsernameWithDiscriminator,
-				Other = new Dictionary<string, string>
-				{
-					{ "developer", discord.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
-					{ "email", discord.Configuration.FeedbackEmail ?? "not_given" }
-				}
-			};
-		var sid = discord.Sentry.CaptureEvent(sentryEvent);
-		_ = Task.Run(discord.Sentry.FlushAsync);
+				{ "Found Fields", sentryJson },
+				{ "Scrubbed Payload", scrubbedPayload ?? "null" }
+			},
+			Tags = new Dictionary<string, string> { ["dcs.entity_type"] = first.GetType().Name },
+			FilePayload = filePayload,
+			FilePayloadName = filePayloadName,
+			UserInfo = Telemetry.TelemetryBootstrap.BuildUserInfo(discord.Configuration, discord.CurrentUser)
+		});
+
 		if (discord.Configuration.EnableLibraryDeveloperMode)
-			discord.Logger.LogInformation("Missing fields reported to sentry with id {sid}", sid.ToString());
+			discord.Logger.LogInformation("Missing fields reported to diagnostics sink");
 
 		return obj;
+	}
+
+	/// <summary>
+	///     Infers a safe, scrubbed type schema from a JSON value.
+	///     Returns only structural types — no actual data is leaked.
+	///     Recurses into objects and arrays to describe the full shape.
+	/// </summary>
+	/// <param name="value">The raw value from <see cref="ObservableApiObject.AdditionalProperties" />.</param>
+	/// <returns>
+	///     A type descriptor: a <see cref="string" /> for primitives (e.g., "integer"),
+	///     a <see cref="Dictionary{TKey, TValue}" /> for objects describing nested structure,
+	///     or a formatted string for arrays (e.g., "array&lt;object&gt;").
+	/// </returns>
+	private static object InferFieldType(object? value)
+		=> value switch
+		{
+			null => "null",
+			JToken jt => InferJTokenType(jt),
+			_ => value.GetType().Name.ToLowerInvariant()
+		};
+
+	private static object InferJTokenType(JToken token)
+		=> token.Type switch
+		{
+			JTokenType.None => "none",
+			JTokenType.Object => InferObjectSchema((JObject)token),
+			JTokenType.Array => InferArrayType((JArray)token),
+			JTokenType.Constructor => "constructor",
+			JTokenType.Property => "property",
+			JTokenType.Comment => "comment",
+			JTokenType.Integer => "integer",
+			JTokenType.Float => "float",
+			JTokenType.String => "string",
+			JTokenType.Boolean => "boolean",
+			JTokenType.Null => "null",
+			JTokenType.Undefined => "undefined",
+			JTokenType.Date => "date",
+			JTokenType.Raw => "raw",
+			JTokenType.Bytes => "bytes",
+			JTokenType.Guid => "guid",
+			JTokenType.Uri => "uri",
+			JTokenType.TimeSpan => "timespan",
+			_ => "unknown"
+		};
+
+	/// <summary>
+	///     Recursively builds a type schema for a JSON object.
+	///     E.g. <c>{"powerup": {"boost_price": "integer"}}</c>.
+	/// </summary>
+	private static Dictionary<string, object> InferObjectSchema(JObject obj)
+	{
+		Dictionary<string, object> schema = [];
+		foreach (var prop in obj.Properties())
+			schema[prop.Name] = InferJTokenType(prop.Value);
+		return schema;
+	}
+
+	/// <summary>
+	///     Infers a descriptive type for JSON arrays by peeking at the first element.
+	///     For object arrays, includes the full element schema.
+	/// </summary>
+	private static object InferArrayType(JArray arr)
+	{
+		if (arr.Count == 0)
+			return "array";
+
+		var elementType = InferJTokenType(arr[0]);
+		return elementType is string typeName
+			? $"array<{typeName}>"
+			: new Dictionary<string, object> { ["array_element"] = elementType };
 	}
 }

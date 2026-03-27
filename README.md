@@ -147,5 +147,5 @@ Big thanks goes to the following people who helped us without being part of the 
 
 The special thanks goes to Nagisa. Make sure to check out her [Instagram](https://www.instagram.com/nagisaarts_/) ♥️♥️
 
-The second special thanks goes to [Sentry](https://sentry.io) ([GitHub](https://github.com/getsentry/)) for sponsering us a business account on sentry for error tracking.
+The second special thanks goes to [Sentry](https://sentry.io) ([GitHub](https://github.com/getsentry/)) for sponsoring us with a business account on Sentry for error tracking.
 You guys are the best 💕⭐

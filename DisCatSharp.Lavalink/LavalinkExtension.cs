@@ -8,6 +8,7 @@ using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
 using DisCatSharp.Lavalink.EventArgs;
 using DisCatSharp.Net;
+using DisCatSharp.Telemetry;
 
 namespace DisCatSharp.Lavalink;
 
@@ -111,8 +112,13 @@ public sealed class LavalinkExtension : BaseExtension
 				if (headerValues.First() != "4")
 					throw new("Lavalink v4 is required");
 		}
-		catch (Exception)
+		catch (Exception ex)
 		{
+			this.DiagnosticsSink.CaptureException("DisCatSharp.Lavalink", ex, tags: new Dictionary<string, string>
+			{
+				[DiagnosticTags.ErrorOrigin] = DiagnosticTags.OriginUpstream,
+				[DiagnosticTags.UpstreamService] = "lavalink"
+			});
 			throw new("Something went wrong when determining the lavalink server version :/");
 		}
 
@@ -125,8 +131,13 @@ public sealed class LavalinkExtension : BaseExtension
 		{
 			await con.EstablishConnectionAsync().ConfigureAwait(false);
 		}
-		catch
+		catch (Exception ex)
 		{
+			this.DiagnosticsSink.CaptureException("DisCatSharp.Lavalink", ex, tags: new Dictionary<string, string>
+			{
+				[DiagnosticTags.ErrorOrigin] = DiagnosticTags.OriginUpstream,
+				[DiagnosticTags.UpstreamService] = "lavalink"
+			});
 			con.SessionConnected += this.LavalinkSessionConnect;
 			this.LavalinkSessionDisconnect(con);
 			throw;

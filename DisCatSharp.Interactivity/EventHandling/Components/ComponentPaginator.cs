@@ -7,6 +7,7 @@ using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Interactivity.Enums;
+using DisCatSharp.Telemetry;
 
 using Microsoft.Extensions.Logging;
 
@@ -50,6 +51,7 @@ internal class ComponentPaginator : IPaginator
 		}
 		catch (Exception ex)
 		{
+			this._client.DiagnosticsSink.CaptureException("DisCatSharp.Interactivity", ex);
 			this._client.Logger.LogError(InteractivityEvents.InteractivityPaginationError, ex, "There was an exception while paginating.");
 		}
 		finally
@@ -61,6 +63,7 @@ internal class ComponentPaginator : IPaginator
 			}
 			catch (Exception ex)
 			{
+				this._client.DiagnosticsSink.CaptureException("DisCatSharp.Interactivity", ex);
 				this._client.Logger.LogError(InteractivityEvents.InteractivityPaginationError, ex, "There was an exception while cleaning up pagination.");
 			}
 		}

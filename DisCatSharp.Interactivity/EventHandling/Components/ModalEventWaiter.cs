@@ -6,6 +6,7 @@ using ConcurrentCollections;
 using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Interactivity.Enums;
+using DisCatSharp.Telemetry;
 
 using Microsoft.Extensions.Logging;
 
@@ -64,6 +65,7 @@ internal class ModalEventWaiter : IDisposable
 		}
 		catch (Exception e)
 		{
+			this._client.DiagnosticsSink.CaptureException("DisCatSharp.Interactivity", e);
 			this._client.Logger.LogError(InteractivityEvents.InteractivityWaitError, e, "An exception was thrown while waiting for modals.");
 			return null;
 		}

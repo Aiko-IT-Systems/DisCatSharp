@@ -50,7 +50,7 @@ applyTo: '**'
 - Logging uses `Microsoft.Extensions.Logging.ILogger` (can swap providers).
 - DI/Hosting: Use extension methods in `/DisCatSharp.Hosting` for ASP.NET Core/Generic Host integration.
 - REST API: All REST calls go through `DiscordApiClient` in `/DisCatSharp/Net/Rest/`.
-- Sentry is used for error reporting; see `/DisCatSharp/Net/Serialization/DiscordJson.cs` for integration details.
+- Sentry is used for error reporting via a centralized `ILibraryDiagnosticsSink` abstraction; see `/DisCatSharp/Telemetry/` for the sink infrastructure and `/DisCatSharp/Net/Serialization/DiscordJson.cs` for missing-field reporting.
 - Configuration classes: `DiscordConfiguration`, `CommandsNextConfiguration`, etc. (see `/DisCatSharp/Configuration/Models/`).
 
 ## Examples & Templates

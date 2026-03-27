@@ -8,6 +8,7 @@ using ConcurrentCollections;
 
 using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
+using DisCatSharp.Telemetry;
 
 using Microsoft.Extensions.Logging;
 
@@ -50,6 +51,7 @@ internal class Poller
 		}
 		catch (Exception ex)
 		{
+			this._client.DiagnosticsSink.CaptureException("DisCatSharp.Interactivity", ex);
 			this._client.Logger.LogError(InteractivityEvents.InteractivityPollError, ex, "Exception occurred while polling");
 		}
 		finally

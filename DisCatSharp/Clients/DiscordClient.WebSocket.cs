@@ -18,8 +18,6 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-using Sentry;
-
 namespace DisCatSharp;
 
 /// <summary>
@@ -237,11 +235,8 @@ public sealed partial class DiscordClient
 			catch (Exception ex)
 			{
 				this.Logger.LogError(LoggerEvents.WebSocketReceiveFailure, ex, "Socket handler suppressed an exception");
-				if (this.Configuration.EnableSentry)
-				{
-					this.Sentry.CaptureException(ex);
-					_ = Task.Run(this.Sentry.FlushAsync, this._cancelToken);
-				}
+				if (this.DiagnosticsSink.IsEnabled)
+					this.DiagnosticsSink.CaptureException("DisCatSharp", ex);
 			}
 		}
 
@@ -254,6 +249,14 @@ public sealed partial class DiscordClient
 			var shouldResume = e.CloseCode is 4000 or 4002 or 4008 or -1;
 			var fatalError = e.CloseCode is 4004 or 4010 or 4011 or 4012 or 4013 or 4014;
 
+			if (this.DiagnosticsSink.IsEnabled)
+				this.DiagnosticsSink.AddBreadcrumb("DisCatSharp", "gateway", $"WebSocket disconnected (code: {e.CloseCode})", fatalError ? Telemetry.DiagnosticSeverity.Error : Telemetry.DiagnosticSeverity.Warning, new Dictionary<string, string>
+				{
+					["close_code"] = e.CloseCode.ToString(),
+					["fatal"] = fatalError.ToString().ToLowerInvariant(),
+					["reconnect"] = shouldReconnect.ToString().ToLowerInvariant()
+				});
+
 			this._connectionLock.Set();
 			this._sessionLock.Set();
 
@@ -261,6 +264,27 @@ public sealed partial class DiscordClient
 				await this._cancelTokenSource.CancelAsync();
 
 			this.Logger.LogDebug(LoggerEvents.ConnectionClose, "Connection closed ({CloseCode}, '{Reason}')", e.CloseCode, e.CloseMessage ?? "No reason given");
+
+			if (this.DiagnosticsSink.IsEnabled)
+			{
+				this.DiagnosticsSink.EndSession();
+				this.DiagnosticsSink.CaptureReport(new()
+				{
+					Source = "DisCatSharp",
+					Severity = fatalError
+						? Telemetry.DiagnosticSeverity.Fatal
+						: Telemetry.DiagnosticSeverity.Warning,
+					Logger = "DiscordClient.WebSocket",
+					Message = $"Gateway disconnected (code: {e.CloseCode})",
+					Tags = new Dictionary<string, string>
+					{
+						["dcs.gateway_close_code"] = e.CloseCode.ToString(),
+						["dcs.gateway_fatal"] = fatalError.ToString().ToLowerInvariant(),
+						["dcs.gateway_reconnect"] = shouldReconnect.ToString().ToLowerInvariant()
+					}
+				});
+			}
+
 			await this._socketClosed.InvokeAsync(this, e).ConfigureAwait(false);
 
 			if (fatalError)
@@ -311,10 +335,19 @@ public sealed partial class DiscordClient
 	{
 		var payload = JsonConvert.DeserializeObject<GatewayPayload>(data)!;
 		this._lastSequence = payload.Sequence ?? this._lastSequence;
+
+		if (this.DiagnosticsSink.IsEnabled)
+			this.DiagnosticsSink.AddBreadcrumb("DisCatSharp", "gateway", $"Received opcode {payload.OpCode}", Telemetry.DiagnosticSeverity.Debug, new Dictionary<string, string>
+			{
+				["opcode"] = payload.OpCode.ToString(),
+				["event_name"] = payload.EventName ?? "none",
+				["sequence"] = (payload.Sequence ?? -1).ToString()
+			});
+
 		switch (payload.OpCode)
 		{
 			case GatewayOpCode.Dispatch:
-				_ = Task.Run(async () => await this.HandleDispatchAsync(payload).ConfigureAwait(false), this._cancelToken);
+				_ = Task.Run(async () => await this.HandleDispatchSafelyAsync(payload).ConfigureAwait(false), this._cancelToken);
 				break;
 
 			case GatewayOpCode.Heartbeat:
@@ -348,6 +381,41 @@ public sealed partial class DiscordClient
 				break;
 			default:
 				this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Unknown Discord opcode: {OpCode}\nPayload: {Payload}", payload.OpCode, payload.Data);
+
+				if (this.DiagnosticsSink.IsEnabled)
+				{
+					var scrubbedPayload = Utilities.StripTokensAndOptIds(data, this.Configuration.EnableDiscordIdScrubber);
+					byte[]? filePayload = null;
+					string? filePayloadName = null;
+					if (scrubbedPayload is not null && scrubbedPayload.Length > 8192)
+					{
+						filePayload = System.Text.Encoding.UTF8.GetBytes(scrubbedPayload);
+						filePayloadName = $"unknown-opcode-{(int)payload.OpCode}.json";
+						scrubbedPayload = scrubbedPayload[..8192] + "... (truncated, full payload in file)";
+					}
+
+					this.DiagnosticsSink.CaptureReport(new()
+					{
+						Source = "DisCatSharp",
+						Severity = Telemetry.DiagnosticSeverity.Warning,
+						Logger = "DiscordClient.WebSocket",
+						Message = $"Unknown gateway opcode {(int)payload.OpCode}",
+						Tags = new Dictionary<string, string>
+						{
+							["dcs.gateway_opcode"] = ((int)payload.OpCode).ToString(),
+							["dcs.gateway_event"] = payload.EventName ?? "none"
+						},
+						Extra = new Dictionary<string, object>
+						{
+							["opcode_name"] = payload.OpCode.ToString(),
+							["sequence"] = payload.Sequence ?? -1,
+							["Scrubbed Payload"] = scrubbedPayload ?? "null"
+						},
+						FilePayload = filePayload,
+						FilePayloadName = filePayloadName
+					});
+				}
+
 				break;
 		}
 	}
@@ -449,6 +517,40 @@ public sealed partial class DiscordClient
 		};
 
 		await this._heartbeated.InvokeAsync(this, args).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Handles a gateway dispatch payload and reports suppressed failures through the diagnostics sink.
+	/// </summary>
+	/// <param name="payload">The dispatch payload.</param>
+	internal async Task HandleDispatchSafelyAsync(GatewayPayload payload)
+	{
+		try
+		{
+			await this.HandleDispatchAsync(payload).ConfigureAwait(false);
+		}
+		catch (Exception ex)
+		{
+			this.Logger.LogError(LoggerEvents.WebSocketReceiveFailure, ex, "Dispatch handler suppressed an exception for event {EventName}", payload.EventName);
+
+			if (this.DiagnosticsSink.IsEnabled)
+			{
+				Dictionary<string, object> context = new()
+				{
+					["event_name"] = payload.EventName ?? "unknown",
+					["opcode"] = (int)payload.OpCode,
+					["sequence"] = payload.Sequence ?? -1
+				};
+				Dictionary<string, string> tags = new()
+				{
+					[Telemetry.DiagnosticTags.ErrorOrigin] = Telemetry.DiagnosticTags.OriginLibrary,
+					["dcs.gateway_event"] = payload.EventName ?? "unknown",
+					["dcs.gateway_opcode"] = ((int)payload.OpCode).ToString()
+				};
+
+				this.DiagnosticsSink.CaptureException("DisCatSharp", ex, context, tags);
+			}
+		}
 	}
 
 	/// <summary>

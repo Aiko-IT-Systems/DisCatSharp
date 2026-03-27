@@ -1,3 +1,5 @@
+using DisCatSharp.Telemetry;
+
 namespace DisCatSharp;
 
 /// <summary>
@@ -10,6 +12,17 @@ public abstract class BaseExtension
 	///     Gets the instance of <see cref="DiscordClient" /> this extension is attached to.
 	/// </summary>
 	public DiscordClient Client { get; protected set; }
+
+	/// <summary>
+	///     Gets the diagnostics sink from the attached client for telemetry reporting.
+	///     Extension packages use this to report errors, breadcrumbs, and metrics through the shared sink.
+	/// </summary>
+	/// <remarks>
+	///     When reporting errors from upstream services (e.g. Lavalink), set the
+	///     <see cref="DiagnosticTags.ErrorOrigin" /> tag to <see cref="DiagnosticTags.OriginUpstream" />
+	///     so they are not confused with library-internal errors.
+	/// </remarks>
+	internal ILibraryDiagnosticsSink DiagnosticsSink => this.Client.DiagnosticsSink;
 
 	/// <summary>
 	///     Gets the string representing the version of bot lib extension.
