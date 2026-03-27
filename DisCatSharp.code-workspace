@@ -1,10 +1,16 @@
 {
 	"folders": [
 		{
+			"name": "DisCatSharp",
 			"path": "."
 		},
 		{
+			"name": "DisCatSharp.Extensions",
 			"path": "../DisCatSharp.Extensions"
+		},
+		{
+			"name": "Planning (Private)",
+			"path": "../../codex-work/DCS-Planning"
 		}
 	],
 	"settings": {
