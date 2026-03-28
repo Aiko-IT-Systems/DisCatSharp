@@ -81,3 +81,16 @@ jobs:
               with:
                   name: DisCatSharp
                   path: ./artifacts/
+            - name: Upload PDBs to Sentry
+              if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+              shell: bash
+              env:
+                  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+                  SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+                  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+              run: |
+                  mkdir -p ./pdb-upload
+                  for f in ./artifacts/*.snupkg; do
+                    unzip -o "$f" "*.pdb" -d ./pdb-upload/ || true
+                  done
+                  npx @sentry/cli debug-files upload --include-sources ./pdb-upload/

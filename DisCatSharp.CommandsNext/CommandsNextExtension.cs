@@ -14,6 +14,8 @@ using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
 
+using DisCatSharp.Telemetry;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -569,6 +571,7 @@ public class CommandsNextExtension : BaseExtension
 		}
 		catch (Exception ex)
 		{
+			this.DiagnosticsSink.CaptureException("DisCatSharp.CommandsNext", ex);
 			await this._error.InvokeAsync(this, new(this.Client.ServiceProvider)
 			{
 				Context = ctx,

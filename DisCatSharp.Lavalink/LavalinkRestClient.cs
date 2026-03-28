@@ -15,6 +15,8 @@ using DisCatSharp.Lavalink.Enums;
 using DisCatSharp.Lavalink.Exceptions;
 using DisCatSharp.Lavalink.Payloads;
 
+using DisCatSharp.Telemetry;
+
 using Microsoft.Extensions.Logging;
 
 using Newtonsoft.Json.Linq;
@@ -156,6 +158,13 @@ internal sealed class LavalinkRestClient
 			ex.Headers = response.Headers;
 			ex.Json = data;
 			this.Discord.Logger.LogError(LavalinkEvents.LavalinkRestError, ex, "Lavalink rest encountered an exception: {data}", data);
+			this.Discord.DiagnosticsSink.CaptureException("DisCatSharp.Lavalink", ex, tags: new Dictionary<string, string>
+			{
+				[DiagnosticTags.ErrorOrigin] = DiagnosticTags.OriginUpstream,
+				[DiagnosticTags.UpstreamService] = "lavalink",
+				[DiagnosticTags.RestRoute] = path,
+				[DiagnosticTags.RestStatus] = ((int)response.StatusCode).ToString()
+			});
 			throw ex;
 		}
 

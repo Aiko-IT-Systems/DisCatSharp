@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Configuration;
+using DisCatSharp.Telemetry;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -53,6 +54,11 @@ public abstract class BaseHostedService : BackgroundService
 	/// </summary>
 	/// <param name="ex">The exception/reason for not starting</param>
 	protected virtual void OnInitializationError(Exception ex) => this.ApplicationLifetime.StopApplication();
+
+	/// <summary>
+	///     Gets the diagnostics sink from the underlying client, if available.
+	/// </summary>
+	internal virtual ILibraryDiagnosticsSink? HostDiagnosticsSink => null;
 
 	/// <summary>
 	///     Connect your client(s) to Discord
@@ -121,6 +127,7 @@ public abstract class BaseHostedService : BackgroundService
 			}
 			catch (Exception ex)
 			{
+				client.DiagnosticsSink.CaptureException("DisCatSharp.Hosting", ex);
 				this.Logger.LogError($"Unable to register '{typePair.Value.ImplementationType.Name}': \n\t{ex.Message}");
 				this.OnInitializationError(ex);
 			}
@@ -172,6 +179,7 @@ public abstract class BaseHostedService : BackgroundService
 			 * So to overcome this obstacle we need to log what happens and
 			 * manually exit
 			 */
+			this.HostDiagnosticsSink?.CaptureException("DisCatSharp.Hosting", ex);
 			this.Logger.LogError($"Was unable to start {this.GetType().Name} Bot as a Hosted Service");
 
 			// Power given to developer for handling exception

@@ -1,5 +1,7 @@
 using System;
 
+using DisCatSharp.Telemetry;
+
 using Sentry.Extensibility;
 
 namespace DisCatSharp.Exceptions;
@@ -28,5 +30,11 @@ public class DisCatSharpExceptionFilter : IExceptionFilter
 	/// </summary>
 	/// <param name="ex">The exception to check.</param>
 	public bool Filter(Exception ex)
-		=> !this.Config.TrackExceptions.Contains(ex.GetType());
+	{
+		var trackedException = ex is SentryCapturableException { InnerException: not null } wrapper
+			? wrapper.InnerException
+			: ex;
+
+		return !this.Config.TrackExceptions.Contains(trackedException.GetType());
+	}
 }

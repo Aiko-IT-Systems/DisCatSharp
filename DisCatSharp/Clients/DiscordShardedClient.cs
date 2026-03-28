@@ -12,12 +12,9 @@ using DisCatSharp.Enums;
 using DisCatSharp.Enums.Core;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
+using DisCatSharp.Telemetry;
 
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
-using Microsoft.Extensions.Options;
-
-using Sentry;
 
 namespace DisCatSharp;
 
@@ -45,99 +42,13 @@ public sealed partial class DiscordShardedClient : IDisposable
 		if (this._configuration.CustomSentryDsn != null)
 			BaseDiscordClient.SentryDsn = this._configuration.CustomSentryDsn;
 
-		if (this._configuration.LoggerFactory == null && !this._configuration.EnableSentry)
+		if (this._configuration.LoggerFactory is null)
 		{
 			this._configuration.LoggerFactory = new DefaultLoggerFactory();
 			this._configuration.LoggerFactory.AddProvider(new DefaultLoggerProvider(this._configuration.MinimumLogLevel, this._configuration.LogTimestampFormat));
 		}
-		else if (this._configuration.LoggerFactory == null && this._configuration.EnableSentry)
-		{
-			var configureNamedOptions = new ConfigureNamedOptions<ConsoleLoggerOptions>(string.Empty, x =>
-			{
-#pragma warning disable CS0618 // Type or member is obsolete
-				x.TimestampFormat = this._configuration.LogTimestampFormat;
-#pragma warning restore CS0618 // Type or member is obsolete
-				x.LogToStandardErrorThreshold = this._configuration.MinimumLogLevel;
-			});
-			var optionsFactory = new OptionsFactory<ConsoleLoggerOptions>([configureNamedOptions], []);
-			var optionsMonitor = new OptionsMonitor<ConsoleLoggerOptions>(optionsFactory, [], new OptionsCache<ConsoleLoggerOptions>());
-			/*
-			var configureFormatterOptions = new ConfigureNamedOptions<ConsoleFormatterOptions>(string.Empty, x => { x.TimestampFormat = this.Configuration.LogTimestampFormat; });
-			var formatterFactory = new OptionsFactory<ConsoleFormatterOptions>(new[] { configureFormatterOptions }, Enumerable.Empty<IPostConfigureOptions<ConsoleFormatterOptions>>());
-			var formatterMonitor = new OptionsMonitor<ConsoleFormatterOptions>(formatterFactory, Enumerable.Empty<IOptionsChangeTokenSource<ConsoleFormatterOptions>>(), new OptionsCache<ConsoleFormatterOptions>());
-			*/
 
-			var l = new ConsoleLoggerProvider(optionsMonitor);
-			this._configuration.LoggerFactory = new LoggerFactory();
-			this._configuration.LoggerFactory.AddProvider(l);
-		}
-
-		if (this._configuration is { LoggerFactory: not null, EnableSentry: true })
-			this._configuration.LoggerFactory.AddSentry(o =>
-			{
-				var a = typeof(DiscordClient).GetTypeInfo().Assembly;
-				var vs = "";
-				var iv = a.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
-				if (iv != null)
-					vs = iv.InformationalVersion;
-				else
-				{
-					var v = a.GetName().Version;
-					vs = v?.ToString(3);
-				}
-
-				o.InitializeSdk = true;
-				o.Dsn = BaseDiscordClient.SentryDsn;
-				o.DetectStartupTime = StartupTimeDetectionMode.Fast;
-				o.DiagnosticLevel = SentryLevel.Debug;
-				o.Environment = "dev";
-				o.IsGlobalModeEnabled = false;
-				o.TracesSampleRate = 1.0;
-				o.ReportAssembliesMode = ReportAssembliesMode.InformationalVersion;
-				o.AddInAppInclude("DisCatSharp");
-				o.AttachStacktrace = true;
-				o.StackTraceMode = StackTraceMode.Enhanced;
-				o.Release = $"{this.BotLibrary}@{vs}";
-				o.SendClientReports = true;
-				if (!this._configuration.AttachRecentLogEntries)
-					o.MaxBreadcrumbs = 0;
-				if (!this._configuration.DisableExceptionFilter)
-					o.AddExceptionFilter(new DisCatSharpExceptionFilter(this._configuration));
-				o.IsEnvironmentUser = false;
-				o.UseAsyncFileIO = true;
-				o.Debug = this._configuration.SentryDebug;
-				o.EnableScopeSync = true;
-				o.SetBeforeSend((e, _) =>
-				{
-					if (!this._configuration.DisableExceptionFilter)
-					{
-						if (e.Exception != null)
-						{
-							if (!this._configuration.TrackExceptions.Contains(e.Exception.GetType()))
-								return null;
-						}
-						else if (e.Extra.Count == 0 || !e.Extra.ContainsKey("Found Fields"))
-							return null;
-					}
-
-					if (!e.HasUser())
-						if (this._configuration.AttachUserInfo && this.CurrentUser! != null!)
-							e.User = new()
-							{
-								Id = this.CurrentUser.Id.ToString(),
-								Username = this.CurrentUser.UsernameWithDiscriminator,
-								Other = new Dictionary<string, string>
-								{
-									{ "developer", this._configuration.DeveloperUserId?.ToString() ?? "not_given" },
-									{ "email", this._configuration.FeedbackEmail ?? "not_given" }
-								}
-							};
-
-					if (!e.Extra.ContainsKey("Found Fields"))
-						e.SetFingerprint(BaseDiscordClient.GenerateSentryFingerPrint(e));
-					return e;
-				});
-			});
+		this.DiagnosticsSink = TelemetryBootstrap.CreateSink(this._configuration);
 
 		this._configuration.HasShardLogger = true;
 
@@ -183,7 +94,7 @@ public sealed partial class DiscordShardedClient : IDisposable
 				LoggerFactory = lf
 			};
 
-			var client = new DiscordClient(cfg);
+			var client = CreateShardClient(cfg);
 			if (!this._shards.TryAdd(i, client))
 				throw new InvalidOperationException("Could not initialize shards.");
 		}
@@ -239,6 +150,11 @@ public sealed partial class DiscordShardedClient : IDisposable
 	///     Gets the logger for this client.
 	/// </summary>
 	public ILogger<BaseDiscordClient> Logger { get; }
+
+	/// <summary>
+	///     Gets the diagnostics sink for this sharded client.
+	/// </summary>
+	internal ILibraryDiagnosticsSink DiagnosticsSink { get; }
 
 	/// <summary>
 	///     Gets all client shards.
@@ -506,15 +422,36 @@ public sealed partial class DiscordShardedClient : IDisposable
 	#region Private Methods & Version Property
 
 	/// <summary>
+	///     Creates a shard client and reinitializes its diagnostics sink with the shard-specific configuration.
+	/// </summary>
+	internal static DiscordClient CreateShardClient(DiscordConfiguration configuration)
+	{
+		var client = new DiscordClient(configuration)
+		{
+			DiagnosticsSink = TelemetryBootstrap.CreateSink(configuration)
+		};
+		return client;
+	}
+
+	/// <summary>
 	///     Gets the gateway info.
 	/// </summary>
 	private async Task<GatewayInfo> GetGatewayInfoAsync()
 	{
 		this.Logger.LogDebug(LoggerEvents.ShardRest, "Obtaining gateway information from GET {Gateway}{Bot}...", Endpoints.GATEWAY, Endpoints.BOT);
 
-		using var tempClient = new DiscordClient(this._configuration);
+		using var tempClient = new DiscordClient(CreateGatewayInfoClientConfiguration(this._configuration));
 		return await tempClient.ApiClient.GetGatewayInfoAsync().ConfigureAwait(false);
 	}
+
+	/// <summary>
+	///     Creates an isolated configuration for the temporary gateway-info client so its disposal does not touch the parent telemetry session.
+	/// </summary>
+	internal static DiscordConfiguration CreateGatewayInfoClientConfiguration(DiscordConfiguration configuration)
+		=> new(configuration)
+		{
+			EnableSentry = false
+		};
 
 	#endregion
 

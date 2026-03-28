@@ -20,6 +20,9 @@ using DisCatSharp.Net;
 
 using Microsoft.Extensions.Logging;
 
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
 using NuGet.Common;
 using NuGet.Packaging;
 using NuGet.Protocol;
@@ -146,6 +149,66 @@ public static class Utilities
 		str = DiscordRegEx.IdRegex().Replace(str, "{DISCORD_ID}");
 
 		return str;
+	}
+
+	/// <summary>
+	///     Removes discord-based tokens and, optionally, embedded ids from JSON payload values while preserving non-ID strings and the original string when no replacements are needed.
+	/// </summary>
+	/// <param name="str">The JSON payload to scrub.</param>
+	/// <param name="stripIds">Whether to strip discord-based ids.</param>
+	/// <returns>A new JSON string with tokens and optionally embedded Discord ids scrubbed.</returns>
+	public static string? StripTokensAndOptIdsInJson(string? str, bool stripIds)
+	{
+		if (string.IsNullOrWhiteSpace(str))
+			return str;
+
+		str = StripTokens(str);
+		if (!stripIds)
+			return str;
+
+		try
+		{
+			var token = JToken.Parse(str);
+			if (!TryStripIdsInJsonToken(token))
+				return str;
+
+			var formatting = str.Contains('\n') || str.Contains('\r')
+				? Formatting.Indented
+				: Formatting.None;
+			return token.ToString(formatting);
+		}
+		catch (JsonReaderException)
+		{
+			return StripIds(str, stripIds);
+		}
+	}
+
+	private static bool TryStripIdsInJsonToken(JToken token)
+	{
+		var changed = false;
+
+		switch (token)
+		{
+			case JValue { Type: JTokenType.String } value when value.Value is string stringValue && DiscordRegEx.IdRegex().IsMatch(stringValue):
+				value.Value = "{DISCORD_ID}";
+				return true;
+
+			case JValue { Type: JTokenType.Integer } value:
+				var integerValue = Convert.ToString(value.Value, CultureInfo.InvariantCulture);
+				if (!string.IsNullOrWhiteSpace(integerValue) && DiscordRegEx.IdRegex().IsMatch(integerValue))
+				{
+					value.Value = "{DISCORD_ID}";
+					return true;
+				}
+
+				return false;
+
+			default:
+				foreach (var child in token.Children())
+					changed |= TryStripIdsInJsonToken(child);
+
+				return changed;
+		}
 	}
 
 	/// <summary>

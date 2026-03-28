@@ -44,6 +44,8 @@ jobs:
         steps:
             - name: Checkout repository
               uses: actions/checkout@v6
+              with:
+                  fetch-depth: 0
             - name: Check Intention
               if: ${{!inputs.release_as_prerelease}}
               run: |
@@ -122,3 +124,42 @@ jobs:
               shell: pwsh
               run: dotnet nuget push --source https://nuget.pkg.github.com/Aiko-IT-Systems/index.json -k ${{secrets.NYUW_TOKEN_GH}} *
               working-directory: ./dcs-artifacts
+            - name: Extract version for Sentry
+              id: sentry_vars
+              shell: bash
+              run: |
+                  VERSION=$(grep -oP '(?<=<VersionPrefix>)[^<]+' DisCatSharp.Targets/Version.targets)
+                  SUFFIX="${{ github.event.inputs.version_suffix }}"
+                  if [ -n "$SUFFIX" ]; then
+                    SENTRY_VERSION="DisCatSharp@${VERSION}-${SUFFIX}"
+                    SENTRY_ENV="dev"
+                  else
+                    SENTRY_VERSION="DisCatSharp@${VERSION}"
+                    SENTRY_ENV="production"
+                  fi
+                  echo "version=$SENTRY_VERSION" >> $GITHUB_OUTPUT
+                  echo "environment=$SENTRY_ENV" >> $GITHUB_OUTPUT
+            - name: Create Sentry release
+              if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp' }}
+              uses: getsentry/action-release@v3.5.0
+              env:
+                  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+                  SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+                  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+              with:
+                  environment: ${{ steps.sentry_vars.outputs.environment }}
+                  version: ${{ steps.sentry_vars.outputs.version }}
+                  ignore_missing: true
+            - name: Upload PDBs to Sentry
+              if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp' }}
+              shell: bash
+              env:
+                  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+                  SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+                  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+              run: |
+                  mkdir -p ./pdb-upload
+                  for f in ./dcs-artifacts/*.snupkg; do
+                    unzip -o "$f" "*.pdb" -d ./pdb-upload/ || true
+                  done
+                  npx @sentry/cli debug-files upload --include-sources ./pdb-upload/

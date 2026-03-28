@@ -11,6 +11,7 @@ using ConcurrentCollections;
 using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
+using DisCatSharp.Telemetry;
 
 using Microsoft.Extensions.Logging;
 
@@ -105,6 +106,7 @@ internal class ReactionCollector : IDisposable
 		}
 		catch (Exception ex)
 		{
+			this._client.DiagnosticsSink.CaptureException("DisCatSharp.Interactivity", ex);
 			this._client.Logger.LogError(InteractivityEvents.InteractivityCollectorError, ex, "Exception occurred while collecting reactions");
 		}
 		finally

@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 
 using DisCatSharp.Configuration;
+using DisCatSharp.Telemetry;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -44,6 +45,9 @@ public abstract class DiscordHostedService : BaseHostedService, IDiscordHostedSe
 
 	/// <inheritdoc />
 	public DiscordClient Client { get; protected set; }
+
+	/// <inheritdoc />
+	internal override ILibraryDiagnosticsSink? HostDiagnosticsSink => this.Client?.DiagnosticsSink;
 
 	protected override Task ConfigureAsync()
 	{

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using ConcurrentCollections;
 
 using DisCatSharp.Common.Utilities;
+using DisCatSharp.Telemetry;
 
 using Microsoft.Extensions.Logging;
 
@@ -78,6 +79,7 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 		}
 		catch (Exception ex)
 		{
+			this._client.DiagnosticsSink.CaptureException("DisCatSharp.Interactivity", ex);
 			this._client.Logger.LogError(InteractivityEvents.InteractivityWaitError, ex, "An exception occurred while waiting for {0}", typeof(T).Name);
 		}
 		finally
@@ -103,6 +105,7 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 		}
 		catch (Exception ex)
 		{
+			this._client.DiagnosticsSink.CaptureException("DisCatSharp.Interactivity", ex);
 			this._client.Logger.LogError(InteractivityEvents.InteractivityWaitError, ex, "An exception occurred while collecting from {0}", typeof(T).Name);
 		}
 		finally

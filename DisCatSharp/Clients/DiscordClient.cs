@@ -24,8 +24,6 @@ using Microsoft.Extensions.Logging;
 
 using Newtonsoft.Json.Linq;
 
-using Sentry;
-
 namespace DisCatSharp;
 
 /// <summary>
@@ -1735,13 +1733,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <returns>Whether a presence was found.</returns>
 	internal bool TryGetPresence(ulong userId, ulong? guildId, [NotNullWhen(true)] out DiscordPresence? presence)
 	{
-		if (guildId.HasValue &&
-			this.GuildsInternal.TryGetValue(guildId.Value, out var guild) &&
-			guild.PresencesInternal.TryGetValue(userId, out presence))
-			return true;
-
-		return this.PresencesInternal.TryGetValue(userId, out presence);
+		return (guildId.HasValue &&	this.GuildsInternal.TryGetValue(guildId.Value, out var guild) &&
+			guild.PresencesInternal.TryGetValue(userId, out presence)) || this.PresencesInternal.TryGetValue(userId, out presence);
 	}
+
 
 	/// <summary>
 	///     Clears the aggregate presence cache and its eviction state.
@@ -2421,6 +2416,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			this._disposed = true;
 		}
 
+		if (this.DiagnosticsSink?.IsEnabled ?? false)
+			this.DiagnosticsSink.EndSession();
+
 		try
 		{
 			this.DisconnectAsync().ConfigureAwait(false).GetAwaiter().GetResult();
@@ -2451,9 +2449,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this.GuildsInternal.Clear();
 		this.EmojisInternal.Clear();
 		this._heartbeatTask?.Dispose();
-
-		if (this.Configuration.EnableSentry)
-			SentrySdk.EndSession();
 
 		GC.SuppressFinalize(this);
 	}
