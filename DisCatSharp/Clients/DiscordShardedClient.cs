@@ -440,12 +440,18 @@ public sealed partial class DiscordShardedClient : IDisposable
 	{
 		this.Logger.LogDebug(LoggerEvents.ShardRest, "Obtaining gateway information from GET {Gateway}{Bot}...", Endpoints.GATEWAY, Endpoints.BOT);
 
-		using var tempClient = new DiscordClient(this._configuration)
-		{
-			DiagnosticsSink = this.DiagnosticsSink
-		};
+		using var tempClient = new DiscordClient(CreateGatewayInfoClientConfiguration(this._configuration));
 		return await tempClient.ApiClient.GetGatewayInfoAsync().ConfigureAwait(false);
 	}
+
+	/// <summary>
+	///     Creates an isolated configuration for the temporary gateway-info client so its disposal does not touch the parent telemetry session.
+	/// </summary>
+	internal static DiscordConfiguration CreateGatewayInfoClientConfiguration(DiscordConfiguration configuration)
+		=> new(configuration)
+		{
+			EnableSentry = false
+		};
 
 	#endregion
 

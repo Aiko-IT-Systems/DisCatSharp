@@ -140,6 +140,28 @@ public class ShardedClientLifecycleTests
 		Assert.Equal(7, sinkConfig.ShardCount);
 	}
 
+	[Fact]
+	public void CreateGatewayInfoClientConfiguration_DisablesTelemetryWithoutMutatingParentConfig()
+	{
+		var original = new DiscordConfiguration
+		{
+			Token = "dummy.token.for.testing",
+			TokenType = TokenType.Bot,
+			EnableSentry = true,
+			HasShardLogger = true,
+			ShardId = 2,
+			ShardCount = 5
+		};
+
+		var tempConfig = DiscordShardedClient.CreateGatewayInfoClientConfiguration(original);
+
+		Assert.NotSame(original, tempConfig);
+		Assert.False(tempConfig.EnableSentry);
+		Assert.True(original.EnableSentry);
+		Assert.Equal(original.ShardId, tempConfig.ShardId);
+		Assert.Equal(original.ShardCount, tempConfig.ShardCount);
+	}
+
 	#endregion
 
 	#region Startup guards
