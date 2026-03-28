@@ -384,7 +384,7 @@ public sealed partial class DiscordClient
 
 				if (this.DiagnosticsSink.IsEnabled)
 				{
-					var scrubbedPayload = Utilities.StripTokensAndOptIds(data, this.Configuration.EnableDiscordIdScrubber);
+					var scrubbedPayload = Utilities.StripTokensAndOptIdsInJson(data, this.Configuration.EnableDiscordIdScrubber);
 					byte[]? filePayload = null;
 					string? filePayloadName = null;
 					if (scrubbedPayload is not null && scrubbedPayload.Length > 8192)

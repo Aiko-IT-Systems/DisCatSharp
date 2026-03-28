@@ -197,7 +197,7 @@ public static class DiscordJson
 		sentryMessage += "\n\nNew fields: " + sentryJson;
 
 		// Scrub the raw payload for safe inclusion — strip tokens/IDs
-		var scrubbedPayload = Utilities.StripTokensAndOptIds(json, discord.Configuration.EnableDiscordIdScrubber);
+		var scrubbedPayload = Utilities.StripTokensAndOptIdsInJson(json, discord.Configuration.EnableDiscordIdScrubber);
 
 		// Large payloads: truncate inline extra but include full version as file payload
 		byte[]? filePayload = null;
@@ -306,7 +306,7 @@ public static class DiscordJson
 		var sentryJson = JsonConvert.SerializeObject(sentryFields, Formatting.Indented);
 		sentryMessage += "\n\nNew fields: " + sentryJson;
 
-		var scrubbedPayload = Utilities.StripTokensAndOptIds(json, discord.Configuration.EnableDiscordIdScrubber);
+		var scrubbedPayload = Utilities.StripTokensAndOptIdsInJson(json, discord.Configuration.EnableDiscordIdScrubber);
 
 		byte[]? filePayload = null;
 		string? filePayloadName = null;

@@ -378,6 +378,29 @@ public class StoreGatewayDispatchFollowupRegressionTests
 	}
 
 	[Fact]
+	public async Task HandleSocketMessageAsync_UnknownOpcode_ScrubsEmbeddedDiscordIdsInJsonPayload()
+	{
+		var client = CreateClient(config => config.EnableDiscordIdScrubber = true);
+		var sink = new TestDiagnosticsSink();
+		client.DiagnosticsSink = sink;
+
+		const string payload = """
+		                       {"op":99,"t":"mystery_event","s":7,"d":{"guild_id":804032421678153819,"roles":["1480674874463752384","804032421757976697"],"user":{"id":"773493116404629504"}}}
+		                       """;
+
+		await client.HandleSocketMessageAsync(payload);
+
+		var report = await sink.WaitForReportAsync();
+		var scrubbedPayload = Assert.IsType<string>(report.Extra["Scrubbed Payload"]);
+
+		Assert.DoesNotContain("804032421678153819", scrubbedPayload);
+		Assert.DoesNotContain("1480674874463752384", scrubbedPayload);
+		Assert.DoesNotContain("804032421757976697", scrubbedPayload);
+		Assert.DoesNotContain("773493116404629504", scrubbedPayload);
+		Assert.Contains("{DISCORD_ID}", scrubbedPayload);
+	}
+
+	[Fact]
 	public async Task ThreadCreateEvent_MissingGuildCache_DoesNotThrowAndStillRaisesEvent()
 	{
 		var client = CreateClient();
