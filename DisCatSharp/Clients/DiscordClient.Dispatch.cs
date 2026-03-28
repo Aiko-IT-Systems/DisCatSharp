@@ -2455,6 +2455,7 @@ public sealed partial class DiscordClient
 		mbr.GuildAvatarHash = member.GuildAvatarHash;
 		mbr.GuildBannerHash = member.GuildBannerHash;
 		mbr.GuildAvatarDecorationData = member.GuildAvatarDecorationData;
+		mbr.GuildCollectibles = member.GuildCollectibles;
 		mbr.Nickname = nick;
 		mbr.GuildPronouns = member.GuildPronouns;
 		mbr.IsPending = pending;
