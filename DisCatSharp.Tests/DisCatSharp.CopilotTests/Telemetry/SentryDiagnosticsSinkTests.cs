@@ -130,4 +130,94 @@ public class SentryDiagnosticsSinkTests
 		Assert.NotNull(evt.Fingerprint);
 		Assert.True(evt.Fingerprint.Count > 0, "Pre-existing fingerprint should be detectable");
 	}
+
+	[Fact]
+	public void ReportFingerprintCache_CreateKey_IncludesSchemaAndTags()
+	{
+		var evt = new SentryEvent
+		{
+			Level = SentryLevel.Warning,
+			Logger = "DiscordJson",
+			Message = "Missing fields detected"
+		};
+
+		var report = new DiagnosticReport
+		{
+			Source = "DisCatSharp",
+			Severity = DiagnosticSeverity.Warning,
+			Logger = "DiscordJson",
+			Message = "Missing fields detected",
+			DeduplicateByFingerprint = true,
+			Tags = new Dictionary<string, string>
+			{
+				[DiagnosticTags.EntityType] = "DiscordMember"
+			},
+			Extra = new Dictionary<string, object>
+			{
+				["Found Fields"] = "{\n  \"collectibles\": \"object\"\n}"
+			}
+		};
+
+		var cacheKey = ReportFingerprintCache.CreateKey(evt, report);
+
+		Assert.Contains("entity:DiscordMember", cacheKey);
+		Assert.Contains("tag:dcs.entity_type=DiscordMember", cacheKey);
+		Assert.Contains("fields:{\n  \"collectibles\": \"object\"\n}", cacheKey);
+	}
+
+	[Fact]
+	public void ReportFingerprintCache_TryReserve_SuppressesRepeatedOptInReports()
+	{
+		var cache = new ReportFingerprintCache();
+		var evt = new SentryEvent
+		{
+			Level = SentryLevel.Warning,
+			Logger = "DiscordClient.WebSocket",
+			Message = "Unknown gateway opcode 99"
+		};
+
+		var report = new DiagnosticReport
+		{
+			Source = "DisCatSharp",
+			Severity = DiagnosticSeverity.Warning,
+			Logger = "DiscordClient.WebSocket",
+			Message = "Unknown gateway opcode 99",
+			DeduplicateByFingerprint = true,
+			Tags = new Dictionary<string, string>
+			{
+				["dcs.gateway_opcode"] = "99",
+				["dcs.gateway_event"] = "mystery_event"
+			}
+		};
+
+		Assert.True(cache.TryReserve(evt, report));
+		Assert.False(cache.TryReserve(evt, report));
+	}
+
+	[Fact]
+	public void ReportFingerprintCache_TryReserve_AllowsRepeatedNonOptInReports()
+	{
+		var cache = new ReportFingerprintCache();
+		var evt = new SentryEvent
+		{
+			Level = SentryLevel.Warning,
+			Logger = "RestClient",
+			Message = "Rate limit hit"
+		};
+
+		var report = new DiagnosticReport
+		{
+			Source = "DisCatSharp",
+			Severity = DiagnosticSeverity.Warning,
+			Logger = "RestClient",
+			Message = "Rate limit hit",
+			Tags = new Dictionary<string, string>
+			{
+				[DiagnosticTags.RestRoute] = "POST /channels/{channel_id}/messages"
+			}
+		};
+
+		Assert.True(cache.TryReserve(evt, report));
+		Assert.True(cache.TryReserve(evt, report));
+	}
 }

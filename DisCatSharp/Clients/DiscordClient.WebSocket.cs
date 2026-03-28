@@ -400,6 +400,7 @@ public sealed partial class DiscordClient
 						Severity = Telemetry.DiagnosticSeverity.Warning,
 						Logger = "DiscordClient.WebSocket",
 						Message = $"Unknown gateway opcode {(int)payload.OpCode}",
+						DeduplicateByFingerprint = true,
 						Tags = new Dictionary<string, string>
 						{
 							["dcs.gateway_opcode"] = ((int)payload.OpCode).ToString(),

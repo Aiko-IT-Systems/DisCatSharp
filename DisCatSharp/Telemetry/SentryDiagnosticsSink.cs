@@ -17,6 +17,7 @@ internal sealed class SentryDiagnosticsSink : ILibraryDiagnosticsSink
 	private readonly SentryClient _client;
 	private readonly Scope _scope;
 	private readonly DiscordConfiguration _config;
+	private readonly ReportFingerprintCache _reportFingerprintCache = new();
 
 	/// <summary>
 	///     Initializes a new Sentry diagnostics sink with the given options and configuration.
@@ -93,6 +94,9 @@ internal sealed class SentryDiagnosticsSink : ILibraryDiagnosticsSink
 			["shard_count"] = this._config.ShardCount,
 			["intents"] = this._config.Intents.ToString()
 		};
+
+		if (!this._reportFingerprintCache.TryReserve(sentryEvent, report))
+			return;
 
 		var hasFoundFields = report.Extra?.ContainsKey("Found Fields") ?? false;
 		if (!hasFoundFields)

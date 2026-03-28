@@ -46,6 +46,12 @@ internal sealed class DiagnosticReport
 	public string? AdditionalFingerprint { get; init; }
 
 	/// <summary>
+	///     Gets or sets whether the report should be deduplicated per client instance using its computed fingerprint.
+	///     This is intended for noisy schema-drift style diagnostics that only need to be emitted once per unique shape.
+	/// </summary>
+	public bool DeduplicateByFingerprint { get; init; }
+
+	/// <summary>
 	///     Gets or sets structured tags for indexing and filtering.
 	///     Tags are low-cardinality key-value pairs (e.g., <c>"dcs.entity_type"</c> → <c>"DiscordGuild"</c>).
 	/// </summary>

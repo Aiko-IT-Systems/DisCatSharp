@@ -432,20 +432,6 @@ internal sealed class RestClient : IDisposable
 					// check the limit info and requeue
 					this.Handle429(response, out var wait, out var global);
 
-					if (this._discord?.DiagnosticsSink.IsEnabled ?? false)
-						this._discord.DiagnosticsSink.CaptureReport(new()
-						{
-							Source = "DisCatSharp",
-							Severity = Telemetry.DiagnosticSeverity.Warning,
-							Logger = "RestClient",
-							Message = global ? "Global rate limit hit (form request)" : "Rate limit hit (form request)",
-							Tags = new Dictionary<string, string>
-							{
-								["dcs.rest_route"] = request.Route,
-								["dcs.rate_limit_global"] = global.ToString().ToLowerInvariant()
-							}
-						});
-
 					if (wait is not null)
 					{
 						if (global)
@@ -671,20 +657,6 @@ internal sealed class RestClient : IDisposable
 
 					// check the limit info and requeue
 					this.Handle429(response, out var wait, out var global);
-
-					if (this._discord?.DiagnosticsSink.IsEnabled ?? false)
-						this._discord.DiagnosticsSink.CaptureReport(new()
-						{
-							Source = "DisCatSharp",
-							Severity = Telemetry.DiagnosticSeverity.Warning,
-							Logger = "RestClient",
-							Message = global ? "Global rate limit hit" : "Rate limit hit",
-							Tags = new Dictionary<string, string>
-							{
-								["dcs.rest_route"] = request.Route,
-								["dcs.rate_limit_global"] = global.ToString().ToLowerInvariant()
-							}
-						});
 
 					if (wait is not null)
 					{

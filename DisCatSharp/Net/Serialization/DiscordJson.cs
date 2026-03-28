@@ -215,6 +215,7 @@ public static class DiscordJson
 			Severity = Telemetry.DiagnosticSeverity.Warning,
 			Logger = nameof(DiscordJson),
 			Message = sentryMessage,
+			DeduplicateByFingerprint = true,
 			Extra = new Dictionary<string, object>
 			{
 				{ "Found Fields", sentryJson },
@@ -323,6 +324,7 @@ public static class DiscordJson
 			Severity = Telemetry.DiagnosticSeverity.Warning,
 			Logger = nameof(DiscordJson),
 			Message = sentryMessage,
+			DeduplicateByFingerprint = true,
 			Extra = new Dictionary<string, object>
 			{
 				{ "Found Fields", sentryJson },
