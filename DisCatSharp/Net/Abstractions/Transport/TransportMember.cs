@@ -44,6 +44,12 @@ internal class TransportMember : ObservableApiObject
 	public AvatarDecorationData GuildAvatarDecorationData { get; internal set; }
 
 	/// <summary>
+	///     Gets the guild collectibles.
+	/// </summary>
+	[JsonProperty("collectibles", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordCollectibles? GuildCollectibles { get; internal set; }
+
+	/// <summary>
 	///     Gets the guild display name styles.
 	/// </summary>
 	[JsonProperty("display_name_styles", NullValueHandling = NullValueHandling.Ignore)]

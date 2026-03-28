@@ -155,4 +155,14 @@ public class GuildMemberUpdateEventArgs : DiscordEventArgs
 	///     Gets the member's guild avatar decoration data before the update.
 	/// </summary>
 	public AvatarDecorationData GuildAvatarDecorationDataBefore { get; internal set; }
+
+	/// <summary>
+	///     Gets the member's guild collectibles before the update.
+	/// </summary>
+	public DiscordCollectibles? GuildCollectiblesBefore { get; internal set; }
+
+	/// <summary>
+	///     Gets the member's guild collectibles after the update.
+	/// </summary>
+	public DiscordCollectibles? GuildCollectiblesAfter { get; internal set; }
 }

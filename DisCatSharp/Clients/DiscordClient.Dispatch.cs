@@ -2444,6 +2444,7 @@ public sealed partial class DiscordClient
 		var gAvOld = old.GuildAvatarHash;
 		var gBaOld = old.GuildBannerHash;
 		var gAvDeDaOld = old.GuildAvatarDecorationData;
+		var gCollectiblesOld = old.GuildCollectibles;
 		var avOld = old.AvatarHash;
 		var nickOld = mbr.Nickname;
 		var pendingOld = mbr.IsPending;
@@ -2455,6 +2456,7 @@ public sealed partial class DiscordClient
 		mbr.GuildAvatarHash = member.GuildAvatarHash;
 		mbr.GuildBannerHash = member.GuildBannerHash;
 		mbr.GuildAvatarDecorationData = member.GuildAvatarDecorationData;
+		mbr.GuildCollectibles = member.GuildCollectibles;
 		mbr.Nickname = nick;
 		mbr.GuildPronouns = member.GuildPronouns;
 		mbr.IsPending = pending;
@@ -2509,6 +2511,7 @@ public sealed partial class DiscordClient
 			GuildAvatarHashAfter = mbr.GuildAvatarHash,
 			GuildBannerHashAfter = mbr.GuildBannerHash,
 			GuildAvatarDecorationDataAfter = mbr.GuildAvatarDecorationData,
+			GuildCollectiblesAfter = mbr.GuildCollectibles,
 			UnusualDmActivityAfter = mbr.UnusualDmActivityUntil,
 			NicknameBefore = nickOld,
 			RolesBefore = rolesOld,
@@ -2518,7 +2521,8 @@ public sealed partial class DiscordClient
 			GuildAvatarHashBefore = gAvOld,
 			UnusualDmActivityBefore = udauOld,
 			GuildBannerHashBefore = gBaOld,
-			GuildAvatarDecorationDataBefore = gAvDeDaOld
+			GuildAvatarDecorationDataBefore = gAvDeDaOld,
+			GuildCollectiblesBefore = gCollectiblesOld
 		};
 
 		await this._guildMemberUpdated.InvokeAsync(this, eargs).ConfigureAwait(false);
