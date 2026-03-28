@@ -4,8 +4,12 @@ DisCatSharp Release Notes
     - Added Discord parity updates for store, entitlement, SKU, guild powerup / applied boost, application, audit-log, automod, message-type, and OAuth scope surfaces.
     - Fixed interaction response posting, soundboard cache refresh/list behavior, duplicate application-command execution logging, and several gateway/store dispatch follow-ups.
     - Removed .NET 8 support and aligned the core package with the current target framework matrix.
-    - Reworked built-in Sentry telemetry around a per-client diagnostics sink with breadcrumbs, structured tags, better grouping, scrubbed file payload attachments, and release/PDB upload support.
+    - Reworked built-in Sentry telemetry around a per-client diagnostics sink with breadcrumbs, structured tags, better grouping, scrubbed file payload attachments, release/PDB upload support, and package-root stack frame rewriting for code mappings.
     - Added package-level diagnostics participation for built-in extensions and hosting paths, including origin tagging for upstream Lavalink failures.
+    - Added gateway telemetry for unknown opcodes, disconnect/session lifecycle, and suppressed dispatch exceptions, plus follow-up fixes for wrapped exception filtering, preserved route-specific grouping, and shard-specific sink metadata.
+    - Adjusted Sentry environment tagging so local stable source builds report as `dev` while CI stable builds continue reporting as `production`.
+    - Removed the separate `ReportMissingFields` telemetry switch so schema-drift diagnostics now follow `EnableSentry` directly.
+    - Prevented the temporary sharded gateway-info client from reusing the parent telemetry sink and emitting spurious session-ended events.
 
 DisCatSharp.Attributes Release Notes
 
