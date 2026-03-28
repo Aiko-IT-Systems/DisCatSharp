@@ -2853,7 +2853,6 @@ public sealed partial class DiscordClient
 		invite.Guild?.Discord = this;
 		invite.TargetUser?.Discord = this;
 		invite.TargetApplication?.Discord = this;
-		invite.TargetApplication.Discord = this;
 		invite.GuildScheduledEvent?.Discord = this;
 		invite.Profile?.Discord = this;
 		if (invite.RolesInternal is not null)

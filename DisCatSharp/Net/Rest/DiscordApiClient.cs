@@ -1581,7 +1581,6 @@ public sealed class DiscordApiClient
 		invite.Inviter?.Discord = this.Discord;
 		invite.TargetUser?.Discord = this.Discord;
 		invite.TargetApplication?.Discord = this.Discord;
-		invite.TargetApplication.Discord = this.Discord;
 		invite.GuildScheduledEvent?.Discord = this.Discord;
 		invite.Profile?.Discord = this.Discord;
 		if (invite.RolesInternal is not null)
@@ -4083,7 +4082,6 @@ public sealed class DiscordApiClient
 			invite.Inviter?.Discord = this.Discord;
 			invite.TargetUser?.Discord = this.Discord;
 			invite.TargetApplication?.Discord = this.Discord;
-			invite.TargetApplication.Discord = this.Discord;
 			invite.GuildScheduledEvent?.Discord = this.Discord;
 			invite.Profile?.Discord = this.Discord;
 			if (invite.RolesInternal is not null)
@@ -4167,7 +4165,6 @@ public sealed class DiscordApiClient
 		invite.Inviter?.Discord = this.Discord;
 		invite.TargetUser?.Discord = this.Discord;
 		invite.TargetApplication?.Discord = this.Discord;
-		invite.TargetApplication.Discord = this.Discord;
 		invite.GuildScheduledEvent?.Discord = this.Discord;
 		invite.Profile?.Discord = this.Discord;
 		if (invite.RolesInternal is not null)
@@ -5329,7 +5326,6 @@ public sealed class DiscordApiClient
 			invite.Inviter?.Discord = this.Discord;
 			invite.TargetUser?.Discord = this.Discord;
 			invite.TargetApplication?.Discord = this.Discord;
-			invite.TargetApplication.Discord = this.Discord;
 			invite.GuildScheduledEvent?.Discord = this.Discord;
 			invite.Profile?.Discord = this.Discord;
 			if (invite.RolesInternal is not null)
@@ -5379,7 +5375,6 @@ public sealed class DiscordApiClient
 		invite.Inviter?.Discord = this.Discord;
 		invite.TargetUser?.Discord = this.Discord;
 		invite.TargetApplication?.Discord = this.Discord;
-		invite.TargetApplication.Discord = this.Discord;
 		invite.GuildScheduledEvent?.Discord = this.Discord;
 		invite.Profile?.Discord = this.Discord;
 		if (invite.RolesInternal is not null)
@@ -5504,7 +5499,6 @@ public sealed class DiscordApiClient
 		invite.Inviter?.Discord = this.Discord;
 		invite.TargetUser?.Discord = this.Discord;
 		invite.TargetApplication?.Discord = this.Discord;
-		invite.TargetApplication.Discord = this.Discord;
 		invite.GuildScheduledEvent?.Discord = this.Discord;
 		invite.Profile?.Discord = this.Discord;
 		if (invite.RolesInternal is not null)
