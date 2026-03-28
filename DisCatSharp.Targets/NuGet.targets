@@ -28,6 +28,12 @@
 	<PropertyGroup Condition="'$(GITHUB_ACTIONS)' != 'true' And '$(TF_BUILD)' != 'true' And '$(CI)' != 'True'">
 		<ContinuousIntegrationBuild>false</ContinuousIntegrationBuild>
 	</PropertyGroup>
+	<ItemGroup Condition="'$(ContinuousIntegrationBuild)' == 'true'">
+		<AssemblyMetadata Include="DisCatSharpBuildOrigin" Value="CI" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(ContinuousIntegrationBuild)' != 'true'">
+		<AssemblyMetadata Include="DisCatSharpBuildOrigin" Value="Local" />
+	</ItemGroup>
 	<PropertyGroup
 		Condition="'$(GITHUB_ACTIONS)' == 'true' And '$(SENTRY_AUTH_TOKEN)' != ''">
 		<SentryOrg>aitsys</SentryOrg>

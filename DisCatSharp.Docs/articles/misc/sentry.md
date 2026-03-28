@@ -215,12 +215,6 @@ The following packages do **not** require instrumentation:
 
 The following configuration options are available for Sentry, and they are all **disabled** or set to **null** by default:
 
--   **ReportMissingFields**: Determines whether to report missing fields for Discord objects. This is useful for library development.
-
-    ```csharp
-    public bool ReportMissingFields { internal get; set; } = false;
-    ```
-
 -   **EnableSentry**: Enables the Sentry integration.
 
     ```csharp

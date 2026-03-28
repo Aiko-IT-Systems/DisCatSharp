@@ -74,7 +74,6 @@ public sealed class DiscordConfiguration
 		this.Override = other.Override;
 		this.Locale = other.Locale;
 		this.Timezone = other.Timezone;
-		this.ReportMissingFields = other.ReportMissingFields;
 		this.EnableSentry = other.EnableSentry;
 		this.AttachRecentLogEntries = other.AttachRecentLogEntries;
 		this.AttachUserInfo = other.AttachUserInfo;
@@ -350,13 +349,6 @@ public sealed class DiscordConfiguration
 	///     Sets your timezone.
 	/// </summary>
 	public string? Timezone { internal get; set; } = null;
-
-	/// <summary>
-	///     <para>Whether to report missing fields for discord object.</para>
-	///     <para>Useful for library development.</para>
-	///     <para>Defaults to <see langword="false" />.</para>
-	/// </summary>
-	public bool ReportMissingFields { internal get; set; } = false;
 
 	/// <summary>
 	///     <para>Sets the service provider.</para>

@@ -60,7 +60,7 @@ internal static class TelemetryBootstrap
 		{
 			DetectStartupTime = StartupTimeDetectionMode.Fast,
 			DiagnosticLevel = SentryLevel.Debug,
-			Environment = IsPreRelease(release) ? "dev" : "production",
+			Environment = GetSentryEnvironment(release) ? "dev" : "production",
 			IsGlobalModeEnabled = false,
 			TracesSampleRate = 1.0,
 			ReportAssembliesMode = ReportAssembliesMode.InformationalVersion,
@@ -263,6 +263,29 @@ internal static class TelemetryBootstrap
 		var versionPart = atIndex >= 0 ? release[(atIndex + 1)..] : release;
 		return versionPart.Contains('-');
 	}
+
+	/// <summary>
+	///     Determines whether Sentry should use the dev environment for the current library build.
+	/// </summary>
+	/// <remarks>
+	///     Pre-release versions are always treated as dev.
+	///     Stable versions are treated as dev when the assembly metadata says the build did not come from CI.
+	/// </remarks>
+	internal static bool GetSentryEnvironment(string release)
+	{
+		if (IsPreRelease(release))
+			return true;
+
+		return !IsCiBuild(typeof(DiscordClient).GetTypeInfo().Assembly);
+	}
+
+	/// <summary>
+	///     Returns whether the current assembly was produced by a CI build.
+	/// </summary>
+	internal static bool IsCiBuild(Assembly assembly)
+		=> assembly.GetCustomAttributes<AssemblyMetadataAttribute>()
+			.Any(attr => string.Equals(attr.Key, "DisCatSharpBuildOrigin", StringComparison.Ordinal)
+				&& string.Equals(attr.Value, "CI", StringComparison.OrdinalIgnoreCase));
 
 	/// <summary>
 	///     Builds a <see cref="DiagnosticUserInfo" /> from the current client state if user info attachment is enabled.

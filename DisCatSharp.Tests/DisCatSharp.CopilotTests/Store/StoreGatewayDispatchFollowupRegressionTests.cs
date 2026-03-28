@@ -430,11 +430,15 @@ public class StoreGatewayDispatchFollowupRegressionTests
 		Assert.False(client.GuildsInternal.ContainsKey(guildId));
 	}
 
-	private static DiscordClient CreateClient()
-		=> new(new DiscordConfiguration
+	private static DiscordClient CreateClient(Action<DiscordConfiguration>? configure = null)
+	{
+		var configuration = new DiscordConfiguration
 		{
 			Token = "1"
-		});
+		};
+		configure?.Invoke(configuration);
+		return new(configuration);
+	}
 
 	private sealed class TestDiagnosticsSink : ILibraryDiagnosticsSink
 	{

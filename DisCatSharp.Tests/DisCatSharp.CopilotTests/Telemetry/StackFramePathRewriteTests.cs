@@ -86,6 +86,22 @@ public class StackFramePathRewriteTests
 		Assert.Equal("DisCatSharp.Hosting\\BaseHostedService.cs", frame.AbsolutePath);
 	}
 
+	[Fact]
+	public void GetSentryEnvironment_ReturnsDevForPreReleaseVersion()
+	{
+		var isDev = TelemetryBootstrap.GetSentryEnvironment("DisCatSharp@10.7.1-preview.1");
+
+		Assert.True(isDev);
+	}
+
+	[Fact]
+	public void IsCiBuild_ReturnsFalseForTestAssembly()
+	{
+		var isCi = TelemetryBootstrap.IsCiBuild(typeof(StackFramePathRewriteTests).Assembly);
+
+		Assert.False(isCi);
+	}
+
 	private static void SetSentryExceptions(SentryEvent evt, SentryException[] exceptions)
 	{
 		var property = typeof(SentryEvent).GetProperty("SentryExceptions", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
