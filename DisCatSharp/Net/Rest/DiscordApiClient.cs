@@ -4540,6 +4540,17 @@ public sealed class DiscordApiClient
 			old.Discriminator = usr.Discriminator;
 			old.AvatarHash = usr.AvatarHash;
 			old.GlobalName = usr.GlobalName;
+			old.BannerHash = usr.BannerHash;
+			old.BannerColorInternal = usr.BannerColorInternal;
+			old.AvatarDecorationData = usr.AvatarDecorationData;
+			old.Collectibles = usr.Collectibles;
+			old.IsSystem = usr.IsSystem;
+			old.IsBot = usr.IsBot;
+			old.ThemeColorsInternal = usr.ThemeColorsInternal;
+			old.Pronouns = usr.Pronouns;
+			old.Locale = usr.Locale;
+			old.PrimaryGuild = usr.PrimaryGuild;
+			old.DisplayNameStyles = usr.DisplayNameStyles;
 			return old;
 		});
 
