@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -284,10 +285,20 @@ internal static class ApplicationCommandEqualityChecks
 
 			if (sourceOption.Choices is not null && targetOption.Choices is not null)
 			{
-				var j1 = JsonConvert.SerializeObject(sourceOption.Choices.OrderBy(x => x.Name), Formatting.None);
-				var j2 = JsonConvert.SerializeObject(targetOption.Choices.OrderBy(x => x.Name), Formatting.None);
-				if (j1 != j2)
-					return (false, "choice mismatch - " + sourceOption.Name);
+				var sourceChoices = sourceOption.Choices.OrderBy(x => x.Name).ToList();
+				var targetChoices = targetOption.Choices.OrderBy(x => x.Name).ToList();
+
+				if (sourceChoices.Count != targetChoices.Count)
+					return (false, "choice count mismatch - " + sourceOption.Name);
+
+				for (var ci = 0; ci < sourceChoices.Count; ci++)
+				{
+					if (sourceChoices[ci].Name != targetChoices[ci].Name)
+						return (false, "choice name mismatch - " + sourceOption.Name);
+
+					if (!AreChoiceValuesEqual(sourceChoices[ci].Value, targetChoices[ci].Value))
+						return (false, "choice value mismatch - " + sourceOption.Name);
+				}
 			}
 
 			if ((sourceOption.ChannelTypes is null && targetOption.ChannelTypes is not null) ||
@@ -306,5 +317,48 @@ internal static class ApplicationCommandEqualityChecks
 		}
 
 		return (true, null);
+	}
+
+	/// <summary>
+	///     Compares two choice values for equality, normalizing numeric types so that
+	///     <c>42</c> (int), <c>42L</c> (long), and <c>42.0</c> (double) are considered equal
+	///     when they represent the same logical value.
+	/// </summary>
+	/// <param name="a">The first value.</param>
+	/// <param name="b">The second value.</param>
+	/// <returns>Whether the two values are considered equal.</returns>
+	private static bool AreChoiceValuesEqual(object? a, object? b)
+	{
+		if (ReferenceEquals(a, b))
+			return true;
+		if (a is null || b is null)
+			return false;
+
+		// Normalize numeric types to a common representation for comparison
+		if (a is IConvertible ca && b is IConvertible cb)
+		{
+			try
+			{
+				// If both can be represented as long without loss, compare as long
+				var la = ca.ToInt64(System.Globalization.CultureInfo.InvariantCulture);
+				var lb = cb.ToInt64(System.Globalization.CultureInfo.InvariantCulture);
+
+				// Verify no precision was lost by round-tripping
+				var da = ca.ToDouble(System.Globalization.CultureInfo.InvariantCulture);
+				var db = cb.ToDouble(System.Globalization.CultureInfo.InvariantCulture);
+
+				if (da == la && db == lb)
+					return la == lb;
+
+				// Fall back to double comparison for fractional values
+				return da == db;
+			}
+			catch
+			{
+				// Not numeric — fall through to string comparison
+			}
+		}
+
+		return string.Equals(a.ToString(), b.ToString(), StringComparison.Ordinal);
 	}
 }

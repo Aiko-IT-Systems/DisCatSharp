@@ -114,7 +114,7 @@ public class BaseContext : DisCatSharpCommandContext
 	///     <para>This allows passing data around without resorting to static members.</para>
 	///     <para>Defaults to an empty service provider.</para>
 	/// </summary>
-	public IServiceProvider Services { get; internal set; } = new ServiceCollection().BuildServiceProvider(true);
+	public IServiceProvider Services { get; internal set; } = EmptyServiceProvider.Instance;
 
 	/// <summary>
 	///     Gets or sets the service scope for this command execution.

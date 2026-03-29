@@ -197,21 +197,45 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	///     Gets a list of registered commands. The key is the guild id (null if global).
 	/// </summary>
 	public IReadOnlyList<KeyValuePair<ulong?, IReadOnlyList<RegisteredDiscordApplicationCommand>>> RegisteredCommands
-		=> s_registeredCommands.Select(guild =>
-			new KeyValuePair<ulong?, IReadOnlyList<RegisteredDiscordApplicationCommand>>(guild.Key, guild.Value
-				.Select(parent => new RegisteredDiscordApplicationCommand(parent)).ToList())).ToList().AsReadOnly();
+	{
+		get
+		{
+			lock (s_collectionLock)
+			{
+				return s_registeredCommands.Select(guild =>
+					new KeyValuePair<ulong?, IReadOnlyList<RegisteredDiscordApplicationCommand>>(guild.Key, guild.Value
+						.Select(parent => new RegisteredDiscordApplicationCommand(parent)).ToList())).ToList().AsReadOnly();
+			}
+		}
+	}
 
 	/// <summary>
 	///     Gets a list of registered global commands.
 	/// </summary>
 	public IReadOnlyList<DiscordApplicationCommand> GlobalCommands
-		=> GlobalCommandsInternal;
+	{
+		get
+		{
+			lock (s_collectionLock)
+			{
+				return GlobalCommandsInternal.ToList().AsReadOnly();
+			}
+		}
+	}
 
 	/// <summary>
 	///     Gets a list of registered guild commands mapped by guild id.
 	/// </summary>
 	public IReadOnlyDictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommands
-		=> GuildCommandsInternal;
+	{
+		get
+		{
+			lock (s_collectionLock)
+			{
+				return GuildCommandsInternal.ToDictionary(kvp => kvp.Key, kvp => kvp.Value).AsReadOnly();
+			}
+		}
+	}
 
 	/// <summary>
 	///     Gets the guild ids where the applications.commands scope is missing.
@@ -291,6 +315,12 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	public static bool FinishFired { get; set; } = false;
 
 	internal static DiscordApplicationCommand? EntryPointCommand { get; set; } = null;
+
+	/// <summary>
+	///     Gets the user-provided entry point command configuration.
+	///     Set via <see cref="RegisterEntryPointCommand"/>.
+	/// </summary>
+	private DiscordApplicationCommand? _userEntryPointCommand;
 
 	/// <summary>
 	///     Runs setup.
@@ -488,6 +518,44 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
+	///     Registers a custom entry point command for the application's activity.
+	///     <para>Only one entry point command can exist per application. The name is always "launch" as required by Discord.</para>
+	///     <para>Use this to configure the description, allowed contexts, integration types, and handler type of the entry point command.</para>
+	/// </summary>
+	/// <param name="description">The description of the entry point command.</param>
+	/// <param name="allowedContexts">Where the entry point command can be used. When <see langword="null"/>, Discord's defaults are kept.</param>
+	/// <param name="integrationTypes">The allowed integration types. When <see langword="null"/>, Discord's defaults are kept.</param>
+	/// <param name="handlerType">The handler type. When <see langword="null"/>, falls back to <see cref="DiscordConfiguration.ActivityHandlerType"/>.</param>
+	/// <param name="defaultMemberPermissions">The default member permissions. When <see langword="null"/>, no restrictions are applied.</param>
+	/// <param name="nameLocalizations">The localizations of the command name.</param>
+	/// <param name="descriptionLocalizations">The localizations of the command description.</param>
+	public void RegisterEntryPointCommand(
+		string description,
+		List<InteractionContextType>? allowedContexts = null,
+		List<ApplicationCommandIntegrationTypes>? integrationTypes = null,
+		ApplicationCommandHandlerType? handlerType = null,
+		Permissions? defaultMemberPermissions = null,
+		DiscordApplicationCommandLocalization? nameLocalizations = null,
+		DiscordApplicationCommandLocalization? descriptionLocalizations = null
+	)
+	{
+		if (this._userEntryPointCommand is not null)
+			throw new InvalidOperationException("An entry point command has already been registered. Only one entry point command is allowed per application.");
+
+		this._userEntryPointCommand = new(
+			"launch",
+			description,
+			type: ApplicationCommandType.PrimaryEntryPoint,
+			nameLocalizations: nameLocalizations,
+			descriptionLocalizations: descriptionLocalizations,
+			defaultMemberPermissions: defaultMemberPermissions,
+			allowedContexts: allowedContexts,
+			integrationTypes: integrationTypes,
+			handlerType: handlerType ?? this.Client.Configuration.ActivityHandlerType
+		);
+	}
+
+	/// <summary>
 	///     Fired when the application commands module is ready.
 	/// </summary>
 	public event AsyncEventHandler<ApplicationCommandsExtension, ApplicationCommandsModuleReadyEventArgs> ApplicationCommandsModuleReady
@@ -610,9 +678,30 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				GlobalDiscordCommands.AddRange(globalCommands);
 				if (this.Client.Configuration.HasActivitiesEnabled)
 				{
-					var entryPointCommand = globalCommands.First(command => command.Name == "launch");
-					entryPointCommand.HandlerType = this.Client.Configuration.ActivityHandlerType;
-					EntryPointCommand = entryPointCommand;
+					var entryPointCommand = globalCommands.FirstOrDefault(command => command.Type is ApplicationCommandType.PrimaryEntryPoint);
+					if (entryPointCommand is not null)
+					{
+						if (this._userEntryPointCommand is not null)
+						{
+							entryPointCommand.Description = this._userEntryPointCommand.Description;
+							entryPointCommand.HandlerType = this._userEntryPointCommand.HandlerType;
+							entryPointCommand.RawNameLocalizations = this._userEntryPointCommand.RawNameLocalizations;
+							entryPointCommand.RawDescriptionLocalizations = this._userEntryPointCommand.RawDescriptionLocalizations;
+							entryPointCommand.DefaultMemberPermissions = this._userEntryPointCommand.DefaultMemberPermissions;
+
+							if (this._userEntryPointCommand.AllowedContexts is not null)
+								entryPointCommand.AllowedContexts = this._userEntryPointCommand.AllowedContexts;
+
+							if (this._userEntryPointCommand.IntegrationTypes is not null)
+								entryPointCommand.IntegrationTypes = this._userEntryPointCommand.IntegrationTypes;
+						}
+						else
+						{
+							entryPointCommand.HandlerType = this.Client.Configuration.ActivityHandlerType;
+						}
+
+						EntryPointCommand = entryPointCommand;
+					}
 				}
 			}
 
@@ -896,7 +985,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								foreach (var cmd in GlobalDiscordCommands)
 									try
 									{
-										if (EntryPointCommand is null || cmd.Name is not "launch")
+										if (EntryPointCommand is null || cmd.Type is not ApplicationCommandType.PrimaryEntryPoint)
 											await this.Client.DeleteGlobalApplicationCommandAsync(cmd.Id).ConfigureAwait(false);
 									}
 									catch (NotFoundException)
@@ -1696,7 +1785,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				args.Add(parameter.DefaultValue);
 			else
 			{
-				var option = options.Single(x => x.Name == parameter.GetCustomAttribute<OptionAttribute>()?.Name.ToLower());
+				var optionName = parameter.GetCustomAttribute<OptionAttribute>()?.Name.ToLower();
+				var option = options.SingleOrDefault(x => x.Name == optionName)
+					?? throw new InvalidOperationException($"Could not find option '{optionName}' for parameter '{parameter.Name}'. Ensure the parameter has a matching [Option] attribute.");
 				// Handle enum parameters (including nullable enums). We map enums to Integer option
 				// types so Discord will send numeric values. Accept numeric (boxed) and numeric-string
 				// values and convert them into the proper enum instance. Also accept named-string
@@ -1744,9 +1835,15 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					args.Add(option.Value?.ToString());
 				}
 				else if (parameter.ParameterType == typeof(ulong) || parameter.ParameterType == typeof(ulong?))
-					args.Add((ulong?)option.Value);
+					if (option.Value is null)
+						args.Add(null);
+					else
+						args.Add(Convert.ToUInt64(option.Value));
 				else if (parameter.ParameterType == typeof(int) || parameter.ParameterType == typeof(int?))
-					args.Add((int?)option.Value);
+					if (option.Value is null)
+						args.Add(null);
+					else
+						args.Add(Convert.ToInt32(option.Value));
 				else if (parameter.ParameterType == typeof(long) || parameter.ParameterType == typeof(long?))
 					if (option.Value is null)
 						args.Add(null);
@@ -2023,9 +2120,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				_ => value.ToString()
 			};
 		}
-		catch
+		catch (Exception ex) when (ex is FormatException or InvalidCastException or OverflowException)
 		{
-			// Fallback to string if conversion fails
+			// Fallback to string if numeric conversion fails
 			return value.ToString();
 		}
 	}
