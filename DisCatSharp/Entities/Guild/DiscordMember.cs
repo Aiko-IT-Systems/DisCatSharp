@@ -226,12 +226,14 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <summary>
 	///     Date until the can communicate again.
 	/// </summary>
+	// NullValueHandling.Include is intentional: GUILD_MEMBER_UPDATE sends explicit null when a member's timeout is removed.
 	[JsonProperty("communication_disabled_until", NullValueHandling = NullValueHandling.Include)]
 	public DateTime? CommunicationDisabledUntil { get; internal set; }
 
 	/// <summary>
 	///     Datetime until unusual dm activity time happened.
 	/// </summary>
+	// NullValueHandling.Include is intentional: explicit null signals that the DM activity restriction has ended.
 	[JsonProperty("unusual_dm_activity_until", NullValueHandling = NullValueHandling.Include)]
 	public DateTime? UnusualDmActivityUntil { get; internal set; }
 

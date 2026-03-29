@@ -15,6 +15,9 @@ public class IncidentsData : ObservableApiObject
 	internal IncidentsData()
 	{ }
 
+	// NullValueHandling.Include is intentional for all fields: GUILD_UPDATE sends explicit null to signal that an
+	// active incident restriction (DM lockdown, invite lockdown, spam/raid detection) has been cleared.
+
 	/// <summary>
 	///     Gets until when direct messages are disabled.
 	/// </summary>

@@ -86,7 +86,7 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// <summary>
 	///     Gets this event's cover hash, when applicable.
 	/// </summary>
-	[JsonProperty("image", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("image", NullValueHandling = NullValueHandling.Ignore)]
 	public string? CoverImageHash { get; internal set; }
 
 	/// <summary>

@@ -387,9 +387,11 @@ public sealed class DiscordRoleColors
 	[JsonProperty("primary_color", NullValueHandling = NullValueHandling.Ignore)]
 	internal int PrimaryColorInternal;
 
+	// NullValueHandling.Include is intentional: GUILD_ROLE_UPDATE sends explicit null to remove a role's secondary gradient color.
 	[JsonProperty("secondary_color", NullValueHandling = NullValueHandling.Include)]
 	internal int? SecondaryColorInternal;
 
+	// NullValueHandling.Include is intentional: GUILD_ROLE_UPDATE sends explicit null to remove the holographic tertiary color.
 	[JsonProperty("tertiary_color", NullValueHandling = NullValueHandling.Include)]
 	internal int? TertiaryColorInternal;
 

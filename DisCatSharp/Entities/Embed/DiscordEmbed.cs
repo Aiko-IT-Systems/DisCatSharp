@@ -15,6 +15,8 @@ public sealed class DiscordEmbed : ObservableApiObject
 	[JsonIgnore]
 	private readonly Lazy<Optional<DiscordColor>> _colorLazy;
 
+	// NullValueHandling.Include is intentional: this is an Optional<int> with its own serialization contract;
+	// the Include ensures a null-wrapping Optional round-trips correctly.
 	[JsonProperty("color", NullValueHandling = NullValueHandling.Include)]
 	internal Optional<int> ColorInternal;
 

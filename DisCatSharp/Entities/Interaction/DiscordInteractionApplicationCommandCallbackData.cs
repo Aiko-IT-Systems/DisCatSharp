@@ -122,6 +122,6 @@ internal sealed class DiscordInteractionApplicationCommandIframeCallbackData : O
 	/// <summary>
 	///     Gets the iFrame path.
 	/// </summary>
-	[JsonProperty("iframe_path", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("iframe_path", NullValueHandling = NullValueHandling.Ignore)]
 	public string? IframePath { get; internal set; }
 }

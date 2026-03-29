@@ -23,7 +23,7 @@ public sealed class DiscordGuildProfile : SnowflakeObject
 	/// <summary>
 	///     Gets the guild icon's hash.
 	/// </summary>
-	[JsonProperty("icon", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("icon", NullValueHandling = NullValueHandling.Ignore)]
 	public string? IconHash { get; internal set; }
 
 	/// <summary>
@@ -36,7 +36,7 @@ public sealed class DiscordGuildProfile : SnowflakeObject
 	/// <summary>
 	///     Gets the guild banner's hash.
 	/// </summary>
-	[JsonProperty("banner", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("banner", NullValueHandling = NullValueHandling.Ignore)]
 	public string? BannerHash { get; internal set; }
 
 	/// <summary>
@@ -49,7 +49,7 @@ public sealed class DiscordGuildProfile : SnowflakeObject
 	/// <summary>
 	///     Gets the guild custom banner's hash.
 	/// </summary>
-	[JsonProperty("custom_banner", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("custom_banner", NullValueHandling = NullValueHandling.Ignore)]
 	public string? CustomBannerHash { get; internal set; }
 
 	/// <summary>
@@ -62,25 +62,25 @@ public sealed class DiscordGuildProfile : SnowflakeObject
 	/// <summary>
 	///     Gets the member count.
 	/// </summary>
-	[JsonProperty("member_count", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("member_count", NullValueHandling = NullValueHandling.Ignore)]
 	public int? MemberCount { get; internal set; }
 
 	/// <summary>
 	///     Gets the online count.
 	/// </summary>
-	[JsonProperty("online_count", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("online_count", NullValueHandling = NullValueHandling.Ignore)]
 	public int? OnlineCount { get; internal set; }
 
 	/// <summary>
 	///     Gets the guild description.
 	/// </summary>
-	[JsonProperty("description", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
 	public string? Description { get; internal set; }
 
 	/// <summary>
 	///     Gets the primary brand color.
 	/// </summary>
-	[JsonProperty("brand_color_primary", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("brand_color_primary", NullValueHandling = NullValueHandling.Ignore)]
 	public string? BrandColorPrimaryRaw { get; internal set; }
 
 	/// <summary>
@@ -93,7 +93,7 @@ public sealed class DiscordGuildProfile : SnowflakeObject
 	/// <summary>
 	///     Gets the primary badge color.
 	/// </summary>
-	[JsonProperty("badge_color_primary", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("badge_color_primary", NullValueHandling = NullValueHandling.Ignore)]
 	public string? BadgeColorPrimaryRaw { get; internal set; }
 
 	/// <summary>
@@ -106,7 +106,7 @@ public sealed class DiscordGuildProfile : SnowflakeObject
 	/// <summary>
 	///     Gets the secondary badge color.
 	/// </summary>
-	[JsonProperty("badge_color_secondary", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("badge_color_secondary", NullValueHandling = NullValueHandling.Ignore)]
 	public string? BadgeColorSecondaryRaw { get; internal set; }
 
 	/// <summary>
@@ -119,7 +119,7 @@ public sealed class DiscordGuildProfile : SnowflakeObject
 	/// <summary>
 	///     Gets the badge hash.
 	/// </summary>
-	[JsonProperty("badge_hash", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("badge_hash", NullValueHandling = NullValueHandling.Ignore)]
 	public string? BadgeHash { get; internal set; }
 
 	/// <summary>
@@ -138,7 +138,7 @@ public sealed class DiscordGuildProfile : SnowflakeObject
 	/// <summary>
 	///     Gets the guild tag.
 	/// </summary>
-	[JsonProperty("tag", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("tag", NullValueHandling = NullValueHandling.Ignore)]
 	public string? Tag { get; internal set; }
 
 	/// <summary>

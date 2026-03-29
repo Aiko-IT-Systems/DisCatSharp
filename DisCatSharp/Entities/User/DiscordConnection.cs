@@ -144,7 +144,7 @@ public class DiscordConnection : ObservableApiObject
 	/// <summary>
 	///     Gets whether the connection is revoked.
 	/// </summary>
-	[JsonProperty("revoked", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("revoked", NullValueHandling = NullValueHandling.Ignore)]
 	public bool? IsRevoked { get; internal set; }
 
 	/// <summary>
