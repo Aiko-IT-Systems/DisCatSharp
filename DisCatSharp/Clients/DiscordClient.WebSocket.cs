@@ -32,7 +32,13 @@ public sealed partial class DiscordClient
 	/// </summary>
 	/// <returns>The added socket lock.</returns>
 	private SocketLock GetSocketLock()
-		=> s_socketLocks.GetOrAdd(this.CurrentApplication.Id, new SocketLock(this.CurrentApplication.Id, this.GatewayInfo!.SessionBucket.MaxConcurrency));
+	{
+		// CurrentApplication and GatewayInfo may be null before InitializeAsync() completes.
+		// Fall back to safe defaults so we never throw an NRE during the initial connection phase.
+		var appId = this.CurrentApplication?.Id ?? 0ul;
+		var maxConcurrency = this.GatewayInfo?.SessionBucket.MaxConcurrency ?? 1;
+		return s_socketLocks.GetOrAdd(appId, new SocketLock(appId, maxConcurrency));
+	}
 
 	#endregion
 
