@@ -193,14 +193,6 @@ public sealed partial class DiscordClient
 				var pauseEndsAt = dat["pause_ends_at"]?.ToObject<DateTimeOffset?>();
 				var endsAt = dat["ends_at"]?.ToObject<DateTimeOffset?>();
 				var ended = dat["ended"].ToObject<bool>();
-				if (this.CurrentApplication.Id is 822242444070092860)
-				{
-					_ = Task.Run(async () =>
-					{
-						var channel = await this.GetChannelAsync(1410132014883012678);
-						await channel.SendMessageAsync(payload.EventName + "\n" + dat.ToString(Formatting.Indented).BlockCode("json"));
-					});
-				}
 				await this.OnGuildAppliedBoostsUpdateEventAsync((ulong)dat["id"], this.GuildsInternal[gid], uid, pauseEndsAt, endsAt, ended).ConfigureAwait(false);
 				break;
 
@@ -210,14 +202,6 @@ public sealed partial class DiscordClient
 				var createdPauseEndsAt = dat["pause_ends_at"]?.ToObject<DateTimeOffset?>();
 				var createdEndsAt = dat["ends_at"]?.ToObject<DateTimeOffset?>();
 				var createdEnded = dat["ended"]?.ToObject<bool>() ?? false;
-				if (this.CurrentApplication.Id is 822242444070092860)
-				{
-					_ = Task.Run(async () =>
-					{
-						var channel = await this.GetChannelAsync(1410132014883012678);
-						await channel.SendMessageAsync(payload.EventName + "\n" + dat.ToString(Formatting.Indented).BlockCode("json"));
-					});
-				}
 				await this.OnGuildAppliedBoostsCreateEventAsync((ulong)dat["id"], gid, uid, createdPauseEndsAt, createdEndsAt, createdEnded).ConfigureAwait(false);
 				break;
 
@@ -227,14 +211,6 @@ public sealed partial class DiscordClient
 				var deletedPauseEndsAt = dat["pause_ends_at"]?.ToObject<DateTimeOffset?>();
 				var deletedEndsAt = dat["ends_at"]?.ToObject<DateTimeOffset?>();
 				var deletedEnded = dat["ended"]?.ToObject<bool>() ?? false;
-				if (this.CurrentApplication.Id is 822242444070092860)
-				{
-					_ = Task.Run(async () =>
-					{
-						var channel = await this.GetChannelAsync(1410132014883012678);
-						await channel.SendMessageAsync(payload.EventName + "\n" + dat.ToString(Formatting.Indented).BlockCode("json"));
-					});
-				}
 				await this.OnGuildAppliedBoostsDeleteEventAsync((ulong)dat["id"], gid, uid, deletedPauseEndsAt, deletedEndsAt, deletedEnded).ConfigureAwait(false);
 				break;
 

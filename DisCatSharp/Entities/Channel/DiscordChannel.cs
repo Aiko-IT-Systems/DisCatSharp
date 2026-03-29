@@ -361,7 +361,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="obj">Object to compare to.</param>
 	/// <returns>Whether the object is equal to this <see cref="DiscordChannel" />.</returns>
 	public override bool Equals(object obj)
-		=> this.Equals(obj as DiscordChannel);
+		=> obj is DiscordChannel x && this.Equals(x);
 
 	/// <summary>
 	///     Gets the hash code for this <see cref="DiscordChannel" />.

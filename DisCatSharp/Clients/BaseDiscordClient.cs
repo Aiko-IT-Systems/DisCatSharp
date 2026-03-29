@@ -112,7 +112,8 @@ public abstract class BaseDiscordClient : IDisposable
 		}
 
 		this.InitGlobalExceptionTracking();
-		_ = Task.Run(() => DisCatSharpBadDomainChecker.LoadAndInitBadDomainHashesAsync(this));
+		_ = Task.Run(() => DisCatSharpBadDomainChecker.LoadAndInitBadDomainHashesAsync(this))
+			.ContinueWith(t => this.Logger.LogWarning(t.Exception, "Bad domain checker failed to load"), TaskContinuationOptions.OnlyOnFaulted);
 	}
 
 	/// <summary>

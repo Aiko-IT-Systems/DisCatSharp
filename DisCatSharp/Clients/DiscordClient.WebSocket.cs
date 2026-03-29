@@ -505,7 +505,7 @@ public sealed partial class DiscordClient
 	{
 		Interlocked.Decrement(ref this._skippedHeartbeats);
 
-		var ping = (int)(DateTime.Now - this._lastHeartbeat).TotalMilliseconds;
+		var ping = (int)(DateTimeOffset.UtcNow - this._lastHeartbeat).TotalMilliseconds;
 
 		this.Logger.LogTrace(LoggerEvents.WebSocketReceive, "Received HEARTBEAT_ACK (OP11, {0}ms)", ping);
 
@@ -682,7 +682,7 @@ public sealed partial class DiscordClient
 		var heartbeatStr = JsonConvert.SerializeObject(heartbeat);
 		await this.WsSendAsync(heartbeatStr).ConfigureAwait(false);
 
-		this._lastHeartbeat = DateTimeOffset.Now;
+		this._lastHeartbeat = DateTimeOffset.UtcNow;
 
 		Interlocked.Increment(ref this._skippedHeartbeats);
 	}

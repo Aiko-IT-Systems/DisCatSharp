@@ -10,7 +10,7 @@ namespace DisCatSharp.EventArgs;
 public class RateLimitExceptionEventArgs : DiscordEventArgs
 {
 	/// <summary>
-	///     Initializes a new instance of the <see cref="HeartbeatEventArgs" /> class.
+	///     Initializes a new instance of the <see cref="RateLimitExceptionEventArgs" /> class.
 	/// </summary>
 	internal RateLimitExceptionEventArgs(IServiceProvider provider)
 		: base(provider)
