@@ -273,15 +273,15 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	[JsonIgnore]
 	public DiscordVoiceState? VoiceState
-		=> this.Discord.Guilds[this.GuildId].VoiceStates.GetValueOrDefault(this.Id);
+		=> this.Discord.Guilds.TryGetValue(this.GuildId, out var vsGuild) ? vsGuild.VoiceStates.GetValueOrDefault(this.Id) : null;
 
 	/// <summary>
 	///     Gets the guild of which this member is a part of.
 	///     <note type="warning">This will throw if accessed for an oauth2 constructed member.</note>
 	/// </summary>
 	[JsonIgnore]
-	public DiscordGuild Guild
-		=> this.Discord.Guilds[this.GuildId];
+	public DiscordGuild? Guild
+		=> this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) ? guild : null;
 
 	/// <summary>
 	///     Gets whether this member is the Guild owner.
@@ -289,7 +289,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	[JsonIgnore]
 	public bool IsOwner
-		=> this.Id == this.Guild.OwnerId;
+		=> this.Guild?.OwnerId == this.Id;
 
 	/// <summary>
 	///     Gets the member's position in the role hierarchy, which is the member's highest role's position. Returns
@@ -297,11 +297,18 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	[JsonIgnore]
 	public int Hierarchy
-		=> this.IsOwner
-			? int.MaxValue
-			: this.RoleIds.Count is 0
-				? 0
-				: this.Roles.Max(x => x.Position);
+	{
+		get
+		{
+			if (this.IsOwner)
+				return int.MaxValue;
+
+			var max = 0;
+			foreach (var role in this.Roles)
+				if (role.Position > max) max = role.Position;
+			return max;
+		}
+	}
 
 	/// <summary>
 	///     Gets the permissions for the current member.

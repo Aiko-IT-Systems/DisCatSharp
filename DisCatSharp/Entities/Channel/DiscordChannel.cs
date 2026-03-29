@@ -66,8 +66,8 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	///     Gets the category that contains this channel.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordChannel Parent
-		=> this.ParentId.HasValue ? this.Guild.GetChannel(this.ParentId.Value) : null;
+	public DiscordChannel? Parent
+		=> this.ParentId.HasValue && this.Guild != null ? this.Guild.GetChannel(this.ParentId.Value) : null;
 
 	/// <summary>
 	///     Gets the name of this channel.

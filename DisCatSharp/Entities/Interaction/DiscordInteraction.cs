@@ -60,18 +60,37 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// </summary>
 	[JsonIgnore] // TODO: Is now also partial "channel"
 	public DiscordChannel Channel
-		=> (this.Discord as DiscordClient).InternalGetCachedChannel(this.ChannelId) ?? (DiscordChannel)(this.Discord as DiscordClient).InternalGetCachedThread(this.ChannelId) ?? (this.Guild is null
-			? new DiscordDmChannel
-			{
-				Id = this.ChannelId,
-				Type = ChannelType.Private,
-				Discord = this.Discord
-			}
-			: new DiscordChannel
-			{
-				Id = this.ChannelId,
-				Discord = this.Discord
-			});
+	{
+		get
+		{
+			if (this.Discord is DiscordClient dc)
+				return dc.InternalGetCachedChannel(this.ChannelId) ?? (DiscordChannel)dc.InternalGetCachedThread(this.ChannelId) ?? (this.Guild is null
+					? new DiscordDmChannel
+					{
+						Id = this.ChannelId,
+						Type = ChannelType.Private,
+						Discord = this.Discord
+					}
+					: new DiscordChannel
+					{
+						Id = this.ChannelId,
+						Discord = this.Discord
+					});
+
+			return this.Guild is null
+				? new DiscordDmChannel
+				{
+					Id = this.ChannelId,
+					Type = ChannelType.Private,
+					Discord = this.Discord
+				}
+				: new DiscordChannel
+				{
+					Id = this.ChannelId,
+					Discord = this.Discord
+				};
+		}
+	}
 
 	/// <summary>
 	///     Gets the user that invoked this interaction.
