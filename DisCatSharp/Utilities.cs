@@ -734,11 +734,13 @@ public static class Utilities
 			}
 
 			var lastGitHubRelease = latest.TagName.Replace("v", string.Empty, StringComparison.InvariantCultureIgnoreCase);
-			var githubSplitVersion = lastGitHubRelease.Split('.');
-			static int ParseVersionSegment(string segment) => int.TryParse(segment.Split('-')[0], out var n) ? n : 0;
-			var githubApi = ParseVersionSegment(githubSplitVersion[0]);
-			var githubMajor = ParseVersionSegment(githubSplitVersion[1]);
-			var githubMinor = ParseVersionSegment(githubSplitVersion[2]);
+			// Pre-release tags (e.g. "10.7.1-nightly-001") carry a suffix after the base SemVer triple.
+			// Use latest.Prerelease to strip the suffix at the right boundary instead of guessing per-segment.
+			var baseVersion = latest.Prerelease ? lastGitHubRelease.Split('-')[0] : lastGitHubRelease;
+			var githubSplitVersion = baseVersion.Split('.');
+			var githubApi = Convert.ToInt32(githubSplitVersion[0]);
+			var githubMajor = Convert.ToInt32(githubSplitVersion[1]);
+			var githubMinor = Convert.ToInt32(githubSplitVersion[2]);
 
 			if (api < githubApi || (api == githubApi && major < githubMajor) || (api == githubApi && major == githubMajor && minor < githubMinor))
 				client.Logger.LogCritical("[{Type}] Your version of {Product} is outdated!\n\tCurrent version: v{CurrentVersion}\n\tLatest version: v{LastGitHubRelease}", fromShard ? "ShardedClient" : "Client", productName, version, lastGitHubRelease);
