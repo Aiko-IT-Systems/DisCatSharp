@@ -161,8 +161,7 @@ public sealed class DiscordConfiguration
 	/// <summary>
 	///     <para>Sets the member count threshold at which guilds are considered large.</para>
 	///     <para>Discord only accepts values between 50 and 250 (inclusive). Values outside this range are silently
-	///     clamped to the nearest boundary rather than being forwarded verbatim to the gateway, which would cause a
-	///     silent member-chunking failure.</para>
+	///     clamped to the nearest boundary.</para>
 	///     <para>Defaults to 250.</para>
 	/// </summary>
 	public int LargeThreshold
