@@ -26,9 +26,14 @@ internal class RegistrationWorker
 	/// <returns>A list of registered commands.</returns>
 	internal static async Task<List<DiscordApplicationCommand>?> RegisterGlobalCommandsAsync(DiscordClient client, List<DiscordApplicationCommand> commands, DiscordApplicationCommand? entryPointCommand = null)
 	{
-		var (changedCommands, unchangedCommands) = BuildGlobalOverwriteList(client, commands);
-		var globalCommandsCreateList = BuildGlobalCreateList(client, commands, entryPointCommand);
-		var globalCommandsDeleteList = BuildGlobalDeleteList(client, commands, entryPointCommand);
+		// Include entry point in the command list for proper change detection
+		var allCommands = entryPointCommand is not null
+			? [..commands, entryPointCommand]
+			: commands;
+
+		var (changedCommands, unchangedCommands) = BuildGlobalOverwriteList(client, allCommands);
+		var globalCommandsCreateList = BuildGlobalCreateList(client, allCommands);
+		var globalCommandsDeleteList = BuildGlobalDeleteList(client, allCommands);
 
 		List<DiscordApplicationCommand> resultCommands = [];
 
@@ -428,9 +433,8 @@ internal class RegistrationWorker
 	/// </summary>
 	/// <param name="client">The discord client.</param>
 	/// <param name="updateList">The command list.</param>
-	/// <param name="entryPointCommand">The entry point command.</param>
 	/// <returns>A list of command ids.</returns>
-	private static List<ulong>? BuildGlobalDeleteList(DiscordClient client, List<DiscordApplicationCommand>? updateList = null, DiscordApplicationCommand? entryPointCommand = null)
+	private static List<ulong>? BuildGlobalDeleteList(DiscordClient client, List<DiscordApplicationCommand>? updateList = null)
 	{
 		if (ApplicationCommandsExtension.GlobalDiscordCommands.Count is 0)
 			return null;
@@ -447,9 +451,6 @@ internal class RegistrationWorker
 		else
 			invalidCommandIds.AddRange(from cmd in discord where updateList.All(ul => ul.Name != cmd.Name || ul.Type != cmd.Type) select cmd.Id);
 
-		if (entryPointCommand is not null && invalidCommandIds.Contains(entryPointCommand.Id))
-			invalidCommandIds.Remove(entryPointCommand.Id);
-
 		return invalidCommandIds;
 	}
 
@@ -458,9 +459,8 @@ internal class RegistrationWorker
 	/// </summary>
 	/// <param name="client">The discord client.</param>
 	/// <param name="updateList">The command list.</param>
-	/// <param name="entryPointCommand">The entry point command.</param>
 	/// <returns>A list of commands.</returns>
-	private static List<DiscordApplicationCommand>? BuildGlobalCreateList(DiscordClient client, List<DiscordApplicationCommand>? updateList = null, DiscordApplicationCommand? entryPointCommand = null)
+	private static List<DiscordApplicationCommand>? BuildGlobalCreateList(DiscordClient client, List<DiscordApplicationCommand>? updateList = null)
 	{
 		if (updateList is null)
 			return null;
@@ -473,9 +473,6 @@ internal class RegistrationWorker
 			return updateList;
 
 		newCommands.AddRange(updateList.Where(cmd => discord.All(d => d.Name != cmd.Name || d.Type != cmd.Type)));
-
-		if (entryPointCommand is not null && newCommands.All(command => command.Type is not ApplicationCommandType.PrimaryEntryPoint))
-			newCommands.Add(entryPointCommand);
 
 		return newCommands;
 	}

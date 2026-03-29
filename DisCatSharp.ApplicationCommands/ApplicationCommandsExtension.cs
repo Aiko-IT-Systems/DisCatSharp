@@ -699,6 +699,15 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							entryPointCommand.HandlerType = this.Client.Configuration.ActivityHandlerType;
 						}
 
+						// Strip localizations from entry point when localization is disabled
+						// Discord always returns built-in localizations for "launch", but we
+						// shouldn't send them back if the bot doesn't use localizations
+						if (Configuration?.EnableLocalization is not true)
+						{
+							entryPointCommand.RawNameLocalizations = null;
+							entryPointCommand.RawDescriptionLocalizations = null;
+						}
+
 						EntryPointCommand = entryPointCommand;
 					}
 				}
