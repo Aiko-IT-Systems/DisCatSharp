@@ -48,13 +48,13 @@ public sealed class DiscordConfiguration
 		this.ActivityHandlerType = other.ActivityHandlerType;
 #pragma warning restore CS0618
 		this.EnableBadDomainCheckerSupport = other.EnableBadDomainCheckerSupport;
-		this.Api = new(other.Api);
-		this.Gateway = new(other.Gateway);
-		this.Rest = new(other.Rest);
-		this.Cache = new(other.Cache);
-		this.Logging = new(other.Logging);
-		this.Diagnostics = new(other.Diagnostics);
-		this.Telemetry = new(other.Telemetry);
+		this.Api = new(other.Api ?? new());
+		this.Gateway = new(other.Gateway ?? new());
+		this.Rest = new(other.Rest ?? new());
+		this.Cache = new(other.Cache ?? new());
+		this.Logging = new(other.Logging ?? new());
+		this.Diagnostics = new(other.Diagnostics ?? new());
+		this.Telemetry = new(other.Telemetry ?? new());
 	}
 
 	#region Root-level configuration (kept)
@@ -126,37 +126,37 @@ public sealed class DiscordConfiguration
 	/// <summary>
 	///     <para>API protocol settings (version, channel, locale, timezone).</para>
 	/// </summary>
-	public ApiConfiguration Api { internal get; set; } = new();
+	public ApiConfiguration Api { get; set; } = new();
 
 	/// <summary>
 	///     <para>Gateway connection settings (sharding, reconnection, compression, factories).</para>
 	/// </summary>
-	public GatewayConfiguration Gateway { internal get; set; } = new();
+	public GatewayConfiguration Gateway { get; set; } = new();
 
 	/// <summary>
 	///     <para>REST client settings (request timeout, rate-limit strategy, proxy).</para>
 	/// </summary>
-	public RestConfiguration Rest { internal get; set; } = new();
+	public RestConfiguration Rest { get; set; } = new();
 
 	/// <summary>
 	///     <para>Caching behavior (message cache, presence cache, member caching, auto-fetch).</para>
 	/// </summary>
-	public CacheConfiguration Cache { internal get; set; } = new();
+	public CacheConfiguration Cache { get; set; } = new();
 
 	/// <summary>
 	///     <para>Logging behavior (log level, timestamp format, logger factory).</para>
 	/// </summary>
-	public LoggingConfiguration Logging { internal get; set; } = new();
+	public LoggingConfiguration Logging { get; set; } = new();
 
 	/// <summary>
 	///     <para>Diagnostics and debugging (payload events, update checks).</para>
 	/// </summary>
-	public DiagnosticsConfiguration Diagnostics { internal get; set; } = new();
+	public DiagnosticsConfiguration Diagnostics { get; set; } = new();
 
 	/// <summary>
 	///     <para>Telemetry and Sentry error reporting configuration.</para>
 	/// </summary>
-	public TelemetryConfiguration Telemetry { internal get; set; } = new();
+	public TelemetryConfiguration Telemetry { get; set; } = new();
 
 	#endregion
 
