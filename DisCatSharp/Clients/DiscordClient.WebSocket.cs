@@ -132,8 +132,6 @@ public sealed partial class DiscordClient
 	{
 		if (startNewSession)
 		{
-			// Guard the clear under _sessionStateLock so that OnHelloAsync cannot observe a partially-cleared
-			// session state: it captures _sessionId under the same lock, making the decision atomic.
 			await this._sessionStateLock.WaitAsync().ConfigureAwait(false);
 			try
 			{
@@ -514,17 +512,11 @@ public sealed partial class DiscordClient
 		this._heartbeatInterval = hello.HeartbeatInterval;
 		if (this._heartbeatTask is { IsCompleted: false })
 		{
-			// HeartbeatLoopAsync swallows OperationCanceledException, so awaiting here
-			// will not throw; the old loop exits naturally once _cancelToken is signalled.
 			try { await this._heartbeatTask.ConfigureAwait(false); } catch { /* already cancelled */ }
 		}
 
 		this._heartbeatTask = Task.Run(this.HeartbeatLoopAsync, this._cancelToken);
 
-		// Capture _sessionId under _sessionStateLock to close the TOCTOU window against
-		// InternalReconnectAsync, which clears _sessionId under the same lock.  We read
-		// once, decide once, and pass the snapshot into SendResumeAsync so that a
-		// concurrent null-write cannot invalidate the resume payload mid-flight.
 		await this._sessionStateLock.WaitAsync().ConfigureAwait(false);
 		string? capturedSessionId;
 		try
@@ -777,8 +769,6 @@ public sealed partial class DiscordClient
 	/// </param>
 	internal async Task SendResumeAsync(string? capturedSessionId = null)
 	{
-		// Prefer the pre-captured snapshot so that a concurrent InternalReconnectAsync cannot
-		// nullify _sessionId between our decision in OnHelloAsync and the use here.
 		var sessionId = capturedSessionId ?? this._sessionId;
 		ArgumentNullException.ThrowIfNull(sessionId);
 		ArgumentNullException.ThrowIfNull(this._resumeGatewayUrl);

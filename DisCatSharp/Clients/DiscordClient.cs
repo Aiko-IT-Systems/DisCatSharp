@@ -399,7 +399,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 		this._connectionLock.Set();
 
-		// Throwing here surfaces a clear error before any network I/O rather than a cryptic 4010 close code.
 		this.Configuration.Validate();
 
 		var w = 7500;
