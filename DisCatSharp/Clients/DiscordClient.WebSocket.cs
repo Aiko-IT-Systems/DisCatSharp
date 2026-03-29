@@ -488,8 +488,16 @@ public sealed partial class DiscordClient
 			return;
 		}
 
-		Interlocked.CompareExchange(ref this._skippedHeartbeats, 0, 0);
+		Interlocked.Exchange(ref this._skippedHeartbeats, 0);
 		this._heartbeatInterval = hello.HeartbeatInterval;
+		if (this._heartbeatTask is { IsCompleted: false })
+		{
+			// Drain the previous heartbeat loop before starting a new one.
+			// HeartbeatLoopAsync swallows OperationCanceledException, so awaiting here
+			// will not throw; the old loop exits naturally once _cancelToken is signalled.
+			try { await this._heartbeatTask.ConfigureAwait(false); } catch { /* already cancelled */ }
+		}
+
 		this._heartbeatTask = Task.Run(this.HeartbeatLoopAsync, this._cancelToken);
 
 		if (string.IsNullOrEmpty(this._sessionId))
