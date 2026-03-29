@@ -55,6 +55,9 @@ public class DiscordBaseSelectComponent : DiscordComponent, ILabelComponent
 
 		this.DefaultValues = defaultValues?.ToList();
 		this.Required = required;
+
+		if (required is true && this.MinimumSelectedValues is 0)
+			this.MinimumSelectedValues = 1;
 	}
 
 	internal DiscordBaseSelectComponent()
@@ -75,6 +78,7 @@ public class DiscordBaseSelectComponent : DiscordComponent, ILabelComponent
 	/// <summary>
 	///     The minimum amount of options that can be selected. Must be less than or equal to
 	///     <see cref="MaximumSelectedValues" />. Defaults to one.
+	///     When <see cref="Required" /> is <see langword="true" />, this is automatically clamped to at least 1.
 	/// </summary>
 	[JsonProperty("min_values", NullValueHandling = NullValueHandling.Ignore)]
 	public int? MinimumSelectedValues { get; internal set; } = 1;
