@@ -148,7 +148,7 @@ jobs:
                   SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
               with:
                   environment: ${{ steps.sentry_vars.outputs.environment }}
-                  version: ${{ steps.sentry_vars.outputs.version }}
+                  release: ${{ steps.sentry_vars.outputs.version }}
                   ignore_missing: true
             - name: Upload PDBs to Sentry
               if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp' }}
