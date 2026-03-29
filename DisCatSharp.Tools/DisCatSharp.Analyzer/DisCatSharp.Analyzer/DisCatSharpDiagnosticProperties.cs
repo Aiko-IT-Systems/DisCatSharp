@@ -33,4 +33,12 @@ internal static class DisCatSharpDiagnosticProperties
 	public static ImmutableDictionary<string, string?> CreatePresenceAccessMigrationProperties(string userExpression)
 		=> ImmutableDictionary<string, string?>.Empty
 			.Add(PresenceUserExpression, userExpression);
+
+	public const string ConfigNestedPath = "NestedPath";
+	public const string ConfigNewName = "NewName";
+
+	public static ImmutableDictionary<string, string?> CreateConfigPropertyMigrationProperties(string nestedPath, string newName)
+		=> ImmutableDictionary<string, string?>.Empty
+			.Add(ConfigNestedPath, nestedPath)
+			.Add(ConfigNewName, newName);
 }
