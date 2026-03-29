@@ -100,6 +100,13 @@ public sealed class DiscordConfiguration
 		this.ActivityHandlerType = other.ActivityHandlerType;
 		this.Capabilities = other.Capabilities;
 		this.EnableBadDomainCheckerSupport = other.EnableBadDomainCheckerSupport;
+		this.Api = new(other.Api);
+		this.Gateway = new(other.Gateway);
+		this.Rest = new(other.Rest);
+		this.Cache = new(other.Cache);
+		this.Logging = new(other.Logging);
+		this.Diagnostics = new(other.Diagnostics);
+		this.Telemetry = new(other.Telemetry);
 	}
 
 	/// <summary>
@@ -562,6 +569,45 @@ public sealed class DiscordConfiguration
 	/// </remarks>
 	public bool EnableBadDomainCheckerSupport { get; internal set; } = false;
 
+	#region Nested configuration
+
+	/// <summary>
+	///     <para>API protocol settings (version, channel, locale, timezone).</para>
+	/// </summary>
+	public ApiConfiguration Api { internal get; set; } = new();
+
+	/// <summary>
+	///     <para>Gateway connection settings (sharding, reconnection, compression, factories).</para>
+	/// </summary>
+	public GatewayConfiguration Gateway { internal get; set; } = new();
+
+	/// <summary>
+	///     <para>REST client settings (request timeout, rate-limit strategy, proxy).</para>
+	/// </summary>
+	public RestConfiguration Rest { internal get; set; } = new();
+
+	/// <summary>
+	///     <para>Caching behavior (message cache, presence cache, member caching, auto-fetch).</para>
+	/// </summary>
+	public CacheConfiguration Cache { internal get; set; } = new();
+
+	/// <summary>
+	///     <para>Logging behavior (log level, timestamp format, logger factory).</para>
+	/// </summary>
+	public LoggingConfiguration Logging { internal get; set; } = new();
+
+	/// <summary>
+	///     <para>Diagnostics and debugging (payload events, update checks).</para>
+	/// </summary>
+	public DiagnosticsConfiguration Diagnostics { internal get; set; } = new();
+
+	/// <summary>
+	///     <para>Telemetry and Sentry error reporting configuration.</para>
+	/// </summary>
+	public TelemetryConfiguration Telemetry { internal get; set; } = new();
+
+	#endregion
+
 	/// <summary>
 	///     Validates cross-property constraints that cannot be checked in individual property setters because the two
 	///     properties may be assigned in any order during object initializer construction.
@@ -576,5 +622,7 @@ public sealed class DiscordConfiguration
 			throw new InvalidOperationException(
 				$"ShardId ({this.ShardId}) must be less than ShardCount ({this.ShardCount}). " +
 				"Shard IDs are zero-based, so a ShardCount of N allows ShardId values 0 through N-1.");
+
+		this.Gateway.Validate();
 	}
 }
