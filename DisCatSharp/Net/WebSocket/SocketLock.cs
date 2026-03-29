@@ -79,8 +79,7 @@ internal sealed class SocketLock : IDisposable
 		this._timeoutCancelSource = new();
 		this._timeoutCancel = this._timeoutCancelSource.Token;
 		this._unlockTask = Task.Delay(TimeSpan.FromSeconds(30), this._timeoutCancel.Value);
-		// M13: Specify CancellationToken.None + TaskScheduler.Default to avoid the
-		// ambient scheduler (e.g. UI or ASP.NET sync-context) being captured accidentally.
+		// CancellationToken.None + TaskScheduler.Default prevent ambient sync-context capture.
 		_ = this._unlockTask.ContinueWith(this.InternalUnlock, CancellationToken.None, TaskContinuationOptions.NotOnCanceled, TaskScheduler.Default);
 	}
 
@@ -104,8 +103,7 @@ internal sealed class SocketLock : IDisposable
 		this._timeoutCancelSource = null;
 
 		this._unlockTask = Task.Delay(unlockDelay, CancellationToken.None);
-		// M13: Specify TaskScheduler.Default so the continuation is never captured by an
-		// ambient sync-context (mirrors the LockAsync path above).
+		// TaskScheduler.Default prevents ambient sync-context capture (mirrors LockAsync).
 		_ = this._unlockTask.ContinueWith(this.InternalUnlock, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.Default);
 	}
 

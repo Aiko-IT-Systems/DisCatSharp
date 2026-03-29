@@ -9,10 +9,6 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class DiscordRoleTags : ObservableApiObject
 {
-	// NullValueHandling.Include is intentional for all fields in this class:
-	// Discord encodes boolean role-tag flags as null-valued properties (absent = false, null = true).
-	// The Optional<T> fields also have their own serialization contract that requires Include.
-
 	/// <summary>
 	///     Whether this role is a guild's linked role.
 	/// </summary>

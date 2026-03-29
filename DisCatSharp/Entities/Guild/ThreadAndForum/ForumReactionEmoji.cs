@@ -19,16 +19,12 @@ public class ForumReactionEmoji : ObservableApiObject
 	/// <summary>
 	///     Gets the emoji id of the forum post tag.
 	/// </summary>
-	// NullValueHandling.Include is intentional: null emoji_id signals a unicode emoji; Discord needs the explicit null
-	// to distinguish "unicode (no id)" from "field absent". Mutually exclusive with emoji_name.
 	[JsonProperty("emoji_id", NullValueHandling = NullValueHandling.Include)]
 	public ulong? EmojiId { get; internal set; }
 
 	/// <summary>
 	///     Gets the unicode emoji of the forum post tag.
 	/// </summary>
-	// NullValueHandling.Include is intentional: null emoji_name signals a custom guild emoji; Discord needs the explicit null
-	// to distinguish "custom (no name)" from "field absent". Mutually exclusive with emoji_id.
 	[JsonProperty("emoji_name", NullValueHandling = NullValueHandling.Include)]
 	public string EmojiName { get; internal set; }
 

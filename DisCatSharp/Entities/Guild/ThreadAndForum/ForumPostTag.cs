@@ -62,8 +62,6 @@ public class ForumPostTag : NullableSnowflakeObject, IEquatable<ForumPostTag>
 	/// <summary>
 	///     Gets the unicode emoji of the forum post tag.
 	/// </summary>
-	// NullValueHandling.Include is intentional: explicit null for emoji_name signals Discord to clear a previously
-	// set unicode emoji when a tag is updated to use a custom guild emoji instead.
 	[JsonProperty("emoji_name", NullValueHandling = NullValueHandling.Include)]
 	public string? UnicodeEmojiString { get; internal set; }
 

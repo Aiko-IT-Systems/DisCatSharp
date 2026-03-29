@@ -62,16 +62,12 @@ public sealed class PartialEmoji
 	/// <summary>
 	///     Sets the guild emoji.
 	/// </summary>
-	// NullValueHandling.Include is intentional: null id signals a unicode emoji; Discord needs the explicit null
-	// to distinguish "unicode emoji (no id)" from "field absent entirely".
 	[JsonProperty("id", NullValueHandling = NullValueHandling.Include)]
 	public ulong? Id { get; internal set; }
 
 	/// <summary>
 	///     Sets the unicode emoji.
 	/// </summary>
-	// NullValueHandling.Include is intentional: null name signals a custom guild emoji; Discord needs the explicit null
-	// to distinguish "custom emoji (no name)" from "field absent entirely".
 	[JsonProperty("name", NullValueHandling = NullValueHandling.Include)]
 	public string? Name { get; internal set; }
 

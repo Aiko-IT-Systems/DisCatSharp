@@ -25,7 +25,6 @@ public sealed class DiscordApplicationIntegrationTypeConfiguration : ObservableA
 	/// <summary>
 	///     Gets or sets the oauth2 install params.
 	/// </summary>
-	// NullValueHandling.Include is intentional: explicit null is sent to Discord to clear OAuth2 install parameters for this integration type.
 	[JsonProperty("oauth2_install_params", NullValueHandling = NullValueHandling.Include)]
 	public DiscordOAuth2InstallParams? OAuth2InstallParams { get; internal set; } = null;
 }

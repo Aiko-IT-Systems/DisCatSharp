@@ -85,8 +85,6 @@ public class DiscordVoiceState : ObservableApiObject
 	/// <summary>
 	///     Gets ID of the channel this user is connected to.
 	/// </summary>
-	// NullValueHandling.Include is intentional: VOICE_STATE_UPDATE sends channel_id as explicit null when a user
-	// disconnects from voice, allowing the client to detect the disconnect and clear stale cache entries.
 	[JsonProperty("channel_id", NullValueHandling = NullValueHandling.Include)]
 	public ulong? ChannelId { get; set; }
 

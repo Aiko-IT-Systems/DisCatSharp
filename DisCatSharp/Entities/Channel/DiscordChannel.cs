@@ -59,7 +59,6 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <summary>
 	///     Gets ID of the category that contains this channel.
 	/// </summary>
-	// NullValueHandling.Include is intentional: CHANNEL_UPDATE events send explicit null to remove a channel from its category (ungrouping).
 	[JsonProperty("parent_id", NullValueHandling = NullValueHandling.Include)]
 	public ulong? ParentId { get; internal set; }
 
@@ -222,7 +221,6 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	[JsonProperty("default_reaction_emoji", NullValueHandling = NullValueHandling.Ignore)]
 	public ForumReactionEmoji DefaultReactionEmoji { get; internal set; }
 
-	// NullValueHandling.Include is intentional: CHANNEL_UPDATE events send explicit null to unset the forum default sort order.
 	[JsonProperty("default_sort_order", NullValueHandling = NullValueHandling.Include)]
 	public ForumPostSortOrder? DefaultSortOrder { get; internal set; }
 
@@ -315,7 +313,6 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <summary>
 	/// Gets the voice channel status.
 	/// </summary>
-	// NullValueHandling.Include is intentional: VOICE_CHANNEL_STATUS_UPDATE sends explicit null to clear the voice channel status.
 	[JsonProperty("status", NullValueHandling = NullValueHandling.Include)]
 	public string? Status { get; internal set; }
 
