@@ -54,8 +54,6 @@ internal sealed class ReportFingerprintCache
 
 	private void Trim()
 	{
-		// Minor TOCTOU under contention is acceptable: the cache is a soft deduplication aid,
-		// not a hard bound — transiently exceeding MaximumEntries is fine.
 		while (this._entries.Count > MaximumEntries && this._entryOrder.TryDequeue(out var staleKey))
 			_ = this._entries.TryRemove(staleKey, out _);
 	}
