@@ -1225,9 +1225,17 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	private Task InteractionHandler(DiscordClient client, InteractionCreateEventArgs e)
 	{
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Got slash interaction on shard {shard}", this.Client.ShardId);
-		if (!HandledInteractions.TryAdd(e.Interaction.Id, 0) || (e.Interaction is { GuildId: not null, AuthorizingIntegrationOwners.GuildInstallKey: not null } && !client.Guilds.ContainsKey(e.Interaction.GuildId.Value)))
+
+		// Check shard ownership BEFORE deduplication to avoid poisoning the set
+		if (e.Interaction is { GuildId: not null, AuthorizingIntegrationOwners.GuildInstallKey: not null } && !client.Guilds.ContainsKey(e.Interaction.GuildId.Value))
 		{
-			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Ignoring, already received or wrong shard");
+			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Ignoring, wrong shard");
+			return Task.FromResult(true);
+		}
+
+		if (!HandledInteractions.TryAdd(e.Interaction.Id, 0))
+		{
+			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Ignoring, already received");
 			return Task.FromResult(true);
 		}
 

@@ -364,8 +364,13 @@ internal static class ApplicationCommandEqualityChecks
 		if (a is null || b is null)
 			return false;
 
+		// String values use ordinal comparison — do NOT coerce through numeric conversion
+		// (e.g. "01" and "1" must remain distinct)
+		if (a is string sa && b is string sb)
+			return string.Equals(sa, sb, StringComparison.Ordinal);
+
 		// Normalize numeric types to a common representation for comparison
-		if (a is IConvertible ca && b is IConvertible cb)
+		if (a is IConvertible ca && b is IConvertible cb && a is not string && b is not string)
 		{
 			try
 			{
