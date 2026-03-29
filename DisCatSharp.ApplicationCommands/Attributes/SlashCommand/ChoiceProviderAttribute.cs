@@ -15,6 +15,9 @@ public class ChoiceProviderAttribute : Attribute
 	/// <param name="providerType">The type of the provider.</param>
 	public ChoiceProviderAttribute(Type providerType)
 	{
+		if (!typeof(IChoiceProvider).IsAssignableFrom(providerType))
+			throw new ArgumentException($"The type '{providerType.FullName}' does not implement IChoiceProvider.", nameof(providerType));
+
 		this.ProviderType = providerType;
 	}
 

@@ -12,9 +12,20 @@ namespace DisCatSharp.ApplicationCommands.Attributes;
 public abstract class ChoiceProvider : IChoiceProvider
 {
 	/// <summary>
-	///     Sets the service provider.
+	///     The backing field for <see cref="Services"/>.
 	/// </summary>
-	public IServiceProvider Services { get; set; }
+	private IServiceProvider? _services;
+
+	/// <summary>
+	///     Gets or sets the service provider. This property is injected by the framework
+	///     during command registration and will be available when <see cref="Provider" /> is called.
+	///     <para>Throws <see cref="InvalidOperationException"/> if accessed before the framework has injected it.</para>
+	/// </summary>
+	public IServiceProvider Services
+	{
+		get => this._services ?? throw new InvalidOperationException("Services has not been set. ChoiceProvider.Services is injected by the framework during command registration and is not available before that point.");
+		set => this._services = value;
+	}
 
 	/// <summary>
 	///     The optional ID of the Guild the command got registered for.

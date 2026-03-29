@@ -7,8 +7,6 @@ using DisCatSharp.Entities.Core;
 using DisCatSharp.Enums;
 using DisCatSharp.Enums.Core;
 
-using Microsoft.Extensions.DependencyInjection;
-
 namespace DisCatSharp.ApplicationCommands.Context;
 
 /// <summary>
@@ -86,7 +84,7 @@ public sealed class AutocompleteContext : DisCatSharpCommandContext
 	///     <para>This allows passing data around without resorting to static members.</para>
 	///     <para>Defaults to an empty service provider.</para>
 	/// </summary>
-	public IServiceProvider Services { get; internal set; } = new ServiceCollection().BuildServiceProvider(true);
+	public IServiceProvider Services { get; internal set; } = EmptyServiceProvider.Instance;
 
 	/// <summary>
 	///     The options already provided.

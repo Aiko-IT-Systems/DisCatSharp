@@ -14,6 +14,9 @@ public class AutocompleteAttribute : Attribute
 	/// <param name="providerType">The type of the provider.</param>
 	public AutocompleteAttribute(Type providerType)
 	{
+		if (!typeof(IAutocompleteProvider).IsAssignableFrom(providerType))
+			throw new ArgumentException($"The type '{providerType.FullName}' does not implement IAutocompleteProvider.", nameof(providerType));
+
 		this.ProviderType = providerType;
 	}
 

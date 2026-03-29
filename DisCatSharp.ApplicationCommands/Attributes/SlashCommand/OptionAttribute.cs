@@ -36,7 +36,7 @@ public class OptionAttribute : Attribute
 		if (description.Length > 100)
 			throw new ArgumentException("Slash command option descriptions cannot go over 100 characters.");
 
-		this.Name = name.ToLower();
+		this.Name = name.ToLowerInvariant();
 		this.Description = description;
 		this.Autocomplete = autocomplete;
 	}

@@ -43,7 +43,7 @@ internal sealed class Command : BaseCommand
 		: base(name, description, type, nameTranslations, descriptionTranslations)
 	{
 		if (options is not null)
-			this.Options = options.Select(OptionTranslator.FromApplicationCommandOption).ToList();
+			this.Options = [.. options.Select(OptionTranslator.FromApplicationCommandOption)];
 	}
 
 	[JsonProperty("options")]

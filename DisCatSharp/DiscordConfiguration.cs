@@ -514,8 +514,9 @@ public sealed class DiscordConfiguration
 	public bool HasActivitiesEnabled { internal get; set; } = false;
 
 	/// <summary>
-	///     If <see cref="HasActivitiesEnabled" /> is <see langword="true" />, determines which handler type we use..
+	///     <para>Let's you overwrite the activity handler type set by Discord.</para>
 	///     <para>Defaults to <see cref="ApplicationCommandHandlerType.DiscordLaunchActivity" />.</para>
+	/// 	<para>Takes no affect if you use the <c>ApplicationCommandExtension.RegisterEntryPointCommand</c> extension method to register your entry point command.</para>
 	/// </summary>
 	public ApplicationCommandHandlerType ActivityHandlerType { internal get; set; } = ApplicationCommandHandlerType.DiscordLaunchActivity;
 

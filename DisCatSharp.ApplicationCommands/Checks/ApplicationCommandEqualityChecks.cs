@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -40,35 +41,44 @@ internal static class ApplicationCommandEqualityChecks
 			ac1.IsNsfw, ac1.AllowedContexts, ac1.IntegrationTypes, ac1.HandlerType
 		);
 
-		if (sourceApplicationCommand.DefaultMemberPermissions == Permissions.None &&
-			targetApplicationCommand.DefaultMemberPermissions == null)
+		// C1: Create a defensive copy of the target to avoid mutating the caller's object
+		DiscordApplicationCommand targetCopy = new(
+			targetApplicationCommand.Name, targetApplicationCommand.Description, targetApplicationCommand.Options,
+			targetApplicationCommand.Type,
+			targetApplicationCommand.NameLocalizations, targetApplicationCommand.DescriptionLocalizations,
+			targetApplicationCommand.DefaultMemberPermissions,
+			targetApplicationCommand.IsNsfw, targetApplicationCommand.AllowedContexts, targetApplicationCommand.IntegrationTypes, targetApplicationCommand.HandlerType
+		);
+
+		if (sourceApplicationCommand.DefaultMemberPermissions is Permissions.None &&
+			targetCopy.DefaultMemberPermissions is null)
 			sourceApplicationCommand.DefaultMemberPermissions = null;
 
 		if (isGuild)
 		{
 			sourceApplicationCommand.IntegrationTypes = null;
-			targetApplicationCommand.IntegrationTypes = null;
+			targetCopy.IntegrationTypes = null;
 			sourceApplicationCommand.AllowedContexts = null;
-			targetApplicationCommand.AllowedContexts = null;
+			targetCopy.AllowedContexts = null;
 		}
 		else
 		{
 			sourceApplicationCommand.IntegrationTypes ??= [ApplicationCommandIntegrationTypes.GuildInstall];
-			targetApplicationCommand.IntegrationTypes ??= [ApplicationCommandIntegrationTypes.GuildInstall];
+			targetCopy.IntegrationTypes ??= [ApplicationCommandIntegrationTypes.GuildInstall];
 		}
 
 		if (sourceApplicationCommand.Type is not ApplicationCommandType.PrimaryEntryPoint)
 		{
 			sourceApplicationCommand.HandlerType = null;
-			targetApplicationCommand.HandlerType = null;
+			targetCopy.HandlerType = null;
 		}
 
 		client.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel,
 			"[AC Change Check] Command {name}\n\n[{jsonOne},{jsontwo}]\n\n", ac1.Name,
 			JsonConvert.SerializeObject(sourceApplicationCommand),
-			JsonConvert.SerializeObject(targetApplicationCommand));
+			JsonConvert.SerializeObject(targetCopy));
 
-		return ac1.Type == targetApplicationCommand.Type && sourceApplicationCommand.SoftEqual(targetApplicationCommand,
+		return ac1.Type == targetApplicationCommand.Type && sourceApplicationCommand.SoftEqual(targetCopy,
 			ac1.Type, client, ApplicationCommandsExtension.Configuration?.EnableLocalization ?? false, isGuild);
 	}
 
@@ -97,24 +107,30 @@ internal static class ApplicationCommandEqualityChecks
 				{
 					ApplicationCommandType.ChatInput => DeepEqual(source, target, client, true),
 					ApplicationCommandType.PrimaryEntryPoint => source.Name == target.Name
-						 && source.Type == target.Type && source.NameLocalizations == target.NameLocalizations
+						 && source.Type == target.Type
+						 && source.Description == target.Description
+						 && source.DefaultMemberPermissions == target.DefaultMemberPermissions
 						 && source.IsNsfw == target.IsNsfw
 						 && source.AllowedContexts.NullableSequenceEqual(target.AllowedContexts)
 						 && source.IntegrationTypes.NullableSequenceEqual(target.IntegrationTypes)
-						 && source.HandlerType == target.HandlerType,
+						 && source.HandlerType == target.HandlerType
+						 && source.RawNameLocalizations.AreDictionariesEqual(target.RawNameLocalizations)
+						 && source.RawDescriptionLocalizations.AreDictionariesEqual(target.RawDescriptionLocalizations),
 					_ => source.Name == target.Name
-						 && source.Type == target.Type && source.NameLocalizations == target.NameLocalizations
+						 && source.Type == target.Type
 						 && source.DefaultMemberPermissions == target.DefaultMemberPermissions
 						 && source.IsNsfw == target.IsNsfw
-						 && source.AllowedContexts.NullableSequenceEqual(target.AllowedContexts) &&
-						 source.IntegrationTypes.NullableSequenceEqual(target.IntegrationTypes) &&
-						 source.RawNameLocalizations.AreDictionariesEqual(target.RawNameLocalizations)
+						 && source.AllowedContexts.NullableSequenceEqual(target.AllowedContexts)
+						 && source.IntegrationTypes.NullableSequenceEqual(target.IntegrationTypes)
+						 && source.RawNameLocalizations.AreDictionariesEqual(target.RawNameLocalizations)
 				}
 				: type switch
 				{
 					ApplicationCommandType.ChatInput => DeepEqual(source, target, client),
 					ApplicationCommandType.PrimaryEntryPoint => source.Name == target.Name
-						 && source.Type == target.Type && source.NameLocalizations == target.NameLocalizations
+						 && source.Type == target.Type
+						 && source.Description == target.Description
+						 && source.DefaultMemberPermissions == target.DefaultMemberPermissions
 						 && source.IsNsfw == target.IsNsfw
 						 && source.AllowedContexts.NullableSequenceEqual(target.AllowedContexts)
 						 && source.IntegrationTypes.NullableSequenceEqual(target.IntegrationTypes)
@@ -123,15 +139,15 @@ internal static class ApplicationCommandEqualityChecks
 						 && source.Type == target.Type
 						 && source.DefaultMemberPermissions == target.DefaultMemberPermissions
 						 && source.IsNsfw == target.IsNsfw
-						 && source.AllowedContexts.NullableSequenceEqual(target.AllowedContexts) &&
-						 source.IntegrationTypes.NullableSequenceEqual(target.IntegrationTypes)
+						 && source.AllowedContexts.NullableSequenceEqual(target.AllowedContexts)
+						 && source.IntegrationTypes.NullableSequenceEqual(target.IntegrationTypes)
 				}
 			: localizationEnabled
 				? type switch
 				{
 					ApplicationCommandType.ChatInput => DeepEqual(source, target, client, true),
 					_ => source.Name == target.Name
-						 && source.Type == target.Type && source.NameLocalizations == target.NameLocalizations
+						 && source.Type == target.Type
 						 && source.DefaultMemberPermissions == target.DefaultMemberPermissions
 						 && source.IsNsfw == target.IsNsfw
 						 && source.RawNameLocalizations.AreDictionariesEqual(target.RawNameLocalizations)
@@ -156,7 +172,7 @@ internal static class ApplicationCommandEqualityChecks
 	/// <returns>Whether both nullable enumerable are equal.</returns>
 	internal static bool NullableSequenceEqual<T>(this List<T>? source, List<T>? target)
 		=> source is not null && target is not null
-			? source.All(target.Contains) && source.Count == target.Count
+			? source.OrderBy(x => x).SequenceEqual(target.OrderBy(x => x))
 			: source is null && target is null;
 
 	/// <summary>
@@ -228,67 +244,151 @@ internal static class ApplicationCommandEqualityChecks
 	/// <param name="targetOptions">Options to check against.</param>
 	/// <param name="localizationEnabled">Whether localization is enabled.</param>
 	private static (bool Equal, string? Reason) DeepEqualOptions(
-		IReadOnlyList<DiscordApplicationCommandOption>? sourceOptions,
-		IReadOnlyList<DiscordApplicationCommandOption>? targetOptions,
+		List<DiscordApplicationCommandOption>? sourceOptions,
+		List<DiscordApplicationCommandOption>? targetOptions,
 		bool localizationEnabled
 	)
 	{
-		if (sourceOptions == null && targetOptions == null)
+		if (sourceOptions is null && targetOptions is null)
 			return (true, null);
 
-		if ((sourceOptions != null && targetOptions == null) || (sourceOptions == null && targetOptions != null))
+		if ((sourceOptions is not null && targetOptions is null) || (sourceOptions is null && targetOptions is not null))
 			return (false, "source or target option null, but not both");
 
 		if (sourceOptions!.Count != targetOptions!.Count)
-			return (false, "source option count mismatches target option count");
+			return (false, $"option count mismatch ({sourceOptions.Count} vs {targetOptions.Count})");
+
+		List<string> reasons = [];
 
 		for (var i = 0; i < sourceOptions.Count; i++)
 		{
 			var sourceOption = sourceOptions[i];
 			var targetOption = targetOptions[i];
+			var optName = sourceOption.Name ?? targetOption.Name ?? $"[{i}]";
 
-			var optionCheck = sourceOption.Name == targetOption.Name &&
-							  sourceOption.Description == targetOption.Description &&
-							  sourceOption.Type == targetOption.Type &&
-							  sourceOption.Required == targetOption.Required &&
-							  sourceOption.AutoComplete == targetOption.AutoComplete &&
-							  sourceOption.MinimumValue?.ToString() == targetOption.MinimumValue?.ToString() &&
-							  sourceOption.MaximumValue?.ToString() == targetOption.MaximumValue?.ToString() &&
-							  sourceOption.MinimumLength == targetOption.MinimumLength &&
-							  sourceOption.MaximumLength == targetOption.MaximumLength;
+			if (sourceOption.Name != targetOption.Name)
+				reasons.Add($"{optName}: name mismatch");
+
+			if (sourceOption.Description != targetOption.Description)
+				reasons.Add($"{optName}: description mismatch");
+
+			if (sourceOption.Type != targetOption.Type)
+				reasons.Add($"{optName}: type mismatch");
+
+			if (sourceOption.Required != targetOption.Required)
+				reasons.Add($"{optName}: required mismatch");
+
+			if (sourceOption.AutoComplete != targetOption.AutoComplete)
+				reasons.Add($"{optName}: autocomplete mismatch");
+
+			if (System.Convert.ToString(sourceOption.MinimumValue, System.Globalization.CultureInfo.InvariantCulture) != System.Convert.ToString(targetOption.MinimumValue, System.Globalization.CultureInfo.InvariantCulture))
+				reasons.Add($"{optName}: minimum value mismatch");
+
+			if (System.Convert.ToString(sourceOption.MaximumValue, System.Globalization.CultureInfo.InvariantCulture) != System.Convert.ToString(targetOption.MaximumValue, System.Globalization.CultureInfo.InvariantCulture))
+				reasons.Add($"{optName}: maximum value mismatch");
+
+			if (sourceOption.MinimumLength != targetOption.MinimumLength)
+				reasons.Add($"{optName}: minimum length mismatch");
+
+			if (sourceOption.MaximumLength != targetOption.MaximumLength)
+				reasons.Add($"{optName}: maximum length mismatch");
 
 			if (localizationEnabled)
-				optionCheck = optionCheck &&
-							  sourceOption.RawNameLocalizations.AreDictionariesEqual(targetOption.RawNameLocalizations) &&
-							  sourceOption.RawDescriptionLocalizations.AreDictionariesEqual(targetOption
-								  .RawDescriptionLocalizations);
-
-			if ((sourceOption.Choices is null && targetOption.Choices is not null) ||
-				(sourceOption.Choices is not null && targetOption.Choices is null))
-				return (false, "source or target choices null, but not both - " + sourceOption.Name);
-
-			if (sourceOption.Choices is not null && targetOption.Choices is not null)
 			{
-				var j1 = JsonConvert.SerializeObject(sourceOption.Choices.OrderBy(x => x.Name), Formatting.None);
-				var j2 = JsonConvert.SerializeObject(targetOption.Choices.OrderBy(x => x.Name), Formatting.None);
-				if (j1 != j2)
-					return (false, "choice mismatch - " + sourceOption.Name);
+				if (!sourceOption.RawNameLocalizations.AreDictionariesEqual(targetOption.RawNameLocalizations))
+					reasons.Add($"{optName}: name localizations mismatch");
+
+				if (!sourceOption.RawDescriptionLocalizations.AreDictionariesEqual(targetOption.RawDescriptionLocalizations))
+					reasons.Add($"{optName}: description localizations mismatch");
 			}
 
-			if ((sourceOption.ChannelTypes is null && targetOption.ChannelTypes is not null) ||
-				(sourceOption.ChannelTypes is not null && targetOption.ChannelTypes is null) ||
-				(sourceOption.ChannelTypes is not null && targetOption.ChannelTypes is not null &&
-				 !sourceOption.ChannelTypes.OrderBy(x => x).All(targetOption.ChannelTypes.OrderBy(x => x).Contains)))
-				return (false, "channel type mismatch - " + sourceOption.Name);
+			if ((sourceOption.Choices is null) != (targetOption.Choices is null))
+			{
+				reasons.Add($"{optName}: choices null mismatch");
+			}
+			else if (sourceOption.Choices is not null && targetOption.Choices is not null)
+			{
+				var sourceChoices = sourceOption.Choices.OrderBy(x => x.Name).ToList();
+				var targetChoices = targetOption.Choices.OrderBy(x => x.Name).ToList();
+
+				if (sourceChoices.Count != targetChoices.Count)
+				{
+					reasons.Add($"{optName}: choice count mismatch ({sourceChoices.Count} vs {targetChoices.Count})");
+				}
+				else
+				{
+					for (var ci = 0; ci < sourceChoices.Count; ci++)
+					{
+						if (sourceChoices[ci].Name != targetChoices[ci].Name)
+							reasons.Add($"{optName}: choice name mismatch at [{ci}]");
+
+						if (!AreChoiceValuesEqual(sourceChoices[ci].Value, targetChoices[ci].Value))
+							reasons.Add($"{optName}: choice value mismatch at [{ci}]");
+					}
+				}
+			}
+
+			if ((sourceOption.ChannelTypes is null) != (targetOption.ChannelTypes is null))
+			{
+				reasons.Add($"{optName}: channel types null mismatch");
+			}
+			else if (sourceOption.ChannelTypes is not null && targetOption.ChannelTypes is not null &&
+					 (sourceOption.ChannelTypes.Count != targetOption.ChannelTypes.Count ||
+					  !sourceOption.ChannelTypes.OrderBy(x => x).SequenceEqual(targetOption.ChannelTypes.OrderBy(x => x))))
+			{
+				reasons.Add($"{optName}: channel types mismatch");
+			}
 
 			var (equal, reason) = DeepEqualOptions(sourceOption.Options, targetOption.Options, localizationEnabled);
 			if (!equal)
-				return (false, "Options Recursive - " + sourceOption.Name + " -- " + reason);
-
-			if (!optionCheck)
-				return (false, "OptionCheck - " + sourceOption.Name);
+				reasons.Add($"{optName} -> {reason}");
 		}
 
-		return (true, null);
+		return reasons.Count > 0
+			? (false, string.Join("; ", reasons))
+			: (true, null);
+	}
+
+	/// <summary>
+	///     Compares two choice values for equality, normalizing numeric types so that
+	///     <c>42</c> (int), <c>42L</c> (long), and <c>42.0</c> (double) are considered equal
+	///     when they represent the same logical value.
+	/// </summary>
+	/// <param name="a">The first value.</param>
+	/// <param name="b">The second value.</param>
+	/// <returns>Whether the two values are considered equal.</returns>
+	private static bool AreChoiceValuesEqual(object? a, object? b)
+	{
+		if (ReferenceEquals(a, b))
+			return true;
+		if (a is null || b is null)
+			return false;
+
+		// Normalize numeric types to a common representation for comparison
+		if (a is IConvertible ca && b is IConvertible cb)
+		{
+			try
+			{
+				// If both can be represented as long without loss, compare as long
+				var la = ca.ToInt64(System.Globalization.CultureInfo.InvariantCulture);
+				var lb = cb.ToInt64(System.Globalization.CultureInfo.InvariantCulture);
+
+				// Verify no precision was lost by round-tripping
+				var da = ca.ToDouble(System.Globalization.CultureInfo.InvariantCulture);
+				var db = cb.ToDouble(System.Globalization.CultureInfo.InvariantCulture);
+
+				if (da == la && db == lb)
+					return la == lb;
+
+				// Fall back to double comparison for fractional values
+				return da == db;
+			}
+			catch
+			{
+				// Not numeric — fall through to string comparison
+			}
+		}
+
+		return string.Equals(a.ToString(), b.ToString(), StringComparison.Ordinal);
 	}
 }

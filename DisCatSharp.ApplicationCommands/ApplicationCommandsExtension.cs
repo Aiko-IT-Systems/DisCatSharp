@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.ApplicationCommands.Attributes;
@@ -42,6 +44,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	internal static ApplicationCommandsConfiguration Configuration { get; set; }
 
 	/// <summary>
+	///     Lock object for synchronizing access to shared static collections.
+	/// </summary>
+	private static readonly Lock s_collectionLock = new();
+
+	/// <summary>
 	///     Sets a list of registered commands. The key is the guild id (null if global).
 	/// </summary>
 	private static readonly List<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> s_registeredCommands = [];
@@ -59,7 +66,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	///     Gets a list of handled interactions. Fix for double interaction execution bug.
 	/// </summary>
-	internal static readonly List<ulong> HandledInteractions = [];
+	internal static readonly ConcurrentDictionary<ulong, byte> HandledInteractions = new();
 
 	/// <summary>
 	///     Fires the application command module ready event.
@@ -190,21 +197,44 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	///     Gets a list of registered commands. The key is the guild id (null if global).
 	/// </summary>
 	public IReadOnlyList<KeyValuePair<ulong?, IReadOnlyList<RegisteredDiscordApplicationCommand>>> RegisteredCommands
-		=> s_registeredCommands.Select(guild =>
-			new KeyValuePair<ulong?, IReadOnlyList<RegisteredDiscordApplicationCommand>>(guild.Key, guild.Value
-				.Select(parent => new RegisteredDiscordApplicationCommand(parent)).ToList())).ToList().AsReadOnly();
+	{
+		get
+		{
+			lock (s_collectionLock)
+			{
+				return s_registeredCommands.Select(guild =>
+					new KeyValuePair<ulong?, IReadOnlyList<RegisteredDiscordApplicationCommand>>(guild.Key, [.. guild.Value.Select(parent => new RegisteredDiscordApplicationCommand(parent))])).ToList().AsReadOnly();
+			}
+		}
+	}
 
 	/// <summary>
 	///     Gets a list of registered global commands.
 	/// </summary>
 	public IReadOnlyList<DiscordApplicationCommand> GlobalCommands
-		=> GlobalCommandsInternal;
+	{
+		get
+		{
+			lock (s_collectionLock)
+			{
+				return GlobalCommandsInternal.ToList().AsReadOnly();
+			}
+		}
+	}
 
 	/// <summary>
 	///     Gets a list of registered guild commands mapped by guild id.
 	/// </summary>
 	public IReadOnlyDictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommands
-		=> GuildCommandsInternal;
+	{
+		get
+		{
+			lock (s_collectionLock)
+			{
+				return GuildCommandsInternal.ToDictionary(kvp => kvp.Key, kvp => kvp.Value).AsReadOnly();
+			}
+		}
+	}
 
 	/// <summary>
 	///     Gets the guild ids where the applications.commands scope is missing.
@@ -286,6 +316,12 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	internal static DiscordApplicationCommand? EntryPointCommand { get; set; } = null;
 
 	/// <summary>
+	///     Gets the user-provided entry point command configuration.
+	///     Set via <see cref="RegisterEntryPointCommand"/>.
+	/// </summary>
+	private DiscordApplicationCommand? _userEntryPointCommand;
+
+	/// <summary>
 	///     Runs setup.
 	///     <note type="caution">DO NOT RUN THIS MANUALLY. DO NOT DO ANYTHING WITH THIS.</note>
 	/// </summary>
@@ -363,14 +399,18 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		s_singletonModules.Clear();
 		s_errored = false;
 		ShardCount = 1;
-		CommandMethods.Clear();
-		GroupCommands.Clear();
-		ContextMenuCommands.Clear();
-		SubGroupCommands.Clear();
+		lock (s_collectionLock)
+		{
+			CommandMethods.Clear();
+			GroupCommands.Clear();
+			ContextMenuCommands.Clear();
+			SubGroupCommands.Clear();
+			s_registeredCommands.Clear();
+			GlobalCommandsInternal.Clear();
+			GuildCommandsInternal.Clear();
+		}
+
 		s_singletonModules.Clear();
-		s_registeredCommands.Clear();
-		GlobalCommandsInternal.Clear();
-		GuildCommandsInternal.Clear();
 		s_missingScopeGuildIdsGlobal.Clear();
 		this.MISSING_SCOPE_GUILD_IDS.Clear();
 		HandledInteractions.Clear();
@@ -389,7 +429,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	public async Task CleanGuildCommandsAsync()
 	{
 		foreach (var guild in this.Client.Guilds.Values)
-			await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guild.Id, Array.Empty<DiscordApplicationCommand>()).ConfigureAwait(false);
+			await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guild.Id, []).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -397,7 +437,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	///     <note type="caution">You normally don't need to execute it.</note>
 	/// </summary>
 	public async Task CleanGlobalCommandsAsync()
-		=> await this.Client.BulkOverwriteGlobalApplicationCommandsAsync(Array.Empty<DiscordApplicationCommand>()).ConfigureAwait(false);
+		=> await this.Client.BulkOverwriteGlobalApplicationCommandsAsync([]).ConfigureAwait(false);
 
 	/// <summary>
 	///     Registers all commands from a given assembly. The command classes need to be public to be considered for
@@ -474,6 +514,44 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
 
 		this._updateList.Add(new(null, new(type, translationSetup)));
+	}
+
+	/// <summary>
+	///     Registers a custom entry point command for the application's activity.
+	///     <para>Only one entry point command can exist per application. The name is always "launch" as required by Discord.</para>
+	///     <para>Use this to configure the description, allowed contexts, integration types, and handler type of the entry point command.</para>
+	/// </summary>
+	/// <param name="description">The description of the entry point command.</param>
+	/// <param name="allowedContexts">Where the entry point command can be used. When <see langword="null"/>, Discord's defaults are kept.</param>
+	/// <param name="integrationTypes">The allowed integration types. When <see langword="null"/>, Discord's defaults are kept.</param>
+	/// <param name="handlerType">The handler type. When <see langword="null"/>, falls back to <see cref="DiscordConfiguration.ActivityHandlerType"/>.</param>
+	/// <param name="defaultMemberPermissions">The default member permissions. When <see langword="null"/>, no restrictions are applied.</param>
+	/// <param name="nameLocalizations">The localizations of the command name.</param>
+	/// <param name="descriptionLocalizations">The localizations of the command description.</param>
+	public void RegisterEntryPointCommand(
+		string description,
+		List<InteractionContextType>? allowedContexts = null,
+		List<ApplicationCommandIntegrationTypes>? integrationTypes = null,
+		ApplicationCommandHandlerType? handlerType = null,
+		Permissions? defaultMemberPermissions = null,
+		DiscordApplicationCommandLocalization? nameLocalizations = null,
+		DiscordApplicationCommandLocalization? descriptionLocalizations = null
+	)
+	{
+		if (this._userEntryPointCommand is not null)
+			throw new InvalidOperationException("An entry point command has already been registered. Only one entry point command is allowed per application.");
+
+		this._userEntryPointCommand = new(
+			"launch",
+			description,
+			type: ApplicationCommandType.PrimaryEntryPoint,
+			nameLocalizations: nameLocalizations,
+			descriptionLocalizations: descriptionLocalizations,
+			defaultMemberPermissions: defaultMemberPermissions,
+			allowedContexts: allowedContexts,
+			integrationTypes: integrationTypes,
+			handlerType: handlerType
+		);
 	}
 
 	/// <summary>
@@ -580,23 +658,18 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			if (Configuration is null || (Configuration is not null && Configuration.EnableDefaultHelp))
 			{
 				this._updateList.Add(new(null, new(typeof(DefaultHelpModule))));
-				commandsPending = this._updateList.Select(x => x.Key).Distinct().ToList();
+				commandsPending = [.. this._updateList.Select(x => x.Key).Distinct()];
 			}
 			else if (Configuration is not null && Configuration.EnableDefaultUserAppsHelp)
 			{
 				this._updateList.Add(new(null, new(typeof(DefaultUserAppsHelpModule))));
-				commandsPending = this._updateList.Select(x => x.Key).Distinct().ToList();
+				commandsPending = [.. this._updateList.Select(x => x.Key).Distinct()];
 			}
 			else
 			{
-				try
-				{
-					this._updateList.Remove(new(null, new(typeof(DefaultHelpModule))));
-				}
-				catch
-				{ }
+				this._updateList.RemoveAll(x => x.Key is null && x.Value.Type == typeof(DefaultHelpModule));
 
-				commandsPending = this._updateList.Select(x => x.Key).Distinct().ToList();
+				commandsPending = [.. this._updateList.Select(x => x.Key).Distinct()];
 			}
 
 			if (globalCommands is not null && globalCommands.Count is not 0)
@@ -604,9 +677,39 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				GlobalDiscordCommands.AddRange(globalCommands);
 				if (this.Client.Configuration.HasActivitiesEnabled)
 				{
-					var entryPointCommand = globalCommands.First(command => command.Name == "launch");
-					entryPointCommand.HandlerType = this.Client.Configuration.ActivityHandlerType;
-					EntryPointCommand = entryPointCommand;
+					var entryPointCommand = globalCommands.FirstOrDefault(command => command.Type is ApplicationCommandType.PrimaryEntryPoint);
+					if (entryPointCommand is not null)
+					{
+						if (this._userEntryPointCommand is not null)
+						{
+							entryPointCommand.Description = this._userEntryPointCommand.Description;
+							entryPointCommand.HandlerType = this._userEntryPointCommand.HandlerType;
+							entryPointCommand.RawNameLocalizations = this._userEntryPointCommand.RawNameLocalizations;
+							entryPointCommand.RawDescriptionLocalizations = this._userEntryPointCommand.RawDescriptionLocalizations;
+							entryPointCommand.DefaultMemberPermissions = this._userEntryPointCommand.DefaultMemberPermissions;
+
+							if (this._userEntryPointCommand.AllowedContexts is not null)
+								entryPointCommand.AllowedContexts = this._userEntryPointCommand.AllowedContexts;
+
+							if (this._userEntryPointCommand.IntegrationTypes is not null)
+								entryPointCommand.IntegrationTypes = this._userEntryPointCommand.IntegrationTypes;
+						}
+						else
+						{
+							entryPointCommand.HandlerType = this.Client.Configuration.ActivityHandlerType;
+						}
+
+						// Strip localizations from entry point when localization is disabled
+						// Discord always returns built-in localizations for "launch", but we
+						// shouldn't send them back if the bot doesn't use localizations
+						if (Configuration?.EnableLocalization is not true)
+						{
+							entryPointCommand.RawNameLocalizations = null;
+							entryPointCommand.RawDescriptionLocalizations = null;
+						}
+
+						EntryPointCommand = entryPointCommand;
+					}
 				}
 			}
 
@@ -619,7 +722,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					this.Client.Logger.Log(ApplicationCommandsLogLevel, "Registering");
 				}
 
-				await this.RegisterCommands(this._updateList.Where(x => x.Key == key).Select(x => x.Value).ToList(), key).ConfigureAwait(false);
+				await this.RegisterCommands([.. this._updateList.Where(x => x.Key == key).Select(x => x.Value)], key).ConfigureAwait(false);
 			}
 
 			this.MISSING_SCOPE_GUILD_IDS = [.. failedGuilds];
@@ -688,14 +791,14 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				else if (module.GetMembers(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance).Any(x => x.IsDefined(typeof(SlashCommandGroupAttribute))))
 				{
 					//Otherwise add the extreme nested groups
-					classes = module.GetMembers(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance)
+					classes = [.. module.GetMembers(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance)
 						.Where(x => x.IsDefined(typeof(SlashCommandGroupAttribute)))
-						.Select(x => module.GetNestedType(x.Name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance).GetTypeInfo()).ToList();
+						.Select(x => module.GetNestedType(x.Name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance).GetTypeInfo())];
 					extremeNestedGroup = true;
 				}
 				else
 					//Otherwise add the nested groups
-					classes = module.DeclaredNestedTypes.Where(x => x.GetCustomAttribute<SlashCommandGroupAttribute>() != null).ToList();
+					classes = [.. module.DeclaredNestedTypes.Where(x => x.GetCustomAttribute<SlashCommandGroupAttribute>() != null)];
 
 				if (module.GetCustomAttribute<SlashCommandGroupAttribute>() is not null || extremeNestedGroup)
 				{
@@ -861,7 +964,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 		if (!s_errored && !IsCalledByUnitTest)
 		{
-			updateList = updateList.DistinctBy(x => x.Name).ToList();
+			updateList = [.. updateList.DistinctBy(x => x.Name)];
 			if (Configuration.GenerateTranslationFilesOnly)
 				await this.CheckRegistrationStartup(translation, groupTranslation, guildId);
 			else
@@ -880,14 +983,17 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								{
 									var actualCommands = regCommands.Distinct().ToList();
 									commands.AddRange(actualCommands);
-									GlobalCommandsInternal.AddRange(actualCommands);
+									lock (s_collectionLock)
+									{
+										GlobalCommandsInternal.AddRange(actualCommands);
+									}
 								}
 							}
 							else if (GlobalDiscordCommands.Count is not 0)
 								foreach (var cmd in GlobalDiscordCommands)
 									try
 									{
-										if (EntryPointCommand is null || cmd.Name is not "launch")
+										if (EntryPointCommand is null || cmd.Type is not ApplicationCommandType.PrimaryEntryPoint)
 											await this.Client.DeleteGlobalApplicationCommandAsync(cmd.Id).ConfigureAwait(false);
 									}
 									catch (NotFoundException)
@@ -904,7 +1010,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								{
 									var actualCommands = regCommands.Distinct().ToList();
 									commands.AddRange(actualCommands);
-									GuildCommandsInternal.Add(guildId.Value, actualCommands);
+									lock (s_collectionLock)
+									{
+										GuildCommandsInternal.Add(guildId.Value, actualCommands);
+									}
 									try
 									{
 										if (this.Client.Guilds.TryGetValue(guildId.Value, out var guild))
@@ -948,12 +1057,15 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					}
 
 					//Adds to the global lists finally
-					CommandMethods.AddRange(commandMethods.DistinctBy(x => x.Name));
-					GroupCommands.AddRange(groupCommands.DistinctBy(x => x.Name));
-					SubGroupCommands.AddRange(subGroupCommands.DistinctBy(x => x.Name));
-					ContextMenuCommands.AddRange(contextMenuCommands.DistinctBy(x => x.Name));
+					lock (s_collectionLock)
+					{
+						CommandMethods.AddRange(commandMethods.DistinctBy(x => x.Name));
+						GroupCommands.AddRange(groupCommands.DistinctBy(x => x.Name));
+						SubGroupCommands.AddRange(subGroupCommands.DistinctBy(x => x.Name));
+						ContextMenuCommands.AddRange(contextMenuCommands.DistinctBy(x => x.Name));
 
-					s_registeredCommands.Add(new(guildId, commands.ToList()));
+						s_registeredCommands.Add(new(guildId, [.. commands]));
+					}
 
 					foreach (var app in commandMethods.Select(command => types.First(t => t.Type == command.Method.DeclaringType)))
 					{ }
@@ -997,12 +1109,15 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		}
 		else if (IsCalledByUnitTest)
 		{
-			CommandMethods.AddRange(commandMethods.DistinctBy(x => x.Name));
-			GroupCommands.AddRange(groupCommands.DistinctBy(x => x.Name));
-			SubGroupCommands.AddRange(subGroupCommands.DistinctBy(x => x.Name));
-			ContextMenuCommands.AddRange(contextMenuCommands.DistinctBy(x => x.Name));
+			lock (s_collectionLock)
+			{
+				CommandMethods.AddRange(commandMethods.DistinctBy(x => x.Name));
+				GroupCommands.AddRange(groupCommands.DistinctBy(x => x.Name));
+				SubGroupCommands.AddRange(subGroupCommands.DistinctBy(x => x.Name));
+				ContextMenuCommands.AddRange(contextMenuCommands.DistinctBy(x => x.Name));
 
-			s_registeredCommands.Add(new(guildId, unitTestCommands.ToList()));
+				s_registeredCommands.Add(new(guildId, [.. unitTestCommands]));
+			}
 
 			foreach (var app in commandMethods.Select(command => types.First(t => t.Type == command.Method.DeclaringType)))
 			{ }
@@ -1110,13 +1225,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	private Task InteractionHandler(DiscordClient client, InteractionCreateEventArgs e)
 	{
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Got slash interaction on shard {shard}", this.Client.ShardId);
-		if (HandledInteractions.Contains(e.Interaction.Id) || (e.Interaction is { GuildId: not null, AuthorizingIntegrationOwners.GuildInstallKey: not null } && !client.Guilds.ContainsKey(e.Interaction.GuildId.Value)))
+		if (!HandledInteractions.TryAdd(e.Interaction.Id, 0) || (e.Interaction is { GuildId: not null, AuthorizingIntegrationOwners.GuildInstallKey: not null } && !client.Guilds.ContainsKey(e.Interaction.GuildId.Value)))
 		{
 			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Ignoring, already received or wrong shard");
 			return Task.FromResult(true);
 		}
-
-		HandledInteractions.Add(e.Interaction.Id);
 
 		_ = Task.Run(async () =>
 		{
@@ -1164,9 +1277,15 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							throw new InvalidOperationException("Application commands failed to register properly on startup.");
 						}
 
-						var methods = CommandMethods.Where(x => x.CommandId == e.Interaction.Data.Id).ToList();
-						var groups = GroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id).ToList();
-						var subgroups = SubGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id).ToList();
+						List<CommandMethod> methods;
+						List<GroupCommand> groups;
+						List<SubGroupCommand> subgroups;
+						lock (s_collectionLock)
+						{
+							methods = [.. CommandMethods.Where(x => x.CommandId == e.Interaction.Data.Id)];
+							groups = [.. GroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id)];
+							subgroups = [.. SubGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id)];
+						}
 						if (methods.Count is 0 && groups.Count is 0 && subgroups.Count is 0)
 						{
 							await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("An application command was executed, but no command was registered for it.").AsEphemeral()).ConfigureAwait(false);
@@ -1238,9 +1357,15 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					throw new InvalidOperationException("Application commands failed to register properly on startup.");
 				case InteractionType.AutoComplete:
 				{
-					var methods = CommandMethods.Where(x => x.CommandId == e.Interaction.Data.Id).ToList();
-					var groups = GroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id).ToList();
-					var subgroups = SubGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id).ToList();
+					List<CommandMethod> methods;
+					List<GroupCommand> groups;
+					List<SubGroupCommand> subgroups;
+					lock (s_collectionLock)
+					{
+						methods = [.. CommandMethods.Where(x => x.CommandId == e.Interaction.Data.Id)];
+						groups = [.. GroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id)];
+						subgroups = [.. SubGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id)];
+					}
 					if (methods.Count is 0 && groups.Count is 0 && subgroups.Count is 0)
 						throw new InvalidOperationException("An autocomplete interaction was created, but no command was registered for it");
 
@@ -1271,7 +1396,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 									Guild = e.Interaction.Guild,
 									Channel = e.Interaction.Channel,
 									User = e.Interaction.User,
-									Options = e.Interaction.Data.Options.ToList(),
+									Options = [.. e.Interaction.Data.Options],
 									FocusedOption = focusedOption,
 									Locale = e.Interaction.Locale,
 									GuildLocale = e.Interaction.GuildLocale,
@@ -1307,7 +1432,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 									Guild = e.Interaction.Guild,
 									Channel = e.Interaction.Channel,
 									User = e.Interaction.User,
-									Options = command.Options.ToList(),
+									Options = [.. command.Options],
 									FocusedOption = focusedOption,
 									Locale = e.Interaction.Locale,
 									GuildLocale = e.Interaction.GuildLocale,
@@ -1344,7 +1469,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 									Guild = e.Interaction.Guild,
 									Channel = e.Interaction.Channel,
 									User = e.Interaction.User,
-									Options = command.Options[0].Options.ToList(),
+									Options = [.. command.Options[0].Options],
 									FocusedOption = focusedOption,
 									Locale = e.Interaction.Locale,
 									GuildLocale = e.Interaction.GuildLocale,
@@ -1407,13 +1532,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	private Task ContextMenuHandler(DiscordClient client, ContextMenuInteractionCreateEventArgs e)
 	{
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Got context menu interaction on shard {shard}", this.Client.ShardId);
-		if (HandledInteractions.Contains(e.Interaction.Id))
+		if (!HandledInteractions.TryAdd(e.Interaction.Id, 0))
 		{
 			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Ignoring, already received");
 			return Task.FromResult(true);
 		}
-
-		HandledInteractions.Add(e.Interaction.Id);
 
 		_ = Task.Run(async () =>
 		{
@@ -1458,7 +1581,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				}
 
 				//Gets the method for the command
-				var method = ContextMenuCommands.FirstOrDefault(x => x.CommandId == e.Interaction.Data.Id);
+				ContextMenuCommand? method;
+				lock (s_collectionLock)
+				{
+					method = ContextMenuCommands.FirstOrDefault(x => x.CommandId == e.Interaction.Data.Id);
+				}
 
 				if (method == null)
 				{
@@ -1550,7 +1677,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					{
 						if (AutoDeferEnabled)
 							await context.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource).ConfigureAwait(false);
-						await ((Task)method.Invoke(classInstance, args.ToArray())).ConfigureAwait(false);
+						await ((Task)method.Invoke(classInstance, [.. args])).ConfigureAwait(false);
 
 						await (module?.AfterSlashExecutionAsync(slashContext) ?? Task.CompletedTask).ConfigureAwait(false);
 					}
@@ -1566,7 +1693,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					{
 						if (AutoDeferEnabled)
 							await context.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource).ConfigureAwait(false);
-						await ((Task)method.Invoke(classInstance, args.ToArray())).ConfigureAwait(false);
+						await ((Task)method.Invoke(classInstance, [.. args])).ConfigureAwait(false);
 
 						await (module?.AfterContextMenuExecutionAsync(contextMenuContext) ?? Task.CompletedTask).ConfigureAwait(false);
 					}
@@ -1666,7 +1793,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				args.Add(parameter.DefaultValue);
 			else
 			{
-				var option = options.Single(x => x.Name == parameter.GetCustomAttribute<OptionAttribute>()?.Name.ToLower());
+				var optionName = parameter.GetCustomAttribute<OptionAttribute>()?.Name.ToLower();
+				var option = options.SingleOrDefault(x => x.Name == optionName)
+					?? throw new InvalidOperationException($"Could not find option '{optionName}' for parameter '{parameter.Name}'. Ensure the parameter has a matching [Option] attribute.");
 				// Handle enum parameters (including nullable enums). We map enums to Integer option
 				// types so Discord will send numeric values. Accept numeric (boxed) and numeric-string
 				// values and convert them into the proper enum instance. Also accept named-string
@@ -1714,9 +1843,15 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					args.Add(option.Value?.ToString());
 				}
 				else if (parameter.ParameterType == typeof(ulong) || parameter.ParameterType == typeof(ulong?))
-					args.Add((ulong?)option.Value);
+					if (option.Value is null)
+						args.Add(null);
+					else
+						args.Add(Convert.ToUInt64(option.Value));
 				else if (parameter.ParameterType == typeof(int) || parameter.ParameterType == typeof(int?))
-					args.Add((int?)option.Value);
+					if (option.Value is null)
+						args.Add(null);
+					else
+						args.Add(Convert.ToInt32(option.Value));
 				else if (parameter.ParameterType == typeof(long) || parameter.ParameterType == typeof(long?))
 					if (option.Value is null)
 						args.Add(null);
@@ -1726,8 +1861,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					args.Add((bool?)option.Value);
 				else if (parameter.ParameterType == typeof(double) || parameter.ParameterType == typeof(double?))
 					args.Add((double?)option.Value);
-				else if (parameter.ParameterType == typeof(int) || parameter.ParameterType == typeof(int?))
-					args.Add((int?)option.Value);
 				else if (parameter.ParameterType == typeof(DiscordAttachment))
 				{
 					//Checks through resolved
@@ -1926,7 +2059,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		foreach (Enum enumValue in Enum.GetValues(enumParam))
 		{
 			var name = enumValue.GetName();
-			object value = optionType switch
+			var value = optionType switch
 			{
 				ApplicationCommandOptionType.Integer => Convert.ChangeType(enumValue, underlying),
 				ApplicationCommandOptionType.Number => Convert.ToDouble(Convert.ChangeType(enumValue, underlying)),
@@ -1979,7 +2112,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	private static List<DiscordApplicationCommandOptionChoice> GetChoiceAttributesFromParameter(List<ChoiceAttribute> choiceAttributes, ApplicationCommandOptionType optionType, Type? numericTargetType = null)
 		=> choiceAttributes.Count is 0
 			? []
-			: choiceAttributes.Select(att => new DiscordApplicationCommandOptionChoice(att.Name, ConvertChoiceValue(att.Value, optionType, numericTargetType))).ToList();
+			: [.. choiceAttributes.Select(att => new DiscordApplicationCommandOptionChoice(att.Name, ConvertChoiceValue(att.Value, optionType, numericTargetType)))];
 
 	private static object? ConvertChoiceValue(object? value, ApplicationCommandOptionType optionType, Type? numericTargetType = null)
 	{
@@ -1995,9 +2128,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				_ => value.ToString()
 			};
 		}
-		catch
+		catch (Exception ex) when (ex is FormatException or InvalidCastException or OverflowException)
 		{
-			// Fallback to string if conversion fails
+			// Fallback to string if numeric conversion fails
 			return value.ToString();
 		}
 	}
@@ -2062,7 +2195,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 			//Handles choices
 			//From attributes
-			var choices = GetChoiceAttributesFromParameter(parameter.GetCustomAttributes<ChoiceAttribute>().ToList(), parameterType, numericTargetType);
+			var choices = GetChoiceAttributesFromParameter([.. parameter.GetCustomAttributes<ChoiceAttribute>()], parameterType, numericTargetType);
 			//From enums
 			if (parameter.ParameterType.IsEnum)
 				choices = GetChoiceAttributesFromEnumParameter(parameter.ParameterType, parameterType);
@@ -2315,18 +2448,16 @@ internal sealed class DefaultHelpModule : ApplicationCommandsModule
 		{
 			var guildCommandsTask = ctx.Client.GetGuildApplicationCommandsAsync(ctx.Guild.Id);
 			await Task.WhenAll(globalCommandsTask, guildCommandsTask).ConfigureAwait(false);
-			applicationCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
+			applicationCommands = [.. globalCommandsTask.Result.Concat(guildCommandsTask.Result)
 				.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
-				.GroupBy(ac => ac.Name).Select(x => x.First())
-				.ToList();
+				.GroupBy(ac => ac.Name).Select(x => x.First())];
 		}
 		else
 		{
 			await Task.WhenAll(globalCommandsTask).ConfigureAwait(false);
-			applicationCommands = globalCommandsTask.Result
+			applicationCommands = [.. globalCommandsTask.Result
 				.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
-				.GroupBy(ac => ac.Name).Select(x => x.First())
-				.ToList();
+				.GroupBy(ac => ac.Name).Select(x => x.First())];
 		}
 
 		if (applicationCommands.Count < 1)
@@ -2448,24 +2579,22 @@ internal sealed class DefaultHelpModule : ApplicationCommandsModule
 			{
 				var guildCommandsTask = context.Client.GetGuildApplicationCommandsAsync(context.Guild.Id);
 				await Task.WhenAll(globalCommandsTask, guildCommandsTask).ConfigureAwait(false);
-				slashCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
+				slashCommands = [.. globalCommandsTask.Result.Concat(guildCommandsTask.Result)
 					.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
-					.GroupBy(ac => ac.Name).Select(x => x.First())
-					.ToList();
+					.GroupBy(ac => ac.Name).Select(x => x.First())];
 
 				if (context.Options.Count > 0 && !string.IsNullOrEmpty(context.Options[0].Value?.ToString()))
-					slashCommands = slashCommands.Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
+					slashCommands = [.. slashCommands.Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase))];
 			}
 			else
 			{
 				await Task.WhenAll(globalCommandsTask).ConfigureAwait(false);
-				slashCommands = globalCommandsTask.Result
+				slashCommands = [.. globalCommandsTask.Result
 					.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
-					.GroupBy(ac => ac.Name).Select(x => x.First())
-					.ToList();
+					.GroupBy(ac => ac.Name).Select(x => x.First())];
 
 				if (context.Options.Count > 0 && !string.IsNullOrEmpty(context.Options[0].Value?.ToString()))
-					slashCommands = slashCommands.Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
+					slashCommands = [.. slashCommands.Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase))];
 			}
 
 			var options = slashCommands.Take(25).Select(sc => new DiscordApplicationCommandAutocompleteChoice(sc.Name, sc.Name.Trim())).ToList();
@@ -2583,18 +2712,16 @@ internal sealed class DefaultUserAppsHelpModule : ApplicationCommandsModule
 		{
 			var guildCommandsTask = ctx.Client.GetGuildApplicationCommandsAsync(ctx.Guild.Id);
 			await Task.WhenAll(globalCommandsTask, guildCommandsTask).ConfigureAwait(false);
-			applicationCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
+			applicationCommands = [.. globalCommandsTask.Result.Concat(guildCommandsTask.Result)
 				.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
-				.GroupBy(ac => ac.Name).Select(x => x.First())
-				.ToList();
+				.GroupBy(ac => ac.Name).Select(x => x.First())];
 		}
 		else
 		{
 			await globalCommandsTask.ConfigureAwait(false);
-			applicationCommands = globalCommandsTask.Result
+			applicationCommands = [.. globalCommandsTask.Result
 				.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
-				.GroupBy(ac => ac.Name).Select(x => x.First())
-				.ToList();
+				.GroupBy(ac => ac.Name).Select(x => x.First())];
 		}
 
 		if (applicationCommands.Count < 1)
@@ -2716,24 +2843,22 @@ internal sealed class DefaultUserAppsHelpModule : ApplicationCommandsModule
 			{
 				var guildCommandsTask = context.Client.GetGuildApplicationCommandsAsync(context.Guild.Id);
 				await Task.WhenAll(globalCommandsTask, guildCommandsTask).ConfigureAwait(false);
-				slashCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
+				slashCommands = [.. globalCommandsTask.Result.Concat(guildCommandsTask.Result)
 					.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
-					.GroupBy(ac => ac.Name).Select(x => x.First())
-					.ToList();
+					.GroupBy(ac => ac.Name).Select(x => x.First())];
 
 				if (context.Options.Count > 0 && !string.IsNullOrEmpty(context.Options[0].Value?.ToString()))
-					slashCommands = slashCommands.Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
+					slashCommands = [.. slashCommands.Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase))];
 			}
 			else
 			{
 				await globalCommandsTask.ConfigureAwait(false);
-				slashCommands = globalCommandsTask.Result
+				slashCommands = [.. globalCommandsTask.Result
 					.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
-					.GroupBy(ac => ac.Name).Select(x => x.First())
-					.ToList();
+					.GroupBy(ac => ac.Name).Select(x => x.First())];
 
 				if (context.Options.Count > 0 && !string.IsNullOrEmpty(context.Options[0].Value?.ToString()))
-					slashCommands = slashCommands.Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
+					slashCommands = [.. slashCommands.Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase))];
 			}
 
 			var options = slashCommands.Take(25).Select(sc => new DiscordApplicationCommandAutocompleteChoice(sc.Name, sc.Name.Trim())).ToList();

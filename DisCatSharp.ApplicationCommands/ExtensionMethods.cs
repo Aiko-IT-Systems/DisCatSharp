@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 using DisCatSharp.ApplicationCommands.Attributes;
 using DisCatSharp.ApplicationCommands.Context;
+using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 
 namespace DisCatSharp.ApplicationCommands;
 
@@ -106,6 +108,34 @@ public static class ExtensionMethods
 
 		foreach (var extension in extensions.Values)
 			extension.RegisterGuildCommands(type, guildId, translationSetup);
+	}
+
+	/// <summary>
+	///     Registers an entry point command across all shards.
+	///     <para>Only one entry point command can exist per application. The name is always "launch" as required by Discord.</para>
+	///     <para>Use this to configure the description, allowed contexts, integration types, and handler type of the entry point command.</para>
+	/// </summary>
+	/// <param name="extensions">Sharding extensions.</param>
+	/// <param name="description">The description of the entry point command.</param>
+	/// <param name="allowedContexts">Where the entry point command can be used.</param>
+	/// <param name="integrationTypes">The allowed integration types.</param>
+	/// <param name="handlerType">The handler type. When <see langword="null"/>, falls back to <see cref="DiscordConfiguration.ActivityHandlerType"/>.</param>
+	/// <param name="defaultMemberPermissions">The default member permissions.</param>
+	/// <param name="nameLocalizations">The localizations of the command name.</param>
+	/// <param name="descriptionLocalizations">The localizations of the command description.</param>
+	public static void RegisterEntryPointCommand(
+		this IReadOnlyDictionary<int, ApplicationCommandsExtension> extensions,
+		string description,
+		List<InteractionContextType>? allowedContexts = null,
+		List<ApplicationCommandIntegrationTypes>? integrationTypes = null,
+		ApplicationCommandHandlerType? handlerType = null,
+		Permissions? defaultMemberPermissions = null,
+		DiscordApplicationCommandLocalization? nameLocalizations = null,
+		DiscordApplicationCommandLocalization? descriptionLocalizations = null
+	)
+	{
+		foreach (var extension in extensions.Values)
+			extension.RegisterEntryPointCommand(description, allowedContexts, integrationTypes, handlerType, defaultMemberPermissions, nameLocalizations, descriptionLocalizations);
 	}
 
 	/// <summary>
