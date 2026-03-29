@@ -189,4 +189,13 @@
   <data name="AnalyzerDescriptionRequiresOverride" xml:space="preserve">
     <value>This requires to modify the DiscordConfiguration to include an Override.</value>
   </data>
+  <data name="AnalyzerTitleBanDeleteMessageDaysMigration" xml:space="preserve">
+    <value>[DCS] Ban parameter renamed to seconds</value>
+  </data>
+  <data name="AnalyzerMessageFormatBanDeleteMessageDaysMigration" xml:space="preserve">
+    <value>'deleteMessageDays' has been renamed to 'deleteMessageSeconds'. Pass seconds directly (max 604800). Positional callers passing day values must be updated manually.</value>
+  </data>
+  <data name="AnalyzerDescriptionBanDeleteMessageDaysMigration" xml:space="preserve">
+    <value>Discord's ban API accepts seconds, not days. The parameter was renamed from 'deleteMessageDays' to 'deleteMessageSeconds'. Named argument callers can be auto-fixed; positional callers must be reviewed manually.</value>
+  </data>
 </root>

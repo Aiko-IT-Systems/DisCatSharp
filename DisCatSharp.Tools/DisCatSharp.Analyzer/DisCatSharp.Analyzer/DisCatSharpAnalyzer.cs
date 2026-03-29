@@ -133,9 +133,20 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 		"Application command check failures now raise dedicated checks-failed events instead of surfacing through errored events.",
 		"https://docs.dcs.aitsys.dev/vs/analyzer/dcs/2101");
 
+	/// <inheritdoc cref="DiagnosticDescriptor" />
+	private static readonly DiagnosticDescriptor s_banDeleteMessageDaysMigrationRule = new(
+		DisCatSharpDiagnosticIds.BanDeleteMessageDaysMigration,
+		new LocalizableResourceString(nameof(Resources.AnalyzerTitleBanDeleteMessageDaysMigration), Resources.ResourceManager, typeof(Resources)),
+		new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormatBanDeleteMessageDaysMigration), Resources.ResourceManager, typeof(Resources)),
+		CATEGORY,
+		DiagnosticSeverity.Warning,
+		true,
+		new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionBanDeleteMessageDaysMigration), Resources.ResourceManager, typeof(Resources)),
+		"https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0301");
+
 	/// <inheritdoc />
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
-		=> ImmutableArray.Create(s_experimentalRule, s_deprecatedRule, s_discordInExperimentRule, s_discordDeprecatedRule, s_discordUnreleasedRule, s_presenceAccessMigrationRule, s_requiresFeatureRule, s_requiresOverrideRule, s_applicationCommandChecksFailedMigrationRule);
+		=> ImmutableArray.Create(s_experimentalRule, s_deprecatedRule, s_discordInExperimentRule, s_discordDeprecatedRule, s_discordUnreleasedRule, s_presenceAccessMigrationRule, s_requiresFeatureRule, s_requiresOverrideRule, s_applicationCommandChecksFailedMigrationRule, s_banDeleteMessageDaysMigrationRule);
 
 	/// <inheritdoc />
 	public override void Initialize(AnalysisContext context)
@@ -155,6 +166,7 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 		context.RegisterSyntaxNodeAction(AnalyzeSyntaxNode, SyntaxKind.SimpleMemberAccessExpression);
 		context.RegisterSyntaxNodeAction(AnalyzePresenceAccessMigration, SyntaxKind.InvocationExpression);
 		context.RegisterSyntaxNodeAction(AnalyzeApplicationCommandChecksFailedMigration, SyntaxKind.AddAssignmentExpression);
+		context.RegisterSyntaxNodeAction(AnalyzeBanDeleteMessageDaysMigration, SyntaxKind.InvocationExpression);
 	}
 
 	/// <summary>
@@ -339,6 +351,17 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 			candidate.PresencesAccess.Name.GetLocation(),
 			properties,
 			userExpression));
+	}
+
+	private static void AnalyzeBanDeleteMessageDaysMigration(SyntaxNodeAnalysisContext context)
+	{
+		if (context.Node is not InvocationExpressionSyntax invocation ||
+		    !BanDeleteMessageDaysMigrationAnalysis.TryGetCandidate(context.SemanticModel, invocation, context.CancellationToken, out var nameColon, out _))
+			return;
+
+		context.ReportDiagnostic(Diagnostic.Create(
+			s_banDeleteMessageDaysMigrationRule,
+			nameColon.GetLocation()));
 	}
 
 	/// <summary>
