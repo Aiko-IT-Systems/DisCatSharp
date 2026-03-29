@@ -61,23 +61,23 @@ public abstract class BaseDiscordClient : IDisposable
 	{
 		this.Configuration = new(config);
 		this.ServiceProvider = config.ServiceProvider;
-		if (this.Configuration.CustomSentryDsn != null)
-			SentryDsn = this.Configuration.CustomSentryDsn;
+		if (this.Configuration.Telemetry.CustomSentryDsn != null)
+			SentryDsn = this.Configuration.Telemetry.CustomSentryDsn;
 		if (this.ServiceProvider is not null)
 		{
-			this.Configuration.LoggerFactory ??= config.ServiceProvider.GetService<ILoggerFactory>()!;
+			this.Configuration.Logging.LoggerFactory ??= config.ServiceProvider.GetService<ILoggerFactory>()!;
 			this.Logger = config.ServiceProvider.GetService<ILogger<BaseDiscordClient>>()!;
 		}
 
-		if (this.Configuration.LoggerFactory is null)
+		if (this.Configuration.Logging.LoggerFactory is null)
 		{
-			this.Configuration.LoggerFactory = new DefaultLoggerFactory();
-			this.Configuration.LoggerFactory.AddProvider(new DefaultLoggerProvider(this));
+			this.Configuration.Logging.LoggerFactory = new DefaultLoggerFactory();
+			this.Configuration.Logging.LoggerFactory.AddProvider(new DefaultLoggerProvider(this));
 		}
 
-		this.DiagnosticsSink = !this.Configuration.HasShardLogger ? TelemetryBootstrap.CreateSink(this.Configuration) : NoOpDiagnosticsSink.Instance;
+		this.DiagnosticsSink = !this.Configuration.Logging.HasShardLogger ? TelemetryBootstrap.CreateSink(this.Configuration) : NoOpDiagnosticsSink.Instance;
 
-		this.Logger ??= this.Configuration.LoggerFactory!.CreateLogger<BaseDiscordClient>();
+		this.Logger ??= this.Configuration.Logging.LoggerFactory!.CreateLogger<BaseDiscordClient>();
 
 		this.ApiClient = new(this);
 		this.UserCache = new();
@@ -88,12 +88,12 @@ public abstract class BaseDiscordClient : IDisposable
 		{
 			UseCookies = false,
 			AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip,
-			UseProxy = this.Configuration.Proxy != null,
-			Proxy = this.Configuration.Proxy
+			UseProxy = this.Configuration.Rest.Proxy != null,
+			Proxy = this.Configuration.Rest.Proxy
 		};
 		this.RestClient = new(httphandler)
 		{
-			Timeout = this.Configuration.HttpTimeout
+			Timeout = this.Configuration.Rest.RequestTimeout
 		};
 		this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.USER_AGENT, Utilities.GetUserAgent());
 
@@ -130,13 +130,13 @@ public abstract class BaseDiscordClient : IDisposable
 	///     Gets the current api channel.
 	/// </summary>
 	public ApiChannel ApiChannel
-		=> this.Configuration.ApiChannel;
+		=> this.Configuration.Api.Channel;
 
 	/// <summary>
 	///     Gets the current api version.
 	/// </summary>
 	public string ApiVersion
-		=> $"v{this.Configuration.ApiVersion}";
+		=> $"v{this.Configuration.Api.Version}";
 
 	/// <summary>
 	///     Gets the sentry dsn.

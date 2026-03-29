@@ -29,7 +29,7 @@ internal class DefaultLoggerProvider : ILoggerProvider
 	/// </summary>
 	/// <param name="client">The client.</param>
 	internal DefaultLoggerProvider(BaseDiscordClient client)
-		: this(client.Configuration.MinimumLogLevel, client.Configuration.LogTimestampFormat)
+		: this(client.Configuration.Logging.MinimumLogLevel, client.Configuration.Logging.LogTimestampFormat)
 	{ }
 
 	/// <summary>

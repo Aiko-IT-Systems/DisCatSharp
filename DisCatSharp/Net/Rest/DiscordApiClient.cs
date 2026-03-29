@@ -62,11 +62,17 @@ public sealed class DiscordApiClient
 		this.Discord = null!;
 		this.Rest = new(new()
 		{
-			Proxy = proxy,
-			HttpTimeout = timeout,
-			UseRelativeRatelimit = useRelativeRateLimit,
-			ApiChannel = ApiChannel.Stable,
-			ApiVersion = "10"
+			Rest = new()
+			{
+				Proxy = proxy,
+				RequestTimeout = timeout,
+				UseRelativeRatelimit = useRelativeRateLimit
+			},
+			Api = new()
+			{
+				Channel = ApiChannel.Stable,
+				Version = "10"
+			}
 		}, logger);
 	}
 
@@ -83,11 +89,17 @@ public sealed class DiscordApiClient
 		this.OAuth2Client = null!;
 		this.Rest = new(new()
 		{
-			Proxy = proxy,
-			HttpTimeout = timeout,
-			UseRelativeRatelimit = useRelativeRateLimit,
-			ApiChannel = ApiChannel.Stable,
-			ApiVersion = "10"
+			Rest = new()
+			{
+				Proxy = proxy,
+				RequestTimeout = timeout,
+				UseRelativeRatelimit = useRelativeRateLimit
+			},
+			Api = new()
+			{
+				Channel = ApiChannel.Stable,
+				Version = "10"
+			}
 		}, logger);
 	}
 
@@ -6263,7 +6275,7 @@ public sealed class DiscordApiClient
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, ratelimitWaitOverride: this.Discord.Configuration.UseRelativeRatelimit ? null : 0.26);
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, ratelimitWaitOverride: this.Discord.Configuration.Rest.UseRelativeRatelimit ? null : 0.26);
 	}
 
 	/// <summary>
@@ -6283,7 +6295,7 @@ public sealed class DiscordApiClient
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, ratelimitWaitOverride: this.Discord.Configuration.UseRelativeRatelimit ? null : 0.26);
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, ratelimitWaitOverride: this.Discord.Configuration.Rest.UseRelativeRatelimit ? null : 0.26);
 	}
 
 	/// <summary>
@@ -6310,7 +6322,7 @@ public sealed class DiscordApiClient
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers, ratelimitWaitOverride: this.Discord.Configuration.UseRelativeRatelimit ? null : 0.26);
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers, ratelimitWaitOverride: this.Discord.Configuration.Rest.UseRelativeRatelimit ? null : 0.26);
 	}
 
 	/// <summary>
@@ -6383,7 +6395,7 @@ public sealed class DiscordApiClient
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers, ratelimitWaitOverride: this.Discord.Configuration.UseRelativeRatelimit ? null : 0.26);
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers, ratelimitWaitOverride: this.Discord.Configuration.Rest.UseRelativeRatelimit ? null : 0.26);
 	}
 
 	/// <summary>
@@ -6403,7 +6415,7 @@ public sealed class DiscordApiClient
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, ratelimitWaitOverride: this.Discord.Configuration.UseRelativeRatelimit ? null : 0.26);
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, ratelimitWaitOverride: this.Discord.Configuration.Rest.UseRelativeRatelimit ? null : 0.26);
 	}
 
 	#endregion
