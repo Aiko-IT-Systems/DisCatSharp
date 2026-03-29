@@ -357,7 +357,7 @@ internal sealed class RestClient : IDisposable
 			else
 				this._logger.LogDebug(LoggerEvents.RatelimitDiag, "Initial request for {bucket} is allowed. Url: {url}", bucket.ToString(), request.Url.AbsoluteUri);
 
-			var req = this.BuildFormRequest(request);
+			using var req = this.BuildFormRequest(request);
 
 			if (this._discord?.DiagnosticsSink.IsEnabled ?? false)
 				this._discord.DiagnosticsSink.AddBreadcrumb("DisCatSharp", "rest", $"{req.Method} {request.Route} (form)", Telemetry.DiagnosticSeverity.Debug, new Dictionary<string, string>
@@ -575,7 +575,7 @@ internal sealed class RestClient : IDisposable
 			else
 				this._logger.LogDebug(LoggerEvents.RatelimitDiag, "Initial request for {bucket} is allowed. Url: {url}", bucket.ToString(), request.Url.AbsoluteUri);
 
-			var req = this.BuildRequest(request);
+			using var req = this.BuildRequest(request);
 
 			if (this._discord?.DiagnosticsSink.IsEnabled ?? false)
 				this._discord.DiagnosticsSink.AddBreadcrumb("DisCatSharp", "rest", $"{req.Method} {request.Route}", Telemetry.DiagnosticSeverity.Debug, new Dictionary<string, string>
