@@ -22,6 +22,11 @@ public class SlashCommandGroupAttribute : Attribute
 	/// <param name="integrationTypes">The allowed integration types of the slash command group.</param>
 	public SlashCommandGroupAttribute(string name, string description, bool isNsfw = false, InteractionContextType[]? allowedContexts = null, ApplicationCommandIntegrationTypes[]? integrationTypes = null)
 	{
+		if (name.Length is 0 or > 32)
+			throw new ArgumentException("Slash command group name must be between 1 and 32 characters.", nameof(name));
+		if (description.Length is 0 or > 100)
+			throw new ArgumentException("Slash command group description must be between 1 and 100 characters.", nameof(description));
+
 		this.Name = name.ToLower();
 		this.Description = description;
 		this.DefaultMemberPermissions = null;
@@ -41,6 +46,11 @@ public class SlashCommandGroupAttribute : Attribute
 	/// <param name="integrationTypes">The allowed integration types of the slash command group.</param>
 	public SlashCommandGroupAttribute(string name, string description, long defaultMemberPermissions, bool isNsfw = false, InteractionContextType[]? allowedContexts = null, ApplicationCommandIntegrationTypes[]? integrationTypes = null)
 	{
+		if (name.Length is 0 or > 32)
+			throw new ArgumentException("Slash command group name must be between 1 and 32 characters.", nameof(name));
+		if (description.Length is 0 or > 100)
+			throw new ArgumentException("Slash command group description must be between 1 and 100 characters.", nameof(description));
+
 		this.Name = name.ToLower();
 		this.Description = description;
 		this.DefaultMemberPermissions = (Permissions)defaultMemberPermissions;

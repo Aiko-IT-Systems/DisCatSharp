@@ -74,15 +74,15 @@ public sealed class ContextMenuAttribute : Attribute
 	/// <summary>
 	///     Gets the allowed contexts of this context menu.
 	/// </summary>
-	public List<InteractionContextType>? AllowedContexts { get; set; }
+	public List<InteractionContextType>? AllowedContexts { get; internal set; }
 
 	/// <summary>
 	///     Gets the allowed integration types of this context menu.
 	/// </summary>
-	public List<ApplicationCommandIntegrationTypes>? IntegrationTypes { get; set; }
+	public List<ApplicationCommandIntegrationTypes>? IntegrationTypes { get; internal set; }
 
 	/// <summary>
 	///     Gets whether this context menu is marked as NSFW.
 	/// </summary>
-	public bool IsNsfw { get; set; }
+	public bool IsNsfw { get; internal set; }
 }

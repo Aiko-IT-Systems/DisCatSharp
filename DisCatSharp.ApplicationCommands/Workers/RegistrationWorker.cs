@@ -47,8 +47,9 @@ internal class RegistrationWorker
 					action.NameLocalizations = command.NameLocalizations;
 					action.Description = command.Description;
 					action.DescriptionLocalizations = command.DescriptionLocalizations;
-					if (command.Options is not null && command.Options.Count is not 0)
-						action.Options = Optional.FromNullable(command.Options);
+					action.Options = command.Options is not null && command.Options.Count is not 0
+						? Optional.FromNullable(command.Options)
+						: Optional.FromNullable<List<DiscordApplicationCommandOption>?>(null);
 					action.DefaultMemberPermissions = command.DefaultMemberPermissions;
 					action.IsNsfw = command.IsNsfw;
 					action.AllowedContexts = command.AllowedContexts;
@@ -80,8 +81,9 @@ internal class RegistrationWorker
 						action.NameLocalizations = command.NameLocalizations;
 						action.Description = command.Description;
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
-						if (command.Options != null && command.Options.Count != 0)
-							action.Options = Optional.FromNullable(command.Options);
+						action.Options = command.Options is not null && command.Options.Count is not 0
+							? Optional.FromNullable(command.Options)
+							: Optional.FromNullable<List<DiscordApplicationCommandOption>?>(null);
 						action.DefaultMemberPermissions = command.DefaultMemberPermissions;
 						action.IsNsfw = command.IsNsfw;
 						action.AllowedContexts = command.AllowedContexts;
@@ -107,8 +109,9 @@ internal class RegistrationWorker
 					action.NameLocalizations = command.NameLocalizations;
 					action.Description = command.Description;
 					action.DescriptionLocalizations = command.DescriptionLocalizations;
-					if (command.Options != null && command.Options.Count != 0)
-						action.Options = Optional.FromNullable(command.Options);
+					action.Options = command.Options is not null && command.Options.Count is not 0
+						? Optional.FromNullable(command.Options)
+						: Optional.FromNullable<List<DiscordApplicationCommandOption>?>(null);
 					action.DefaultMemberPermissions = command.DefaultMemberPermissions;
 					action.IsNsfw = command.IsNsfw;
 					action.AllowedContexts = command.AllowedContexts;
@@ -198,8 +201,9 @@ internal class RegistrationWorker
 					action.NameLocalizations = command.NameLocalizations;
 					action.Description = command.Description;
 					action.DescriptionLocalizations = command.DescriptionLocalizations;
-					if (command.Options != null && command.Options.Count != 0)
-						action.Options = Optional.FromNullable(command.Options);
+					action.Options = command.Options is not null && command.Options.Count is not 0
+						? Optional.FromNullable(command.Options)
+						: Optional.FromNullable<List<DiscordApplicationCommandOption>?>(null);
 					action.DefaultMemberPermissions = command.DefaultMemberPermissions;
 					action.IsNsfw = command.IsNsfw;
 					action.AllowedContexts = command.AllowedContexts;
@@ -230,8 +234,9 @@ internal class RegistrationWorker
 						action.NameLocalizations = command.NameLocalizations;
 						action.Description = command.Description;
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
-						if (command.Options != null && command.Options.Count != 0)
-							action.Options = Optional.FromNullable(command.Options);
+						action.Options = command.Options is not null && command.Options.Count is not 0
+							? Optional.FromNullable(command.Options)
+							: Optional.FromNullable<List<DiscordApplicationCommandOption>?>(null);
 						action.DefaultMemberPermissions = command.DefaultMemberPermissions;
 						action.IsNsfw = command.IsNsfw;
 						action.AllowedContexts = command.AllowedContexts;
@@ -256,8 +261,9 @@ internal class RegistrationWorker
 					action.NameLocalizations = command.NameLocalizations;
 					action.Description = command.Description;
 					action.DescriptionLocalizations = command.DescriptionLocalizations;
-					if (command.Options != null && command.Options.Count != 0)
-						action.Options = Optional.FromNullable(command.Options);
+					action.Options = command.Options is not null && command.Options.Count is not 0
+						? Optional.FromNullable(command.Options)
+						: Optional.FromNullable<List<DiscordApplicationCommandOption>?>(null);
 					if (command.DefaultMemberPermissions.HasValue)
 						action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
 					action.IsNsfw = command.IsNsfw;
@@ -339,7 +345,7 @@ internal class RegistrationWorker
 		if (updateList is null)
 			invalidCommandIds.AddRange(discord.Select(cmd => cmd.Id));
 		else
-			invalidCommandIds.AddRange(from cmd in discord where updateList.All(ul => ul.Name != cmd.Name) select cmd.Id);
+			invalidCommandIds.AddRange(from cmd in discord where updateList.All(ul => ul.Name != cmd.Name || ul.Type != cmd.Type) select cmd.Id);
 
 		return invalidCommandIds;
 	}
@@ -362,7 +368,7 @@ internal class RegistrationWorker
 		if (!success || discord is null || discord.Count is 0)
 			return updateList;
 
-		newCommands.AddRange(updateList.Where(cmd => discord.All(d => d.Name != cmd.Name)));
+		newCommands.AddRange(updateList.Where(cmd => discord.All(d => d.Name != cmd.Name || d.Type != cmd.Type)));
 
 		return newCommands;
 	}
@@ -392,7 +398,7 @@ internal class RegistrationWorker
 			return (null, null);
 
 		foreach (var cmd in updateList)
-			if (discord!.TryGetFirstValueWhere(d => d?.Name == cmd.Name, out var command))
+			if (discord!.TryGetFirstValueWhere(d => d?.Name == cmd.Name && d?.Type == cmd.Type, out var command))
 				if (command.IsEqualTo(cmd, client, true))
 				{
 					if (ApplicationCommandsExtension.DebugEnabled)
@@ -434,7 +440,7 @@ internal class RegistrationWorker
 		if (updateList is null)
 			invalidCommandIds.AddRange(discord.Select(cmd => cmd.Id));
 		else
-			invalidCommandIds.AddRange(from cmd in discord where updateList.All(ul => ul.Name != cmd.Name) select cmd.Id);
+			invalidCommandIds.AddRange(from cmd in discord where updateList.All(ul => ul.Name != cmd.Name || ul.Type != cmd.Type) select cmd.Id);
 
 		if (entryPointCommand is not null && invalidCommandIds.Contains(entryPointCommand.Id))
 			invalidCommandIds.Remove(entryPointCommand.Id);
@@ -461,9 +467,9 @@ internal class RegistrationWorker
 		if (discord is null || discord.Count is 0)
 			return updateList;
 
-		newCommands.AddRange(updateList.Where(cmd => discord.All(d => d.Name != cmd.Name)));
+		newCommands.AddRange(updateList.Where(cmd => discord.All(d => d.Name != cmd.Name || d.Type != cmd.Type)));
 
-		if (entryPointCommand is not null && newCommands.All(command => command.Name != "launch"))
+		if (entryPointCommand is not null && newCommands.All(command => command.Name != entryPointCommand.Name))
 			newCommands.Add(entryPointCommand);
 
 		return newCommands;
@@ -491,7 +497,7 @@ internal class RegistrationWorker
 		Dictionary<ulong, DiscordApplicationCommand> changedCommands = [];
 		List<DiscordApplicationCommand> unchangedCommands = [];
 		foreach (var cmd in updateList)
-			if (discord!.TryGetFirstValueWhere(d => d?.Name == cmd.Name, out var command))
+			if (discord!.TryGetFirstValueWhere(d => d?.Name == cmd.Name && d?.Type == cmd.Type, out var command))
 				if (command.IsEqualTo(cmd, client, false))
 				{
 					if (ApplicationCommandsExtension.DebugEnabled)

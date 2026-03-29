@@ -17,6 +17,9 @@ public class ChannelTypesAttribute : Attribute
 	/// <param name="channelTypes">The channel types to allow.</param>
 	public ChannelTypesAttribute(params ChannelType[] channelTypes)
 	{
+		if (channelTypes.Length is 0)
+			throw new ArgumentException("At least one channel type must be specified.", nameof(channelTypes));
+
 		this.ChannelTypes = [.. channelTypes];
 	}
 

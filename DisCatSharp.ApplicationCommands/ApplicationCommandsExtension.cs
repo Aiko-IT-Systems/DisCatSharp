@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.ApplicationCommands.Attributes;
@@ -42,6 +44,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	internal static ApplicationCommandsConfiguration Configuration { get; set; }
 
 	/// <summary>
+	///     Lock object for synchronizing access to shared static collections.
+	/// </summary>
+	private static readonly Lock s_collectionLock = new();
+
+	/// <summary>
 	///     Sets a list of registered commands. The key is the guild id (null if global).
 	/// </summary>
 	private static readonly List<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> s_registeredCommands = [];
@@ -59,7 +66,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	///     Gets a list of handled interactions. Fix for double interaction execution bug.
 	/// </summary>
-	internal static readonly List<ulong> HandledInteractions = [];
+	internal static readonly ConcurrentDictionary<ulong, byte> HandledInteractions = new();
 
 	/// <summary>
 	///     Fires the application command module ready event.
@@ -363,14 +370,18 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		s_singletonModules.Clear();
 		s_errored = false;
 		ShardCount = 1;
-		CommandMethods.Clear();
-		GroupCommands.Clear();
-		ContextMenuCommands.Clear();
-		SubGroupCommands.Clear();
+		lock (s_collectionLock)
+		{
+			CommandMethods.Clear();
+			GroupCommands.Clear();
+			ContextMenuCommands.Clear();
+			SubGroupCommands.Clear();
+			s_registeredCommands.Clear();
+			GlobalCommandsInternal.Clear();
+			GuildCommandsInternal.Clear();
+		}
+
 		s_singletonModules.Clear();
-		s_registeredCommands.Clear();
-		GlobalCommandsInternal.Clear();
-		GuildCommandsInternal.Clear();
 		s_missingScopeGuildIdsGlobal.Clear();
 		this.MISSING_SCOPE_GUILD_IDS.Clear();
 		HandledInteractions.Clear();
@@ -589,12 +600,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			}
 			else
 			{
-				try
-				{
-					this._updateList.Remove(new(null, new(typeof(DefaultHelpModule))));
-				}
-				catch
-				{ }
+				this._updateList.RemoveAll(x => x.Key is null && x.Value.Type == typeof(DefaultHelpModule));
 
 				commandsPending = this._updateList.Select(x => x.Key).Distinct().ToList();
 			}
@@ -880,7 +886,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								{
 									var actualCommands = regCommands.Distinct().ToList();
 									commands.AddRange(actualCommands);
-									GlobalCommandsInternal.AddRange(actualCommands);
+									lock (s_collectionLock)
+									{
+										GlobalCommandsInternal.AddRange(actualCommands);
+									}
 								}
 							}
 							else if (GlobalDiscordCommands.Count is not 0)
@@ -904,7 +913,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								{
 									var actualCommands = regCommands.Distinct().ToList();
 									commands.AddRange(actualCommands);
-									GuildCommandsInternal.Add(guildId.Value, actualCommands);
+									lock (s_collectionLock)
+									{
+										GuildCommandsInternal.Add(guildId.Value, actualCommands);
+									}
 									try
 									{
 										if (this.Client.Guilds.TryGetValue(guildId.Value, out var guild))
@@ -948,12 +960,15 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					}
 
 					//Adds to the global lists finally
-					CommandMethods.AddRange(commandMethods.DistinctBy(x => x.Name));
-					GroupCommands.AddRange(groupCommands.DistinctBy(x => x.Name));
-					SubGroupCommands.AddRange(subGroupCommands.DistinctBy(x => x.Name));
-					ContextMenuCommands.AddRange(contextMenuCommands.DistinctBy(x => x.Name));
+					lock (s_collectionLock)
+					{
+						CommandMethods.AddRange(commandMethods.DistinctBy(x => x.Name));
+						GroupCommands.AddRange(groupCommands.DistinctBy(x => x.Name));
+						SubGroupCommands.AddRange(subGroupCommands.DistinctBy(x => x.Name));
+						ContextMenuCommands.AddRange(contextMenuCommands.DistinctBy(x => x.Name));
 
-					s_registeredCommands.Add(new(guildId, commands.ToList()));
+						s_registeredCommands.Add(new(guildId, commands.ToList()));
+					}
 
 					foreach (var app in commandMethods.Select(command => types.First(t => t.Type == command.Method.DeclaringType)))
 					{ }
@@ -997,12 +1012,15 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		}
 		else if (IsCalledByUnitTest)
 		{
-			CommandMethods.AddRange(commandMethods.DistinctBy(x => x.Name));
-			GroupCommands.AddRange(groupCommands.DistinctBy(x => x.Name));
-			SubGroupCommands.AddRange(subGroupCommands.DistinctBy(x => x.Name));
-			ContextMenuCommands.AddRange(contextMenuCommands.DistinctBy(x => x.Name));
+			lock (s_collectionLock)
+			{
+				CommandMethods.AddRange(commandMethods.DistinctBy(x => x.Name));
+				GroupCommands.AddRange(groupCommands.DistinctBy(x => x.Name));
+				SubGroupCommands.AddRange(subGroupCommands.DistinctBy(x => x.Name));
+				ContextMenuCommands.AddRange(contextMenuCommands.DistinctBy(x => x.Name));
 
-			s_registeredCommands.Add(new(guildId, unitTestCommands.ToList()));
+				s_registeredCommands.Add(new(guildId, unitTestCommands.ToList()));
+			}
 
 			foreach (var app in commandMethods.Select(command => types.First(t => t.Type == command.Method.DeclaringType)))
 			{ }
@@ -1110,13 +1128,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	private Task InteractionHandler(DiscordClient client, InteractionCreateEventArgs e)
 	{
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Got slash interaction on shard {shard}", this.Client.ShardId);
-		if (HandledInteractions.Contains(e.Interaction.Id) || (e.Interaction is { GuildId: not null, AuthorizingIntegrationOwners.GuildInstallKey: not null } && !client.Guilds.ContainsKey(e.Interaction.GuildId.Value)))
+		if (!HandledInteractions.TryAdd(e.Interaction.Id, 0) || (e.Interaction is { GuildId: not null, AuthorizingIntegrationOwners.GuildInstallKey: not null } && !client.Guilds.ContainsKey(e.Interaction.GuildId.Value)))
 		{
 			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Ignoring, already received or wrong shard");
 			return Task.FromResult(true);
 		}
-
-		HandledInteractions.Add(e.Interaction.Id);
 
 		_ = Task.Run(async () =>
 		{
@@ -1164,9 +1180,15 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							throw new InvalidOperationException("Application commands failed to register properly on startup.");
 						}
 
-						var methods = CommandMethods.Where(x => x.CommandId == e.Interaction.Data.Id).ToList();
-						var groups = GroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id).ToList();
-						var subgroups = SubGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id).ToList();
+						List<CommandMethod> methods;
+						List<GroupCommand> groups;
+						List<SubGroupCommand> subgroups;
+						lock (s_collectionLock)
+						{
+							methods = CommandMethods.Where(x => x.CommandId == e.Interaction.Data.Id).ToList();
+							groups = GroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id).ToList();
+							subgroups = SubGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id).ToList();
+						}
 						if (methods.Count is 0 && groups.Count is 0 && subgroups.Count is 0)
 						{
 							await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("An application command was executed, but no command was registered for it.").AsEphemeral()).ConfigureAwait(false);
@@ -1238,9 +1260,15 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					throw new InvalidOperationException("Application commands failed to register properly on startup.");
 				case InteractionType.AutoComplete:
 				{
-					var methods = CommandMethods.Where(x => x.CommandId == e.Interaction.Data.Id).ToList();
-					var groups = GroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id).ToList();
-					var subgroups = SubGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id).ToList();
+					List<CommandMethod> methods;
+					List<GroupCommand> groups;
+					List<SubGroupCommand> subgroups;
+					lock (s_collectionLock)
+					{
+						methods = CommandMethods.Where(x => x.CommandId == e.Interaction.Data.Id).ToList();
+						groups = GroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id).ToList();
+						subgroups = SubGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id).ToList();
+					}
 					if (methods.Count is 0 && groups.Count is 0 && subgroups.Count is 0)
 						throw new InvalidOperationException("An autocomplete interaction was created, but no command was registered for it");
 
@@ -1407,13 +1435,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	private Task ContextMenuHandler(DiscordClient client, ContextMenuInteractionCreateEventArgs e)
 	{
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Got context menu interaction on shard {shard}", this.Client.ShardId);
-		if (HandledInteractions.Contains(e.Interaction.Id))
+		if (!HandledInteractions.TryAdd(e.Interaction.Id, 0))
 		{
 			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Ignoring, already received");
 			return Task.FromResult(true);
 		}
-
-		HandledInteractions.Add(e.Interaction.Id);
 
 		_ = Task.Run(async () =>
 		{
@@ -1458,7 +1484,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				}
 
 				//Gets the method for the command
-				var method = ContextMenuCommands.FirstOrDefault(x => x.CommandId == e.Interaction.Data.Id);
+				ContextMenuCommand? method;
+				lock (s_collectionLock)
+				{
+					method = ContextMenuCommands.FirstOrDefault(x => x.CommandId == e.Interaction.Data.Id);
+				}
 
 				if (method == null)
 				{
@@ -1726,8 +1756,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					args.Add((bool?)option.Value);
 				else if (parameter.ParameterType == typeof(double) || parameter.ParameterType == typeof(double?))
 					args.Add((double?)option.Value);
-				else if (parameter.ParameterType == typeof(int) || parameter.ParameterType == typeof(int?))
-					args.Add((int?)option.Value);
 				else if (parameter.ParameterType == typeof(DiscordAttachment))
 				{
 					//Checks through resolved

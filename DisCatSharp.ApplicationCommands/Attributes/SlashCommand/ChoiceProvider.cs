@@ -12,9 +12,10 @@ namespace DisCatSharp.ApplicationCommands.Attributes;
 public abstract class ChoiceProvider : IChoiceProvider
 {
 	/// <summary>
-	///     Sets the service provider.
+	///     Gets or sets the service provider. This property is injected by the framework
+	///     during command registration and will be available when <see cref="Provider" /> is called.
 	/// </summary>
-	public IServiceProvider Services { get; set; }
+	public IServiceProvider Services { get; set; } = null!;
 
 	/// <summary>
 	///     The optional ID of the Guild the command got registered for.

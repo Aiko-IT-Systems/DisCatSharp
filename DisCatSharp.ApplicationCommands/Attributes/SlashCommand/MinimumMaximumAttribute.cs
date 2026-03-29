@@ -93,8 +93,11 @@ public class MinimumLengthAttribute : Attribute
 	/// </summary>
 	public MinimumLengthAttribute(int value)
 	{
-		if (value > 600)
-			throw new ArgumentException("Minimum cannot be more than 6000.");
+		if (value < 0)
+			throw new ArgumentException("Minimum length cannot be negative.");
+
+		if (value > 6000)
+			throw new ArgumentException("Minimum length cannot be more than 6000.");
 
 		this.Value = value;
 	}
@@ -116,7 +119,7 @@ public class MaximumLengthAttribute : Attribute
 	/// </summary>
 	public MaximumLengthAttribute(int value)
 	{
-		if (value == 0 || value > 600)
+		if (value is 0 || value > 6000)
 			throw new ArgumentException("Maximum length cannot be less than 1 and cannot be more than 6000.");
 
 		this.Value = value;

@@ -44,14 +44,14 @@ internal class CommandWorker
 
 			DiscordApplicationCommandLocalization? nameLocalizations = null;
 
-			var commandTranslation = translator?.Single(c => c.Name == contextAttribute.Name && c.Type == contextAttribute.Type);
+			var commandTranslation = translator?.SingleOrDefault(c => c.Name == contextAttribute.Name && c.Type == contextAttribute.Type);
 			if (commandTranslation is not null)
 				nameLocalizations = commandTranslation.NameTranslations;
 
 			var command = new DiscordApplicationCommand(contextAttribute.Name, null, null, contextAttribute.Type, nameLocalizations, null, contextAttribute.DefaultMemberPermissions, contextAttribute.IsNsfw, contextAttribute.AllowedContexts, contextAttribute.IntegrationTypes);
 
 			var parameters = contextMethod.GetParameters();
-			if (parameters.Length is 0 || parameters is null || !ReferenceEquals(parameters.FirstOrDefault()?.ParameterType, typeof(ContextMenuContext)))
+			if (parameters is null || parameters.Length is 0 || !ReferenceEquals(parameters.FirstOrDefault()?.ParameterType, typeof(ContextMenuContext)))
 				throw new ArgumentException($"The first argument of the command '{contextAttribute.Name}' has to be an ContextMenuContext!");
 			if (parameters.Length > 1)
 				throw new ArgumentException($"The context menu command '{contextAttribute.Name}' cannot have parameters!");
@@ -96,7 +96,7 @@ internal class CommandWorker
 				var commandAttribute = method.GetCustomAttribute<SlashCommandAttribute>();
 
 				var parameters = method.GetParameters();
-				if (parameters.Length is 0 || parameters is null || !ReferenceEquals(parameters.FirstOrDefault()?.ParameterType, typeof(InteractionContext)))
+				if (parameters is null || parameters.Length is 0 || !ReferenceEquals(parameters.FirstOrDefault()?.ParameterType, typeof(InteractionContext)))
 					throw new ArgumentException($"The first argument of the command '{commandAttribute.Name}' has to be an InteractionContext!");
 
 				var options = await ApplicationCommandsExtension.ParseParametersAsync(parameters.Skip(1), commandAttribute.Name, guildId).ConfigureAwait(false);
@@ -111,7 +111,7 @@ internal class CommandWorker
 				DiscordApplicationCommandLocalization? descriptionLocalizations = null;
 				List<DiscordApplicationCommandOption>? localizedOptions = null;
 
-				var commandTranslation = translator?.Single(c => c.Name == commandAttribute.Name && c.Type is ApplicationCommandType.ChatInput);
+				var commandTranslation = translator?.SingleOrDefault(c => c.Name == commandAttribute.Name && c.Type is ApplicationCommandType.ChatInput);
 
 				if (commandTranslation is { Options: not null })
 				{
@@ -124,7 +124,7 @@ internal class CommandWorker
 								foreach (var choice in option.Choices)
 									try
 									{
-										choices.Add(new(choice.Name, choice.Value, commandTranslation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations));
+										choices.Add(new(choice.Name, choice.Value, commandTranslation.Options.SingleOrDefault(o => o.Name == option.Name)?.Choices?.SingleOrDefault(c => c.Name == choice.Name)?.NameTranslations));
 									}
 									catch (Exception ex)
 									{
@@ -133,7 +133,7 @@ internal class CommandWorker
 
 							localizedOptions.Add(new(option.Name, option.Description, option.Type, option.Required,
 								choices, option.Options, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
-								commandTranslation.Options.Single(o => o.Name == option.Name).NameTranslations, commandTranslation.Options.Single(o => o.Name == option.Name).DescriptionTranslations,
+								commandTranslation.Options.SingleOrDefault(o => o.Name == option.Name)?.NameTranslations, commandTranslation.Options.SingleOrDefault(o => o.Name == option.Name)?.DescriptionTranslations,
 								option.MinimumLength, option.MaximumLength
 							));
 						}
@@ -201,7 +201,7 @@ internal class NestedCommandWorker
 			DiscordApplicationCommandLocalization? nameLocalizations = null;
 			DiscordApplicationCommandLocalization? descriptionLocalizations = null;
 
-			var groupCommandTranslation = translator?.Single(c => c.Name == groupAttribute.Name);
+			var groupCommandTranslation = translator?.SingleOrDefault(c => c.Name == groupAttribute.Name);
 			if (groupCommandTranslation is not null)
 			{
 				nameLocalizations = groupCommandTranslation.NameTranslations;
@@ -221,7 +221,7 @@ internal class NestedCommandWorker
 
 				//Gets the parameters and accounts for InteractionContext
 				var parameters = submethod.GetParameters();
-				if (parameters.Length is 0 || parameters is null || !ReferenceEquals(parameters.First().ParameterType, typeof(InteractionContext)))
+				if (parameters is null || parameters.Length is 0 || !ReferenceEquals(parameters.First().ParameterType, typeof(InteractionContext)))
 					throw new ArgumentException($"The first argument of the command '{commandAttribute.Name}' has to be an InteractionContext!");
 
 				var options = await ApplicationCommandsExtension.ParseParametersAsync(parameters.Skip(1), commandAttribute.Name, guildId).ConfigureAwait(false);
@@ -230,9 +230,9 @@ internal class NestedCommandWorker
 				DiscordApplicationCommandLocalization? subDescriptionLocalizations = null;
 				List<DiscordApplicationCommandOption>? localizedOptions = null;
 
-				var commandTranslation = translator?.Single(c => c.Name == payload.Name);
+				var commandTranslation = translator?.SingleOrDefault(c => c.Name == payload.Name);
 
-				var subCommandTranslation = commandTranslation?.Commands?.Single(sc => sc.Name == commandAttribute.Name);
+				var subCommandTranslation = commandTranslation?.Commands?.SingleOrDefault(sc => sc.Name == commandAttribute.Name);
 				if (subCommandTranslation is not null)
 				{
 					if (subCommandTranslation.Options is not null)
@@ -242,11 +242,11 @@ internal class NestedCommandWorker
 						{
 							var choices = option.Choices is not null ? new List<DiscordApplicationCommandOptionChoice>(option.Choices.Count) : null;
 							if (option.Choices is not null && choices is not null)
-								choices.AddRange(option.Choices.Select(choice => new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, subCommandTranslation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations)));
+								choices.AddRange(option.Choices.Select(choice => new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, subCommandTranslation.Options.SingleOrDefault(o => o.Name == option.Name)?.Choices?.SingleOrDefault(c => c.Name == choice.Name)?.NameTranslations)));
 
 							localizedOptions.Add(new(option.Name, option.Description, option.Type, option.Required,
 								choices, option.Options, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
-								subCommandTranslation.Options.Single(o => o.Name == option.Name).NameTranslations, subCommandTranslation.Options.Single(o => o.Name == option.Name).DescriptionTranslations,
+								subCommandTranslation.Options.SingleOrDefault(o => o.Name == option.Name)?.NameTranslations, subCommandTranslation.Options.SingleOrDefault(o => o.Name == option.Name)?.DescriptionTranslations,
 								option.MinimumLength, option.MaximumLength
 							));
 						}
@@ -263,12 +263,13 @@ internal class NestedCommandWorker
 
 				//Adds it to the method lists
 				commandMethods.Add(new(commandAttribute.Name, submethod));
-				groupCommands.Add(new()
-				{
-					Name = groupAttribute.Name,
-					Methods = commandMethods
-				});
 			}
+
+			groupCommands.Add(new()
+			{
+				Name = groupAttribute.Name,
+				Methods = commandMethods
+			});
 
 			var command = new SubGroupCommand
 			{
@@ -287,10 +288,10 @@ internal class NestedCommandWorker
 				DiscordApplicationCommandLocalization? subNameLocalizations = null;
 				DiscordApplicationCommandLocalization? subDescriptionLocalizations = null;
 
-				var subGroupCommandTranslation = translator?.Single(c => c.Name == payload.Name);
+				var subGroupCommandTranslation = translator?.SingleOrDefault(c => c.Name == payload.Name);
 				if (subGroupCommandTranslation is { SubGroups: not null })
 				{
-					var subCommandTranslation = subGroupCommandTranslation?.SubGroups.Single(sc => sc.Name == subgroupAttribute.Name);
+					var subCommandTranslation = subGroupCommandTranslation?.SubGroups?.SingleOrDefault(sc => sc.Name == subgroupAttribute.Name);
 
 					if (subCommandTranslation is not null)
 					{
@@ -305,7 +306,7 @@ internal class NestedCommandWorker
 					var suboptions = new List<DiscordApplicationCommandOption>();
 					var commatt = subsubmethod.GetCustomAttribute<SlashCommandAttribute>();
 					var parameters = subsubmethod.GetParameters();
-					if (parameters.Length is 0 || parameters is null || !ReferenceEquals(parameters.First().ParameterType, typeof(InteractionContext)))
+					if (parameters is null || parameters.Length is 0 || !ReferenceEquals(parameters.First().ParameterType, typeof(InteractionContext)))
 						throw new ArgumentException($"The first argument of the command '{subgroupAttribute.Name}' has to be an InteractionContext!");
 
 					suboptions = [.. suboptions, .. await ApplicationCommandsExtension.ParseParametersAsync(parameters.Skip(1), subgroupAttribute.Name, guildId).ConfigureAwait(false)];
@@ -314,11 +315,11 @@ internal class NestedCommandWorker
 					DiscordApplicationCommandLocalization? subSubDescriptionLocalizations = null;
 					List<DiscordApplicationCommandOption>? localizedOptions = null;
 
-					var commandTranslation = translator?.Single(c => c.Name == payload.Name);
+					var commandTranslation = translator?.SingleOrDefault(c => c.Name == payload.Name);
 
-					var subCommandTranslation = commandTranslation?.SubGroups?.Single(sc => sc.Name == subgroupAttribute.Name);
+					var subCommandTranslation = commandTranslation?.SubGroups?.SingleOrDefault(sc => sc.Name == subgroupAttribute.Name);
 
-					var subSubCommandTranslation = subCommandTranslation?.Commands.Single(sc => sc.Name == commatt.Name);
+					var subSubCommandTranslation = subCommandTranslation?.Commands?.SingleOrDefault(sc => sc.Name == commatt.Name);
 
 					if (subSubCommandTranslation is { Options: not null })
 					{
@@ -327,11 +328,11 @@ internal class NestedCommandWorker
 						{
 							var choices = option.Choices is not null ? new List<DiscordApplicationCommandOptionChoice>(option.Choices.Count) : null;
 							if (option.Choices is not null && choices is not null)
-								choices.AddRange(option.Choices.Select(choice => new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, subSubCommandTranslation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations)));
+								choices.AddRange(option.Choices.Select(choice => new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, subSubCommandTranslation.Options.SingleOrDefault(o => o.Name == option.Name)?.Choices?.SingleOrDefault(c => c.Name == choice.Name)?.NameTranslations)));
 
 							localizedOptions.Add(new(option.Name, option.Description, option.Type, option.Required,
 								choices, option.Options, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
-								subSubCommandTranslation.Options.Single(o => o.Name == option.Name).NameTranslations, subSubCommandTranslation.Options.Single(o => o.Name == option.Name).DescriptionTranslations,
+								subSubCommandTranslation.Options.SingleOrDefault(o => o.Name == option.Name)?.NameTranslations, subSubCommandTranslation.Options.SingleOrDefault(o => o.Name == option.Name)?.DescriptionTranslations,
 								option.MinimumLength, option.MaximumLength
 							));
 						}
