@@ -19,6 +19,12 @@ public class RingBuffer<T> : ICollection<T>
 	private bool _reachedEnd;
 
 	/// <summary>
+	///     Tracks which slots have been explicitly written. Required to correctly distinguish
+	///     uninitialised default-valued struct slots from slots that have been written with Add.
+	/// </summary>
+	private bool[] _occupied;
+
+	/// <summary>
 	///     Creates a new ring buffer with specified size.
 	/// </summary>
 	/// <param name="size">Size of the buffer to create.</param>
@@ -31,6 +37,7 @@ public class RingBuffer<T> : ICollection<T>
 		this.CurrentIndex = 0;
 		this.Capacity = size;
 		this.InternalBuffer = new T[this.Capacity];
+		this._occupied = new bool[this.Capacity];
 	}
 
 	/// <summary>
@@ -60,7 +67,10 @@ public class RingBuffer<T> : ICollection<T>
 		this.Capacity = this.InternalBuffer.Length;
 
 		if (this.CurrentIndex >= this.InternalBuffer.Length || this.CurrentIndex < 0)
-			throw new ArgumentOutOfRangeException(nameof(index), "Index must be less than buffer capacity, and greater than zero.");
+			throw new ArgumentOutOfRangeException(nameof(index), "Index must be less than buffer capacity, and greater than or equal to zero.");
+
+		this._occupied = new bool[this.Capacity];
+		Array.Fill(this._occupied, true); // all slots pre-filled from the provided elements
 	}
 
 	/// <summary>
@@ -96,6 +106,7 @@ public class RingBuffer<T> : ICollection<T>
 	/// <param name="item">Item to insert.</param>
 	public void Add(T item)
 	{
+		this._occupied[this.CurrentIndex] = true;
 		this.InternalBuffer[this.CurrentIndex++] = item;
 
 		if (this.CurrentIndex == this.Capacity)
@@ -111,6 +122,7 @@ public class RingBuffer<T> : ICollection<T>
 	public void Clear()
 	{
 		this.InternalBuffer.Populate(default);
+		Array.Clear(this._occupied, 0, this._occupied.Length);
 		this.CurrentIndex = 0;
 	}
 
@@ -130,10 +142,10 @@ public class RingBuffer<T> : ICollection<T>
 	/// <param name="index">Index starting at which to copy the items to.</param>
 	public void CopyTo(T[] array, int index)
 	{
-		if (array.Length - index < 1)
+		if (array.Length - index < this.Count)
 			throw new ArgumentException("Target array is too small to contain the elements from this buffer.", nameof(array));
 
-		var ci = 0;
+		var ci = index;
 		for (var i = this.CurrentIndex; i < this.InternalBuffer.Length; i++)
 			array[ci++] = this.InternalBuffer[i];
 		for (var i = 0; i < this.CurrentIndex; i++)
@@ -176,14 +188,14 @@ public class RingBuffer<T> : ICollection<T>
 	public bool TryGet(Func<T, bool> predicate, out T item)
 	{
 		for (var i = this.CurrentIndex; i < this.InternalBuffer.Length; i++)
-			if (this.InternalBuffer[i] != null && predicate(this.InternalBuffer[i]))
+			if (this._occupied[i] && predicate(this.InternalBuffer[i]))
 			{
 				item = this.InternalBuffer[i];
 				return true;
 			}
 
 		for (var i = 0; i < this.CurrentIndex; i++)
-			if (this.InternalBuffer[i] != null && predicate(this.InternalBuffer[i]))
+			if (this._occupied[i] && predicate(this.InternalBuffer[i]))
 			{
 				item = this.InternalBuffer[i];
 				return true;
