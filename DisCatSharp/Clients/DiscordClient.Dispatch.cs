@@ -1743,6 +1743,12 @@ public sealed partial class DiscordClient
 	internal async Task OnStickersUpdatedAsync(IEnumerable<DiscordSticker> newStickers, ulong guildId)
 	{
 		var guild = this.InternalGetCachedGuild(guildId);
+		if (guild is null)
+		{
+			this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received guild_stickers_update for unknown guild {GuildId}, skipping.", guildId);
+			return;
+		}
+
 		var oldStickers = new ConcurrentDictionary<ulong, DiscordSticker>(guild.StickersInternal);
 		guild.StickersInternal.Clear();
 
