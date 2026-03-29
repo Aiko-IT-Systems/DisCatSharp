@@ -142,7 +142,7 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 		DiagnosticSeverity.Warning,
 		true,
 		new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionBanDeleteMessageDaysMigration), Resources.ResourceManager, typeof(Resources)),
-		"https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0301");
+		"https://docs.dcs.aitsys.dev/vs/analyzer/dcs/1102");
 
 	/// <inheritdoc />
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
