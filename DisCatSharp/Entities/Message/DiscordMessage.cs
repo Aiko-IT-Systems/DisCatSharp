@@ -103,7 +103,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 			var cid = this.ChannelId.ToString(CultureInfo.InvariantCulture);
 			var mid = this.Id.ToString(CultureInfo.InvariantCulture);
 
-			var baseUrl = this.Discord.Configuration.ApiChannel switch
+			var baseUrl = this.Discord.Configuration.Api.Channel switch
 			{
 				ApiChannel.Stable => "discord.com",
 				ApiChannel.Ptb => "ptb.discord.com",

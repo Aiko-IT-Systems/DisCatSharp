@@ -80,13 +80,13 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <summary>
 	///     Gets the total number of shards the bot is connected to.
 	/// </summary>
-	public int ShardCount => this.GatewayInfo?.ShardCount ?? this.Configuration.ShardCount;
+	public int ShardCount => this.GatewayInfo?.ShardCount ?? this.Configuration.Gateway.ShardCount;
 
 	/// <summary>
 	///     Gets the currently connected shard ID.
 	/// </summary>
 	public int ShardId
-		=> this.Configuration.ShardId;
+		=> this.Configuration.Gateway.ShardId;
 
 	/// <summary>
 	///     Gets the intents configured for this client.
@@ -216,11 +216,11 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public DiscordClient(DiscordConfiguration config)
 		: base(config)
 	{
-		if (this.Configuration.MessageCacheSize > 0)
+		if (this.Configuration.Cache.MessageCacheSize > 0)
 		{
 			var intents = this.Configuration.Intents;
 			this.MessageCache = intents.HasIntent(DiscordIntents.GuildMessages) || intents.HasIntent(DiscordIntents.DirectMessages)
-				? new RingBuffer<DiscordMessage>(this.Configuration.MessageCacheSize)
+				? new RingBuffer<DiscordMessage>(this.Configuration.Cache.MessageCacheSize)
 				: null;
 		}
 
@@ -431,18 +431,18 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			this.Logger.LogInformation(LoggerEvents.Startup, "Library {LibraryName}, Version {LibraryVersion}, Commit {CommitHash}", this.BotLibrary, version, commit);
 		}
 
-		if (!this.Configuration.DisableUpdateCheck)
+		if (!this.Configuration.Diagnostics.UpdateChecks.Disabled)
 		{
 			this.Logger.LogInformation("Checking versions..");
-			await Utilities.CheckVersionAsync(this, true, this.IsShard, githubToken: this.Configuration.UpdateCheckGitHubToken, includePrerelease: this.Configuration.IncludePrereleaseInUpdateCheck, checkMode: this.Configuration.UpdateCheckMode);
+			await Utilities.CheckVersionAsync(this, true, this.IsShard, githubToken: this.Configuration.Diagnostics.UpdateChecks.GitHubToken, includePrerelease: this.Configuration.Diagnostics.UpdateChecks.IncludePrerelease, checkMode: this.Configuration.Diagnostics.UpdateChecks.Mode);
 			foreach (var extension in this._extensions.Where(extension => extension.HasVersionCheckSupport))
-				await Utilities.CheckVersionAsync(this, true, this.IsShard, extension.RepositoryOwner, extension.Repository, extension.PackageId, extension.VersionString, this.Configuration.UpdateCheckGitHubToken, this.Configuration.IncludePrereleaseInUpdateCheck, this.Configuration.UpdateCheckMode);
+				await Utilities.CheckVersionAsync(this, true, this.IsShard, extension.RepositoryOwner, extension.Repository, extension.PackageId, extension.VersionString, this.Configuration.Diagnostics.UpdateChecks.GitHubToken, this.Configuration.Diagnostics.UpdateChecks.IncludePrerelease, this.Configuration.Diagnostics.UpdateChecks.Mode);
 			this.Logger.LogInformation("Done");
 		}
 		else
 			this.Logger.LogInformation("Skipped version check");
 
-		while (i-- > 0 || this.Configuration.ReconnectIndefinitely)
+		while (i-- > 0 || this.Configuration.Gateway.ReconnectIndefinitely)
 			try
 			{
 				await this.InternalConnectAsync().ConfigureAwait(false);
@@ -469,7 +469,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				FailConnection(null);
 
 				cex = ex;
-				if (i <= 0 && !this.Configuration.ReconnectIndefinitely) break;
+				if (i <= 0 && !this.Configuration.Gateway.ReconnectIndefinitely) break;
 
 				this.Logger.LogError(LoggerEvents.ConnectionFailure, ex, "Connection attempt failed, retrying in {Seconds}s", w / 1000);
 				await Task.Delay(w, this._cancelToken).ConfigureAwait(false);
@@ -484,24 +484,24 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			throw new("Could not connect to Discord.", cex);
 		}
 
-		if (this.Configuration is { AutoFetchSkuIds: false, AutoFetchApplicationEmojis: false })
+		if (this.Configuration.Cache is { AutoFetchSkuIds: false, AutoFetchApplicationEmojis: false })
 			return;
 
-		if (this.Configuration.AutoFetchSkuIds)
+		if (this.Configuration.Cache.AutoFetchSkuIds)
 			try
 			{
 				var skus = await this.ApiClient.GetSkusAsync(this.CurrentApplication.Id).ConfigureAwait(false);
 				if (!skus.Any())
 					return;
 
-				this.Configuration.SkuId = skus.FirstOrDefault(x => x.Type is SkuType.Subscription)?.Id;
+				this.Configuration.Cache.SkuId = skus.FirstOrDefault(x => x.Type is SkuType.Subscription)?.Id;
 			}
 			catch (Exception ex)
 			{
 				this.Logger.LogError(LoggerEvents.Startup, ex, "Failed to fetch SKU IDs");
 			}
 
-		if (this.Configuration.AutoFetchApplicationEmojis)
+		if (this.Configuration.Cache.AutoFetchApplicationEmojis)
 			try
 			{
 				await this.ApiClient.GetApplicationEmojisAsync(this.CurrentApplication.Id);
@@ -531,7 +531,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	public async Task DisconnectAsync()
 	{
-		this.Configuration.AutoReconnect = false;
+		this.Configuration.Gateway.AutoReconnect = false;
 		if (this.WebSocketClient is not null)
 			await this.WebSocketClient.DisconnectAsync().ConfigureAwait(false);
 	}
@@ -1796,7 +1796,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	private void TrimAggregatePresenceCacheUnsafe()
 	{
-		var capacity = this.Configuration.PresenceCacheSize;
+		var capacity = this.Configuration.Cache.PresenceCacheSize;
 		if (capacity <= 0)
 			return;
 
@@ -2056,10 +2056,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 			if (!guild.MembersInternal.TryGetValue(usr.Id, out var member))
 			{
-				if (intents.HasIntent(DiscordIntents.GuildMembers) || this.Configuration.AlwaysCacheMembers) // member can be updated by events, so cache it
+				if (intents.HasIntent(DiscordIntents.GuildMembers) || this.Configuration.Cache.AlwaysCacheMembers) // member can be updated by events, so cache it
 					guild.MembersInternal.TryAdd(usr.Id, (DiscordMember)usr);
 			}
-			else if (intents.HasIntent(DiscordIntents.GuildPresences) || this.Configuration.AlwaysCacheMembers) // we can attempt to update it if it's already in cache.
+			else if (intents.HasIntent(DiscordIntents.GuildPresences) || this.Configuration.Cache.AlwaysCacheMembers) // we can attempt to update it if it's already in cache.
 				if (!intents.HasIntent(DiscordIntents.GuildMembers)) // no need to update if we already have the member events
 					_ = guild.MembersInternal.TryUpdate(usr.Id, (DiscordMember)usr, member);
 		}
@@ -2381,7 +2381,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		foreach (var xr in message.ReactionsInternal)
 			xr.Emoji.Discord = this;
 
-		if (this.Configuration.MessageCacheSize > 0 && message.Channel is not null)
+		if (this.Configuration.Cache.MessageCacheSize > 0 && message.Channel is not null)
 			this.MessageCache?.Add(message);
 	}
 

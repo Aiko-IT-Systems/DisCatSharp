@@ -33,24 +33,24 @@ public sealed partial class DiscordShardedClient : IDisposable
 	{
 		this.InternalSetup();
 
-		if (config.ShardCount > 1)
+		if (config.Gateway.ShardCount > 1)
 			this._manuallySharding = true;
 
 		this._configuration = config;
 		this.ShardClients = new ReadOnlyConcurrentDictionary<int, DiscordClient>(this._shards);
 
-		if (this._configuration.CustomSentryDsn != null)
-			BaseDiscordClient.SentryDsn = this._configuration.CustomSentryDsn;
+		if (this._configuration.Telemetry.CustomSentryDsn != null)
+			BaseDiscordClient.SentryDsn = this._configuration.Telemetry.CustomSentryDsn;
 
-		if (this._configuration.LoggerFactory is null)
+		if (this._configuration.Logging.LoggerFactory is null)
 		{
-			this._configuration.LoggerFactory = new DefaultLoggerFactory();
-			this._configuration.LoggerFactory.AddProvider(new DefaultLoggerProvider(this._configuration.MinimumLogLevel, this._configuration.LogTimestampFormat));
+			this._configuration.Logging.LoggerFactory = new DefaultLoggerFactory();
+			this._configuration.Logging.LoggerFactory.AddProvider(new DefaultLoggerProvider(this._configuration.Logging.MinimumLogLevel, this._configuration.Logging.LogTimestampFormat));
 		}
 
 		this.DiagnosticsSink = TelemetryBootstrap.CreateSink(this._configuration);
 
-		this._configuration.HasShardLogger = true;
+		this._configuration.Logging.HasShardLogger = true;
 
 		var a = typeof(DiscordClient).GetTypeInfo().Assembly;
 
@@ -66,7 +66,7 @@ public sealed partial class DiscordShardedClient : IDisposable
 				this.VersionString = $"{vs}, CI build {v.Revision}";
 		}
 
-		this.Logger ??= this._configuration.LoggerFactory!.CreateLogger<BaseDiscordClient>();
+		this.Logger ??= this._configuration.Logging.LoggerFactory!.CreateLogger<BaseDiscordClient>();
 	}
 
 	#endregion
@@ -83,16 +83,14 @@ public sealed partial class DiscordShardedClient : IDisposable
 			return this._shards.Count;
 
 		this.GatewayInfo = await this.GetGatewayInfoAsync().ConfigureAwait(false);
-		var shardCount = this._configuration.ShardCount == 1 ? this.GatewayInfo.ShardCount : this._configuration.ShardCount;
+		var shardCount = this._configuration.Gateway.ShardCount == 1 ? this.GatewayInfo.ShardCount : this._configuration.Gateway.ShardCount;
 		var lf = new ShardedLoggerFactory(this.Logger);
 		for (var i = 0; i < shardCount; i++)
 		{
-			var cfg = new DiscordConfiguration(this._configuration)
-			{
-				ShardId = i,
-				ShardCount = shardCount,
-				LoggerFactory = lf
-			};
+			var cfg = new DiscordConfiguration(this._configuration);
+			cfg.Gateway.ShardId = i;
+			cfg.Gateway.ShardCount = shardCount;
+			cfg.Logging.LoggerFactory = lf;
 
 			var client = CreateShardClient(cfg);
 			if (!this._shards.TryAdd(i, client))
@@ -183,13 +181,13 @@ public sealed partial class DiscordShardedClient : IDisposable
 	///     Gets the current api channel.
 	/// </summary>
 	public ApiChannel ApiChannel
-		=> this._configuration.ApiChannel;
+		=> this._configuration.Api.Channel;
 
 	/// <summary>
 	///     Gets the current api version.
 	/// </summary>
 	public string ApiVersion
-		=> $"v{this._configuration.ApiVersion}";
+		=> $"v{this._configuration.Api.Version}";
 
 	/// <summary>
 	///     Gets the bot library name.

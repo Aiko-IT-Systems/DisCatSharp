@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -49,7 +49,7 @@ public sealed partial class DiscordClient
 				["event_name"] = payload.EventName ?? "unknown"
 			});
 
-		if ((this.Configuration?.EnableLibraryDeveloperMode ?? false) || (this.Configuration?.EnablePayloadReceivedEvent ?? false))
+		if ((this.Configuration?.Telemetry.EnableLibraryDeveloperMode ?? false) || (this.Configuration?.Diagnostics.EnablePayloadReceivedEvent ?? false))
 			await this._payloadReceived.InvokeAsync(this, new(this.ServiceProvider)
 			{
 				EventName = payload.EventName,
@@ -1100,7 +1100,7 @@ public sealed partial class DiscordClient
 
 		cachedGuild.ChannelsInternal[channel.Id] = channel;
 
-		/*if (this.Configuration.AutoRefreshChannelCache)
+		/*if (this.Configuration.Cache.AutoRefreshChannelCache)
             {
                 await this.RefreshChannelsAsync(channel.Guild.Id);
             }*/
@@ -1207,14 +1207,14 @@ public sealed partial class DiscordClient
 			channelOld.Initialize(this);
 			channelNew.Initialize(this);
 
-			if (this.Configuration.AutoRefreshChannelCache && gld != null)
+			if (this.Configuration.Cache.AutoRefreshChannelCache && gld != null)
 				await this.RefreshChannelsAsync(channel.Guild.Id).ConfigureAwait(false);
 		}
 		else if (gld != null)
 		{
 			gld.ChannelsInternal[channel.Id] = channel;
 
-			if (this.Configuration.AutoRefreshChannelCache)
+			if (this.Configuration.Cache.AutoRefreshChannelCache)
 				await this.RefreshChannelsAsync(channel.Guild.Id).ConfigureAwait(false);
 		}
 
@@ -1253,7 +1253,7 @@ public sealed partial class DiscordClient
 
 			if (gld.ChannelsInternal.TryRemove(channel.Id, out var cachedChannel)) channel = cachedChannel;
 
-			if (this.Configuration.AutoRefreshChannelCache)
+			if (this.Configuration.Cache.AutoRefreshChannelCache)
 				await this.RefreshChannelsAsync(channel.Guild.Id).ConfigureAwait(false);
 
 			await this._channelDeleted.InvokeAsync(this, new(this.ServiceProvider)
@@ -3190,7 +3190,7 @@ public sealed partial class DiscordClient
 		var eventMessage = message;
 
 		DiscordMessage oldmsg = null;
-		if (this.Configuration.MessageCacheSize == 0
+		if (this.Configuration.Cache.MessageCacheSize == 0
 			|| this.MessageCache == null
 			|| !this.MessageCache.TryGet(xm => xm.Id == eventMessage.Id && xm.ChannelId == eventMessage.ChannelId, out message))
 		{
@@ -3324,7 +3324,7 @@ public sealed partial class DiscordClient
 		var guild = this.InternalGetCachedGuild(guildId);
 
 		if (channel == null
-			|| this.Configuration.MessageCacheSize == 0
+			|| this.Configuration.Cache.MessageCacheSize == 0
 			|| this.MessageCache == null
 			|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
 			msg = new()
@@ -3335,7 +3335,7 @@ public sealed partial class DiscordClient
 				Discord = this
 			};
 
-		if (this.Configuration.MessageCacheSize > 0)
+		if (this.Configuration.Cache.MessageCacheSize > 0)
 			this.MessageCache?.Remove(xm => xm.Id == msg.Id && xm.ChannelId == channelId);
 
 		var ea = new MessageDeleteEventArgs(this.ServiceProvider)
@@ -3361,7 +3361,7 @@ public sealed partial class DiscordClient
 		foreach (var messageId in messageIds)
 		{
 			if (channel == null
-				|| this.Configuration.MessageCacheSize == 0
+				|| this.Configuration.Cache.MessageCacheSize == 0
 				|| this.MessageCache == null
 				|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
 				msg = new()
@@ -3371,7 +3371,7 @@ public sealed partial class DiscordClient
 					GuildId = guildId,
 					Discord = this
 				};
-			if (this.Configuration.MessageCacheSize > 0)
+			if (this.Configuration.Cache.MessageCacheSize > 0)
 				this.MessageCache?.Remove(xm => xm.Id == msg.Id && xm.ChannelId == channelId);
 			msgs.Add(msg);
 		}
@@ -3410,7 +3410,7 @@ public sealed partial class DiscordClient
 			};
 
 		if (channel == null
-			|| this.Configuration.MessageCacheSize == 0
+			|| this.Configuration.Cache.MessageCacheSize == 0
 			|| this.MessageCache == null
 			|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var message))
 			message = new()
@@ -3459,7 +3459,7 @@ public sealed partial class DiscordClient
 			};
 
 		if (channel == null
-			|| this.Configuration.MessageCacheSize == 0
+			|| this.Configuration.Cache.MessageCacheSize == 0
 			|| this.MessageCache == null
 			|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var message))
 			message = new()
@@ -3521,7 +3521,7 @@ public sealed partial class DiscordClient
 		}, guildId, guild, mbr);
 
 		if (channel == null
-			|| this.Configuration.MessageCacheSize == 0
+			|| this.Configuration.Cache.MessageCacheSize == 0
 			|| this.MessageCache == null
 			|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
 			msg = new()
@@ -3598,7 +3598,7 @@ public sealed partial class DiscordClient
 				};
 
 		if (channel == null
-			|| this.Configuration.MessageCacheSize == 0
+			|| this.Configuration.Cache.MessageCacheSize == 0
 			|| this.MessageCache == null
 			|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
 			msg = new()
@@ -3653,7 +3653,7 @@ public sealed partial class DiscordClient
 		};
 
 		if (channel == null
-			|| this.Configuration.MessageCacheSize == 0
+			|| this.Configuration.Cache.MessageCacheSize == 0
 			|| this.MessageCache == null
 			|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
 			msg = new()
@@ -3689,7 +3689,7 @@ public sealed partial class DiscordClient
 		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
 
 		if (channel == null
-			|| this.Configuration.MessageCacheSize == 0
+			|| this.Configuration.Cache.MessageCacheSize == 0
 			|| this.MessageCache == null
 			|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
 			msg = new()
@@ -4599,7 +4599,7 @@ public sealed partial class DiscordClient
 	[SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
 	internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportUser user, TransportMember member, DiscordInteraction interaction, string rawInteraction)
 	{
-		if (this.Configuration.EnableLibraryDeveloperMode)
+		if (this.Configuration.Telemetry.EnableLibraryDeveloperMode)
 		{
 			//this.Logger.LogDebug("Interaction from {guild} on shard {shard}", guildId.HasValue ? guildId.Value : "dm", this.ShardId);
 			//this.Logger.LogDebug("Interaction: {interaction}", rawInteraction);

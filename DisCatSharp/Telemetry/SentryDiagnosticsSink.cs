@@ -89,9 +89,9 @@ internal sealed class SentryDiagnosticsSink : ILibraryDiagnosticsSink
 
 		sentryEvent.Contexts["library"] = new Dictionary<string, object>
 		{
-			["api_version"] = this._config.ApiVersion,
-			["shard_id"] = this._config.ShardId,
-			["shard_count"] = this._config.ShardCount,
+			["api_version"] = this._config.Api.Version,
+			["shard_id"] = this._config.Gateway.ShardId,
+			["shard_count"] = this._config.Gateway.ShardCount,
 			["intents"] = this._config.Intents.ToString()
 		};
 
@@ -125,9 +125,9 @@ internal sealed class SentryDiagnosticsSink : ILibraryDiagnosticsSink
 		evt.SetTag(DiagnosticTags.SessionEvent, "start");
 		evt.Contexts["library"] = new Dictionary<string, object>
 		{
-			["api_version"] = this._config.ApiVersion,
-			["shard_id"] = this._config.ShardId,
-			["shard_count"] = this._config.ShardCount,
+			["api_version"] = this._config.Api.Version,
+			["shard_id"] = this._config.Gateway.ShardId,
+			["shard_count"] = this._config.Gateway.ShardCount,
 			["intents"] = this._config.Intents.ToString()
 		};
 
@@ -203,9 +203,9 @@ internal sealed class SentryDiagnosticsSink : ILibraryDiagnosticsSink
 	private void ApplyDefaultTags(SentryEvent evt, string source)
 	{
 		evt.SetTag(DiagnosticTags.Source, source);
-		evt.SetTag(DiagnosticTags.ApiVersion, this._config.ApiVersion);
-		evt.SetTag(DiagnosticTags.ShardId, this._config.ShardId.ToString());
-		evt.SetTag(DiagnosticTags.ShardCount, this._config.ShardCount.ToString());
+		evt.SetTag(DiagnosticTags.ApiVersion, this._config.Api.Version);
+		evt.SetTag(DiagnosticTags.ShardId, this._config.Gateway.ShardId.ToString());
+		evt.SetTag(DiagnosticTags.ShardCount, this._config.Gateway.ShardCount.ToString());
 	}
 
 	/// <summary>

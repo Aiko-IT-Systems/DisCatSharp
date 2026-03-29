@@ -580,7 +580,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordMessage> GetMessageAsync(ulong id, bool fetch = false) =>
-		this.Discord.Configuration.MessageCacheSize > 0
+		this.Discord.Configuration.Cache.MessageCacheSize > 0
 		&& !fetch
 		&& this.Discord is DiscordClient { MessageCache: not null } dc
 		&& dc.MessageCache.TryGet(xm => xm.Id == id && xm.ChannelId == this.Id, out var msg)

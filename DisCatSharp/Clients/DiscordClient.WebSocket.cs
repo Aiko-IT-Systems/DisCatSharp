@@ -190,10 +190,10 @@ public sealed partial class DiscordClient
 
 		Volatile.Write(ref this._skippedHeartbeats, 0);
 
-		this.WebSocketClient = this.Configuration.WebSocketClientFactory(this.Configuration.Proxy, this.ServiceProvider);
+		this.WebSocketClient = this.Configuration.Gateway.WebSocketClientFactory(this.Configuration.Rest.Proxy, this.ServiceProvider);
 		this.WebSocketClient.AddDefaultHeader(CommonHeaders.USER_AGENT, Utilities.GetUserAgent());
-		this._payloadDecompressor = this.Configuration.GatewayCompressionLevel is not GatewayCompressionLevel.None
-			? new PayloadDecompressor(this.Configuration.GatewayCompressionLevel)
+		this._payloadDecompressor = this.Configuration.Gateway.CompressionLevel is not GatewayCompressionLevel.None
+			? new PayloadDecompressor(this.Configuration.Gateway.CompressionLevel)
 			: null;
 
 		this._cancelTokenSource = new();
@@ -204,9 +204,9 @@ public sealed partial class DiscordClient
 		this.WebSocketClient.MessageReceived += SocketOnMessage;
 		this.WebSocketClient.ExceptionThrown += SocketOnException;
 
-		var gwuri = this.GatewayUri.AddParameter("v", this.Configuration.ApiVersion).AddParameter("encoding", "json");
+		var gwuri = this.GatewayUri.AddParameter("v", this.Configuration.Api.Version).AddParameter("encoding", "json");
 
-		if (this.Configuration.GatewayCompressionLevel == GatewayCompressionLevel.Stream)
+		if (this.Configuration.Gateway.CompressionLevel == GatewayCompressionLevel.Stream)
 			gwuri = gwuri.AddParameter("compress", "zlib-stream");
 
 		this.GatewayUri = gwuri;
@@ -319,7 +319,7 @@ public sealed partial class DiscordClient
 				this._sessionId = null;
 			}
 
-			if (this.Configuration.AutoReconnect && shouldReconnect)
+			if (this.Configuration.Gateway.AutoReconnect && shouldReconnect)
 			{
 				this.Logger.LogCritical(LoggerEvents.ConnectionClose, "Connection terminated ({CloseCode}, '{Reason}'), reconnecting", e.CloseCode, e.CloseMessage ?? "No reason given");
 				this._identified = false;
@@ -331,7 +331,7 @@ public sealed partial class DiscordClient
 
 				await this.ConnectAsync(this._status?.ActivitiesInternal?.FirstOrDefault(), this._status?.Status, this._status?.IdleSince is not null ? Utilities.GetDateTimeOffsetFromMilliseconds(this._status.IdleSince.Value) : null).ConfigureAwait(false);
 			}
-			else if (this.Configuration.AutoReconnect)
+			else if (this.Configuration.Gateway.AutoReconnect)
 			{
 				this._sessionId = null;
 				this._identified = false;
@@ -404,7 +404,7 @@ public sealed partial class DiscordClient
 
 				if (this.DiagnosticsSink.IsEnabled)
 				{
-					var scrubbedPayload = Utilities.StripTokensAndOptIdsInJson(data, this.Configuration.EnableDiscordIdScrubber);
+					var scrubbedPayload = Utilities.StripTokensAndOptIdsInJson(data, this.Configuration.Telemetry.EnableDiscordIdScrubber);
 					byte[]? filePayload = null;
 					string? filePayloadName = null;
 					if (scrubbedPayload is not null && scrubbedPayload.Length > 8192)
@@ -734,17 +734,17 @@ public sealed partial class DiscordClient
 		var identify = new GatewayIdentify
 		{
 			Token = Utilities.GetFormattedToken(this),
-			Compress = this.Configuration.GatewayCompressionLevel == GatewayCompressionLevel.Payload,
-			LargeThreshold = this.Configuration.LargeThreshold,
+			Compress = this.Configuration.Gateway.CompressionLevel == GatewayCompressionLevel.Payload,
+			LargeThreshold = this.Configuration.Gateway.LargeThreshold,
 			ShardInfo = new()
 			{
-				ShardId = this.Configuration.ShardId,
-				ShardCount = this.Configuration.ShardCount
+				ShardId = this.Configuration.Gateway.ShardId,
+				ShardCount = this.Configuration.Gateway.ShardCount
 			},
 			Presence = status,
 			Intents = this.Configuration.Intents,
 			Discord = this,
-			Capabilities = this.Configuration.Capabilities
+			Capabilities = this.Configuration.Gateway.Capabilities
 		};
 		var payload = new GatewayPayload
 		{
