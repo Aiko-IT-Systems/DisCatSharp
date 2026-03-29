@@ -220,9 +220,10 @@ public class RingBuffer<T> : ICollection<T>
 	public bool Remove(Func<T, bool> predicate)
 	{
 		for (var i = 0; i < this.InternalBuffer.Length; i++)
-			if (this.InternalBuffer[i] != null && predicate(this.InternalBuffer[i]))
+			if (this._occupied[i] && predicate(this.InternalBuffer[i]))
 			{
 				this.InternalBuffer[i] = default;
+				this._occupied[i] = false;
 				return true;
 			}
 
