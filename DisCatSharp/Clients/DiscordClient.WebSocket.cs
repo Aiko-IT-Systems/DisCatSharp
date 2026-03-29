@@ -107,6 +107,13 @@ public sealed partial class DiscordClient
 	/// </summary>
 	private readonly ManualResetEventSlim _sessionLock = new(true);
 
+	/// <summary>
+	///     Guards concurrent reads and writes of <see cref="_sessionId" /> during the reconnect handshake.
+	///     Specifically protects the TOCTOU window in <see cref="OnHelloAsync" /> (check + branch) against
+	///     the clear performed by <see cref="InternalReconnectAsync" /> on a different thread.
+	/// </summary>
+	private readonly SemaphoreSlim _sessionStateLock = new(1, 1);
+
 	#endregion
 
 	#region Internal Connection Methods
@@ -117,13 +124,24 @@ public sealed partial class DiscordClient
 	/// <param name="startNewSession">Whether to start a new session.</param>
 	/// <param name="code">The reconnect code.</param>
 	/// <param name="message">The reconnect message.</param>
-	private Task InternalReconnectAsync(bool startNewSession = false, int code = 1000, string message = "")
+	private async Task InternalReconnectAsync(bool startNewSession = false, int code = 1000, string message = "")
 	{
 		if (startNewSession)
-			this._sessionId = null;
+		{
+			// Guard the clear under _sessionStateLock so that OnHelloAsync cannot observe a partially-cleared
+			// session state: it captures _sessionId under the same lock, making the decision atomic.
+			await this._sessionStateLock.WaitAsync().ConfigureAwait(false);
+			try
+			{
+				this._sessionId = null;
+			}
+			finally
+			{
+				this._sessionStateLock.Release();
+			}
+		}
 
 		_ = this.WebSocketClient.DisconnectAsync(code, message);
-		return Task.CompletedTask;
 	}
 
 	/// <summary>
@@ -500,10 +518,25 @@ public sealed partial class DiscordClient
 
 		this._heartbeatTask = Task.Run(this.HeartbeatLoopAsync, this._cancelToken);
 
-		if (string.IsNullOrEmpty(this._sessionId))
+		// Capture _sessionId under _sessionStateLock to close the TOCTOU window against
+		// InternalReconnectAsync, which clears _sessionId under the same lock.  We read
+		// once, decide once, and pass the snapshot into SendResumeAsync so that a
+		// concurrent null-write cannot invalidate the resume payload mid-flight.
+		await this._sessionStateLock.WaitAsync().ConfigureAwait(false);
+		string? capturedSessionId;
+		try
+		{
+			capturedSessionId = this._sessionId;
+		}
+		finally
+		{
+			this._sessionStateLock.Release();
+		}
+
+		if (string.IsNullOrEmpty(capturedSessionId))
 			await this.SendIdentifyAsync(this._status).ConfigureAwait(false);
 		else
-			await this.SendResumeAsync().ConfigureAwait(false);
+			await this.SendResumeAsync(capturedSessionId).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -733,15 +766,24 @@ public sealed partial class DiscordClient
 	/// <summary>
 	///     Sends the resume payload.
 	/// </summary>
-	internal async Task SendResumeAsync()
+	/// <param name="capturedSessionId">
+	///     The session ID captured under <see cref="_sessionStateLock" /> by the caller.
+	///     When <see langword="null" /> the method falls back to reading <c>_sessionId</c> directly
+	///     (used by <see cref="OnInvalidateSessionAsync" /> which holds its own serialization guarantee
+	///     via the socket-lock, so the TOCTOU window does not exist in that path).
+	/// </param>
+	internal async Task SendResumeAsync(string? capturedSessionId = null)
 	{
-		ArgumentNullException.ThrowIfNull(this._sessionId);
+		// Prefer the pre-captured snapshot so that a concurrent InternalReconnectAsync cannot
+		// nullify _sessionId between our decision in OnHelloAsync and the use here.
+		var sessionId = capturedSessionId ?? this._sessionId;
+		ArgumentNullException.ThrowIfNull(sessionId);
 		ArgumentNullException.ThrowIfNull(this._resumeGatewayUrl);
 
 		var resume = new GatewayResume
 		{
 			Token = Utilities.GetFormattedToken(this),
-			SessionId = this._sessionId,
+			SessionId = sessionId,
 			SequenceNumber = Volatile.Read(ref this._lastSequence)
 		};
 		var resumePayload = new GatewayPayload
