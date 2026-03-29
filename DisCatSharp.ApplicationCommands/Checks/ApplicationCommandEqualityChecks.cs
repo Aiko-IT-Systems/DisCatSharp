@@ -256,67 +256,97 @@ internal static class ApplicationCommandEqualityChecks
 			return (false, "source or target option null, but not both");
 
 		if (sourceOptions!.Count != targetOptions!.Count)
-			return (false, "source option count mismatches target option count");
+			return (false, $"option count mismatch ({sourceOptions.Count} vs {targetOptions.Count})");
+
+		List<string> reasons = [];
 
 		for (var i = 0; i < sourceOptions.Count; i++)
 		{
 			var sourceOption = sourceOptions[i];
 			var targetOption = targetOptions[i];
+			var optName = sourceOption.Name ?? targetOption.Name ?? $"[{i}]";
 
-			var optionCheck = sourceOption.Name == targetOption.Name &&
-							  sourceOption.Description == targetOption.Description &&
-							  sourceOption.Type == targetOption.Type &&
-							  sourceOption.Required == targetOption.Required &&
-							  sourceOption.AutoComplete == targetOption.AutoComplete &&
-							  System.Convert.ToString(sourceOption.MinimumValue, System.Globalization.CultureInfo.InvariantCulture) == System.Convert.ToString(targetOption.MinimumValue, System.Globalization.CultureInfo.InvariantCulture) &&
-							  System.Convert.ToString(sourceOption.MaximumValue, System.Globalization.CultureInfo.InvariantCulture) == System.Convert.ToString(targetOption.MaximumValue, System.Globalization.CultureInfo.InvariantCulture) &&
-							  sourceOption.MinimumLength == targetOption.MinimumLength &&
-							  sourceOption.MaximumLength == targetOption.MaximumLength;
+			if (sourceOption.Name != targetOption.Name)
+				reasons.Add($"{optName}: name mismatch");
+
+			if (sourceOption.Description != targetOption.Description)
+				reasons.Add($"{optName}: description mismatch");
+
+			if (sourceOption.Type != targetOption.Type)
+				reasons.Add($"{optName}: type mismatch");
+
+			if (sourceOption.Required != targetOption.Required)
+				reasons.Add($"{optName}: required mismatch");
+
+			if (sourceOption.AutoComplete != targetOption.AutoComplete)
+				reasons.Add($"{optName}: autocomplete mismatch");
+
+			if (System.Convert.ToString(sourceOption.MinimumValue, System.Globalization.CultureInfo.InvariantCulture) != System.Convert.ToString(targetOption.MinimumValue, System.Globalization.CultureInfo.InvariantCulture))
+				reasons.Add($"{optName}: minimum value mismatch");
+
+			if (System.Convert.ToString(sourceOption.MaximumValue, System.Globalization.CultureInfo.InvariantCulture) != System.Convert.ToString(targetOption.MaximumValue, System.Globalization.CultureInfo.InvariantCulture))
+				reasons.Add($"{optName}: maximum value mismatch");
+
+			if (sourceOption.MinimumLength != targetOption.MinimumLength)
+				reasons.Add($"{optName}: minimum length mismatch");
+
+			if (sourceOption.MaximumLength != targetOption.MaximumLength)
+				reasons.Add($"{optName}: maximum length mismatch");
 
 			if (localizationEnabled)
-				optionCheck = optionCheck &&
-							  sourceOption.RawNameLocalizations.AreDictionariesEqual(targetOption.RawNameLocalizations) &&
-							  sourceOption.RawDescriptionLocalizations.AreDictionariesEqual(targetOption
-								  .RawDescriptionLocalizations);
+			{
+				if (!sourceOption.RawNameLocalizations.AreDictionariesEqual(targetOption.RawNameLocalizations))
+					reasons.Add($"{optName}: name localizations mismatch");
 
-			if ((sourceOption.Choices is null && targetOption.Choices is not null) ||
-				(sourceOption.Choices is not null && targetOption.Choices is null))
-				return (false, "source or target choices null, but not both - " + sourceOption.Name);
+				if (!sourceOption.RawDescriptionLocalizations.AreDictionariesEqual(targetOption.RawDescriptionLocalizations))
+					reasons.Add($"{optName}: description localizations mismatch");
+			}
 
-			if (sourceOption.Choices is not null && targetOption.Choices is not null)
+			if ((sourceOption.Choices is null) != (targetOption.Choices is null))
+			{
+				reasons.Add($"{optName}: choices null mismatch");
+			}
+			else if (sourceOption.Choices is not null && targetOption.Choices is not null)
 			{
 				var sourceChoices = sourceOption.Choices.OrderBy(x => x.Name).ToList();
 				var targetChoices = targetOption.Choices.OrderBy(x => x.Name).ToList();
 
 				if (sourceChoices.Count != targetChoices.Count)
-					return (false, "choice count mismatch - " + sourceOption.Name);
-
-				for (var ci = 0; ci < sourceChoices.Count; ci++)
 				{
-					if (sourceChoices[ci].Name != targetChoices[ci].Name)
-						return (false, "choice name mismatch - " + sourceOption.Name);
+					reasons.Add($"{optName}: choice count mismatch ({sourceChoices.Count} vs {targetChoices.Count})");
+				}
+				else
+				{
+					for (var ci = 0; ci < sourceChoices.Count; ci++)
+					{
+						if (sourceChoices[ci].Name != targetChoices[ci].Name)
+							reasons.Add($"{optName}: choice name mismatch at [{ci}]");
 
-					if (!AreChoiceValuesEqual(sourceChoices[ci].Value, targetChoices[ci].Value))
-						return (false, "choice value mismatch - " + sourceOption.Name);
+						if (!AreChoiceValuesEqual(sourceChoices[ci].Value, targetChoices[ci].Value))
+							reasons.Add($"{optName}: choice value mismatch at [{ci}]");
+					}
 				}
 			}
 
-			if ((sourceOption.ChannelTypes is null && targetOption.ChannelTypes is not null) ||
-				(sourceOption.ChannelTypes is not null && targetOption.ChannelTypes is null) ||
-				(sourceOption.ChannelTypes is not null && targetOption.ChannelTypes is not null &&
-				 (sourceOption.ChannelTypes.Count != targetOption.ChannelTypes.Count ||
-				  !sourceOption.ChannelTypes.OrderBy(x => x).SequenceEqual(targetOption.ChannelTypes.OrderBy(x => x)))))
-				return (false, "channel type mismatch - " + sourceOption.Name);
+			if ((sourceOption.ChannelTypes is null) != (targetOption.ChannelTypes is null))
+			{
+				reasons.Add($"{optName}: channel types null mismatch");
+			}
+			else if (sourceOption.ChannelTypes is not null && targetOption.ChannelTypes is not null &&
+					 (sourceOption.ChannelTypes.Count != targetOption.ChannelTypes.Count ||
+					  !sourceOption.ChannelTypes.OrderBy(x => x).SequenceEqual(targetOption.ChannelTypes.OrderBy(x => x))))
+			{
+				reasons.Add($"{optName}: channel types mismatch");
+			}
 
 			var (equal, reason) = DeepEqualOptions(sourceOption.Options, targetOption.Options, localizationEnabled);
 			if (!equal)
-				return (false, "Options Recursive - " + sourceOption.Name + " -- " + reason);
-
-			if (!optionCheck)
-				return (false, "OptionCheck - " + sourceOption.Name);
+				reasons.Add($"{optName} -> {reason}");
 		}
 
-		return (true, null);
+		return reasons.Count > 0
+			? (false, string.Join("; ", reasons))
+			: (true, null);
 	}
 
 	/// <summary>

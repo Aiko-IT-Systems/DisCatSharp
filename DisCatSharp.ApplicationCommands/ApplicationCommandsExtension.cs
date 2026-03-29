@@ -551,7 +551,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			defaultMemberPermissions: defaultMemberPermissions,
 			allowedContexts: allowedContexts,
 			integrationTypes: integrationTypes,
-			handlerType: handlerType ?? this.Client.Configuration.ActivityHandlerType
+			handlerType: handlerType
 		);
 	}
 
