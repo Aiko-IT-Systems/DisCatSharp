@@ -125,7 +125,7 @@ public static class ExtensionMethods
 	/// <param name="descriptionLocalizations">The localizations of the command description.</param>
 	public static void RegisterEntryPointCommand(
 		this IReadOnlyDictionary<int, ApplicationCommandsExtension> extensions,
-		string description,
+		string? description = null,
 		List<InteractionContextType>? allowedContexts = null,
 		List<ApplicationCommandIntegrationTypes>? integrationTypes = null,
 		ApplicationCommandHandlerType? handlerType = null,

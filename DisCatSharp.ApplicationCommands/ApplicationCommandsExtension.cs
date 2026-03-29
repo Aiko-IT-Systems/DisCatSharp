@@ -521,7 +521,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	///     <para>Only one entry point command can exist per application. The name is always "launch" as required by Discord.</para>
 	///     <para>Use this to configure the description, allowed contexts, integration types, and handler type of the entry point command.</para>
 	/// </summary>
-	/// <param name="description">The description of the entry point command.</param>
+	/// <param name="description">The description of the entry point command. When <see langword="null"/>, defaults to "Launch an activity".</param>
 	/// <param name="allowedContexts">Where the entry point command can be used. When <see langword="null"/>, Discord's defaults are kept.</param>
 	/// <param name="integrationTypes">The allowed integration types. When <see langword="null"/>, Discord's defaults are kept.</param>
 	/// <param name="handlerType">The handler type. When <see langword="null"/>, falls back to <see cref="DiscordConfiguration.ActivityHandlerType"/>.</param>
@@ -529,7 +529,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <param name="nameLocalizations">The localizations of the command name.</param>
 	/// <param name="descriptionLocalizations">The localizations of the command description.</param>
 	public void RegisterEntryPointCommand(
-		string description,
+		string? description = null,
 		List<InteractionContextType>? allowedContexts = null,
 		List<ApplicationCommandIntegrationTypes>? integrationTypes = null,
 		ApplicationCommandHandlerType? handlerType = null,
@@ -543,7 +543,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 		this._userEntryPointCommand = new(
 			"launch",
-			description,
+			description ?? "Launch an activity",
 			type: ApplicationCommandType.PrimaryEntryPoint,
 			nameLocalizations: nameLocalizations,
 			descriptionLocalizations: descriptionLocalizations,
