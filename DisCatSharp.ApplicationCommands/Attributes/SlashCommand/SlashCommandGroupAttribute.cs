@@ -27,7 +27,7 @@ public class SlashCommandGroupAttribute : Attribute
 		if (description.Length is 0 or > 100)
 			throw new ArgumentException("Slash command group description must be between 1 and 100 characters.", nameof(description));
 
-		this.Name = name.ToLower();
+		this.Name = name.ToLowerInvariant();
 		this.Description = description;
 		this.DefaultMemberPermissions = null;
 		this.IsNsfw = isNsfw;
@@ -51,7 +51,7 @@ public class SlashCommandGroupAttribute : Attribute
 		if (description.Length is 0 or > 100)
 			throw new ArgumentException("Slash command group description must be between 1 and 100 characters.", nameof(description));
 
-		this.Name = name.ToLower();
+		this.Name = name.ToLowerInvariant();
 		this.Description = description;
 		this.DefaultMemberPermissions = (Permissions)defaultMemberPermissions;
 		this.IsNsfw = isNsfw;
