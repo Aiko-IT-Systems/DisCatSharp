@@ -216,12 +216,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public DiscordClient(DiscordConfiguration config)
 		: base(config)
 	{
-		// Validate cross-property constraints (e.g. ShardId < ShardCount) that cannot be enforced in
-		// individual property setters because either property may be assigned before the other during
-		// object-initializer construction.  Throwing here surfaces a clear InvalidOperationException
-		// before any network I/O is attempted, rather than a cryptic gateway 4010 close code.
-		this.Configuration.Validate();
-
 		if (this.Configuration.MessageCacheSize > 0)
 		{
 			var intents = this.Configuration.Intents;
@@ -404,6 +398,11 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			throw new InvalidOperationException("This client is already connected.");
 
 		this._connectionLock.Set();
+
+		// Validate cross-property constraints that cannot be enforced in individual property setters,
+		// because either property may be assigned before the other during object-initializer construction.
+		// Throwing here surfaces a clear error before any network I/O rather than a cryptic 4010 close code.
+		this.Configuration.Validate();
 
 		var w = 7500;
 		var i = 5;
