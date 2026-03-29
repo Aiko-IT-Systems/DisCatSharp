@@ -33,8 +33,6 @@ public sealed partial class DiscordClient
 	/// <returns>The added socket lock.</returns>
 	private SocketLock GetSocketLock()
 	{
-		// CurrentApplication and GatewayInfo may be null before InitializeAsync() completes.
-		// Fall back to safe defaults so we never throw an NRE during the initial connection phase.
 		var appId = this.CurrentApplication?.Id ?? 0ul;
 		var maxConcurrency = this.GatewayInfo?.SessionBucket.MaxConcurrency ?? 1;
 		return s_socketLocks.GetOrAdd(appId, new SocketLock(appId, maxConcurrency));
@@ -516,7 +514,6 @@ public sealed partial class DiscordClient
 		this._heartbeatInterval = hello.HeartbeatInterval;
 		if (this._heartbeatTask is { IsCompleted: false })
 		{
-			// Drain the previous heartbeat loop before starting a new one.
 			// HeartbeatLoopAsync swallows OperationCanceledException, so awaiting here
 			// will not throw; the old loop exits naturally once _cancelToken is signalled.
 			try { await this._heartbeatTask.ConfigureAwait(false); } catch { /* already cancelled */ }

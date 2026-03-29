@@ -1178,7 +1178,7 @@ internal sealed class RestClient : IDisposable
 
 				_ = this._hashesToBuckets.TryRemove(key, out _);
 				removedBuckets++;
-				bucketIdStrBuilder.Append(value.BucketId).Append(", "); // M8: avoid transient string allocation from concat inside Append
+				bucketIdStrBuilder.Append(value.BucketId).Append(", ");
 			}
 
 			if (removedBuckets > 0)
