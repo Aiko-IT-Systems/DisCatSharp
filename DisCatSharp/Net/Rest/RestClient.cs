@@ -975,7 +975,10 @@ internal sealed class RestClient : IDisposable
 		// handle the wait
 		if (hs.TryGetValue(CommonHeaders.RETRY_AFTER, out var retryAfterRaw))
 		{
-			var retryAfter = TimeSpan.FromSeconds(int.Parse(retryAfterRaw, CultureInfo.InvariantCulture));
+			// M5: Cap retry_after to 3600 s (1 hour) to prevent an indefinite hang on
+			// a malformed or adversarially large header value.
+			var retryAfterSeconds = Math.Min(int.Parse(retryAfterRaw, CultureInfo.InvariantCulture), 3600);
+			var retryAfter = TimeSpan.FromSeconds(retryAfterSeconds);
 			waitTask = Task.Delay(retryAfter);
 		}
 
@@ -1145,7 +1148,10 @@ internal sealed class RestClient : IDisposable
 			ObjectDisposedException.ThrowIf(this._disposed, this);
 
 			//Check and clean request queue first in case it wasn't removed properly during requests.
-			foreach (var key in this._requestQueue.Keys)
+			// M6: Snapshot the keys into a List before iterating so that concurrent mutations
+			// to _requestQueue do not cause enumeration exceptions, and to linearize the loop
+			// rather than re-evaluating a live ConcurrentDictionary view on each iteration.
+			foreach (var key in this._requestQueue.Keys.ToList())
 			{
 				var bucket = this._hashesToBuckets.Values.FirstOrDefault(x => x.RouteHashes.Contains(key));
 
@@ -1172,11 +1178,18 @@ internal sealed class RestClient : IDisposable
 
 				_ = this._hashesToBuckets.TryRemove(key, out _);
 				removedBuckets++;
-				bucketIdStrBuilder.Append(value.BucketId + ", ");
+				bucketIdStrBuilder.Append(value.BucketId).Append(", "); // M8: avoid transient string allocation from concat inside Append
 			}
 
 			if (removedBuckets > 0)
 				this._logger.LogDebug(LoggerEvents.RestCleaner, "Removed {0} unused bucket{1}: [{2}]", removedBuckets, removedBuckets > 1 ? "s" : string.Empty, bucketIdStrBuilder.ToString().TrimEnd(',', ' '));
+
+			// M7: Defensive warning — _hashesToBuckets has no upper-bound cap.  If cleanup
+			// cannot keep up (e.g. extremely high-cardinality route usage), the dictionary
+			// will grow without bound.  Log a warning so operators can detect the condition.
+			// A proper LRU eviction policy would be the long-term remedy.
+			if (this._hashesToBuckets.Count > 10_000)
+				this._logger.LogWarning(LoggerEvents.RestCleaner, "Bucket accumulation warning: {Count} rate-limit buckets are currently tracked. Cleanup may not be keeping up; consider reviewing route cardinality.", this._hashesToBuckets.Count);
 
 			if (this._hashesToBuckets.IsEmpty)
 				break;
