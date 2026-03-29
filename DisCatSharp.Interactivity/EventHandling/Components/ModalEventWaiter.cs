@@ -80,13 +80,12 @@ internal class ModalEventWaiter : IDisposable
 	/// </summary>
 	/// <param name="_">The client.</param>
 	/// <param name="args">The args.</param>
-	private async Task Handle(DiscordClient _, ComponentInteractionCreateEventArgs args)
+	private Task Handle(DiscordClient _, ComponentInteractionCreateEventArgs args)
 	{
 		foreach (var mreq in this._modalMatchRequests)
 			if (mreq.CustomId == args.Interaction.Data.CustomId && mreq.IsMatch(args))
 				mreq.Tcs.TrySetResult(args);
 
-			else if (this._config.ResponseBehavior is InteractionResponseBehavior.Respond)
-				await args.Interaction.CreateFollowupMessageAsync(this._message).ConfigureAwait(false);
+		return Task.CompletedTask;
 	}
 }

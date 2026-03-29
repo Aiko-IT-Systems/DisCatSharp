@@ -36,7 +36,8 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 	{
 		this._client = client;
 		var tinfo = this._client.GetType().GetTypeInfo();
-		var handler = tinfo.DeclaredFields.First(x => x.FieldType == typeof(AsyncEvent<DiscordClient, T>));
+		var handler = tinfo.DeclaredFields.FirstOrDefault(x => x.FieldType == typeof(AsyncEvent<DiscordClient, T>))
+			?? throw new InvalidOperationException($"No event field of type AsyncEvent<DiscordClient, {typeof(T).Name}> found on DiscordClient.");
 		this._matchRequests = [];
 		this._collectRequests = [];
 		this._event = (AsyncEvent<DiscordClient, T>)handler.GetValue(this._client);

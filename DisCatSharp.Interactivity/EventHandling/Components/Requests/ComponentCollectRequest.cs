@@ -25,5 +25,5 @@ internal sealed class ComponentCollectRequest : ComponentMatchRequest
 	/// <summary>
 	///     Gets the collected.
 	/// </summary>
-	public ConcurrentBag<ComponentInteractionCreateEventArgs> Collected { get; }
+	public ConcurrentBag<ComponentInteractionCreateEventArgs> Collected { get; } = [];
 }

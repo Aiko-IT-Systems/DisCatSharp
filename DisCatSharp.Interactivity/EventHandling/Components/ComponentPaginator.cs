@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,10 +19,9 @@ namespace DisCatSharp.Interactivity.EventHandling;
 /// </summary>
 internal class ComponentPaginator : IPaginator
 {
-	private readonly DiscordMessageBuilder _builder = new();
 	private readonly DiscordClient _client;
 	private readonly InteractivityConfiguration _config;
-	private readonly Dictionary<ulong, IPaginationRequest> _requests = [];
+	private readonly ConcurrentDictionary<ulong, IPaginationRequest> _requests = new();
 
 	/// <summary>
 	///     Initializes a new instance of the <see cref="ComponentPaginator" /> class.
@@ -42,7 +42,7 @@ internal class ComponentPaginator : IPaginator
 	public async Task DoPaginationAsync(IPaginationRequest request)
 	{
 		var id = (await request.GetMessageAsync().ConfigureAwait(false)).Id;
-		this._requests.Add(id, request);
+		this._requests.TryAdd(id, request);
 
 		try
 		{
@@ -56,7 +56,7 @@ internal class ComponentPaginator : IPaginator
 		}
 		finally
 		{
-			this._requests.Remove(id);
+			this._requests.TryRemove(id, out _);
 			try
 			{
 				await request.DoCleanupAsync().ConfigureAwait(false);
@@ -188,23 +188,23 @@ internal class ComponentPaginator : IPaginator
 			return;
 		}
 
-		this._builder.Clear();
+		var msgBuilder = new DiscordMessageBuilder();
 
 		if (!page.UsesCV2)
 		{
 			if (page.Content is not null)
-				this._builder.WithContent(page.Content);
+				msgBuilder.WithContent(page.Content);
 			if (page.Embed is not null)
-				this._builder.AddEmbed(page.Embed);
-			this._builder.AddComponents(bts);
+				msgBuilder.AddEmbed(page.Embed);
+			msgBuilder.AddComponents(bts);
 		}
 		else
 		{
-			this._builder.WithV2Components();
-			this._builder.AddComponents(page.ComponentsInternal);
-			this._builder.AddComponents(new DiscordActionRowComponent(bts));
+			msgBuilder.WithV2Components();
+			msgBuilder.AddComponents(page.ComponentsInternal);
+			msgBuilder.AddComponents(new DiscordActionRowComponent(bts));
 		}
 
-		await this._builder.ModifyAsync(msg).ConfigureAwait(false);
+		await msgBuilder.ModifyAsync(msg).ConfigureAwait(false);
 	}
 }

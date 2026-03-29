@@ -26,8 +26,10 @@ internal class ComponentMatchRequest
 		this.Message = message;
 		this.Predicate = predicate;
 		this.Cancellation = cancellation;
-		this.Cancellation.Register(() => this.Tcs.TrySetResult(null)); // TrySetCancelled would probably be better but I digress ~Velvet //
+		this._cancellationRegistration = this.Cancellation.Register(() => this.Tcs.TrySetResult(null));
 	}
+
+	private readonly CancellationTokenRegistration _cancellationRegistration;
 
 	/// <summary>
 	///     The id to wait on. This should be uniquely formatted to avoid collisions.

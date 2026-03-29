@@ -117,18 +117,10 @@ internal class ComponentEventWaiter : IDisposable
 			if (mreq.Message == args.Message && mreq.IsMatch(args))
 				mreq.Tcs.TrySetResult(args);
 
-			else if (this._config.ResponseBehavior is InteractionResponseBehavior.Respond)
-				await args.Interaction.CreateFollowupMessageAsync(this._message).ConfigureAwait(false);
-
 		foreach (var creq in this._collectRequests.Where(creq => creq.Message == args.Message && creq.IsMatch(args)))
 		{
 			await args.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate).ConfigureAwait(false);
-
-			if (creq.IsMatch(args))
-				creq.Collected.Add(args);
-
-			else if (this._config.ResponseBehavior is InteractionResponseBehavior.Respond)
-				await args.Interaction.CreateFollowupMessageAsync(this._message).ConfigureAwait(false);
+			creq.Collected.Add(args);
 		}
 	}
 }

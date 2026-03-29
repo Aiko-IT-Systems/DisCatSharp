@@ -19,18 +19,26 @@ public static class InteractivityHelpers
 	/// <returns>A new list of pages with updated footers.</returns>
 	public static List<Page> Recalculate(this List<Page> pages)
 	{
-		List<Page> recalulatedPages = new(pages.Count);
-		var pageCount = 1;
 		if (pages.All(p => p.Embed is null))
-			throw new InvalidOperationException("Recalculate can only be used on embed pages.");
-		foreach (var page in pages.Where(p => p.Embed is not null))
+			throw new InvalidOperationException("Recalculate can only be used on pages that contain at least one embed page.");
+
+		List<Page> recalculatedPages = new(pages.Count);
+		var pageCount = 1;
+		foreach (var page in pages)
 		{
-			ArgumentNullException.ThrowIfNull(page.Embed);
-			var replaceEmbed = new DiscordEmbedBuilder(page.Embed).WithFooter($"Page {pageCount}/{pages.Count}");
-			recalulatedPages.Add(new(embed: replaceEmbed));
+			if (page.Embed is not null)
+			{
+				var replaceEmbed = new DiscordEmbedBuilder(page.Embed).WithFooter($"Page {pageCount}/{pages.Count}");
+				recalculatedPages.Add(new(page.Content, replaceEmbed));
+			}
+			else
+			{
+				recalculatedPages.Add(page);
+			}
+
 			pageCount++;
 		}
 
-		return recalulatedPages;
+		return recalculatedPages;
 	}
 }

@@ -73,43 +73,35 @@ internal class PaginationRequest : IPaginationRequest
 	///     Gets the page async.
 	/// </summary>
 	/// <returns>A Task.</returns>
-	public async Task<Page> GetPageAsync()
-	{
-		await Task.Yield();
-
-		return this._pages[this._index];
-	}
+	public Task<Page> GetPageAsync()
+		=> Task.FromResult(this._pages[this._index]);
 
 	/// <summary>
 	///     Skips the left async.
 	/// </summary>
 	/// <returns>A Task.</returns>
-	public async Task SkipLeftAsync()
+	public Task SkipLeftAsync()
 	{
-		await Task.Yield();
-
 		this._index = 0;
+		return Task.CompletedTask;
 	}
 
 	/// <summary>
 	///     Skips the right async.
 	/// </summary>
 	/// <returns>A Task.</returns>
-	public async Task SkipRightAsync()
+	public Task SkipRightAsync()
 	{
-		await Task.Yield();
-
 		this._index = this._pages.Count - 1;
+		return Task.CompletedTask;
 	}
 
 	/// <summary>
 	///     Nexts the page async.
 	/// </summary>
 	/// <returns>A Task.</returns>
-	public async Task NextPageAsync()
+	public Task NextPageAsync()
 	{
-		await Task.Yield();
-
 		switch (this._behaviour)
 		{
 			case PaginationBehaviour.Ignore:
@@ -128,16 +120,16 @@ internal class PaginationRequest : IPaginationRequest
 
 				break;
 		}
+
+		return Task.CompletedTask;
 	}
 
 	/// <summary>
 	///     Previous the page async.
 	/// </summary>
 	/// <returns>A Task.</returns>
-	public async Task PreviousPageAsync()
+	public Task PreviousPageAsync()
 	{
-		await Task.Yield();
-
 		switch (this._behaviour)
 		{
 			case PaginationBehaviour.Ignore:
@@ -156,6 +148,8 @@ internal class PaginationRequest : IPaginationRequest
 
 				break;
 		}
+
+		return Task.CompletedTask;
 	}
 
 	/// <summary>
@@ -171,34 +165,22 @@ internal class PaginationRequest : IPaginationRequest
 	///     Gets the emojis async.
 	/// </summary>
 	/// <returns>A Task.</returns>
-	public async Task<PaginationEmojis> GetEmojisAsync()
-	{
-		await Task.Yield();
-
-		return this._emojis;
-	}
+	public Task<PaginationEmojis> GetEmojisAsync()
+		=> Task.FromResult(this._emojis);
 
 	/// <summary>
 	///     Gets the message async.
 	/// </summary>
 	/// <returns>A Task.</returns>
-	public async Task<DiscordMessage> GetMessageAsync()
-	{
-		await Task.Yield();
-
-		return this._message;
-	}
+	public Task<DiscordMessage> GetMessageAsync()
+		=> Task.FromResult(this._message);
 
 	/// <summary>
 	///     Gets the user async.
 	/// </summary>
 	/// <returns>A Task.</returns>
-	public async Task<DiscordUser> GetUserAsync()
-	{
-		await Task.Yield();
-
-		return this._user;
-	}
+	public Task<DiscordUser> GetUserAsync()
+		=> Task.FromResult(this._user);
 
 	/// <summary>
 	///     Dos the cleanup async.
@@ -225,12 +207,8 @@ internal class PaginationRequest : IPaginationRequest
 	///     Gets the task completion source async.
 	/// </summary>
 	/// <returns>A Task.</returns>
-	public async Task<TaskCompletionSource<bool>> GetTaskCompletionSourceAsync()
-	{
-		await Task.Yield();
-
-		return this._tcs;
-	}
+	public Task<TaskCompletionSource<bool>> GetTaskCompletionSourceAsync()
+		=> Task.FromResult(this._tcs);
 
 	~PaginationRequest()
 	{
