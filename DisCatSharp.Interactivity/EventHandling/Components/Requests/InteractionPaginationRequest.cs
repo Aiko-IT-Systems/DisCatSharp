@@ -15,7 +15,7 @@ namespace DisCatSharp.Interactivity.EventHandling;
 /// </summary>
 internal class InteractionPaginationRequest : IPaginationRequest
 {
-	private readonly ButtonPaginationBehavior _behaviorBehavior;
+	private readonly ButtonPaginationBehavior _buttonBehavior;
 	private readonly PaginationButtons _buttons;
 	private readonly DiscordMessage _message;
 	private readonly List<Page> _pages = [];
@@ -57,7 +57,7 @@ internal class InteractionPaginationRequest : IPaginationRequest
 		this._buttons = new(buttons);
 		this._message = message;
 		this._wrapBehavior = behavior;
-		this._behaviorBehavior = behaviorBehavior;
+		this._buttonBehavior = behaviorBehavior;
 		this._pages.AddRange(pages);
 
 		this.RegenerateCts(interaction);
@@ -78,7 +78,10 @@ internal class InteractionPaginationRequest : IPaginationRequest
 
 		if (this.PageCount is 1)
 		{
-			_ = this._buttons.ButtonArray.Select(b => b.Disable());
+			this._buttons.SkipLeft.Disable();
+			this._buttons.Left.Disable();
+			this._buttons.Right.Disable();
+			this._buttons.SkipRight.Disable();
 			this._buttons.Stop.Enable();
 			return page;
 		}
@@ -207,7 +210,7 @@ internal class InteractionPaginationRequest : IPaginationRequest
 	{
 		var page = this._pages[this._index];
 		var builder = new DiscordWebhookBuilder();
-		switch (this._behaviorBehavior)
+		switch (this._buttonBehavior)
 		{
 			case ButtonPaginationBehavior.Disable:
 				var buttons = this._buttons.ButtonArray.Select(b => b.Disable());

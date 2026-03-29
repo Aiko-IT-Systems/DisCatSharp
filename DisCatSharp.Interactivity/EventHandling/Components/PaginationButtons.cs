@@ -8,22 +8,22 @@ namespace DisCatSharp.Interactivity.EventHandling;
 /// </summary>
 public class PaginationButtons
 {
-	public const string SKIP_LEFT_CUSTOM_ID = "pgb-skip-left";
+	public const string SKIP_LEFT_CUSTOM_ID = "pgb-leftskip";
 	public const string LEFT_CUSTOM_ID = "pgb-left";
 	public const string STOP_CUSTOM_ID = "pgb-stop";
 	public const string RIGHT_CUSTOM_ID = "pgb-right";
-	public const string SKIP_RIGHT_CUSTOM_ID = "pgb-skip-right";
+	public const string SKIP_RIGHT_CUSTOM_ID = "pgb-rightskip";
 
 	/// <summary>
 	///     Initializes a new instance of the <see cref="PaginationButtons" /> class.
 	/// </summary>
 	public PaginationButtons()
 	{
-		this.SkipLeft = new(ButtonStyle.Secondary, "leftskip", null, false, new(DiscordEmoji.FromUnicode("⏮")));
-		this.Left = new(ButtonStyle.Secondary, "left", null, false, new(DiscordEmoji.FromUnicode("◀")));
-		this.Stop = new(ButtonStyle.Secondary, "stop", null, false, new(DiscordEmoji.FromUnicode("⏹")));
-		this.Right = new(ButtonStyle.Secondary, "right", null, false, new(DiscordEmoji.FromUnicode("▶")));
-		this.SkipRight = new(ButtonStyle.Secondary, "rightskip", null, false, new(DiscordEmoji.FromUnicode("⏭")));
+		this.SkipLeft = new(ButtonStyle.Secondary, SKIP_LEFT_CUSTOM_ID, null, false, new(DiscordEmoji.FromUnicode("⏮")));
+		this.Left = new(ButtonStyle.Secondary, LEFT_CUSTOM_ID, null, false, new(DiscordEmoji.FromUnicode("◀")));
+		this.Stop = new(ButtonStyle.Secondary, STOP_CUSTOM_ID, null, false, new(DiscordEmoji.FromUnicode("⏹")));
+		this.Right = new(ButtonStyle.Secondary, RIGHT_CUSTOM_ID, null, false, new(DiscordEmoji.FromUnicode("▶")));
+		this.SkipRight = new(ButtonStyle.Secondary, SKIP_RIGHT_CUSTOM_ID, null, false, new(DiscordEmoji.FromUnicode("⏭")));
 	}
 
 	/// <summary>

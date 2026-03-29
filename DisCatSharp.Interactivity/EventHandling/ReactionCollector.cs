@@ -2,13 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
 using ConcurrentCollections;
 
-using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Telemetry;
@@ -24,16 +22,7 @@ namespace DisCatSharp.Interactivity.EventHandling;
 internal class ReactionCollector : IDisposable
 {
 	private DiscordClient _client;
-
-	private AsyncEvent<DiscordClient, MessageReactionAddEventArgs> _reactionAddEvent;
-	private AsyncEventHandler<DiscordClient, MessageReactionAddEventArgs> _reactionAddHandler;
-
-	private AsyncEvent<DiscordClient, MessageReactionsClearEventArgs> _reactionClearEvent;
-	private AsyncEventHandler<DiscordClient, MessageReactionsClearEventArgs> _reactionClearHandler;
-
-	private AsyncEvent<DiscordClient, MessageReactionRemoveEventArgs> _reactionRemoveEvent;
-	private AsyncEventHandler<DiscordClient, MessageReactionRemoveEventArgs> _reactionRemoveHandler;
-
+	private bool _disposed;
 	private ConcurrentHashSet<ReactionCollectRequest> _requests;
 
 	/// <summary>
@@ -43,49 +32,33 @@ internal class ReactionCollector : IDisposable
 	public ReactionCollector(DiscordClient client)
 	{
 		this._client = client;
-		var tinfo = this._client.GetType().GetTypeInfo();
-
 		this._requests = [];
 
-		// Grabbing all three events from client
-		var handler = tinfo.DeclaredFields.First(x => x.FieldType == typeof(AsyncEvent<DiscordClient, MessageReactionAddEventArgs>));
-
-		this._reactionAddEvent = (AsyncEvent<DiscordClient, MessageReactionAddEventArgs>)handler.GetValue(this._client);
-		this._reactionAddHandler = this.HandleReactionAdd;
-		this._reactionAddEvent.Register(this._reactionAddHandler);
-
-		handler = tinfo.DeclaredFields.First(x => x.FieldType == typeof(AsyncEvent<DiscordClient, MessageReactionRemoveEventArgs>));
-
-		this._reactionRemoveEvent = (AsyncEvent<DiscordClient, MessageReactionRemoveEventArgs>)handler.GetValue(this._client);
-		this._reactionRemoveHandler = this.HandleReactionRemove;
-		this._reactionRemoveEvent.Register(this._reactionRemoveHandler);
-
-		handler = tinfo.DeclaredFields.First(x => x.FieldType == typeof(AsyncEvent<DiscordClient, MessageReactionsClearEventArgs>));
-
-		this._reactionClearEvent = (AsyncEvent<DiscordClient, MessageReactionsClearEventArgs>)handler.GetValue(this._client);
-		this._reactionClearHandler = this.HandleReactionClear;
-		this._reactionClearEvent.Register(this._reactionClearHandler);
+		this._client.MessageReactionAdded += this.HandleReactionAdd;
+		this._client.MessageReactionRemoved += this.HandleReactionRemove;
+		this._client.MessageReactionsCleared += this.HandleReactionClear;
 	}
 
 	/// <summary>
-	///     Disposes this EventWaiter
+	///     Disposes this EventWaiter.
 	/// </summary>
 	public void Dispose()
 	{
+		if (this._disposed)
+			return;
+
+		this._disposed = true;
+
+		var client = this._client;
+		if (client is not null)
+		{
+			client.MessageReactionAdded -= this.HandleReactionAdd;
+			client.MessageReactionRemoved -= this.HandleReactionRemove;
+			client.MessageReactionsCleared -= this.HandleReactionClear;
+		}
+
 		this._client = null;
-
-		this._reactionAddEvent.Unregister(this._reactionAddHandler);
-		this._reactionRemoveEvent.Unregister(this._reactionRemoveHandler);
-		this._reactionClearEvent.Unregister(this._reactionClearHandler);
-
-		this._reactionAddEvent = null;
-		this._reactionAddHandler = null;
-		this._reactionRemoveEvent = null;
-		this._reactionRemoveHandler = null;
-		this._reactionClearEvent = null;
-		this._reactionClearHandler = null;
-
-		this._requests.Clear();
+		this._requests?.Clear();
 		this._requests = null;
 		GC.SuppressFinalize(this);
 	}
@@ -131,19 +104,22 @@ internal class ReactionCollector : IDisposable
 		foreach (var req in this._requests)
 			if (req.Message.Id == eventArgs.Message.Id)
 			{
-				if (req.Collected.Any(x => x.Emoji == eventArgs.Emoji && x.Users.Any(y => y.Id == eventArgs.User.Id)))
+				lock (req)
 				{
-					var reaction = req.Collected.First(x => x.Emoji == eventArgs.Emoji && x.Users.Any(y => y.Id == eventArgs.User.Id));
-					req.Collected.TryRemove(reaction);
-					reaction.Users.Add(eventArgs.User);
-					req.Collected.Add(reaction);
-				}
-				else
-					req.Collected.Add(new()
+					var reaction = req.Collected.FirstOrDefault(x => x.Emoji == eventArgs.Emoji);
+					if (reaction is not null)
 					{
-						Emoji = eventArgs.Emoji,
-						Users = [eventArgs.User]
-					});
+						req.Collected.TryRemove(reaction);
+						reaction.Users.Add(eventArgs.User);
+						req.Collected.Add(reaction);
+					}
+					else
+						req.Collected.Add(new()
+						{
+							Emoji = eventArgs.Emoji,
+							Users = [eventArgs.User]
+						});
+				}
 			}
 
 		return Task.CompletedTask;
@@ -160,14 +136,19 @@ internal class ReactionCollector : IDisposable
 		// foreach request remove
 		foreach (var req in this._requests)
 			if (req.Message.Id == eventArgs.Message.Id)
-				if (req.Collected.Any(x => x.Emoji == eventArgs.Emoji && x.Users.Any(y => y.Id == eventArgs.User.Id)))
+			{
+				lock (req)
 				{
-					var reaction = req.Collected.First(x => x.Emoji == eventArgs.Emoji && x.Users.Any(y => y.Id == eventArgs.User.Id));
-					req.Collected.TryRemove(reaction);
-					reaction.Users.TryRemove(eventArgs.User);
-					if (reaction.Users.Count > 0)
-						req.Collected.Add(reaction);
+					var reaction = req.Collected.FirstOrDefault(x => x.Emoji == eventArgs.Emoji && x.Users.Any(y => y.Id == eventArgs.User.Id));
+					if (reaction is not null)
+					{
+						req.Collected.TryRemove(reaction);
+						reaction.Users.TryRemove(eventArgs.User);
+						if (reaction.Users.Count > 0)
+							req.Collected.Add(reaction);
+					}
 				}
+			}
 
 		return Task.CompletedTask;
 	}
@@ -224,6 +205,10 @@ public class ReactionCollectRequest : IDisposable
 	/// </summary>
 	public void Dispose()
 	{
+		if (this._disposed)
+			return;
+
+		this._disposed = true;
 		GC.SuppressFinalize(this);
 		this.Ct.Dispose();
 		this.Tcs = null;
@@ -231,6 +216,8 @@ public class ReactionCollectRequest : IDisposable
 		this.Collected?.Clear();
 		this.Collected = null;
 	}
+
+	private bool _disposed;
 
 	~ReactionCollectRequest()
 	{

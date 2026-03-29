@@ -19,8 +19,9 @@ namespace DisCatSharp.Interactivity.EventHandling;
 /// </summary>
 internal class Poller
 {
-	private DiscordClient _client;
-	private ConcurrentHashSet<PollRequest> _requests;
+	private readonly DiscordClient _client;
+	private bool _disposed;
+	private readonly ConcurrentHashSet<PollRequest> _requests;
 
 	/// <summary>
 	///     Creates a new EventWaiter object.
@@ -72,27 +73,34 @@ internal class Poller
 	/// <returns>A Task.</returns>
 	private Task HandleReactionAdd(DiscordClient client, MessageReactionAddEventArgs eventArgs)
 	{
-		if (this._requests.Count == 0)
+		if (this._disposed || this._requests.Count == 0)
 			return Task.CompletedTask;
 
 		_ = Task.Run(async () =>
 		{
-			foreach (var req in this._requests)
-				// match message
-				if (req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id)
-				{
-					if (req.Emojis.Contains(eventArgs.Emoji) && !req.Collected.Any(x => x.Voted.Contains(eventArgs.User)))
+			try
+			{
+				foreach (var req in this._requests)
+					// match message
+					if (req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id)
 					{
-						if (eventArgs.User.Id != this._client.CurrentUser.Id)
-							req.AddReaction(eventArgs.Emoji, eventArgs.User);
+						if (req.Emojis.Contains(eventArgs.Emoji) && !req.Collected.Any(x => x.Voted.Contains(eventArgs.User)))
+						{
+							if (eventArgs.User.Id != this._client.CurrentUser.Id)
+								req.AddReaction(eventArgs.Emoji, eventArgs.User);
+						}
+						else
+						{
+							var member = await eventArgs.Channel.Guild.GetMemberAsync(client.CurrentUser.Id).ConfigureAwait(false);
+							if (eventArgs.Channel.PermissionsFor(member).HasPermission(Permissions.ManageMessages))
+								await eventArgs.Message.DeleteReactionAsync(eventArgs.Emoji, eventArgs.User).ConfigureAwait(false);
+						}
 					}
-					else
-					{
-						var member = await eventArgs.Channel.Guild.GetMemberAsync(client.CurrentUser.Id).ConfigureAwait(false);
-						if (eventArgs.Channel.PermissionsFor(member).HasPermission(Permissions.ManageMessages))
-							await eventArgs.Message.DeleteReactionAsync(eventArgs.Emoji, eventArgs.User).ConfigureAwait(false);
-					}
-				}
+			}
+			catch (Exception ex)
+			{
+				this._client?.Logger.LogError(InteractivityEvents.InteractivityPollError, ex, "Exception occurred while handling reaction add in poller");
+			}
 		});
 		return Task.CompletedTask;
 	}
@@ -105,11 +113,25 @@ internal class Poller
 	/// <returns>A Task.</returns>
 	private Task HandleReactionRemove(DiscordClient client, MessageReactionRemoveEventArgs eventArgs)
 	{
-		foreach (var req in this._requests)
-			// match message
-			if (req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id)
-				if (eventArgs.User.Id != this._client.CurrentUser.Id)
-					req.RemoveReaction(eventArgs.Emoji, eventArgs.User);
+		if (this._disposed || this._requests.Count == 0)
+			return Task.CompletedTask;
+
+		_ = Task.Run(() =>
+		{
+			try
+			{
+				foreach (var req in this._requests)
+					// match message
+					if (req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id)
+						if (eventArgs.User.Id != this._client.CurrentUser.Id)
+							req.RemoveReaction(eventArgs.Emoji, eventArgs.User);
+			}
+			catch (Exception ex)
+			{
+				this._client?.Logger.LogError(InteractivityEvents.InteractivityPollError, ex, "Exception occurred while handling reaction remove in poller");
+			}
+		});
+
 		return Task.CompletedTask;
 	}
 
@@ -121,10 +143,24 @@ internal class Poller
 	/// <returns>A Task.</returns>
 	private Task HandleReactionClear(DiscordClient client, MessageReactionsClearEventArgs eventArgs)
 	{
-		foreach (var req in this._requests)
-			// match message
-			if (req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id)
-				req.ClearCollected();
+		if (this._disposed || this._requests.Count == 0)
+			return Task.CompletedTask;
+
+		_ = Task.Run(() =>
+		{
+			try
+			{
+				foreach (var req in this._requests)
+					// match message
+					if (req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id)
+						req.ClearCollected();
+			}
+			catch (Exception ex)
+			{
+				this._client?.Logger.LogError(InteractivityEvents.InteractivityPollError, ex, "Exception occurred while handling reaction clear in poller");
+			}
+		});
+
 		return Task.CompletedTask;
 	}
 
@@ -138,11 +174,20 @@ internal class Poller
 	/// </summary>
 	public void Dispose()
 	{
-		this._client.MessageReactionAdded -= this.HandleReactionAdd;
-		this._client.MessageReactionRemoved -= this.HandleReactionRemove;
-		this._client.MessageReactionsCleared -= this.HandleReactionClear;
-		this._client = null;
-		this._requests.Clear();
-		this._requests = null;
+		if (this._disposed)
+			return;
+
+		this._disposed = true;
+
+		var client = this._client;
+		if (client is not null)
+		{
+			client.MessageReactionAdded -= this.HandleReactionAdd;
+			client.MessageReactionRemoved -= this.HandleReactionRemove;
+			client.MessageReactionsCleared -= this.HandleReactionClear;
+		}
+
+		this._requests?.Clear();
+		GC.SuppressFinalize(this);
 	}
 }

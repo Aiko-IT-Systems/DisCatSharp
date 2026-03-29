@@ -18,20 +18,17 @@ namespace DisCatSharp.Interactivity;
 /// <summary>
 ///     Extension class for DisCatSharp.Interactivity
 /// </summary>
-public class InteractivityExtension : BaseExtension
+public class InteractivityExtension : BaseExtension, IDisposable
 {
 	private ComponentEventWaiter _componentEventWaiter;
-
-	private EventWaiter<ComponentInteractionCreateEventArgs> _componentInteractionWaiter;
 	private ComponentPaginator _compPaginator;
+	private bool _disposed;
 
 	private EventWaiter<MessageCreateEventArgs> _messageCreatedWaiter;
 
 	private EventWaiter<MessageReactionAddEventArgs> _messageReactionAddWaiter;
 
 	private ModalEventWaiter _modalEventWaiter;
-
-	private EventWaiter<ComponentInteractionCreateEventArgs> _modalInteractionWaiter;
 
 	private Paginator _paginator;
 
@@ -62,17 +59,21 @@ public class InteractivityExtension : BaseExtension
 	protected internal override void Setup(DiscordClient client)
 	{
 		this.Client = client;
-		this._messageCreatedWaiter = new(this.Client);
-		this._messageReactionAddWaiter = new(this.Client);
-		this._componentInteractionWaiter = new(this.Client);
-		this._modalInteractionWaiter = new(this.Client);
-		this._typingStartWaiter = new(this.Client);
+		this._messageCreatedWaiter = new(this.Client,
+			h => this.Client.MessageCreated += h,
+			h => this.Client.MessageCreated -= h);
+		this._messageReactionAddWaiter = new(this.Client,
+			h => this.Client.MessageReactionAdded += h,
+			h => this.Client.MessageReactionAdded -= h);
+		this._typingStartWaiter = new(this.Client,
+			h => this.Client.TypingStarted += h,
+			h => this.Client.TypingStarted -= h);
 		this._poller = new(this.Client);
 		this._reactionCollector = new(this.Client);
 		this._paginator = new(this.Client);
 		this._compPaginator = new(this.Client, this.Config);
-		this._componentEventWaiter = new(this.Client, this.Config);
-		this._modalEventWaiter = new(this.Client, this.Config);
+		this._componentEventWaiter = new(this.Client);
+		this._modalEventWaiter = new(this.Client);
 	}
 
 	/// <summary>
@@ -817,13 +818,19 @@ public class InteractivityExtension : BaseExtension
 		var bts = buttons ?? this.Config.PaginationButtons;
 
 		bts = new(bts);
+
+		var pageList = pages as IList<Page> ?? [.. pages];
+
+		if (pageList.Count == 0)
+			throw new ArgumentException("You need to provide at least 1 page.", nameof(pages));
+
 		if (bhv is PaginationBehaviour.Ignore)
 		{
 			bts.SkipLeft.Disable();
 			bts.Left.Disable();
 		}
 
-		var page = pages.First();
+		var page = pageList[0];
 		var builder = new DiscordMessageBuilder();
 		if (page.Content is not null)
 			builder.WithContent(page.Content);
@@ -833,7 +840,7 @@ public class InteractivityExtension : BaseExtension
 
 		var message = await builder.SendAsync(channel).ConfigureAwait(false);
 
-		var req = new ButtonPaginationRequest(message, user, bhv, del, bts, pages, token == default ? this.GetCancellationToken() : token);
+		var req = new ButtonPaginationRequest(message, user, bhv, del, bts, pageList, token == default ? this.GetCancellationToken() : token);
 
 		await this._compPaginator.DoPaginationAsync(req).ConfigureAwait(false);
 	}
@@ -910,7 +917,12 @@ public class InteractivityExtension : BaseExtension
 		TimeSpan? timeoutOverride = null
 	)
 	{
-		var page = pages.First();
+		var pageList = pages as IList<Page> ?? [.. pages];
+
+		if (pageList.Count == 0)
+			throw new ArgumentException("You need to provide at least 1 page.", nameof(pages));
+
+		var page = pageList[0];
 		var builder = new DiscordMessageBuilder();
 		if (page.Content is not null)
 			builder.WithContent(page.Content);
@@ -924,7 +936,7 @@ public class InteractivityExtension : BaseExtension
 		var del = deletion ?? this.Config.PaginationDeletion;
 		var ems = emojis ?? this.Config.PaginationEmojis;
 
-		var pRequest = new PaginationRequest(m, user, bhv, del, ems, timeout, pages);
+		var pRequest = new PaginationRequest(m, user, bhv, del, ems, timeout, pageList);
 
 		await this._paginator.DoPaginationAsync(pRequest).ConfigureAwait(false);
 	}
@@ -951,15 +963,21 @@ public class InteractivityExtension : BaseExtension
 		var bts = buttons ?? this.Config.PaginationButtons;
 
 		bts = new(bts);
+
+		var pageList = pages as IList<Page> ?? [.. pages];
+
+		if (pageList.Count == 0)
+			throw new ArgumentException("You need to provide at least 1 page.", nameof(pages));
+
 		if (bhv is PaginationBehaviour.Ignore)
 		{
 			bts.SkipLeft.Disable();
 			bts.Left.Disable();
 		}
 
-		if (pages.Count() is 1)
+		if (pageList.Count is 1)
 		{
-			bts.SkipRight.Disable();
+			bts.SkipLeft.Disable();
 			bts.Left.Disable();
 			bts.Stop.Disable();
 			bts.Right.Disable();
@@ -970,7 +988,7 @@ public class InteractivityExtension : BaseExtension
 
 		if (deferred)
 		{
-			var page = pages.First();
+			var page = pageList[0];
 			var builder = new DiscordWebhookBuilder();
 			if (!page.UsesCV2)
 			{
@@ -990,7 +1008,7 @@ public class InteractivityExtension : BaseExtension
 		}
 		else
 		{
-			var page = pages.First();
+			var page = pageList[0];
 			var builder = new DiscordInteractionResponseBuilder();
 			if (!page.UsesCV2)
 			{
@@ -1011,7 +1029,7 @@ public class InteractivityExtension : BaseExtension
 			message = (await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, builder).ConfigureAwait(false)).Message!;
 		}
 
-		var req = new InteractionPaginationRequest(interaction, message, user, bhv, del, bts, pages, token);
+		var req = new InteractionPaginationRequest(interaction, message, user, bhv, del, bts, pageList, token);
 
 		await this._compPaginator.DoPaginationAsync(req).ConfigureAwait(false);
 	}
@@ -1065,7 +1083,7 @@ public class InteractivityExtension : BaseExtension
 
 				for (var i = 0; i < subsplit.Length; i++)
 				{
-					s += subsplit[i];
+					s += $"{subsplit[i]}\n";
 					if (i < 15 || i % 15 is not 0)
 						continue;
 
@@ -1166,26 +1184,34 @@ public class InteractivityExtension : BaseExtension
 	///     Gets the cancellation token.
 	/// </summary>
 	/// <param name="timeout">The timeout.</param>
-	private CancellationToken GetCancellationToken(TimeSpan? timeout = null) => new CancellationTokenSource(timeout ?? this.Config.Timeout).Token;
+	private CancellationToken GetCancellationToken(TimeSpan? timeout = null)
+	{
+		var cts = new CancellationTokenSource(timeout ?? this.Config.Timeout);
+		var token = cts.Token;
+		token.Register(() => cts.Dispose());
+		return token;
+	}
 
 	/// <summary>
-	///     Handles an invalid interaction.
+	///     Disposes the interactivity extension and all internal components.
 	/// </summary>
-	/// <param name="interaction">The interaction.</param>
-	private async Task HandleInvalidInteraction(DiscordInteraction interaction)
+	public void Dispose()
 	{
-		var at = this.Config.ResponseBehavior switch
-		{
-			InteractionResponseBehavior.Ack => interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate),
-			InteractionResponseBehavior.Respond => interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new()
-			{
-				Content = this.Config.ResponseMessage,
-				IsEphemeral = true
-			}),
-			InteractionResponseBehavior.Ignore => Task.CompletedTask,
-			_ => throw new ArgumentException("Unknown enum value.")
-		};
+		if (this._disposed)
+			return;
 
-		await at.ConfigureAwait(false);
+		this._disposed = true;
+
+		this._messageCreatedWaiter?.Dispose();
+		this._messageReactionAddWaiter?.Dispose();
+		this._typingStartWaiter?.Dispose();
+		this._poller?.Dispose();
+		this._reactionCollector?.Dispose();
+		this._paginator?.Dispose();
+		this._compPaginator?.Dispose();
+		this._componentEventWaiter?.Dispose();
+		this._modalEventWaiter?.Dispose();
+
+		GC.SuppressFinalize(this);
 	}
 }

@@ -18,8 +18,9 @@ namespace DisCatSharp.Interactivity.EventHandling;
 /// </summary>
 internal class Paginator : IPaginator
 {
-	private DiscordClient _client;
-	private ConcurrentHashSet<IPaginationRequest> _requests;
+	private readonly DiscordClient _client;
+	private bool _disposed;
+	private readonly ConcurrentHashSet<IPaginationRequest> _requests;
 
 	/// <summary>
 	///     Creates a new EventWaiter object.
@@ -73,12 +74,21 @@ internal class Paginator : IPaginator
 	/// </summary>
 	public void Dispose()
 	{
-		this._client.MessageReactionAdded -= this.HandleReactionAdd;
-		this._client.MessageReactionRemoved -= this.HandleReactionRemove;
-		this._client.MessageReactionsCleared -= this.HandleReactionClear;
-		this._client = null;
-		this._requests.Clear();
-		this._requests = null;
+		if (this._disposed)
+			return;
+
+		this._disposed = true;
+
+		var client = this._client;
+		if (client is not null)
+		{
+			client.MessageReactionAdded -= this.HandleReactionAdd;
+			client.MessageReactionRemoved -= this.HandleReactionRemove;
+			client.MessageReactionsCleared -= this.HandleReactionClear;
+		}
+
+		this._requests?.Clear();
+		GC.SuppressFinalize(this);
 	}
 
 	/// <summary>
@@ -88,42 +98,49 @@ internal class Paginator : IPaginator
 	/// <param name="eventArgs">The event's arguments.</param>
 	private Task HandleReactionAdd(DiscordClient client, MessageReactionAddEventArgs eventArgs)
 	{
-		if (this._requests.Count == 0)
+		if (this._disposed || this._requests.Count == 0)
 			return Task.CompletedTask;
 
 		_ = Task.Run(async () =>
 		{
-			foreach (var req in this._requests)
+			try
 			{
-				var emojis = await req.GetEmojisAsync().ConfigureAwait(false);
-				var msg = await req.GetMessageAsync().ConfigureAwait(false);
-				var usr = await req.GetUserAsync().ConfigureAwait(false);
-
-				if (msg.Id == eventArgs.Message.Id)
+				foreach (var req in this._requests)
 				{
-					if (eventArgs.User.Id == usr.Id)
+					var emojis = await req.GetEmojisAsync().ConfigureAwait(false);
+					var msg = await req.GetMessageAsync().ConfigureAwait(false);
+					var usr = await req.GetUserAsync().ConfigureAwait(false);
+
+					if (msg.Id == eventArgs.Message.Id)
 					{
-						if (req.PageCount > 1 &&
-							(eventArgs.Emoji == emojis.Left ||
-							 eventArgs.Emoji == emojis.SkipLeft ||
-							 eventArgs.Emoji == emojis.Right ||
-							 eventArgs.Emoji == emojis.SkipRight ||
-							 eventArgs.Emoji == emojis.Stop))
-							await this.PaginateAsync(req, eventArgs.Emoji).ConfigureAwait(false);
-						else if (eventArgs.Emoji == emojis.Stop &&
-								 req is PaginationRequest { PaginationDeletion: PaginationDeletion.DeleteMessage })
-							await this.PaginateAsync(req, eventArgs.Emoji).ConfigureAwait(false);
-						else
-							await msg.DeleteReactionAsync(eventArgs.Emoji, eventArgs.User).ConfigureAwait(false);
+						if (eventArgs.User.Id == usr.Id)
+						{
+							if (req.PageCount > 1 &&
+								(eventArgs.Emoji == emojis.Left ||
+								 eventArgs.Emoji == emojis.SkipLeft ||
+								 eventArgs.Emoji == emojis.Right ||
+								 eventArgs.Emoji == emojis.SkipRight ||
+								 eventArgs.Emoji == emojis.Stop))
+								await this.PaginateAsync(req, eventArgs.Emoji).ConfigureAwait(false);
+							else if (eventArgs.Emoji == emojis.Stop &&
+									 req is PaginationRequest { PaginationDeletion: PaginationDeletion.DeleteMessage })
+								await this.PaginateAsync(req, eventArgs.Emoji).ConfigureAwait(false);
+							else
+								await msg.DeleteReactionAsync(eventArgs.Emoji, eventArgs.User).ConfigureAwait(false);
+						}
+						else if (eventArgs.User.Id != this._client.CurrentUser.Id)
+							if (eventArgs.Emoji != emojis.Left &&
+								eventArgs.Emoji != emojis.SkipLeft &&
+								eventArgs.Emoji != emojis.Right &&
+								eventArgs.Emoji != emojis.SkipRight &&
+								eventArgs.Emoji != emojis.Stop)
+								await msg.DeleteReactionAsync(eventArgs.Emoji, eventArgs.User).ConfigureAwait(false);
 					}
-					else if (eventArgs.User.Id != this._client.CurrentUser.Id)
-						if (eventArgs.Emoji != emojis.Left &&
-							eventArgs.Emoji != emojis.SkipLeft &&
-							eventArgs.Emoji != emojis.Right &&
-							eventArgs.Emoji != emojis.SkipRight &&
-							eventArgs.Emoji != emojis.Stop)
-							await msg.DeleteReactionAsync(eventArgs.Emoji, eventArgs.User).ConfigureAwait(false);
 				}
+			}
+			catch (Exception ex)
+			{
+				this._client?.Logger.LogError(InteractivityEvents.InteractivityPaginationError, ex, "Exception occurred while handling reaction add in paginator");
 			}
 		});
 		return Task.CompletedTask;
@@ -136,31 +153,38 @@ internal class Paginator : IPaginator
 	/// <param name="eventArgs">The event's arguments.</param>
 	private Task HandleReactionRemove(DiscordClient client, MessageReactionRemoveEventArgs eventArgs)
 	{
-		if (this._requests.Count == 0)
+		if (this._disposed || this._requests.Count == 0)
 			return Task.CompletedTask;
 
 		_ = Task.Run(async () =>
 		{
-			foreach (var req in this._requests)
+			try
 			{
-				var emojis = await req.GetEmojisAsync().ConfigureAwait(false);
-				var msg = await req.GetMessageAsync().ConfigureAwait(false);
-				var usr = await req.GetUserAsync().ConfigureAwait(false);
+				foreach (var req in this._requests)
+				{
+					var emojis = await req.GetEmojisAsync().ConfigureAwait(false);
+					var msg = await req.GetMessageAsync().ConfigureAwait(false);
+					var usr = await req.GetUserAsync().ConfigureAwait(false);
 
-				if (msg.Id == eventArgs.Message.Id)
-					if (eventArgs.User.Id == usr.Id)
-					{
-						if (req.PageCount > 1 &&
-							(eventArgs.Emoji == emojis.Left ||
-							 eventArgs.Emoji == emojis.SkipLeft ||
-							 eventArgs.Emoji == emojis.Right ||
-							 eventArgs.Emoji == emojis.SkipRight ||
-							 eventArgs.Emoji == emojis.Stop))
-							await this.PaginateAsync(req, eventArgs.Emoji).ConfigureAwait(false);
-						else if (eventArgs.Emoji == emojis.Stop &&
-								 req is PaginationRequest { PaginationDeletion: PaginationDeletion.DeleteMessage })
-							await this.PaginateAsync(req, eventArgs.Emoji).ConfigureAwait(false);
-					}
+					if (msg.Id == eventArgs.Message.Id)
+						if (eventArgs.User.Id == usr.Id)
+						{
+							if (req.PageCount > 1 &&
+								(eventArgs.Emoji == emojis.Left ||
+								 eventArgs.Emoji == emojis.SkipLeft ||
+								 eventArgs.Emoji == emojis.Right ||
+								 eventArgs.Emoji == emojis.SkipRight ||
+								 eventArgs.Emoji == emojis.Stop))
+								await this.PaginateAsync(req, eventArgs.Emoji).ConfigureAwait(false);
+							else if (eventArgs.Emoji == emojis.Stop &&
+									 req is PaginationRequest { PaginationDeletion: PaginationDeletion.DeleteMessage })
+								await this.PaginateAsync(req, eventArgs.Emoji).ConfigureAwait(false);
+						}
+				}
+			}
+			catch (Exception ex)
+			{
+				this._client?.Logger.LogError(InteractivityEvents.InteractivityPaginationError, ex, "Exception occurred while handling reaction remove in paginator");
 			}
 		});
 
@@ -174,17 +198,24 @@ internal class Paginator : IPaginator
 	/// <param name="eventArgs">The eventArgs.</param>
 	private Task HandleReactionClear(DiscordClient client, MessageReactionsClearEventArgs eventArgs)
 	{
-		if (this._requests.Count == 0)
+		if (this._disposed || this._requests.Count == 0)
 			return Task.CompletedTask;
 
 		_ = Task.Run(async () =>
 		{
-			foreach (var req in this._requests)
+			try
 			{
-				var msg = await req.GetMessageAsync().ConfigureAwait(false);
+				foreach (var req in this._requests)
+				{
+					var msg = await req.GetMessageAsync().ConfigureAwait(false);
 
-				if (msg.Id == eventArgs.Message.Id)
-					await this.ResetReactionsAsync(req).ConfigureAwait(false);
+					if (msg.Id == eventArgs.Message.Id)
+						await this.ResetReactionsAsync(req).ConfigureAwait(false);
+				}
+			}
+			catch (Exception ex)
+			{
+				this._client?.Logger.LogError(InteractivityEvents.InteractivityPaginationError, ex, "Exception occurred while handling reaction clear in paginator");
 			}
 		});
 

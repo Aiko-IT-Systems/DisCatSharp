@@ -51,6 +51,8 @@ public class PollRequest
 			this.Collected.Add(new(e));
 	}
 
+	private readonly Lock _collectedLock = new();
+
 	/// <summary>
 	///     Removes the reaction.
 	/// </summary>
@@ -58,14 +60,19 @@ public class PollRequest
 	/// <param name="member">The member.</param>
 	internal void RemoveReaction(DiscordEmoji emoji, DiscordUser member)
 	{
-		if (this.Collected.Any(x => x.Emoji == emoji))
-			if (this.Collected.Any(x => x.Voted.Contains(member)))
-			{
-				var e = this.Collected.First(x => x.Emoji == emoji);
-				this.Collected.TryRemove(e);
-				e.Voted.TryRemove(member);
-				this.Collected.Add(e);
-			}
+		lock (this._collectedLock)
+		{
+			var e = this.Collected.FirstOrDefault(x => x.Emoji == emoji);
+			if (e is null)
+				return;
+
+			if (!e.Voted.Contains(member))
+				return;
+
+			this.Collected.TryRemove(e);
+			e.Voted.TryRemove(member);
+			this.Collected.Add(e);
+		}
 	}
 
 	/// <summary>
@@ -75,15 +82,22 @@ public class PollRequest
 	/// <param name="member">The member.</param>
 	internal void AddReaction(DiscordEmoji emoji, DiscordUser member)
 	{
-		if (this.Collected.Any(x => x.Emoji == emoji))
-			if (!this.Collected.Any(x => x.Voted.Contains(member)))
-			{
-				var e = this.Collected.First(x => x.Emoji == emoji);
-				this.Collected.TryRemove(e);
-				e.Voted.Add(member);
-				this.Collected.Add(e);
-			}
+		lock (this._collectedLock)
+		{
+			var e = this.Collected.FirstOrDefault(x => x.Emoji == emoji);
+			if (e is null)
+				return;
+
+			if (this.Collected.Any(x => x.Voted.Contains(member)))
+				return;
+
+			this.Collected.TryRemove(e);
+			e.Voted.Add(member);
+			this.Collected.Add(e);
+		}
 	}
+
+	private bool _disposed;
 
 	~PollRequest()
 	{
@@ -95,8 +109,13 @@ public class PollRequest
 	/// </summary>
 	public void Dispose()
 	{
+		if (this._disposed)
+			return;
+
+		this._disposed = true;
 		this.Ct.Dispose();
 		this.Tcs = null;
+		GC.SuppressFinalize(this);
 	}
 }
 
