@@ -181,7 +181,7 @@ internal static class ApplicationCommandEqualityChecks
 	/// <param name="sourceDictionary">The source dictionary.</param>
 	/// <param name="targetDictionary">The target dictionary.</param>
 	/// <returns>Whether both dictionaries are equal.</returns>
-	internal static bool AreDictionariesEqual(this Dictionary<string, string> sourceDictionary, Dictionary<string, string> targetDictionary)
+	internal static bool AreDictionariesEqual(this Dictionary<string, string>? sourceDictionary, Dictionary<string, string>? targetDictionary)
 	{
 		if (sourceDictionary?.Count != targetDictionary?.Count)
 			return false;
