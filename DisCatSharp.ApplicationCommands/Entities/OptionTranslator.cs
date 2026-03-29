@@ -73,7 +73,7 @@ public sealed class OptionTranslator
 		};
 
 		if (option.Choices is not null)
-			optionTranslator.Choices = option.Choices.Select(ChoiceTranslator.FromApplicationCommandChoice).ToList();
+			optionTranslator.Choices = [.. option.Choices.Select(ChoiceTranslator.FromApplicationCommandChoice)];
 
 		return optionTranslator;
 	}
