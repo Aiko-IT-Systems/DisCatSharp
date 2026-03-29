@@ -215,12 +215,19 @@ internal class PaginationRequest : IPaginationRequest
 		this.Dispose();
 	}
 
+	private bool _disposed;
+
 	/// <summary>
 	///     Disposes this PaginationRequest.
 	/// </summary>
 	public void Dispose()
 	{
+		if (this._disposed)
+			return;
+
+		this._disposed = true;
 		this._ct.Dispose();
 		this._tcs = null;
+		GC.SuppressFinalize(this);
 	}
 }

@@ -22,6 +22,7 @@ internal class ComponentPaginator : IPaginator
 	private readonly DiscordClient _client;
 	private readonly InteractivityConfiguration _config;
 	private readonly ConcurrentDictionary<ulong, IPaginationRequest> _requests = new();
+	private bool _disposed;
 
 	/// <summary>
 	///     Initializes a new instance of the <see cref="ComponentPaginator" /> class.
@@ -72,7 +73,22 @@ internal class ComponentPaginator : IPaginator
 	/// <summary>
 	///     Disposes the paginator.
 	/// </summary>
-	public void Dispose() => this._client.ComponentInteractionCreated -= this.Handle;
+	public void Dispose()
+	{
+		if (this._disposed)
+			return;
+
+		this._disposed = true;
+		this._client.ComponentInteractionCreated -= this.Handle;
+		this._requests.Clear();
+		GC.SuppressFinalize(this);
+	}
+
+	/// <inheritdoc />
+	~ComponentPaginator()
+	{
+		this.Dispose();
+	}
 
 	/// <summary>
 	///     Handles the pagination event.
