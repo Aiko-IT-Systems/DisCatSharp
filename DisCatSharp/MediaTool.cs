@@ -167,9 +167,7 @@ public sealed class MediaTool : IDisposable
 
 		this.SourceStream.Seek(0, SeekOrigin.Begin);
 		var buff = new byte[this.SourceStream.Length];
-		var br = 0;
-		while (br < buff.Length)
-			br += this.SourceStream.Read(buff, br, (int)this.SourceStream.Length - br);
+		this.SourceStream.ReadExactly(buff, 0, buff.Length);
 
 		sb.Append(Convert.ToBase64String(buff));
 

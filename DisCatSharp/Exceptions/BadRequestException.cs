@@ -1,5 +1,6 @@
 using DisCatSharp.Net;
 
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace DisCatSharp.Exceptions;
@@ -33,7 +34,7 @@ public class BadRequestException : DisCatSharpException
 			if (j["errors"] is not null)
 				this.Errors = j["errors"]!.ToString();
 		}
-		catch
+		catch (JsonReaderException)
 		{ }
 	}
 

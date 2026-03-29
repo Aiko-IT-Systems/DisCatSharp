@@ -54,6 +54,11 @@ internal sealed class ReportFingerprintCache
 
 	private void Trim()
 	{
+		// Minor TOCTOU accepted here: _entries is a ConcurrentDictionary and _entryOrder is a ConcurrentQueue.
+		// The count check and subsequent dequeue are not atomic, so the cache may transiently exceed MaximumEntries
+		// by a small amount under contention. This is intentional — correctness does not depend on an exact bound;
+		// the cache is a soft deduplication aid, not a hard limit. Adding a lock would serialise all reservations
+		// and is not worth the contention cost for this use-case.
 		while (this._entries.Count > MaximumEntries && this._entryOrder.TryDequeue(out var staleKey))
 			_ = this._entries.TryRemove(staleKey, out _);
 	}

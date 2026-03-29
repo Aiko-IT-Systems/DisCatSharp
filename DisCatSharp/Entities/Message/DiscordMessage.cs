@@ -124,7 +124,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	{
 		this.Discord = other.Discord;
 
-		this.AttachmentsInternal = other.AttachmentsInternal; // the attachments cannot change, thus no need to copy and reallocate.
+		this.AttachmentsInternal = [.. other.AttachmentsInternal];
 		this.EmbedsInternal = [.. other.EmbedsInternal];
 
 		this.MentionedChannelsInternal = [.. other.MentionedChannelsInternal];

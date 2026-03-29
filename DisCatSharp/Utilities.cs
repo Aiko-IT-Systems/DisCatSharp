@@ -465,7 +465,7 @@ public static class Utilities
 		{
 			return DateTimeOffset.FromUnixTimeSeconds(unixTime);
 		}
-		catch (Exception)
+		catch (ArgumentOutOfRangeException)
 		{
 			if (shouldThrow)
 				throw;
@@ -487,7 +487,7 @@ public static class Utilities
 		{
 			return DateTimeOffset.FromUnixTimeMilliseconds(unixTime);
 		}
-		catch (Exception)
+		catch (ArgumentOutOfRangeException)
 		{
 			if (shouldThrow)
 				throw;
