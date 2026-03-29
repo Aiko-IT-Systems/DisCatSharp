@@ -10,6 +10,7 @@ DisCatSharp Release Notes
     - Adjusted Sentry environment tagging so local stable source builds report as `dev` while CI stable builds continue reporting as `production`.
     - Removed the separate `ReportMissingFields` telemetry switch so schema-drift diagnostics now follow `EnableSentry` directly.
     - Prevented the temporary sharded gateway-info client from reusing the parent telemetry sink and emitting spurious session-ended events.
+    - Made `DiscordApplicationCommandLocalization.ValidLocales` a static `FrozenSet<string>` for O(1) lookup and zero per-instance allocation.
 
 DisCatSharp.Attributes Release Notes
 
@@ -22,6 +23,19 @@ DisCatSharp.ApplicationCommands Release Notes
     - Updated command error flow to use dedicated checks-failed events instead of the older errored-event-only pattern.
     - Included follow-up fixes and regression coverage around application-command checks-failed behavior and execution logging.
     - Added diagnostics-sink reporting for application-command execution, registration, and autocomplete failure paths.
+    - Fixed command equality change detection: defensive copies for both source and target, type-based matching for entry points and context menus, and explicit `Optional` clearing for unchanged option fields.
+    - Fixed entry point (launch) command registration so it flows through normal create/overwrite/unchanged detection instead of being unconditionally re-created on every startup.
+    - Strip built-in localizations from the entry point command when `EnableLocalization` is disabled.
+    - Added `RegisterEntryPointCommand()` on `ApplicationCommandsExtension` so consumers can configure entry point properties (description, handler type, contexts, integration types) without hardcoding them.
+    - Replaced three wasteful `new ServiceCollection().BuildServiceProvider()` allocations with a shared `EmptyServiceProvider.Instance` singleton.
+    - Hardened `ChoiceProvider.Services` with a backing field and `InvalidOperationException` guard when accessed before initialization.
+    - Fixed bare `catch` blocks to use filtered `catch (Exception ex)` for proper debugger break behavior.
+    - Fixed unsafe `int`/`ulong` casts to use `Convert.ToInt32`/`Convert.ToUInt64` for safe numeric conversion.
+    - Normalized `ToLower()` calls to `ToLowerInvariant()` for culture-independent command name handling.
+    - Improved choice value comparison with numeric normalization (`AreChoiceValuesEqual`) to avoid false change detection between `int`/`long`/`double` representations from JSON.
+    - Rewrote `DeepEqualOptions` to collect all option mismatches with per-field diagnostic messages instead of returning on the first difference.
+    - Added thread-safe snapshots for public collection properties (`GlobalCommands`, `GuildCommands`).
+    - Isolated `resultCommands` from the input `updateList` to prevent mutation of caller-provided data.
 
 DisCatSharp.CommandsNext Release Notes
 
