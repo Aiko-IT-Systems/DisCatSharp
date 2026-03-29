@@ -31,7 +31,7 @@ DisCatSharp.ApplicationCommands Release Notes
     - Hardened `ChoiceProvider.Services` with a backing field and `InvalidOperationException` guard when accessed before initialization.
     - Fixed bare `catch` blocks to use filtered `catch (Exception ex)` for proper debugger break behavior.
     - Fixed unsafe `int`/`ulong` casts to use `Convert.ToInt32`/`Convert.ToUInt64` for safe numeric conversion.
-    - Normalized `ToLower()` calls to `ToLowerInvariant()` for culture-independent command name handling.
+    - Normalized `ToLower()` calls to `ToLowerInvariant()` for culture-independent command name handling (including `SlashCommandGroupAttribute`).
     - Improved choice value comparison with numeric normalization (`AreChoiceValuesEqual`) to avoid false change detection between `int`/`long`/`double` representations from JSON.
     - Rewrote `DeepEqualOptions` to collect all option mismatches with per-field diagnostic messages instead of returning on the first difference.
     - Added thread-safe snapshots for public collection properties (`GlobalCommands`, `GuildCommands`).
@@ -45,8 +45,29 @@ DisCatSharp.CommandsNext Release Notes
 
 DisCatSharp.Interactivity Release Notes
 
-    - No notable feature changes.
-    - Package alignment was updated as part of the current framework support refresh.
+    - Fixed `ComponentCollectRequest.Collected` never being initialized, which caused `NullReferenceException` on any component collect operation.
+    - Replaced non-thread-safe `Dictionary` in `ComponentPaginator` with `ConcurrentDictionary` to prevent race condition corruption during concurrent pagination.
+    - Added try-catch blocks around all fire-and-forget `Task.Run` calls in `Paginator` and `Poller` to prevent silent exception swallowing.
+    - Fixed `CancellationTokenSource` leak in `GetCancellationToken` by registering a self-disposal callback on the token.
+    - Fixed `InteractionPaginationRequest.GetPageAsync` so navigation buttons are properly disabled for single-page pagination and boundary conditions.
+    - Removed broken followup-without-ACK path in `ComponentEventWaiter.Handle` that caused Discord API 400 errors on non-matching interactions.
+    - Eliminated shared mutable `_builder` field in `ComponentPaginator`; each pagination response now uses a local builder to prevent concurrent corruption.
+    - Aligned `PaginationButtons` default custom IDs with their declared constants so custom ID matching works correctly.
+    - Removed spam followup messages in `ModalEventWaiter.Handle` for every non-matching interaction event.
+    - Fixed dispose-race in `Paginator` and `Poller` where `_client` was set to null before pending `Task.Run` could complete, causing `NullReferenceException`.
+    - Replaced reflection-based event lookup in `EventWaiter<T>` with explicit subscribe/unsubscribe delegates for the three known event types; reflection kept only as fallback for the dynamic `WaitForEventArgsAsync<T>` / `CollectEventArgsAsync<T>` public API.
+    - Replaced reflection-based event lookup in `ReactionCollector` with direct `+=` / `-=` event subscription matching the pattern `Paginator` and `Poller` already use.
+    - Added `lock()` guards around non-atomic read-modify-write operations on `ConcurrentHashSet` in `ReactionCollector` and `PollRequest` to prevent race conditions losing reactions or votes.
+    - Fixed multiple enumeration of `IEnumerable<Page>` in `SendPaginatedMessageAsync` / `SendPaginatedResponseAsync` by coercing to `IList<Page>` upfront.
+    - Added empty-pages guard (`ArgumentException`) in pagination methods instead of letting `pages.First()` throw an unhelpful exception.
+    - Removed dead code `HandleInvalidInteraction` method and unused `_componentInteractionWaiter` / `_modalInteractionWaiter` fields along with their suppressions.
+    - `IPaginator` now extends `IDisposable` so paginators held via the interface can be properly disposed.
+    - `InteractivityExtension` now implements `IDisposable` with a `_disposed` guard that disposes all nine internal components (waiters, paginators, poller, collector).
+    - Added double-dispose guards with `_disposed` flags to `ComponentPaginator`, `PaginationRequest`, `PollRequest`, `ReactionCollectRequest`, `Paginator`, and `Poller`.
+    - Replaced unnecessary `await Task.Yield()` calls in `PaginationRequest` with `Task.FromResult` / `Task.CompletedTask`.
+    - Renamed confusing `_behaviorBehavior` field to `_buttonBehavior`.
+    - `InteractivityHelpers.Recalculate` now throws if all pages lack embeds and preserves content-only pages in the output.
+    - Stored `CancellationTokenRegistration` in `ComponentMatchRequest` and `ModalMatchRequest` for proper lifecycle tracking.
     - Added diagnostics-sink reporting for waiter, paginator, poller, and collector exception paths.
 
 DisCatSharp.Common Release Notes
