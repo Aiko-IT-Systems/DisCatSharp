@@ -59,9 +59,15 @@ public class InteractivityExtension : BaseExtension, IDisposable
 	protected internal override void Setup(DiscordClient client)
 	{
 		this.Client = client;
-		this._messageCreatedWaiter = new(this.Client);
-		this._messageReactionAddWaiter = new(this.Client);
-		this._typingStartWaiter = new(this.Client);
+		this._messageCreatedWaiter = new(this.Client,
+			h => this.Client.MessageCreated += h,
+			h => this.Client.MessageCreated -= h);
+		this._messageReactionAddWaiter = new(this.Client,
+			h => this.Client.MessageReactionAdded += h,
+			h => this.Client.MessageReactionAdded -= h);
+		this._typingStartWaiter = new(this.Client,
+			h => this.Client.TypingStarted += h,
+			h => this.Client.TypingStarted -= h);
 		this._poller = new(this.Client);
 		this._reactionCollector = new(this.Client);
 		this._paginator = new(this.Client);

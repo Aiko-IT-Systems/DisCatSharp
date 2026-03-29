@@ -2,13 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
 using ConcurrentCollections;
 
-using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Telemetry;
@@ -24,16 +22,7 @@ namespace DisCatSharp.Interactivity.EventHandling;
 internal class ReactionCollector : IDisposable
 {
 	private DiscordClient _client;
-
-	private AsyncEvent<DiscordClient, MessageReactionAddEventArgs> _reactionAddEvent;
-	private AsyncEventHandler<DiscordClient, MessageReactionAddEventArgs> _reactionAddHandler;
-
-	private AsyncEvent<DiscordClient, MessageReactionsClearEventArgs> _reactionClearEvent;
-	private AsyncEventHandler<DiscordClient, MessageReactionsClearEventArgs> _reactionClearHandler;
-
-	private AsyncEvent<DiscordClient, MessageReactionRemoveEventArgs> _reactionRemoveEvent;
-	private AsyncEventHandler<DiscordClient, MessageReactionRemoveEventArgs> _reactionRemoveHandler;
-
+	private bool _disposed;
 	private ConcurrentHashSet<ReactionCollectRequest> _requests;
 
 	/// <summary>
@@ -43,52 +32,33 @@ internal class ReactionCollector : IDisposable
 	public ReactionCollector(DiscordClient client)
 	{
 		this._client = client;
-		var tinfo = this._client.GetType().GetTypeInfo();
-
 		this._requests = [];
 
-		// Grabbing all three events from client
-		var handler = tinfo.DeclaredFields.FirstOrDefault(x => x.FieldType == typeof(AsyncEvent<DiscordClient, MessageReactionAddEventArgs>))
-			?? throw new InvalidOperationException("No event field of type AsyncEvent<DiscordClient, MessageReactionAddEventArgs> found on DiscordClient.");
-
-		this._reactionAddEvent = (AsyncEvent<DiscordClient, MessageReactionAddEventArgs>)handler.GetValue(this._client);
-		this._reactionAddHandler = this.HandleReactionAdd;
-		this._reactionAddEvent.Register(this._reactionAddHandler);
-
-		handler = tinfo.DeclaredFields.FirstOrDefault(x => x.FieldType == typeof(AsyncEvent<DiscordClient, MessageReactionRemoveEventArgs>))
-			?? throw new InvalidOperationException("No event field of type AsyncEvent<DiscordClient, MessageReactionRemoveEventArgs> found on DiscordClient.");
-
-		this._reactionRemoveEvent = (AsyncEvent<DiscordClient, MessageReactionRemoveEventArgs>)handler.GetValue(this._client);
-		this._reactionRemoveHandler = this.HandleReactionRemove;
-		this._reactionRemoveEvent.Register(this._reactionRemoveHandler);
-
-		handler = tinfo.DeclaredFields.FirstOrDefault(x => x.FieldType == typeof(AsyncEvent<DiscordClient, MessageReactionsClearEventArgs>))
-			?? throw new InvalidOperationException("No event field of type AsyncEvent<DiscordClient, MessageReactionsClearEventArgs> found on DiscordClient.");
-
-		this._reactionClearEvent = (AsyncEvent<DiscordClient, MessageReactionsClearEventArgs>)handler.GetValue(this._client);
-		this._reactionClearHandler = this.HandleReactionClear;
-		this._reactionClearEvent.Register(this._reactionClearHandler);
+		this._client.MessageReactionAdded += this.HandleReactionAdd;
+		this._client.MessageReactionRemoved += this.HandleReactionRemove;
+		this._client.MessageReactionsCleared += this.HandleReactionClear;
 	}
 
 	/// <summary>
-	///     Disposes this EventWaiter
+	///     Disposes this EventWaiter.
 	/// </summary>
 	public void Dispose()
 	{
+		if (this._disposed)
+			return;
+
+		this._disposed = true;
+
+		var client = this._client;
+		if (client is not null)
+		{
+			client.MessageReactionAdded -= this.HandleReactionAdd;
+			client.MessageReactionRemoved -= this.HandleReactionRemove;
+			client.MessageReactionsCleared -= this.HandleReactionClear;
+		}
+
 		this._client = null;
-
-		this._reactionAddEvent.Unregister(this._reactionAddHandler);
-		this._reactionRemoveEvent.Unregister(this._reactionRemoveHandler);
-		this._reactionClearEvent.Unregister(this._reactionClearHandler);
-
-		this._reactionAddEvent = null;
-		this._reactionAddHandler = null;
-		this._reactionRemoveEvent = null;
-		this._reactionRemoveHandler = null;
-		this._reactionClearEvent = null;
-		this._reactionClearHandler = null;
-
-		this._requests.Clear();
+		this._requests?.Clear();
 		this._requests = null;
 		GC.SuppressFinalize(this);
 	}

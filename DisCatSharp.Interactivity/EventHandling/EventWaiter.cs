@@ -18,42 +18,69 @@ namespace DisCatSharp.Interactivity.EventHandling;
 ///     EventWaiter is a class that serves as a layer between the InteractivityExtension
 ///     and the DiscordClient to listen to an event and check for matches to a predicate.
 /// </summary>
-/// <typeparam name="T"></typeparam>
+/// <typeparam name="T">The event args type to listen for.</typeparam>
 internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 {
 	private DiscordClient _client;
 	private ConcurrentHashSet<CollectRequest<T>> _collectRequests;
 	private bool _disposed;
-	private AsyncEvent<DiscordClient, T> _event;
+	private readonly Action<AsyncEventHandler<DiscordClient, T>> _unsubscribe;
 	private AsyncEventHandler<DiscordClient, T> _handler;
 	private ConcurrentHashSet<MatchRequest<T>> _matchRequests;
 
 	/// <summary>
 	///     Creates a new EventWaiter object.
 	/// </summary>
-	/// <param name="client">Your DiscordClient</param>
+	/// <param name="client">Your DiscordClient.</param>
+	/// <param name="subscribe">Action to subscribe the handler to the client event.</param>
+	/// <param name="unsubscribe">Action to unsubscribe the handler from the client event.</param>
+	public EventWaiter(
+		DiscordClient client,
+		Action<AsyncEventHandler<DiscordClient, T>> subscribe,
+		Action<AsyncEventHandler<DiscordClient, T>> unsubscribe
+	)
+	{
+		this._client = client;
+		this._unsubscribe = unsubscribe;
+		this._matchRequests = [];
+		this._collectRequests = [];
+		this._handler = this.HandleEvent;
+		subscribe(this._handler);
+	}
+
+	/// <summary>
+	///     Creates a new EventWaiter object using reflection to find the event.
+	///     Use this only when the event type is not known at compile time.
+	/// </summary>
+	/// <param name="client">Your DiscordClient.</param>
 	public EventWaiter(DiscordClient client)
 	{
 		this._client = client;
 		var tinfo = this._client.GetType().GetTypeInfo();
-		var handler = tinfo.DeclaredFields.FirstOrDefault(x => x.FieldType == typeof(AsyncEvent<DiscordClient, T>))
+		var eventField = tinfo.DeclaredFields.FirstOrDefault(x => x.FieldType == typeof(AsyncEvent<DiscordClient, T>))
 			?? throw new InvalidOperationException($"No event field of type AsyncEvent<DiscordClient, {typeof(T).Name}> found on DiscordClient.");
+
+		var asyncEvent = (AsyncEvent<DiscordClient, T>)eventField.GetValue(this._client);
+		this._unsubscribe = h => asyncEvent.Unregister(h);
 		this._matchRequests = [];
 		this._collectRequests = [];
-		this._event = (AsyncEvent<DiscordClient, T>)handler.GetValue(this._client);
 		this._handler = this.HandleEvent;
-		this._event.Register(this._handler);
+		asyncEvent.Register(this._handler);
 	}
 
 	/// <summary>
-	///     Disposes this EventWaiter
+	///     Disposes this EventWaiter.
 	/// </summary>
 	public void Dispose()
 	{
-		this._disposed = true;
-		this._event?.Unregister(this._handler);
+		if (this._disposed)
+			return;
 
-		this._event = null;
+		this._disposed = true;
+
+		if (this._handler is not null)
+			this._unsubscribe?.Invoke(this._handler);
+
 		this._handler = null;
 		this._client = null;
 
