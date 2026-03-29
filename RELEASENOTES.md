@@ -18,6 +18,7 @@ DisCatSharp Release Notes
     - Added non-negative validation for `ShardId` and positive validation for `ShardCount` in `DiscordConfiguration` property setters.
     - Audited `NullValueHandling` across 51 serialized properties in 19 entity files: corrected 25 from `Include` to `Ignore` on fields Discord never reads as explicit `null`; preserved `Include` on 26 fields where `null` carries a distinct semantic (ungrouping channels, disconnecting from voice, clearing timeout/gradient/incident restrictions, null-as-boolean role tags, and unicode-vs-custom emoji disambiguation).
     - Fixed `DiscordMember.BanAsync` and `UnbanAsync` to route through `ApiClient` directly, consistent with all other member REST operations.
+    - Renamed `deleteMessageDays` to `deleteMessageSeconds` on `DiscordMember.BanAsync` and all `DiscordGuild.BanMemberAsync` overloads; removed the legacy days-to-seconds compatibility shim — the API has always accepted seconds. **Note:** positional callers passing day values must be updated manually; named-argument callers are handled by `DCS1102`.
     - Padded log-level labels to eight characters in `DefaultLogger` for consistent column alignment across log lines.
     - Fixed `DiscordEventArgs` scoped service scope to be properly disposed after event dispatch, preventing scoped service leaks on high-volume bots.
 
@@ -137,3 +138,4 @@ DisCatSharp.Analyzer Release Notes
     - Improved `DCS0201` so the override fixer can update `DiscordConfiguration` across project documents.
     - Updated analyzer packaging so `DisCatSharp.Attributes.dll` is bundled with the analyzer package for Roslyn runtime loading.
     - Added analyzer authoring documentation, diagnostic family guidance, release tracking files, and release workflow support for publishing `DisCatSharp.Analyzer`.
+    - Added `DCS1102`, a ban-parameter migration analyzer/code fix: detects `deleteMessageDays:` named arguments on `BanAsync`/`BanMemberAsync` and renames them to `deleteMessageSeconds:`, multiplying integer literals by 86400 automatically.

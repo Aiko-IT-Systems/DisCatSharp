@@ -76,4 +76,5 @@ These rules keep their historical IDs for compatibility.
 
 | Rule ID                              | Category | Severity | Notes                                      |
 | ------------------------------------ | -------- | -------- | ------------------------------------------ |
-| [DCS1101](xref:vs_analyzer_dcs_1101) | Usage    | Info     | Prefer `DiscordClient.GetPresences(userId)` over manual `Presences` filtering |
+| [DCS1101](xref:vs_analyzer_dcs_1101) | Usage    | Warning  | Prefer `DiscordClient.GetPresences(userId)` over manual `Presences` filtering |
+| [DCS1102](xref:vs_analyzer_dcs_1102) | Usage    | Warning  | `deleteMessageDays` renamed to `deleteMessageSeconds` on ban methods; named-argument callers auto-fixed |
