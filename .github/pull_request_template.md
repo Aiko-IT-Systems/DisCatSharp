@@ -37,4 +37,4 @@ Please describe the tests that you ran to verify your changes. Provide instructi
 - [ ] My changes generate no new warnings
 - [ ] Any dependent changes have been merged and published in downstream modules
 
-@Aiko-IT-Systems/discatsharp
+@Aiko-IT-Systems/discatsharp-reviewer
