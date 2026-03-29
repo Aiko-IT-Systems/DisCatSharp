@@ -1,5 +1,26 @@
 DisCatSharp Release Notes
 
+    - Fixed `RingBuffer<T>.CopyTo` to respect the `index` parameter and validate that enough free slots exist before copying, preventing silent data corruption.
+    - Hardened gateway dispatch: all `GuildsInternal` indexer accesses now use `TryGetValue` guards to prevent `KeyNotFoundException` on late-arriving or missing guild payloads.
+    - Synchronized session state during reconnect under `_sessionStateLock` to close a TOCTOU race where `OnHelloAsync` could read a partially-cleared session ID and produce a malformed RESUME payload.
+    - Fixed heartbeat skipped-beat counter reset from a no-op `Interlocked.CompareExchange` to `Volatile.Write`, and cancels the old heartbeat loop before starting a new one to prevent task leaks across reconnects.
+    - Null-guarded `GetSocketLock` to return `null` instead of throwing before the WebSocket is fully initialized.
+    - Made `ReadyGuildIds` thread-safe via a dedicated lock and an atomic `SetReadyGuildIds()` mutator; dispatch now calls the mutator instead of writing directly to the backing set.
+    - Narrowed broad `catch (Exception)` blocks to specific exception types (`JsonReaderException`, `ArgumentOutOfRangeException`) in all seven Discord exception wrapper types and `Utilities`.
+    - Replaced `Stream.Read` with `Stream.ReadExactly` in `MediaTool` to prevent silent partial reads.
+    - Eliminated a redundant `DateTimeOffset` → `DateTime` → `DateTimeOffset` round-trip in `Formatter`, preserving UTC offset fidelity.
+    - Added a defensive copy on `AttachmentsInternal` in `DiscordMessage.Attachments` to prevent external callers from mutating cached message state.
+    - Capped REST `retry_after` to 3 600 s to guard against adversarially large values from misbehaving proxies or rogue buckets.
+    - Linearized concurrent bucket enumeration in `RestClient` with a `.ToList()` snapshot before iteration to prevent `InvalidOperationException` under concurrent request pressure.
+    - Fixed `SocketLock.ContinueWith` calls to use `CancellationToken.None` and `TaskScheduler.Default`, preventing ambient sync-context capture and potential deadlocks in UI/ASP.NET contexts.
+    - Added `DiscordConfiguration.Validate()`, called from `ConnectAsync` before any network I/O, which throws `InvalidOperationException` when `ShardId ≥ ShardCount`.
+    - Clamped `LargeThreshold` to the Discord-specified bot range (50–250) in `DiscordConfiguration`; values outside the range are silently clamped on assignment.
+    - Added non-negative validation for `ShardId` and positive validation for `ShardCount` in `DiscordConfiguration` property setters.
+    - Audited `NullValueHandling` across 51 serialized properties in 19 entity files: corrected 25 from `Include` to `Ignore` on fields Discord never reads as explicit `null`; preserved `Include` on 26 fields where `null` carries a distinct semantic (ungrouping channels, disconnecting from voice, clearing timeout/gradient/incident restrictions, null-as-boolean role tags, and unicode-vs-custom emoji disambiguation).
+    - Fixed `DiscordMember.BanAsync` and `UnbanAsync` to route through `ApiClient` directly, consistent with all other member REST operations.
+    - Padded log-level labels to eight characters in `DefaultLogger` for consistent column alignment across log lines.
+    - Fixed `DiscordEventArgs` scoped service scope to be properly disposed after event dispatch, preventing scoped service leaks on high-volume bots.
+
     - Overhauled presence caching and added follow-up regression coverage around gateway cache behavior.
     - Added Discord parity updates for store, entitlement, SKU, guild powerup / applied boost, application, audit-log, automod, message-type, and OAuth scope surfaces.
     - Fixed interaction response posting, soundboard cache refresh/list behavior, duplicate application-command execution logging, and several gateway/store dispatch follow-ups.
