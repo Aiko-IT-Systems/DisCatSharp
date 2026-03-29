@@ -160,9 +160,15 @@ public sealed class DiscordConfiguration
 
 	/// <summary>
 	///     <para>Sets the member count threshold at which guilds are considered large.</para>
+	///     <para>Discord only accepts values between 50 and 250 (inclusive). Values outside this range are silently
+	///     clamped to the nearest boundary.</para>
 	///     <para>Defaults to 250.</para>
 	/// </summary>
-	public int LargeThreshold { internal get; set; } = 250;
+	public int LargeThreshold
+	{
+		internal get;
+		set => field = Math.Clamp(value, 50, 250);
+	} = 250;
 
 	/// <summary>
 	///     <para>Sets whether to automatically reconnect in case a connection is lost.</para>
@@ -173,8 +179,21 @@ public sealed class DiscordConfiguration
 	/// <summary>
 	///     <para>Sets the ID of the shard to connect to.</para>
 	///     <para>If not sharding, or sharding automatically, this value should be left with the default value of 0.</para>
+	///     <para>Must be non-negative and less than <see cref="ShardCount" />. The cross-constraint against
+	///     <see cref="ShardCount" /> is enforced at connection time — this setter only guards against negative values
+	///     since the two properties may be assigned in any order during configuration.</para>
 	/// </summary>
-	public int ShardId { internal get; set; } = 0;
+	public int ShardId
+	{
+		internal get;
+		set
+		{
+			if (value < 0)
+				throw new ArgumentOutOfRangeException(nameof(value), value, "ShardId must be greater than or equal to 0.");
+
+			field = value;
+		}
+	} = 0;
 
 	/// <summary>
 	///     <para>
@@ -185,8 +204,20 @@ public sealed class DiscordConfiguration
 	///         If sharding automatically, this value will indicate how many shards to boot. If left default for automatic
 	///         sharding, the client will determine the shard count automatically.
 	///     </para>
+	///     <para>Must be greater than 0. The cross-constraint that <see cref="ShardId" /> must be less than this value
+	///     is enforced at connection time via <see cref="Validate" />.</para>
 	/// </summary>
-	public int ShardCount { internal get; set; } = 1;
+	public int ShardCount
+	{
+		internal get;
+		set
+		{
+			if (value <= 0)
+				throw new ArgumentOutOfRangeException(nameof(value), value, "ShardCount must be greater than 0.");
+
+			field = value;
+		}
+	} = 1;
 
 	/// <summary>
 	///     <para>Sets the level of compression for WebSocket traffic.</para>
@@ -530,4 +561,20 @@ public sealed class DiscordConfiguration
 	/// 	We use https://github.com/nager/Nager.PublicSuffix with a cached HTTP rule provider to parse domain names; the public suffix list is cached on disk in the temp directory using the library defaults.
 	/// </remarks>
 	public bool EnableBadDomainCheckerSupport { get; internal set; } = false;
+
+	/// <summary>
+	///     Validates cross-property constraints that cannot be checked in individual property setters because the two
+	///     properties may be assigned in any order during object initializer construction.
+	/// </summary>
+	/// <exception cref="InvalidOperationException">
+	///     Thrown when <see cref="ShardId" /> is not strictly less than <see cref="ShardCount" />, which would cause
+	///     the gateway to reject the IDENTIFY payload with a cryptic <c>4010 Invalid Shard</c> close code.
+	/// </exception>
+	internal void Validate()
+	{
+		if (this.ShardId >= this.ShardCount)
+			throw new InvalidOperationException(
+				$"ShardId ({this.ShardId}) must be less than ShardCount ({this.ShardCount}). " +
+				"Shard IDs are zero-based, so a ShardCount of N allows ShardId values 0 through N-1.");
+	}
 }

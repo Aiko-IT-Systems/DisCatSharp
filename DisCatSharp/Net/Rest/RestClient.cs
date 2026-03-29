@@ -975,7 +975,9 @@ internal sealed class RestClient : IDisposable
 		// handle the wait
 		if (hs.TryGetValue(CommonHeaders.RETRY_AFTER, out var retryAfterRaw))
 		{
-			var retryAfter = TimeSpan.FromSeconds(int.Parse(retryAfterRaw, CultureInfo.InvariantCulture));
+			// Cap to 1 hour to guard against adversarially large retry-after values.
+			var retryAfterSeconds = Math.Min(int.Parse(retryAfterRaw, CultureInfo.InvariantCulture), 3600);
+			var retryAfter = TimeSpan.FromSeconds(retryAfterSeconds);
 			waitTask = Task.Delay(retryAfter);
 		}
 
@@ -1145,7 +1147,7 @@ internal sealed class RestClient : IDisposable
 			ObjectDisposedException.ThrowIf(this._disposed, this);
 
 			//Check and clean request queue first in case it wasn't removed properly during requests.
-			foreach (var key in this._requestQueue.Keys)
+			foreach (var key in this._requestQueue.Keys.ToList())
 			{
 				var bucket = this._hashesToBuckets.Values.FirstOrDefault(x => x.RouteHashes.Contains(key));
 
@@ -1172,11 +1174,14 @@ internal sealed class RestClient : IDisposable
 
 				_ = this._hashesToBuckets.TryRemove(key, out _);
 				removedBuckets++;
-				bucketIdStrBuilder.Append(value.BucketId + ", ");
+				bucketIdStrBuilder.Append(value.BucketId).Append(", ");
 			}
 
 			if (removedBuckets > 0)
 				this._logger.LogDebug(LoggerEvents.RestCleaner, "Removed {0} unused bucket{1}: [{2}]", removedBuckets, removedBuckets > 1 ? "s" : string.Empty, bucketIdStrBuilder.ToString().TrimEnd(',', ' '));
+
+			if (this._hashesToBuckets.Count > 10_000)
+				this._logger.LogWarning(LoggerEvents.RestCleaner, "Bucket accumulation warning: {Count} rate-limit buckets are currently tracked. Cleanup may not be keeping up; consider reviewing route cardinality.", this._hashesToBuckets.Count);
 
 			if (this._hashesToBuckets.IsEmpty)
 				break;

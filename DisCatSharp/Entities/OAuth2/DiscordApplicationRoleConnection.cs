@@ -12,13 +12,13 @@ public sealed class DiscordApplicationRoleConnection : ObservableApiObject
 	/// <summary>
 	///     Gets the platform name.
 	/// </summary>
-	[JsonProperty("platform_name", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("platform_name", NullValueHandling = NullValueHandling.Ignore)]
 	public string? PlatformName { get; internal set; }
 
 	/// <summary>
 	///     Gets the platform username.
 	/// </summary>
-	[JsonProperty("platform_username", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("platform_username", NullValueHandling = NullValueHandling.Ignore)]
 	public string? PlatformUsername { get; internal set; }
 
 	/// <summary>

@@ -465,7 +465,7 @@ public static class Utilities
 		{
 			return DateTimeOffset.FromUnixTimeSeconds(unixTime);
 		}
-		catch (Exception)
+		catch (ArgumentOutOfRangeException)
 		{
 			if (shouldThrow)
 				throw;
@@ -487,7 +487,7 @@ public static class Utilities
 		{
 			return DateTimeOffset.FromUnixTimeMilliseconds(unixTime);
 		}
-		catch (Exception)
+		catch (ArgumentOutOfRangeException)
 		{
 			if (shouldThrow)
 				throw;
@@ -734,7 +734,10 @@ public static class Utilities
 			}
 
 			var lastGitHubRelease = latest.TagName.Replace("v", string.Empty, StringComparison.InvariantCultureIgnoreCase);
-			var githubSplitVersion = lastGitHubRelease.Split('.');
+			// Pre-release tags (e.g. "10.7.1-nightly-001") carry a suffix after the base SemVer triple.
+			// Use latest.Prerelease to strip the suffix at the right boundary instead of guessing per-segment.
+			var baseVersion = latest.Prerelease ? lastGitHubRelease.Split('-')[0] : lastGitHubRelease;
+			var githubSplitVersion = baseVersion.Split('.');
 			var githubApi = Convert.ToInt32(githubSplitVersion[0]);
 			var githubMajor = Convert.ToInt32(githubSplitVersion[1]);
 			var githubMinor = Convert.ToInt32(githubSplitVersion[2]);

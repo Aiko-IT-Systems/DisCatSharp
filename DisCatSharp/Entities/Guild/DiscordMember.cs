@@ -195,7 +195,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordRole> Roles
-		=> this.RoleIds.Select(id => this.Guild.GetRole(id)).Where(x => x is not null).ToList()!;
+		=> this.RoleIds.Select(id => this.Guild?.GetRole(id)).Where(x => x is not null).ToList()!;
 
 	/// <summary>
 	///     Gets the color associated with this user's top color-giving role, otherwise 0 (no color).
@@ -273,15 +273,15 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	[JsonIgnore]
 	public DiscordVoiceState? VoiceState
-		=> this.Discord.Guilds[this.GuildId].VoiceStates.GetValueOrDefault(this.Id);
+		=> this.Discord.Guilds.TryGetValue(this.GuildId, out var vsGuild) ? vsGuild.VoiceStates.GetValueOrDefault(this.Id) : null;
 
 	/// <summary>
 	///     Gets the guild of which this member is a part of.
 	///     <note type="warning">This will throw if accessed for an oauth2 constructed member.</note>
 	/// </summary>
 	[JsonIgnore]
-	public DiscordGuild Guild
-		=> this.Discord.Guilds[this.GuildId];
+	public DiscordGuild? Guild
+		=> this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) ? guild : null;
 
 	/// <summary>
 	///     Gets whether this member is the Guild owner.
@@ -289,7 +289,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	[JsonIgnore]
 	public bool IsOwner
-		=> this.Id == this.Guild.OwnerId;
+		=> this.Guild?.OwnerId == this.Id;
 
 	/// <summary>
 	///     Gets the member's position in the role hierarchy, which is the member's highest role's position. Returns
@@ -297,11 +297,18 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	[JsonIgnore]
 	public int Hierarchy
-		=> this.IsOwner
-			? int.MaxValue
-			: this.RoleIds.Count is 0
-				? 0
-				: this.Roles.Max(x => x.Position);
+	{
+		get
+		{
+			if (this.IsOwner)
+				return int.MaxValue;
+
+			var max = 0;
+			foreach (var role in this.Roles)
+				if (role.Position > max) max = role.Position;
+			return max;
+		}
+	}
 
 	/// <summary>
 	///     Gets the permissions for the current member.
@@ -399,15 +406,15 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 
 		if (mdl.Nickname.HasValue && this.Discord.CurrentUser.Id == this.Id)
 		{
-			await this.Discord.ApiClient.ModifyCurrentGuildMemberAsync(this.Guild.Id, mdl.Nickname, Optional.None, Optional.None, Optional.None, mdl.AuditLogReason).ConfigureAwait(false);
+			await this.Discord.ApiClient.ModifyCurrentGuildMemberAsync(this.GuildId, mdl.Nickname, Optional.None, Optional.None, Optional.None, mdl.AuditLogReason).ConfigureAwait(false);
 			this.Discord.Logger.LogWarning("Please use DiscordGuild.ModifyCurrentMemberAsync to change the current bot member's nickname from now on.");
 
-			await this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, Optional.None,
+			await this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, Optional.None,
 				mdl.Roles.Map(e => e.Select(xr => xr.Id)), mdl.Muted, mdl.Deafened,
 				mdl.VoiceChannel.Map(e => e?.Id), default, this.MemberFlags, mdl.AuditLogReason).ConfigureAwait(false);
 		}
 		else
-			await this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, mdl.Nickname,
+			await this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, mdl.Nickname,
 				mdl.Roles.Map(e => e.Select(xr => xr.Id)), mdl.Muted, mdl.Deafened,
 				mdl.VoiceChannel.Map(e => e?.Id), default, this.MemberFlags, mdl.AuditLogReason).ConfigureAwait(false);
 	}
@@ -432,7 +439,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task TimeoutAsync(DateTimeOffset until, string? reason = null)
-		=> until.Subtract(DateTimeOffset.UtcNow).Days > 28 ? throw new ArgumentException("Timeout can not be longer than 28 days") : this.Discord.ApiClient.ModifyTimeoutAsync(this.Guild.Id, this.Id, until, reason);
+		=> until.Subtract(DateTimeOffset.UtcNow).Days > 28 ? throw new ArgumentException("Timeout can not be longer than 28 days") : this.Discord.ApiClient.ModifyTimeoutAsync(this.GuildId, this.Id, until, reason);
 
 	/// <summary>
 	///     Adds a timeout to a member.
@@ -476,7 +483,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task RemoveTimeoutAsync(string reason = null)
-		=> this.Discord.ApiClient.ModifyTimeoutAsync(this.Guild.Id, this.Id, null, reason);
+		=> this.Discord.ApiClient.ModifyTimeoutAsync(this.GuildId, this.Id, null, reason);
 
 	/// <summary>
 	///     Grants a role to the member.
@@ -491,7 +498,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task GrantRoleAsync(DiscordRole role, string? reason = null)
-		=> this.Discord.ApiClient.AddGuildMemberRoleAsync(this.Guild.Id, this.Id, role.Id, reason);
+		=> this.Discord.ApiClient.AddGuildMemberRoleAsync(this.GuildId, this.Id, role.Id, reason);
 
 	/// <summary>
 	///     Revokes a role from a member.
@@ -506,7 +513,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task RevokeRoleAsync(DiscordRole role, string? reason = null)
-		=> this.Discord.ApiClient.RemoveGuildMemberRoleAsync(this.Guild.Id, this.Id, role.Id, reason);
+		=> this.Discord.ApiClient.RemoveGuildMemberRoleAsync(this.GuildId, this.Id, role.Id, reason);
 
 	/// <summary>
 	///     Sets the member's roles to ones specified.
@@ -521,13 +528,13 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task ReplaceRolesAsync(IEnumerable<DiscordRole> roles, string? reason = null)
-		=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, default,
+		=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default,
 			Optional.Some(roles.Select(xr => xr.Id)), default, default, default, default, this.MemberFlags, reason);
 
 	/// <summary>
 	///     Bans this member from their guild.
 	/// </summary>
-	/// <param name="deleteMessageDays">How many days to remove messages from.</param>
+	/// <param name="deleteMessageSeconds">How many seconds of messages to delete. Minimum 0 seconds and maximum 604800 seconds (7 days).</param>
 	/// <param name="reason">Reason for audit logs.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.BanMembers" />
@@ -536,8 +543,8 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task BanAsync(int deleteMessageDays = 0, string? reason = null)
-		=> this.Guild.BanMemberAsync(this, deleteMessageDays, reason);
+	public Task BanAsync(int deleteMessageSeconds = 0, string? reason = null)
+		=> this.Discord.ApiClient.CreateGuildBanAsync(this.GuildId, this.Id, deleteMessageSeconds, reason);
 
 	/// <summary>
 	///     Unbans this member from their guild.
@@ -550,7 +557,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task UnbanAsync(string? reason = null)
-		=> this.Guild.UnbanMemberAsync(this, reason);
+		=> this.Discord.ApiClient.RemoveGuildBanAsync(this.GuildId, this.Id, reason);
 
 	/// <summary>
 	///     Kicks this member from their guild.
@@ -586,7 +593,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <returns></returns>
 	public async Task<DiscordVoiceState?> GetVoiceStateAsync()
-		=> await this.Discord.ApiClient.GetMemberVoiceStateAsync(this.Guild.Id, this.Id);
+		=> await this.Discord.ApiClient.GetMemberVoiceStateAsync(this.GuildId, this.Id);
 
 	/// <summary>
 	///     Updates the member's suppress state in a stage channel.
@@ -599,7 +606,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		if (channel.Type != ChannelType.Stage)
 			throw new ArgumentException("Voice state can only be updated in a stage channel.");
 
-		await this.Discord.ApiClient.UpdateUserVoiceStateAsync(this.Guild.Id, this.Id, channel.Id, suppress).ConfigureAwait(false);
+		await this.Discord.ApiClient.UpdateUserVoiceStateAsync(this.GuildId, this.Id, channel.Id, suppress).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -619,7 +626,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		if (vs?.Channel?.Type is not ChannelType.Stage)
 			throw new ArgumentException("Voice state can only be updated when the user is inside an stage channel.");
 
-		await this.Discord.ApiClient.UpdateUserVoiceStateAsync(this.Guild.Id, this.Id, vs.Channel.Id, false).ConfigureAwait(false);
+		await this.Discord.ApiClient.UpdateUserVoiceStateAsync(this.GuildId, this.Id, vs.Channel.Id, false).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -639,7 +646,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		if (vs?.Channel?.Type is not ChannelType.Stage)
 			throw new ArgumentException("Voice state can only be updated when the user is inside an stage channel.");
 
-		await this.Discord.ApiClient.UpdateUserVoiceStateAsync(this.Guild.Id, this.Id, vs.Channel.Id, true).ConfigureAwait(false);
+		await this.Discord.ApiClient.UpdateUserVoiceStateAsync(this.GuildId, this.Id, vs.Channel.Id, true).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -655,11 +662,13 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	private Permissions GetPermissions()
 	{
-		if (this.Guild.OwnerId == this.Id)
+		var guild = this.Guild ?? throw new InvalidOperationException("Guild is not cached.");
+
+		if (guild.OwnerId == this.Id)
 			return PermissionMethods.FullPerms;
 
 		// assign @everyone permissions
-		var everyoneRole = this.Guild.EveryoneRole!;
+		var everyoneRole = guild.EveryoneRole!;
 		var perms = everyoneRole.Permissions;
 
 		// assign permissions from member's roles (in order)
@@ -682,7 +691,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <param name="obj">Object to compare to.</param>
 	/// <returns>Whether the object is equal to this <see cref="DiscordMember" />.</returns>
 	public override bool Equals(object obj)
-		=> this.Equals(obj as DiscordMember);
+		=> obj is DiscordMember x && this.Equals(x);
 
 	/// <summary>
 	///     Gets the hash code for this <see cref="DiscordMember" />.

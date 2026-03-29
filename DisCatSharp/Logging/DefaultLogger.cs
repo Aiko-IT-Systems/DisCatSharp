@@ -94,20 +94,16 @@ public class DefaultLogger : ILogger<BaseDiscordClient>
 
 			Console.Write(logLevel switch
 			{
-				LogLevel.Trace => "[Trace] ",
-				LogLevel.Debug => "[Debug] ",
-				LogLevel.Information => "[Info ] ",
-				LogLevel.Warning => "[Warn ] ",
-				LogLevel.Error => "[Error] ",
-				LogLevel.Critical => "[Critical ]",
-				LogLevel.None => "[None ] ",
+				LogLevel.Trace => "[Trace   ] ",
+				LogLevel.Debug => "[Debug   ] ",
+				LogLevel.Information => "[Info    ] ",
+				LogLevel.Warning => "[Warn    ] ",
+				LogLevel.Error => "[Error   ] ",
+				LogLevel.Critical => "[Critical] ",
+				LogLevel.None => "[None    ] ",
 				_ => throw new ArgumentOutOfRangeException(nameof(logLevel), logLevel, null)
 			});
 			Console.ResetColor();
-
-			//The foreground color is off.
-			if (logLevel is LogLevel.Critical)
-				Console.Write(" ");
 
 			var message = formatter(state, exception);
 			Console.WriteLine(message);

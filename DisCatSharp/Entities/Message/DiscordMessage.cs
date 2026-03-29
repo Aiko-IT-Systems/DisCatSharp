@@ -124,7 +124,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	{
 		this.Discord = other.Discord;
 
-		this.AttachmentsInternal = other.AttachmentsInternal; // the attachments cannot change, thus no need to copy and reallocate.
+		this.AttachmentsInternal = [.. other.AttachmentsInternal];
 		this.EmbedsInternal = [.. other.EmbedsInternal];
 
 		this.MentionedChannelsInternal = [.. other.MentionedChannelsInternal];
@@ -1094,7 +1094,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <param name="obj">Object to compare to.</param>
 	/// <returns>Whether the object is equal to this <see cref="DiscordMessage" />.</returns>
 	public override bool Equals(object obj)
-		=> this.Equals(obj as DiscordMessage);
+		=> obj is DiscordMessage x && this.Equals(x);
 
 	/// <summary>
 	///     Gets the hash code for this <see cref="DiscordMessage" />.

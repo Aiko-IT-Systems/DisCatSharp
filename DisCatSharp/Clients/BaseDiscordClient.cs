@@ -112,7 +112,8 @@ public abstract class BaseDiscordClient : IDisposable
 		}
 
 		this.InitGlobalExceptionTracking();
-		_ = Task.Run(() => DisCatSharpBadDomainChecker.LoadAndInitBadDomainHashesAsync(this));
+		_ = Task.Run(() => DisCatSharpBadDomainChecker.LoadAndInitBadDomainHashesAsync(this))
+			.ContinueWith(t => this.Logger.LogWarning(t.Exception, "Bad domain checker failed to load"), TaskContinuationOptions.OnlyOnFaulted);
 	}
 
 	/// <summary>
@@ -209,9 +210,41 @@ public abstract class BaseDiscordClient : IDisposable
 	}
 
 	/// <summary>
-	///     Gets the guilds ids for this shard.
+	///     Lock that serialises all mutations of and snapshots from <see cref="_readyGuildIds" />.
 	/// </summary>
-	internal List<ulong> ReadyGuildIds { get; } = [];
+	private readonly object _readyGuildIdsLock = new();
+
+	/// <summary>
+	///     Backing store for <see cref="ReadyGuildIds" />.
+	/// </summary>
+	private List<ulong> _readyGuildIds = [];
+
+	/// <summary>
+	///     Gets a point-in-time snapshot of the guild ids received in the last READY payload for this shard.
+	///     Callers receive their own copy — mutations to the returned list do not affect the internal state.
+	/// </summary>
+	internal List<ulong> ReadyGuildIds
+	{
+		get
+		{
+			lock (this._readyGuildIdsLock)
+				return [..this._readyGuildIds];
+		}
+	}
+
+	/// <summary>
+	///     Atomically replaces the ready guild id set.  All callers that were previously reading a snapshot
+	///     are unaffected; future calls to <see cref="ReadyGuildIds" /> will reflect the new set.
+	/// </summary>
+	/// <param name="ids">The new collection of guild ids.</param>
+	internal void SetReadyGuildIds(IEnumerable<ulong> ids)
+	{
+		lock (this._readyGuildIdsLock)
+		{
+			this._readyGuildIds.Clear();
+			this._readyGuildIds.AddRange(ids);
+		}
+	}
 
 	/// <summary>
 	///     Gets the cached users for this client.

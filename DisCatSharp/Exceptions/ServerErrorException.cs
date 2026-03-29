@@ -2,6 +2,7 @@ using System;
 
 using DisCatSharp.Net;
 
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace DisCatSharp.Exceptions;
@@ -29,7 +30,7 @@ public class ServerErrorException : DisCatSharpException
 			if (j["message"] != null)
 				this.JsonMessage = j["message"]!.ToString();
 		}
-		catch (Exception)
+		catch (JsonReaderException)
 		{ }
 	}
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -18,7 +19,7 @@ internal readonly struct ReadOnlySet<T> : IReadOnlyCollection<T>
 	/// <param name="sourceSet">Set to create a view over.</param>
 	public ReadOnlySet(ISet<T> sourceSet)
 	{
-		this._underlyingSet = sourceSet;
+		this._underlyingSet = sourceSet ?? throw new ArgumentNullException(nameof(sourceSet));
 	}
 
 	/// <summary>

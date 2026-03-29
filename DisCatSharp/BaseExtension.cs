@@ -30,7 +30,7 @@ public abstract class BaseExtension
 	public string VersionString { get; set; } = string.Empty;
 
 	/// <summary>
-	///     Gets whether this lib extension supports the built-in version checl.
+	///     Gets whether this lib extension supports the built-in version check.
 	/// </summary>
 	public bool HasVersionCheckSupport { get; set; } = false;
 

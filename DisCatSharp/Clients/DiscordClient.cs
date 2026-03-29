@@ -399,6 +399,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 		this._connectionLock.Set();
 
+		this.Configuration.Validate();
+
 		var w = 7500;
 		var i = 5;
 		var s = false;

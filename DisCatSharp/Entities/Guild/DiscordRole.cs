@@ -167,7 +167,7 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<KeyValuePair<ulong, DiscordMember>> Members
-		=> [.. this.Guild.Members.Where(x => x.Value.RoleIds.Any(x => x == this.Id))];
+		=> [.. this.Guild.Members.Where(x => x.Value.RoleIds.Contains(this.Id))];
 
 	/// <summary>
 	///     Checks whether this <see cref="DiscordRole" /> is equal to another <see cref="DiscordRole" />.

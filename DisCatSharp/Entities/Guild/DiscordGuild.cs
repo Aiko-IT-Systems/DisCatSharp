@@ -1384,8 +1384,8 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task BanMemberAsync(DiscordMember member, [DiscordDeprecated("This is now in seconds, we convert it until the next minor release.")] int deleteMessageSeconds = 0, string? reason = null)
-		=> this.Discord.ApiClient.CreateGuildBanAsync(this.Id, member.Id, deleteMessageSeconds is < 8 and > 0 ? this.DaysToSeconds(deleteMessageSeconds) : deleteMessageSeconds, reason);
+	public Task BanMemberAsync(DiscordMember member, int deleteMessageSeconds = 0, string? reason = null)
+		=> this.Discord.ApiClient.CreateGuildBanAsync(this.Id, member.Id, deleteMessageSeconds, reason);
 
 	/// <summary>
 	///     Bans a specified <see cref="DiscordUser" />. This doesn't require the user to be in this guild.
@@ -1403,8 +1403,8 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task BanMemberAsync(DiscordUser user, [DiscordDeprecated("This is now in seconds, we convert it until the next minor release.")] int deleteMessageSeconds = 0, string? reason = null)
-		=> this.Discord.ApiClient.CreateGuildBanAsync(this.Id, user.Id, deleteMessageSeconds is < 8 and > 0 ? this.DaysToSeconds(deleteMessageSeconds) : deleteMessageSeconds, reason);
+	public Task BanMemberAsync(DiscordUser user, int deleteMessageSeconds = 0, string? reason = null)
+		=> this.Discord.ApiClient.CreateGuildBanAsync(this.Id, user.Id, deleteMessageSeconds, reason);
 
 	/// <summary>
 	///     Bans a specified user ID from this guild. This doesn't require the user to be in this guild.
@@ -1422,16 +1422,8 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task BanMemberAsync(ulong userId, [DiscordDeprecated("This is now in seconds, we convert it until the next minor release.")] int deleteMessageSeconds = 0, string reason = null)
-		=> this.Discord.ApiClient.CreateGuildBanAsync(this.Id, userId, deleteMessageSeconds is < 8 and > 0 ? this.DaysToSeconds(deleteMessageSeconds) : deleteMessageSeconds, reason);
-
-	/// <summary>
-	///     Converts days to seconds to help users transition from <c>deleteMessageDays</c> to <c>deleteMessageSeconds</c>.
-	/// </summary>
-	/// <param name="days">The days to convert to seconds.</param>
-	/// <returns>The days in seconds.</returns>
-	private int DaysToSeconds(int days)
-		=> days * 24 * 60 * 60;
+	public Task BanMemberAsync(ulong userId, int deleteMessageSeconds = 0, string reason = null)
+		=> this.Discord.ApiClient.CreateGuildBanAsync(this.Id, userId, deleteMessageSeconds, reason);
 
 	/// <summary>
 	///     Bulk bans a list of <see cref="DiscordMember" />s from this guild.

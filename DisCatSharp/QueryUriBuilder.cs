@@ -53,6 +53,8 @@ internal class QueryUriBuilder
 	/// <param name="value">The value to be added.</param>
 	public QueryUriBuilder AddParameter(string key, string value)
 	{
+		ArgumentNullException.ThrowIfNull(key);
+		ArgumentNullException.ThrowIfNull(value);
 		this._queryParams.Add(new(key, value));
 		return this;
 	}

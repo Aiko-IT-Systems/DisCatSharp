@@ -43,7 +43,8 @@ internal class DefaultLoggerFactory : ILoggerFactory
 	/// </summary>
 	public void Dispose()
 	{
-		ObjectDisposedException.ThrowIf(this._isDisposed, this);
+		if (this._isDisposed)
+			return;
 
 		this._isDisposed = true;
 

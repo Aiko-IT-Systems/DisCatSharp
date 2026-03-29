@@ -275,5 +275,32 @@ namespace DisCatSharp.Analyzer {
                 return ResourceManager.GetString("Handling", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [DCS] Ban parameter renamed to seconds.
+        /// </summary>
+        internal static string AnalyzerTitleBanDeleteMessageDaysMigration {
+            get {
+                return ResourceManager.GetString("AnalyzerTitleBanDeleteMessageDaysMigration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;deleteMessageDays&apos; has been renamed to &apos;deleteMessageSeconds&apos;. Pass seconds directly (max 604800). Positional callers passing day values must be updated manually.
+        /// </summary>
+        internal static string AnalyzerMessageFormatBanDeleteMessageDaysMigration {
+            get {
+                return ResourceManager.GetString("AnalyzerMessageFormatBanDeleteMessageDaysMigration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Discord&apos;s ban API accepts seconds, not days. The parameter was renamed from &apos;deleteMessageDays&apos; to &apos;deleteMessageSeconds&apos;. Named argument callers can be auto-fixed; positional callers must be reviewed manually.
+        /// </summary>
+        internal static string AnalyzerDescriptionBanDeleteMessageDaysMigration {
+            get {
+                return ResourceManager.GetString("AnalyzerDescriptionBanDeleteMessageDaysMigration", resourceCulture);
+            }
+        }
     }
 }

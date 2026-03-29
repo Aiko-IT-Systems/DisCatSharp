@@ -2,6 +2,7 @@ using System;
 
 using DisCatSharp.Net;
 
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace DisCatSharp.Exceptions;
@@ -36,7 +37,7 @@ public sealed class NotIndexedException : Exception
 			if (j["retry_after"] is not null)
 				this.RetryAfter = (long)j["retry_after"]!;
 		}
-		catch
+		catch (JsonReaderException)
 		{ }
 	}
 

@@ -148,7 +148,7 @@ public class ConfigurationExtensionTests
 
 		Assert.Equal(expectedIntents, config.Intents);
 		Assert.True(config.MobileStatus);
-		Assert.Equal(1000, config.LargeThreshold);
+		Assert.Equal(200, config.LargeThreshold);
 		Assert.Equal(TimeSpan.FromHours(10), config.HttpTimeout);
 	}
 

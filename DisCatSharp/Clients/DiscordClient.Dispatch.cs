@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -157,18 +157,33 @@ public sealed partial class DiscordClient
 			case "guild_audit_log_entry_create":
 				gid = (ulong)dat["guild_id"]!;
 				dat.Remove("guild_id");
-				await this.OnGuildAuditLogEntryCreateEventAsync(this.GuildsInternal[gid], dat).ConfigureAwait(false);
+				if (!this.GuildsInternal.TryGetValue(gid, out var gaGuild))
+				{
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received event for unknown guild {GuildId}, skipping.", gid);
+					return;
+				}
+				await this.OnGuildAuditLogEntryCreateEventAsync(gaGuild, dat).ConfigureAwait(false);
 				break;
 
 			case "guild_sync":
 				gid = (ulong)dat["id"]!;
-				await this.OnGuildSyncEventAsync(this.GuildsInternal[gid], (bool)dat["large"]!, (JArray)dat["members"]!, dat["presences"]!.ToDiscordObject<IEnumerable<DiscordPresence>>()).ConfigureAwait(false);
+				if (!this.GuildsInternal.TryGetValue(gid, out var gsGuild))
+				{
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received event for unknown guild {GuildId}, skipping.", gid);
+					return;
+				}
+				await this.OnGuildSyncEventAsync(gsGuild, (bool)dat["large"]!, (JArray)dat["members"]!, dat["presences"]!.ToDiscordObject<IEnumerable<DiscordPresence>>()).ConfigureAwait(false);
 				break;
 
 			case "guild_emojis_update":
 				gid = (ulong)dat["guild_id"]!;
 				var ems = dat["emojis"]!.ToObject<IEnumerable<DiscordEmoji>>()!;
-				await this.OnGuildEmojisUpdateEventAsync(this.GuildsInternal[gid], ems).ConfigureAwait(false);
+				if (!this.GuildsInternal.TryGetValue(gid, out var geGuild))
+				{
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received event for unknown guild {GuildId}, skipping.", gid);
+					return;
+				}
+				await this.OnGuildEmojisUpdateEventAsync(geGuild, ems).ConfigureAwait(false);
 				break;
 
 			case "guild_stickers_update":
@@ -193,15 +208,12 @@ public sealed partial class DiscordClient
 				var pauseEndsAt = dat["pause_ends_at"]?.ToObject<DateTimeOffset?>();
 				var endsAt = dat["ends_at"]?.ToObject<DateTimeOffset?>();
 				var ended = dat["ended"].ToObject<bool>();
-				if (this.CurrentApplication.Id is 822242444070092860)
+				if (!this.GuildsInternal.TryGetValue(gid, out var gabGuild))
 				{
-					_ = Task.Run(async () =>
-					{
-						var channel = await this.GetChannelAsync(1410132014883012678);
-						await channel.SendMessageAsync(payload.EventName + "\n" + dat.ToString(Formatting.Indented).BlockCode("json"));
-					});
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received event for unknown guild {GuildId}, skipping.", gid);
+					return;
 				}
-				await this.OnGuildAppliedBoostsUpdateEventAsync((ulong)dat["id"], this.GuildsInternal[gid], uid, pauseEndsAt, endsAt, ended).ConfigureAwait(false);
+				await this.OnGuildAppliedBoostsUpdateEventAsync((ulong)dat["id"], gabGuild, uid, pauseEndsAt, endsAt, ended).ConfigureAwait(false);
 				break;
 
 			case "guild_applied_boosts_create":
@@ -210,14 +222,6 @@ public sealed partial class DiscordClient
 				var createdPauseEndsAt = dat["pause_ends_at"]?.ToObject<DateTimeOffset?>();
 				var createdEndsAt = dat["ends_at"]?.ToObject<DateTimeOffset?>();
 				var createdEnded = dat["ended"]?.ToObject<bool>() ?? false;
-				if (this.CurrentApplication.Id is 822242444070092860)
-				{
-					_ = Task.Run(async () =>
-					{
-						var channel = await this.GetChannelAsync(1410132014883012678);
-						await channel.SendMessageAsync(payload.EventName + "\n" + dat.ToString(Formatting.Indented).BlockCode("json"));
-					});
-				}
 				await this.OnGuildAppliedBoostsCreateEventAsync((ulong)dat["id"], gid, uid, createdPauseEndsAt, createdEndsAt, createdEnded).ConfigureAwait(false);
 				break;
 
@@ -227,14 +231,6 @@ public sealed partial class DiscordClient
 				var deletedPauseEndsAt = dat["pause_ends_at"]?.ToObject<DateTimeOffset?>();
 				var deletedEndsAt = dat["ends_at"]?.ToObject<DateTimeOffset?>();
 				var deletedEnded = dat["ended"]?.ToObject<bool>() ?? false;
-				if (this.CurrentApplication.Id is 822242444070092860)
-				{
-					_ = Task.Run(async () =>
-					{
-						var channel = await this.GetChannelAsync(1410132014883012678);
-						await channel.SendMessageAsync(payload.EventName + "\n" + dat.ToString(Formatting.Indented).BlockCode("json"));
-					});
-				}
 				await this.OnGuildAppliedBoostsDeleteEventAsync((ulong)dat["id"], gid, uid, deletedPauseEndsAt, deletedEndsAt, deletedEnded).ConfigureAwait(false);
 				break;
 
@@ -263,7 +259,12 @@ public sealed partial class DiscordClient
 				break;
 			case "auto_moderation_action_execution":
 				gid = (ulong)dat["guild_id"]!;
-				await this.OnAutomodActionExecuted(this.GuildsInternal[gid], dat).ConfigureAwait(false);
+				if (!this.GuildsInternal.TryGetValue(gid, out var amGuild))
+				{
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received event for unknown guild {GuildId}, skipping.", gid);
+					return;
+				}
+				await this.OnAutomodActionExecuted(amGuild, dat).ConfigureAwait(false);
 				break;
 
 			#endregion
@@ -273,13 +274,23 @@ public sealed partial class DiscordClient
 			case "guild_ban_add":
 				usr = DiscordJson.DeserializeObject<TransportUser>(dat["user"]!.ToString(), this);
 				gid = (ulong)dat["guild_id"]!;
-				await this.OnGuildBanAddEventAsync(usr, this.GuildsInternal[gid]).ConfigureAwait(false);
+				if (!this.GuildsInternal.TryGetValue(gid, out var gbaGuild))
+				{
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received event for unknown guild {GuildId}, skipping.", gid);
+					return;
+				}
+				await this.OnGuildBanAddEventAsync(usr, gbaGuild).ConfigureAwait(false);
 				break;
 
 			case "guild_ban_remove":
 				usr = DiscordJson.DeserializeObject<TransportUser>(dat["user"]!.ToString(), this);
 				gid = (ulong)dat["guild_id"]!;
-				await this.OnGuildBanRemoveEventAsync(usr, this.GuildsInternal[gid]).ConfigureAwait(false);
+				if (!this.GuildsInternal.TryGetValue(gid, out var gbrGuild))
+				{
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received event for unknown guild {GuildId}, skipping.", gid);
+					return;
+				}
+				await this.OnGuildBanRemoveEventAsync(usr, gbrGuild).ConfigureAwait(false);
 				break;
 
 			#endregion
@@ -289,49 +300,89 @@ public sealed partial class DiscordClient
 			case "guild_scheduled_event_create":
 				gse = DiscordJson.DeserializeObject<DiscordScheduledEvent>(payloadString, this);
 				gid = (ulong)dat["guild_id"]!;
-				await this.OnGuildScheduledEventCreateEventAsync(gse, this.GuildsInternal[gid]).ConfigureAwait(false);
+				if (!this.GuildsInternal.TryGetValue(gid, out var gsecGuild))
+				{
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received event for unknown guild {GuildId}, skipping.", gid);
+					return;
+				}
+				await this.OnGuildScheduledEventCreateEventAsync(gse, gsecGuild).ConfigureAwait(false);
 				break;
 
 			case "guild_scheduled_event_update":
 				gse = DiscordJson.DeserializeObject<DiscordScheduledEvent>(payloadString, this);
 				gid = (ulong)dat["guild_id"]!;
-				await this.OnGuildScheduledEventUpdateEventAsync(gse, this.GuildsInternal[gid]).ConfigureAwait(false);
+				if (!this.GuildsInternal.TryGetValue(gid, out var gseuGuild))
+				{
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received event for unknown guild {GuildId}, skipping.", gid);
+					return;
+				}
+				await this.OnGuildScheduledEventUpdateEventAsync(gse, gseuGuild).ConfigureAwait(false);
 				break;
 
 			case "guild_scheduled_event_delete":
 				gse = DiscordJson.DeserializeObject<DiscordScheduledEvent>(payloadString, this);
 				gid = (ulong)dat["guild_id"]!;
-				await this.OnGuildScheduledEventDeleteEventAsync(gse, this.GuildsInternal[gid]).ConfigureAwait(false);
+				if (!this.GuildsInternal.TryGetValue(gid, out var gsedGuild))
+				{
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received event for unknown guild {GuildId}, skipping.", gid);
+					return;
+				}
+				await this.OnGuildScheduledEventDeleteEventAsync(gse, gsedGuild).ConfigureAwait(false);
 				break;
 
 			case "guild_scheduled_event_user_add":
 				gid = (ulong)dat["guild_id"]!;
 				uid = (ulong)dat["user_id"]!;
-				await this.OnGuildScheduledEventUserAddedEventAsync((ulong)dat["guild_scheduled_event_id"]!, uid, (ulong?)dat["guild_scheduled_event_exception_id"], this.GuildsInternal[gid]).ConfigureAwait(false);
+				if (!this.GuildsInternal.TryGetValue(gid, out var gsuaGuild))
+				{
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received event for unknown guild {GuildId}, skipping.", gid);
+					return;
+				}
+				await this.OnGuildScheduledEventUserAddedEventAsync((ulong)dat["guild_scheduled_event_id"]!, uid, (ulong?)dat["guild_scheduled_event_exception_id"], gsuaGuild).ConfigureAwait(false);
 				break;
 
 			case "guild_scheduled_event_user_remove":
 				gid = (ulong)dat["guild_id"]!;
 				uid = (ulong)dat["user_id"]!;
-				await this.OnGuildScheduledEventUserRemovedEventAsync((ulong)dat["guild_scheduled_event_id"]!, uid, (ulong?)dat["guild_scheduled_event_exception_id"], this.GuildsInternal[gid]).ConfigureAwait(false);
+				if (!this.GuildsInternal.TryGetValue(gid, out var gsurGuild))
+				{
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received event for unknown guild {GuildId}, skipping.", gid);
+					return;
+				}
+				await this.OnGuildScheduledEventUserRemovedEventAsync((ulong)dat["guild_scheduled_event_id"]!, uid, (ulong?)dat["guild_scheduled_event_exception_id"], gsurGuild).ConfigureAwait(false);
 				break;
 
 			case "guild_scheduled_event_exception_create":
 				gsee = DiscordJson.DeserializeObject<DiscordScheduledEventException>(payloadString, this);
 				gid = (ulong)dat["guild_id"]!;
-				await this.OnGuildScheduledEventExceptionCreateEventAsync(gsee, this.GuildsInternal[gid]).ConfigureAwait(false);
+				if (!this.GuildsInternal.TryGetValue(gid, out var gseecGuild))
+				{
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received event for unknown guild {GuildId}, skipping.", gid);
+					return;
+				}
+				await this.OnGuildScheduledEventExceptionCreateEventAsync(gsee, gseecGuild).ConfigureAwait(false);
 				break;
 
 			case "guild_scheduled_event_exception_update":
 				gsee = DiscordJson.DeserializeObject<DiscordScheduledEventException>(payloadString, this);
 				gid = (ulong)dat["guild_id"]!;
-				await this.OnGuildScheduledEventExceptionUpdateEventAsync(gsee, this.GuildsInternal[gid]).ConfigureAwait(false);
+				if (!this.GuildsInternal.TryGetValue(gid, out var gseeuGuild))
+				{
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received event for unknown guild {GuildId}, skipping.", gid);
+					return;
+				}
+				await this.OnGuildScheduledEventExceptionUpdateEventAsync(gsee, gseeuGuild).ConfigureAwait(false);
 				break;
 
 			case "guild_scheduled_event_exception_delete":
 				gsee = DiscordJson.DeserializeObject<DiscordScheduledEventException>(payloadString, this);
 				gid = (ulong)dat["guild_id"]!;
-				await this.OnGuildScheduledEventExceptionDeleteEventAsync(gsee, this.GuildsInternal[gid]).ConfigureAwait(false);
+				if (!this.GuildsInternal.TryGetValue(gid, out var gsedeGuild))
+				{
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received event for unknown guild {GuildId}, skipping.", gid);
+					return;
+				}
+				await this.OnGuildScheduledEventExceptionDeleteEventAsync(gsee, gsedeGuild).ConfigureAwait(false);
 				break;
 
 			#endregion
@@ -376,7 +427,12 @@ public sealed partial class DiscordClient
 
 			case "guild_member_add":
 				gid = (ulong)dat["guild_id"]!;
-				await this.OnGuildMemberAddEventAsync(DiscordJson.DeserializeObject<TransportMember>(payloadString, this), this.GuildsInternal[gid]).ConfigureAwait(false);
+				if (!this.GuildsInternal.TryGetValue(gid, out var gmaGuild))
+				{
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received event for unknown guild {GuildId}, skipping.", gid);
+					return;
+				}
+				await this.OnGuildMemberAddEventAsync(DiscordJson.DeserializeObject<TransportMember>(payloadString, this), gmaGuild).ConfigureAwait(false);
 				break;
 
 			case "guild_member_remove":
@@ -396,7 +452,12 @@ public sealed partial class DiscordClient
 
 			case "guild_member_update":
 				gid = (ulong)dat["guild_id"]!;
-				await this.OnGuildMemberUpdateEventAsync(DiscordJson.DeserializeObject<TransportMember>(payloadString, this), this.GuildsInternal[gid], dat["roles"]!.ToObject<IEnumerable<ulong>>()!, (string)dat["nick"]!, (bool?)dat["pending"]).ConfigureAwait(false);
+				if (!this.GuildsInternal.TryGetValue(gid, out var gmuGuild))
+				{
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received event for unknown guild {GuildId}, skipping.", gid);
+					return;
+				}
+				await this.OnGuildMemberUpdateEventAsync(DiscordJson.DeserializeObject<TransportMember>(payloadString, this), gmuGuild, dat["roles"]!.ToObject<IEnumerable<ulong>>()!, (string)dat["nick"]!, (bool?)dat["pending"]).ConfigureAwait(false);
 				break;
 
 			case "guild_members_chunk":
@@ -409,17 +470,32 @@ public sealed partial class DiscordClient
 
 			case "guild_role_create":
 				gid = (ulong)dat["guild_id"]!;
-				await this.OnGuildRoleCreateEventAsync(DiscordJson.DeserializeObject<DiscordRole>(dat["role"]!.ToString(), this), this.GuildsInternal[gid]).ConfigureAwait(false);
+				if (!this.GuildsInternal.TryGetValue(gid, out var grcGuild))
+				{
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received event for unknown guild {GuildId}, skipping.", gid);
+					return;
+				}
+				await this.OnGuildRoleCreateEventAsync(DiscordJson.DeserializeObject<DiscordRole>(dat["role"]!.ToString(), this), grcGuild).ConfigureAwait(false);
 				break;
 
 			case "guild_role_update":
 				gid = (ulong)dat["guild_id"]!;
-				await this.OnGuildRoleUpdateEventAsync(DiscordJson.DeserializeObject<DiscordRole>(dat["role"]!.ToString(), this), this.GuildsInternal[gid]).ConfigureAwait(false);
+				if (!this.GuildsInternal.TryGetValue(gid, out var gruGuild))
+				{
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received event for unknown guild {GuildId}, skipping.", gid);
+					return;
+				}
+				await this.OnGuildRoleUpdateEventAsync(DiscordJson.DeserializeObject<DiscordRole>(dat["role"]!.ToString(), this), gruGuild).ConfigureAwait(false);
 				break;
 
 			case "guild_role_delete":
 				gid = (ulong)dat["guild_id"]!;
-				await this.OnGuildRoleDeleteEventAsync((ulong)dat["role_id"]!, this.GuildsInternal[gid]).ConfigureAwait(false);
+				if (!this.GuildsInternal.TryGetValue(gid, out var grdGuild))
+				{
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received event for unknown guild {GuildId}, skipping.", gid);
+					return;
+				}
+				await this.OnGuildRoleDeleteEventAsync((ulong)dat["role_id"]!, grdGuild).ConfigureAwait(false);
 				break;
 
 			#endregion
@@ -623,7 +699,12 @@ public sealed partial class DiscordClient
 				gid = (ulong)dat["guild_id"]!;
 				var trds = DiscordJson.DeserializeIEnumerableObject<IReadOnlyList<DiscordThreadChannel>>(dat["threads"]!.ToString(), this);
 				var trms = DiscordJson.DeserializeIEnumerableObject<IReadOnlyList<DiscordThreadChannelMember>>(dat["members"]!.ToString(), this);
-				await this.OnThreadListSyncEventAsync(this.GuildsInternal[gid], dat["channel_ids"]!.ToObject<IReadOnlyList<ulong?>>()!, trds, trms).ConfigureAwait(false);
+				if (!this.GuildsInternal.TryGetValue(gid, out var tlsGuild))
+				{
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received event for unknown guild {GuildId}, skipping.", gid);
+					return;
+				}
+				await this.OnThreadListSyncEventAsync(tlsGuild, dat["channel_ids"]!.ToObject<IReadOnlyList<ulong?>>()!, trds, trms).ConfigureAwait(false);
 				break;
 
 			case "thread_member_update":
@@ -634,7 +715,12 @@ public sealed partial class DiscordClient
 			case "thread_members_update":
 				gid = (ulong)dat["guild_id"]!;
 
-				await this.OnThreadMembersUpdateEventAsync(this.GuildsInternal[gid], (ulong)dat["id"]!, (JArray)dat["added_members"]!, (JArray)dat["removed_member_ids"]!, (int)dat["member_count"]!).ConfigureAwait(false);
+				if (!this.GuildsInternal.TryGetValue(gid, out var tmuGuild))
+				{
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received event for unknown guild {GuildId}, skipping.", gid);
+					return;
+				}
+				await this.OnThreadMembersUpdateEventAsync(tmuGuild, (ulong)dat["id"]!, (JArray)dat["added_members"]!, (JArray)dat["removed_member_ids"]!, (int)dat["member_count"]!).ConfigureAwait(false);
 				break;
 
 			#endregion
@@ -644,7 +730,12 @@ public sealed partial class DiscordClient
 			case "embedded_activity_update":
 				gid = (ulong)dat["guild_id"]!;
 				cid = (ulong)dat["channel_id"]!;
-				await this.OnEmbeddedActivityUpdateAsync((JObject)dat["embedded_activity"]!, this.GuildsInternal[gid], cid, (JArray)dat["users"]!, (ulong)dat["embedded_activity"]["application_id"]!).ConfigureAwait(false);
+				if (!this.GuildsInternal.TryGetValue(gid, out var eauGuild))
+				{
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received event for unknown guild {GuildId}, skipping.", gid);
+					return;
+				}
+				await this.OnEmbeddedActivityUpdateAsync((JObject)dat["embedded_activity"]!, eauGuild, cid, (JArray)dat["users"]!, (ulong)dat["embedded_activity"]["application_id"]!).ConfigureAwait(false);
 				break;
 
 			#endregion
@@ -675,7 +766,12 @@ public sealed partial class DiscordClient
 
 			case "voice_server_update":
 				gid = (ulong)dat["guild_id"]!;
-				await this.OnVoiceServerUpdateEventAsync((string)dat["endpoint"]!, (string)dat["token"]!, this.GuildsInternal[gid]).ConfigureAwait(false);
+				if (!this.GuildsInternal.TryGetValue(gid, out var vsuGuild))
+				{
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received event for unknown guild {GuildId}, skipping.", gid);
+					return;
+				}
+				await this.OnVoiceServerUpdateEventAsync((string)dat["endpoint"]!, (string)dat["token"]!, vsuGuild).ConfigureAwait(false);
 				break;
 
 			case "voice_channel_effect_send":
@@ -850,10 +946,7 @@ public sealed partial class DiscordClient
 			: null;
 
 		if (rawGuildIndex is not null && rawGuildIndex.Count is not 0)
-		{
-			this.ReadyGuildIds.Clear();
-			this.ReadyGuildIds.AddRange(rawGuildIndex.Select(x => x.Key));
-		}
+			this.SetReadyGuildIds(rawGuildIndex.Select(x => x.Key));
 
 		foreach (var cachedGuild in this.GuildsInternal.Values)
 			cachedGuild.PresencesInternal.Clear();
@@ -999,7 +1092,13 @@ public sealed partial class DiscordClient
 	{
 		channel.Initialize(this);
 
-		this.GuildsInternal[channel.GuildId.Value].ChannelsInternal[channel.Id] = channel;
+		if (!this.GuildsInternal.TryGetValue(channel.GuildId.Value, out var cachedGuild))
+		{
+			this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received channel_create for unknown guild {GuildId}, skipping.", channel.GuildId.Value);
+			return;
+		}
+
+		cachedGuild.ChannelsInternal[channel.Id] = channel;
 
 		/*if (this.Configuration.AutoRefreshChannelCache)
             {
@@ -1644,6 +1743,12 @@ public sealed partial class DiscordClient
 	internal async Task OnStickersUpdatedAsync(IEnumerable<DiscordSticker> newStickers, ulong guildId)
 	{
 		var guild = this.InternalGetCachedGuild(guildId);
+		if (guild is null)
+		{
+			this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received guild_stickers_update for unknown guild {GuildId}, skipping.", guildId);
+			return;
+		}
+
 		var oldStickers = new ConcurrentDictionary<ulong, DiscordSticker>(guild.StickersInternal);
 		guild.StickersInternal.Clear();
 
@@ -3911,7 +4016,13 @@ public sealed partial class DiscordClient
 		if (thread == null)
 		{
 			var tempThread = await this.ApiClient.GetThreadAsync(member.Id).ConfigureAwait(false);
-			thread = this.GuildsInternal[member.GuildId].ThreadsInternal.AddOrUpdate(member.Id, tempThread, (old, newThread) => newThread);
+			if (!this.GuildsInternal.TryGetValue(member.GuildId, out var tmGuild))
+			{
+				this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received thread_member_update for unknown guild {GuildId}, skipping.", member.GuildId);
+				return;
+			}
+
+			thread = tmGuild.ThreadsInternal.AddOrUpdate(member.Id, tempThread, (old, newThread) => newThread);
 		}
 
 		thread.CurrentMember = member;

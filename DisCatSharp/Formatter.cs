@@ -55,7 +55,7 @@ public static class Formatter
 	/// <param name="format">The format to render the timestamp in. Defaults to relative.</param>
 	/// <returns>A formatted timestamp relative to now.</returns>
 	public static string Timestamp(this DateTime time, TimestampFormat format = TimestampFormat.RelativeTime)
-		=> Timestamp(time.ToUniversalTime() - DateTime.UtcNow, format);
+		=> Timestamp(new DateTimeOffset(time.ToUniversalTime()), format);
 
 	/// <summary>
 	///     Creates small subtext.

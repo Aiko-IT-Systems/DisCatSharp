@@ -16,13 +16,13 @@ public sealed class DiscordGuildTrait
 	/// <summary>
 	///    Gets the emoji ID.
 	/// </summary>
-	[JsonProperty("emoji_id", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("emoji_id", NullValueHandling = NullValueHandling.Ignore)]
 	public ulong? EmojiId { get; internal set; }
 
 	/// <summary>
 	///    Gets the emoji name.
 	/// </summary>
-	[JsonProperty("emoji_name", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("emoji_name", NullValueHandling = NullValueHandling.Ignore)]
 	public string? EmojiName { get; internal set; }
 
 	/// <summary>

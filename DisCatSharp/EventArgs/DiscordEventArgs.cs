@@ -20,7 +20,7 @@ public abstract class DiscordEventArgs : AsyncEventArgs
 	protected DiscordEventArgs(IServiceProvider provider)
 	{
 		if (provider != null)
-			this.ServiceProvider = provider.CreateScope().ServiceProvider;
+			this.ServiceProvider = provider;
 	}
 
 	/// <summary>

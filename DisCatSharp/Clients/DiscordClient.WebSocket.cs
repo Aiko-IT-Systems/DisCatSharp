@@ -32,7 +32,11 @@ public sealed partial class DiscordClient
 	/// </summary>
 	/// <returns>The added socket lock.</returns>
 	private SocketLock GetSocketLock()
-		=> s_socketLocks.GetOrAdd(this.CurrentApplication.Id, new SocketLock(this.CurrentApplication.Id, this.GatewayInfo!.SessionBucket.MaxConcurrency));
+	{
+		var appId = this.CurrentApplication?.Id ?? 0ul;
+		var maxConcurrency = this.GatewayInfo?.SessionBucket.MaxConcurrency ?? 1;
+		return s_socketLocks.GetOrAdd(appId, new SocketLock(appId, maxConcurrency));
+	}
 
 	#endregion
 
@@ -107,6 +111,13 @@ public sealed partial class DiscordClient
 	/// </summary>
 	private readonly ManualResetEventSlim _sessionLock = new(true);
 
+	/// <summary>
+	///     Guards concurrent reads and writes of <see cref="_sessionId" /> during the reconnect handshake.
+	///     Specifically protects the TOCTOU window in <see cref="OnHelloAsync" /> (check + branch) against
+	///     the clear performed by <see cref="InternalReconnectAsync" /> on a different thread.
+	/// </summary>
+	private readonly SemaphoreSlim _sessionStateLock = new(1, 1);
+
 	#endregion
 
 	#region Internal Connection Methods
@@ -117,13 +128,22 @@ public sealed partial class DiscordClient
 	/// <param name="startNewSession">Whether to start a new session.</param>
 	/// <param name="code">The reconnect code.</param>
 	/// <param name="message">The reconnect message.</param>
-	private Task InternalReconnectAsync(bool startNewSession = false, int code = 1000, string message = "")
+	private async Task InternalReconnectAsync(bool startNewSession = false, int code = 1000, string message = "")
 	{
 		if (startNewSession)
-			this._sessionId = null;
+		{
+			await this._sessionStateLock.WaitAsync().ConfigureAwait(false);
+			try
+			{
+				this._sessionId = null;
+			}
+			finally
+			{
+				this._sessionStateLock.Release();
+			}
+		}
 
 		_ = this.WebSocketClient.DisconnectAsync(code, message);
-		return Task.CompletedTask;
 	}
 
 	/// <summary>
@@ -488,14 +508,30 @@ public sealed partial class DiscordClient
 			return;
 		}
 
-		Interlocked.CompareExchange(ref this._skippedHeartbeats, 0, 0);
+		Interlocked.Exchange(ref this._skippedHeartbeats, 0);
 		this._heartbeatInterval = hello.HeartbeatInterval;
+		if (this._heartbeatTask is { IsCompleted: false })
+		{
+			try { await this._heartbeatTask.ConfigureAwait(false); } catch { /* already cancelled */ }
+		}
+
 		this._heartbeatTask = Task.Run(this.HeartbeatLoopAsync, this._cancelToken);
 
-		if (string.IsNullOrEmpty(this._sessionId))
+		await this._sessionStateLock.WaitAsync().ConfigureAwait(false);
+		string? capturedSessionId;
+		try
+		{
+			capturedSessionId = this._sessionId;
+		}
+		finally
+		{
+			this._sessionStateLock.Release();
+		}
+
+		if (string.IsNullOrEmpty(capturedSessionId))
 			await this.SendIdentifyAsync(this._status).ConfigureAwait(false);
 		else
-			await this.SendResumeAsync().ConfigureAwait(false);
+			await this.SendResumeAsync(capturedSessionId).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -505,7 +541,7 @@ public sealed partial class DiscordClient
 	{
 		Interlocked.Decrement(ref this._skippedHeartbeats);
 
-		var ping = (int)(DateTime.Now - this._lastHeartbeat).TotalMilliseconds;
+		var ping = (int)(DateTimeOffset.UtcNow - this._lastHeartbeat).TotalMilliseconds;
 
 		this.Logger.LogTrace(LoggerEvents.WebSocketReceive, "Received HEARTBEAT_ACK (OP11, {0}ms)", ping);
 
@@ -682,7 +718,7 @@ public sealed partial class DiscordClient
 		var heartbeatStr = JsonConvert.SerializeObject(heartbeat);
 		await this.WsSendAsync(heartbeatStr).ConfigureAwait(false);
 
-		this._lastHeartbeat = DateTimeOffset.Now;
+		this._lastHeartbeat = DateTimeOffset.UtcNow;
 
 		Interlocked.Increment(ref this._skippedHeartbeats);
 	}
@@ -725,15 +761,22 @@ public sealed partial class DiscordClient
 	/// <summary>
 	///     Sends the resume payload.
 	/// </summary>
-	internal async Task SendResumeAsync()
+	/// <param name="capturedSessionId">
+	///     The session ID captured under <see cref="_sessionStateLock" /> by the caller.
+	///     When <see langword="null" /> the method falls back to reading <c>_sessionId</c> directly
+	///     (used by <see cref="OnInvalidateSessionAsync" /> which holds its own serialization guarantee
+	///     via the socket-lock, so the TOCTOU window does not exist in that path).
+	/// </param>
+	internal async Task SendResumeAsync(string? capturedSessionId = null)
 	{
-		ArgumentNullException.ThrowIfNull(this._sessionId);
+		var sessionId = capturedSessionId ?? this._sessionId;
+		ArgumentNullException.ThrowIfNull(sessionId);
 		ArgumentNullException.ThrowIfNull(this._resumeGatewayUrl);
 
 		var resume = new GatewayResume
 		{
 			Token = Utilities.GetFormattedToken(this),
-			SessionId = this._sessionId,
+			SessionId = sessionId,
 			SequenceNumber = Volatile.Read(ref this._lastSequence)
 		};
 		var resumePayload = new GatewayPayload

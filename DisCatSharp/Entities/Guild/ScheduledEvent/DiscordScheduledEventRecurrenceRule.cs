@@ -39,36 +39,36 @@ public sealed class DiscordScheduledEventRecurrenceRule
 	/// <summary>
 	///     Gets or sets specific days within a week for the event to recur on.
 	/// </summary>
-	[JsonProperty("by_weekday", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("by_weekday", NullValueHandling = NullValueHandling.Ignore)]
 	public List<RecurrenceRuleWeekday>? ByWeekday { get; set; }
 
 	/// <summary>
 	///     Gets or sets specific days within a specific week (1-5) to recur on.
 	/// </summary>
-	[JsonProperty("by_n_weekday", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("by_n_weekday", NullValueHandling = NullValueHandling.Ignore)]
 	public List<DiscordRecurrenceRuleNWeekday>? ByNWeekday { get; set; }
 
 	/// <summary>
 	///     Gets or sets specific months to recur on.
 	/// </summary>
-	[JsonProperty("by_month", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("by_month", NullValueHandling = NullValueHandling.Ignore)]
 	public List<int>? ByMonth { get; set; }
 
 	/// <summary>
 	///     Gets or sets specific dates within a month to recur on.
 	/// </summary>
-	[JsonProperty("by_month_day", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("by_month_day", NullValueHandling = NullValueHandling.Ignore)]
 	public List<int>? ByMonthDay { get; set; }
 
 	/// <summary>
 	///     Gets specific dates within a year to recur on.
 	/// </summary>
-	[JsonProperty("by_year_day", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("by_year_day", NullValueHandling = NullValueHandling.Ignore)]
 	public List<int>? ByYearDay { get; internal set; }
 
 	/// <summary>
 	///     Gets the total amount of times that the event is allowed to recur before stopping.
 	/// </summary>
-	[JsonProperty("count", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("count", NullValueHandling = NullValueHandling.Ignore)]
 	public int? Count { get; internal set; }
 }

@@ -409,7 +409,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// <summary>
 	///     Gets the maximum participants for the application's embedded activity.
 	/// </summary>
-	[JsonProperty("max_participants", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("max_participants", NullValueHandling = NullValueHandling.Ignore)]
 	public int? MaxParticipants { get; internal set; }
 
 	/// <summary>

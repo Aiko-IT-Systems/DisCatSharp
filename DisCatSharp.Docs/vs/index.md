@@ -43,7 +43,7 @@ Use this as the quick orientation guide.
 These rules keep their historical IDs for compatibility.
 
 | Rule ID                              | Category | Severity | Notes                                  |
-| ------------------------------------ | -------- | -------- | -------------------------------------- |
+|--------------------------------------|----------|----------|----------------------------------------|
 | [DCS0001](xref:vs_analyzer_dcs_0001) | Usage    | Info     | Experimental Attribute Analyzer        |
 | [DCS0002](xref:vs_analyzer_dcs_0002) | Usage    | Error    | Deprecated Attribute Analyzer          |
 | [DCS0101](xref:vs_analyzer_dcs_0101) | Usage    | Warning  | DiscordInExperiment Attribute Analyzer |
@@ -54,26 +54,27 @@ These rules keep their historical IDs for compatibility.
 
 ##### Reserved families
 
-| Family | Purpose |
-| ------ | ------- |
-| `DCS1XXX` | Core `DisCatSharp` diagnostics, migrations, and cross-cutting code fixes |
-| `DCS2XXX` | `DisCatSharp.ApplicationCommands` diagnostics and code-fix families |
-| `DCS3XXX` | `DisCatSharp.CommandsNext` diagnostics and code-fix families |
-| `DCS4XXX` | `DisCatSharp.Interactivity` diagnostics and code-fix families |
-| `DCS5XXX` | `DisCatSharp.Voice` diagnostics and code-fix families |
-| `DCS6XXX` | `DisCatSharp.Lavalink` diagnostics and code-fix families |
-| `DCS7XXX` | `DisCatSharp.Common` diagnostics and code-fix families |
+| Family    | Purpose                                                                            |
+|-----------|------------------------------------------------------------------------------------|
+| `DCS1XXX` | Core `DisCatSharp` diagnostics, migrations, and cross-cutting code fixes           |
+| `DCS2XXX` | `DisCatSharp.ApplicationCommands` diagnostics and code-fix families                |
+| `DCS3XXX` | `DisCatSharp.CommandsNext` diagnostics and code-fix families                       |
+| `DCS4XXX` | `DisCatSharp.Interactivity` diagnostics and code-fix families                      |
+| `DCS5XXX` | `DisCatSharp.Voice` diagnostics and code-fix families                              |
+| `DCS6XXX` | `DisCatSharp.Lavalink` diagnostics and code-fix families                           |
+| `DCS7XXX` | `DisCatSharp.Common` diagnostics and code-fix families                             |
 | `DCS8XXX` | Hosting, dependency injection, and configuration diagnostics and code-fix families |
-| `DCS9XXX` | Reserved |
+| `DCS9XXX` | Reserved                                                                           |
 
 ##### Application command family
 
-| Rule ID                              | Category | Severity | Notes                                            |
-| ------------------------------------ | -------- | -------- | ------------------------------------------------ |
+| Rule ID                              | Category | Severity | Notes                                                 |
+|--------------------------------------|----------|----------|-------------------------------------------------------|
 | [DCS2101](xref:vs_analyzer_dcs_2101) | Usage    | Info     | Application command checks-failed migration prototype |
 
 ##### Core family
 
-| Rule ID                              | Category | Severity | Notes                                      |
-| ------------------------------------ | -------- | -------- | ------------------------------------------ |
-| [DCS1101](xref:vs_analyzer_dcs_1101) | Usage    | Info     | Prefer `DiscordClient.GetPresences(userId)` over manual `Presences` filtering |
+| Rule ID                              | Category | Severity | Notes                                                                                                   |
+|--------------------------------------|----------|----------|---------------------------------------------------------------------------------------------------------|
+| [DCS1101](xref:vs_analyzer_dcs_1101) | Usage    | Warning  | Prefer `DiscordClient.GetPresences(userId)` over manual `Presences` filtering                           |
+| [DCS1102](xref:vs_analyzer_dcs_1102) | Usage    | Warning  | `deleteMessageDays` renamed to `deleteMessageSeconds` on ban methods; named-argument callers auto-fixed |
