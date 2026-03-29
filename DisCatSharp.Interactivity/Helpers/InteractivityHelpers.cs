@@ -32,9 +32,7 @@ public static class InteractivityHelpers
 				recalculatedPages.Add(new(page.Content, replaceEmbed));
 			}
 			else
-			{
 				recalculatedPages.Add(page);
-			}
 
 			pageCount++;
 		}

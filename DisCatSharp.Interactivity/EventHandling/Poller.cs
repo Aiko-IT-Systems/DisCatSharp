@@ -19,9 +19,9 @@ namespace DisCatSharp.Interactivity.EventHandling;
 /// </summary>
 internal class Poller
 {
-	private DiscordClient _client;
+	private readonly DiscordClient _client;
 	private bool _disposed;
-	private ConcurrentHashSet<PollRequest> _requests;
+	private readonly ConcurrentHashSet<PollRequest> _requests;
 
 	/// <summary>
 	///     Creates a new EventWaiter object.

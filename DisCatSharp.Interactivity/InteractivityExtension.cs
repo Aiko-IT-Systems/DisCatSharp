@@ -72,8 +72,8 @@ public class InteractivityExtension : BaseExtension, IDisposable
 		this._reactionCollector = new(this.Client);
 		this._paginator = new(this.Client);
 		this._compPaginator = new(this.Client, this.Config);
-		this._componentEventWaiter = new(this.Client, this.Config);
-		this._modalEventWaiter = new(this.Client, this.Config);
+		this._componentEventWaiter = new(this.Client);
+		this._modalEventWaiter = new(this.Client);
 	}
 
 	/// <summary>

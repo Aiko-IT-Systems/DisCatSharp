@@ -8,11 +8,11 @@ namespace DisCatSharp.Interactivity.EventHandling;
 /// </summary>
 public class PaginationButtons
 {
-	public const string SKIP_LEFT_CUSTOM_ID = "leftskip";
-	public const string LEFT_CUSTOM_ID = "left";
-	public const string STOP_CUSTOM_ID = "stop";
-	public const string RIGHT_CUSTOM_ID = "right";
-	public const string SKIP_RIGHT_CUSTOM_ID = "rightskip";
+	public const string SKIP_LEFT_CUSTOM_ID = "pgb-leftskip";
+	public const string LEFT_CUSTOM_ID = "pgb-left";
+	public const string STOP_CUSTOM_ID = "pgb-stop";
+	public const string RIGHT_CUSTOM_ID = "pgb-right";
+	public const string SKIP_RIGHT_CUSTOM_ID = "pgb-rightskip";
 
 	/// <summary>
 	///     Initializes a new instance of the <see cref="PaginationButtons" /> class.

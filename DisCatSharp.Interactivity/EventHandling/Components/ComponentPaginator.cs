@@ -21,7 +21,7 @@ internal class ComponentPaginator : IPaginator
 {
 	private readonly DiscordClient _client;
 	private readonly InteractivityConfiguration _config;
-	private readonly ConcurrentDictionary<ulong, IPaginationRequest> _requests = new();
+	private readonly ConcurrentDictionary<ulong, IPaginationRequest> _requests = [];
 	private bool _disposed;
 
 	/// <summary>

@@ -22,27 +22,16 @@ internal class ComponentEventWaiter : IDisposable
 {
 	private readonly DiscordClient _client;
 	private readonly ConcurrentHashSet<ComponentCollectRequest> _collectRequests = [];
-	private readonly InteractivityConfiguration _config;
 	private readonly ConcurrentHashSet<ComponentMatchRequest> _matchRequests = [];
-
-	private readonly DiscordFollowupMessageBuilder _message;
 
 	/// <summary>
 	///     Initializes a new instance of the <see cref="ComponentEventWaiter" /> class.
 	/// </summary>
 	/// <param name="client">The client.</param>
-	/// <param name="config">The config.</param>
-	public ComponentEventWaiter(DiscordClient client, InteractivityConfiguration config)
+	public ComponentEventWaiter(DiscordClient client)
 	{
 		this._client = client;
 		this._client.ComponentInteractionCreated += this.Handle;
-		this._config = config;
-
-		this._message = new()
-		{
-			Content = config.ResponseMessage ?? "This message was not meant for you.",
-			IsEphemeral = true
-		};
 	}
 
 	/// <summary>

@@ -51,7 +51,7 @@ public class PollRequest
 			this.Collected.Add(new(e));
 	}
 
-	private readonly object _collectedLock = new();
+	private readonly Lock _collectedLock = new();
 
 	/// <summary>
 	///     Removes the reaction.

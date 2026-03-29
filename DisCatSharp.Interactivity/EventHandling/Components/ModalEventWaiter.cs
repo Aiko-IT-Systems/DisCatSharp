@@ -18,27 +18,16 @@ namespace DisCatSharp.Interactivity.EventHandling;
 internal class ModalEventWaiter : IDisposable
 {
 	private readonly DiscordClient _client;
-	private readonly InteractivityConfiguration _config;
-
-	private readonly DiscordFollowupMessageBuilder _message;
 	private readonly ConcurrentHashSet<ModalMatchRequest> _modalMatchRequests = [];
 
 	/// <summary>
 	///     Initializes a new instance of the <see cref="ComponentEventWaiter" /> class.
 	/// </summary>
 	/// <param name="client">The client.</param>
-	/// <param name="config">The config.</param>
-	public ModalEventWaiter(DiscordClient client, InteractivityConfiguration config)
+	public ModalEventWaiter(DiscordClient client)
 	{
 		this._client = client;
 		this._client.ComponentInteractionCreated += this.Handle;
-		this._config = config;
-
-		this._message = new()
-		{
-			Content = config.ResponseMessage ?? "This modal was not meant for you.",
-			IsEphemeral = true
-		};
 	}
 
 	/// <summary>

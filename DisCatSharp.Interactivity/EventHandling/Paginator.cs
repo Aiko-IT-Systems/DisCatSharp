@@ -18,9 +18,9 @@ namespace DisCatSharp.Interactivity.EventHandling;
 /// </summary>
 internal class Paginator : IPaginator
 {
-	private DiscordClient _client;
+	private readonly DiscordClient _client;
 	private bool _disposed;
-	private ConcurrentHashSet<IPaginationRequest> _requests;
+	private readonly ConcurrentHashSet<IPaginationRequest> _requests;
 
 	/// <summary>
 	///     Creates a new EventWaiter object.
