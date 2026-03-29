@@ -12,18 +12,6 @@
 
 ----
 
-# News
-
-## New
-
-- Nothing here yet
-
-## Breaking
-
-- Nothing here yet
-
-----
-
 # About
 
 ## Why DisCatSharp?
