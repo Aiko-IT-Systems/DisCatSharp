@@ -544,7 +544,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task BanAsync(int deleteMessageDays = 0, string? reason = null)
-		=> (this.Guild ?? throw new InvalidOperationException("Guild is not cached.")).BanMemberAsync(this, deleteMessageDays, reason);
+		=> this.Discord.ApiClient.CreateGuildBanAsync(this.GuildId, this.Id, deleteMessageDays is < 8 and > 0 ? deleteMessageDays * 86400 : deleteMessageDays, reason);
 
 	/// <summary>
 	///     Unbans this member from their guild.
@@ -557,7 +557,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task UnbanAsync(string? reason = null)
-		=> (this.Guild ?? throw new InvalidOperationException("Guild is not cached.")).UnbanMemberAsync(this, reason);
+		=> this.Discord.ApiClient.RemoveGuildBanAsync(this.GuildId, this.Id, reason);
 
 	/// <summary>
 	///     Kicks this member from their guild.
