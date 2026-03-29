@@ -534,7 +534,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <summary>
 	///     Bans this member from their guild.
 	/// </summary>
-	/// <param name="deleteMessageDays">How many days to remove messages from.</param>
+	/// <param name="deleteMessageSeconds">How many seconds of messages to delete. Minimum 0 seconds and maximum 604800 seconds (7 days).</param>
 	/// <param name="reason">Reason for audit logs.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.BanMembers" />
@@ -543,8 +543,8 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task BanAsync(int deleteMessageDays = 0, string? reason = null)
-		=> this.Discord.ApiClient.CreateGuildBanAsync(this.GuildId, this.Id, deleteMessageDays is < 8 and > 0 ? deleteMessageDays * 86400 : deleteMessageDays, reason);
+	public Task BanAsync(int deleteMessageSeconds = 0, string? reason = null)
+		=> this.Discord.ApiClient.CreateGuildBanAsync(this.GuildId, this.Id, deleteMessageSeconds, reason);
 
 	/// <summary>
 	///     Unbans this member from their guild.
