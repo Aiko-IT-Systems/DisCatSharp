@@ -15,4 +15,5 @@ internal static class DisCatSharpDiagnosticIds
 	public const string RequiresOverride = DisCatSharpAnalyzer.DIAGNOSTIC_ID_PREFIX + "0201";
 	public const string ApplicationCommandChecksFailedMigration = DisCatSharpAnalyzer.DIAGNOSTIC_ID_PREFIX + "2101";
 	public const string BanDeleteMessageDaysMigration = DisCatSharpAnalyzer.DIAGNOSTIC_ID_PREFIX + "1102";
+	public const string ConfigPropertyMigration = DisCatSharpAnalyzer.DIAGNOSTIC_ID_PREFIX + "1201";
 }

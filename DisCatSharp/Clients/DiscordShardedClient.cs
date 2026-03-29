@@ -446,10 +446,11 @@ public sealed partial class DiscordShardedClient : IDisposable
 	///     Creates an isolated configuration for the temporary gateway-info client so its disposal does not touch the parent telemetry session.
 	/// </summary>
 	internal static DiscordConfiguration CreateGatewayInfoClientConfiguration(DiscordConfiguration configuration)
-		=> new(configuration)
-		{
-			EnableSentry = false
-		};
+	{
+		var cfg = new DiscordConfiguration(configuration);
+		cfg.Telemetry.EnableSentry = false;
+		return cfg;
+	}
 
 	#endregion
 

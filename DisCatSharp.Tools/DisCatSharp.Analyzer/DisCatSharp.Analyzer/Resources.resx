@@ -198,4 +198,13 @@
   <data name="AnalyzerDescriptionBanDeleteMessageDaysMigration" xml:space="preserve">
     <value>Discord's ban API accepts seconds, not days. The parameter was renamed from 'deleteMessageDays' to 'deleteMessageSeconds'. Named argument callers can be auto-fixed; positional callers must be reviewed manually.</value>
   </data>
+  <data name="AnalyzerTitleConfigPropertyMigration" xml:space="preserve">
+    <value>[DCS] Configuration property moved to nested config</value>
+  </data>
+  <data name="AnalyzerMessageFormatConfigPropertyMigration" xml:space="preserve">
+    <value>'{0}' has been moved. Use '{1}' instead. This property will be removed in a future version.</value>
+  </data>
+  <data name="AnalyzerDescriptionConfigPropertyMigration" xml:space="preserve">
+    <value>DiscordConfiguration properties have been reorganized into nested sub-configurations (Api, Gateway, Rest, Cache, Logging, Diagnostics, Telemetry). Update your code to use the new nested paths.</value>
+  </data>
 </root>

@@ -122,6 +122,28 @@ internal static class RoslynTestDocumentFactory
 		return text.ToString();
 	}
 
+	public static async Task<string> ApplyConfigPropertyMigrationFixAsync(string source)
+	{
+		using var workspace = new AdhocWorkspace();
+		var (solution, documentIds) = CreateProjectSolution(workspace, ImmutableDictionary<string, string>.Empty.Add("Test.cs", source));
+		var documentId = documentIds["Test.cs"];
+
+		var document = solution.GetDocument(documentId)!;
+		var compilation = await document.Project.GetCompilationAsync().ConfigureAwait(false);
+		var diagnostics = await compilation!
+			.WithAnalyzers([new DisCatSharpAnalyzer()])
+			.GetAnalyzerDiagnosticsAsync()
+			.ConfigureAwait(false);
+		var diagnostic = Assert.Single(diagnostics, x => x.Id == DisCatSharpDiagnosticIds.ConfigPropertyMigration);
+
+		var nestedPath = diagnostic.Properties[DisCatSharpDiagnosticProperties.ConfigNestedPath]!;
+		var newName = diagnostic.Properties[DisCatSharpDiagnosticProperties.ConfigNewName]!;
+
+		var fixedDocument = await DisCatSharpConfigPropertyMigrationCodeFix.ApplyFixToDocumentAsync(document, diagnostic, nestedPath, newName, CancellationToken.None).ConfigureAwait(false);
+		var text = await fixedDocument.GetTextAsync().ConfigureAwait(false);
+		return text.ToString();
+	}
+
 	private static (Solution Solution, ImmutableDictionary<string, DocumentId> DocumentIds) CreateProjectSolution(
 		AdhocWorkspace workspace,
 		ImmutableDictionary<string, string> sources)

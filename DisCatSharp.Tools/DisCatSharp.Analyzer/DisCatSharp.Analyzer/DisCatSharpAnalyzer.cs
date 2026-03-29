@@ -144,9 +144,29 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 		new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionBanDeleteMessageDaysMigration), Resources.ResourceManager, typeof(Resources)),
 		"https://docs.dcs.aitsys.dev/vs/analyzer/dcs/1102");
 
+	/// <inheritdoc cref="LocalizableString" />
+	private static readonly LocalizableString s_titleConfigPropertyMigration = new LocalizableResourceString(nameof(Resources.AnalyzerTitleConfigPropertyMigration), Resources.ResourceManager, typeof(Resources));
+
+	/// <inheritdoc cref="LocalizableString" />
+	private static readonly LocalizableString s_messageFormatConfigPropertyMigration = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormatConfigPropertyMigration), Resources.ResourceManager, typeof(Resources));
+
+	/// <inheritdoc cref="LocalizableString" />
+	private static readonly LocalizableString s_descriptionConfigPropertyMigration = new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionConfigPropertyMigration), Resources.ResourceManager, typeof(Resources));
+
+	/// <inheritdoc cref="DiagnosticDescriptor" />
+	private static readonly DiagnosticDescriptor s_configPropertyMigrationRule = new(
+		DisCatSharpDiagnosticIds.ConfigPropertyMigration,
+		s_titleConfigPropertyMigration,
+		s_messageFormatConfigPropertyMigration,
+		CATEGORY,
+		DiagnosticSeverity.Warning,
+		isEnabledByDefault: true,
+		description: s_descriptionConfigPropertyMigration,
+		helpLinkUri: "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/1201");
+
 	/// <inheritdoc />
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
-		=> ImmutableArray.Create(s_experimentalRule, s_deprecatedRule, s_discordInExperimentRule, s_discordDeprecatedRule, s_discordUnreleasedRule, s_presenceAccessMigrationRule, s_requiresFeatureRule, s_requiresOverrideRule, s_applicationCommandChecksFailedMigrationRule, s_banDeleteMessageDaysMigrationRule);
+		=> ImmutableArray.Create(s_experimentalRule, s_deprecatedRule, s_discordInExperimentRule, s_discordDeprecatedRule, s_discordUnreleasedRule, s_presenceAccessMigrationRule, s_requiresFeatureRule, s_requiresOverrideRule, s_applicationCommandChecksFailedMigrationRule, s_banDeleteMessageDaysMigrationRule, s_configPropertyMigrationRule);
 
 	/// <inheritdoc />
 	public override void Initialize(AnalysisContext context)
@@ -167,6 +187,7 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 		context.RegisterSyntaxNodeAction(AnalyzePresenceAccessMigration, SyntaxKind.InvocationExpression);
 		context.RegisterSyntaxNodeAction(AnalyzeApplicationCommandChecksFailedMigration, SyntaxKind.AddAssignmentExpression);
 		context.RegisterSyntaxNodeAction(AnalyzeBanDeleteMessageDaysMigration, SyntaxKind.InvocationExpression);
+		context.RegisterSyntaxNodeAction(AnalyzeConfigPropertyAccess, SyntaxKind.SimpleMemberAccessExpression);
 	}
 
 	/// <summary>
@@ -362,6 +383,31 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 		context.ReportDiagnostic(Diagnostic.Create(
 			s_banDeleteMessageDaysMigrationRule,
 			nameColon.GetLocation()));
+	}
+
+	private static void AnalyzeConfigPropertyAccess(SyntaxNodeAnalysisContext context)
+	{
+		if (context.Node is not MemberAccessExpressionSyntax memberAccess)
+			return;
+
+		if (!ConfigPropertyMigrationAnalysis.TryGetMigration(
+				context.SemanticModel,
+				memberAccess,
+				context.CancellationToken,
+				out var oldName,
+				out var nestedPath,
+				out var newName))
+			return;
+
+		var fullNewPath = $"{nestedPath}.{newName}";
+		var properties = DisCatSharpDiagnosticProperties.CreateConfigPropertyMigrationProperties(nestedPath, newName);
+
+		context.ReportDiagnostic(Diagnostic.Create(
+			s_configPropertyMigrationRule,
+			memberAccess.Name.GetLocation(),
+			properties,
+			oldName,
+			fullNewPath));
 	}
 
 	/// <summary>

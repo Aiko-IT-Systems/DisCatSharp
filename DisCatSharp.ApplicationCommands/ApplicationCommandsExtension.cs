@@ -696,7 +696,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						}
 						else
 						{
+#pragma warning disable CS0618
 							entryPointCommand.HandlerType = this.Client.Configuration.ActivityHandlerType;
+#pragma warning restore CS0618
 						}
 
 						// Strip localizations from entry point when localization is disabled
