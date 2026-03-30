@@ -188,6 +188,7 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 		context.RegisterSyntaxNodeAction(AnalyzeApplicationCommandChecksFailedMigration, SyntaxKind.AddAssignmentExpression);
 		context.RegisterSyntaxNodeAction(AnalyzeBanDeleteMessageDaysMigration, SyntaxKind.InvocationExpression);
 		context.RegisterSyntaxNodeAction(AnalyzeConfigPropertyAccess, SyntaxKind.SimpleMemberAccessExpression);
+		context.RegisterSyntaxNodeAction(AnalyzeInitializerAssignment, SyntaxKind.SimpleAssignmentExpression);
 	}
 
 	/// <summary>
@@ -408,6 +409,93 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 			properties,
 			oldName,
 			fullNewPath));
+	}
+
+	/// <summary>
+	///     Analyzes property assignments inside object initializers.
+	///     Catches patterns like <c>new DiscordConfiguration { ApiChannel = ... }</c>.
+	/// </summary>
+	private static void AnalyzeInitializerAssignment(SyntaxNodeAnalysisContext context)
+	{
+		if (context.Node is not AssignmentExpressionSyntax { Parent: InitializerExpressionSyntax initializer, Left: IdentifierNameSyntax identifier })
+			return;
+
+		var symbolInfo = context.SemanticModel.GetSymbolInfo(identifier, context.CancellationToken);
+		var symbol = symbolInfo.Symbol;
+		if (symbol is null)
+			return;
+
+		var attributes = symbol.GetAttributes();
+		var name = GetDisplayName(symbol);
+		var kind = GetDisplayKind(symbol);
+		var location = identifier.GetLocation();
+
+		var experimentalAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(ExperimentalAttribute)));
+		var deprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(DeprecatedAttribute)));
+		var discordInExperimentAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(DiscordInExperimentAttribute)));
+		var discordDeprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(DiscordDeprecatedAttribute)));
+		var discordUnreleasedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(DiscordUnreleasedAttribute)));
+		var requiresFeatureAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(RequiresFeatureAttribute)));
+		var requiresOverrideAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(RequiresOverrideAttribute)));
+
+		if (experimentalAttributeData != null)
+		{
+			var message = GetMessage(experimentalAttributeData);
+			context.ReportDiagnostic(Diagnostic.Create(s_experimentalRule, location, kind, name, message));
+		}
+
+		if (deprecatedAttributeData != null)
+		{
+			var message = GetMessage(deprecatedAttributeData);
+			context.ReportDiagnostic(Diagnostic.Create(s_deprecatedRule, location, kind, name, message));
+		}
+
+		if (discordInExperimentAttributeData != null)
+		{
+			var message = GetMessage(discordInExperimentAttributeData);
+			context.ReportDiagnostic(Diagnostic.Create(s_discordInExperimentRule, location, kind, name, message));
+		}
+
+		if (discordDeprecatedAttributeData != null)
+		{
+			var message = GetMessage(discordDeprecatedAttributeData);
+			context.ReportDiagnostic(Diagnostic.Create(s_discordDeprecatedRule, location, kind, name, message));
+		}
+
+		if (discordUnreleasedAttributeData != null)
+		{
+			var message = GetMessage(discordUnreleasedAttributeData);
+			context.ReportDiagnostic(Diagnostic.Create(s_discordUnreleasedRule, location, kind, name, message));
+		}
+
+		if (requiresFeatureAttributeData != null)
+		{
+			var message = GetFeatureMessage(requiresFeatureAttributeData);
+			context.ReportDiagnostic(Diagnostic.Create(s_requiresFeatureRule, location, kind, name, message));
+		}
+
+		if (requiresOverrideAttributeData != null)
+		{
+			var message = GetOverrideMessage(requiresOverrideAttributeData);
+			var overrideProperties = DisCatSharpDiagnosticProperties.CreateRequiresOverrideProperties(GetOverrideValue(requiresOverrideAttributeData), GetOverrideDate(requiresOverrideAttributeData));
+			context.ReportDiagnostic(Diagnostic.Create(s_requiresOverrideRule, location, overrideProperties, kind, name, message));
+		}
+
+		// Config property migration (DCS1201)
+		if (symbol is IPropertySymbol &&
+			ConfigPropertyMigrationAnalysis.TryGetMigrationFromInitializer(
+				context.SemanticModel, identifier, initializer, context.CancellationToken,
+				out var oldName, out var nestedPath, out var newName))
+		{
+			var fullNewPath = $"{nestedPath}.{newName}";
+			var migrationProperties = DisCatSharpDiagnosticProperties.CreateConfigPropertyMigrationProperties(nestedPath, newName);
+			context.ReportDiagnostic(Diagnostic.Create(
+				s_configPropertyMigrationRule,
+				location,
+				migrationProperties,
+				oldName,
+				fullNewPath));
+		}
 	}
 
 	/// <summary>

@@ -170,4 +170,153 @@ public sealed class ConfigPropertyMigrationTests
 		Assert.Contains("config.Diagnostics.UpdateChecks.Disabled", fixedSource);
 		Assert.DoesNotContain("config.DisableUpdateCheck", fixedSource);
 	}
+
+	[Fact]
+	public async Task Reports_diagnostic_on_initializer_property()
+	{
+		const string source = """
+			#pragma warning disable DCS0002
+			using DisCatSharp;
+			using DisCatSharp.Enums;
+
+			public sealed class Consumer
+			{
+			    public void Test()
+			    {
+			        var cfg = new DiscordConfiguration
+			        {
+			            ApiChannel = ApiChannel.Canary,
+			        };
+			    }
+			}
+			""";
+
+		var diagnostics = await RoslynTestDocumentFactory.GetAnalyzerDiagnosticsAsync(source);
+		var diagnostic = Assert.Single(diagnostics, x => x.Id == DisCatSharpDiagnosticIds.ConfigPropertyMigration);
+		Assert.Contains("Api.Channel", diagnostic.GetMessage());
+	}
+
+	[Fact]
+	public async Task Reports_diagnostic_on_implicit_new_initializer()
+	{
+		const string source = """
+			#pragma warning disable DCS0002
+			using DisCatSharp;
+
+			public sealed class Consumer
+			{
+			    public DiscordConfiguration Create()
+			    {
+			        return new()
+			        {
+			            ReconnectIndefinitely = true,
+			        };
+			    }
+			}
+			""";
+
+		var diagnostics = await RoslynTestDocumentFactory.GetAnalyzerDiagnosticsAsync(source);
+		var diagnostic = Assert.Single(diagnostics, x => x.Id == DisCatSharpDiagnosticIds.ConfigPropertyMigration);
+		Assert.Contains("Gateway.ReconnectIndefinitely", diagnostic.GetMessage());
+	}
+
+	[Fact]
+	public async Task Reports_diagnostic_on_deep_nested_initializer_property()
+	{
+		const string source = """
+			#pragma warning disable DCS0002
+			using DisCatSharp;
+
+			public sealed class Consumer
+			{
+			    public void Test()
+			    {
+			        var cfg = new DiscordConfiguration
+			        {
+			            DisableUpdateCheck = true,
+			        };
+			    }
+			}
+			""";
+
+		var diagnostics = await RoslynTestDocumentFactory.GetAnalyzerDiagnosticsAsync(source);
+		var diagnostic = Assert.Single(diagnostics, x => x.Id == DisCatSharpDiagnosticIds.ConfigPropertyMigration);
+		Assert.Contains("Diagnostics.UpdateChecks.Disabled", diagnostic.GetMessage());
+	}
+
+	[Fact]
+	public async Task Does_not_report_on_root_keeper_in_initializer()
+	{
+		const string source = """
+			using DisCatSharp;
+			using DisCatSharp.Enums;
+
+			public sealed class Consumer
+			{
+			    public void Test()
+			    {
+			        var cfg = new DiscordConfiguration
+			        {
+			            Token = "test",
+			            TokenType = TokenType.Bot,
+			        };
+			    }
+			}
+			""";
+
+		var diagnostics = await RoslynTestDocumentFactory.GetAnalyzerDiagnosticsAsync(source);
+		Assert.DoesNotContain(diagnostics, x => x.Id == DisCatSharpDiagnosticIds.ConfigPropertyMigration);
+	}
+
+	[Fact]
+	public async Task Code_fix_replaces_initializer_property()
+	{
+		const string source = """
+			#pragma warning disable DCS0002
+			using DisCatSharp;
+			using DisCatSharp.Enums;
+
+			public sealed class Consumer
+			{
+			    public void Test()
+			    {
+			        var cfg = new DiscordConfiguration
+			        {
+			            ApiChannel = ApiChannel.Canary,
+			        };
+			    }
+			}
+			""";
+
+		var fixedSource = await RoslynTestDocumentFactory.ApplyConfigPropertyMigrationFixAsync(source);
+		Assert.Contains("Api =", fixedSource);
+		Assert.Contains("Channel = ApiChannel.Canary", fixedSource);
+		Assert.DoesNotContain("ApiChannel = ApiChannel.Canary", fixedSource);
+	}
+
+	[Fact]
+	public async Task Code_fix_replaces_deep_nested_initializer_property()
+	{
+		const string source = """
+			#pragma warning disable DCS0002
+			using DisCatSharp;
+
+			public sealed class Consumer
+			{
+			    public void Test()
+			    {
+			        var cfg = new DiscordConfiguration
+			        {
+			            DisableUpdateCheck = true,
+			        };
+			    }
+			}
+			""";
+
+		var fixedSource = await RoslynTestDocumentFactory.ApplyConfigPropertyMigrationFixAsync(source);
+		Assert.Contains("Diagnostics =", fixedSource);
+		Assert.Contains("UpdateChecks =", fixedSource);
+		Assert.Contains("Disabled = true", fixedSource);
+		Assert.DoesNotContain("DisableUpdateCheck", fixedSource);
+	}
 }

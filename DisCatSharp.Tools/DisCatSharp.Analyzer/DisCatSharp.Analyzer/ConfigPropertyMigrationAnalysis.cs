@@ -102,4 +102,33 @@ internal static class ConfigPropertyMigrationAnalysis
 		newName = migration.NewName;
 		return true;
 	}
+
+	internal static bool TryGetMigrationFromInitializer(
+		SemanticModel semanticModel,
+		IdentifierNameSyntax identifier,
+		InitializerExpressionSyntax initializer,
+		CancellationToken cancellationToken,
+		out string oldName,
+		out string nestedPath,
+		out string newName)
+	{
+		oldName = identifier.Identifier.Text;
+		nestedPath = null!;
+		newName = null!;
+
+		if (!s_propertyMigrations.TryGetValue(oldName, out var migration))
+			return false;
+
+		// Verify the initializer belongs to a DiscordConfiguration creation
+		if (initializer.Parent is not BaseObjectCreationExpressionSyntax objectCreation)
+			return false;
+
+		var typeInfo = semanticModel.GetTypeInfo(objectCreation, cancellationToken);
+		if (typeInfo.Type?.ToDisplayString() != DiscordConfigurationTypeName)
+			return false;
+
+		nestedPath = migration.NestedPath;
+		newName = migration.NewName;
+		return true;
+	}
 }
