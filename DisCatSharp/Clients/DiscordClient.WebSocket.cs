@@ -225,8 +225,6 @@ public sealed partial class DiscordClient
 				SingleWriter = true
 			});
 
-		this._dispatchConsumerTask = Task.Run(() => this.DispatchConsumerLoopAsync(this._cancelToken), this._cancelToken);
-
 		this.WebSocketClient.Connected += SocketOnConnect;
 		this.WebSocketClient.Disconnected += SocketOnDisconnect;
 		this.WebSocketClient.MessageReceived += SocketOnMessage;
@@ -246,7 +244,10 @@ public sealed partial class DiscordClient
 		return;
 
 		Task SocketOnConnect(IWebSocketClient sender, SocketEventArgs e)
-			=> this._socketOpened.InvokeAsync(this, e);
+		{
+			this._dispatchConsumerTask = Task.Run(() => this.DispatchConsumerLoopAsync(this._cancelToken), this._cancelToken);
+			return this._socketOpened.InvokeAsync(this, e);
+		}
 
 		async Task SocketOnMessage(IWebSocketClient sender, SocketMessageEventArgs e)
 		{
