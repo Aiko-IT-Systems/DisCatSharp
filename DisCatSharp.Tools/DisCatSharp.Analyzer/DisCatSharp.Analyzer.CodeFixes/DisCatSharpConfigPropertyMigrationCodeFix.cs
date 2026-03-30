@@ -103,10 +103,14 @@ public sealed class DisCatSharpConfigPropertyMigrationCodeFix : SingleDiagnostic
 
 		// Case 2: Object initializer assignment (e.g., ApiChannel = value inside new DiscordConfiguration { ... })
 		if (node is IdentifierNameSyntax identifier &&
-			identifier.Parent is AssignmentExpressionSyntax { Parent: InitializerExpressionSyntax } assignment)
+			identifier.Parent is AssignmentExpressionSyntax { Parent: InitializerExpressionSyntax initializer } assignment)
 		{
-			var replacement = BuildNestedInitializerAssignment(nestedPath, newName, assignment.Right);
-			var newRoot = root.ReplaceNode(assignment, replacement.WithTriviaFrom(assignment));
+			var replacement = BuildNestedInitializerAssignment(nestedPath, newName, assignment.Right)
+				.WithLeadingTrivia(assignment.GetLeadingTrivia())
+				.WithTrailingTrivia(assignment.GetTrailingTrivia());
+
+			var newInitializer = ReplaceExpressionInSeparatedList(initializer, assignment, replacement);
+			var newRoot = root.ReplaceNode(initializer, newInitializer);
 			return await Formatter.FormatAsync(
 				document.WithSyntaxRoot(newRoot),
 				cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -181,7 +185,7 @@ public sealed class DisCatSharpConfigPropertyMigrationCodeFix : SingleDiagnostic
 		}
 
 		var newInitializer = initializer.WithExpressions(
-			SyntaxFactory.SeparatedList(newExpressions));
+			BuildSeparatedListWithTrailingCommas(newExpressions));
 
 		var newRoot = root.ReplaceNode(initializer, newInitializer);
 		return await Formatter.FormatAsync(
@@ -221,7 +225,7 @@ public sealed class DisCatSharpConfigPropertyMigrationCodeFix : SingleDiagnostic
 		ExpressionSyntax current = SyntaxFactory.AssignmentExpression(
 			SyntaxKind.SimpleAssignmentExpression,
 			SyntaxFactory.IdentifierName(newName),
-			value);
+			value.WithoutTrivia());
 
 		for (var i = pathParts.Length - 1; i >= 0; i--)
 		{
@@ -234,6 +238,43 @@ public sealed class DisCatSharpConfigPropertyMigrationCodeFix : SingleDiagnostic
 		}
 
 		return current;
+	}
+
+	private static InitializerExpressionSyntax ReplaceExpressionInSeparatedList(
+		InitializerExpressionSyntax initializer,
+		ExpressionSyntax oldExpression,
+		ExpressionSyntax newExpression)
+	{
+		var expressions = initializer.Expressions;
+		var index = expressions.IndexOf(oldExpression);
+		if (index < 0)
+			return initializer;
+
+		var newExpressions = new List<ExpressionSyntax>();
+		for (var i = 0; i < expressions.Count; i++)
+			newExpressions.Add(i == index ? newExpression : expressions[i]);
+
+		return initializer.WithExpressions(BuildSeparatedListWithTrailingCommas(newExpressions));
+	}
+
+	private static SeparatedSyntaxList<ExpressionSyntax> BuildSeparatedListWithTrailingCommas(List<ExpressionSyntax> expressions)
+	{
+		if (expressions.Count == 0)
+			return SyntaxFactory.SeparatedList<ExpressionSyntax>();
+
+		var nodesAndTokens = new List<SyntaxNodeOrToken>();
+		for (var i = 0; i < expressions.Count; i++)
+		{
+			nodesAndTokens.Add(expressions[i]);
+			// Always add trailing comma (C# allows trailing comma in initializers)
+			nodesAndTokens.Add(SyntaxFactory.Token(SyntaxKind.CommaToken)
+				.WithTrailingTrivia(SyntaxFactory.ElasticLineFeed));
+		}
+
+		// Remove the very last comma — let the formatter decide
+		nodesAndTokens.RemoveAt(nodesAndTokens.Count - 1);
+
+		return SyntaxFactory.SeparatedList<ExpressionSyntax>(nodesAndTokens);
 	}
 
 	private sealed class InitializerGroupNode
