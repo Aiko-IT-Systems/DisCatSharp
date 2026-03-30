@@ -69,10 +69,11 @@ These analyzers check for the presence of attributes from the `DisCatSharp.Attri
 
 ##### Core family
 
-| Rule ID                              | Category | Severity | Notes                                                                                                   |
-|--------------------------------------|----------|----------|---------------------------------------------------------------------------------------------------------|
-| [DCS1101](xref:vs_analyzer_dcs_1101) | Usage    | Warning  | Prefer `DiscordClient.GetPresences(userId)` over manual `Presences` filtering                           |
-| [DCS1102](xref:vs_analyzer_dcs_1102) | Usage    | Warning  | `deleteMessageDays` renamed to `deleteMessageSeconds` on ban methods; named-argument callers auto-fixed |
+| Rule ID                              | Category | Severity | Notes                                                                                                                             |
+|--------------------------------------|----------|----------|-----------------------------------------------------------------------------------------------------------------------------------|
+| [DCS1101](xref:vs_analyzer_dcs_1101) | Usage    | Warning  | Prefer `DiscordClient.GetPresences(userId)` over manual `Presences` filtering                                                     |
+| [DCS1102](xref:vs_analyzer_dcs_1102) | Usage    | Warning  | `deleteMessageDays` renamed to `deleteMessageSeconds` on ban methods; named-argument callers auto-fixed                           |
+| [DCS1201](xref:vs_analyzer_dcs_1201) | Usage    | Warning  | Config property migration analyzer and code fix for `DiscordConfiguration` (legacy properties moved to nested sub-configurations) |
 
 ##### Application command family
 
