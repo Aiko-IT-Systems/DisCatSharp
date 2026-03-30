@@ -217,8 +217,7 @@ public sealed partial class DiscordClient
 			? Channel.CreateBounded<GatewayPayload>(new BoundedChannelOptions(capacity)
 			{
 				SingleReader = true,
-				SingleWriter = true,
-				FullMode = BoundedChannelFullMode.Wait
+				SingleWriter = true
 			})
 			: Channel.CreateUnbounded<GatewayPayload>(new UnboundedChannelOptions
 			{
@@ -396,7 +395,8 @@ public sealed partial class DiscordClient
 		switch (payload.OpCode)
 		{
 			case GatewayOpCode.Dispatch:
-				await this._dispatchQueue!.Writer.WriteAsync(payload, this._cancelToken).ConfigureAwait(false);
+				if (!this._dispatchQueue!.Writer.TryWrite(payload))
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Dispatch queue is full; dropping event {EventName} (seq {Sequence}). Consider increasing DispatchQueueCapacity.", payload.EventName, payload.Sequence);
 				break;
 
 			case GatewayOpCode.Heartbeat:
@@ -620,20 +620,13 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	///     Sequentially consumes dispatch payloads from <see cref="_dispatchQueue" />.
+	///     Sequentially consumes dispatch payloads from <see cref="_dispatchQueue" />, ensuring FIFO ordering
+	///     for internal cache and state mutations.
 	/// </summary>
 	/// <remarks>
-	///     <para>
-	///         In <see cref="GatewayDispatchMode.ConcurrentHandlers" /> mode (default), each payload is dequeued in FIFO
-	///         order but processing is fire-and-forget, allowing multiple events to be handled concurrently. This matches
-	///         the throughput characteristics of the previous <c>Task.Run</c> dispatch, while adding bounded back-pressure
-	///         and clean shutdown semantics.
-	///     </para>
-	///     <para>
-	///         In <see cref="GatewayDispatchMode.SequentialHandlers" /> mode, each payload is fully awaited before the
-	///         next one is dequeued — providing total serialization of internal cache mutations and user handler execution
-	///         at the cost of throughput.
-	///     </para>
+	///     The consumer always awaits each dispatch event sequentially to guarantee ordered cache mutations.
+	///     The configured <see cref="GatewayDispatchMode" /> controls whether user event handlers are awaited
+	///     inline or fire-and-forget — that logic lives in <see cref="RaiseEventAsync{TArgs}" />.
 	/// </remarks>
 	/// <param name="cancellationToken">Token that signals shutdown.</param>
 	private async Task DispatchConsumerLoopAsync(CancellationToken cancellationToken)
@@ -644,12 +637,7 @@ public sealed partial class DiscordClient
 		try
 		{
 			await foreach (var payload in this._dispatchQueue!.Reader.ReadAllAsync(cancellationToken).ConfigureAwait(false))
-			{
-				if (mode is GatewayDispatchMode.SequentialHandlers)
-					await this.HandleDispatchSafelyAsync(payload).ConfigureAwait(false);
-				else
-					_ = Task.Run(async () => await this.HandleDispatchSafelyAsync(payload).ConfigureAwait(false), cancellationToken);
-			}
+				await this.HandleDispatchSafelyAsync(payload).ConfigureAwait(false);
 		}
 		catch (OperationCanceledException)
 		{

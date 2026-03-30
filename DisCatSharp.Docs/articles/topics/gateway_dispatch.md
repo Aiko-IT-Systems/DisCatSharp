@@ -83,7 +83,7 @@ var config = new DiscordConfiguration
 ```
 
 > [!WARNING]
-> If the queue is full for too long, the gateway may close the connection because heartbeat ACKs are delayed. Increase the capacity if your bot processes events slowly and serves many large guilds.
+> If the queue is full, incoming dispatch events will be **dropped** and a warning will be logged. This prevents the WebSocket reader from stalling, which would block heartbeats and cause a gateway disconnect. Increase the capacity if you see drop warnings in your logs.
 
 > [!NOTE]
 > Setting the capacity to `0` creates an unbounded queue. This eliminates back-pressure but may consume significant memory under high load.

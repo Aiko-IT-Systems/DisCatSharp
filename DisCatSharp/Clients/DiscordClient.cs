@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Attributes;
+using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
 using DisCatSharp.Entities.Core;
 using DisCatSharp.Entities.OAuth2;
@@ -354,6 +355,46 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 		this._presencesLazy = new(() => new ReadOnlyDictionary<ulong, DiscordPresence>(this.PresencesInternal));
 		this._embeddedActivitiesLazy = new(() => new ReadOnlyDictionary<string, DiscordActivity>(this.EmbeddedActivitiesInternal));
+	}
+
+	#endregion
+
+	#region Event Dispatch Helpers
+
+	/// <summary>
+	///     Raises a user-facing event, respecting the configured <see cref="GatewayDispatchMode" />.
+	/// </summary>
+	/// <remarks>
+	///     <para>
+	///         In <see cref="Enums.GatewayDispatchMode.SequentialHandlers" /> mode, the event handlers are awaited inline,
+	///         ensuring full serialization of both cache mutations and handler execution.
+	///     </para>
+	///     <para>
+	///         In <see cref="Enums.GatewayDispatchMode.ConcurrentHandlers" /> mode, handler invocation is fire-and-forget,
+	///         allowing multiple handler sets to run concurrently while cache mutations remain ordered.
+	///     </para>
+	/// </remarks>
+	/// <typeparam name="TArgs">The event args type.</typeparam>
+	/// <param name="asyncEvent">The async event to invoke.</param>
+	/// <param name="args">The event arguments.</param>
+	internal Task RaiseEventAsync<TArgs>(AsyncEvent<DiscordClient, TArgs> asyncEvent, TArgs args) where TArgs : AsyncEventArgs
+	{
+		if (this.Configuration.Gateway.Advanced.DispatchMode is Enums.GatewayDispatchMode.SequentialHandlers)
+			return asyncEvent.InvokeAsync(this, args);
+
+		_ = Task.Run(async () =>
+		{
+			try
+			{
+				await asyncEvent.InvokeAsync(this, args).ConfigureAwait(false);
+			}
+			catch (Exception ex)
+			{
+				this.Logger.LogError(LoggerEvents.EventHandlerException, ex, "Concurrent event handler threw an exception for {EventName}", asyncEvent.Name);
+			}
+		});
+
+		return Task.CompletedTask;
 	}
 
 	#endregion
