@@ -15,7 +15,7 @@ internal static class ConfigPropertyMigrationAnalysis
 	// Maps old property name -> (nested config property, new property name)
 	// e.g., "ApiVersion" -> ("Api", "Version")
 	// For deeper nesting: "DisableUpdateCheck" -> ("Diagnostics.UpdateChecks", "Disabled")
-	private static readonly ImmutableDictionary<string, (string NestedPath, string NewName)> s_propertyMigrations =
+	internal static readonly ImmutableDictionary<string, (string NestedPath, string NewName)> s_propertyMigrations =
 		ImmutableDictionary.CreateRange<string, (string, string)>(new[]
 		{
 			// Api group

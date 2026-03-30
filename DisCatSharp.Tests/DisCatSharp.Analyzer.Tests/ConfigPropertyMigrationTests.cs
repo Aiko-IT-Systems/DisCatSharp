@@ -319,4 +319,114 @@ public sealed class ConfigPropertyMigrationTests
 		Assert.Contains("Disabled = true", fixedSource);
 		Assert.DoesNotContain("DisableUpdateCheck", fixedSource);
 	}
+
+	[Fact]
+	public async Task Batch_fix_migrates_all_properties_in_initializer()
+	{
+		const string source = """
+			#pragma warning disable DCS0002
+			using System;
+			using DisCatSharp;
+			using DisCatSharp.Enums;
+
+			public sealed class Consumer
+			{
+			    public void Test()
+			    {
+			        var cfg = new DiscordConfiguration
+			        {
+			            Token = "test",
+			            TokenType = TokenType.Bot,
+			            AutoReconnect = true,
+			            ApiChannel = ApiChannel.Canary,
+			            HttpTimeout = TimeSpan.FromMinutes(1),
+			            MinimumLogLevel = Microsoft.Extensions.Logging.LogLevel.Debug,
+			            ReconnectIndefinitely = true,
+			            MessageCacheSize = 0,
+			            EnableSentry = true,
+			            DisableUpdateCheck = false,
+			            ShowReleaseNotesInUpdateCheck = true,
+			        };
+			    }
+			}
+			""";
+
+		var fixedSource = await RoslynTestDocumentFactory.ApplyConfigPropertyMigrationBatchFixAsync(source);
+
+		// Root keepers preserved
+		Assert.Contains("Token = \"test\"", fixedSource);
+		Assert.Contains("TokenType = TokenType.Bot", fixedSource);
+
+		// Grouped under Api
+		Assert.Contains("Api =", fixedSource);
+		Assert.Contains("Channel = ApiChannel.Canary", fixedSource);
+
+		// Grouped under Gateway
+		Assert.Contains("Gateway =", fixedSource);
+		Assert.Contains("AutoReconnect = true", fixedSource);
+		Assert.Contains("ReconnectIndefinitely = true", fixedSource);
+
+		// Grouped under Rest
+		Assert.Contains("Rest =", fixedSource);
+		Assert.Contains("RequestTimeout = TimeSpan.FromMinutes(1)", fixedSource);
+
+		// Grouped under Cache
+		Assert.Contains("Cache =", fixedSource);
+		Assert.Contains("MessageCacheSize = 0", fixedSource);
+
+		// Grouped under Logging
+		Assert.Contains("Logging =", fixedSource);
+		Assert.Contains("MinimumLogLevel = Microsoft.Extensions.Logging.LogLevel.Debug", fixedSource);
+
+		// Grouped under Telemetry
+		Assert.Contains("Telemetry =", fixedSource);
+		Assert.Contains("EnableSentry = true", fixedSource);
+
+		// Deep nesting: Diagnostics.UpdateChecks
+		Assert.Contains("Diagnostics =", fixedSource);
+		Assert.Contains("UpdateChecks =", fixedSource);
+		Assert.Contains("Disabled = false", fixedSource);
+		Assert.Contains("ShowReleaseNotes = true", fixedSource);
+
+		// Old names gone
+		Assert.DoesNotContain("ApiChannel = ", fixedSource);
+		Assert.DoesNotContain("HttpTimeout", fixedSource);
+		Assert.DoesNotContain("DisableUpdateCheck", fixedSource);
+		Assert.DoesNotContain("ShowReleaseNotesInUpdateCheck", fixedSource);
+	}
+
+	[Fact]
+	public async Task Batch_fix_works_with_implicit_new()
+	{
+		const string source = """
+			#pragma warning disable DCS0002
+			using DisCatSharp;
+			using DisCatSharp.Enums;
+
+			public sealed class Consumer
+			{
+			    public DiscordConfiguration Create()
+			    {
+			        return new()
+			        {
+			            Token = "test",
+			            ApiChannel = ApiChannel.Canary,
+			            AutoReconnect = true,
+			            GatewayCompressionLevel = GatewayCompressionLevel.Stream,
+			        };
+			    }
+			}
+			""";
+
+		var fixedSource = await RoslynTestDocumentFactory.ApplyConfigPropertyMigrationBatchFixAsync(source);
+
+		Assert.Contains("Token = \"test\"", fixedSource);
+		Assert.Contains("Api =", fixedSource);
+		Assert.Contains("Channel = ApiChannel.Canary", fixedSource);
+		Assert.Contains("Gateway =", fixedSource);
+		Assert.Contains("AutoReconnect = true", fixedSource);
+		Assert.Contains("CompressionLevel = GatewayCompressionLevel.Stream", fixedSource);
+		Assert.DoesNotContain("ApiChannel =", fixedSource);
+		Assert.DoesNotContain("GatewayCompressionLevel =", fixedSource);
+	}
 }
