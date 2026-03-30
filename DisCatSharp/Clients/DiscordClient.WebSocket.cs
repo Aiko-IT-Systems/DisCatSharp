@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
@@ -96,6 +97,17 @@ public sealed partial class DiscordClient
 	///     Gets the cancel token.
 	/// </summary>
 	private CancellationToken _cancelToken;
+
+	/// <summary>
+	///     Gets the ordered dispatch queue for this shard/client.
+	///     All dispatch payloads are written here and processed sequentially by <see cref="_dispatchConsumerTask" />.
+	/// </summary>
+	private Channel<GatewayPayload>? _dispatchQueue;
+
+	/// <summary>
+	///     Gets the background task that consumes payloads from <see cref="_dispatchQueue" />.
+	/// </summary>
+	private Task? _dispatchConsumerTask;
 
 	#endregion
 
@@ -198,6 +210,23 @@ public sealed partial class DiscordClient
 
 		this._cancelTokenSource = new();
 		this._cancelToken = this._cancelTokenSource.Token;
+
+		// Initialize the ordered dispatch queue.
+		var capacity = this.Configuration.Gateway.Advanced.DispatchQueueCapacity;
+		this._dispatchQueue = capacity > 0
+			? Channel.CreateBounded<GatewayPayload>(new BoundedChannelOptions(capacity)
+			{
+				SingleReader = true,
+				SingleWriter = true,
+				FullMode = BoundedChannelFullMode.Wait
+			})
+			: Channel.CreateUnbounded<GatewayPayload>(new UnboundedChannelOptions
+			{
+				SingleReader = true,
+				SingleWriter = true
+			});
+
+		this._dispatchConsumerTask = Task.Run(() => this.DispatchConsumerLoopAsync(this._cancelToken), this._cancelToken);
 
 		this.WebSocketClient.Connected += SocketOnConnect;
 		this.WebSocketClient.Disconnected += SocketOnDisconnect;
@@ -367,7 +396,7 @@ public sealed partial class DiscordClient
 		switch (payload.OpCode)
 		{
 			case GatewayOpCode.Dispatch:
-				_ = Task.Run(async () => await this.HandleDispatchSafelyAsync(payload).ConfigureAwait(false), this._cancelToken);
+				await this._dispatchQueue!.Writer.WriteAsync(payload, this._cancelToken).ConfigureAwait(false);
 				break;
 
 			case GatewayOpCode.Heartbeat:
@@ -588,6 +617,56 @@ public sealed partial class DiscordClient
 				this.DiagnosticsSink.CaptureException("DisCatSharp", ex, context, tags);
 			}
 		}
+	}
+
+	/// <summary>
+	///     Sequentially consumes dispatch payloads from <see cref="_dispatchQueue" />, ensuring FIFO ordering for
+	///     internal state and cache mutations.
+	/// </summary>
+	/// <remarks>
+	///     <para>
+	///         In <see cref="GatewayDispatchMode.ConcurrentHandlers" /> mode (default), internal processing is awaited
+	///         sequentially, but user event handler invocation is fire-and-forget, allowing multiple handler sets to run
+	///         concurrently.
+	///     </para>
+	///     <para>
+	///         In <see cref="GatewayDispatchMode.SequentialHandlers" /> mode, both internal processing and user handlers
+	///         are fully awaited before the next event is dequeued — providing total serialization at the cost of throughput.
+	///     </para>
+	/// </remarks>
+	/// <param name="cancellationToken">Token that signals shutdown.</param>
+	private async Task DispatchConsumerLoopAsync(CancellationToken cancellationToken)
+	{
+		this.Logger.LogDebug(LoggerEvents.Startup, "Dispatch consumer loop started");
+
+		try
+		{
+			await foreach (var payload in this._dispatchQueue!.Reader.ReadAllAsync(cancellationToken).ConfigureAwait(false))
+				await this.HandleDispatchSafelyAsync(payload).ConfigureAwait(false);
+		}
+		catch (OperationCanceledException)
+		{
+			// Expected during shutdown — the cancellation token was triggered.
+		}
+		catch (ChannelClosedException)
+		{
+			// Expected if the channel writer is completed (rare but safe).
+		}
+		catch (Exception ex)
+		{
+			this.Logger.LogCritical(LoggerEvents.WebSocketReceiveFailure, ex, "Dispatch consumer loop terminated unexpectedly");
+
+			if (this.DiagnosticsSink.IsEnabled)
+				this.DiagnosticsSink.CaptureException("DisCatSharp", ex, new Dictionary<string, object>
+				{
+					["component"] = "DispatchConsumerLoop"
+				}, new Dictionary<string, string>
+				{
+					[Telemetry.DiagnosticTags.ErrorOrigin] = Telemetry.DiagnosticTags.OriginLibrary
+				});
+		}
+
+		this.Logger.LogDebug(LoggerEvents.Misc, "Dispatch consumer loop stopped");
 	}
 
 	/// <summary>

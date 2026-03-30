@@ -2448,6 +2448,15 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		catch
 		{ }
 
+		// Complete the dispatch channel writer to signal the consumer loop to exit,
+		// then await the consumer task to ensure orderly shutdown.
+		try
+		{
+			this._dispatchQueue?.Writer.TryComplete();
+		}
+		catch
+		{ }
+
 		this.GuildsInternal.Clear();
 		this.EmojisInternal.Clear();
 		this._heartbeatTask?.Dispose();
