@@ -44,9 +44,9 @@ public sealed class DiscordConfiguration
 		this.ServiceProvider = other.ServiceProvider;
 		this.Intents = other.Intents;
 		this.HasActivitiesEnabled = other.HasActivitiesEnabled;
-#pragma warning disable CS0618
+#pragma warning disable DCS0002
 		this.ActivityHandlerType = other.ActivityHandlerType;
-#pragma warning restore CS0618
+#pragma warning restore DCS0002
 		this.EnableBadDomainCheckerSupport = other.EnableBadDomainCheckerSupport;
 		this.Api = new(other.Api ?? new());
 		this.Gateway = new(other.Gateway ?? new());
@@ -105,7 +105,7 @@ public sealed class DiscordConfiguration
 	///     <para>Defaults to <see cref="ApplicationCommandHandlerType.DiscordLaunchActivity" />.</para>
 	///     <para>Takes no affect if you use the <c>ApplicationCommandExtension.RegisterEntryPointCommand</c> extension method to register your entry point command.</para>
 	/// </summary>
-	[Obsolete("ActivityHandlerType is a deprecation candidate. Prefer explicit handler registration via ApplicationCommandsExtension.")]
+	[Deprecated("ActivityHandlerType is a deprecation candidate. Prefer explicit handler registration via ApplicationCommandsExtension.")]
 	public ApplicationCommandHandlerType ActivityHandlerType { internal get; set; } = ApplicationCommandHandlerType.DiscordLaunchActivity;
 
 	/// <summary>
@@ -163,7 +163,7 @@ public sealed class DiscordConfiguration
 	#region Forwarding properties (deprecated — use nested config instead)
 
 	/// <inheritdoc cref="ApiConfiguration.Version" />
-	[Obsolete("Use Api.Version instead. This property will be removed in a future version.")]
+	[Deprecated("Use Api.Version instead. This property will be removed in a future version.")]
 	public string ApiVersion
 	{
 		internal get => this.Api.Version;
@@ -171,7 +171,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="ApiConfiguration.Channel" />
-	[Obsolete("Use Api.Channel instead. This property will be removed in a future version.")]
+	[Deprecated("Use Api.Channel instead. This property will be removed in a future version.")]
 	public ApiChannel ApiChannel
 	{
 		internal get => this.Api.Channel;
@@ -179,7 +179,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="ApiConfiguration.Override" />
-	[Obsolete("Use Api.Override instead. This property will be removed in a future version.")]
+	[Deprecated("Use Api.Override instead. This property will be removed in a future version.")]
 	public string? Override
 	{
 		internal get => this.Api.Override;
@@ -187,7 +187,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="ApiConfiguration.Locale" />
-	[Obsolete("Use Api.Locale instead. This property will be removed in a future version.")]
+	[Deprecated("Use Api.Locale instead. This property will be removed in a future version.")]
 	public string Locale
 	{
 		internal get => this.Api.Locale;
@@ -195,7 +195,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="ApiConfiguration.Timezone" />
-	[Obsolete("Use Api.Timezone instead. This property will be removed in a future version.")]
+	[Deprecated("Use Api.Timezone instead. This property will be removed in a future version.")]
 	public string? Timezone
 	{
 		internal get => this.Api.Timezone;
@@ -203,7 +203,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="GatewayConfiguration.AutoReconnect" />
-	[Obsolete("Use Gateway.AutoReconnect instead. This property will be removed in a future version.")]
+	[Deprecated("Use Gateway.AutoReconnect instead. This property will be removed in a future version.")]
 	public bool AutoReconnect
 	{
 		internal get => this.Gateway.AutoReconnect;
@@ -211,7 +211,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="GatewayConfiguration.ReconnectIndefinitely" />
-	[Obsolete("Use Gateway.ReconnectIndefinitely instead. This property will be removed in a future version.")]
+	[Deprecated("Use Gateway.ReconnectIndefinitely instead. This property will be removed in a future version.")]
 	public bool ReconnectIndefinitely
 	{
 		internal get => this.Gateway.ReconnectIndefinitely;
@@ -219,7 +219,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="GatewayConfiguration.ShardId" />
-	[Obsolete("Use Gateway.ShardId instead. This property will be removed in a future version.")]
+	[Deprecated("Use Gateway.ShardId instead. This property will be removed in a future version.")]
 	public int ShardId
 	{
 		internal get => this.Gateway.ShardId;
@@ -227,7 +227,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="GatewayConfiguration.ShardCount" />
-	[Obsolete("Use Gateway.ShardCount instead. This property will be removed in a future version.")]
+	[Deprecated("Use Gateway.ShardCount instead. This property will be removed in a future version.")]
 	public int ShardCount
 	{
 		internal get => this.Gateway.ShardCount;
@@ -235,7 +235,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="GatewayConfiguration.CompressionLevel" />
-	[Obsolete("Use Gateway.CompressionLevel instead. This property will be removed in a future version.")]
+	[Deprecated("Use Gateway.CompressionLevel instead. This property will be removed in a future version.")]
 	public GatewayCompressionLevel GatewayCompressionLevel
 	{
 		internal get => this.Gateway.CompressionLevel;
@@ -243,7 +243,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="GatewayConfiguration.LargeThreshold" />
-	[Obsolete("Use Gateway.LargeThreshold instead. This property will be removed in a future version.")]
+	[Deprecated("Use Gateway.LargeThreshold instead. This property will be removed in a future version.")]
 	public int LargeThreshold
 	{
 		internal get => this.Gateway.LargeThreshold;
@@ -251,7 +251,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="GatewayConfiguration.Capabilities" />
-	[Obsolete("Use Gateway.Capabilities instead. This property will be removed in a future version.")]
+	[Deprecated("Use Gateway.Capabilities instead. This property will be removed in a future version.")]
 	public GatewayCapabilities Capabilities
 	{
 		internal get => this.Gateway.Capabilities;
@@ -259,7 +259,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="GatewayConfiguration.MobileStatus" />
-	[Obsolete("Use Gateway.MobileStatus instead. This property will be removed in a future version.")]
+	[Deprecated("Use Gateway.MobileStatus instead. This property will be removed in a future version.")]
 	public bool MobileStatus
 	{
 		internal get => this.Gateway.MobileStatus;
@@ -267,7 +267,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="GatewayConfiguration.WebSocketClientFactory" />
-	[Obsolete("Use Gateway.WebSocketClientFactory instead. This property will be removed in a future version.")]
+	[Deprecated("Use Gateway.WebSocketClientFactory instead. This property will be removed in a future version.")]
 	public WebSocketClientFactoryDelegate WebSocketClientFactory
 	{
 		internal get => this.Gateway.WebSocketClientFactory;
@@ -275,7 +275,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="GatewayConfiguration.UdpClientFactory" />
-	[Obsolete("Use Gateway.UdpClientFactory instead. This property will be removed in a future version.")]
+	[Deprecated("Use Gateway.UdpClientFactory instead. This property will be removed in a future version.")]
 	public UdpClientFactoryDelegate UdpClientFactory
 	{
 		internal get => this.Gateway.UdpClientFactory;
@@ -283,7 +283,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="RestConfiguration.RequestTimeout" />
-	[Obsolete("Use Rest.RequestTimeout instead. This property will be removed in a future version.")]
+	[Deprecated("Use Rest.RequestTimeout instead. This property will be removed in a future version.")]
 	public TimeSpan HttpTimeout
 	{
 		internal get => this.Rest.RequestTimeout;
@@ -291,7 +291,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="RestConfiguration.UseRelativeRatelimit" />
-	[Obsolete("Use Rest.UseRelativeRatelimit instead. This property will be removed in a future version.")]
+	[Deprecated("Use Rest.UseRelativeRatelimit instead. This property will be removed in a future version.")]
 	public bool UseRelativeRatelimit
 	{
 		internal get => this.Rest.UseRelativeRatelimit;
@@ -299,7 +299,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="RestConfiguration.Proxy" />
-	[Obsolete("Use Rest.Proxy instead. This property will be removed in a future version.")]
+	[Deprecated("Use Rest.Proxy instead. This property will be removed in a future version.")]
 	public IWebProxy? Proxy
 	{
 		internal get => this.Rest.Proxy;
@@ -307,7 +307,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="CacheConfiguration.MessageCacheSize" />
-	[Obsolete("Use Cache.MessageCacheSize instead. This property will be removed in a future version.")]
+	[Deprecated("Use Cache.MessageCacheSize instead. This property will be removed in a future version.")]
 	public int MessageCacheSize
 	{
 		internal get => this.Cache.MessageCacheSize;
@@ -315,7 +315,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="CacheConfiguration.PresenceCacheSize" />
-	[Obsolete("Use Cache.PresenceCacheSize instead. This property will be removed in a future version.")]
+	[Deprecated("Use Cache.PresenceCacheSize instead. This property will be removed in a future version.")]
 	public int PresenceCacheSize
 	{
 		internal get => this.Cache.PresenceCacheSize;
@@ -323,7 +323,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="CacheConfiguration.AlwaysCacheMembers" />
-	[Obsolete("Use Cache.AlwaysCacheMembers instead. This property will be removed in a future version.")]
+	[Deprecated("Use Cache.AlwaysCacheMembers instead. This property will be removed in a future version.")]
 	public bool AlwaysCacheMembers
 	{
 		internal get => this.Cache.AlwaysCacheMembers;
@@ -331,7 +331,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="CacheConfiguration.AutoRefreshChannelCache" />
-	[Obsolete("Use Cache.AutoRefreshChannelCache instead. This property will be removed in a future version.")]
+	[Deprecated("Use Cache.AutoRefreshChannelCache instead. This property will be removed in a future version.")]
 	public bool AutoRefreshChannelCache
 	{
 		internal get => this.Cache.AutoRefreshChannelCache;
@@ -339,7 +339,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="CacheConfiguration.AutoFetchApplicationEmojis" />
-	[Obsolete("Use Cache.AutoFetchApplicationEmojis instead. This property will be removed in a future version.")]
+	[Deprecated("Use Cache.AutoFetchApplicationEmojis instead. This property will be removed in a future version.")]
 	public bool AutoFetchApplicationEmojis
 	{
 		internal get => this.Cache.AutoFetchApplicationEmojis;
@@ -347,7 +347,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="CacheConfiguration.AutoFetchSkuIds" />
-	[Obsolete("Use Cache.AutoFetchSkuIds instead. This property will be removed in a future version.")]
+	[Deprecated("Use Cache.AutoFetchSkuIds instead. This property will be removed in a future version.")]
 	[RequiresFeature(Features.MonetizedApplication)]
 	public bool AutoFetchSkuIds
 	{
@@ -356,7 +356,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="CacheConfiguration.SkuId" />
-	[Obsolete("Use Cache.SkuId instead. This property will be removed in a future version.")]
+	[Deprecated("Use Cache.SkuId instead. This property will be removed in a future version.")]
 	[RequiresFeature(Features.MonetizedApplication)]
 	public ulong? SkuId
 	{
@@ -365,7 +365,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="LoggingConfiguration.MinimumLogLevel" />
-	[Obsolete("Use Logging.MinimumLogLevel instead. This property will be removed in a future version.")]
+	[Deprecated("Use Logging.MinimumLogLevel instead. This property will be removed in a future version.")]
 	public LogLevel MinimumLogLevel
 	{
 		internal get => this.Logging.MinimumLogLevel;
@@ -373,7 +373,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="LoggingConfiguration.LogTimestampFormat" />
-	[Obsolete("Use Logging.LogTimestampFormat instead. This property will be removed in a future version.")]
+	[Deprecated("Use Logging.LogTimestampFormat instead. This property will be removed in a future version.")]
 	public string LogTimestampFormat
 	{
 		internal get => this.Logging.LogTimestampFormat;
@@ -381,7 +381,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="LoggingConfiguration.LoggerFactory" />
-	[Obsolete("Use Logging.LoggerFactory instead. This property will be removed in a future version.")]
+	[Deprecated("Use Logging.LoggerFactory instead. This property will be removed in a future version.")]
 	public ILoggerFactory LoggerFactory
 	{
 		internal get => this.Logging.LoggerFactory;
@@ -396,7 +396,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="DiagnosticsConfiguration.EnablePayloadReceivedEvent" />
-	[Obsolete("Use Diagnostics.EnablePayloadReceivedEvent instead. This property will be removed in a future version.")]
+	[Deprecated("Use Diagnostics.EnablePayloadReceivedEvent instead. This property will be removed in a future version.")]
 	public bool EnablePayloadReceivedEvent
 	{
 		internal get => this.Diagnostics.EnablePayloadReceivedEvent;
@@ -404,7 +404,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="UpdateCheckConfiguration.Disabled" />
-	[Obsolete("Use Diagnostics.UpdateChecks.Disabled instead. This property will be removed in a future version.")]
+	[Deprecated("Use Diagnostics.UpdateChecks.Disabled instead. This property will be removed in a future version.")]
 	public bool DisableUpdateCheck
 	{
 		internal get => this.Diagnostics.UpdateChecks.Disabled;
@@ -412,7 +412,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="UpdateCheckConfiguration.Mode" />
-	[Obsolete("Use Diagnostics.UpdateChecks.Mode instead. This property will be removed in a future version.")]
+	[Deprecated("Use Diagnostics.UpdateChecks.Mode instead. This property will be removed in a future version.")]
 	public VersionCheckMode UpdateCheckMode
 	{
 		internal get => this.Diagnostics.UpdateChecks.Mode;
@@ -420,7 +420,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="UpdateCheckConfiguration.IncludePrerelease" />
-	[Obsolete("Use Diagnostics.UpdateChecks.IncludePrerelease instead. This property will be removed in a future version.")]
+	[Deprecated("Use Diagnostics.UpdateChecks.IncludePrerelease instead. This property will be removed in a future version.")]
 	public bool IncludePrereleaseInUpdateCheck
 	{
 		internal get => this.Diagnostics.UpdateChecks.IncludePrerelease;
@@ -428,7 +428,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="UpdateCheckConfiguration.GitHubToken" />
-	[Obsolete("Use Diagnostics.UpdateChecks.GitHubToken instead. This property will be removed in a future version.")]
+	[Deprecated("Use Diagnostics.UpdateChecks.GitHubToken instead. This property will be removed in a future version.")]
 	public string? UpdateCheckGitHubToken
 	{
 		internal get => this.Diagnostics.UpdateChecks.GitHubToken;
@@ -436,7 +436,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="UpdateCheckConfiguration.ShowReleaseNotes" />
-	[Obsolete("Use Diagnostics.UpdateChecks.ShowReleaseNotes instead. This property will be removed in a future version.")]
+	[Deprecated("Use Diagnostics.UpdateChecks.ShowReleaseNotes instead. This property will be removed in a future version.")]
 	public bool ShowReleaseNotesInUpdateCheck
 	{
 		internal get => this.Diagnostics.UpdateChecks.ShowReleaseNotes;
@@ -444,7 +444,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="TelemetryConfiguration.EnableSentry" />
-	[Obsolete("Use Telemetry.EnableSentry instead. This property will be removed in a future version.")]
+	[Deprecated("Use Telemetry.EnableSentry instead. This property will be removed in a future version.")]
 	public bool EnableSentry
 	{
 		internal get => this.Telemetry.EnableSentry;
@@ -452,7 +452,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="TelemetryConfiguration.AttachRecentLogEntries" />
-	[Obsolete("Use Telemetry.AttachRecentLogEntries instead. This property will be removed in a future version.")]
+	[Deprecated("Use Telemetry.AttachRecentLogEntries instead. This property will be removed in a future version.")]
 	public bool AttachRecentLogEntries
 	{
 		internal get => this.Telemetry.AttachRecentLogEntries;
@@ -460,7 +460,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="TelemetryConfiguration.AttachUserInfo" />
-	[Obsolete("Use Telemetry.AttachUserInfo instead. This property will be removed in a future version.")]
+	[Deprecated("Use Telemetry.AttachUserInfo instead. This property will be removed in a future version.")]
 	public bool AttachUserInfo
 	{
 		internal get => this.Telemetry.AttachUserInfo;
@@ -468,7 +468,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="TelemetryConfiguration.FeedbackEmail" />
-	[Obsolete("Use Telemetry.FeedbackEmail instead. This property will be removed in a future version.")]
+	[Deprecated("Use Telemetry.FeedbackEmail instead. This property will be removed in a future version.")]
 	public string? FeedbackEmail
 	{
 		internal get => this.Telemetry.FeedbackEmail;
@@ -476,7 +476,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="TelemetryConfiguration.DeveloperUserId" />
-	[Obsolete("Use Telemetry.DeveloperUserId instead. This property will be removed in a future version.")]
+	[Deprecated("Use Telemetry.DeveloperUserId instead. This property will be removed in a future version.")]
 	public ulong? DeveloperUserId
 	{
 		internal get => this.Telemetry.DeveloperUserId;
@@ -484,7 +484,7 @@ public sealed class DiscordConfiguration
 	}
 
 	/// <inheritdoc cref="TelemetryConfiguration.EnableDiscordIdScrubber" />
-	[Obsolete("Use Telemetry.EnableDiscordIdScrubber instead. This property will be removed in a future version.")]
+	[Deprecated("Use Telemetry.EnableDiscordIdScrubber instead. This property will be removed in a future version.")]
 	public bool EnableDiscordIdScrubber
 	{
 		internal get => this.Telemetry.EnableDiscordIdScrubber;
