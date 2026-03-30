@@ -620,29 +620,36 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	///     Sequentially consumes dispatch payloads from <see cref="_dispatchQueue" />, ensuring FIFO ordering for
-	///     internal state and cache mutations.
+	///     Sequentially consumes dispatch payloads from <see cref="_dispatchQueue" />.
 	/// </summary>
 	/// <remarks>
 	///     <para>
-	///         In <see cref="GatewayDispatchMode.ConcurrentHandlers" /> mode (default), internal processing is awaited
-	///         sequentially, but user event handler invocation is fire-and-forget, allowing multiple handler sets to run
-	///         concurrently.
+	///         In <see cref="GatewayDispatchMode.ConcurrentHandlers" /> mode (default), each payload is dequeued in FIFO
+	///         order but processing is fire-and-forget, allowing multiple events to be handled concurrently. This matches
+	///         the throughput characteristics of the previous <c>Task.Run</c> dispatch, while adding bounded back-pressure
+	///         and clean shutdown semantics.
 	///     </para>
 	///     <para>
-	///         In <see cref="GatewayDispatchMode.SequentialHandlers" /> mode, both internal processing and user handlers
-	///         are fully awaited before the next event is dequeued — providing total serialization at the cost of throughput.
+	///         In <see cref="GatewayDispatchMode.SequentialHandlers" /> mode, each payload is fully awaited before the
+	///         next one is dequeued — providing total serialization of internal cache mutations and user handler execution
+	///         at the cost of throughput.
 	///     </para>
 	/// </remarks>
 	/// <param name="cancellationToken">Token that signals shutdown.</param>
 	private async Task DispatchConsumerLoopAsync(CancellationToken cancellationToken)
 	{
-		this.Logger.LogDebug(LoggerEvents.Startup, "Dispatch consumer loop started");
+		var mode = this.Configuration.Gateway.Advanced.DispatchMode;
+		this.Logger.LogDebug(LoggerEvents.Startup, "Dispatch consumer loop started (mode: {DispatchMode})", mode);
 
 		try
 		{
 			await foreach (var payload in this._dispatchQueue!.Reader.ReadAllAsync(cancellationToken).ConfigureAwait(false))
-				await this.HandleDispatchSafelyAsync(payload).ConfigureAwait(false);
+			{
+				if (mode is GatewayDispatchMode.SequentialHandlers)
+					await this.HandleDispatchSafelyAsync(payload).ConfigureAwait(false);
+				else
+					_ = Task.Run(async () => await this.HandleDispatchSafelyAsync(payload).ConfigureAwait(false), cancellationToken);
+			}
 		}
 		catch (OperationCanceledException)
 		{
