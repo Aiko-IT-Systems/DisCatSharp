@@ -38,9 +38,9 @@ The analyzer currently contains a mix of legacy shipped IDs and newer family-bas
 
 Use this as the quick orientation guide.
 
-##### Legacy shipped diagnostics
+##### DisCatSharp.Attributes Based Analyzers
 
-These rules keep their historical IDs for compatibility.
+These analyzers check for the presence of attributes from the `DisCatSharp.Attributes` namespace and report diagnostics based on their usage.
 
 | Rule ID                              | Category | Severity | Notes                                  |
 |--------------------------------------|----------|----------|----------------------------------------|
@@ -56,6 +56,7 @@ These rules keep their historical IDs for compatibility.
 
 | Family    | Purpose                                                                            |
 |-----------|------------------------------------------------------------------------------------|
+| `DCS0XXX` | `DisCatSharp.Attributes` based diagnostics                                         |
 | `DCS1XXX` | Core `DisCatSharp` diagnostics, migrations, and cross-cutting code fixes           |
 | `DCS2XXX` | `DisCatSharp.ApplicationCommands` diagnostics and code-fix families                |
 | `DCS3XXX` | `DisCatSharp.CommandsNext` diagnostics and code-fix families                       |
@@ -66,15 +67,15 @@ These rules keep their historical IDs for compatibility.
 | `DCS8XXX` | Hosting, dependency injection, and configuration diagnostics and code-fix families |
 | `DCS9XXX` | Reserved                                                                           |
 
-##### Application command family
-
-| Rule ID                              | Category | Severity | Notes                                                 |
-|--------------------------------------|----------|----------|-------------------------------------------------------|
-| [DCS2101](xref:vs_analyzer_dcs_2101) | Usage    | Info     | Application command checks-failed migration prototype |
-
 ##### Core family
 
 | Rule ID                              | Category | Severity | Notes                                                                                                   |
 |--------------------------------------|----------|----------|---------------------------------------------------------------------------------------------------------|
 | [DCS1101](xref:vs_analyzer_dcs_1101) | Usage    | Warning  | Prefer `DiscordClient.GetPresences(userId)` over manual `Presences` filtering                           |
 | [DCS1102](xref:vs_analyzer_dcs_1102) | Usage    | Warning  | `deleteMessageDays` renamed to `deleteMessageSeconds` on ban methods; named-argument callers auto-fixed |
+
+##### Application command family
+
+| Rule ID                              | Category | Severity | Notes                                                 |
+|--------------------------------------|----------|----------|-------------------------------------------------------|
+| [DCS2101](xref:vs_analyzer_dcs_2101) | Usage    | Info     | Application command checks-failed migration prototype |

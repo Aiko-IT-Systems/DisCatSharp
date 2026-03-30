@@ -66,6 +66,8 @@ The existing shipped diagnostics keep their historical IDs for compatibility, ev
 
 For new diagnostics, prefer category-based ranges:
 
+- `DCS0XXX`
+  - `DisCatSharp.Attributes` based diagnostics
 - `DCS1XXX`
   - core `DisCatSharp` diagnostics, migrations, and cross-cutting code-fix families
 - `DCS2XXX`
