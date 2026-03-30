@@ -16,7 +16,7 @@ namespace DisCatSharp.Telemetry;
 /// </summary>
 internal static class TelemetryBootstrap
 {
-	private static readonly IReadOnlyDictionary<string, string> SourceCodeRoots = new Dictionary<string, string>(StringComparer.Ordinal)
+	private static readonly IReadOnlyDictionary<string, string> s_sourceCodeRoots = new Dictionary<string, string>(StringComparer.Ordinal)
 	{
 		["DisCatSharp"] = "DisCatSharp",
 		["DisCatSharp.ApplicationCommands"] = "DisCatSharp.ApplicationCommands",
@@ -29,7 +29,7 @@ internal static class TelemetryBootstrap
 		["DisCatSharp.Configuration"] = "DisCatSharp.Configuration",
 		["DisCatSharp.Common"] = "DisCatSharp.Common",
 		["DisCatSharp.Experimental"] = "DisCatSharp.Experimental"
-	};
+	}.AsReadOnly();
 
 	/// <summary>
 	///     Creates the appropriate diagnostics sink based on the configuration.
@@ -158,7 +158,7 @@ internal static class TelemetryBootstrap
 	internal static void RewriteStackFramePaths(SentryEvent e)
 	{
 		if (!e.Tags.TryGetValue(DiagnosticTags.Source, out var source)
-			|| !SourceCodeRoots.TryGetValue(source, out var sourceRoot))
+			|| !s_sourceCodeRoots.TryGetValue(source, out var sourceRoot))
 			return;
 
 		foreach (var sentryException in e.SentryExceptions ?? [])
