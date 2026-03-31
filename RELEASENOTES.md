@@ -16,6 +16,11 @@ DisCatSharp Release Notes
     - Added `DiscordConfiguration.Validate()`, called from `ConnectAsync` before any network I/O, which throws `InvalidOperationException` when `ShardId ≥ ShardCount`.
     - Clamped `LargeThreshold` to the Discord-specified bot range (50–250) in `DiscordConfiguration`; values outside the range are silently clamped on assignment.
     - Added non-negative validation for `ShardId` and positive validation for `ShardCount` in `DiscordConfiguration` property setters.
+    - Replaced fire-and-forget `Task.Run` gateway dispatch with an ordered `Channel<T>` queue and single-consumer loop per shard, guaranteeing FIFO cache and state mutations.
+    - Added `GatewayDispatchMode` enum (`ConcurrentHandlers` / `SequentialHandlers`) configurable via `GatewayAdvancedConfiguration.DispatchMode`; defaults to `ConcurrentHandlers` (fire-and-forget user handlers after sequential cache mutations).
+    - Added 11 internal extension events on `DiscordClient` for reliable, ordered delivery to library extensions before public events fire. Extensions (AppCommands, CommandsNext, Interactivity, Lavalink, Voice) now subscribe to these instead of public events.
+    - Moved `Proxy` from `RestConfiguration` to root `DiscordConfiguration` since it applies to both REST and Gateway connections.
+    - Moved `EnableLibraryDeveloperMode` from `TelemetryConfiguration` to root `DiscordConfiguration` since it gates behavior beyond telemetry.
     - Audited `NullValueHandling` across 51 serialized properties in 19 entity files: corrected 25 from `Include` to `Ignore` on fields Discord never reads as explicit `null`; preserved `Include` on 26 fields where `null` carries a distinct semantic (ungrouping channels, disconnecting from voice, clearing timeout/gradient/incident restrictions, null-as-boolean role tags, and unicode-vs-custom emoji disambiguation).
     - Fixed `DiscordMember.BanAsync` and `UnbanAsync` to route through `ApiClient` directly, consistent with all other member REST operations.
     - Renamed `deleteMessageDays` to `deleteMessageSeconds` on `DiscordMember.BanAsync` and all `DiscordGuild.BanMemberAsync` overloads; removed the legacy days-to-seconds compatibility shim — the API has always accepted seconds. **Note:** positional callers passing day values must be updated manually; named-argument callers are handled by `DCS1102`.
@@ -58,12 +63,14 @@ DisCatSharp.ApplicationCommands Release Notes
     - Rewrote `DeepEqualOptions` to collect all option mismatches with per-field diagnostic messages instead of returning on the first difference.
     - Added thread-safe snapshots for public collection properties (`GlobalCommands`, `GuildCommands`).
     - Isolated `resultCommands` from the input `updateList` to prevent mutation of caller-provided data.
+    - Migrated to internal extension events for reliable, ordered event delivery from the dispatch pipeline.
 
 DisCatSharp.CommandsNext Release Notes
 
     - No notable feature changes.
     - Package alignment was updated as part of the .NET 8 removal and current framework support refresh.
     - Added diagnostics-sink reporting for command execution failures.
+    - Migrated to internal extension events for reliable, ordered event delivery from the dispatch pipeline.
 
 DisCatSharp.Interactivity Release Notes
 
@@ -91,6 +98,7 @@ DisCatSharp.Interactivity Release Notes
     - `InteractivityHelpers.Recalculate` now throws if all pages lack embeds and preserves content-only pages in the output.
     - Stored `CancellationTokenRegistration` in `ComponentMatchRequest` and `ModalMatchRequest` for proper lifecycle tracking.
     - Added diagnostics-sink reporting for waiter, paginator, poller, and collector exception paths.
+    - Migrated to internal extension events for reliable, ordered event delivery from the dispatch pipeline.
 
 DisCatSharp.Common Release Notes
 
@@ -102,12 +110,14 @@ DisCatSharp.Lavalink Release Notes
     - Fixed a regression affecting player updates when switching the bot's voice channel while using Lavalink.
     - Included follow-up Lavalink session/internal cleanup and removed obsolete archived Lavalink v1 sources from the maintained tree.
     - Added diagnostics-sink reporting for Lavalink REST, websocket, and connection failures with upstream-origin tagging to distinguish Lavalink server issues from library faults.
+    - Migrated to internal extension events for reliable, ordered event delivery from the dispatch pipeline.
 
 DisCatSharp.Voice Release Notes
 
     - Fixed voice/lavalink integration regressions around channel switching.
     - Voice native packaging/build settings were refreshed with the wider framework alignment changes.
     - Added diagnostics-sink reporting across voice sender, receiver, keepalive, disconnect, and native-loading failure paths.
+    - Migrated to internal extension events for reliable, ordered event delivery from the dispatch pipeline.
 
 DisCatSharp.Experimental Release Notes
 
@@ -139,3 +149,4 @@ DisCatSharp.Analyzer Release Notes
     - Updated analyzer packaging so `DisCatSharp.Attributes.dll` is bundled with the analyzer package for Roslyn runtime loading.
     - Added analyzer authoring documentation, diagnostic family guidance, release tracking files, and release workflow support for publishing `DisCatSharp.Analyzer`.
     - Added `DCS1102`, a ban-parameter migration analyzer/code fix: detects `deleteMessageDays:` named arguments on `BanAsync`/`BanMemberAsync` and renames them to `deleteMessageSeconds:`, multiplying integer literals by 86400 automatically.
+    - Updated `DCS1201` config property migration to support root-level property targets (empty `NestedPath`) for `Proxy` and `EnableLibraryDeveloperMode`.
