@@ -35,7 +35,7 @@ public sealed class DisCatSharpConfigPropertyMigrationCodeFix : SingleDiagnostic
 				nestedPath is null || newName is null)
 				continue;
 
-			var fullPath = $"{nestedPath}.{newName}";
+			var fullPath = string.IsNullOrEmpty(nestedPath) ? newName : $"{nestedPath}.{newName}";
 
 			// Single-property fix
 			context.RegisterCodeFix(
@@ -81,7 +81,7 @@ public sealed class DisCatSharpConfigPropertyMigrationCodeFix : SingleDiagnostic
 			var expression = memberAccess.Expression;
 			var pathParts = nestedPath.Split('.');
 			ExpressionSyntax current = expression;
-			foreach (var part in pathParts)
+			foreach (var part in pathParts.Where(p => p.Length > 0))
 			{
 				current = SyntaxFactory.MemberAccessExpression(
 					SyntaxKind.SimpleMemberAccessExpression,
@@ -157,7 +157,7 @@ public sealed class DisCatSharpConfigPropertyMigrationCodeFix : SingleDiagnostic
 			}
 
 			// Add to tree: split full path into segments
-			var segments = migration.NestedPath.Split('.');
+			var segments = migration.NestedPath.Split('.').Where(s => s.Length > 0);
 			var node = tree;
 			foreach (var segment in segments)
 			{
@@ -220,7 +220,7 @@ public sealed class DisCatSharpConfigPropertyMigrationCodeFix : SingleDiagnostic
 
 	private static ExpressionSyntax BuildNestedInitializerAssignment(string nestedPath, string newName, ExpressionSyntax value)
 	{
-		var pathParts = nestedPath.Split('.');
+		var pathParts = nestedPath.Split('.').Where(p => p.Length > 0).ToArray();
 
 		ExpressionSyntax current = SyntaxFactory.AssignmentExpression(
 			SyntaxKind.SimpleAssignmentExpression,

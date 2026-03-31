@@ -38,7 +38,7 @@ internal static class ConfigPropertyMigrationAnalysis
 			// Rest group
 			new KeyValuePair<string, (string, string)>("HttpTimeout", ("Rest", "RequestTimeout")),
 			new KeyValuePair<string, (string, string)>("UseRelativeRatelimit", ("Rest", "UseRelativeRatelimit")),
-			new KeyValuePair<string, (string, string)>("Proxy", ("Rest", "Proxy")),
+			new KeyValuePair<string, (string, string)>("Proxy", ("", "Proxy")),
 			// Cache group
 			new KeyValuePair<string, (string, string)>("MessageCacheSize", ("Cache", "MessageCacheSize")),
 			new KeyValuePair<string, (string, string)>("PresenceCacheSize", ("Cache", "PresenceCacheSize")),
@@ -67,7 +67,7 @@ internal static class ConfigPropertyMigrationAnalysis
 			new KeyValuePair<string, (string, string)>("DeveloperUserId", ("Telemetry", "DeveloperUserId")),
 			new KeyValuePair<string, (string, string)>("EnableDiscordIdScrubber", ("Telemetry", "EnableDiscordIdScrubber")),
 			new KeyValuePair<string, (string, string)>("TrackExceptions", ("Telemetry", "TrackExceptions")),
-			new KeyValuePair<string, (string, string)>("EnableLibraryDeveloperMode", ("Telemetry", "EnableLibraryDeveloperMode")),
+			new KeyValuePair<string, (string, string)>("EnableLibraryDeveloperMode", ("", "EnableLibraryDeveloperMode")),
 			new KeyValuePair<string, (string, string)>("DisableScrubber", ("Telemetry", "DisableScrubber")),
 			new KeyValuePair<string, (string, string)>("SentryDebug", ("Telemetry", "SentryDebug")),
 			new KeyValuePair<string, (string, string)>("DisableExceptionFilter", ("Telemetry", "DisableExceptionFilter")),

@@ -202,7 +202,7 @@ public sealed partial class DiscordClient
 
 		Volatile.Write(ref this._skippedHeartbeats, 0);
 
-		this.WebSocketClient = this.Configuration.Gateway.WebSocketClientFactory(this.Configuration.Rest.Proxy, this.ServiceProvider);
+		this.WebSocketClient = this.Configuration.Gateway.WebSocketClientFactory(this.Configuration.Proxy, this.ServiceProvider);
 		this.WebSocketClient.AddDefaultHeader(CommonHeaders.USER_AGENT, Utilities.GetUserAgent());
 		this._payloadDecompressor = this.Configuration.Gateway.CompressionLevel is not GatewayCompressionLevel.None
 			? new PayloadDecompressor(this.Configuration.Gateway.CompressionLevel)

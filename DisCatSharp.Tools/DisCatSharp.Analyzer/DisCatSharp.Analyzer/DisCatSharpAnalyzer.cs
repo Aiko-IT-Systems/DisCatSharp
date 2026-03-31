@@ -400,7 +400,7 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 				out var newName))
 			return;
 
-		var fullNewPath = $"{nestedPath}.{newName}";
+		var fullNewPath = string.IsNullOrEmpty(nestedPath) ? newName : $"{nestedPath}.{newName}";
 		var properties = DisCatSharpDiagnosticProperties.CreateConfigPropertyMigrationProperties(nestedPath, newName);
 
 		context.ReportDiagnostic(Diagnostic.Create(
@@ -487,7 +487,7 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 				context.SemanticModel, identifier, initializer, context.CancellationToken,
 				out var oldName, out var nestedPath, out var newName))
 		{
-			var fullNewPath = $"{nestedPath}.{newName}";
+			var fullNewPath = string.IsNullOrEmpty(nestedPath) ? newName : $"{nestedPath}.{newName}";
 			var migrationProperties = DisCatSharpDiagnosticProperties.CreateConfigPropertyMigrationProperties(nestedPath, newName);
 			context.ReportDiagnostic(Diagnostic.Create(
 				s_configPropertyMigrationRule,
