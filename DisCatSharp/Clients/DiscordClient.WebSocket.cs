@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
@@ -96,6 +97,17 @@ public sealed partial class DiscordClient
 	///     Gets the cancel token.
 	/// </summary>
 	private CancellationToken _cancelToken;
+
+	/// <summary>
+	///     Gets the ordered dispatch queue for this shard/client.
+	///     All dispatch payloads are written here and processed sequentially by <see cref="_dispatchConsumerTask" />.
+	/// </summary>
+	private Channel<GatewayPayload>? _dispatchQueue;
+
+	/// <summary>
+	///     Gets the background task that consumes payloads from <see cref="_dispatchQueue" />.
+	/// </summary>
+	private Task? _dispatchConsumerTask;
 
 	#endregion
 
@@ -190,7 +202,7 @@ public sealed partial class DiscordClient
 
 		Volatile.Write(ref this._skippedHeartbeats, 0);
 
-		this.WebSocketClient = this.Configuration.Gateway.WebSocketClientFactory(this.Configuration.Rest.Proxy, this.ServiceProvider);
+		this.WebSocketClient = this.Configuration.Gateway.WebSocketClientFactory(this.Configuration.Proxy, this.ServiceProvider);
 		this.WebSocketClient.AddDefaultHeader(CommonHeaders.USER_AGENT, Utilities.GetUserAgent());
 		this._payloadDecompressor = this.Configuration.Gateway.CompressionLevel is not GatewayCompressionLevel.None
 			? new PayloadDecompressor(this.Configuration.Gateway.CompressionLevel)
@@ -198,6 +210,20 @@ public sealed partial class DiscordClient
 
 		this._cancelTokenSource = new();
 		this._cancelToken = this._cancelTokenSource.Token;
+
+		// Initialize the ordered dispatch queue.
+		var capacity = this.Configuration.Gateway.Advanced.DispatchQueueCapacity;
+		this._dispatchQueue = capacity > 0
+			? Channel.CreateBounded<GatewayPayload>(new BoundedChannelOptions(capacity)
+			{
+				SingleReader = true,
+				SingleWriter = true
+			})
+			: Channel.CreateUnbounded<GatewayPayload>(new UnboundedChannelOptions
+			{
+				SingleReader = true,
+				SingleWriter = true
+			});
 
 		this.WebSocketClient.Connected += SocketOnConnect;
 		this.WebSocketClient.Disconnected += SocketOnDisconnect;
@@ -218,7 +244,10 @@ public sealed partial class DiscordClient
 		return;
 
 		Task SocketOnConnect(IWebSocketClient sender, SocketEventArgs e)
-			=> this._socketOpened.InvokeAsync(this, e);
+		{
+			this._dispatchConsumerTask = Task.Run(() => this.DispatchConsumerLoopAsync(this._cancelToken), this._cancelToken);
+			return this._socketOpened.InvokeAsync(this, e);
+		}
 
 		async Task SocketOnMessage(IWebSocketClient sender, SocketMessageEventArgs e)
 		{
@@ -367,7 +396,8 @@ public sealed partial class DiscordClient
 		switch (payload.OpCode)
 		{
 			case GatewayOpCode.Dispatch:
-				_ = Task.Run(async () => await this.HandleDispatchSafelyAsync(payload).ConfigureAwait(false), this._cancelToken);
+				if (!this._dispatchQueue!.Writer.TryWrite(payload))
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Dispatch queue is full; dropping event {EventName} (seq {Sequence}). Consider increasing DispatchQueueCapacity.", payload.EventName, payload.Sequence);
 				break;
 
 			case GatewayOpCode.Heartbeat:
@@ -588,6 +618,51 @@ public sealed partial class DiscordClient
 				this.DiagnosticsSink.CaptureException("DisCatSharp", ex, context, tags);
 			}
 		}
+	}
+
+	/// <summary>
+	///     Sequentially consumes dispatch payloads from <see cref="_dispatchQueue" />, ensuring FIFO ordering
+	///     for internal cache and state mutations.
+	/// </summary>
+	/// <remarks>
+	///     The consumer always awaits each dispatch event sequentially to guarantee ordered cache mutations.
+	///     The configured <see cref="GatewayDispatchMode" /> controls whether user event handlers are awaited
+	///     inline or fire-and-forget — that logic lives in <see cref="RaiseEventAsync{TArgs}" />.
+	/// </remarks>
+	/// <param name="cancellationToken">Token that signals shutdown.</param>
+	private async Task DispatchConsumerLoopAsync(CancellationToken cancellationToken)
+	{
+		var mode = this.Configuration.Gateway.Advanced.DispatchMode;
+		this.Logger.LogDebug(LoggerEvents.Startup, "Dispatch consumer loop started (mode: {DispatchMode})", mode);
+
+		try
+		{
+			await foreach (var payload in this._dispatchQueue!.Reader.ReadAllAsync(cancellationToken).ConfigureAwait(false))
+				await this.HandleDispatchSafelyAsync(payload).ConfigureAwait(false);
+		}
+		catch (OperationCanceledException)
+		{
+			// Expected during shutdown — the cancellation token was triggered.
+		}
+		catch (ChannelClosedException)
+		{
+			// Expected if the channel writer is completed (rare but safe).
+		}
+		catch (Exception ex)
+		{
+			this.Logger.LogCritical(LoggerEvents.WebSocketReceiveFailure, ex, "Dispatch consumer loop terminated unexpectedly");
+
+			if (this.DiagnosticsSink.IsEnabled)
+				this.DiagnosticsSink.CaptureException("DisCatSharp", ex, new Dictionary<string, object>
+				{
+					["component"] = "DispatchConsumerLoop"
+				}, new Dictionary<string, string>
+				{
+					[Telemetry.DiagnosticTags.ErrorOrigin] = Telemetry.DiagnosticTags.OriginLibrary
+				});
+		}
+
+		this.Logger.LogDebug(LoggerEvents.Misc, "Dispatch consumer loop stopped");
 	}
 
 	/// <summary>

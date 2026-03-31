@@ -1,5 +1,4 @@
 using System;
-using System.Net;
 
 namespace DisCatSharp;
 
@@ -22,7 +21,6 @@ public sealed class RestConfiguration
 	{
 		this.RequestTimeout = other.RequestTimeout;
 		this.UseRelativeRatelimit = other.UseRelativeRatelimit;
-		this.Proxy = other.Proxy;
 		this.Advanced = new(other.Advanced);
 	}
 
@@ -46,12 +44,6 @@ public sealed class RestConfiguration
 	///     <para>Defaults to <see langword="true" />.</para>
 	/// </summary>
 	public bool UseRelativeRatelimit { internal get; set; } = true;
-
-	/// <summary>
-	///     <para>Sets the proxy to use for HTTP and WebSocket connections to Discord.</para>
-	///     <para>Defaults to <see langword="null" />.</para>
-	/// </summary>
-	public IWebProxy? Proxy { internal get; set; } = null;
 
 	/// <summary>
 	///     <para>Advanced REST tuning options.</para>

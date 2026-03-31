@@ -62,9 +62,9 @@ public sealed class DiscordApiClient
 		this.Discord = null!;
 		this.Rest = new(new()
 		{
+			Proxy = proxy,
 			Rest = new()
 			{
-				Proxy = proxy,
 				RequestTimeout = timeout,
 				UseRelativeRatelimit = useRelativeRateLimit
 			},
@@ -89,9 +89,9 @@ public sealed class DiscordApiClient
 		this.OAuth2Client = null!;
 		this.Rest = new(new()
 		{
+			Proxy = proxy,
 			Rest = new()
 			{
-				Proxy = proxy,
 				RequestTimeout = timeout,
 				UseRelativeRatelimit = useRelativeRateLimit
 			},

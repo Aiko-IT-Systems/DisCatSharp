@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Attributes;
+using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
 using DisCatSharp.Entities.Core;
 using DisCatSharp.Entities.OAuth2;
@@ -348,12 +349,65 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._guildPowerupEntitlementsCreated = new("GUILD_POWERUP_ENTITLEMENTS_CREATED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildPowerupEntitlementsDeleted = new("GUILD_POWERUP_ENTITLEMENTS_DELETED", EventExecutionLimit, this.EventErrorHandler);
 
+		// Internal extension events — always sequential, fired before public events
+		this.InternalReadyEv = new("INTERNAL_READY", EventExecutionLimit, this.EventErrorHandler);
+		this.InternalInteractionCreated = new("INTERNAL_INTERACTION_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this.InternalContextMenuInteractionCreated = new("INTERNAL_CONTEXT_MENU_INTERACTED", EventExecutionLimit, this.EventErrorHandler);
+		this.InternalMessageCreated = new("INTERNAL_MESSAGE_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this.InternalMessageReactionAdded = new("INTERNAL_MESSAGE_REACTION_ADDED", EventExecutionLimit, this.EventErrorHandler);
+		this.InternalMessageReactionRemoved = new("INTERNAL_MESSAGE_REACTION_REMOVED", EventExecutionLimit, this.EventErrorHandler);
+		this.InternalMessageReactionsCleared = new("INTERNAL_MESSAGE_REACTIONS_CLEARED", EventExecutionLimit, this.EventErrorHandler);
+		this.InternalTypingStarted = new("INTERNAL_TYPING_STARTED", EventExecutionLimit, this.EventErrorHandler);
+		this.InternalComponentInteractionCreated = new("INTERNAL_COMPONENT_INTERACTED", EventExecutionLimit, this.EventErrorHandler);
+		this.InternalVoiceStateUpdated = new("INTERNAL_VOICE_STATE_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this.InternalVoiceServerUpdated = new("INTERNAL_VOICE_SERVER_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+
 		this.GuildsInternal.Clear();
 		this.EmojisInternal.Clear();
 		this.ClearAggregatePresenceCache();
 
 		this._presencesLazy = new(() => new ReadOnlyDictionary<ulong, DiscordPresence>(this.PresencesInternal));
 		this._embeddedActivitiesLazy = new(() => new ReadOnlyDictionary<string, DiscordActivity>(this.EmbeddedActivitiesInternal));
+	}
+
+	#endregion
+
+	#region Event Dispatch Helpers
+
+	/// <summary>
+	///     Raises a user-facing event, respecting the configured <see cref="GatewayDispatchMode" />.
+	/// </summary>
+	/// <remarks>
+	///     <para>
+	///         In <see cref="Enums.GatewayDispatchMode.SequentialHandlers" /> mode, the event handlers are awaited inline,
+	///         ensuring full serialization of both cache mutations and handler execution.
+	///     </para>
+	///     <para>
+	///         In <see cref="Enums.GatewayDispatchMode.ConcurrentHandlers" /> mode, handler invocation is fire-and-forget,
+	///         allowing multiple handler sets to run concurrently while cache mutations remain ordered.
+	///     </para>
+	/// </remarks>
+	/// <typeparam name="TArgs">The event args type.</typeparam>
+	/// <param name="asyncEvent">The async event to invoke.</param>
+	/// <param name="args">The event arguments.</param>
+	internal Task RaiseEventAsync<TArgs>(AsyncEvent<DiscordClient, TArgs> asyncEvent, TArgs args) where TArgs : AsyncEventArgs
+	{
+		if (this.Configuration.Gateway.Advanced.DispatchMode is Enums.GatewayDispatchMode.SequentialHandlers)
+			return asyncEvent.InvokeAsync(this, args);
+
+		_ = Task.Run(async () =>
+		{
+			try
+			{
+				await asyncEvent.InvokeAsync(this, args).ConfigureAwait(false);
+			}
+			catch (Exception ex)
+			{
+				this.Logger.LogError(LoggerEvents.EventHandlerException, ex, "Concurrent event handler threw an exception for {EventName}", asyncEvent.Name);
+			}
+		});
+
+		return Task.CompletedTask;
 	}
 
 	#endregion
@@ -2444,6 +2498,15 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		{
 			this._cancelTokenSource?.Cancel();
 			this._cancelTokenSource?.Dispose();
+		}
+		catch
+		{ }
+
+		// Complete the dispatch channel writer to signal the consumer loop to exit,
+		// then await the consumer task to ensure orderly shutdown.
+		try
+		{
+			this._dispatchQueue?.Writer.TryComplete();
 		}
 		catch
 		{ }

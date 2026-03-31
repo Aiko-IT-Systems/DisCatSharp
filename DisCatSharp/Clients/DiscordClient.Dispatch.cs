@@ -49,7 +49,7 @@ public sealed partial class DiscordClient
 				["event_name"] = payload.EventName ?? "unknown"
 			});
 
-		if ((this.Configuration?.Telemetry.EnableLibraryDeveloperMode ?? false) || (this.Configuration?.Diagnostics.EnablePayloadReceivedEvent ?? false))
+		if ((this.Configuration?.EnableLibraryDeveloperMode ?? false) || (this.Configuration?.Diagnostics.EnablePayloadReceivedEvent ?? false))
 			await this._payloadReceived.InvokeAsync(this, new(this.ServiceProvider)
 			{
 				EventName = payload.EventName,
@@ -1061,11 +1061,12 @@ public sealed partial class DiscordClient
 			Volatile.Write(ref this._guildDownloadCompleted, true);
 			this._guildDownloadCompletedLock.Exit();
 
-			await this.GuildDownloadCompletedEv.InvokeAsync(this, new(this.Guilds, true, this.ServiceProvider)).ConfigureAwait(false);
+			await this.RaiseEventAsync(this.GuildDownloadCompletedEv, new(this.Guilds, true, this.ServiceProvider)).ConfigureAwait(false);
 			this.Logger.LogInformation(LoggerEvents.Startup, "Application has no guilds. Firing GuildDownloadCompleted event for internal tools");
 		}
 
-		await this.ReadyEv.InvokeAsync(this, new(this.ServiceProvider)).ConfigureAwait(false);
+		await this.InternalReadyEv.InvokeAsync(this, new(this.ServiceProvider)).ConfigureAwait(false);
+		await this.RaiseEventAsync(this.ReadyEv, new(this.ServiceProvider)).ConfigureAwait(false);
 
 		if (this.DiagnosticsSink.IsEnabled)
 			this.DiagnosticsSink.StartSession();
@@ -1077,7 +1078,7 @@ public sealed partial class DiscordClient
 	internal Task OnResumedAsync()
 	{
 		this.Logger.LogInformation(LoggerEvents.SessionUpdate, "Session resumed");
-		return this._resumed.InvokeAsync(this, new(this.ServiceProvider));
+		return this.RaiseEventAsync(this._resumed, new(this.ServiceProvider));
 	}
 
 	#endregion
@@ -1105,7 +1106,7 @@ public sealed partial class DiscordClient
                 await this.RefreshChannelsAsync(channel.Guild.Id);
             }*/
 
-		await this._channelCreated.InvokeAsync(this, new(this.ServiceProvider)
+		await this.RaiseEventAsync(this._channelCreated, new(this.ServiceProvider)
 		{
 			Channel = channel,
 			Guild = channel.Guild
@@ -1218,7 +1219,7 @@ public sealed partial class DiscordClient
 				await this.RefreshChannelsAsync(channel.Guild.Id).ConfigureAwait(false);
 		}
 
-		await this._channelUpdated.InvokeAsync(this, new(this.ServiceProvider)
+		await this.RaiseEventAsync(this._channelUpdated, new(this.ServiceProvider)
 		{
 			ChannelAfter = channelNew,
 			Guild = gld,
@@ -1242,7 +1243,7 @@ public sealed partial class DiscordClient
 		{
 			var dmChannel = channel as DiscordDmChannel;
 
-			await this._dmChannelDeleted.InvokeAsync(this, new(this.ServiceProvider)
+			await this.RaiseEventAsync(this._dmChannelDeleted, new(this.ServiceProvider)
 			{
 				Channel = dmChannel
 			}).ConfigureAwait(false);
@@ -1256,7 +1257,7 @@ public sealed partial class DiscordClient
 			if (this.Configuration.Cache.AutoRefreshChannelCache)
 				await this.RefreshChannelsAsync(channel.Guild.Id).ConfigureAwait(false);
 
-			await this._channelDeleted.InvokeAsync(this, new(this.ServiceProvider)
+			await this.RaiseEventAsync(this._channelDeleted, new(this.ServiceProvider)
 			{
 				Channel = channel,
 				Guild = gld
@@ -1297,7 +1298,7 @@ public sealed partial class DiscordClient
 			Channel = channel,
 			LastPinTimestamp = lastPinTimestamp
 		};
-		await this._channelPinsUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._channelPinsUpdated, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -1317,7 +1318,7 @@ public sealed partial class DiscordClient
 			Channel = channel,
 			Status = status
 		};
-		await this._voiceChannelStatusUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._voiceChannelStatusUpdated, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -1336,7 +1337,7 @@ public sealed partial class DiscordClient
 			Channel = channel,
 			VoiceStartTime = voiceStartTime
 		};
-		await this._voiceChannelStartTimeUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._voiceChannelStartTimeUpdated, ea).ConfigureAwait(false);
 	}
 
 	#endregion
@@ -1460,18 +1461,18 @@ public sealed partial class DiscordClient
 		this._guildDownloadCompletedLock.Exit();
 
 		if (exists)
-			await this._guildAvailable.InvokeAsync(this, new(this.ServiceProvider)
+			await this.RaiseEventAsync(this._guildAvailable, new(this.ServiceProvider)
 			{
 				Guild = guild
 			}).ConfigureAwait(false);
 		else
-			await this._guildCreated.InvokeAsync(this, new(this.ServiceProvider)
+			await this.RaiseEventAsync(this._guildCreated, new(this.ServiceProvider)
 			{
 				Guild = guild
 			}).ConfigureAwait(false);
 
 		if (dcompl && !old)
-			await this.GuildDownloadCompletedEv.InvokeAsync(this, new(this.Guilds, false, this.ServiceProvider)).ConfigureAwait(false);
+			await this.RaiseEventAsync(this.GuildDownloadCompletedEv, new(this.Guilds, false, this.ServiceProvider)).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -1624,7 +1625,7 @@ public sealed partial class DiscordClient
 				};
 		}
 
-		await this._guildUpdated.InvokeAsync(this, new(this.ServiceProvider)
+		await this.RaiseEventAsync(this._guildUpdated, new(this.ServiceProvider)
 		{
 			GuildBefore = oldGuild,
 			GuildAfter = guild
@@ -1644,7 +1645,7 @@ public sealed partial class DiscordClient
 
 			gld.IsUnavailable = true;
 
-			await this._guildUnavailable.InvokeAsync(this, new(this.ServiceProvider)
+			await this.RaiseEventAsync(this._guildUnavailable, new(this.ServiceProvider)
 			{
 				Guild = guild,
 				Unavailable = true
@@ -1655,7 +1656,7 @@ public sealed partial class DiscordClient
 			if (!this.GuildsInternal.TryRemove(guild.Id, out var gld))
 				return;
 
-			await this._guildDeleted.InvokeAsync(this, new(this.ServiceProvider)
+			await this.RaiseEventAsync(this._guildDeleted, new(this.ServiceProvider)
 			{
 				Guild = gld
 			}).ConfigureAwait(false);
@@ -1677,7 +1678,7 @@ public sealed partial class DiscordClient
 			var parsedEntry = AuditLogEntryParserRegistry.Instance.ParseEntry(guild, new(guild, null), rawAuditLogEntry);
 
 			if (parsedEntry is not null)
-				await this._guildAuditLogEntryCreated.InvokeAsync(this, new(this.ServiceProvider)
+				await this.RaiseEventAsync(this._guildAuditLogEntryCreated, new(this.ServiceProvider)
 				{
 					Guild = guild,
 					AuditLogEntry = parsedEntry
@@ -1704,7 +1705,7 @@ public sealed partial class DiscordClient
 
 		this.UpdateCachedGuild(guild, rawMembers);
 
-		await this._guildAvailable.InvokeAsync(this, new(this.ServiceProvider)
+		await this.RaiseEventAsync(this._guildAvailable, new(this.ServiceProvider)
 		{
 			Guild = guild
 		}).ConfigureAwait(false);
@@ -1732,7 +1733,7 @@ public sealed partial class DiscordClient
 			EmojisAfter = guild.Emojis,
 			EmojisBefore = new ReadOnlyConcurrentDictionary<ulong, DiscordEmoji>(oldEmojis)
 		};
-		await this._guildEmojisUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._guildEmojisUpdated, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -1772,7 +1773,7 @@ public sealed partial class DiscordClient
 			StickersAfter = guild.Stickers
 		};
 
-		await this._guildStickersUpdated.InvokeAsync(this, sea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._guildStickersUpdated, sea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -1786,7 +1787,7 @@ public sealed partial class DiscordClient
 			Rule = newRule
 		};
 
-		await this._automodRuleCreated.InvokeAsync(this, sea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._automodRuleCreated, sea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -1800,7 +1801,7 @@ public sealed partial class DiscordClient
 			Rule = updatedRule
 		};
 
-		await this._automodRuleUpdated.InvokeAsync(this, sea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._automodRuleUpdated, sea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -1814,7 +1815,7 @@ public sealed partial class DiscordClient
 			Rule = deletedRule
 		};
 
-		await this._automodRuleDeleted.InvokeAsync(this, sea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._automodRuleDeleted, sea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -1850,7 +1851,7 @@ public sealed partial class DiscordClient
 			MatchedContent = matchedContent
 		};
 
-		await this._automodActionExecuted.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._automodActionExecuted, ea).ConfigureAwait(false);
 	}
 
 	#endregion
@@ -1888,7 +1889,7 @@ public sealed partial class DiscordClient
 			Guild = guild,
 			Member = mbr
 		};
-		await this._guildBanAdded.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._guildBanAdded, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -1922,7 +1923,7 @@ public sealed partial class DiscordClient
 			Guild = guild,
 			Member = mbr
 		};
-		await this._guildBanRemoved.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._guildBanRemoved, ea).ConfigureAwait(false);
 	}
 
 	#endregion
@@ -1959,7 +1960,7 @@ public sealed partial class DiscordClient
 			});
 		}
 
-		await this._guildScheduledEventCreated.InvokeAsync(this, new(this.ServiceProvider)
+		await this.RaiseEventAsync(this._guildScheduledEventCreated, new(this.ServiceProvider)
 		{
 			ScheduledEvent = scheduledEvent,
 			Guild = scheduledEvent.Guild
@@ -2027,7 +2028,7 @@ public sealed partial class DiscordClient
 		if (scheduledEvent.Status == ScheduledEventStatus.Completed)
 		{
 			guild.ScheduledEventsInternal.TryRemove(scheduledEvent.Id, out var deletedEvent);
-			await this._guildScheduledEventDeleted.InvokeAsync(this, new(this.ServiceProvider)
+			await this.RaiseEventAsync(this._guildScheduledEventDeleted, new(this.ServiceProvider)
 			{
 				ScheduledEvent = scheduledEvent,
 				Guild = guild,
@@ -2038,7 +2039,7 @@ public sealed partial class DiscordClient
 		{
 			guild.ScheduledEventsInternal.TryRemove(scheduledEvent.Id, out var deletedEvent);
 			scheduledEvent.Status = ScheduledEventStatus.Canceled;
-			await this._guildScheduledEventDeleted.InvokeAsync(this, new(this.ServiceProvider)
+			await this.RaiseEventAsync(this._guildScheduledEventDeleted, new(this.ServiceProvider)
 			{
 				ScheduledEvent = scheduledEvent,
 				Guild = guild,
@@ -2048,7 +2049,7 @@ public sealed partial class DiscordClient
 		else
 		{
 			this.UpdateScheduledEvent(scheduledEvent, guild);
-			await this._guildScheduledEventUpdated.InvokeAsync(this, new(this.ServiceProvider)
+			await this.RaiseEventAsync(this._guildScheduledEventUpdated, new(this.ServiceProvider)
 			{
 				ScheduledEventBefore = oldEvent,
 				ScheduledEventAfter = scheduledEvent,
@@ -2088,7 +2089,7 @@ public sealed partial class DiscordClient
 			});
 		}
 
-		await this._guildScheduledEventDeleted.InvokeAsync(this, new(this.ServiceProvider)
+		await this.RaiseEventAsync(this._guildScheduledEventDeleted, new(this.ServiceProvider)
 		{
 			ScheduledEvent = scheduledEvent,
 			Guild = scheduledEvent.Guild,
@@ -2123,7 +2124,7 @@ public sealed partial class DiscordClient
 		var member = guild.Members.TryGetValue(userId, out var mem) ? mem : guild.GetMemberAsync(userId).Result;
 		member.Discord = this;
 
-		await this._guildScheduledEventUserAdded.InvokeAsync(this, new(this.ServiceProvider)
+		await this.RaiseEventAsync(this._guildScheduledEventUserAdded, new(this.ServiceProvider)
 		{
 			ScheduledEvent = scheduledEvent,
 			Guild = guild,
@@ -2159,7 +2160,7 @@ public sealed partial class DiscordClient
 		var member = guild.Members.TryGetValue(userId, out var mem) ? mem : guild.GetMemberAsync(userId).Result;
 		member.Discord = this;
 
-		await this._guildScheduledEventUserRemoved.InvokeAsync(this, new(this.ServiceProvider)
+		await this.RaiseEventAsync(this._guildScheduledEventUserRemoved, new(this.ServiceProvider)
 		{
 			ScheduledEvent = scheduledEvent,
 			Guild = guild,
@@ -2178,7 +2179,7 @@ public sealed partial class DiscordClient
 		exception.GuildId ??= guild.Id;
 		this.UpsertScheduledEventException(exception, guild);
 
-		await this._guildScheduledEventExceptionCreated.InvokeAsync(this, new(this.ServiceProvider)
+		await this.RaiseEventAsync(this._guildScheduledEventExceptionCreated, new(this.ServiceProvider)
 		{
 			Exception = exception,
 			Guild = guild
@@ -2194,7 +2195,7 @@ public sealed partial class DiscordClient
 		exception.GuildId ??= guild.Id;
 		var oldException = this.UpsertScheduledEventException(exception, guild);
 
-		await this._guildScheduledEventExceptionUpdated.InvokeAsync(this, new(this.ServiceProvider)
+		await this.RaiseEventAsync(this._guildScheduledEventExceptionUpdated, new(this.ServiceProvider)
 		{
 			ExceptionBefore = oldException,
 			ExceptionAfter = exception,
@@ -2211,7 +2212,7 @@ public sealed partial class DiscordClient
 		exception.GuildId ??= guild.Id;
 		this.RemoveScheduledEventException(exception, guild);
 
-		await this._guildScheduledEventExceptionDeleted.InvokeAsync(this, new(this.ServiceProvider)
+		await this.RaiseEventAsync(this._guildScheduledEventExceptionDeleted, new(this.ServiceProvider)
 		{
 			Exception = exception,
 			Guild = guild
@@ -2231,7 +2232,7 @@ public sealed partial class DiscordClient
 	{
 		integration.Discord = this;
 
-		await this._guildIntegrationCreated.InvokeAsync(this, new(this.ServiceProvider)
+		await this.RaiseEventAsync(this._guildIntegrationCreated, new(this.ServiceProvider)
 		{
 			Integration = integration,
 			Guild = guild
@@ -2247,7 +2248,7 @@ public sealed partial class DiscordClient
 	{
 		integration.Discord = this;
 
-		await this._guildIntegrationUpdated.InvokeAsync(this, new(this.ServiceProvider)
+		await this.RaiseEventAsync(this._guildIntegrationUpdated, new(this.ServiceProvider)
 		{
 			Integration = integration,
 			Guild = guild
@@ -2264,7 +2265,7 @@ public sealed partial class DiscordClient
 		{
 			Guild = guild
 		};
-		await this._guildIntegrationsUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._guildIntegrationsUpdated, ea).ConfigureAwait(false);
 	}
 
 	internal async Task OnGuildAppliedBoostsUpdateEventAsync(ulong boostId, DiscordGuild guild, ulong userId, DateTimeOffset? pauseEndsAt, DateTimeOffset? endsAt, bool ended)
@@ -2282,7 +2283,7 @@ public sealed partial class DiscordClient
 			EndsAt = endsAt,
 			Ended = ended
 		};
-		await this._guildAppliedBoostsUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._guildAppliedBoostsUpdated, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -2317,7 +2318,7 @@ public sealed partial class DiscordClient
 			EndsAt = endsAt,
 			Ended = ended
 		};
-		await this._guildAppliedBoostsCreated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._guildAppliedBoostsCreated, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -2352,7 +2353,7 @@ public sealed partial class DiscordClient
 			EndsAt = endsAt,
 			Ended = ended
 		};
-		await this._guildAppliedBoostsDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._guildAppliedBoostsDeleted, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -2383,7 +2384,7 @@ public sealed partial class DiscordClient
 			Guild = guild,
 			Entitlements = entitlements
 		};
-		await this._guildPowerupEntitlementsCreated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._guildPowerupEntitlementsCreated, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -2414,7 +2415,7 @@ public sealed partial class DiscordClient
 			Guild = guild,
 			Entitlements = entitlements
 		};
-		await this._guildPowerupEntitlementsDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._guildPowerupEntitlementsDeleted, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -2424,7 +2425,7 @@ public sealed partial class DiscordClient
 	/// <param name="integrationId">The integration id.</param>
 	/// <param name="applicationId">The optional application id.</param>
 	internal async Task OnGuildIntegrationDeleteEventAsync(DiscordGuild guild, ulong integrationId, ulong? applicationId)
-		=> await this._guildIntegrationDeleted.InvokeAsync(this, new(this.ServiceProvider)
+		=> await this.RaiseEventAsync(this._guildIntegrationDeleted, new(this.ServiceProvider)
 		{
 			Guild = guild,
 			IntegrationId = integrationId,
@@ -2480,7 +2481,7 @@ public sealed partial class DiscordClient
 			Guild = guild,
 			Member = mbr
 		};
-		await this._guildMemberAdded.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._guildMemberAdded, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -2507,7 +2508,7 @@ public sealed partial class DiscordClient
 			Guild = guild,
 			Member = mbr
 		};
-		await this._guildMemberRemoved.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._guildMemberRemoved, ea).ConfigureAwait(false);
 
 		this.RemovePresence(guild.Id, user.Id);
 	}
@@ -2639,13 +2640,13 @@ public sealed partial class DiscordClient
 			GuildCollectiblesBefore = gCollectiblesOld
 		};
 
-		await this._guildMemberUpdated.InvokeAsync(this, eargs).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._guildMemberUpdated, eargs).ConfigureAwait(false);
 
 		var timeoutBefore = (eargs.TimeoutBefore ?? DateTimeOffset.UtcNow) > DateTimeOffset.UtcNow ? eargs.TimeoutBefore : null; // safe guard in case timeout isnt null despite being in the past
 		var timeoutAfter = (eargs.TimeoutAfter ?? DateTimeOffset.MinValue) > DateTimeOffset.UtcNow ? eargs.TimeoutAfter : null; // i remember that being an issue, idk if its fixed
 
 		if (timeoutBefore is null && timeoutAfter is not null)
-			await this._guildMemberTimeoutAdded.InvokeAsync(this, new(this.ServiceProvider)
+			await this.RaiseEventAsync(this._guildMemberTimeoutAdded, new(this.ServiceProvider)
 			{
 				Guild = guild,
 				Target = mbr,
@@ -2653,7 +2654,7 @@ public sealed partial class DiscordClient
 			});
 
 		if (timeoutBefore is not null && timeoutAfter is not null)
-			await this._guildMemberTimeoutChanged.InvokeAsync(this, new(this.ServiceProvider)
+			await this.RaiseEventAsync(this._guildMemberTimeoutChanged, new(this.ServiceProvider)
 			{
 				Guild = guild,
 				Target = mbr,
@@ -2662,7 +2663,7 @@ public sealed partial class DiscordClient
 			});
 
 		if (timeoutBefore is not null && timeoutAfter is null)
-			await this._guildMemberTimeoutRemoved.InvokeAsync(this, new(this.ServiceProvider)
+			await this.RaiseEventAsync(this._guildMemberTimeoutRemoved, new(this.ServiceProvider)
 			{
 				Guild = guild,
 				Target = mbr,
@@ -2732,7 +2733,7 @@ public sealed partial class DiscordClient
 			ea.NotFound = new ReadOnlySet<ulong>(nf);
 		}
 
-		await this._guildMembersChunked.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._guildMembersChunked, ea).ConfigureAwait(false);
 	}
 
 	#endregion
@@ -2756,7 +2757,7 @@ public sealed partial class DiscordClient
 			Guild = guild,
 			Role = role
 		};
-		await this._guildRoleCreated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._guildRoleCreated, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -2802,7 +2803,7 @@ public sealed partial class DiscordClient
 			RoleAfter = newRole,
 			RoleBefore = oldRole
 		};
-		await this._guildRoleUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._guildRoleUpdated, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -2820,7 +2821,7 @@ public sealed partial class DiscordClient
 			Guild = guild,
 			Role = role
 		};
-		await this._guildRoleDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._guildRoleDeleted, ea).ConfigureAwait(false);
 	}
 
 	#endregion
@@ -2843,7 +2844,7 @@ public sealed partial class DiscordClient
 			Guild = guild,
 			SoundboardSound = sound
 		};
-		await this._guildSoundboardSoundCreated.InvokeAsync(this, args).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._guildSoundboardSoundCreated, args).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -2863,7 +2864,7 @@ public sealed partial class DiscordClient
 			Guild = guild,
 			SoundboardSound = sound
 		};
-		await this._guildSoundboardSoundUpdated.InvokeAsync(this, args).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._guildSoundboardSoundUpdated, args).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -2882,7 +2883,7 @@ public sealed partial class DiscordClient
 			SoundboardSoundId = soundId,
 			SoundboardSound = sound
 		};
-		await this._guildSoundboardSoundDeleted.InvokeAsync(this, args).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._guildSoundboardSoundDeleted, args).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -2906,7 +2907,7 @@ public sealed partial class DiscordClient
 			Guild = guild,
 			SoundboardSounds = sounds
 		};
-		await this._guildSoundboardSoundsUpdated.InvokeAsync(this, args).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._guildSoundboardSoundsUpdated, args).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -2936,7 +2937,7 @@ public sealed partial class DiscordClient
 		}
 
 		if (this._soundboardSounds is not null)
-			await this._soundboardSounds.InvokeAsync(this, new(this.ServiceProvider)
+			await this.RaiseEventAsync(this._soundboardSounds, new(this.ServiceProvider)
 			{
 				GuildId = guildId,
 				Guild = guild,
@@ -2987,7 +2988,7 @@ public sealed partial class DiscordClient
 			Guild = guild,
 			Invite = invite
 		};
-		await this._inviteCreated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._inviteCreated, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -3030,7 +3031,7 @@ public sealed partial class DiscordClient
 			Guild = guild,
 			Invite = invite
 		};
-		await this._inviteDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._inviteDeleted, ea).ConfigureAwait(false);
 	}
 
 	#endregion
@@ -3053,7 +3054,7 @@ public sealed partial class DiscordClient
 			Status = statusType,
 			Guild = guild
 		};
-		await this._guildJoinRequestCreated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._guildJoinRequestCreated, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -3072,7 +3073,7 @@ public sealed partial class DiscordClient
 			Status = statusType,
 			Guild = guild
 		};
-		await this._guildJoinRequestUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._guildJoinRequestUpdated, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -3090,7 +3091,7 @@ public sealed partial class DiscordClient
 			Guild = guild,
 			RequestId = requestId
 		};
-		await this._guildJoinRequestDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._guildJoinRequestDeleted, ea).ConfigureAwait(false);
 	}
 
 	#endregion
@@ -3112,7 +3113,7 @@ public sealed partial class DiscordClient
 				Discord = this
 			};
 
-		await this._messageAcknowledged.InvokeAsync(this, new(this.ServiceProvider)
+		await this.RaiseEventAsync(this._messageAcknowledged, new(this.ServiceProvider)
 		{
 			Message = msg
 		}).ConfigureAwait(false);
@@ -3170,7 +3171,8 @@ public sealed partial class DiscordClient
 			MentionedRoles = message.MentionedRolesInternal.Count is not 0 ? new ReadOnlyCollection<DiscordRole>(message.MentionedRolesInternal) : [],
 			MentionedChannels = message.MentionedChannelsInternal.Count is not 0 ? new ReadOnlyCollection<DiscordChannel>(message.MentionedChannelsInternal) : []
 		};
-		await this._messageCreated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.InternalMessageCreated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._messageCreated, ea).ConfigureAwait(false);
 	}
 
 		/// <summary>
@@ -3309,7 +3311,7 @@ public sealed partial class DiscordClient
 			MentionedRoles = message.MentionedRolesInternal != null ? new ReadOnlyCollection<DiscordRole>(message.MentionedRolesInternal) : null,
 			MentionedChannels = message.MentionedChannelsInternal != null ? new ReadOnlyCollection<DiscordChannel>(message.MentionedChannelsInternal) : null
 		};
-		await this._messageUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._messageUpdated, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -3344,7 +3346,7 @@ public sealed partial class DiscordClient
 			Message = msg,
 			Guild = guild
 		};
-		await this._messageDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._messageDeleted, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -3384,7 +3386,7 @@ public sealed partial class DiscordClient
 			Messages = new ReadOnlyCollection<DiscordMessage>(msgs),
 			Guild = guild
 		};
-		await this._messagesBulkDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._messagesBulkDeleted, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -3433,7 +3435,7 @@ public sealed partial class DiscordClient
 			UserId = userId,
 			AnswerId = answerId
 		};
-		await this._messagePollVoteAdded.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._messagePollVoteAdded, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -3482,7 +3484,7 @@ public sealed partial class DiscordClient
 			UserId = userId,
 			AnswerId = answerId
 		};
-		await this._messagePollVoteRemoved.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._messagePollVoteRemoved, ea).ConfigureAwait(false);
 	}
 
 	#endregion
@@ -3557,7 +3559,8 @@ public sealed partial class DiscordClient
 			Channel = channel,
 			ChannelId = channelId
 		};
-		await this._messageReactionAdded.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.InternalMessageReactionAdded.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._messageReactionAdded, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -3632,7 +3635,8 @@ public sealed partial class DiscordClient
 			Channel = channel,
 			ChannelId = channelId
 		};
-		await this._messageReactionRemoved.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.InternalMessageReactionRemoved.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._messageReactionRemoved, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -3672,7 +3676,8 @@ public sealed partial class DiscordClient
 			Message = msg
 		};
 
-		await this._messageReactionsCleared.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.InternalMessageReactionsCleared.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._messageReactionsCleared, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -3716,7 +3721,7 @@ public sealed partial class DiscordClient
 			Emoji = emoji
 		};
 
-		await this._messageReactionRemovedEmoji.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._messageReactionRemovedEmoji, ea).ConfigureAwait(false);
 	}
 
 	#endregion
@@ -3734,7 +3739,7 @@ public sealed partial class DiscordClient
 		var guild = this.InternalGetCachedGuild(stage.GuildId);
 		guild.StageInstancesInternal[stage.Id] = stage;
 
-		await this._stageInstanceCreated.InvokeAsync(this, new(this.ServiceProvider)
+		await this.RaiseEventAsync(this._stageInstanceCreated, new(this.ServiceProvider)
 		{
 			StageInstance = stage,
 			Guild = stage.Guild
@@ -3751,7 +3756,7 @@ public sealed partial class DiscordClient
 		var guild = this.InternalGetCachedGuild(stage.GuildId);
 		guild.StageInstancesInternal[stage.Id] = stage;
 
-		await this._stageInstanceUpdated.InvokeAsync(this, new(this.ServiceProvider)
+		await this.RaiseEventAsync(this._stageInstanceUpdated, new(this.ServiceProvider)
 		{
 			StageInstance = stage,
 			Guild = stage.Guild
@@ -3769,7 +3774,7 @@ public sealed partial class DiscordClient
 		if (guild?.StageInstancesInternal.TryRemove(stage.Id, out var cachedStage) ?? false)
 			stage = cachedStage;
 
-		await this._stageInstanceDeleted.InvokeAsync(this, new(this.ServiceProvider)
+		await this.RaiseEventAsync(this._stageInstanceDeleted, new(this.ServiceProvider)
 		{
 			StageInstance = stage,
 			Guild = guild ?? stage.Guild
@@ -3793,7 +3798,7 @@ public sealed partial class DiscordClient
 			: null;
 		guild?.ThreadsInternal.AddOrUpdate(thread.Id, thread, (oldThread, newThread) => newThread);
 
-		await this._threadCreated.InvokeAsync(this, new(this.ServiceProvider)
+		await this.RaiseEventAsync(this._threadCreated, new(this.ServiceProvider)
 		{
 			Thread = thread,
 			Guild = guild ?? new DiscordGuild
@@ -3898,7 +3903,7 @@ public sealed partial class DiscordClient
 			guild.ThreadsInternal[thread.Id] = thread;
 		}
 
-		await this._threadUpdated.InvokeAsync(this, updateEvent).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._threadUpdated, updateEvent).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -3916,7 +3921,7 @@ public sealed partial class DiscordClient
 		if (gld.ThreadsInternal.TryRemove(thread.Id, out var cachedThread))
 			thread = cachedThread;
 
-		await this._threadDeleted.InvokeAsync(this, new(this.ServiceProvider)
+		await this.RaiseEventAsync(this._threadDeleted, new(this.ServiceProvider)
 		{
 			Thread = thread,
 			Guild = thread.Guild,
@@ -3996,7 +4001,7 @@ public sealed partial class DiscordClient
 			thread.CurrentMember = member;
 		}
 
-		await this._threadListSynced.InvokeAsync(this, new(this.ServiceProvider)
+		await this.RaiseEventAsync(this._threadListSynced, new(this.ServiceProvider)
 		{
 			Guild = guild,
 			Channels = channels.AsReadOnly(),
@@ -4028,7 +4033,7 @@ public sealed partial class DiscordClient
 		thread.CurrentMember = member;
 		thread.Guild.ThreadsInternal.AddOrUpdate(member.Id, thread, (oldThread, newThread) => newThread);
 
-		await this._threadMemberUpdated.InvokeAsync(this, new(this.ServiceProvider)
+		await this.RaiseEventAsync(this._threadMemberUpdated, new(this.ServiceProvider)
 		{
 			ThreadMember = member,
 			Thread = thread
@@ -4102,7 +4107,7 @@ public sealed partial class DiscordClient
 			MemberCount = memberCount
 		};
 
-		await this._threadMembersUpdated.InvokeAsync(this, threadMembersUpdateArg).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._threadMembersUpdated, threadMembersUpdateArg).ConfigureAwait(false);
 	}
 
 	#endregion
@@ -4161,7 +4166,7 @@ public sealed partial class DiscordClient
                     Channel = channel
 
                 };
-                await this._embeddedActivityUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+                await this.RaiseEventAsync(this._embeddedActivityUpdated, ea).ConfigureAwait(false);
             } catch (Exception ex)
             {
                 this.Logger.LogError(ex, ex.Message);
@@ -4245,7 +4250,7 @@ public sealed partial class DiscordClient
 			PresenceBefore = old,
 			PresenceAfter = presence
 		};
-		await this._presenceUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._presenceUpdated, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -4263,7 +4268,7 @@ public sealed partial class DiscordClient
 		{
 			User = usr
 		};
-		await this._userSettingsUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._userSettingsUpdated, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -4301,7 +4306,7 @@ public sealed partial class DiscordClient
 			UserAfter = this.CurrentUser,
 			UserBefore = usrOld
 		};
-		await this._userUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._userUpdated, ea).ConfigureAwait(false);
 	}
 
 	#endregion
@@ -4359,7 +4364,8 @@ public sealed partial class DiscordClient
 			Before = vstateOld,
 			After = vstateNew
 		};
-		await this._voiceStateUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.InternalVoiceStateUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._voiceStateUpdated, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -4376,7 +4382,8 @@ public sealed partial class DiscordClient
 			VoiceToken = token,
 			Guild = guild
 		};
-		await this._voiceServerUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.InternalVoiceServerUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._voiceServerUpdated, ea).ConfigureAwait(false);
 	}
 
 	internal async Task OnVoiceChannelEffectSendEventAsync(ulong gid, ulong cid, ulong uid, JObject rawObject)
@@ -4427,7 +4434,7 @@ public sealed partial class DiscordClient
 			SoundVolume = soundVolume
 		};
 
-		await this._voiceChannelEffectSend.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._voiceChannelEffectSend, ea).ConfigureAwait(false);
 	}
 
 	#endregion
@@ -4458,7 +4465,7 @@ public sealed partial class DiscordClient
 			Command = cmd
 		};
 
-		await this._applicationCommandCreated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._applicationCommandCreated, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -4485,7 +4492,7 @@ public sealed partial class DiscordClient
 			Command = cmd
 		};
 
-		await this._applicationCommandUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._applicationCommandUpdated, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -4512,7 +4519,7 @@ public sealed partial class DiscordClient
 			Command = cmd
 		};
 
-		await this._applicationCommandDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._applicationCommandDeleted, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -4538,7 +4545,7 @@ public sealed partial class DiscordClient
 			Guild = guild
 		};
 
-		await this._guildApplicationCommandCountUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._guildApplicationCommandCountUpdated, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -4580,7 +4587,7 @@ public sealed partial class DiscordClient
 			Guild = guild
 		};
 
-		await this._applicationCommandPermissionsUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._applicationCommandPermissionsUpdated, ea).ConfigureAwait(false);
 	}
 
 	#endregion
@@ -4599,7 +4606,7 @@ public sealed partial class DiscordClient
 	[SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
 	internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportUser user, TransportMember member, DiscordInteraction interaction, string rawInteraction)
 	{
-		if (this.Configuration.Telemetry.EnableLibraryDeveloperMode)
+		if (this.Configuration.EnableLibraryDeveloperMode)
 		{
 			//this.Logger.LogDebug("Interaction from {guild} on shard {shard}", guildId.HasValue ? guildId.Value : "dm", this.ShardId);
 			//this.Logger.LogDebug("Interaction: {interaction}", rawInteraction);
@@ -4715,7 +4722,8 @@ public sealed partial class DiscordClient
 				Interaction = interaction
 			};
 
-			await this._componentInteractionCreated.InvokeAsync(this, cea).ConfigureAwait(false);
+			await this.InternalComponentInteractionCreated.InvokeAsync(this, cea).ConfigureAwait(false);
+			await this.RaiseEventAsync(this._componentInteractionCreated, cea).ConfigureAwait(false);
 		}
 		else
 		{
@@ -4737,7 +4745,8 @@ public sealed partial class DiscordClient
 					TargetMessage = targetMessage,
 					Type = interaction.Data.Type
 				};
-				await this._contextMenuInteractionCreated.InvokeAsync(this, ea).ConfigureAwait(false);
+				await this.InternalContextMenuInteractionCreated.InvokeAsync(this, ea).ConfigureAwait(false);
+				await this.RaiseEventAsync(this._contextMenuInteractionCreated, ea).ConfigureAwait(false);
 			}
 			else
 			{
@@ -4746,7 +4755,8 @@ public sealed partial class DiscordClient
 					Interaction = interaction
 				};
 
-				await this._interactionCreated.InvokeAsync(this, ea).ConfigureAwait(false);
+				await this.InternalInteractionCreated.InvokeAsync(this, ea).ConfigureAwait(false);
+				await this.RaiseEventAsync(this._interactionCreated, ea).ConfigureAwait(false);
 			}
 		}
 	}
@@ -4765,7 +4775,7 @@ public sealed partial class DiscordClient
 		{
 			Entitlement = entitlement
 		};
-		await this._entitlementCreated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._entitlementCreated, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -4778,7 +4788,7 @@ public sealed partial class DiscordClient
 		{
 			Entitlement = entitlement
 		};
-		await this._entitlementUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._entitlementUpdated, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -4791,7 +4801,7 @@ public sealed partial class DiscordClient
 		{
 			Entitlement = entitlement
 		};
-		await this._entitlementDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._entitlementDeleted, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -4804,7 +4814,7 @@ public sealed partial class DiscordClient
 		{
 			Subscription = subscription
 		};
-		await this._subscriptionCreated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._subscriptionCreated, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -4817,7 +4827,7 @@ public sealed partial class DiscordClient
 		{
 			Subscription = subscription
 		};
-		await this._subscriptionUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._subscriptionUpdated, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -4852,7 +4862,8 @@ public sealed partial class DiscordClient
 			Guild = guild,
 			StartedAt = started
 		};
-		await this._typingStarted.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.InternalTypingStarted.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._typingStarted, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -4880,7 +4891,7 @@ public sealed partial class DiscordClient
 			Channel = channel,
 			Guild = guild
 		};
-		await this._webhooksUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._webhooksUpdated, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -4894,7 +4905,7 @@ public sealed partial class DiscordClient
 			EventName = payload.EventName,
 			Json = (payload.Data as JObject)?.ToString()
 		};
-		await this._unknownEvent.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this.RaiseEventAsync(this._unknownEvent, ea).ConfigureAwait(false);
 	}
 
 	#endregion

@@ -121,8 +121,8 @@ internal sealed class RestClient : IDisposable
 		{
 			UseCookies = false,
 			AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip,
-			UseProxy = configuration.Rest.Proxy != null,
-			Proxy = configuration.Rest.Proxy
+			UseProxy = configuration.Proxy != null,
+			Proxy = configuration.Proxy
 		};
 
 		this.HttpClient = new(httphandler)

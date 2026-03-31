@@ -99,6 +99,8 @@ items:
       items:
           - name: Events
             uid: topics_events
+          - name: Gateway Dispatch
+            uid: topics_gateway_dispatch
           - name: Audit Logs
             uid: topics_audit_logs
           - name: Logging

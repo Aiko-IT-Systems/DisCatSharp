@@ -328,6 +328,13 @@ public class PresenceCacheRegressionTests
 		=> new(new DiscordConfiguration
 		{
 			Token = "1",
+			Gateway =
+			{
+				Advanced =
+				{
+					DispatchMode = Enums.GatewayDispatchMode.SequentialHandlers
+				}
+			},
 			PresenceCacheSize = presenceCacheSize
 		});
 

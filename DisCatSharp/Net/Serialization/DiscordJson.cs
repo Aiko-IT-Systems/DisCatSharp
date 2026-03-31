@@ -124,7 +124,7 @@ public static class DiscordJson
 							"JRE Line Position" + jre.LinePosition + "\n" +
 							"JRE Path" + jre.Path;
 
-		if (discord.Configuration.Telemetry.EnableLibraryDeveloperMode)
+		if (discord.Configuration.EnableLibraryDeveloperMode)
 			discord.Logger.LogError(e.ErrorContext.Error, "{msg}\n\n{raw}", sentryMessage, e.ErrorContext.OriginalObject);
 
 		if (!discord.DiagnosticsSink.IsEnabled)
@@ -140,7 +140,7 @@ public static class DiscordJson
 			UserInfo = Telemetry.TelemetryBootstrap.BuildUserInfo(discord.Configuration, discord.CurrentUser)
 		});
 
-		if (discord.Configuration.Telemetry.EnableLibraryDeveloperMode)
+		if (discord.Configuration.EnableLibraryDeveloperMode)
 			discord.Logger.LogInformation("DiscordJson exception reported to diagnostics sink");
 	}
 
@@ -178,7 +178,7 @@ public static class DiscordJson
 				continue;
 
 			if (vals is 1)
-				if (discord.Configuration.Telemetry.EnableLibraryDeveloperMode)
+				if (discord.Configuration.EnableLibraryDeveloperMode)
 				{
 					discord.Logger.LogInformation("{sentry}", sentryMessage);
 					discord.Logger.LogDebug("{json}", json);
@@ -186,7 +186,7 @@ public static class DiscordJson
 
 			var fieldType = InferFieldType(ap.Value);
 			sentryFields[ap.Key] = fieldType;
-			if (discord.Configuration.Telemetry.EnableLibraryDeveloperMode)
+			if (discord.Configuration.EnableLibraryDeveloperMode)
 				discord.Logger.LogInformation("Found field {field}: {type} on {object}", ap.Key, fieldType, obj.GetType().Name);
 		}
 
@@ -227,7 +227,7 @@ public static class DiscordJson
 			UserInfo = Telemetry.TelemetryBootstrap.BuildUserInfo(discord.Configuration, discord.CurrentUser)
 		});
 
-		if (discord.Configuration.Telemetry.EnableLibraryDeveloperMode)
+		if (discord.Configuration.EnableLibraryDeveloperMode)
 			discord.Logger.LogInformation("Missing fields reported to diagnostics sink");
 
 		return obj;
@@ -289,7 +289,7 @@ public static class DiscordJson
 				continue;
 
 			if (vals is 1)
-				if (discord.Configuration.Telemetry.EnableLibraryDeveloperMode)
+				if (discord.Configuration.EnableLibraryDeveloperMode)
 				{
 					discord.Logger.LogInformation("{sentry}", sentryMessage);
 					discord.Logger.LogDebug("{json}", json);
@@ -297,7 +297,7 @@ public static class DiscordJson
 
 			var fieldType = InferFieldType(ap.Value);
 			sentryFields[ap.Key] = fieldType;
-			if (discord.Configuration.Telemetry.EnableLibraryDeveloperMode)
+			if (discord.Configuration.EnableLibraryDeveloperMode)
 				discord.Logger.LogInformation("Found field {field}: {type} on {object}", ap.Key, fieldType, first.GetType().Name);
 		}
 
@@ -336,7 +336,7 @@ public static class DiscordJson
 			UserInfo = Telemetry.TelemetryBootstrap.BuildUserInfo(discord.Configuration, discord.CurrentUser)
 		});
 
-		if (discord.Configuration.Telemetry.EnableLibraryDeveloperMode)
+		if (discord.Configuration.EnableLibraryDeveloperMode)
 			discord.Logger.LogInformation("Missing fields reported to diagnostics sink");
 
 		return obj;

@@ -88,8 +88,8 @@ public abstract class BaseDiscordClient : IDisposable
 		{
 			UseCookies = false,
 			AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip,
-			UseProxy = this.Configuration.Rest.Proxy != null,
-			Proxy = this.Configuration.Rest.Proxy
+			UseProxy = this.Configuration.Proxy != null,
+			Proxy = this.Configuration.Proxy
 		};
 		this.RestClient = new(httphandler)
 		{

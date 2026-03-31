@@ -48,6 +48,8 @@ public sealed class DiscordConfiguration
 		this.ActivityHandlerType = other.ActivityHandlerType;
 #pragma warning restore DCS0002
 		this.EnableBadDomainCheckerSupport = other.EnableBadDomainCheckerSupport;
+		this.Proxy = other.Proxy;
+		this.EnableLibraryDeveloperMode = other.EnableLibraryDeveloperMode;
 		this.Api = new(other.Api ?? new());
 		this.Gateway = new(other.Gateway ?? new());
 		this.Rest = new(other.Rest ?? new());
@@ -118,6 +120,18 @@ public sealed class DiscordConfiguration
 	///     We use https://github.com/nager/Nager.PublicSuffix with a cached HTTP rule provider to parse domain names; the public suffix list is cached on disk in the temp directory using the library defaults.
 	/// </remarks>
 	public bool EnableBadDomainCheckerSupport { get; internal set; } = false;
+
+	/// <summary>
+	///     <para>Sets the proxy to use for HTTP and WebSocket connections to Discord.</para>
+	///     <para>Defaults to <see langword="null" />.</para>
+	/// </summary>
+	public IWebProxy? Proxy { internal get; set; } = null;
+
+	/// <summary>
+	///     <para>Whether to enable the library developer mode.</para>
+	///     <para>Defaults <see langword="false" />.</para>
+	/// </summary>
+	internal bool EnableLibraryDeveloperMode { get; set; } = false;
 
 	#endregion
 
@@ -296,14 +310,6 @@ public sealed class DiscordConfiguration
 	{
 		internal get => this.Rest.UseRelativeRatelimit;
 		set => this.Rest.UseRelativeRatelimit = value;
-	}
-
-	/// <inheritdoc cref="RestConfiguration.Proxy" />
-	[Deprecated("Use Rest.Proxy instead. This property will be removed in a future version.")]
-	public IWebProxy? Proxy
-	{
-		internal get => this.Rest.Proxy;
-		set => this.Rest.Proxy = value;
 	}
 
 	/// <inheritdoc cref="CacheConfiguration.MessageCacheSize" />
@@ -495,14 +501,13 @@ public sealed class DiscordConfiguration
 	internal List<Type> TrackExceptions
 	{
 		get => this.Telemetry.TrackExceptions;
-		set => this.Telemetry.TrackExceptions = value;
-	}
+		set
+		{
+			if (!this.EnableLibraryDeveloperMode)
+				throw new AccessViolationException("Cannot set this as non-library-dev");
 
-	/// <inheritdoc cref="TelemetryConfiguration.EnableLibraryDeveloperMode" />
-	internal bool EnableLibraryDeveloperMode
-	{
-		get => this.Telemetry.EnableLibraryDeveloperMode;
-		set => this.Telemetry.EnableLibraryDeveloperMode = value;
+			this.Telemetry.TrackExceptions = value;
+		}
 	}
 
 	/// <inheritdoc cref="TelemetryConfiguration.DisableScrubber" />

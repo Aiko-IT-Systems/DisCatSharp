@@ -60,14 +60,14 @@ public class InteractivityExtension : BaseExtension, IDisposable
 	{
 		this.Client = client;
 		this._messageCreatedWaiter = new(this.Client,
-			h => this.Client.MessageCreated += h,
-			h => this.Client.MessageCreated -= h);
+			h => this.Client.InternalMessageCreated.Register(h),
+			h => this.Client.InternalMessageCreated.Unregister(h));
 		this._messageReactionAddWaiter = new(this.Client,
-			h => this.Client.MessageReactionAdded += h,
-			h => this.Client.MessageReactionAdded -= h);
+			h => this.Client.InternalMessageReactionAdded.Register(h),
+			h => this.Client.InternalMessageReactionAdded.Unregister(h));
 		this._typingStartWaiter = new(this.Client,
-			h => this.Client.TypingStarted += h,
-			h => this.Client.TypingStarted -= h);
+			h => this.Client.InternalTypingStarted.Register(h),
+			h => this.Client.InternalTypingStarted.Unregister(h));
 		this._poller = new(this.Client);
 		this._reactionCollector = new(this.Client);
 		this._paginator = new(this.Client);

@@ -457,7 +457,14 @@ public class StoreGatewayDispatchFollowupRegressionTests
 	{
 		var configuration = new DiscordConfiguration
 		{
-			Token = "1"
+			Token = "1",
+			Gateway =
+			{
+				Advanced =
+				{
+					DispatchMode = Enums.GatewayDispatchMode.SequentialHandlers
+				}
+			}
 		};
 		configure?.Invoke(configuration);
 		return new(configuration);

@@ -152,8 +152,8 @@ public sealed class LavalinkSession
 		this._voiceServerUpdates = new();
 		this._voiceStateUpdates = new();
 		this._pendingVoiceStates = new();
-		this.Discord.VoiceStateUpdated += this.Discord_VoiceStateUpdated;
-		this.Discord.VoiceServerUpdated += this.Discord_VoiceServerUpdated;
+		this.Discord.InternalVoiceStateUpdated.Register(this.Discord_VoiceStateUpdated);
+		this.Discord.InternalVoiceServerUpdated.Register(this.Discord_VoiceServerUpdated);
 		this.GuildPlayerDestroyed += this.LavalinkGuildPlayerDestroyed;
 
 		this.Rest = new(this.Config, this.Discord);
@@ -529,7 +529,7 @@ public sealed class LavalinkSession
 		if (this.Discord.CurrentUser?.Id == null)
 			throw new InvalidOperationException("This operation requires the Discord client to be fully initialized.");
 
-		this._webSocket = this.Discord.Configuration.Gateway.WebSocketClientFactory(this.Discord.Configuration.Rest.Proxy, this.Discord.ServiceProvider);
+		this._webSocket = this.Discord.Configuration.Gateway.WebSocketClientFactory(this.Discord.Configuration.Proxy, this.Discord.ServiceProvider);
 		this._webSocket.Connected += this.Lavalink_WebSocket_Connected;
 		this._webSocket.Disconnected += this.Lavalink_WebSocket_Disconnected;
 		this._webSocket.ExceptionThrown += this.Lavalink_WebSocket_ExceptionThrown;

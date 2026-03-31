@@ -388,7 +388,7 @@ public sealed class VoiceConnection : IDisposable
 		this._pauseEvent = new(true);
 
 		this._udpClient = this._discord.Configuration.Gateway.UdpClientFactory();
-		this._voiceWs = this._discord.Configuration.Gateway.WebSocketClientFactory(this._discord.Configuration.Rest.Proxy, this._discord.ServiceProvider);
+		this._voiceWs = this._discord.Configuration.Gateway.WebSocketClientFactory(this._discord.Configuration.Proxy, this._discord.ServiceProvider);
 		this._voiceWs.Disconnected += this.VoiceWS_SocketClosed;
 		this._voiceWs.MessageReceived += this.VoiceWS_SocketMessage;
 		this._voiceWs.Connected += this.VoiceWS_SocketOpened;
@@ -2141,7 +2141,7 @@ public sealed class VoiceConnection : IDisposable
 			this.ClearAudioSenders();
 			this._daveSession?.Reset();
 			this._tokenSource = new();
-			this._voiceWs = this._discord.Configuration.Gateway.WebSocketClientFactory(this._discord.Configuration.Rest.Proxy, this._discord.ServiceProvider);
+			this._voiceWs = this._discord.Configuration.Gateway.WebSocketClientFactory(this._discord.Configuration.Proxy, this._discord.ServiceProvider);
 			this._voiceWs.Disconnected += this.VoiceWS_SocketClosed;
 			this._voiceWs.MessageReceived += this.VoiceWS_SocketMessage;
 			this._voiceWs.Connected += this.VoiceWS_SocketOpened;

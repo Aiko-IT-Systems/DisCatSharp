@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Exceptions;
 
 namespace DisCatSharp;
@@ -35,7 +36,6 @@ public sealed class TelemetryConfiguration
 		this.DeveloperUserId = other.DeveloperUserId;
 		this.EnableDiscordIdScrubber = other.EnableDiscordIdScrubber;
 		this._exceptions = other._exceptions;
-		this.EnableLibraryDeveloperMode = other.EnableLibraryDeveloperMode;
 		this.DisableScrubber = other.DisableScrubber;
 		this.SentryDebug = other.SentryDebug;
 		this.DisableExceptionFilter = other.DisableExceptionFilter;
@@ -101,9 +101,6 @@ public sealed class TelemetryConfiguration
 		get => this._exceptions;
 		set
 		{
-			if (!this.EnableLibraryDeveloperMode)
-				throw new AccessViolationException("Cannot set this as non-library-dev");
-
 			if (value is null)
 				this._exceptions.Clear();
 			else
@@ -112,12 +109,6 @@ public sealed class TelemetryConfiguration
 					: throw new InvalidOperationException("Can only track exceptions who inherit from " + nameof(DisCatSharpException) + " and must be constructed with typeof(Type)");
 		}
 	}
-
-	/// <summary>
-	///     <para>Whether to enable the library developer mode.</para>
-	///     <para>Defaults <see langword="false" />.</para>
-	/// </summary>
-	internal bool EnableLibraryDeveloperMode { get; set; } = false;
 
 	/// <summary>
 	///     <para>Whether to disable all safety scrubbers.</para>
