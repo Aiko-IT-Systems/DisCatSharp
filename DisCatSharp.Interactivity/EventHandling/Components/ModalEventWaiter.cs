@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using ConcurrentCollections;
 
 using DisCatSharp.Entities;
-using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Interactivity.Enums;
 using DisCatSharp.Telemetry;
@@ -72,20 +71,10 @@ internal class ModalEventWaiter : IDisposable
 	/// <param name="args">The args.</param>
 	private Task Handle(DiscordClient client, ComponentInteractionCreateEventArgs args)
 	{
-		if (this._client.Configuration.Gateway.Advanced.DispatchMode is GatewayDispatchMode.ConcurrentHandlers)
-		{
-			_ = Task.Run(() => HandleCore(args));
-			return Task.CompletedTask;
-		}
-
-		HandleCore(args);
-		return Task.CompletedTask;
-	}
-
-	private void HandleCore(ComponentInteractionCreateEventArgs args)
-	{
 		foreach (var mreq in this._modalMatchRequests)
 			if (mreq.CustomId == args.Interaction.Data.CustomId && mreq.IsMatch(args))
 				mreq.Tcs.TrySetResult(args);
+
+		return Task.CompletedTask;
 	}
 }

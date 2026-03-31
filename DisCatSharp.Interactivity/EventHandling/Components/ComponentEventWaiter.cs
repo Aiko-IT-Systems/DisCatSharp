@@ -102,17 +102,6 @@ internal class ComponentEventWaiter : IDisposable
 	/// <param name="args">The args.</param>
 	private async Task Handle(DiscordClient client, ComponentInteractionCreateEventArgs args)
 	{
-		if (this._client.Configuration.Gateway.Advanced.DispatchMode is GatewayDispatchMode.ConcurrentHandlers)
-		{
-			_ = Task.Run(async () => await HandleCore(args).ConfigureAwait(false));
-			return;
-		}
-
-		await HandleCore(args).ConfigureAwait(false);
-	}
-
-	private async Task HandleCore(ComponentInteractionCreateEventArgs args)
-	{
 		foreach (var mreq in this._matchRequests)
 			if (mreq.Message == args.Message && mreq.IsMatch(args))
 				mreq.Tcs.TrySetResult(args);

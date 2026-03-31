@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using ConcurrentCollections;
 
 using DisCatSharp.Common.Utilities;
-using DisCatSharp.Enums;
 using DisCatSharp.Telemetry;
 
 using Microsoft.Extensions.Logging;
@@ -157,18 +156,6 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 		if (this._disposed)
 			return Task.CompletedTask;
 
-		if (this._client.Configuration.Gateway.Advanced.DispatchMode is GatewayDispatchMode.ConcurrentHandlers)
-		{
-			_ = Task.Run(() => HandleEventCore(eventArgs));
-			return Task.CompletedTask;
-		}
-
-		HandleEventCore(eventArgs);
-		return Task.CompletedTask;
-	}
-
-	private void HandleEventCore(T eventArgs)
-	{
 		foreach (var req in this._matchRequests)
 			if (req.Predicate(eventArgs))
 				req.Tcs.TrySetResult(eventArgs);
@@ -176,6 +163,8 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 		foreach (var req in this._collectRequests)
 			if (req.Predicate(eventArgs))
 				req.Collected.Add(eventArgs);
+
+		return Task.CompletedTask;
 	}
 
 	~EventWaiter()
