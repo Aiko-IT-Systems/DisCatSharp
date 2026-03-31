@@ -613,11 +613,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			var globalCommands = IsCalledByUnitTest ? null : (await this.Client.GetGlobalApplicationCommandsAsync(Configuration?.EnableLocalization ?? false).ConfigureAwait(false))?.ToList() ?? null;
 
 			var guilds = CheckAllGuilds ? this.Client.ReadyGuildIds : this._updateList.Where(x => x.Key is not null)?.Select(x => x.Key!.Value).Distinct().ToList();
-			var wrongShards = guilds is not null && this.Client.ReadyGuildIds.Count is not 0 ? guilds.Where(x => !this.Client.ReadyGuildIds.Contains(x)).ToList() : [];
-			if (wrongShards.Count is not 0)
+			var unknownGuilds = guilds is not null && this.Client.ReadyGuildIds.Count is not 0 ? guilds.Where(x => !this.Client.ReadyGuildIds.Contains(x)).ToList() : [];
+			if (unknownGuilds.Count is not 0)
 			{
-				this.Client.Logger.Log(ApplicationCommandsLogLevel, "Some guilds are not on the same shard as the client. Removing them from the update list");
-				foreach (var guild in wrongShards)
+				this.Client.Logger.Log(LogLevel.Warning, "Shard {Shard}: {Count} registered guild(s) are not present in the READY payload (bot may have left them or they belong to a different shard). Removing: {GuildIds}", this.Client.ShardId, unknownGuilds.Count, string.Join(", ", unknownGuilds));
+				foreach (var guild in unknownGuilds)
 				{
 					this._updateList.RemoveAll(x => x.Key == guild);
 					guilds?.Remove(guild);
