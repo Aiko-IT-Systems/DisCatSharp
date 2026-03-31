@@ -49,7 +49,7 @@ public sealed partial class DiscordClient
 				["event_name"] = payload.EventName ?? "unknown"
 			});
 
-		if ((this.Configuration?.Telemetry.EnableLibraryDeveloperMode ?? false) || (this.Configuration?.Diagnostics.EnablePayloadReceivedEvent ?? false))
+		if ((this.Configuration?.EnableLibraryDeveloperMode ?? false) || (this.Configuration?.Diagnostics.EnablePayloadReceivedEvent ?? false))
 			await this._payloadReceived.InvokeAsync(this, new(this.ServiceProvider)
 			{
 				EventName = payload.EventName,
@@ -1065,6 +1065,7 @@ public sealed partial class DiscordClient
 			this.Logger.LogInformation(LoggerEvents.Startup, "Application has no guilds. Firing GuildDownloadCompleted event for internal tools");
 		}
 
+		await this.InternalReadyEv.InvokeAsync(this, new(this.ServiceProvider)).ConfigureAwait(false);
 		await this.RaiseEventAsync(this.ReadyEv, new(this.ServiceProvider)).ConfigureAwait(false);
 
 		if (this.DiagnosticsSink.IsEnabled)
@@ -3170,6 +3171,7 @@ public sealed partial class DiscordClient
 			MentionedRoles = message.MentionedRolesInternal.Count is not 0 ? new ReadOnlyCollection<DiscordRole>(message.MentionedRolesInternal) : [],
 			MentionedChannels = message.MentionedChannelsInternal.Count is not 0 ? new ReadOnlyCollection<DiscordChannel>(message.MentionedChannelsInternal) : []
 		};
+		await this.InternalMessageCreated.InvokeAsync(this, ea).ConfigureAwait(false);
 		await this.RaiseEventAsync(this._messageCreated, ea).ConfigureAwait(false);
 	}
 
@@ -3557,6 +3559,7 @@ public sealed partial class DiscordClient
 			Channel = channel,
 			ChannelId = channelId
 		};
+		await this.InternalMessageReactionAdded.InvokeAsync(this, ea).ConfigureAwait(false);
 		await this.RaiseEventAsync(this._messageReactionAdded, ea).ConfigureAwait(false);
 	}
 
@@ -3632,6 +3635,7 @@ public sealed partial class DiscordClient
 			Channel = channel,
 			ChannelId = channelId
 		};
+		await this.InternalMessageReactionRemoved.InvokeAsync(this, ea).ConfigureAwait(false);
 		await this.RaiseEventAsync(this._messageReactionRemoved, ea).ConfigureAwait(false);
 	}
 
@@ -3672,6 +3676,7 @@ public sealed partial class DiscordClient
 			Message = msg
 		};
 
+		await this.InternalMessageReactionsCleared.InvokeAsync(this, ea).ConfigureAwait(false);
 		await this.RaiseEventAsync(this._messageReactionsCleared, ea).ConfigureAwait(false);
 	}
 
@@ -4359,6 +4364,7 @@ public sealed partial class DiscordClient
 			Before = vstateOld,
 			After = vstateNew
 		};
+		await this.InternalVoiceStateUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
 		await this.RaiseEventAsync(this._voiceStateUpdated, ea).ConfigureAwait(false);
 	}
 
@@ -4376,6 +4382,7 @@ public sealed partial class DiscordClient
 			VoiceToken = token,
 			Guild = guild
 		};
+		await this.InternalVoiceServerUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
 		await this.RaiseEventAsync(this._voiceServerUpdated, ea).ConfigureAwait(false);
 	}
 
@@ -4599,7 +4606,7 @@ public sealed partial class DiscordClient
 	[SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
 	internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportUser user, TransportMember member, DiscordInteraction interaction, string rawInteraction)
 	{
-		if (this.Configuration.Telemetry.EnableLibraryDeveloperMode)
+		if (this.Configuration.EnableLibraryDeveloperMode)
 		{
 			//this.Logger.LogDebug("Interaction from {guild} on shard {shard}", guildId.HasValue ? guildId.Value : "dm", this.ShardId);
 			//this.Logger.LogDebug("Interaction: {interaction}", rawInteraction);
@@ -4715,6 +4722,7 @@ public sealed partial class DiscordClient
 				Interaction = interaction
 			};
 
+			await this.InternalComponentInteractionCreated.InvokeAsync(this, cea).ConfigureAwait(false);
 			await this.RaiseEventAsync(this._componentInteractionCreated, cea).ConfigureAwait(false);
 		}
 		else
@@ -4737,6 +4745,7 @@ public sealed partial class DiscordClient
 					TargetMessage = targetMessage,
 					Type = interaction.Data.Type
 				};
+				await this.InternalContextMenuInteractionCreated.InvokeAsync(this, ea).ConfigureAwait(false);
 				await this.RaiseEventAsync(this._contextMenuInteractionCreated, ea).ConfigureAwait(false);
 			}
 			else
@@ -4746,6 +4755,7 @@ public sealed partial class DiscordClient
 					Interaction = interaction
 				};
 
+				await this.InternalInteractionCreated.InvokeAsync(this, ea).ConfigureAwait(false);
 				await this.RaiseEventAsync(this._interactionCreated, ea).ConfigureAwait(false);
 			}
 		}
@@ -4852,6 +4862,7 @@ public sealed partial class DiscordClient
 			Guild = guild,
 			StartedAt = started
 		};
+		await this.InternalTypingStarted.InvokeAsync(this, ea).ConfigureAwait(false);
 		await this.RaiseEventAsync(this._typingStarted, ea).ConfigureAwait(false);
 	}
 

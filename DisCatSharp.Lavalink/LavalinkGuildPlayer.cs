@@ -103,7 +103,7 @@ public sealed class LavalinkGuildPlayer
 		this.TrackExceptionEvent = new("LAVALINK_TRACK_EXCEPTION", TimeSpan.Zero, this.Discord.EventErrorHandler);
 		this.TrackStuckEvent = new("LAVALINK_TRACK_STUCK", TimeSpan.Zero, this.Discord.EventErrorHandler);
 		this.StateUpdatedEvent = new("LAVALINK_PLAYER_STATE_UPDATED", TimeSpan.Zero, this.Discord.EventErrorHandler);
-		this.Discord.VoiceStateUpdated += async (sender, args) => await this._voiceStateUpdated.InvokeAsync(sender, args).ConfigureAwait(false);
+		this.Discord.InternalVoiceStateUpdated.Register(async (sender, args) => await this._voiceStateUpdated.InvokeAsync(sender, args).ConfigureAwait(false));
 		this.VoiceStateUpdated += this.OnVoiceStateUpdated;
 		this.CurrentUsersInternal.Add(this.Discord.CurrentUser.Id, this.Discord.CurrentUser);
 		this.TrackEnded += this.OnTrackEnded;

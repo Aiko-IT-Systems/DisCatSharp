@@ -31,7 +31,7 @@ internal class ComponentEventWaiter : IDisposable
 	public ComponentEventWaiter(DiscordClient client)
 	{
 		this._client = client;
-		this._client.ComponentInteractionCreated += this.Handle;
+		this._client.InternalComponentInteractionCreated.Register(this.Handle);
 	}
 
 	/// <summary>
@@ -41,7 +41,7 @@ internal class ComponentEventWaiter : IDisposable
 	{
 		this._matchRequests.Clear();
 		this._collectRequests.Clear();
-		this._client.ComponentInteractionCreated -= this.Handle;
+		this._client.InternalComponentInteractionCreated.Unregister(this.Handle);
 	}
 
 	/// <summary>
@@ -98,9 +98,20 @@ internal class ComponentEventWaiter : IDisposable
 	/// <summary>
 	///     Handles the waiter.
 	/// </summary>
-	/// <param name="_">The client.</param>
+	/// <param name="client">The client.</param>
 	/// <param name="args">The args.</param>
-	private async Task Handle(DiscordClient _, ComponentInteractionCreateEventArgs args)
+	private async Task Handle(DiscordClient client, ComponentInteractionCreateEventArgs args)
+	{
+		if (this._client.Configuration.Gateway.Advanced.DispatchMode is GatewayDispatchMode.ConcurrentHandlers)
+		{
+			_ = Task.Run(async () => await HandleCore(args).ConfigureAwait(false));
+			return;
+		}
+
+		await HandleCore(args).ConfigureAwait(false);
+	}
+
+	private async Task HandleCore(ComponentInteractionCreateEventArgs args)
 	{
 		foreach (var mreq in this._matchRequests)
 			if (mreq.Message == args.Message && mreq.IsMatch(args))

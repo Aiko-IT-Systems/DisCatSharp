@@ -32,7 +32,7 @@ internal class ComponentPaginator : IPaginator
 	public ComponentPaginator(DiscordClient client, InteractivityConfiguration config)
 	{
 		this._client = client;
-		this._client.ComponentInteractionCreated += this.Handle;
+		this._client.InternalComponentInteractionCreated.Register(this.Handle);
 		this._config = config;
 	}
 
@@ -79,7 +79,7 @@ internal class ComponentPaginator : IPaginator
 			return;
 
 		this._disposed = true;
-		this._client.ComponentInteractionCreated -= this.Handle;
+		this._client.InternalComponentInteractionCreated.Unregister(this.Handle);
 		this._requests.Clear();
 		GC.SuppressFinalize(this);
 	}
@@ -93,9 +93,20 @@ internal class ComponentPaginator : IPaginator
 	/// <summary>
 	///     Handles the pagination event.
 	/// </summary>
-	/// <param name="_">The client.</param>
+	/// <param name="client">The client.</param>
 	/// <param name="e">The event arguments.</param>
-	private async Task Handle(DiscordClient _, ComponentInteractionCreateEventArgs e)
+	private async Task Handle(DiscordClient client, ComponentInteractionCreateEventArgs e)
+	{
+		if (this._client.Configuration.Gateway.Advanced.DispatchMode is GatewayDispatchMode.ConcurrentHandlers)
+		{
+			_ = Task.Run(async () => await HandleCore(e).ConfigureAwait(false));
+			return;
+		}
+
+		await HandleCore(e).ConfigureAwait(false);
+	}
+
+	private async Task HandleCore(ComponentInteractionCreateEventArgs e)
 	{
 		if (e.Interaction.Type == InteractionType.ModalSubmit)
 			return;

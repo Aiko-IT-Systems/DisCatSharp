@@ -179,7 +179,7 @@ public class CommandsNextExtension : BaseExtension
 		this._error = new("COMMAND_ERRORED", TimeSpan.Zero, this.Client.EventErrorHandler);
 
 		if (this._config.UseDefaultCommandHandler)
-			this.Client.MessageCreated += this.HandleCommandsAsync;
+			this.Client.InternalMessageCreated.Register(this.HandleCommandsAsync);
 		else
 			this.Client.Logger.LogWarning(CommandsNextEvents.Misc, "Not attaching default command handler - if this is intentional, you can ignore this message");
 

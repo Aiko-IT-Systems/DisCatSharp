@@ -349,6 +349,19 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._guildPowerupEntitlementsCreated = new("GUILD_POWERUP_ENTITLEMENTS_CREATED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildPowerupEntitlementsDeleted = new("GUILD_POWERUP_ENTITLEMENTS_DELETED", EventExecutionLimit, this.EventErrorHandler);
 
+		// Internal extension events — always sequential, fired before public events
+		this.InternalReadyEv = new("INTERNAL_READY", EventExecutionLimit, this.EventErrorHandler);
+		this.InternalInteractionCreated = new("INTERNAL_INTERACTION_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this.InternalContextMenuInteractionCreated = new("INTERNAL_CONTEXT_MENU_INTERACTED", EventExecutionLimit, this.EventErrorHandler);
+		this.InternalMessageCreated = new("INTERNAL_MESSAGE_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this.InternalMessageReactionAdded = new("INTERNAL_MESSAGE_REACTION_ADDED", EventExecutionLimit, this.EventErrorHandler);
+		this.InternalMessageReactionRemoved = new("INTERNAL_MESSAGE_REACTION_REMOVED", EventExecutionLimit, this.EventErrorHandler);
+		this.InternalMessageReactionsCleared = new("INTERNAL_MESSAGE_REACTIONS_CLEARED", EventExecutionLimit, this.EventErrorHandler);
+		this.InternalTypingStarted = new("INTERNAL_TYPING_STARTED", EventExecutionLimit, this.EventErrorHandler);
+		this.InternalComponentInteractionCreated = new("INTERNAL_COMPONENT_INTERACTED", EventExecutionLimit, this.EventErrorHandler);
+		this.InternalVoiceStateUpdated = new("INTERNAL_VOICE_STATE_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this.InternalVoiceServerUpdated = new("INTERNAL_VOICE_SERVER_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+
 		this.GuildsInternal.Clear();
 		this.EmojisInternal.Clear();
 		this.ClearAggregatePresenceCache();

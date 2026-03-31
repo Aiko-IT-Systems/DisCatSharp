@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using ConcurrentCollections;
 
 using DisCatSharp.Common.Utilities;
+using DisCatSharp.Enums;
 using DisCatSharp.Telemetry;
 
 using Microsoft.Extensions.Logging;
@@ -153,18 +154,28 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 	/// <param name="eventArgs">The event's arguments.</param>
 	private Task HandleEvent(DiscordClient client, T eventArgs)
 	{
-		if (!this._disposed)
-		{
-			foreach (var req in this._matchRequests)
-				if (req.Predicate(eventArgs))
-					req.Tcs.TrySetResult(eventArgs);
+		if (this._disposed)
+			return Task.CompletedTask;
 
-			foreach (var req in this._collectRequests)
-				if (req.Predicate(eventArgs))
-					req.Collected.Add(eventArgs);
+		if (this._client.Configuration.Gateway.Advanced.DispatchMode is GatewayDispatchMode.ConcurrentHandlers)
+		{
+			_ = Task.Run(() => HandleEventCore(eventArgs));
+			return Task.CompletedTask;
 		}
 
+		HandleEventCore(eventArgs);
 		return Task.CompletedTask;
+	}
+
+	private void HandleEventCore(T eventArgs)
+	{
+		foreach (var req in this._matchRequests)
+			if (req.Predicate(eventArgs))
+				req.Tcs.TrySetResult(eventArgs);
+
+		foreach (var req in this._collectRequests)
+			if (req.Predicate(eventArgs))
+				req.Collected.Add(eventArgs);
 	}
 
 	~EventWaiter()

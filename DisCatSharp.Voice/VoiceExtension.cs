@@ -71,8 +71,8 @@ public sealed class VoiceExtension : BaseExtension
 		this.Client = client;
 		VoiceRuntimeLogging.SetEnableDebugLogs(this.Client.Logger, this._configuration.EnableDebugLogging);
 
-		this.Client.VoiceStateUpdated += this.Client_VoiceStateUpdate;
-		this.Client.VoiceServerUpdated += this.Client_VoiceServerUpdate;
+		this.Client.InternalVoiceStateUpdated.Register(this.Client_VoiceStateUpdate);
+		this.Client.InternalVoiceServerUpdated.Register(this.Client_VoiceServerUpdate);
 	}
 
 	/// <summary>

@@ -335,14 +335,14 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		ShardCount = client.ShardCount;
 		Logger = client.Logger;
 
-		this.Client.Ready += (c, e) =>
+		this.Client.InternalReadyEv.Register((c, e) =>
 		{
 			if (!this.ShardStartupFinished)
 				_ = Task.Run(async () => await this.UpdateAsync().ConfigureAwait(false));
 			return Task.CompletedTask;
-		};
-		this.Client.InteractionCreated += this.CatchInteractionsOnStartup;
-		this.Client.ContextMenuInteractionCreated += this.CatchContextMenuInteractionsOnStartup;
+		});
+		this.Client.InternalInteractionCreated.Register(this.CatchInteractionsOnStartup);
+		this.Client.InternalContextMenuInteractionCreated.Register(this.CatchContextMenuInteractionsOnStartup);
 	}
 
 	/// <summary>
@@ -382,11 +382,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	private void FinishedRegistration()
 	{
-		this.Client.InteractionCreated -= this.CatchInteractionsOnStartup;
-		this.Client.ContextMenuInteractionCreated -= this.CatchContextMenuInteractionsOnStartup;
+		this.Client.InternalInteractionCreated.Unregister(this.CatchInteractionsOnStartup);
+		this.Client.InternalContextMenuInteractionCreated.Unregister(this.CatchContextMenuInteractionsOnStartup);
 
-		this.Client.InteractionCreated += this.InteractionHandler;
-		this.Client.ContextMenuInteractionCreated += this.ContextMenuHandler;
+		this.Client.InternalInteractionCreated.Register(this.InteractionHandler);
+		this.Client.InternalContextMenuInteractionCreated.Register(this.ContextMenuHandler);
 	}
 
 	/// <summary>
