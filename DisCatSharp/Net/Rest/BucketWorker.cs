@@ -255,7 +255,7 @@ internal sealed class BucketWorker : IDisposable
 					if (result.IsGlobalRateLimit)
 					{
 						this._logger.LogError(LoggerEvents.RatelimitHit, "Global ratelimit hit, cooling down for {Url}", request.Url.AbsoluteUri);
-						await this._client.EnforceGlobalRateLimitAsync(result.RetryDelay);
+						await this._client.EnforceGlobalRateLimitAsync(result.RetryDelay, ct);
 					}
 					else if (result.IsServerError)
 					{

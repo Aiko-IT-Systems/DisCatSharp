@@ -345,14 +345,16 @@ internal sealed class RestClient : IDisposable
 	/// <summary>
 	///     Blocks the global gate, waits the specified delay, then reopens it.
 	/// </summary>
-	internal async Task EnforceGlobalRateLimitAsync(TimeSpan delay)
+	/// <param name="delay">The delay to enforce.</param>
+	/// <param name="ct">Cancellation token to abort the delay (e.g., on dispose).</param>
+	internal async Task EnforceGlobalRateLimitAsync(TimeSpan delay, CancellationToken ct = default)
 	{
 		try
 		{
 			this._globalRateLimitEvent.Reset();
 
 			if (delay > TimeSpan.Zero)
-				await Task.Delay(delay).ConfigureAwait(false);
+				await Task.Delay(delay, ct).ConfigureAwait(false);
 		}
 		finally
 		{
