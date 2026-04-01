@@ -222,27 +222,30 @@ internal sealed class RateLimitBucket : IEquatable<RateLimitBucket>
 	///     Sets remaining number of requests to the maximum when the ratelimit is reset
 	/// </summary>
 	/// <param name="now">The datetime offset.</param>
-	internal async Task TryResetLimitAsync(DateTimeOffset now)
+	internal async Task<bool> TryResetLimitAsync(DateTimeOffset now)
 	{
 		if (this.ResetAfter.HasValue)
 			this.ResetAfter = this.ResetAfterOffset - now;
 
 		if (this.NextReset is 0)
-			return;
+			return false;
 
 		if (this.NextReset > now.UtcTicks)
-			return;
+			return false;
 
 		while (Interlocked.CompareExchange(ref this.LimitResetting, 1, 0) != 0)
 			await Task.Yield();
 
+		var didReset = false;
 		if (this.NextReset is not 0)
 		{
 			this.RemainingInternal = this.Maximum;
 			this.NextReset = 0;
+			didReset = true;
 		}
 
 		this.LimitResetting = 0;
+		return didReset;
 	}
 
 	/// <summary>

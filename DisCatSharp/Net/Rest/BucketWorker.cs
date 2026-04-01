@@ -213,6 +213,9 @@ internal sealed class BucketWorker : IDisposable
 
 					if (Interlocked.Decrement(ref this._bucket.RemainingInternal) < 0)
 					{
+						// Restore the counter — we didn't actually consume a slot
+						Interlocked.Increment(ref this._bucket.RemainingInternal);
+
 						var delay = this._client.ComputeBucketDelay(this._bucket);
 
 						if (delay < new TimeSpan(-TimeSpan.TicksPerMinute))
