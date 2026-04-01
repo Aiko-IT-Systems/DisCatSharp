@@ -109,6 +109,18 @@ public sealed partial class DiscordClient
 	/// </summary>
 	private Task? _dispatchConsumerTask;
 
+	/// <summary>
+	///     Gets the dedicated presence update channel.
+	///     PRESENCE_UPDATE payloads bypass the main dispatch queue and are routed here
+	///     to avoid starving other event types under high presence volume.
+	/// </summary>
+	private Channel<GatewayPayload>? _presenceChannel;
+
+	/// <summary>
+	///     Gets the background task that consumes payloads from <see cref="_presenceChannel" />.
+	/// </summary>
+	private Task? _presenceConsumerTask;
+
 	#endregion
 
 	#region Connection Semaphore
@@ -225,6 +237,14 @@ public sealed partial class DiscordClient
 				SingleWriter = true
 			});
 
+		// Initialize the dedicated presence update channel (always unbounded — presence updates
+		// are high-volume but individually cheap; dropping them silently is worse than buffering).
+		this._presenceChannel = Channel.CreateUnbounded<GatewayPayload>(new UnboundedChannelOptions
+		{
+			SingleReader = true,
+			SingleWriter = true
+		});
+
 		this.WebSocketClient.Connected += SocketOnConnect;
 		this.WebSocketClient.Disconnected += SocketOnDisconnect;
 		this.WebSocketClient.MessageReceived += SocketOnMessage;
@@ -246,6 +266,7 @@ public sealed partial class DiscordClient
 		Task SocketOnConnect(IWebSocketClient sender, SocketEventArgs e)
 		{
 			this._dispatchConsumerTask = Task.Run(() => this.DispatchConsumerLoopAsync(this._cancelToken), this._cancelToken);
+			this._presenceConsumerTask = Task.Run(() => this.PresenceConsumerLoopAsync(this._cancelToken), this._cancelToken);
 			return this._socketOpened.InvokeAsync(this, e);
 		}
 
@@ -396,7 +417,13 @@ public sealed partial class DiscordClient
 		switch (payload.OpCode)
 		{
 			case GatewayOpCode.Dispatch:
-				if (!this._dispatchQueue!.Writer.TryWrite(payload))
+				if (payload.EventName is "PRESENCE_UPDATE")
+				{
+					// Route presence updates to the dedicated fast-path channel to avoid
+					// starving the main dispatch queue under high presence volume.
+					this._presenceChannel!.Writer.TryWrite(payload);
+				}
+				else if (!this._dispatchQueue!.Writer.TryWrite(payload))
 					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Dispatch queue is full; dropping event {EventName} (seq {Sequence}). Consider increasing DispatchQueueCapacity.", payload.EventName, payload.Sequence);
 				break;
 
@@ -663,6 +690,74 @@ public sealed partial class DiscordClient
 		}
 
 		this.Logger.LogDebug(LoggerEvents.Misc, "Dispatch consumer loop stopped");
+	}
+
+	/// <summary>
+	///     Consumes PRESENCE_UPDATE payloads from the dedicated <see cref="_presenceChannel" />.
+	///     Runs independently of the main dispatch loop so presence spam cannot starve other events.
+	/// </summary>
+	/// <param name="cancellationToken">Token that signals shutdown.</param>
+	private async Task PresenceConsumerLoopAsync(CancellationToken cancellationToken)
+	{
+		this.Logger.LogDebug(LoggerEvents.Startup, "Presence consumer loop started");
+
+		try
+		{
+			await foreach (var payload in this._presenceChannel!.Reader.ReadAllAsync(cancellationToken).ConfigureAwait(false))
+				await this.HandlePresenceDispatchSafelyAsync(payload).ConfigureAwait(false);
+		}
+		catch (OperationCanceledException)
+		{
+			// Expected during shutdown.
+		}
+		catch (ChannelClosedException)
+		{
+			// Expected if the channel writer is completed.
+		}
+		catch (Exception ex)
+		{
+			this.Logger.LogCritical(LoggerEvents.WebSocketReceiveFailure, ex, "Presence consumer loop terminated unexpectedly");
+
+			if (this.DiagnosticsSink.IsEnabled)
+				this.DiagnosticsSink.CaptureException("DisCatSharp", ex, new Dictionary<string, object>
+				{
+					["component"] = "PresenceConsumerLoop"
+				}, new Dictionary<string, string>
+				{
+					[Telemetry.DiagnosticTags.ErrorOrigin] = Telemetry.DiagnosticTags.OriginLibrary
+				});
+		}
+
+		this.Logger.LogDebug(LoggerEvents.Misc, "Presence consumer loop stopped");
+	}
+
+	/// <summary>
+	///     Handles a single PRESENCE_UPDATE payload from the presence fast-path channel.
+	///     Cache updates happen inline; the user event fires fire-and-forget.
+	/// </summary>
+	/// <param name="payload">The gateway payload.</param>
+	private async Task HandlePresenceDispatchSafelyAsync(GatewayPayload payload)
+	{
+		try
+		{
+			var dat = (JObject)payload.Data;
+			await this.OnPresenceUpdateEventAsync(dat, (JObject)dat["user"]!).ConfigureAwait(false);
+		}
+		catch (Exception ex)
+		{
+			this.Logger.LogError(LoggerEvents.EventHandlerException, ex, "Exception in presence update handler");
+
+			if (this.DiagnosticsSink.IsEnabled)
+				this.DiagnosticsSink.CaptureException("DisCatSharp", ex, new Dictionary<string, object>
+				{
+					["component"] = "PresenceConsumerLoop",
+					["event"] = "PRESENCE_UPDATE",
+					["sequence"] = payload.Sequence ?? -1
+				}, new Dictionary<string, string>
+				{
+					[Telemetry.DiagnosticTags.ErrorOrigin] = Telemetry.DiagnosticTags.OriginLibrary
+				});
+		}
 	}
 
 	/// <summary>

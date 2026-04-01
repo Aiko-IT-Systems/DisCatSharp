@@ -743,6 +743,9 @@ public sealed partial class DiscordClient
 			#region User/Presence Update
 
 			case "presence_update":
+				// NOTE: Under normal operation, PRESENCE_UPDATE payloads are routed to the
+				// dedicated presence channel and handled by PresenceConsumerLoopAsync.
+				// This case exists only as a fallback for direct HandleDispatchAsync calls.
 				await this.OnPresenceUpdateEventAsync(dat, (JObject)dat["user"]!).ConfigureAwait(false);
 				break;
 

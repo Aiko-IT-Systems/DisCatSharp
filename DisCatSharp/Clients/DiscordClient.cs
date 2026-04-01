@@ -2507,6 +2507,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		try
 		{
 			this._dispatchQueue?.Writer.TryComplete();
+			this._presenceChannel?.Writer.TryComplete();
 		}
 		catch
 		{ }
