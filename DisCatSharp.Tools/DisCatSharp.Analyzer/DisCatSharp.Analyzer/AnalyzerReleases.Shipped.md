@@ -36,3 +36,11 @@ Rule ID | Category | Severity | Notes
 --------|----------|----------|--------------------
 DCS1102 | Usage    | Warning  | Ban parameter renamed from 'deleteMessageDays' to 'deleteMessageSeconds'; named argument callers can be auto-fixed, [Documentation](https://docs.dcs.aitsys.dev/vs/analyzer/dcs/1102)
 
+## Release 1.0.4.0
+
+### Removed Rules
+
+Rule ID | Category | Severity | Notes
+--------|----------|----------|--------------------
+DCS1101 | Usage    | Warning  | Removed; superseded by DCS1103 (PresencesPropertyRemoval). The DiscordClient.Presences property no longer exists.
+

@@ -64,7 +64,7 @@ public class PresenceCacheRegressionTests
 		Assert.Equal(UserStatus.DoNotDisturb, guildA.Presences[userId].Status);
 		Assert.Equal(UserStatus.Idle, guildB.Presences[userId].Status);
 		Assert.Equal("Guild B", guildB.Presences[userId].Activity?.Name);
-		Assert.True(client.Presences.ContainsKey(userId));
+		Assert.True(client.PresenceStore.ContainsKey(userId));
 		Assert.NotNull(captured);
 		Assert.Equal(guildA.Id, captured!.PresenceAfter.GuildId);
 		Assert.Equal(UserStatus.Online, captured.PresenceBefore?.Status);
@@ -116,7 +116,7 @@ public class PresenceCacheRegressionTests
 		Assert.Single(captured!.Presences);
 		Assert.True(guild.Presences.ContainsKey(userId));
 		Assert.Equal("Chunk Activity", guild.Presences[userId].Activity?.Name);
-		Assert.True(client.Presences.ContainsKey(userId));
+		Assert.True(client.PresenceStore.ContainsKey(userId));
 	}
 
 	[Fact]
@@ -249,8 +249,8 @@ public class PresenceCacheRegressionTests
 		await client.OnGuildSyncEventAsync(guildC, false, new JArray(), [CreatePresence(631, guildC.Id, UserStatus.DoNotDisturb, "Guild C")]);
 
 		// Centralized store keeps all presences — no LRU eviction.
-		Assert.Equal(3, client.Presences.Count);
-		Assert.True(client.Presences.ContainsKey(611));
+		Assert.Equal(3, client.PresenceStore.Count);
+		Assert.True(client.PresenceStore.ContainsKey(611));
 		Assert.True(guildA.Presences.ContainsKey(611));
 
 		var userPresences = client.GetPresences(611);
@@ -285,7 +285,7 @@ public class PresenceCacheRegressionTests
 
 		Assert.Empty(guildB.Presences);
 		Assert.False(client.GuildsInternal.ContainsKey(guildB.Id));
-		Assert.Same(guildA.Presences[userId], client.Presences[userId]);
+		Assert.Same(guildA.Presences[userId], client.GetPresences(userId)[guildA.Id]);
 
 		await client.OnGuildDeleteEventAsync(new DiscordGuild
 		{
@@ -294,7 +294,7 @@ public class PresenceCacheRegressionTests
 		});
 
 		Assert.Empty(guildA.Presences);
-		Assert.False(client.Presences.ContainsKey(userId));
+		Assert.False(client.PresenceStore.ContainsKey(userId));
 	}
 
 	[Fact]
@@ -322,7 +322,7 @@ public class PresenceCacheRegressionTests
 		}, guild);
 
 		Assert.False(guild.Presences.ContainsKey(userId));
-		Assert.False(client.Presences.ContainsKey(userId));
+		Assert.False(client.PresenceStore.ContainsKey(userId));
 	}
 
 	private static DiscordClient CreateClient(int presenceCacheSize = 0)

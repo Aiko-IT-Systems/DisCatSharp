@@ -55,6 +55,13 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	private StatusUpdate? _status;
 
 	/// <summary>
+	///     The bot's own presence, tracked locally.
+	///     This is never populated from PRESENCE_UPDATE (bots don't receive that for themselves).
+	///     Updated when <see cref="UpdateStatusAsync" /> is called or at connect time.
+	/// </summary>
+	private DiscordPresence? _currentPresence;
+
+	/// <summary>
 	///     Gets the connection lock.
 	/// </summary>
 	private readonly ManualResetEventSlim _connectionLock = new(true);
@@ -134,11 +141,11 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	private int _ping = 0;
 
 	/// <summary>
-	///     Gets the collection of presences held by this client.
-	///     Returns a flat view keyed by user ID (latest guild presence per user).
+	///     Gets the bot's own presence.
+	///     This is tracked locally since bots never receive PRESENCE_UPDATE for themselves.
+	///     Updated when <see cref="UpdateStatusAsync" /> is called or at connect time.
 	/// </summary>
-	public IReadOnlyDictionary<ulong, DiscordPresence> Presences
-		=> new ReadOnlyDictionary<ulong, DiscordPresence>(this.BuildFlatPresenceView());
+	public DiscordPresence? CurrentPresence => this._currentPresence;
 
 	/// <summary>
 	///     Gets the cached presences for a user keyed by guild id.
@@ -341,6 +348,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this.GuildsInternal.Clear();
 		this.EmojisInternal.Clear();
 		this.PresenceStore.Clear();
+		this._currentPresence = null;
 
 		this._embeddedActivitiesLazy = new(() => new ReadOnlyDictionary<string, DiscordActivity>(this.EmbeddedActivitiesInternal));
 	}
@@ -1783,23 +1791,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			return ReadOnlyDictionary<ulong, DiscordPresence>.Empty;
 
 		return new ReadOnlyDictionary<ulong, DiscordPresence>(new Dictionary<ulong, DiscordPresence>(inner));
-	}
-
-	/// <summary>
-	///     Builds a flat userId → presence dictionary from the centralized store.
-	///     Picks one presence per user (arbitrary guild).
-	/// </summary>
-	private Dictionary<ulong, DiscordPresence> BuildFlatPresenceView()
-	{
-		var result = new Dictionary<ulong, DiscordPresence>();
-		foreach (var (userId, inner) in this.PresenceStore)
-		{
-			var first = inner.Values.FirstOrDefault();
-			if (first is not null)
-				result[userId] = first;
-		}
-
-		return result;
 	}
 
 	/// <summary>

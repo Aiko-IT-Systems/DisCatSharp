@@ -41,7 +41,7 @@ public sealed class CacheConfiguration
 	/// <summary>
 	///     <para>Sets the maximum size of the client-wide aggregate presence cache.</para>
 	///     <para>
-	///         This only affects <see cref="DiscordClient.Presences" />. Guild-scoped presence caches remain authoritative
+	///         This affects <see cref="DiscordClient.GetPresences" /> and <see cref="Entities.DiscordGuild.Presences" />. Guild-scoped presence caches remain authoritative
 	///         and are not evicted by this setting.
 	///     </para>
 	///     <para>Set to 0 to disable the cap. Defaults to 0.</para>

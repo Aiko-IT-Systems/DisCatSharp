@@ -191,48 +191,24 @@ public sealed partial class DiscordClient
 			throw;
 		}
 
-		if (!this.PresenceStore.TryGetValue(this.CurrentUser.Id, out var selfInner) || selfInner.IsEmpty)
-		{
-			// Store a default presence for the bot in every cached guild.
-			var defaultPresence = new DiscordPresence
+		// Initialize bot's own presence from _status or defaults.
+		this._currentPresence = this._status is { } s
+			? new DiscordPresence
+			{
+				Discord = this,
+				Activity = s.ActivitiesInternal?.FirstOrDefault(),
+				InternalActivities = s.ActivitiesInternal,
+				Status = s.Status,
+				InternalUser = new() { Id = this.CurrentUser.Id }
+			}
+			: new DiscordPresence
 			{
 				Discord = this,
 				RawActivity = new(),
 				Activity = new(),
 				Status = UserStatus.Online,
-				InternalUser = new()
-				{
-					Id = this.CurrentUser.Id
-				}
+				InternalUser = new() { Id = this.CurrentUser.Id }
 			};
-
-			if (this.GuildsInternal.IsEmpty)
-				this.CachePresence(null, defaultPresence);
-			else
-				foreach (var guild in this.GuildsInternal.Values)
-					this.CachePresence(guild, new()
-					{
-						Discord = this,
-						RawActivity = new(),
-						Activity = new(),
-						Status = UserStatus.Online,
-						GuildId = guild.Id,
-						InternalUser = new()
-						{
-							Id = this.CurrentUser.Id
-						}
-					});
-		}
-		else
-		{
-			// Update existing presence entries for the current user.
-			foreach (var pr in selfInner.Values)
-			{
-				pr.RawActivity = new();
-				pr.Activity = new();
-				pr.Status = UserStatus.Online;
-			}
-		}
 
 		Volatile.Write(ref this._skippedHeartbeats, 0);
 
@@ -871,28 +847,15 @@ public sealed partial class DiscordClient
 
 		await this.WsSendAsync(statusstr).ConfigureAwait(false);
 
-		if (!this.PresenceStore.TryGetValue(this.CurrentUser.Id, out var statusInner) || statusInner.IsEmpty)
-			this.CachePresence(null, new()
-			{
-				Discord = this,
-				Activity = acts.First(),
-				InternalActivities = acts,
-				Status = userStatus ?? UserStatus.Online,
-				InternalUser = new()
-				{
-					Id = this.CurrentUser.Id
-				}
-			});
-		else
+		// Update bot's own presence locally (bots never receive PRESENCE_UPDATE for themselves).
+		this._currentPresence = new()
 		{
-			// Update all cached presences for the current user with the new status.
-			foreach (var value in statusInner.Values)
-			{
-				value.Activity = acts.First();
-				value.InternalActivities = acts;
-				value.Status = userStatus ?? value.Status;
-			}
-		}
+			Discord = this,
+			Activity = acts.First(),
+			InternalActivities = acts,
+			Status = userStatus ?? UserStatus.Online,
+			InternalUser = new() { Id = this.CurrentUser.Id }
+		};
 	}
 
 	/// <summary>

@@ -315,21 +315,6 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	public DiscordAccessToken? AccessToken { get; set; }
 
 	/// <summary>
-	///     Gets this user's presence.
-	/// </summary>
-	[JsonIgnore]
-	public DiscordPresence? Presence
-		=> this.Discord is not DiscordClient dc
-			? null
-			: this is DiscordMember member
-				? dc.TryGetPresence(this.Id, member.GuildId, out var memberPresence)
-					? memberPresence
-					: null
-				: dc.PresenceStore.TryGetValue(this.Id, out var inner)
-					? inner.Values.FirstOrDefault()
-					: null;
-
-	/// <summary>
 	///     Checks whether this <see cref="DiscordUser" /> is equal to another <see cref="DiscordUser" />.
 	/// </summary>
 	/// <param name="e"><see cref="DiscordUser" /> to compare to.</param>
