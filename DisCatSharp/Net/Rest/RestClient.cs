@@ -290,7 +290,12 @@ internal sealed class RestClient : IDisposable
 	public async Task ExecuteRequestAsync(BaseRestRequest request)
 	{
 		ArgumentNullException.ThrowIfNull(request);
-		ObjectDisposedException.ThrowIf(this._disposed, this);
+
+		if (this._disposed)
+		{
+			request.SetFaulted(new ObjectDisposedException(nameof(RestClient), "Cannot execute request on a disposed RestClient."));
+			return;
+		}
 
 		var worker = this.GetOrCreateWorker(request.RateLimitBucket);
 		worker.Enqueue(request);
