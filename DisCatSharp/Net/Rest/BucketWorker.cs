@@ -144,7 +144,7 @@ internal sealed class BucketWorker : IDisposable
 							this.QueueLength,
 							this._client.IsGlobalGateBlocked
 						);
-						this._logger.LogError(LoggerEvents.RestError, ex, "Request to {Url} timed out in queue after {Duration:F1}s", request.Url.AbsoluteUri, waited.TotalSeconds);
+						this._logger.LogError(LoggerEvents.RestQueueTimeout, ex, "Request to {Url} timed out in queue after {Duration:F1}s", request.Url.AbsoluteUri, waited.TotalSeconds);
 						request.TrySetFaulted(ex);
 						continue;
 					}
@@ -191,7 +191,7 @@ internal sealed class BucketWorker : IDisposable
 				if (waited >= this._config.QueueWarningThreshold)
 				{
 					warnEmitted = true;
-					this._logger.LogWarning(LoggerEvents.RestError, "Request to {Url} has been waiting {Duration:F1}s in queue (bucket: {Bucket}, queue depth: {QueueLength})", request.Url.AbsoluteUri, waited.TotalSeconds, this._bucket, this.QueueLength);
+					this._logger.LogWarning(LoggerEvents.RestQueuePressure, "Request to {Url} has been waiting {Duration:F1}s in queue (bucket: {Bucket}, queue depth: {QueueLength})", request.Url.AbsoluteUri, waited.TotalSeconds, this._bucket, this.QueueLength);
 				}
 			}
 

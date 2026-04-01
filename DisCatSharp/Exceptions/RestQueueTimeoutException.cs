@@ -52,7 +52,7 @@ public sealed class RestQueueTimeoutException : DisCatSharpException
 	public bool GlobalGateActive { get; }
 
 	private static string FormatMessage(string route, string? bucketId, TimeSpan waitedDuration, int queueLength, bool globalGateActive)
-		=> $"REST request timed out after waiting {waitedDuration.TotalSeconds:F1}s in queue. " +
+		=> $"REST request timed out after waiting {waitedDuration.TotalSeconds.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)}s in queue. " +
 		   $"Route: {route}, Bucket: {bucketId ?? "unknown"}, " +
 		   $"Queue depth: {queueLength}, Global gate active: {globalGateActive}";
 }
