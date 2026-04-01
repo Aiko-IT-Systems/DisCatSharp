@@ -22,6 +22,7 @@ namespace DisCatSharp.Copilot.Tests.Rest;
 /// <remarks>
 ///     Required environment variables:
 ///     <list type="bullet">
+///         <item><c>RUN_STRESS_TEST</c> — Must be set (any value) to enable stress tests.</item>
 ///         <item><c>DCS_STRESS_TEST_TOKEN</c> — Bot token for bot 822627593110683718.</item>
 ///     </list>
 ///     <para>
@@ -35,6 +36,7 @@ namespace DisCatSharp.Copilot.Tests.Rest;
 public class RestRuntimeStressTests : IAsyncLifetime
 {
 	private const string TOKEN_ENV = "DCS_STRESS_TEST_TOKEN";
+	private const string GATE_ENV = "RUN_STRESS_TEST";
 	private const ulong EXPECTED_BOT_ID = 822627593110683718;
 
 	// AITSYS Internal — read-only / existing channels
@@ -60,6 +62,11 @@ public class RestRuntimeStressTests : IAsyncLifetime
 
 	public async Task InitializeAsync()
 	{
+		// Double gate: both RUN_STRESS_TEST and DCS_STRESS_TEST_TOKEN must be set
+		var gate = Environment.GetEnvironmentVariable(GATE_ENV);
+		if (string.IsNullOrWhiteSpace(gate))
+			return;
+
 		var token = Environment.GetEnvironmentVariable(TOKEN_ENV);
 		this._hasToken = !string.IsNullOrWhiteSpace(token);
 

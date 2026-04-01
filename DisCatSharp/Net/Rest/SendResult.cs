@@ -14,7 +14,7 @@ internal readonly struct SendResult
 	internal RestResponse Response { get; init; }
 
 	/// <summary>
-	///     Gets whether the request should be retried (e.g. 429).
+	///     Gets whether the request should be retried (e.g. 429, 5xx).
 	/// </summary>
 	internal bool ShouldRetry { get; init; }
 
@@ -27,6 +27,11 @@ internal readonly struct SendResult
 	///     Gets whether the rate limit that caused the retry is global.
 	/// </summary>
 	internal bool IsGlobalRateLimit { get; init; }
+
+	/// <summary>
+	///     Gets whether the retry is due to a transient server error (5xx).
+	/// </summary>
+	internal bool IsServerError { get; init; }
 
 	/// <summary>
 	///     Gets the exception mapped from the response status, if any.

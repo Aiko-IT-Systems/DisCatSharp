@@ -48,7 +48,9 @@ public sealed class RestAdvancedConfiguration
 	public TimeSpan QueueWarningThreshold { get; set; } = TimeSpan.FromMinutes(2);
 
 	/// <summary>
-	///     Gets or sets the maximum number of automatic retries for a request that receives a retryable response (e.g. 429, 502).
+	///     Gets or sets the maximum number of automatic retries for a request that receives a retryable response.
+	///     Applies to rate-limit responses (429) and transient server errors (500, 502, 503, 504).
+	///     Server errors use exponential backoff (1s, 2s, 4s, …); rate limits use the server-provided Retry-After.
 	/// </summary>
 	/// <remarks>
 	///     Defaults to 5. Set to 0 to disable retries entirely.

@@ -71,6 +71,11 @@ internal sealed class BucketWorker : IDisposable
 	internal long Cancelled;
 
 	/// <summary>
+	///     Gets whether this worker's loop is still running (not yet idle-shutdown or crashed).
+	/// </summary>
+	internal bool IsAlive => this._loopTask is { IsCompleted: false };
+
+	/// <summary>
 	///     Enqueues a request into this worker's FIFO queue.
 	///     Starts the worker loop if it is not already running.
 	/// </summary>
@@ -248,6 +253,14 @@ internal sealed class BucketWorker : IDisposable
 					{
 						this._logger.LogError(LoggerEvents.RatelimitHit, "Global ratelimit hit, cooling down for {Url}", request.Url.AbsoluteUri);
 						await this._client.EnforceGlobalRateLimitAsync(result.RetryDelay);
+					}
+					else if (result.IsServerError)
+					{
+						// Exponential backoff for transient server errors (502, 503, 504)
+						var backoff = TimeSpan.FromSeconds(Math.Pow(2, retries - 1));
+						this._logger.LogWarning(LoggerEvents.RestError, "Server error ({Status}), retrying {Url} after {Delay:F1}s (attempt {Retry}/{Max})",
+							result.Response.ResponseCode, request.Url.AbsoluteUri, backoff.TotalSeconds, retries, maxRetries);
+						await Task.Delay(backoff, ct);
 					}
 					else
 					{

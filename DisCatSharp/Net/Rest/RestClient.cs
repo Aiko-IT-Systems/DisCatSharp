@@ -68,9 +68,9 @@ internal sealed class RestClient : IDisposable
 	private readonly RestAdvancedConfiguration _advancedConfig;
 
 	/// <summary>
-	///     Gets the bucket workers keyed by bucket ID.
+	///     Gets the bucket workers keyed by bucket reference for stable identity across hash transitions.
 	/// </summary>
-	private readonly ConcurrentDictionary<string, BucketWorker> _bucketWorkers;
+	private readonly ConcurrentDictionary<RateLimitBucket, BucketWorker> _bucketWorkers;
 
 	/// <summary>
 	///     Gets the bucket cleaner token source.
@@ -305,12 +305,10 @@ internal sealed class RestClient : IDisposable
 
 	/// <summary>
 	///     Gets or creates a <see cref="BucketWorker" /> for the given bucket.
+	///     Uses the bucket object reference as key to remain stable across hash transitions.
 	/// </summary>
 	private BucketWorker GetOrCreateWorker(RateLimitBucket bucket)
-	{
-		var bucketId = bucket.BucketId ?? "unknown";
-		return this._bucketWorkers.GetOrAdd(bucketId, _ => new(this, bucket, this._advancedConfig, this._logger));
-	}
+		=> this._bucketWorkers.GetOrAdd(bucket, static (b, ctx) => new(ctx.client, b, ctx.config, ctx.logger), (client: this, config: this._advancedConfig, logger: this._logger));
 
 	// ── Internal methods called by BucketWorker ──────────────────────────────
 
@@ -506,7 +504,7 @@ internal sealed class RestClient : IDisposable
 			case HttpStatusCode.BadGateway:
 			case HttpStatusCode.ServiceUnavailable:
 			case HttpStatusCode.GatewayTimeout:
-				return new() { Response = response, Error = new ServerErrorException(request, response) };
+				return new() { Response = response, ShouldRetry = true, IsServerError = true, RetryDelay = TimeSpan.FromSeconds(1), Error = new ServerErrorException(request, response) };
 
 			default:
 				return new() { Response = response };
@@ -859,10 +857,11 @@ internal sealed class RestClient : IDisposable
 
 			ObjectDisposedException.ThrowIf(this._disposed, this);
 
-			// Clean up dead worker entries
+			// Clean up dead worker entries — only remove workers whose loop has naturally terminated
 			foreach (var key in this._bucketWorkers.Keys.ToList())
-				if (this._bucketWorkers.TryGetValue(key, out var worker) && worker.QueueLength == 0 && worker.Processed > 0)
-					this._bucketWorkers.TryRemove(key, out _);
+				if (this._bucketWorkers.TryGetValue(key, out var worker) && !worker.IsAlive && worker.Processed > 0)
+					if (this._bucketWorkers.TryRemove(key, out var removed))
+						removed.Dispose();
 
 			var removedBuckets = 0;
 			StringBuilder? bucketIdStrBuilder = default;
@@ -875,7 +874,7 @@ internal sealed class RestClient : IDisposable
 				if (string.IsNullOrEmpty(value.BucketId))
 					continue;
 
-				if (this._bucketWorkers.TryGetValue(value.BucketId, out var activeWorker) && activeWorker.QueueLength > 0 && !value.IsUnlimited)
+				if (this._bucketWorkers.TryGetValue(value, out var activeWorker) && activeWorker.IsAlive && !value.IsUnlimited)
 					continue;
 
 				var resetOffset = this._useResetAfter ? value.ResetAfterOffset : value.Reset;
