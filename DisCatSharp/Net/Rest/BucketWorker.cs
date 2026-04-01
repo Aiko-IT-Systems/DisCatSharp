@@ -202,8 +202,8 @@ internal sealed class BucketWorker : IDisposable
 
 			try
 			{
-				// 1. Wait for the global rate limit gate to open
-				await this._client.WaitForGlobalGateAsync();
+				// 1. Wait for the global rate limit gate to open (cancellable to avoid deadlock on dispose)
+				await this._client.WaitForGlobalGateAsync(ct);
 
 				// 2. Per-bucket preemptive rate limiting (skip for unprobed buckets)
 				if (this._bucket.LimitValid)

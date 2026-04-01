@@ -183,13 +183,15 @@ internal sealed class RestClient : IDisposable
 			this._disposed = true;
 		}
 
-		this._globalRateLimitEvent.Reset();
-
-		// Dispose all bucket workers — drains queued requests with explicit failure
+		// Dispose all bucket workers first — cancels their CTS so they exit cleanly
+		// (must happen BEFORE resetting the global gate to avoid deadlock on WaitForGlobalGateAsync)
 		foreach (var (_, worker) in this._bucketWorkers)
 			worker.Dispose();
 
 		this._bucketWorkers.Clear();
+
+		// Now reset the global gate — no workers are waiting on it anymore
+		this._globalRateLimitEvent.Reset();
 
 		if (this._bucketCleanerTokenSource?.IsCancellationRequested is false)
 		{
@@ -315,8 +317,9 @@ internal sealed class RestClient : IDisposable
 	/// <summary>
 	///     Waits until the global rate limit gate is open.
 	/// </summary>
-	internal Task WaitForGlobalGateAsync()
-		=> this._globalRateLimitEvent.WaitAsync();
+	/// <param name="ct">Optional cancellation token to abort the wait.</param>
+	internal Task WaitForGlobalGateAsync(CancellationToken ct = default)
+		=> this._globalRateLimitEvent.WaitAsync(ct);
 
 	/// <summary>
 	///     Gets whether the global rate limit gate is currently blocking requests.

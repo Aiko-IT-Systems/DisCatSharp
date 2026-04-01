@@ -5,8 +5,7 @@ namespace DisCatSharp;
 
 // source: https://blogs.msdn.microsoft.com/pfxteam/2012/02/11/building-async-coordination-primitives-part-1-asyncmanualresetevent/
 /// <summary>
-///     Implements an async version of a <see cref="ManualResetEvent" />
-///     This class does currently not support Timeouts or the use of CancellationTokens
+///     Implements an async version of a <see cref="ManualResetEvent" />.
 /// </summary>
 internal class AsyncManualResetEvent
 {
@@ -42,6 +41,18 @@ internal class AsyncManualResetEvent
 	///     Waits the async waiter.
 	/// </summary>
 	public Task WaitAsync() => this._tsc.Task;
+
+	/// <summary>
+	///     Waits the async waiter with cancellation support.
+	/// </summary>
+	/// <param name="ct">The cancellation token to observe.</param>
+	public Task WaitAsync(CancellationToken ct)
+	{
+		var task = this._tsc.Task;
+		return task.IsCompleted || !ct.CanBeCanceled
+			? task
+			: task.WaitAsync(ct);
+	}
 
 	/// <summary>
 	///     Sets the async task.
