@@ -325,7 +325,9 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 				? dc.TryGetPresence(this.Id, member.GuildId, out var memberPresence)
 					? memberPresence
 					: null
-				: null;
+				: dc.PresenceStore.TryGetValue(this.Id, out var inner)
+					? inner.Values.FirstOrDefault()
+					: null;
 
 	/// <summary>
 	///     Checks whether this <see cref="DiscordUser" /> is equal to another <see cref="DiscordUser" />.
