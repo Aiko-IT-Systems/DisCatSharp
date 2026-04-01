@@ -4205,11 +4205,11 @@ public sealed partial class DiscordClient
 		DiscordPresence presence;
 		if (hasExisting)
 		{
-			presence = existingPresence!;
+			presence = new(existingPresence!);
 
 			// Only clone the "before" snapshot when someone is actually listening to the event.
 			if (hasListeners)
-				old = new(presence);
+				old = new(existingPresence!);
 
 			DiscordJson.PopulateObject(rawPresence, presence);
 		}

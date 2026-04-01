@@ -32,9 +32,9 @@ public sealed class DiscordPresence : ObservableApiObject
 		this.InternalActivities = other.InternalActivities;
 		this.RawActivities = other.RawActivities;
 		this.Status = other.Status;
-		this.InternalUser = other.InternalUser;
+		this.InternalUser = other.InternalUser is not null ? new(other.InternalUser) : null;
 		this.GuildId = other.GuildId;
-		this.ClientStatus = other.ClientStatus;
+		this.ClientStatus = other.ClientStatus is not null ? new(other.ClientStatus) : null;
 	}
 
 	/// <summary>
@@ -118,6 +118,14 @@ public sealed class DiscordPresence : ObservableApiObject
 /// </summary>
 public sealed class UserWithIdOnly : ObservableApiObject
 {
+	internal UserWithIdOnly()
+	{ }
+
+	internal UserWithIdOnly(UserWithIdOnly other)
+	{
+		this.Id = other.Id;
+	}
+
 	[JsonProperty("id")]
 	public ulong Id { get; internal set; }
 }
@@ -127,6 +135,18 @@ public sealed class UserWithIdOnly : ObservableApiObject
 /// </summary>
 public sealed class DiscordClientStatus : ObservableApiObject
 {
+	internal DiscordClientStatus()
+	{ }
+
+	internal DiscordClientStatus(DiscordClientStatus other)
+	{
+		this.Desktop = other.Desktop;
+		this.Mobile = other.Mobile;
+		this.Web = other.Web;
+		this.Embedded = other.Embedded;
+		this.Vr = other.Vr;
+	}
+
 	/// <summary>
 	///     Gets the user's status set for an active desktop (Windows, Linux, Mac) application session.
 	/// </summary>
