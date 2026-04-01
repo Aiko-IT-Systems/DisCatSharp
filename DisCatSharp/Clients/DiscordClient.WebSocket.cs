@@ -192,7 +192,9 @@ public sealed partial class DiscordClient
 		}
 
 		if (!this.PresenceStore.TryGetValue(this.CurrentUser.Id, out var selfInner) || selfInner.IsEmpty)
-			this.CachePresence(null, new()
+		{
+			// Store a default presence for the bot in every cached guild.
+			var defaultPresence = new DiscordPresence
 			{
 				Discord = this,
 				RawActivity = new(),
@@ -202,7 +204,25 @@ public sealed partial class DiscordClient
 				{
 					Id = this.CurrentUser.Id
 				}
-			});
+			};
+
+			if (this.GuildsInternal.IsEmpty)
+				this.CachePresence(null, defaultPresence);
+			else
+				foreach (var guild in this.GuildsInternal.Values)
+					this.CachePresence(guild, new()
+					{
+						Discord = this,
+						RawActivity = new(),
+						Activity = new(),
+						Status = UserStatus.Online,
+						GuildId = guild.Id,
+						InternalUser = new()
+						{
+							Id = this.CurrentUser.Id
+						}
+					});
+		}
 		else
 		{
 			// Update existing presence entries for the current user.

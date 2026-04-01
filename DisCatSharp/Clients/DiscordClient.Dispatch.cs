@@ -4193,7 +4193,15 @@ public sealed partial class DiscordClient
 
 		// Look up existing presence from centralized store.
 		DiscordPresence? existingPresence = null;
-		var hasExisting = guildId.HasValue && this.TryGetPresence(uid, guildId.Value, out existingPresence);
+		bool hasExisting;
+		if (guildId.HasValue)
+			hasExisting = this.TryGetPresence(uid, guildId.Value, out existingPresence);
+		else
+		{
+			// No guild_id — pick any cached presence for this user.
+			hasExisting = this.PresenceStore.TryGetValue(uid, out var inner)
+				&& (existingPresence = inner.Values.FirstOrDefault()) is not null;
+		}
 
 		DiscordPresence presence;
 		if (hasExisting)
