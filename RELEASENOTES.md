@@ -147,7 +147,6 @@ DisCatSharp.Analyzer Release Notes
     - Reworked the analyzer/tooling stack into a NuGet-first workflow with real xUnit/Roslyn regression coverage.
     - Added `DCS2101` as a application-command migration analyzer/code fix with rewrite, split, and manual migration modes..
     - Added `DCS2101` to an error because leaving legacy checks-failed logic on errored events can break consumers.
-    - Added `DCS1101`, a presence migration analyzer/code fix for moving supported manual `DiscordClient.Presences` filtering and direct lookup shapes to `DiscordClient.GetPresences(userId)`.
     - Improved `DCS0201` so the override fixer can update `DiscordConfiguration` across project documents.
     - Updated analyzer packaging so `DisCatSharp.Attributes.dll` is bundled with the analyzer package for Roslyn runtime loading.
     - Added analyzer authoring documentation, diagnostic family guidance, release tracking files, and release workflow support for publishing `DisCatSharp.Analyzer`.
