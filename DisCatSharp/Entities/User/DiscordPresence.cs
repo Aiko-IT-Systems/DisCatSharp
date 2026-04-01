@@ -15,9 +15,8 @@ public sealed class DiscordPresence : ObservableApiObject
 	/// <summary>
 	///     Initializes a new instance of the <see cref="DiscordPresence" /> class.
 	/// </summary>
-	// TODO: Add broadcast field
 	internal DiscordPresence()
-		: base(["broadcast", "roles", "premium_since", "nick", "game", "processed_at_timestamp"])
+		: base(["processed_at_timestamp"])
 	{ }
 
 	/// <summary>
@@ -25,7 +24,7 @@ public sealed class DiscordPresence : ObservableApiObject
 	/// </summary>
 	/// <param name="other">The other.</param>
 	internal DiscordPresence(DiscordPresence other)
-		: base(["broadcast", "roles", "premium_since", "nick", "game", "processed_at_timestamp"])
+		: base(["processed_at_timestamp"])
 	{
 		this.Discord = other.Discord;
 		this.Activity = other.Activity is not null ? new(other.Activity) : null;
