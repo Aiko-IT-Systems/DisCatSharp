@@ -197,6 +197,64 @@ public class PresenceCacheRegressionTests
 	}
 
 	[Fact]
+	public async Task PresenceUpdate_PresenceBefore_KeepsIndependentActivitySnapshot()
+	{
+		var client = CreateClient();
+		var guild = CreateGuild(client, 552);
+		const ulong userId = 553;
+
+		client.UserCache[userId] = new DiscordUser
+		{
+			Id = userId,
+			Discord = client,
+			Username = "snapshot-user",
+			Discriminator = "0001"
+		};
+
+		await client.OnGuildSyncEventAsync(guild, false, new JArray(), [CreatePresence(userId, guild.Id, UserStatus.Online, "Original")]);
+
+		PresenceUpdateEventArgs? captured = null;
+		client.PresenceUpdated += (_, args) =>
+		{
+			captured = args;
+			return Task.CompletedTask;
+		};
+
+		await client.OnPresenceUpdateEventAsync(
+			JObject.Parse($$"""
+			{
+			  "guild_id": {{guild.Id}},
+			  "status": "idle",
+			  "activities": [
+			    {
+			      "name": "Updated",
+			      "type": 0
+			    },
+			    {
+			      "name": "Secondary",
+			      "type": 2
+			    }
+			  ],
+			  "client_status": {
+			    "web": "idle"
+			  }
+			}
+			"""),
+			new JObject
+			{
+				["id"] = userId
+			}
+		);
+
+		Assert.NotNull(captured);
+		Assert.Equal("Original", captured!.PresenceBefore?.Activity?.Name);
+		Assert.Single(captured.PresenceBefore!.Activities!);
+		Assert.Equal("Original", captured.PresenceBefore.Activities![0].Name);
+		Assert.Equal("Updated", captured.PresenceAfter.Activity?.Name);
+		Assert.Equal(2, captured.PresenceAfter.Activities!.Count);
+	}
+
+	[Fact]
 	public async Task PresenceUpdate_TracksEmbeddedAndVrClientStatusFields()
 	{
 		var client = CreateClient();

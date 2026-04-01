@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 using DisCatSharp.Net.Abstractions;
 
@@ -27,10 +28,14 @@ public sealed class DiscordPresence : ObservableApiObject
 		: base(["broadcast", "roles", "premium_since", "nick", "game", "processed_at_timestamp"])
 	{
 		this.Discord = other.Discord;
-		this.Activity = other.Activity;
+		this.Activity = other.Activity is not null ? new(other.Activity) : null;
 		this.RawActivity = other.RawActivity;
-		this.InternalActivities = other.InternalActivities;
-		this.RawActivities = other.RawActivities;
+		this.InternalActivities = other.InternalActivities is not null
+			? [.. other.InternalActivities.Select(static activity => new DiscordActivity(activity))]
+			: null;
+		this.RawActivities = other.RawActivities is not null
+			? [.. other.RawActivities]
+			: null;
 		this.Status = other.Status;
 		this.InternalUser = other.InternalUser is not null ? new(other.InternalUser) : null;
 		this.GuildId = other.GuildId;
