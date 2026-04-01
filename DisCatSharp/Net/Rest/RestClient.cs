@@ -150,7 +150,7 @@ internal sealed class RestClient : IDisposable
 
 		this._routesToHashes = new();
 		this._hashesToBuckets = new();
-		this._bucketWorkers = new();
+		this._bucketWorkers = new(ReferenceEqualityComparer.Instance);
 
 		this._globalRateLimitEvent = new(true);
 		this._useResetAfter = configuration.Rest.UseRelativeRatelimit;
