@@ -695,16 +695,45 @@ public sealed partial class DiscordClient
 	/// <summary>
 	///     Consumes PRESENCE_UPDATE payloads from the dedicated <see cref="_presenceChannel" />.
 	///     Runs independently of the main dispatch loop so presence spam cannot starve other events.
+	///     Coalesces rapid same-user updates: when multiple updates for the same user are queued,
+	///     only the latest payload is processed (latest-wins deduplication).
 	/// </summary>
 	/// <param name="cancellationToken">Token that signals shutdown.</param>
 	private async Task PresenceConsumerLoopAsync(CancellationToken cancellationToken)
 	{
 		this.Logger.LogDebug(LoggerEvents.Startup, "Presence consumer loop started");
 
+		// Reusable dictionary for coalescing within each drain cycle.
+		var coalesceBatch = new Dictionary<ulong, GatewayPayload>(64);
+
 		try
 		{
-			await foreach (var payload in this._presenceChannel!.Reader.ReadAllAsync(cancellationToken).ConfigureAwait(false))
-				await this.HandlePresenceDispatchSafelyAsync(payload).ConfigureAwait(false);
+			var reader = this._presenceChannel!.Reader;
+
+			while (await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false))
+			{
+				coalesceBatch.Clear();
+
+				// Drain all immediately available items and coalesce by user ID (latest wins).
+				while (reader.TryRead(out var payload))
+				{
+					try
+					{
+						var dat = (JObject)payload.Data;
+						var uid = (ulong)dat["user"]!["id"]!;
+						coalesceBatch[uid] = payload;
+					}
+					catch
+					{
+						// Malformed payload — process it directly to let the handler report the error.
+						await this.HandlePresenceDispatchSafelyAsync(payload).ConfigureAwait(false);
+					}
+				}
+
+				// Process coalesced payloads.
+				foreach (var payload in coalesceBatch.Values)
+					await this.HandlePresenceDispatchSafelyAsync(payload).ConfigureAwait(false);
+			}
 		}
 		catch (OperationCanceledException)
 		{
