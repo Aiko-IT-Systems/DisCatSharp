@@ -18,6 +18,9 @@ DisCatSharp Release Notes
     - Added non-negative validation for `ShardId` and positive validation for `ShardCount` in `DiscordConfiguration` property setters.
     - Replaced fire-and-forget `Task.Run` gateway dispatch with an ordered `Channel<T>` queue and single-consumer loop per shard, guaranteeing FIFO cache and state mutations.
     - Added `GatewayDispatchMode` enum (`ConcurrentHandlers` / `SequentialHandlers`) configurable via `GatewayAdvancedConfiguration.DispatchMode`; defaults to `ConcurrentHandlers` (fire-and-forget user handlers after sequential cache mutations).
+    - Routed `PRESENCE_UPDATE` to a dedicated unbounded channel and consumer task, decoupled from the main dispatch queue. Prevents high-volume presence spam from starving other gateway events.
+    - Added `AsyncEvent<TSender, TArgs>.HasHandlers` property; `OnPresenceUpdateEventAsync` now skips old-presence cloning, event args allocation, and `RaiseEventAsync` when no `PresenceUpdated` handlers are registered.
+    - Added presence coalescing: the presence consumer drains all immediately available payloads, deduplicates by user ID (latest wins), and processes only the coalesced batch — eliminating redundant cache writes during burst updates.
     - Added 11 internal extension events on `DiscordClient` for reliable, ordered delivery to library extensions before public events fire. Extensions (AppCommands, CommandsNext, Interactivity, Lavalink, Voice) now subscribe to these instead of public events.
     - Moved `Proxy` from `RestConfiguration` to root `DiscordConfiguration` since it applies to both REST and Gateway connections.
     - Moved `EnableLibraryDeveloperMode` from `TelemetryConfiguration` to root `DiscordConfiguration` since it gates behavior beyond telemetry.
