@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -37,9 +38,10 @@ public class AppCommandSplitPartialTests(ITestOutputHelper testOutputHelper)
 			return Task.CompletedTask;
 		};
 		extension.RegisterGlobalCommands<TestCommand>();
-		await this._client.ReadyEv.InvokeAsync(this._client, new(null!));
+		await this._client.InternalReadyEv.InvokeAsync(this._client, new(null!));
+		using var cts = new System.Threading.CancellationTokenSource(TimeSpan.FromSeconds(10));
 		while (!regFired)
-			await Task.Delay(1);
+			await Task.Delay(1, cts.Token);
 
 		Assert.True(regFired);
 		var commands = extension.RegisteredCommands.ToList();
