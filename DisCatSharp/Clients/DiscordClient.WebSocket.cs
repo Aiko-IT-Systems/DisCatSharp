@@ -109,6 +109,18 @@ public sealed partial class DiscordClient
 	/// </summary>
 	private Task? _dispatchConsumerTask;
 
+	/// <summary>
+	///     Gets the dedicated presence update channel.
+	///     PRESENCE_UPDATE payloads bypass the main dispatch queue and are routed here
+	///     to avoid starving other event types under high presence volume.
+	/// </summary>
+	private Channel<GatewayPayload>? _presenceChannel;
+
+	/// <summary>
+	///     Gets the background task that consumes payloads from <see cref="_presenceChannel" />.
+	/// </summary>
+	private Task? _presenceConsumerTask;
+
 	#endregion
 
 	#region Connection Semaphore
@@ -179,26 +191,24 @@ public sealed partial class DiscordClient
 			throw;
 		}
 
-		if (!this.Presences.ContainsKey(this.CurrentUser.Id))
-			this.CacheAggregatePresence(new()
+		// Initialize bot's own presence from _status or defaults.
+		this._currentPresence = this._status is { } s
+			? new DiscordPresence
+			{
+				Discord = this,
+				Activity = s.ActivitiesInternal?.FirstOrDefault(),
+				InternalActivities = s.ActivitiesInternal,
+				Status = s.Status,
+				InternalUser = new() { Id = this.CurrentUser.Id }
+			}
+			: new DiscordPresence
 			{
 				Discord = this,
 				RawActivity = new(),
 				Activity = new(),
 				Status = UserStatus.Online,
-				InternalUser = new()
-				{
-					Id = this.CurrentUser.Id
-				}
-			});
-		else
-		{
-			var pr = this.PresencesInternal[this.CurrentUser.Id];
-			pr.RawActivity = new();
-			pr.Activity = new();
-			pr.Status = UserStatus.Online;
-			this.CacheAggregatePresence(pr);
-		}
+				InternalUser = new() { Id = this.CurrentUser.Id }
+			};
 
 		Volatile.Write(ref this._skippedHeartbeats, 0);
 
@@ -225,6 +235,14 @@ public sealed partial class DiscordClient
 				SingleWriter = true
 			});
 
+		// Initialize the dedicated presence update channel (always unbounded — presence updates
+		// are high-volume but individually cheap; dropping them silently is worse than buffering).
+		this._presenceChannel = Channel.CreateUnbounded<GatewayPayload>(new UnboundedChannelOptions
+		{
+			SingleReader = true,
+			SingleWriter = true
+		});
+
 		this.WebSocketClient.Connected += SocketOnConnect;
 		this.WebSocketClient.Disconnected += SocketOnDisconnect;
 		this.WebSocketClient.MessageReceived += SocketOnMessage;
@@ -246,6 +264,7 @@ public sealed partial class DiscordClient
 		Task SocketOnConnect(IWebSocketClient sender, SocketEventArgs e)
 		{
 			this._dispatchConsumerTask = Task.Run(() => this.DispatchConsumerLoopAsync(this._cancelToken), this._cancelToken);
+			this._presenceConsumerTask = Task.Run(() => this.PresenceConsumerLoopAsync(this._cancelToken), this._cancelToken);
 			return this._socketOpened.InvokeAsync(this, e);
 		}
 
@@ -396,7 +415,13 @@ public sealed partial class DiscordClient
 		switch (payload.OpCode)
 		{
 			case GatewayOpCode.Dispatch:
-				if (!this._dispatchQueue!.Writer.TryWrite(payload))
+				if (payload.EventName is "PRESENCE_UPDATE")
+				{
+					// Route presence updates to the dedicated fast-path channel to avoid
+					// starving the main dispatch queue under high presence volume.
+					this._presenceChannel!.Writer.TryWrite(payload);
+				}
+				else if (!this._dispatchQueue!.Writer.TryWrite(payload))
 					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Dispatch queue is full; dropping event {EventName} (seq {Sequence}). Consider increasing DispatchQueueCapacity.", payload.EventName, payload.Sequence);
 				break;
 
@@ -666,6 +691,105 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
+	///     Consumes PRESENCE_UPDATE payloads from the dedicated <see cref="_presenceChannel" />.
+	///     Runs independently of the main dispatch loop so presence spam cannot starve other events.
+	///     Coalesces rapid same-user updates: when multiple updates for the same user are queued,
+	///     only the latest payload is processed (latest-wins deduplication).
+	/// </summary>
+	/// <param name="cancellationToken">Token that signals shutdown.</param>
+	private async Task PresenceConsumerLoopAsync(CancellationToken cancellationToken)
+	{
+		this.Logger.LogDebug(LoggerEvents.Startup, "Presence consumer loop started");
+
+		// Reusable dictionary for coalescing within each drain cycle.
+		// Key is (guildId, userId) to preserve per-guild presence state.
+		var coalesceBatch = new Dictionary<(ulong GuildId, ulong UserId), GatewayPayload>(64);
+
+		try
+		{
+			var reader = this._presenceChannel!.Reader;
+
+			while (await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false))
+			{
+				coalesceBatch.Clear();
+
+				// Drain all immediately available items and coalesce by (guildId, userId) — latest wins.
+				while (reader.TryRead(out var payload))
+				{
+					try
+					{
+						var dat = (JObject)payload.Data;
+						var uid = (ulong)dat["user"]!["id"]!;
+						var gid = (ulong?)dat["guild_id"] ?? 0;
+						coalesceBatch[(gid, uid)] = payload;
+					}
+					catch
+					{
+						// Malformed payload — process it directly to let the handler report the error.
+						await this.HandlePresenceDispatchSafelyAsync(payload).ConfigureAwait(false);
+					}
+				}
+
+				// Process coalesced payloads.
+				foreach (var payload in coalesceBatch.Values)
+					await this.HandlePresenceDispatchSafelyAsync(payload).ConfigureAwait(false);
+			}
+		}
+		catch (OperationCanceledException)
+		{
+			// Expected during shutdown.
+		}
+		catch (ChannelClosedException)
+		{
+			// Expected if the channel writer is completed.
+		}
+		catch (Exception ex)
+		{
+			this.Logger.LogCritical(LoggerEvents.WebSocketReceiveFailure, ex, "Presence consumer loop terminated unexpectedly");
+
+			if (this.DiagnosticsSink.IsEnabled)
+				this.DiagnosticsSink.CaptureException("DisCatSharp", ex, new Dictionary<string, object>
+				{
+					["component"] = "PresenceConsumerLoop"
+				}, new Dictionary<string, string>
+				{
+					[Telemetry.DiagnosticTags.ErrorOrigin] = Telemetry.DiagnosticTags.OriginLibrary
+				});
+		}
+
+		this.Logger.LogDebug(LoggerEvents.Misc, "Presence consumer loop stopped");
+	}
+
+	/// <summary>
+	///     Handles a single PRESENCE_UPDATE payload from the presence fast-path channel.
+	///     Cache updates happen inline; the user event fires fire-and-forget.
+	/// </summary>
+	/// <param name="payload">The gateway payload.</param>
+	private async Task HandlePresenceDispatchSafelyAsync(GatewayPayload payload)
+	{
+		try
+		{
+			var dat = (JObject)payload.Data;
+			await this.OnPresenceUpdateEventAsync(dat, (JObject)dat["user"]!).ConfigureAwait(false);
+		}
+		catch (Exception ex)
+		{
+			this.Logger.LogError(LoggerEvents.EventHandlerException, ex, "Exception in presence update handler");
+
+			if (this.DiagnosticsSink.IsEnabled)
+				this.DiagnosticsSink.CaptureException("DisCatSharp", ex, new Dictionary<string, object>
+				{
+					["component"] = "PresenceConsumerLoop",
+					["event"] = "PRESENCE_UPDATE",
+					["sequence"] = payload.Sequence ?? -1
+				}, new Dictionary<string, string>
+				{
+					[Telemetry.DiagnosticTags.ErrorOrigin] = Telemetry.DiagnosticTags.OriginLibrary
+				});
+		}
+	}
+
+	/// <summary>
 	///     Handles the heartbeat loop.
 	/// </summary>
 	internal async Task HeartbeatLoopAsync()
@@ -723,25 +847,15 @@ public sealed partial class DiscordClient
 
 		await this.WsSendAsync(statusstr).ConfigureAwait(false);
 
-		if (!this.PresencesInternal.TryGetValue(this.CurrentUser.Id, out var value))
-			this.CacheAggregatePresence(new()
-			{
-				Discord = this,
-				Activity = acts.First(),
-				InternalActivities = acts,
-				Status = userStatus ?? UserStatus.Online,
-				InternalUser = new()
-				{
-					Id = this.CurrentUser.Id
-				}
-			});
-		else
+		// Update bot's own presence locally (bots never receive PRESENCE_UPDATE for themselves).
+		this._currentPresence = new()
 		{
-			value.Activity = acts.First();
-			value.InternalActivities = acts;
-			value.Status = userStatus ?? value.Status;
-			this.CacheAggregatePresence(value);
-		}
+			Discord = this,
+			Activity = acts.First(),
+			InternalActivities = acts,
+			Status = userStatus ?? UserStatus.Online,
+			InternalUser = new() { Id = this.CurrentUser.Id }
+		};
 	}
 
 	/// <summary>

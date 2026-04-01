@@ -44,9 +44,6 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	[JsonProperty("members", NullValueHandling = NullValueHandling.Ignore), JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
 	internal ConcurrentDictionary<ulong, DiscordMember> MembersInternal = [];
 
-	[JsonIgnore]
-	internal ConcurrentDictionary<ulong, DiscordPresence> PresencesInternal = [];
-
 	[JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore), JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
 	internal ConcurrentDictionary<ulong, DiscordRole> RolesInternal = [];
 
@@ -457,10 +454,24 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 
 	/// <summary>
 	///     Gets a dictionary of the presences cached for this guild. The dictionary's key is the user ID.
+	///     Computed on demand from the centralized presence store.
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyDictionary<ulong, DiscordPresence> Presences
-		=> new ReadOnlyConcurrentDictionary<ulong, DiscordPresence>(this.PresencesInternal);
+	{
+		get
+		{
+			if (this.Discord is not DiscordClient dc)
+				return ReadOnlyDictionary<ulong, DiscordPresence>.Empty;
+
+			var result = new Dictionary<ulong, DiscordPresence>();
+			foreach (var (userId, inner) in dc.PresenceStore)
+				if (inner.TryGetValue(this.Id, out var presence))
+					result[userId] = presence;
+
+			return new ReadOnlyDictionary<ulong, DiscordPresence>(result);
+		}
+	}
 
 	/// <summary>
 	///     Gets a dictionary of all the channels associated with this guild. The dictionary's key is the channel ID.

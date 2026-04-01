@@ -113,7 +113,7 @@ items:
                   uid: topics_logging_di
           - name: Intents
             uid: topics_intents
-          - name: Presence Caching
+          - name: Presences & Activities
             uid: topics_presence_caching
           - name: Sharding
             uid: topics_sharding

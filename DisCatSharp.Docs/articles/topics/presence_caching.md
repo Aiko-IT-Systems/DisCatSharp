@@ -1,56 +1,61 @@
 ---
 uid: topics_presence_caching
-title: Presence Caching
+title: Presences & Activities
 author: DisCatSharp Team
 ---
 
-# Presence Caching
+# Presences & Activities
 
 ## Overview
 
-Presence data in Discord is not globally unique. The same user can appear with different presence data in different guilds, so DisCatSharp treats guild-scoped presence data as the authoritative source.
+Presence data in Discord is guild-scoped. The same user can appear with a different status, different activities, and different platform clients in each guild they share with the bot. DisCatSharp stores presences in a centralized store keyed by user ID and guild ID to reflect this.
 
-This means you should choose the API you read from based on what you are trying to answer:
+> [!IMPORTANT]
+> The `GUILD_PRESENCES` privileged intent is required to receive presence updates. Without it, the cache will be empty after the initial READY payload.
 
-- Use [DiscordGuild.Presences](xref:DisCatSharp.Entities.DiscordGuild.Presences) when you need the cached presences for one guild.
-- Use [DiscordMember.Presence](xref:DisCatSharp.Entities.DiscordUser.Presence) when you already have a member object and want that member's guild-specific presence.
-- Use [DiscordClient.GetPresences(System.UInt64)](xref:DisCatSharp.DiscordClient.GetPresences(System.UInt64)) when you want every cached presence for a user across all cached guilds.
-- Use [DiscordClient.Presences](xref:DisCatSharp.DiscordClient.Presences) only as a client-wide aggregate compatibility view.
+## Quick Reference
 
-## How Presence Caching Works
+| I want to … | API |
+|---|---|
+| Get a member's presence in a guild | `member.Presence` |
+| Get all presences cached for a guild | `guild.Presences` |
+| Get all cached presences for a user across guilds | `client.GetPresences(userId)` |
+| Get the bot's own presence | `client.CurrentPresence` |
+| Listen for presence changes | `client.PresenceUpdated` event |
 
-DisCatSharp fills the presence cache from gateway payloads such as guild startup payloads, member chunk payloads, and presence updates.
+## How the Presence Cache Works
 
-Guild caches are authoritative:
+DisCatSharp fills the presence cache from three gateway sources:
 
-- [DiscordGuild.Presences](xref:DisCatSharp.Entities.DiscordGuild.Presences) stores presences keyed by user id for that guild.
-- [DiscordMember.Presence](xref:DisCatSharp.Entities.DiscordUser.Presence) resolves against the member's guild cache.
+1. **Guild startup payloads** — when the bot connects and receives guild data.
+2. **Member chunk responses** — when you request guild members via `RequestMembersAsync`.
+3. **PRESENCE_UPDATE events** — real-time updates from Discord.
 
-The client also keeps a compatibility cache:
+Internally, the cache is a two-level `ConcurrentDictionary<ulong userId, ConcurrentDictionary<ulong guildId, DiscordPresence>>`. This means:
 
-- [DiscordClient.Presences](xref:DisCatSharp.DiscordClient.Presences) stores one aggregate presence per user id.
-- Because that view is keyed only by user id, it cannot represent multiple simultaneous guild presences for the same user.
+- Each presence entry is keyed by **(userId, guildId)**.
+- A user can have different presences in different guilds.
+- Guild-scoped access is always authoritative.
 
-If a user is visible in more than one guild, [DiscordClient.GetPresences(System.UInt64)](xref:DisCatSharp.DiscordClient.GetPresences(System.UInt64)) is the correct API when you need every cached presence entry.
+If [CacheConfiguration.PresenceCacheSize](xref:DisCatSharp.Configuration.CacheConfiguration.PresenceCacheSize) is greater than `0`, DisCatSharp caps the centralized store and evicts the **oldest cached presence entries** when the limit is exceeded.
+
+> [!NOTE]
+> Presence updates are processed on a dedicated fast-path channel with coalescing. If a user's presence changes rapidly, intermediate states may be merged — only the latest state is guaranteed to be cached.
 
 ## Choosing the Right API
 
 ### I have a member and want their presence
-
-Use the member directly:
 
 ```cs
 DiscordPresence? presence = member.Presence;
 
 if (presence is not null && presence.Status == UserStatus.Online)
 {
-    // The member is online in this guild context.
+    // The member is online in this guild.
 }
 ```
 
 ### I want all presences cached for one guild
-
-Read the guild cache:
 
 ```cs
 foreach (var (userId, presence) in guild.Presences)
@@ -61,64 +66,226 @@ foreach (var (userId, presence) in guild.Presences)
 
 ### I want all cached presences for one user across guilds
 
-Use the client helper:
-
 ```cs
-var cachedPresences = discord.GetPresences(userId);
+IReadOnlyDictionary<ulong, DiscordPresence> presences = client.GetPresences(userId);
 
-foreach (var (guildId, presence) in cachedPresences)
+foreach (var (guildId, presence) in presences)
 {
-    if (guildId == 0)
-        Console.WriteLine($"Aggregate presence: {presence.Status}");
-    else
-        Console.WriteLine($"Guild {guildId}: {presence.Status}");
+    Console.WriteLine($"Guild {guildId}: {presence.Status} — {presence.Activity?.Name}");
 }
 ```
 
-The `0` key is reserved for a non-guild aggregate presence entry when one exists.
+### I want the bot's own presence
 
-## Aggregate Presence Cache Size
-
-If you want to limit the size of the client-wide aggregate presence view, set [DiscordConfiguration.PresenceCacheSize](xref:DisCatSharp.DiscordConfiguration.PresenceCacheSize).
+Bots do not receive `PRESENCE_UPDATE` for themselves. Use [DiscordClient.CurrentPresence](xref:DisCatSharp.DiscordClient.CurrentPresence) instead:
 
 ```cs
-var config = new DiscordConfiguration
-{
-    Token = "token",
-    TokenType = TokenType.Bot,
-    PresenceCacheSize = 5000
-};
+DiscordPresence? botPresence = client.CurrentPresence;
+
+Console.WriteLine($"Bot status: {botPresence?.Status}");
+Console.WriteLine($"Bot activity: {botPresence?.Activity?.Name}");
 ```
 
-Important details:
+This is automatically kept in sync when you call `UpdateStatusAsync`.
 
-- This only limits [DiscordClient.Presences](xref:DisCatSharp.DiscordClient.Presences).
-- Guild-scoped caches such as [DiscordGuild.Presences](xref:DisCatSharp.Entities.DiscordGuild.Presences) are not evicted by this setting.
-- Set it to `0` to disable the aggregate cache size cap.
+> [!TIP]
+> `DiscordMember.Presence` also returns `CurrentPresence` when the member is the bot itself, so you don't need special-case logic in code that iterates members.
+
+## Activities
+
+A user can have **multiple activities at the same time**. For example, a user might have a custom status, be playing a game, and be listening to Spotify simultaneously.
+
+### Single Activity vs. Activity List
+
+[DiscordPresence](xref:DisCatSharp.Entities.DiscordPresence) exposes both:
+
+| Property | Type | Description |
+|---|---|---|
+| `Activity` | `DiscordActivity?` | The first (primary) activity — convenience accessor |
+| `Activities` | `IReadOnlyList<DiscordActivity>?` | All activities — the complete list |
+
+> [!WARNING]
+> If you only use `Activity`, you will miss secondary activities. Always use `Activities` when you need the full picture.
+
+```cs
+var presence = member.Presence;
+
+if (presence?.Activities is not null)
+{
+    foreach (var activity in presence.Activities)
+    {
+        Console.WriteLine($"[{activity.ActivityType}] {activity.Name}");
+    }
+}
+```
+
+### Activity Types
+
+Each [DiscordActivity](xref:DisCatSharp.Entities.DiscordActivity) has an `ActivityType`:
+
+| Type | Value | Display | Example |
+|---|---|---|---|
+| `Playing` | 0 | "Playing {name}" | Playing Visual Studio Code |
+| `Streaming` | 1 | "Streaming {name}" | Streaming on Twitch |
+| `ListeningTo` | 2 | "Listening to {name}" | Listening to Spotify |
+| `Watching` | 3 | "Watching {name}" | Watching YouTube Together |
+| `Custom` | 4 | "{emoji} {state}" | 🎮 Taking a break |
+| `Competing` | 5 | "Competing in {name}" | Competing in Arena World Championship |
+
+### Custom Status
+
+When `ActivityType` is `Custom`, the activity represents a user-set custom status with an optional emoji:
+
+```cs
+var customStatus = presence?.Activities?
+    .FirstOrDefault(a => a.ActivityType == ActivityType.Custom);
+
+if (customStatus is not null)
+{
+    Console.WriteLine($"Emoji: {customStatus.Emoji?.Name}");
+    Console.WriteLine($"Text: {customStatus.State}");
+
+    // Or use the structured accessor:
+    var structured = customStatus.CustomStatus;
+    Console.WriteLine($"Custom status: {structured?.Emoji?.Name} {structured?.State}");
+}
+```
+
+### Rich Presence
+
+Activities of type `Playing` may include rich presence data with game details, images, party info, and timestamps:
+
+```cs
+var gameActivity = presence?.Activities?
+    .FirstOrDefault(a => a.ActivityType == ActivityType.Playing && a.RichPresence is not null);
+
+if (gameActivity?.RichPresence is { } rp)
+{
+    Console.WriteLine($"Game: {gameActivity.Name}");
+    Console.WriteLine($"Details: {rp.Details}");
+    Console.WriteLine($"State: {rp.State}");
+    Console.WriteLine($"Party: {rp.CurrentPartySize}/{rp.MaximumPartySize}");
+
+    if (rp.StartTimestamp.HasValue)
+        Console.WriteLine($"Elapsed: {DateTimeOffset.UtcNow - rp.StartTimestamp.Value}");
+
+    if (rp.LargeImage is not null)
+        Console.WriteLine($"Large image: {rp.LargeImageText}");
+}
+```
+
+### Spotify / Listening Activity
+
+Spotify activities have type `ListeningTo` and include sync and session IDs for tracking playback:
+
+```cs
+var spotify = presence?.Activities?
+    .FirstOrDefault(a => a.ActivityType == ActivityType.ListeningTo);
+
+if (spotify is not null)
+{
+    Console.WriteLine($"Listening to: {spotify.RichPresence?.Details}");      // Track name
+    Console.WriteLine($"By: {spotify.RichPresence?.State}");                  // Artist(s)
+    Console.WriteLine($"Album: {spotify.RichPresence?.LargeImageText}");      // Album name
+    Console.WriteLine($"Sync ID: {spotify.SyncId}");                          // Spotify track ID
+    Console.WriteLine($"Session: {spotify.SessionId}");                       // Spotify session
+
+    if (spotify.RichPresence is { StartTimestamp: { } start, EndTimestamp: { } end })
+    {
+        var progress = DateTimeOffset.UtcNow - start;
+        var duration = end - start;
+        Console.WriteLine($"Progress: {progress:mm\\:ss} / {duration:mm\\:ss}");
+    }
+}
+```
 
 ## Platform Status
 
-Discord can report per-platform status information through [DiscordPresence.ClientStatus](xref:DisCatSharp.Entities.DiscordPresence.ClientStatus).
+Discord reports which platforms a user is active on through [DiscordClientStatus](xref:DisCatSharp.Entities.DiscordClientStatus):
 
-In addition to `desktop`, `mobile`, and `web`, Discord may also send:
+| Property | Platforms |
+|---|---|
+| `Desktop` | Windows, Linux, macOS |
+| `Mobile` | iOS, Android |
+| `Web` | Browser, bot accounts |
+| `Embedded` | Xbox, PlayStation, other embedded devices |
+| `Vr` | VR headsets |
 
-- `embedded`
-- `vr`
-
-You can inspect them through [DiscordClientStatus](xref:DisCatSharp.Entities.DiscordClientStatus):
+Each property is `Optional<UserStatus>` — it only has a value when the user is active on that platform.
 
 ```cs
 var clientStatus = member.Presence?.ClientStatus;
 
-if (clientStatus?.Embedded.HasValue == true)
-    Console.WriteLine($"Embedded status: {clientStatus.Embedded.Value}");
+if (clientStatus is null)
+    return;
 
-if (clientStatus?.Vr.HasValue == true)
-    Console.WriteLine($"VR status: {clientStatus.Vr.Value}");
+if (clientStatus.Desktop.HasValue)
+    Console.WriteLine($"Desktop: {clientStatus.Desktop.Value}");
+
+if (clientStatus.Mobile.HasValue)
+    Console.WriteLine($"Mobile: {clientStatus.Mobile.Value}");
+
+if (clientStatus.Web.HasValue)
+    Console.WriteLine($"Web: {clientStatus.Web.Value}");
+
+if (clientStatus.Embedded.HasValue)
+    Console.WriteLine($"Embedded: {clientStatus.Embedded.Value}");
+
+if (clientStatus.Vr.HasValue)
+    Console.WriteLine($"VR: {clientStatus.Vr.Value}");
 ```
+
+> [!NOTE]
+> The `embedded` and `vr` platform statuses are not documented by Discord but are sent by the gateway. DisCatSharp supports them.
+
+## Listening for Presence Changes
+
+Use the `PresenceUpdated` event to react to presence changes in real time:
+
+```cs
+client.PresenceUpdated += (sender, e) =>
+{
+    Console.WriteLine($"User {e.User.Username} changed status: {e.PresenceBefore?.Status} → {e.Status}");
+
+    if (e.Activities is not null)
+    {
+        foreach (var activity in e.Activities)
+            Console.WriteLine($"  [{activity.ActivityType}] {activity.Name}");
+    }
+
+    return Task.CompletedTask;
+};
+```
+
+[PresenceUpdateEventArgs](xref:DisCatSharp.EventArgs.User.PresenceUpdateEventArgs) provides:
+
+| Property | Description |
+|---|---|
+| `User` | The user whose presence changed |
+| `Status` | The new overall status |
+| `Activity` | The new primary activity |
+| `Activities` | The complete list of new activities |
+| `PresenceBefore` | The previous presence state (may be null on first update) |
+| `PresenceAfter` | The new presence state |
+
+## Status Values
+
+The [UserStatus](xref:DisCatSharp.Entities.UserStatus) enum defines:
+
+| Status | Value | Gateway String |
+|---|---|---|
+| `Offline` | 0 | `"offline"` |
+| `Online` | 1 | `"online"` |
+| `Idle` | 2 | `"idle"` |
+| `DoNotDisturb` | 4 | `"dnd"` |
+| `Invisible` | 5 | `"invisible"` |
+| `Streaming` | 6 | `"streaming"` |
 
 ## Recommendations
 
-- Prefer guild-scoped presence data whenever you have a guild or member context.
-- Treat [DiscordClient.Presences](xref:DisCatSharp.DiscordClient.Presences) as a convenience view, not as the authoritative source for multi-guild users.
-- If your bot does not need a large aggregate presence view, consider setting [DiscordConfiguration.PresenceCacheSize](xref:DisCatSharp.DiscordConfiguration.PresenceCacheSize) to a reasonable cap.
+- Always use **guild-scoped** access (`member.Presence` or `guild.Presences`) when you have a guild context.
+- Use `Activities` (plural) instead of `Activity` (singular) when you need the full picture — users commonly have 2–3 activities at once.
+- Use `client.CurrentPresence` to read the bot's own presence. Do not try to look it up in the presence store.
+- Use `client.GetPresences(userId)` when you need to see a user's status across multiple guilds.
+- If you configure `PresenceCacheSize`, remember that it caps the total number of cached **presence entries**, not the number of users or guilds.
+- Remember that the `GUILD_PRESENCES` intent is privileged and must be enabled in the Discord Developer Portal.

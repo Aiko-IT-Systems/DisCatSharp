@@ -57,6 +57,11 @@ public sealed class AsyncEvent<TSender, TArgs>(string name, TimeSpan maxExecutio
 	private ImmutableArray<AsyncEventHandler<TSender, TArgs>> _handlers = [];
 
 	/// <summary>
+	///     Gets whether any handlers are currently registered for this event.
+	/// </summary>
+	public bool HasHandlers => !this._handlers.IsEmpty;
+
+	/// <summary>
 	///     Gets the maximum allotted execution time for all handlers. Any event which causes the handler to time out
 	///     will raise a non-fatal <see cref="AsyncEventTimeoutException{TSender, TArgs}" />.
 	/// </summary>

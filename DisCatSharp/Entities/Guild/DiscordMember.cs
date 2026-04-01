@@ -276,6 +276,25 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		=> this.Discord.Guilds.TryGetValue(this.GuildId, out var vsGuild) ? vsGuild.VoiceStates.GetValueOrDefault(this.Id) : null;
 
 	/// <summary>
+	///     Gets this member's presence in the guild.
+	///     For the bot's own presence, returns <see cref="DiscordClient.CurrentPresence" />.
+	/// </summary>
+	[JsonIgnore]
+	public DiscordPresence? Presence
+	{
+		get
+		{
+			if (this.Discord is not DiscordClient dc)
+				return null;
+
+			if (this.Id == dc.CurrentUser.Id)
+				return dc.CurrentPresence;
+
+			return dc.TryGetPresence(this.Id, this.GuildId, out var presence) ? presence : null;
+		}
+	}
+
+	/// <summary>
 	///     Gets the guild of which this member is a part of.
 	///     <note type="warning">This will throw if accessed for an oauth2 constructed member.</note>
 	/// </summary>

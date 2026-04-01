@@ -39,12 +39,11 @@ public sealed class CacheConfiguration
 	public int MessageCacheSize { internal get; set; } = 1024;
 
 	/// <summary>
-	///     <para>Sets the maximum size of the client-wide aggregate presence cache.</para>
+	///     <para>Sets the maximum number of cached presence entries.</para>
 	///     <para>
-	///         This only affects <see cref="DiscordClient.Presences" />. Guild-scoped presence caches remain authoritative
-	///         and are not evicted by this setting.
+	///         This affects <see cref="DiscordClient.GetPresences" /> and <see cref="Entities.DiscordGuild.Presences" /> because both read from the centralized presence store.
 	///     </para>
-	///     <para>Set to 0 to disable the cap. Defaults to 0.</para>
+	///     <para>When the cap is exceeded, the oldest cached presence entries are evicted. Set to 0 to disable the cap. Defaults to 0.</para>
 	/// </summary>
 	public int PresenceCacheSize
 	{

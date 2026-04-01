@@ -743,6 +743,9 @@ public sealed partial class DiscordClient
 			#region User/Presence Update
 
 			case "presence_update":
+				// NOTE: Under normal operation, PRESENCE_UPDATE payloads are routed to the
+				// dedicated presence channel and handled by PresenceConsumerLoopAsync.
+				// This case exists only as a fallback for direct HandleDispatchAsync calls.
 				await this.OnPresenceUpdateEventAsync(dat, (JObject)dat["user"]!).ConfigureAwait(false);
 				break;
 
@@ -941,19 +944,16 @@ public sealed partial class DiscordClient
 		this._sessionId = ready.SessionId;
 		this._resumeGatewayUrl = ready.ResumeGatewayUrl;
 		var rawGuildIndex = rawGuilds.Any() ? rawGuilds.ToDictionary(xt => (ulong)xt["id"]!, xt => (JObject)xt) : null;
-		var currentUserPresence = this.PresencesInternal.TryGetValue(this.CurrentUser.Id, out var cachedCurrentUserPresence)
-			? cachedCurrentUserPresence
-			: null;
+		var currentUserPresences = this.GetAllPresences(this.CurrentUser.Id);
 
 		if (rawGuildIndex is not null && rawGuildIndex.Count is not 0)
 			this.SetReadyGuildIds(rawGuildIndex.Select(x => x.Key));
 
-		foreach (var cachedGuild in this.GuildsInternal.Values)
-			cachedGuild.PresencesInternal.Clear();
-
-		this.ClearAggregatePresenceCache();
-		if (currentUserPresence is not null)
-			this.CacheAggregatePresence(currentUserPresence);
+		this.ClearPresenceStore();
+		foreach (var (guildId, presence) in currentUserPresences)
+		{
+			this.CachePresence(guildId is 0 ? null : this.InternalGetCachedGuild(guildId), presence);
+		}
 
 		this.GuildsInternal.Clear();
 		if (ready.Guilds.Count is not 0 && rawGuildIndex is not null)
@@ -4187,13 +4187,30 @@ public sealed partial class DiscordClient
 		var uid = (ulong)rawUser["id"]!;
 		var guildId = (ulong?)rawPresence["guild_id"];
 		var guild = this.InternalGetCachedGuild(guildId);
+		var hasListeners = this._presenceUpdated.HasHandlers;
 		DiscordPresence? old = null;
-		DiscordPresence presence;
 
-		if (guild is not null && guild.PresencesInternal.TryGetValue(uid, out presence) ||
-			guildId is null && this.PresencesInternal.TryGetValue(uid, out presence))
+		// Look up existing presence from centralized store.
+		DiscordPresence? existingPresence = null;
+		bool hasExisting;
+		if (guildId.HasValue)
+			hasExisting = this.TryGetPresence(uid, guildId.Value, out existingPresence);
+		else
 		{
-			old = new(presence);
+			// No guild_id — pick any cached presence for this user.
+			hasExisting = this.PresenceStore.TryGetValue(uid, out var inner)
+				&& (existingPresence = inner.Values.FirstOrDefault()) is not null;
+		}
+
+		DiscordPresence presence;
+		if (hasExisting)
+		{
+			presence = new(existingPresence!);
+
+			// Only clone the "before" snapshot when someone is actually listening to the event.
+			if (hasListeners)
+				old = new(existingPresence!);
+
 			DiscordJson.PopulateObject(rawPresence, presence);
 		}
 		else
@@ -4239,7 +4256,12 @@ public sealed partial class DiscordClient
 			}
 		}
 
+		// Write to centralized presence store. Guild reference is only used for GuildId assignment.
 		this.CachePresence(guild, presence);
+
+		// Skip event args allocation + dispatch when nobody is listening.
+		if (!hasListeners)
+			return;
 
 		var ea = new PresenceUpdateEventArgs(this.ServiceProvider)
 		{
