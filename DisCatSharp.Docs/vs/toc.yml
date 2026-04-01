@@ -26,6 +26,8 @@ items:
       uid: vs_analyzer_dcs_1101
     - name: DCS1102
       uid: vs_analyzer_dcs_1102
+    - name: DCS1103
+      uid: vs_analyzer_dcs_1103
     - name: DCS1201
       uid: vs_analyzer_dcs_1201
     - name: DCS2101
