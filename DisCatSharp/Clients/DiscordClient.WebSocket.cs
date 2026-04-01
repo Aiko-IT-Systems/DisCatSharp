@@ -704,7 +704,8 @@ public sealed partial class DiscordClient
 		this.Logger.LogDebug(LoggerEvents.Startup, "Presence consumer loop started");
 
 		// Reusable dictionary for coalescing within each drain cycle.
-		var coalesceBatch = new Dictionary<ulong, GatewayPayload>(64);
+		// Key is (guildId, userId) to preserve per-guild presence state.
+		var coalesceBatch = new Dictionary<(ulong GuildId, ulong UserId), GatewayPayload>(64);
 
 		try
 		{
@@ -714,14 +715,15 @@ public sealed partial class DiscordClient
 			{
 				coalesceBatch.Clear();
 
-				// Drain all immediately available items and coalesce by user ID (latest wins).
+				// Drain all immediately available items and coalesce by (guildId, userId) — latest wins.
 				while (reader.TryRead(out var payload))
 				{
 					try
 					{
 						var dat = (JObject)payload.Data;
 						var uid = (ulong)dat["user"]!["id"]!;
-						coalesceBatch[uid] = payload;
+						var gid = (ulong?)dat["guild_id"] ?? 0;
+						coalesceBatch[(gid, uid)] = payload;
 					}
 					catch
 					{

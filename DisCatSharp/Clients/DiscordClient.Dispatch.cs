@@ -4246,7 +4246,10 @@ public sealed partial class DiscordClient
 			}
 		}
 
-		this.CachePresence(guild, presence);
+		// Re-resolve guild to guard against GUILD_DELETE racing with the presence fast-path.
+		// If the guild was removed between routing and processing, write only to the aggregate cache.
+		var resolvedGuild = guildId.HasValue ? this.InternalGetCachedGuild(guildId) : null;
+		this.CachePresence(resolvedGuild, presence);
 
 		// Skip event args allocation + dispatch when nobody is listening.
 		if (!hasListeners)
