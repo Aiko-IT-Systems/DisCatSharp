@@ -191,8 +191,8 @@ public sealed partial class DiscordClient
 			throw;
 		}
 
-		if (!this.Presences.ContainsKey(this.CurrentUser.Id))
-			this.CacheAggregatePresence(new()
+		if (!this.PresenceStore.TryGetValue(this.CurrentUser.Id, out var selfInner) || selfInner.IsEmpty)
+			this.CachePresence(null, new()
 			{
 				Discord = this,
 				RawActivity = new(),
@@ -205,11 +205,13 @@ public sealed partial class DiscordClient
 			});
 		else
 		{
-			var pr = this.PresencesInternal[this.CurrentUser.Id];
-			pr.RawActivity = new();
-			pr.Activity = new();
-			pr.Status = UserStatus.Online;
-			this.CacheAggregatePresence(pr);
+			// Update existing presence entries for the current user.
+			foreach (var pr in selfInner.Values)
+			{
+				pr.RawActivity = new();
+				pr.Activity = new();
+				pr.Status = UserStatus.Online;
+			}
 		}
 
 		Volatile.Write(ref this._skippedHeartbeats, 0);
@@ -849,8 +851,8 @@ public sealed partial class DiscordClient
 
 		await this.WsSendAsync(statusstr).ConfigureAwait(false);
 
-		if (!this.PresencesInternal.TryGetValue(this.CurrentUser.Id, out var value))
-			this.CacheAggregatePresence(new()
+		if (!this.PresenceStore.TryGetValue(this.CurrentUser.Id, out var statusInner) || statusInner.IsEmpty)
+			this.CachePresence(null, new()
 			{
 				Discord = this,
 				Activity = acts.First(),
@@ -863,10 +865,13 @@ public sealed partial class DiscordClient
 			});
 		else
 		{
-			value.Activity = acts.First();
-			value.InternalActivities = acts;
-			value.Status = userStatus ?? value.Status;
-			this.CacheAggregatePresence(value);
+			// Update all cached presences for the current user with the new status.
+			foreach (var value in statusInner.Values)
+			{
+				value.Activity = acts.First();
+				value.InternalActivities = acts;
+				value.Status = userStatus ?? value.Status;
+			}
 		}
 	}
 

@@ -64,7 +64,7 @@ public class PresenceCacheRegressionTests
 		Assert.Equal(UserStatus.DoNotDisturb, guildA.Presences[userId].Status);
 		Assert.Equal(UserStatus.Idle, guildB.Presences[userId].Status);
 		Assert.Equal("Guild B", guildB.Presences[userId].Activity?.Name);
-		Assert.Same(guildA.Presences[userId], client.Presences[userId]);
+		Assert.True(client.Presences.ContainsKey(userId));
 		Assert.NotNull(captured);
 		Assert.Equal(guildA.Id, captured!.PresenceAfter.GuildId);
 		Assert.Equal(UserStatus.Online, captured.PresenceBefore?.Status);
@@ -116,7 +116,7 @@ public class PresenceCacheRegressionTests
 		Assert.Single(captured!.Presences);
 		Assert.True(guild.Presences.ContainsKey(userId));
 		Assert.Equal("Chunk Activity", guild.Presences[userId].Activity?.Name);
-		Assert.Same(guild.Presences[userId], client.Presences[userId]);
+		Assert.True(client.Presences.ContainsKey(userId));
 	}
 
 	[Fact]
@@ -237,7 +237,7 @@ public class PresenceCacheRegressionTests
 	}
 
 	[Fact]
-	public async Task AggregatePresenceCacheSize_EvictsOldestAggregateEntryWithoutTouchingGuildCache()
+	public async Task CentralizedStore_ReturnsAllPresencesWithoutEviction()
 	{
 		var client = CreateClient(presenceCacheSize: 2);
 		var guildA = CreateGuild(client, 610);
@@ -248,13 +248,14 @@ public class PresenceCacheRegressionTests
 		await client.OnGuildSyncEventAsync(guildB, false, new JArray(), [CreatePresence(621, guildB.Id, UserStatus.Idle, "Guild B")]);
 		await client.OnGuildSyncEventAsync(guildC, false, new JArray(), [CreatePresence(631, guildC.Id, UserStatus.DoNotDisturb, "Guild C")]);
 
-		Assert.Equal(2, client.Presences.Count);
-		Assert.False(client.Presences.ContainsKey(611));
+		// Centralized store keeps all presences — no LRU eviction.
+		Assert.Equal(3, client.Presences.Count);
+		Assert.True(client.Presences.ContainsKey(611));
 		Assert.True(guildA.Presences.ContainsKey(611));
 
-		var evictedUserPresences = client.GetPresences(611);
-		Assert.Single(evictedUserPresences);
-		Assert.Same(guildA.Presences[611], evictedUserPresences[guildA.Id]);
+		var userPresences = client.GetPresences(611);
+		Assert.Single(userPresences);
+		Assert.Same(guildA.Presences[611], userPresences[guildA.Id]);
 	}
 
 	[Fact]

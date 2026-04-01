@@ -944,19 +944,17 @@ public sealed partial class DiscordClient
 		this._sessionId = ready.SessionId;
 		this._resumeGatewayUrl = ready.ResumeGatewayUrl;
 		var rawGuildIndex = rawGuilds.Any() ? rawGuilds.ToDictionary(xt => (ulong)xt["id"]!, xt => (JObject)xt) : null;
-		var currentUserPresence = this.PresencesInternal.TryGetValue(this.CurrentUser.Id, out var cachedCurrentUserPresence)
-			? cachedCurrentUserPresence
-			: null;
+		var currentUserPresences = this.GetAllPresences(this.CurrentUser.Id);
 
 		if (rawGuildIndex is not null && rawGuildIndex.Count is not 0)
 			this.SetReadyGuildIds(rawGuildIndex.Select(x => x.Key));
 
-		foreach (var cachedGuild in this.GuildsInternal.Values)
-			cachedGuild.PresencesInternal.Clear();
-
-		this.ClearAggregatePresenceCache();
-		if (currentUserPresence is not null)
-			this.CacheAggregatePresence(currentUserPresence);
+		this.PresenceStore.Clear();
+		foreach (var (guildId, presence) in currentUserPresences)
+		{
+			var inner = this.PresenceStore.GetOrAdd(this.CurrentUser.Id, static _ => []);
+			inner[guildId] = presence;
+		}
 
 		this.GuildsInternal.Clear();
 		if (ready.Guilds.Count is not 0 && rawGuildIndex is not null)
@@ -4192,11 +4190,16 @@ public sealed partial class DiscordClient
 		var guild = this.InternalGetCachedGuild(guildId);
 		var hasListeners = this._presenceUpdated.HasHandlers;
 		DiscordPresence? old = null;
-		DiscordPresence presence;
 
-		if (guild is not null && guild.PresencesInternal.TryGetValue(uid, out presence) ||
-			guildId is null && this.PresencesInternal.TryGetValue(uid, out presence))
+		// Look up existing presence from centralized store.
+		DiscordPresence? existingPresence = null;
+		var hasExisting = guildId.HasValue && this.TryGetPresence(uid, guildId.Value, out existingPresence);
+
+		DiscordPresence presence;
+		if (hasExisting)
 		{
+			presence = existingPresence!;
+
 			// Only clone the "before" snapshot when someone is actually listening to the event.
 			if (hasListeners)
 				old = new(presence);
@@ -4246,10 +4249,8 @@ public sealed partial class DiscordClient
 			}
 		}
 
-		// Re-resolve guild to guard against GUILD_DELETE racing with the presence fast-path.
-		// If the guild was removed between routing and processing, write only to the aggregate cache.
-		var resolvedGuild = guildId.HasValue ? this.InternalGetCachedGuild(guildId) : null;
-		this.CachePresence(resolvedGuild, presence);
+		// Write to centralized presence store. Guild reference is only used for GuildId assignment.
+		this.CachePresence(guild, presence);
 
 		// Skip event args allocation + dispatch when nobody is listening.
 		if (!hasListeners)

@@ -135,55 +135,31 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 	/// <summary>
 	///     Gets the collection of presences held by this client.
+	///     Returns a flat view keyed by user ID (latest guild presence per user).
 	/// </summary>
 	public IReadOnlyDictionary<ulong, DiscordPresence> Presences
-		=> this._presencesLazy.Value;
+		=> new ReadOnlyDictionary<ulong, DiscordPresence>(this.BuildFlatPresenceView());
 
 	/// <summary>
 	///     Gets the cached presences for a user keyed by guild id.
 	/// </summary>
 	/// <param name="userId">The user id.</param>
 	/// <returns>
-	///     A read-only dictionary of presences keyed by guild id. A key of <c>0</c> represents a non-guild aggregate
-	///     presence if one is cached.
+	///     A read-only dictionary of presences keyed by guild id.
 	/// </returns>
 	public IReadOnlyDictionary<ulong, DiscordPresence> GetPresences(ulong userId)
 	{
-		Dictionary<ulong, DiscordPresence> presences = [];
-		if (this.PresencesInternal.TryGetValue(userId, out var aggregatePresence) && aggregatePresence.GuildId == 0)
-			presences[0] = aggregatePresence;
+		if (!this.PresenceStore.TryGetValue(userId, out var inner))
+			return ReadOnlyDictionary<ulong, DiscordPresence>.Empty;
 
-		foreach (var guild in this.GuildsInternal.Values)
-			if (guild.PresencesInternal.TryGetValue(userId, out var guildPresence))
-				presences[guild.Id] = guildPresence;
-
-		return new ReadOnlyDictionary<ulong, DiscordPresence>(presences);
+		return new ReadOnlyDictionary<ulong, DiscordPresence>(new Dictionary<ulong, DiscordPresence>(inner));
 	}
 
 	/// <summary>
-	///     Gets the internal collection of presences.
+	///     Centralized presence store: userId → (guildId → presence).
+	///     All presence reads and writes go through this single store.
 	/// </summary>
-	internal ConcurrentDictionary<ulong, DiscordPresence> PresencesInternal = [];
-
-	/// <summary>
-	///     Synchronizes aggregate presence cache eviction state.
-	/// </summary>
-	private readonly Lock _presenceCacheLock = new();
-
-	/// <summary>
-	///     Tracks aggregate presence usage in insertion/update order.
-	/// </summary>
-	private readonly LinkedList<ulong> _presenceCacheOrder = [];
-
-	/// <summary>
-	///     Maps aggregate presence entries to their tracking nodes.
-	/// </summary>
-	private readonly Dictionary<ulong, LinkedListNode<ulong>> _presenceCacheNodes = [];
-
-	/// <summary>
-	///     Lazily gets the collection of presences held by this client.
-	/// </summary>
-	private Lazy<IReadOnlyDictionary<ulong, DiscordPresence>> _presencesLazy;
+	internal ConcurrentDictionary<ulong, ConcurrentDictionary<ulong, DiscordPresence>> PresenceStore = [];
 
 	/// <summary>
 	///     Gets the collection of presences held by this client.
@@ -364,9 +340,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 		this.GuildsInternal.Clear();
 		this.EmojisInternal.Clear();
-		this.ClearAggregatePresenceCache();
+		this.PresenceStore.Clear();
 
-		this._presencesLazy = new(() => new ReadOnlyDictionary<ulong, DiscordPresence>(this.PresencesInternal));
 		this._embeddedActivitiesLazy = new(() => new ReadOnlyDictionary<string, DiscordActivity>(this.EmbeddedActivitiesInternal));
 	}
 
@@ -1781,89 +1756,50 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	///     Tries to get a cached presence for a user, optionally scoped to a guild.
+	///     Tries to get a cached presence for a user in a specific guild.
 	/// </summary>
 	/// <param name="userId">The target user id.</param>
-	/// <param name="guildId">The optional guild id.</param>
+	/// <param name="guildId">The guild id to scope the lookup to.</param>
 	/// <param name="presence">The cached presence, if any.</param>
 	/// <returns>Whether a presence was found.</returns>
-	internal bool TryGetPresence(ulong userId, ulong? guildId, [NotNullWhen(true)] out DiscordPresence? presence)
+	internal bool TryGetPresence(ulong userId, ulong guildId, [NotNullWhen(true)] out DiscordPresence? presence)
 	{
-		return (guildId.HasValue &&	this.GuildsInternal.TryGetValue(guildId.Value, out var guild) &&
-			guild.PresencesInternal.TryGetValue(userId, out presence)) || this.PresencesInternal.TryGetValue(userId, out presence);
-	}
+		if (this.PresenceStore.TryGetValue(userId, out var inner) && inner.TryGetValue(guildId, out presence))
+			return true;
 
-
-	/// <summary>
-	///     Clears the aggregate presence cache and its eviction state.
-	/// </summary>
-	internal void ClearAggregatePresenceCache()
-	{
-		this.PresencesInternal.Clear();
-
-		lock (this._presenceCacheLock)
-		{
-			this._presenceCacheOrder.Clear();
-			this._presenceCacheNodes.Clear();
-		}
+		presence = null;
+		return false;
 	}
 
 	/// <summary>
-	///     Caches a latest-known aggregate presence.
+	///     Gets all cached presences for a user across all guilds.
+	///     Returns an empty dictionary if no presences are cached.
 	/// </summary>
-	/// <param name="presence">The presence to cache.</param>
-	internal void CacheAggregatePresence(DiscordPresence presence)
+	/// <param name="userId">The target user id.</param>
+	/// <returns>A read-only dictionary of presences keyed by guild id.</returns>
+	internal IReadOnlyDictionary<ulong, DiscordPresence> GetAllPresences(ulong userId)
 	{
-		var userId = presence.InternalUser.Id;
-		this.PresencesInternal[userId] = presence;
+		if (!this.PresenceStore.TryGetValue(userId, out var inner))
+			return ReadOnlyDictionary<ulong, DiscordPresence>.Empty;
 
-		lock (this._presenceCacheLock)
-		{
-			if (this._presenceCacheNodes.TryGetValue(userId, out var existingNode))
-				this._presenceCacheOrder.Remove(existingNode);
-
-			this._presenceCacheNodes[userId] = this._presenceCacheOrder.AddLast(userId);
-			this.TrimAggregatePresenceCacheUnsafe();
-		}
+		return new ReadOnlyDictionary<ulong, DiscordPresence>(new Dictionary<ulong, DiscordPresence>(inner));
 	}
 
 	/// <summary>
-	///     Removes a latest-known aggregate presence.
+	///     Builds a flat userId → presence dictionary from the centralized store.
+	///     Picks one presence per user (arbitrary guild).
 	/// </summary>
-	/// <param name="userId">The user id.</param>
-	internal void RemoveAggregatePresence(ulong userId)
+	private Dictionary<ulong, DiscordPresence> BuildFlatPresenceView()
 	{
-		this.PresencesInternal.TryRemove(userId, out _);
-
-		lock (this._presenceCacheLock)
+		var result = new Dictionary<ulong, DiscordPresence>();
+		foreach (var (userId, inner) in this.PresenceStore)
 		{
-			if (!this._presenceCacheNodes.TryGetValue(userId, out var node))
-				return;
-
-			this._presenceCacheOrder.Remove(node);
-			this._presenceCacheNodes.Remove(userId);
+			var first = inner.Values.FirstOrDefault();
+			if (first is not null)
+				result[userId] = first;
 		}
-	}
 
-	/// <summary>
-	///     Trims the aggregate presence cache to the configured capacity.
-	/// </summary>
-	private void TrimAggregatePresenceCacheUnsafe()
-	{
-		var capacity = this.Configuration.Cache.PresenceCacheSize;
-		if (capacity <= 0)
-			return;
-
-		while (this._presenceCacheOrder.Count > capacity)
-		{
-			var oldestNode = this._presenceCacheOrder.First;
-			if (oldestNode is null)
-				return;
-
-			this._presenceCacheOrder.RemoveFirst();
-			this._presenceCacheNodes.Remove(oldestNode.Value);
-			this.PresencesInternal.TryRemove(oldestNode.Value, out _);
-		}
+		return result;
 	}
 
 	/// <summary>
@@ -1892,58 +1828,52 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	///     Caches a presence for a guild and refreshes the aggregate presence view.
+	///     Caches a presence in the centralized presence store.
 	/// </summary>
-	/// <param name="guild">The guild the presence belongs to.</param>
+	/// <param name="guild">The guild the presence belongs to (may be null for non-guild presences).</param>
 	/// <param name="presence">The presence to cache.</param>
 	/// <returns>The cached presence instance.</returns>
 	internal DiscordPresence CachePresence(DiscordGuild? guild, DiscordPresence presence)
 	{
 		presence.Discord = this;
+		var guildId = guild?.Id ?? presence.GuildId;
 		if (guild is not null)
-		{
-			presence.GuildId = guild.Id;
-			guild.PresencesInternal[presence.InternalUser.Id] = presence;
-		}
+			presence.GuildId = guildId;
 
-		this.CacheAggregatePresence(presence);
+		var userId = presence.InternalUser.Id;
+		var inner = this.PresenceStore.GetOrAdd(userId, static _ => []);
+		inner[guildId] = presence;
+
 		return presence;
 	}
 
 	/// <summary>
-	///     Removes all cached presences for a guild and repairs the aggregate presence view.
+	///     Removes all cached presences for a guild from the centralized store.
 	/// </summary>
 	/// <param name="guild">The guild whose presences should be removed.</param>
 	internal void RemovePresences(DiscordGuild guild)
 	{
-		foreach (var userId in guild.PresencesInternal.Keys.ToList())
-			this.RemovePresence(guild.Id, userId);
-
-		guild.PresencesInternal.Clear();
+		foreach (var (userId, inner) in this.PresenceStore)
+		{
+			inner.TryRemove(guild.Id, out _);
+			if (inner.IsEmpty)
+				this.PresenceStore.TryRemove(userId, out _);
+		}
 	}
 
 	/// <summary>
-	///     Removes a cached presence for a guild and repairs the aggregate presence view.
+	///     Removes a cached presence for a specific guild and user.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="userId">The user id.</param>
 	internal void RemovePresence(ulong guildId, ulong userId)
 	{
-		if (this.GuildsInternal.TryGetValue(guildId, out var guild))
-			guild.PresencesInternal.TryRemove(userId, out _);
-
-		if (!this.PresencesInternal.TryGetValue(userId, out var aggregate) || aggregate.GuildId != guildId)
+		if (!this.PresenceStore.TryGetValue(userId, out var inner))
 			return;
 
-		var replacement = this.GuildsInternal.Values
-			.Where(x => x.Id != guildId)
-			.SelectMany(x => x.PresencesInternal.Values)
-			.FirstOrDefault(x => x.InternalUser.Id == userId);
-
-		if (replacement is null)
-			this.RemoveAggregatePresence(userId);
-		else
-			this.CacheAggregatePresence(replacement);
+		inner.TryRemove(guildId, out _);
+		if (inner.IsEmpty)
+			this.PresenceStore.TryRemove(userId, out _);
 	}
 
 	/// <summary>

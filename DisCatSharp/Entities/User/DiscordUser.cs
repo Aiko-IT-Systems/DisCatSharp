@@ -322,12 +322,10 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		=> this.Discord is not DiscordClient dc
 			? null
 			: this is DiscordMember member
-				? dc.InternalGetCachedGuild(member.GuildId)?.PresencesInternal.TryGetValue(this.Id, out var memberPresence) == true
+				? dc.TryGetPresence(this.Id, member.GuildId, out var memberPresence)
 					? memberPresence
 					: null
-				: dc.TryGetPresence(this.Id, null, out var presence)
-					? presence
-					: null;
+				: null;
 
 	/// <summary>
 	///     Checks whether this <see cref="DiscordUser" /> is equal to another <see cref="DiscordUser" />.
