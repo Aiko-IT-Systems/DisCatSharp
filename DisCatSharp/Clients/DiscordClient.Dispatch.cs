@@ -4190,13 +4190,17 @@ public sealed partial class DiscordClient
 		var uid = (ulong)rawUser["id"]!;
 		var guildId = (ulong?)rawPresence["guild_id"];
 		var guild = this.InternalGetCachedGuild(guildId);
+		var hasListeners = this._presenceUpdated.HasHandlers;
 		DiscordPresence? old = null;
 		DiscordPresence presence;
 
 		if (guild is not null && guild.PresencesInternal.TryGetValue(uid, out presence) ||
 			guildId is null && this.PresencesInternal.TryGetValue(uid, out presence))
 		{
-			old = new(presence);
+			// Only clone the "before" snapshot when someone is actually listening to the event.
+			if (hasListeners)
+				old = new(presence);
+
 			DiscordJson.PopulateObject(rawPresence, presence);
 		}
 		else
@@ -4243,6 +4247,10 @@ public sealed partial class DiscordClient
 		}
 
 		this.CachePresence(guild, presence);
+
+		// Skip event args allocation + dispatch when nobody is listening.
+		if (!hasListeners)
+			return;
 
 		var ea = new PresenceUpdateEventArgs(this.ServiceProvider)
 		{
