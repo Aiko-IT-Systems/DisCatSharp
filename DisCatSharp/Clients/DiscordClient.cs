@@ -69,7 +69,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <summary>
 	///     Synchronizes presence cache eviction state.
 	/// </summary>
-	private readonly object _presenceCacheLock = new();
+	private readonly Lock _presenceCacheLock = new();
 
 	/// <summary>
 	///     Tracks cached presence entries in least-recently-updated order.
