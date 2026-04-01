@@ -154,6 +154,17 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 	private static readonly LocalizableString s_descriptionConfigPropertyMigration = new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionConfigPropertyMigration), Resources.ResourceManager, typeof(Resources));
 
 	/// <inheritdoc cref="DiagnosticDescriptor" />
+	private static readonly DiagnosticDescriptor s_presencesPropertyRemovalRule = new(
+		DisCatSharpDiagnosticIds.PresencesPropertyRemoval,
+		"[DCS] Presences property removed",
+		"'DiscordClient.Presences' has been removed. Use 'GetPresences(userId)' for user-specific lookups, 'guild.Presences' for guild-scoped, or 'CurrentPresence' for the bot's own presence.",
+		CATEGORY,
+		DiagnosticSeverity.Error,
+		true,
+		"The aggregate Presences flat view has been removed. Use DiscordClient.GetPresences(userId), DiscordGuild.Presences, or DiscordClient.CurrentPresence instead.",
+		"https://docs.dcs.aitsys.dev/vs/analyzer/dcs/1103");
+
+	/// <inheritdoc cref="DiagnosticDescriptor" />
 	private static readonly DiagnosticDescriptor s_configPropertyMigrationRule = new(
 		DisCatSharpDiagnosticIds.ConfigPropertyMigration,
 		s_titleConfigPropertyMigration,
@@ -166,7 +177,7 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 
 	/// <inheritdoc />
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
-		=> ImmutableArray.Create(s_experimentalRule, s_deprecatedRule, s_discordInExperimentRule, s_discordDeprecatedRule, s_discordUnreleasedRule, s_presenceAccessMigrationRule, s_requiresFeatureRule, s_requiresOverrideRule, s_applicationCommandChecksFailedMigrationRule, s_banDeleteMessageDaysMigrationRule, s_configPropertyMigrationRule);
+		=> ImmutableArray.Create(s_experimentalRule, s_deprecatedRule, s_discordInExperimentRule, s_discordDeprecatedRule, s_discordUnreleasedRule, s_presenceAccessMigrationRule, s_requiresFeatureRule, s_requiresOverrideRule, s_applicationCommandChecksFailedMigrationRule, s_banDeleteMessageDaysMigrationRule, s_presencesPropertyRemovalRule, s_configPropertyMigrationRule);
 
 	/// <inheritdoc />
 	public override void Initialize(AnalysisContext context)
@@ -185,6 +196,7 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 		context.RegisterSyntaxNodeAction(AnalyzeSyntaxNode, SyntaxKind.ElementAccessExpression);
 		context.RegisterSyntaxNodeAction(AnalyzeSyntaxNode, SyntaxKind.SimpleMemberAccessExpression);
 		context.RegisterSyntaxNodeAction(AnalyzePresenceAccessMigration, SyntaxKind.InvocationExpression);
+		context.RegisterSyntaxNodeAction(AnalyzePresencesPropertyRemoval, SyntaxKind.SimpleMemberAccessExpression);
 		context.RegisterSyntaxNodeAction(AnalyzeApplicationCommandChecksFailedMigration, SyntaxKind.AddAssignmentExpression);
 		context.RegisterSyntaxNodeAction(AnalyzeBanDeleteMessageDaysMigration, SyntaxKind.InvocationExpression);
 		context.RegisterSyntaxNodeAction(AnalyzeConfigPropertyAccess, SyntaxKind.SimpleMemberAccessExpression);
@@ -373,6 +385,17 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 			candidate.PresencesAccess.Name.GetLocation(),
 			properties,
 			userExpression));
+	}
+
+	private static void AnalyzePresencesPropertyRemoval(SyntaxNodeAnalysisContext context)
+	{
+		if (context.Node is not MemberAccessExpressionSyntax memberAccess ||
+		    !PresencesPropertyRemovalAnalysis.TryGetCandidate(context.SemanticModel, memberAccess, context.CancellationToken, out _))
+			return;
+
+		context.ReportDiagnostic(Diagnostic.Create(
+			s_presencesPropertyRemovalRule,
+			memberAccess.Name.GetLocation()));
 	}
 
 	private static void AnalyzeBanDeleteMessageDaysMigration(SyntaxNodeAnalysisContext context)
