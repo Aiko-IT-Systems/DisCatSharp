@@ -63,6 +63,11 @@ internal sealed class RestClient : IDisposable
 	private readonly bool _useResetAfter;
 
 	/// <summary>
+	///     Gets the advanced REST configuration.
+	/// </summary>
+	private readonly RestAdvancedConfiguration _advancedConfig;
+
+	/// <summary>
 	///     Gets the bucket workers keyed by bucket ID.
 	/// </summary>
 	private readonly ConcurrentDictionary<string, BucketWorker> _bucketWorkers;
@@ -149,6 +154,7 @@ internal sealed class RestClient : IDisposable
 
 		this._globalRateLimitEvent = new(true);
 		this._useResetAfter = configuration.Rest.UseRelativeRatelimit;
+		this._advancedConfig = new(configuration.Rest.Advanced);
 	}
 
 	/// <summary>
@@ -279,8 +285,7 @@ internal sealed class RestClient : IDisposable
 	///     Executes the request by enqueuing it into the appropriate bucket worker.
 	/// </summary>
 	/// <param name="request">The request to be executed.</param>
-	/// <param name="targetDebug">Enables a possible breakpoint in the rest client for debugging purposes.</param>
-	public async Task ExecuteRequestAsync(BaseRestRequest request, bool targetDebug = false)
+	public async Task ExecuteRequestAsync(BaseRestRequest request)
 	{
 		ArgumentNullException.ThrowIfNull(request);
 		ObjectDisposedException.ThrowIf(this._disposed, this);
@@ -295,9 +300,8 @@ internal sealed class RestClient : IDisposable
 	///     Form and regular requests share the same queue/worker infrastructure.
 	/// </summary>
 	/// <param name="request">The request to be executed.</param>
-	/// <param name="targetDebug">Enables a possible breakpoint in the rest client for debugging purposes.</param>
-	public Task ExecuteFormRequestAsync(BaseRestRequest request, bool targetDebug = false)
-		=> this.ExecuteRequestAsync(request, targetDebug);
+	public Task ExecuteFormRequestAsync(BaseRestRequest request)
+		=> this.ExecuteRequestAsync(request);
 
 	/// <summary>
 	///     Gets or creates a <see cref="BucketWorker" /> for the given bucket.
@@ -305,7 +309,7 @@ internal sealed class RestClient : IDisposable
 	private BucketWorker GetOrCreateWorker(RateLimitBucket bucket)
 	{
 		var bucketId = bucket.BucketId ?? "unknown";
-		return this._bucketWorkers.GetOrAdd(bucketId, _ => new(this, bucket, this._logger));
+		return this._bucketWorkers.GetOrAdd(bucketId, _ => new(this, bucket, this._advancedConfig, this._logger));
 	}
 
 	// ── Internal methods called by BucketWorker ──────────────────────────────
@@ -315,6 +319,11 @@ internal sealed class RestClient : IDisposable
 	/// </summary>
 	internal Task WaitForGlobalGateAsync()
 		=> this._globalRateLimitEvent.WaitAsync();
+
+	/// <summary>
+	///     Gets whether the global rate limit gate is currently blocking requests.
+	/// </summary>
+	internal bool IsGlobalGateBlocked => !this._globalRateLimitEvent.IsSet;
 
 	/// <summary>
 	///     Computes the delay for a preemptive bucket rate limit.

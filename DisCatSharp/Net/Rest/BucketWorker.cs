@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
+using DisCatSharp.Exceptions;
+
 using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp.Net;
@@ -15,17 +17,13 @@ namespace DisCatSharp.Net;
 internal sealed class BucketWorker : IDisposable
 {
 	/// <summary>
-	///     Maximum number of times a single request will be retried on 429 responses.
-	/// </summary>
-	private const int MAX_RETRIES = 5;
-
-	/// <summary>
 	///     How long the worker loop waits for a new request before shutting down.
 	/// </summary>
 	private static readonly TimeSpan s_idleGracePeriod = TimeSpan.FromSeconds(30);
 
 	private readonly RateLimitBucket _bucket;
 	private readonly RestClient _client;
+	private readonly RestAdvancedConfiguration _config;
 	private readonly CancellationTokenSource _cts;
 	private readonly ILogger _logger;
 	private readonly Channel<BaseRestRequest> _queue;
@@ -34,10 +32,11 @@ internal sealed class BucketWorker : IDisposable
 	private volatile bool _disposed;
 	private Task? _loopTask;
 
-	internal BucketWorker(RestClient client, RateLimitBucket bucket, ILogger logger)
+	internal BucketWorker(RestClient client, RateLimitBucket bucket, RestAdvancedConfiguration config, ILogger logger)
 	{
 		this._client = client;
 		this._bucket = bucket;
+		this._config = config;
 		this._logger = logger;
 		this._cts = new();
 		this._queue = Channel.CreateUnbounded<BaseRestRequest>(new()
@@ -60,6 +59,16 @@ internal sealed class BucketWorker : IDisposable
 	///     Gets the total number of retry attempts across all requests.
 	/// </summary>
 	internal long Retried;
+
+	/// <summary>
+	///     Gets the total number of requests that timed out in the queue.
+	/// </summary>
+	internal long TimedOut;
+
+	/// <summary>
+	///     Gets the total number of requests cancelled before execution.
+	/// </summary>
+	internal long Cancelled;
 
 	/// <summary>
 	///     Enqueues a request into this worker's FIFO queue.
@@ -112,6 +121,35 @@ internal sealed class BucketWorker : IDisposable
 					return;
 				}
 
+				// Best-effort pre-execution cancellation
+				if (request.CancellationTokenSource.IsCancellationRequested)
+				{
+					request.TrySetFaulted(new OperationCanceledException("Request was cancelled before execution."));
+					Interlocked.Increment(ref this.Cancelled);
+					continue;
+				}
+
+				// Queue timeout check — fail requests that have been waiting too long
+				if (this._config.QueueTimeout > TimeSpan.Zero)
+				{
+					var waited = DateTimeOffset.UtcNow - request.EnqueuedAt;
+
+					if (waited >= this._config.QueueTimeout)
+					{
+						Interlocked.Increment(ref this.TimedOut);
+						var ex = new RestQueueTimeoutException(
+							request.Route,
+							this._bucket.BucketId,
+							waited,
+							this.QueueLength,
+							this._client.IsGlobalGateBlocked
+						);
+						this._logger.LogError(LoggerEvents.RestError, ex, "Request to {Url} timed out in queue after {Duration:F1}s", request.Url.AbsoluteUri, waited.TotalSeconds);
+						request.TrySetFaulted(ex);
+						continue;
+					}
+				}
+
 				await this.ExecuteAsync(request, ct);
 			}
 		}
@@ -131,10 +169,31 @@ internal sealed class BucketWorker : IDisposable
 	private async Task ExecuteAsync(BaseRestRequest request, CancellationToken ct)
 	{
 		var retries = 0;
+		var maxRetries = this._config.MaxRetries;
+		var warnEmitted = false;
 
 		while (true)
 		{
 			ct.ThrowIfCancellationRequested();
+
+			// Best-effort cancellation between retries
+			if (request.CancellationTokenSource.IsCancellationRequested)
+			{
+				request.TrySetFaulted(new OperationCanceledException("Request was cancelled during processing."));
+				Interlocked.Increment(ref this.Cancelled);
+				return;
+			}
+
+			// Emit warning if request has been queued too long (once per request)
+			if (!warnEmitted && this._config.QueueWarningThreshold > TimeSpan.Zero)
+			{
+				var waited = DateTimeOffset.UtcNow - request.EnqueuedAt;
+				if (waited >= this._config.QueueWarningThreshold)
+				{
+					warnEmitted = true;
+					this._logger.LogWarning(LoggerEvents.RestError, "Request to {Url} has been waiting {Duration:F1}s in queue (bucket: {Bucket}, queue depth: {QueueLength})", request.Url.AbsoluteUri, waited.TotalSeconds, this._bucket, this.QueueLength);
+				}
+			}
 
 			try
 			{
@@ -180,7 +239,7 @@ internal sealed class BucketWorker : IDisposable
 				var result = await this._client.SendAndParseAsync(request, this._bucket, isProbe);
 
 				// 4. Handle retry on 429
-				if (result.ShouldRetry && retries < MAX_RETRIES)
+				if (result.ShouldRetry && retries < maxRetries)
 				{
 					retries++;
 					Interlocked.Increment(ref this.Retried);
@@ -193,7 +252,7 @@ internal sealed class BucketWorker : IDisposable
 					else
 					{
 						this._logger.LogError(LoggerEvents.RatelimitHit, "Ratelimit hit, retrying request to {Url}", request.Url.AbsoluteUri);
-						await this._client.RaiseRateLimitHitAsync(request, result.Error as Exceptions.RateLimitException);
+						await this._client.RaiseRateLimitHitAsync(request, result.Error as RateLimitException);
 
 						if (result.RetryDelay > TimeSpan.Zero)
 							await Task.Delay(result.RetryDelay, ct);
