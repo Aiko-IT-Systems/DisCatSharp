@@ -237,7 +237,7 @@ public class PresenceCacheRegressionTests
 	}
 
 	[Fact]
-	public async Task CentralizedStore_ReturnsAllPresencesWithoutEviction()
+	public async Task CentralizedStore_EvictsOldestPresenceEntriesWhenCapacityIsExceeded()
 	{
 		var client = CreateClient(presenceCacheSize: 2);
 		var guildA = CreateGuild(client, 610);
@@ -248,14 +248,14 @@ public class PresenceCacheRegressionTests
 		await client.OnGuildSyncEventAsync(guildB, false, new JArray(), [CreatePresence(621, guildB.Id, UserStatus.Idle, "Guild B")]);
 		await client.OnGuildSyncEventAsync(guildC, false, new JArray(), [CreatePresence(631, guildC.Id, UserStatus.DoNotDisturb, "Guild C")]);
 
-		// Centralized store keeps all presences — no LRU eviction.
-		Assert.Equal(3, client.PresenceStore.Count);
-		Assert.True(client.PresenceStore.ContainsKey(611));
-		Assert.True(guildA.Presences.ContainsKey(611));
-
-		var userPresences = client.GetPresences(611);
-		Assert.Single(userPresences);
-		Assert.Same(guildA.Presences[611], userPresences[guildA.Id]);
+		Assert.Equal(2, client.PresenceStore.Count);
+		Assert.False(client.PresenceStore.ContainsKey(611));
+		Assert.Empty(client.GetPresences(611));
+		Assert.Empty(guildA.Presences);
+		Assert.True(client.PresenceStore.ContainsKey(621));
+		Assert.True(client.PresenceStore.ContainsKey(631));
+		Assert.True(guildB.Presences.ContainsKey(621));
+		Assert.True(guildC.Presences.ContainsKey(631));
 	}
 
 	[Fact]

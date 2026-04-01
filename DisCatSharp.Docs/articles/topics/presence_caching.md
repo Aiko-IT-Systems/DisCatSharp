@@ -37,6 +37,8 @@ Internally, the cache is a two-level `ConcurrentDictionary<ulong userId, Concurr
 - A user can have different presences in different guilds.
 - Guild-scoped access is always authoritative.
 
+If [CacheConfiguration.PresenceCacheSize](xref:DisCatSharp.Configuration.CacheConfiguration.PresenceCacheSize) is greater than `0`, DisCatSharp caps the centralized store and evicts the **oldest cached presence entries** when the limit is exceeded.
+
 > [!NOTE]
 > Presence updates are processed on a dedicated fast-path channel with coalescing. If a user's presence changes rapidly, intermediate states may be merged — only the latest state is guaranteed to be cached.
 
@@ -285,4 +287,5 @@ The [UserStatus](xref:DisCatSharp.Entities.UserStatus) enum defines:
 - Use `Activities` (plural) instead of `Activity` (singular) when you need the full picture — users commonly have 2–3 activities at once.
 - Use `client.CurrentPresence` to read the bot's own presence. Do not try to look it up in the presence store.
 - Use `client.GetPresences(userId)` when you need to see a user's status across multiple guilds.
+- If you configure `PresenceCacheSize`, remember that it caps the total number of cached **presence entries**, not the number of users or guilds.
 - Remember that the `GUILD_PRESENCES` intent is privileged and must be enabled in the Discord Developer Portal.

@@ -949,11 +949,10 @@ public sealed partial class DiscordClient
 		if (rawGuildIndex is not null && rawGuildIndex.Count is not 0)
 			this.SetReadyGuildIds(rawGuildIndex.Select(x => x.Key));
 
-		this.PresenceStore.Clear();
+		this.ClearPresenceStore();
 		foreach (var (guildId, presence) in currentUserPresences)
 		{
-			var inner = this.PresenceStore.GetOrAdd(this.CurrentUser.Id, static _ => []);
-			inner[guildId] = presence;
+			this.CachePresence(guildId is 0 ? null : this.InternalGetCachedGuild(guildId), presence);
 		}
 
 		this.GuildsInternal.Clear();

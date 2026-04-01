@@ -66,6 +66,21 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	private readonly ManualResetEventSlim _connectionLock = new(true);
 
+	/// <summary>
+	///     Synchronizes presence cache eviction state.
+	/// </summary>
+	private readonly object _presenceCacheLock = new();
+
+	/// <summary>
+	///     Tracks cached presence entries in least-recently-updated order.
+	/// </summary>
+	private readonly LinkedList<(ulong UserId, ulong GuildId)> _presenceCacheOrder = [];
+
+	/// <summary>
+	///     Maps cached presence entries to their linked-list nodes.
+	/// </summary>
+	private readonly Dictionary<(ulong UserId, ulong GuildId), LinkedListNode<(ulong UserId, ulong GuildId)>> _presenceCacheNodes = [];
+
 	#endregion
 
 	#region Public Fields/Properties
@@ -347,7 +362,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 		this.GuildsInternal.Clear();
 		this.EmojisInternal.Clear();
-		this.PresenceStore.Clear();
+		this.ClearPresenceStore();
 		this._currentPresence = null;
 
 		this._embeddedActivitiesLazy = new(() => new ReadOnlyDictionary<string, DiscordActivity>(this.EmbeddedActivitiesInternal));
@@ -1794,6 +1809,89 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
+	///     Clears the centralized presence store and its eviction state.
+	/// </summary>
+	internal void ClearPresenceStore()
+	{
+		this.PresenceStore.Clear();
+
+		lock (this._presenceCacheLock)
+		{
+			this._presenceCacheOrder.Clear();
+			this._presenceCacheNodes.Clear();
+		}
+	}
+
+	/// <summary>
+	///     Removes the tracking entry for a cached presence.
+	/// </summary>
+	/// <param name="userId">The user id.</param>
+	/// <param name="guildId">The guild id.</param>
+	private void RemovePresenceTracking(ulong userId, ulong guildId)
+	{
+		lock (this._presenceCacheLock)
+			this.RemovePresenceTrackingUnsafe(userId, guildId);
+	}
+
+	/// <summary>
+	///     Removes the tracking entry for a cached presence.
+	/// </summary>
+	/// <param name="userId">The user id.</param>
+	/// <param name="guildId">The guild id.</param>
+	private void RemovePresenceTrackingUnsafe(ulong userId, ulong guildId)
+	{
+		var key = (userId, guildId);
+		if (!this._presenceCacheNodes.Remove(key, out var node))
+			return;
+
+		this._presenceCacheOrder.Remove(node);
+	}
+
+	/// <summary>
+	///     Marks a presence entry as recently updated and trims the cache if needed.
+	/// </summary>
+	/// <param name="userId">The user id.</param>
+	/// <param name="guildId">The guild id.</param>
+	private void TouchPresenceEntryAndTrim(ulong userId, ulong guildId)
+	{
+		lock (this._presenceCacheLock)
+		{
+			var key = (userId, guildId);
+			this.RemovePresenceTrackingUnsafe(userId, guildId);
+			this._presenceCacheNodes[key] = this._presenceCacheOrder.AddLast(key);
+			this.TrimPresenceCacheUnsafe();
+		}
+	}
+
+	/// <summary>
+	///     Trims cached presence entries to the configured capacity.
+	/// </summary>
+	private void TrimPresenceCacheUnsafe()
+	{
+		var capacity = this.Configuration.Cache.PresenceCacheSize;
+		if (capacity <= 0)
+			return;
+
+		while (this._presenceCacheOrder.Count > capacity)
+		{
+			var oldestNode = this._presenceCacheOrder.First;
+			if (oldestNode is null)
+				return;
+
+			var (userId, guildId) = oldestNode.Value;
+			this._presenceCacheOrder.RemoveFirst();
+			this._presenceCacheNodes.Remove((userId, guildId));
+
+			if (!this.PresenceStore.TryGetValue(userId, out var inner))
+				continue;
+
+			inner.TryRemove(guildId, out _);
+			if (inner.IsEmpty)
+				this.PresenceStore.TryRemove(userId, out _);
+		}
+	}
+
+	/// <summary>
 	///     Normalizes a presence before it is cached.
 	/// </summary>
 	/// <param name="presence">The presence to normalize.</param>
@@ -1834,6 +1932,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		var userId = presence.InternalUser.Id;
 		var inner = this.PresenceStore.GetOrAdd(userId, static _ => []);
 		inner[guildId] = presence;
+		this.TouchPresenceEntryAndTrim(userId, guildId);
 
 		return presence;
 	}
@@ -1846,7 +1945,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	{
 		foreach (var (userId, inner) in this.PresenceStore)
 		{
-			inner.TryRemove(guild.Id, out _);
+			if (inner.TryRemove(guild.Id, out _))
+				this.RemovePresenceTracking(userId, guild.Id);
+
 			if (inner.IsEmpty)
 				this.PresenceStore.TryRemove(userId, out _);
 		}
@@ -1862,7 +1963,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		if (!this.PresenceStore.TryGetValue(userId, out var inner))
 			return;
 
-		inner.TryRemove(guildId, out _);
+		if (inner.TryRemove(guildId, out _))
+			this.RemovePresenceTracking(userId, guildId);
+
 		if (inner.IsEmpty)
 			this.PresenceStore.TryRemove(userId, out _);
 	}
