@@ -39,18 +39,6 @@ internal sealed class RateLimitBucket : IEquatable<RateLimitBucket>
 	internal volatile int LimitResetting;
 
 	/// <summary>
-	///     Task to wait for the rate limit test to finish.
-	/// </summary>
-	internal volatile Task? LimitTestFinished;
-
-	/// <summary>
-	///     If the initial request for this bucket that is determining the rate limits is currently executing.
-	///     This is a int because booleans can't be accessed atomically.
-	///     0 => False, all other values => True
-	/// </summary>
-	internal volatile int LimitTesting;
-
-	/// <summary>
 	///     If the rate limits have been determined.
 	/// </summary>
 	internal volatile bool LimitValid;
@@ -270,7 +258,5 @@ internal sealed class RateLimitBucket : IEquatable<RateLimitBucket>
 		this.NextReset = newReset.UtcTicks;
 
 		this.LimitValid = true;
-		this.LimitTestFinished = null;
-		this.LimitTesting = 0;
 	}
 }
