@@ -52,7 +52,7 @@ internal sealed class BucketWorker : IDisposable
 			? Channel.CreateBounded<BaseRestRequest>(new BoundedChannelOptions(config.MaxQueueDepthPerBucket)
 			{
 				SingleReader = true,
-				FullMode = BoundedChannelFullMode.DropWrite
+				FullMode = BoundedChannelFullMode.Wait
 			})
 			: Channel.CreateUnbounded<BaseRestRequest>(new()
 			{
