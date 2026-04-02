@@ -427,7 +427,7 @@ public sealed partial class DiscordClient
 				break;
 
 			case GatewayOpCode.Heartbeat:
-				await this.OnHeartbeatAsync((long)payload.Data).ConfigureAwait(false);
+				await this.OnHeartbeatAsync(this.GetHeartbeatSequence(payload.Data)).ConfigureAwait(false);
 				break;
 
 			case GatewayOpCode.Reconnect:
@@ -496,6 +496,23 @@ public sealed partial class DiscordClient
 				break;
 		}
 	}
+
+	/// <summary>
+	///     Gets the heartbeat sequence from the gateway payload, falling back to the last known sequence when Discord sends
+	///     a heartbeat request without one.
+	/// </summary>
+	/// <param name="data">The heartbeat payload data.</param>
+	/// <returns>The sequence to send back with the heartbeat.</returns>
+	private long GetHeartbeatSequence(object? data)
+		=> data switch
+		{
+			null => this._lastSequence,
+			long sequence => sequence,
+			int sequence => sequence,
+			JValue { Type: JTokenType.Integer } sequence => sequence.Value<long>(),
+			JValue { Type: JTokenType.Null } => this._lastSequence,
+			_ => this._lastSequence
+		};
 
 	/// <summary>
 	///     Handles the heartbeat.

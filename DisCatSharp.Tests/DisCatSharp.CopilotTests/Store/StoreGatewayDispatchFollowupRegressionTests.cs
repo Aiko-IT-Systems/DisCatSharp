@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 
+using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Net.Abstractions;
+using DisCatSharp.Net.WebSocket;
 using DisCatSharp.Telemetry;
 
 using Newtonsoft.Json.Linq;
@@ -352,6 +355,25 @@ public class StoreGatewayDispatchFollowupRegressionTests
 	}
 
 	[Fact]
+	public async Task HandleSocketMessageAsync_HeartbeatWithNullData_UsesLastKnownSequence()
+	{
+		var client = CreateClient();
+		var socket = new TestWebSocketClient();
+		client.WebSocketClient = socket;
+
+		const string payload = """
+		                       {"op":1,"d":null}
+		                       """;
+
+		var exception = await Record.ExceptionAsync(() => client.HandleSocketMessageAsync(payload));
+
+		Assert.Null(exception);
+		Assert.NotNull(socket.LastTextMessage);
+		Assert.Contains("\"op\":1", socket.LastTextMessage);
+		Assert.Contains("\"d\":0", socket.LastTextMessage);
+	}
+
+	[Fact]
 	public async Task HandleSocketMessageAsync_UnknownOpcode_CapturesDiagnosticsSinkReport()
 	{
 		var client = CreateClient();
@@ -511,6 +533,60 @@ public class StoreGatewayDispatchFollowupRegressionTests
 	private sealed record CapturedException(string Source, Exception Exception, Dictionary<string, object> Context, Dictionary<string, string> Tags);
 
 	private sealed record CapturedReport(string Source, DiagnosticSeverity Severity, string Logger, string Message, Dictionary<string, object> Extra, Dictionary<string, string> Tags);
+
+	private sealed class TestWebSocketClient : IWebSocketClient
+	{
+		public IWebProxy Proxy => null!;
+
+		public IReadOnlyDictionary<string, string> DefaultHeaders { get; } = new Dictionary<string, string>();
+
+		public IServiceProvider ServiceProvider { get; set; } = null!;
+
+		public string? LastTextMessage { get; private set; }
+
+		public event AsyncEventHandler<IWebSocketClient, SocketEventArgs>? Connected
+		{
+			add { }
+			remove { }
+		}
+
+		public event AsyncEventHandler<IWebSocketClient, SocketCloseEventArgs>? Disconnected
+		{
+			add { }
+			remove { }
+		}
+
+		public event AsyncEventHandler<IWebSocketClient, SocketMessageEventArgs>? MessageReceived
+		{
+			add { }
+			remove { }
+		}
+
+		public event AsyncEventHandler<IWebSocketClient, SocketErrorEventArgs>? ExceptionThrown
+		{
+			add { }
+			remove { }
+		}
+
+		public Task ConnectAsync(Uri uri) => Task.CompletedTask;
+
+		public Task DisconnectAsync(int code = 1000, string message = "") => Task.CompletedTask;
+
+		public Task SendMessageAsync(string message)
+		{
+			this.LastTextMessage = message;
+			return Task.CompletedTask;
+		}
+
+		public Task SendMessageAsync(byte[] data) => Task.CompletedTask;
+
+		public bool AddDefaultHeader(string name, string value) => true;
+
+		public bool RemoveDefaultHeader(string name) => true;
+
+		public void Dispose()
+		{ }
+	}
 
 	private sealed class NoOpDisposable : IDisposable
 	{
