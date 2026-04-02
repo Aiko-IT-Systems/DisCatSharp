@@ -117,6 +117,8 @@ items:
             uid: topics_presence_caching
           - name: REST Client
             uid: topics_rest
+          - name: Timeout Configuration
+            uid: topics_timeouts
           - name: Sharding
             uid: topics_sharding
           - name: Message Builder
