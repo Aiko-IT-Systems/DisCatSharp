@@ -172,7 +172,7 @@ internal sealed class BucketWorker : IDisposable
 	///     Starts the worker loop if it is not already running.
 	///     Guarded against post-disposal restarts.
 	/// </summary>
-	private void EnsureRunning()
+	internal void EnsureRunning()
 	{
 		if (this._disposed)
 			return;
@@ -184,8 +184,43 @@ internal sealed class BucketWorker : IDisposable
 					return;
 
 				if (this._loopTask is null or { IsCompleted: true })
+				{
 					this._loopTask = Task.Run(() => this.RunAsync(this._cts.Token));
+
+					// Observe the task to prevent UnobservedTaskException — the cleaner
+					// detects faults via IsFaulted and handles recovery, but the task
+					// itself must be observed or .NET fires the global unobserved handler.
+					_ = this._loopTask.ContinueWith(
+						static (t, state) =>
+						{
+							if (t.IsFaulted)
+								((ILogger)state!).LogError(LoggerEvents.RestError, t.Exception!.InnerException, "Bucket worker loop faulted");
+						},
+						this._logger,
+						TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously);
+				}
 			}
+	}
+
+	/// <summary>
+	///     Enqueues a request directly into the channel, bypassing circuit breaker and queue-full checks.
+	///     Used by <see cref="MigrateQueueTo" /> during fault recovery where dropping requests is unacceptable.
+	///     Also useful for test scenarios where the worker loop should not auto-start.
+	/// </summary>
+	/// <param name="request">The request to enqueue.</param>
+	/// <param name="startLoop">Whether to start the worker loop. Defaults to <c>false</c> for migration safety.</param>
+	/// <returns><c>true</c> if the request was written; <c>false</c> if the channel is closed.</returns>
+	internal bool EnqueueDirect(BaseRestRequest request, bool startLoop = false)
+	{
+		if (this._queue.Writer.TryWrite(request))
+		{
+			if (startLoop)
+				this.EnsureRunning();
+
+			return true;
+		}
+
+		return false;
 	}
 
 	/// <summary>
@@ -201,12 +236,14 @@ internal sealed class BucketWorker : IDisposable
 		// Stop accepting new work — the reader side continues for the in-flight request
 		this._queue.Writer.TryComplete();
 
-		// Drain queued items and move to target
+		// Drain queued items and move to target via direct write (bypasses circuit breaker + bounds)
 		var migrated = 0;
 		while (this._queue.Reader.TryRead(out var request))
 		{
-			target.Enqueue(request);
-			migrated++;
+			if (target.EnqueueDirect(request))
+				migrated++;
+			else
+				request.TrySetFaulted(new ObjectDisposedException(nameof(BucketWorker), "Target worker queue is closed during migration."));
 		}
 
 		return migrated;

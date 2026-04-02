@@ -250,7 +250,7 @@ foreach (var bucket in diag.GetBucketSnapshots())
 The `CancelAllPendingRequests` method drains all bucket queues and fails every pending request with `OperationCanceledException`:
 
 ```cs
-client.ApiClient.Rest.CancelAllPendingRequests("Emergency shutdown");
+client.CancelAllPendingRequests("Emergency shutdown");
 ```
 
 **When to use:**

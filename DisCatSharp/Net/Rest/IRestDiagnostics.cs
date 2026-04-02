@@ -25,6 +25,20 @@ public interface IRestDiagnostics
 }
 
 /// <summary>
+///     Safe wrapper that delegates to an <see cref="IRestDiagnostics" /> implementation
+///     without exposing the underlying object (prevents casting to <see cref="RestClient" />).
+/// </summary>
+internal sealed class RestDiagnosticsWrapper(IRestDiagnostics inner) : IRestDiagnostics
+{
+	public int ActiveWorkerCount => inner.ActiveWorkerCount;
+
+	public int TotalQueuedRequests => inner.TotalQueuedRequests;
+
+	public IReadOnlyList<BucketDiagnostics> GetBucketSnapshots()
+		=> inner.GetBucketSnapshots();
+}
+
+/// <summary>
 ///     Diagnostic snapshot of a single bucket worker's state.
 /// </summary>
 /// <param name="BucketId">The bucket identifier string.</param>

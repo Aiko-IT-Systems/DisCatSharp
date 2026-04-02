@@ -123,8 +123,8 @@ public class FaultRecoveryTests
 
 		var r1 = CreateTestRequest(sourceBucket);
 		var r2 = CreateTestRequest(sourceBucket);
-		source.Enqueue(r1);
-		source.Enqueue(r2);
+		source.EnqueueDirect(r1);
+		source.EnqueueDirect(r2);
 
 		var migrated = source.MigrateQueueTo(target);
 
@@ -140,9 +140,9 @@ public class FaultRecoveryTests
 		using var source = CreateTestWorker(bucket);
 		using var target = CreateTestWorker(bucket);
 
-		source.Enqueue(CreateTestRequest(bucket));
-		source.Enqueue(CreateTestRequest(bucket));
-		source.Enqueue(CreateTestRequest(bucket));
+		source.EnqueueDirect(CreateTestRequest(bucket));
+		source.EnqueueDirect(CreateTestRequest(bucket));
+		source.EnqueueDirect(CreateTestRequest(bucket));
 
 		var recovered = source.MigrateQueueTo(target);
 		target.Recovered = recovered;

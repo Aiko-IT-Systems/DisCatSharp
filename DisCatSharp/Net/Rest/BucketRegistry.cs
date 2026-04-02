@@ -364,13 +364,28 @@ internal sealed class BucketRegistry : IDisposable
 								key);
 						}
 
-						// Swap the worker in the registry — if the key was removed concurrently, dispose the orphan
+						// Swap the worker in the registry — if the key was removed concurrently,
+						// try to re-add it. If that also fails, drain the migrated requests
+						// back to avoid ObjectDisposedException on dispose.
 						if (!this._bucketWorkers.TryUpdate(key, replacement, worker))
 						{
-							this._logger.LogWarning(LoggerEvents.RestCleaner,
-								"Failed to swap replacement worker for {Bucket} — key was removed concurrently, disposing orphan", key);
-							replacement.Dispose();
+							if (!this._bucketWorkers.TryAdd(key, replacement))
+							{
+								this._logger.LogWarning(LoggerEvents.RestCleaner,
+									"Failed to register replacement worker for {Bucket} — draining {Count} request(s) back to caller as faulted", key, replacement.QueueLength);
+
+								// Drain remaining requests and fail them explicitly — better than silent ObjectDisposedException
+								while (replacement.TryDequeue(out var orphaned))
+									orphaned.TrySetFaulted(new InvalidOperationException($"Fault recovery failed for bucket {key}: worker could not be registered."));
+
+								replacement.Dispose();
+								continue;
+							}
 						}
+
+						// Start the replacement's processing loop so migrated requests get executed
+						if (recovered > 0)
+							replacement.EnsureRunning();
 					}
 					else
 					{
