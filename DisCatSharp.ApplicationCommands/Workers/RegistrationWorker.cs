@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.ApplicationCommands.Checks;
@@ -24,7 +25,7 @@ internal class RegistrationWorker
 	/// <param name="commands">The command list.</param>
 	/// <param name="entryPointCommand">The entry point command.</param>
 	/// <returns>A list of registered commands.</returns>
-	internal static async Task<List<DiscordApplicationCommand>?> RegisterGlobalCommandsAsync(DiscordClient client, List<DiscordApplicationCommand> commands, DiscordApplicationCommand? entryPointCommand = null)
+	internal static async Task<List<DiscordApplicationCommand>?> RegisterGlobalCommandsAsync(DiscordClient client, List<DiscordApplicationCommand> commands, DiscordApplicationCommand? entryPointCommand = null, CancellationToken cancellationToken = default)
 	{
 		// Include entry point in the command list for proper change detection
 		var allCommands = entryPointCommand is not null
@@ -185,7 +186,7 @@ internal class RegistrationWorker
 	/// <param name="guildId">The target guild id.</param>
 	/// <param name="commands">The command list.</param>
 	/// <returns>A list of registered commands.</returns>
-	internal static async Task<List<DiscordApplicationCommand>?> RegisterGuildCommandsAsync(DiscordClient client, ulong guildId, List<DiscordApplicationCommand> commands)
+	internal static async Task<List<DiscordApplicationCommand>?> RegisterGuildCommandsAsync(DiscordClient client, ulong guildId, List<DiscordApplicationCommand> commands, CancellationToken cancellationToken = default)
 	{
 		var (changedCommands, unchangedCommands) = BuildGuildOverwriteList(client, guildId, commands);
 		var guildCommandsCreateList = BuildGuildCreateList(client, guildId, commands);

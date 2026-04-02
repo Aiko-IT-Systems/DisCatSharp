@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.ApplicationCommands.Attributes;
@@ -48,7 +49,7 @@ public static class ExtensionMethods
 	/// </summary>
 	/// <param name="client">Client to get application commands from.</param>
 	/// <returns>A dictionary of current <see cref="ApplicationCommandsExtension" /> with the key being the shard id.</returns>
-	public static async Task<IReadOnlyDictionary<int, ApplicationCommandsExtension>> GetApplicationCommandsAsync(this DiscordShardedClient client)
+	public static async Task<IReadOnlyDictionary<int, ApplicationCommandsExtension>> GetApplicationCommandsAsync(this DiscordShardedClient client, CancellationToken cancellationToken = default)
 	{
 		await client.InitializeShardsAsync().ConfigureAwait(false);
 		return client.ShardClients.Values.ToDictionary(shard => shard.ShardId, shard => shard.GetExtension<ApplicationCommandsExtension>()!);
@@ -144,7 +145,7 @@ public static class ExtensionMethods
 	/// <param name="client">Client to enable application commands on.</param>
 	/// <param name="config">Configuration to use.</param>
 	/// <returns>A dictionary of created <see cref="ApplicationCommandsExtension" /> with the key being the shard id.</returns>
-	public static async Task<IReadOnlyDictionary<int, ApplicationCommandsExtension>> UseApplicationCommandsAsync(this DiscordShardedClient client, ApplicationCommandsConfiguration? config = null)
+	public static async Task<IReadOnlyDictionary<int, ApplicationCommandsExtension>> UseApplicationCommandsAsync(this DiscordShardedClient client, ApplicationCommandsConfiguration? config = null, CancellationToken cancellationToken = default)
 	{
 		var modules = new Dictionary<int, ApplicationCommandsExtension>();
 		await client.InitializeShardsAsync().ConfigureAwait(false);

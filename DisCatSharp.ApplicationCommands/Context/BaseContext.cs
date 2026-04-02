@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
@@ -138,14 +139,14 @@ public class BaseContext : DisCatSharpCommandContext
 	///     The created <see cref="DiscordMessage" />, or <see langword="null" /> if <paramref name="type" /> creates no
 	///     content.
 	/// </returns>
-	public async Task<DiscordInteractionCallbackResponse> CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder? builder = null, ModifyMode modifyMode = ModifyMode.Update)
+	public async Task<DiscordInteractionCallbackResponse> CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder? builder = null, ModifyMode modifyMode = ModifyMode.Update, CancellationToken cancellationToken = default)
 		=> await this.Interaction.CreateResponseAsync(type, builder, modifyMode);
 
 	/// <summary>
 	///     Creates a modal response to this interaction.
 	/// </summary>
 	/// <param name="builder">The data to send.</param>
-	public Task CreateModalResponseAsync(DiscordInteractionModalBuilder builder)
+	public Task CreateModalResponseAsync(DiscordInteractionModalBuilder builder, CancellationToken cancellationToken = default)
 		=> this.Interaction.Type is not InteractionType.Ping && this.Interaction.Type is not InteractionType.ModalSubmit ? this.Interaction.CreateInteractionModalResponseAsync(builder) : throw new NotSupportedException("You can't respond to a PING with a modal.");
 
 	/// <summary>
@@ -155,7 +156,7 @@ public class BaseContext : DisCatSharpCommandContext
 	/// <param name="title">The title of the iframe.</param>
 	/// <param name="modalSize">The size of the iframe.</param>
 	/// <param name="iFramePath">The path of the iframe.</param>
-	public Task CreateInteractionIframeResponseAsync(string customId, string title, IframeModalSize modalSize = IframeModalSize.Normal, string? iFramePath = null)
+	public Task CreateInteractionIframeResponseAsync(string customId, string title, IframeModalSize modalSize = IframeModalSize.Normal, string? iFramePath = null, CancellationToken cancellationToken = default)
 		=> this.Interaction.Type is not InteractionType.Ping ? this.Interaction.CreateInteractionIframeResponseAsync(customId, title, modalSize, iFramePath) : throw new NotSupportedException("You can't respond to a PING with an iframe.");
 
 	/// <summary>
@@ -164,7 +165,7 @@ public class BaseContext : DisCatSharpCommandContext
 	/// <param name="builder">The data to edit the response with.</param>
 	/// <param name="modifyMode">The modify mode.</param>
 	/// <returns></returns>
-	public Task<DiscordMessage> EditResponseAsync(DiscordWebhookBuilder builder, ModifyMode modifyMode = ModifyMode.Update)
+	public Task<DiscordMessage> EditResponseAsync(DiscordWebhookBuilder builder, ModifyMode modifyMode = ModifyMode.Update, CancellationToken cancellationToken = default)
 		=> this.Interaction.EditOriginalResponseAsync(builder, modifyMode);
 
 	/// <summary>
@@ -172,14 +173,14 @@ public class BaseContext : DisCatSharpCommandContext
 	/// </summary>
 	/// <param name="content">The content to edit the response with.</param>
 	/// <returns></returns>
-	public Task<DiscordMessage> EditResponseAsync(string content)
+	public Task<DiscordMessage> EditResponseAsync(string content, CancellationToken cancellationToken = default)
 		=> this.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder().WithContent(content));
 
 	/// <summary>
 	///     Deletes the interaction response.
 	/// </summary>
 	/// <returns></returns>
-	public Task DeleteResponseAsync()
+	public Task DeleteResponseAsync(CancellationToken cancellationToken = default)
 		=> this.Interaction.DeleteOriginalResponseAsync();
 
 	/// <summary>
@@ -187,7 +188,7 @@ public class BaseContext : DisCatSharpCommandContext
 	/// </summary>
 	/// <param name="builder">The message to be sent, in the form of a webhook.</param>
 	/// <returns>The created message.</returns>
-	public Task<DiscordMessage> FollowUpAsync(DiscordFollowupMessageBuilder builder)
+	public Task<DiscordMessage> FollowUpAsync(DiscordFollowupMessageBuilder builder, CancellationToken cancellationToken = default)
 		=> this.Interaction.CreateFollowupMessageAsync(builder);
 
 	/// <summary>
@@ -195,8 +196,8 @@ public class BaseContext : DisCatSharpCommandContext
 	/// </summary>
 	/// <param name="content">The content of the message to be sent.</param>
 	/// <returns>The created message.</returns>
-	public Task<DiscordMessage> FollowUpAsync(string content)
-		=> this.FollowUpAsync(new DiscordFollowupMessageBuilder().WithContent(content));
+	public Task<DiscordMessage> FollowUpAsync(string content, CancellationToken cancellationToken = default)
+		=> this.FollowUpAsync(new DiscordFollowupMessageBuilder().WithContent(content), cancellationToken);
 
 	/// <summary>
 	///     Edits a followup message.
@@ -205,7 +206,7 @@ public class BaseContext : DisCatSharpCommandContext
 	/// <param name="builder">The webhook builder.</param>
 	/// <param name="modifyMode">The modify mode.</param>
 	/// <returns>The created message.</returns>
-	public Task<DiscordMessage> EditFollowupAsync(ulong followupMessageId, DiscordWebhookBuilder builder, ModifyMode modifyMode = ModifyMode.Update)
+	public Task<DiscordMessage> EditFollowupAsync(ulong followupMessageId, DiscordWebhookBuilder builder, ModifyMode modifyMode = ModifyMode.Update, CancellationToken cancellationToken = default)
 		=> this.Interaction.EditFollowupMessageAsync(followupMessageId, builder, modifyMode);
 
 	/// <summary>
@@ -214,28 +215,28 @@ public class BaseContext : DisCatSharpCommandContext
 	/// <param name="followupMessageId">The id of the followup message to edit.</param>
 	/// <param name="content">The content of the webhook.</param>
 	/// <returns>The created message.</returns>
-	public Task<DiscordMessage> EditFollowupAsync(ulong followupMessageId, string content)
-		=> this.EditFollowupAsync(followupMessageId, new DiscordWebhookBuilder().WithContent(content));
+	public Task<DiscordMessage> EditFollowupAsync(ulong followupMessageId, string content, CancellationToken cancellationToken = default)
+		=> this.EditFollowupAsync(followupMessageId, new DiscordWebhookBuilder().WithContent(content), cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Deletes a followup message.
 	/// </summary>
 	/// <param name="followupMessageId">The id of the followup message to delete.</param>
 	/// <returns></returns>
-	public Task DeleteFollowupAsync(ulong followupMessageId)
+	public Task DeleteFollowupAsync(ulong followupMessageId, CancellationToken cancellationToken = default)
 		=> this.Interaction.DeleteFollowupMessageAsync(followupMessageId);
 
 	/// <summary>
 	///     Gets the followup message.
 	/// </summary>
 	/// <param name="followupMessageId">The followup message id.</param>
-	public Task<DiscordMessage> GetFollowupMessageAsync(ulong followupMessageId)
+	public Task<DiscordMessage> GetFollowupMessageAsync(ulong followupMessageId, CancellationToken cancellationToken = default)
 		=> this.Interaction.GetFollowupMessageAsync(followupMessageId);
 
 	/// <summary>
 	///     Gets the original interaction response.
 	/// </summary>
 	/// <returns>The original interaction response.</returns>
-	public Task<DiscordMessage> GetOriginalResponseAsync()
+	public Task<DiscordMessage> GetOriginalResponseAsync(CancellationToken cancellationToken = default)
 		=> this.Interaction.GetOriginalResponseAsync();
 }

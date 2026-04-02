@@ -426,7 +426,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	///     Cleans all guild application commands.
 	///     <note type="caution">You normally don't need to execute it.</note>
 	/// </summary>
-	public async Task CleanGuildCommandsAsync()
+	public async Task CleanGuildCommandsAsync(CancellationToken cancellationToken = default)
 	{
 		foreach (var guild in this.Client.Guilds.Values)
 			await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guild.Id, []).ConfigureAwait(false);
@@ -436,7 +436,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	///     Cleans all global application commands.
 	///     <note type="caution">You normally don't need to execute it.</note>
 	/// </summary>
-	public async Task CleanGlobalCommandsAsync()
+	public async Task CleanGlobalCommandsAsync(CancellationToken cancellationToken = default)
 		=> await this.Client.BulkOverwriteGlobalApplicationCommandsAsync([]).ConfigureAwait(false);
 
 	/// <summary>
@@ -593,7 +593,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	///     Used for RegisterCommands and the <see cref="DisCatSharp.DiscordClient.Ready" /> event.
 	/// </summary>
-	internal async Task UpdateAsync()
+	internal async Task UpdateAsync(CancellationToken cancellationToken = default)
 	{
 		this.Client.Logger.Log(LogLevel.Information, "Request to register commands on shard {shard}", this.Client.ShardId);
 
@@ -724,7 +724,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					this.Client.Logger.Log(ApplicationCommandsLogLevel, "Registering");
 				}
 
-				await this.RegisterCommands([.. this._updateList.Where(x => x.Key == key).Select(x => x.Value)], key).ConfigureAwait(false);
+				await this.RegisterCommands([.. this._updateList.Where(x => x.Key == key).Select(x => x.Value)], key, cancellationToken).ConfigureAwait(false);
 			}
 
 			this.MISSING_SCOPE_GUILD_IDS = [.. failedGuilds];
@@ -758,7 +758,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	/// <param name="types">The types.</param>
 	/// <param name="guildId">The optional guild id.</param>
-	private async Task RegisterCommands(List<ApplicationCommandsModuleConfiguration> types, ulong? guildId)
+	private async Task RegisterCommands(List<ApplicationCommandsModuleConfiguration> types, ulong? guildId, CancellationToken cancellationToken = default)
 	{
 		this.Client.Logger.Log(LogLevel.Information, "Registering commands on shard {shard}", this.Client.ShardId);
 		//Initialize empty lists to be added to the global ones at the end
@@ -980,7 +980,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						{
 							if (updateList.Count is not 0)
 							{
-								var regCommands = await RegistrationWorker.RegisterGlobalCommandsAsync(this.Client, updateList, EntryPointCommand).ConfigureAwait(false);
+								var regCommands = await RegistrationWorker.RegisterGlobalCommandsAsync(this.Client, updateList, EntryPointCommand, cancellationToken).ConfigureAwait(false);
 								if (regCommands is not null)
 								{
 									var actualCommands = regCommands.Distinct().ToList();
@@ -1007,7 +1007,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						{
 							if (updateList.Count is not 0)
 							{
-								var regCommands = await RegistrationWorker.RegisterGuildCommandsAsync(this.Client, guildId.Value, updateList).ConfigureAwait(false);
+								var regCommands = await RegistrationWorker.RegisterGuildCommandsAsync(this.Client, guildId.Value, updateList, cancellationToken).ConfigureAwait(false);
 								if (regCommands is not null)
 								{
 									var actualCommands = regCommands.Distinct().ToList();
