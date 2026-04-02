@@ -309,15 +309,14 @@ internal class Sodium : IDisposable
 	}
 
 	/// <summary>
-	///     Decrypts <paramref name="ciphertext" /> using the specified AEAD mode.
+	///     One-shot decrypt aead diagnostics.
 	/// </summary>
-	/// <param name="ciphertext">Ciphertext payload to decrypt.</param>
-	/// <param name="plaintextDest">Destination span for decrypted plaintext (must equal ciphertext.Length).</param>
-	/// <param name="tag">16-byte authentication tag.</param>
-	/// <param name="nonceCounter4">4-byte little-endian nonce counter read from the end of the received packet.</param>
-	/// <param name="aad">Additional authenticated data — must be the RTP header bytes (including any CSRC extension).</param>
+	/// <param name="logger">The logger instance.</param>
 	/// <param name="mode">The AEAD encryption mode.</param>
-	/// <exception cref="CryptographicException">Thrown when decryption or authentication fails.</exception>
+	/// <param name="ciphertextLength">The ciphertext payload length.</param>
+	/// <param name="aadLength">The additional authenticated data length.</param>
+	/// <param name="keyLength">The key length..</param>
+	/// <param name="nonceCounter4">4-byte little-endian nonce counter read from the end of the received packet.</param>
 	private static void LogDecryptAeadDiagnosticsOnce(ILogger? logger, SodiumEncryptionMode mode, int ciphertextLength, int aadLength, int keyLength, ReadOnlySpan<byte> nonceCounter4)
 	{
 		if (logger == null)
@@ -344,6 +343,16 @@ internal class Sodium : IDisposable
 			nonceLen, BitConverter.ToString(diagNonce.ToArray()));
 	}
 
+	/// <summary>
+	///     Decrypts <paramref name="ciphertext" /> using the specified AEAD mode.
+	/// </summary>
+	/// <param name="ciphertext">Ciphertext payload to decrypt.</param>
+	/// <param name="plaintextDest">Destination span for decrypted plaintext (must equal ciphertext.Length).</param>
+	/// <param name="tag">16-byte authentication tag.</param>
+	/// <param name="nonceCounter4">4-byte little-endian nonce counter read from the end of the received packet.</param>
+	/// <param name="aad">Additional authenticated data — must be the RTP header bytes (including any CSRC extension).</param>
+	/// <param name="mode">The AEAD encryption mode.</param>
+	/// <exception cref="CryptographicException">Thrown when decryption or authentication fails.</exception>
 	public void DecryptAead(ReadOnlySpan<byte> ciphertext, Span<byte> plaintextDest, ReadOnlySpan<byte> tag, ReadOnlySpan<byte> nonceCounter4, ReadOnlySpan<byte> aad, SodiumEncryptionMode mode)
 	{
 		if (tag.Length != AES_GCM_TAG_SIZE)
