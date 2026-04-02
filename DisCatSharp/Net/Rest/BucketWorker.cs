@@ -92,13 +92,46 @@ internal sealed class BucketWorker : IDisposable
 
 	/// <summary>
 	///     Starts the worker loop if it is not already running.
+	///     Guarded against post-disposal restarts.
 	/// </summary>
 	private void EnsureRunning()
 	{
+		if (this._disposed)
+			return;
+
 		if (this._loopTask is null or { IsCompleted: true })
 			lock (this._startLock)
+			{
+				if (this._disposed)
+					return;
+
 				if (this._loopTask is null or { IsCompleted: true })
 					this._loopTask = Task.Run(() => this.RunAsync(this._cts.Token));
+			}
+	}
+
+	/// <summary>
+	///     Migrates all queued (not in-flight) requests to the <paramref name="target" /> worker.
+	///     Completes the writer to stop accepting new work, drains remaining items,
+	///     and enqueues them into the target. The in-flight request (if any)
+	///     completes on this worker. After migration, this worker idles out naturally.
+	/// </summary>
+	/// <param name="target">The worker to receive the migrated requests.</param>
+	/// <returns>The number of requests migrated.</returns>
+	internal int MigrateQueueTo(BucketWorker target)
+	{
+		// Stop accepting new work — the reader side continues for the in-flight request
+		this._queue.Writer.TryComplete();
+
+		// Drain queued items and move to target
+		var migrated = 0;
+		while (this._queue.Reader.TryRead(out var request))
+		{
+			target.Enqueue(request);
+			migrated++;
+		}
+
+		return migrated;
 	}
 
 	/// <summary>

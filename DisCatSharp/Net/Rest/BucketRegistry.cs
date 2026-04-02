@@ -190,6 +190,32 @@ internal sealed class BucketRegistry : IDisposable
 	internal BucketWorker GetOrCreateWorker(RateLimitBucket bucket)
 		=> this._bucketWorkers.GetOrAdd(bucket, static (b, ctx) => new(ctx.client, b, ctx.config, ctx.logger), (client: this._client, config: this._config, logger: this._logger));
 
+	/// <summary>
+	///     Migrates queued requests from the <paramref name="sourceBucket" />'s worker to the
+	///     <paramref name="targetBucket" />'s worker. The source worker's in-flight request (if any)
+	///     completes on the source worker; it idles out naturally after migration.
+	///     The source worker is removed from the registry but NOT disposed.
+	/// </summary>
+	/// <param name="sourceBucket">The bucket whose worker should be drained.</param>
+	/// <param name="targetBucket">The bucket whose worker should receive the migrated requests.</param>
+	/// <returns>The number of requests migrated, or 0 if no migration was needed.</returns>
+	internal int MigrateBucketWorker(RateLimitBucket sourceBucket, RateLimitBucket targetBucket)
+	{
+		if (!this._bucketWorkers.TryGetValue(sourceBucket, out var sourceWorker))
+			return 0;
+
+		var targetWorker = this.GetOrCreateWorker(targetBucket);
+		var migrated = sourceWorker.MigrateQueueTo(targetWorker);
+
+		// Remove the source worker from the registry — don't dispose; let it drain in-flight work
+		this._bucketWorkers.TryRemove(sourceBucket, out _);
+
+		if (migrated > 0)
+			this._logger.LogDebug(LoggerEvents.RestHashMover, "Migrated {Count} queued request(s) from {Source} to {Target}", migrated, sourceBucket, targetBucket);
+
+		return migrated;
+	}
+
 	// ── Atomic remap (acquires _remapLock) ───────────────────────────────────
 
 	/// <summary>
@@ -230,14 +256,29 @@ internal sealed class BucketRegistry : IDisposable
 			this._logger.LogDebug(LoggerEvents.RestHashMover, "Updating hash in {0}: \"{1}\" -> \"{2}\"", hashKey, oldHash, newHash);
 			var bucketId = RateLimitBucket.GenerateBucketId(newHash, bucket.GuildId, bucket.ChannelId, bucket.WebhookId);
 
+			// Check for merge case: another route already registered a different bucket for this hash+params.
+			// If so, migrate queued work from our worker to the existing bucket's worker.
+			RateLimitBucket? mergeBucket = null;
+			if (this._hashesToBuckets.TryGetValue(bucketId, out var existingBucket) && !ReferenceEquals(existingBucket, bucket))
+				mergeBucket = existingBucket;
+
 			_ = this._routesToHashes.AddOrUpdate(hashKey, newHash, (_, _) =>
 			{
 				bucket.Hash = newHash;
 
-				// Keep the old entry in _hashesToBuckets so concurrent lock-free GetBucket
-				// callers that still see the old hash can resolve to the same bucket object.
-				// The cleaner will remove the stale entry once the bucket expires.
-				_ = this._hashesToBuckets.AddOrUpdate(bucketId, bucket, (_, _) => bucket);
+				if (mergeBucket is not null)
+				{
+					// Merge case: migrate queued work from our worker to the existing bucket's worker
+					this._logger.LogDebug(LoggerEvents.RestHashMover, "Bucket merge detected for {0}: migrating work to existing bucket", bucketId);
+					this.MigrateBucketWorker(bucket, mergeBucket);
+				}
+				else
+				{
+					// Keep the old entry in _hashesToBuckets so concurrent lock-free GetBucket
+					// callers that still see the old hash can resolve to the same bucket object.
+					// The cleaner will remove the stale entry once the bucket expires.
+					_ = this._hashesToBuckets.AddOrUpdate(bucketId, bucket, (_, _) => bucket);
+				}
 
 				return newHash;
 			});
