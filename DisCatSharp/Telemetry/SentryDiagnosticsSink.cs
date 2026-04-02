@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 
 using Sentry;
 
@@ -14,7 +13,6 @@ namespace DisCatSharp.Telemetry;
 /// </summary>
 internal sealed class SentryDiagnosticsSink : ILibraryDiagnosticsSink
 {
-	private readonly SentryClient _client;
 	private readonly Scope _scope;
 	private readonly DiscordConfiguration _config;
 	private readonly ReportFingerprintCache _reportFingerprintCache = new();
@@ -26,7 +24,7 @@ internal sealed class SentryDiagnosticsSink : ILibraryDiagnosticsSink
 	/// <param name="config">The Discord configuration for filtering/enrichment decisions.</param>
 	public SentryDiagnosticsSink(SentryOptions options, DiscordConfiguration config)
 	{
-		this._client = new(options);
+		this.Client = new(options);
 		this._scope = new(options);
 		this._config = config;
 	}
@@ -37,7 +35,7 @@ internal sealed class SentryDiagnosticsSink : ILibraryDiagnosticsSink
 	/// <summary>
 	///     Gets the underlying Sentry client for advanced scenarios.
 	/// </summary>
-	internal SentryClient Client => this._client;
+	internal SentryClient Client { get; }
 
 	/// <inheritdoc />
 	public void CaptureException(string source, Exception exception, IDictionary<string, object>? context = null, IDictionary<string, string>? tags = null)
@@ -53,7 +51,7 @@ internal sealed class SentryDiagnosticsSink : ILibraryDiagnosticsSink
 		this.ApplyDefaultTags(evt, source);
 		ApplyTags(evt, tags);
 
-		this._client.CaptureEvent(evt, this._scope, new());
+		this.Client.CaptureEvent(evt, this._scope, new());
 		this.Flush();
 	}
 
@@ -89,9 +87,9 @@ internal sealed class SentryDiagnosticsSink : ILibraryDiagnosticsSink
 
 		sentryEvent.Contexts["library"] = new Dictionary<string, object>
 		{
-			["api_version"] = this._config.ApiVersion,
-			["shard_id"] = this._config.ShardId,
-			["shard_count"] = this._config.ShardCount,
+			["api_version"] = this._config.Api.Version,
+			["shard_id"] = this._config.Gateway.ShardId,
+			["shard_count"] = this._config.Gateway.ShardCount,
 			["intents"] = this._config.Intents.ToString()
 		};
 
@@ -107,7 +105,7 @@ internal sealed class SentryDiagnosticsSink : ILibraryDiagnosticsSink
 		if (report.FilePayload is not null && report.FilePayloadName is not null)
 			hint.Attachments.Add(new(AttachmentType.Default, new ByteAttachmentContent(report.FilePayload), report.FilePayloadName, "application/json"));
 
-		this._client.CaptureEvent(sentryEvent, this._scope, hint);
+		this.Client.CaptureEvent(sentryEvent, this._scope, hint);
 		this.Flush();
 	}
 
@@ -125,13 +123,13 @@ internal sealed class SentryDiagnosticsSink : ILibraryDiagnosticsSink
 		evt.SetTag(DiagnosticTags.SessionEvent, "start");
 		evt.Contexts["library"] = new Dictionary<string, object>
 		{
-			["api_version"] = this._config.ApiVersion,
-			["shard_id"] = this._config.ShardId,
-			["shard_count"] = this._config.ShardCount,
+			["api_version"] = this._config.Api.Version,
+			["shard_id"] = this._config.Gateway.ShardId,
+			["shard_count"] = this._config.Gateway.ShardCount,
 			["intents"] = this._config.Intents.ToString()
 		};
 
-		this._client.CaptureEvent(evt, this._scope, new());
+		this.Client.CaptureEvent(evt, this._scope, new());
 		this.Flush();
 	}
 
@@ -148,7 +146,7 @@ internal sealed class SentryDiagnosticsSink : ILibraryDiagnosticsSink
 		this.ApplyDefaultTags(evt, "DisCatSharp");
 		evt.SetTag(DiagnosticTags.SessionEvent, "end");
 
-		this._client.CaptureEvent(evt, this._scope, new());
+		this.Client.CaptureEvent(evt, this._scope, new());
 		this.Flush();
 	}
 
@@ -186,7 +184,7 @@ internal sealed class SentryDiagnosticsSink : ILibraryDiagnosticsSink
 		evt.SetExtra("metric.value", value);
 		evt.SetExtra("metric.unit", unit);
 
-		this._client.CaptureEvent(evt, this._scope, new());
+		this.Client.CaptureEvent(evt, this._scope, new());
 	}
 
 	/// <inheritdoc />
@@ -195,7 +193,7 @@ internal sealed class SentryDiagnosticsSink : ILibraryDiagnosticsSink
 
 	/// <inheritdoc />
 	public void Flush()
-		=> _ = this._client.FlushAsync(TimeSpan.FromSeconds(2));
+		=> _ = this.Client.FlushAsync(TimeSpan.FromSeconds(2));
 
 	/// <summary>
 	///     Applies default library tags to every Sentry event for consistent filtering.
@@ -203,9 +201,9 @@ internal sealed class SentryDiagnosticsSink : ILibraryDiagnosticsSink
 	private void ApplyDefaultTags(SentryEvent evt, string source)
 	{
 		evt.SetTag(DiagnosticTags.Source, source);
-		evt.SetTag(DiagnosticTags.ApiVersion, this._config.ApiVersion);
-		evt.SetTag(DiagnosticTags.ShardId, this._config.ShardId.ToString());
-		evt.SetTag(DiagnosticTags.ShardCount, this._config.ShardCount.ToString());
+		evt.SetTag(DiagnosticTags.ApiVersion, this._config.Api.Version);
+		evt.SetTag(DiagnosticTags.ShardId, this._config.Gateway.ShardId.ToString());
+		evt.SetTag(DiagnosticTags.ShardCount, this._config.Gateway.ShardCount.ToString());
 	}
 
 	/// <summary>

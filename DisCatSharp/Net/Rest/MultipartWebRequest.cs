@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 using DisCatSharp.Entities;
 
@@ -25,6 +26,7 @@ internal sealed class MultipartWebRequest : BaseRestRequest
 	/// <param name="ratelimitWaitOverride">The ratelimit_wait_override.</param>
 	/// <param name="overwriteFileIdStart">The file id start.</param>
 	/// <param name="fileFieldNameFactory">The file field name factory.</param>
+	/// <param name="cancellationToken">Optional cancellation token for caller-initiated cancellation.</param>
 	internal MultipartWebRequest(
 		BaseDiscordClient client,
 		RateLimitBucket bucket,
@@ -36,9 +38,10 @@ internal sealed class MultipartWebRequest : BaseRestRequest
 		IEnumerable<DiscordMessageFile>? files = null,
 		double? ratelimitWaitOverride = null,
 		int? overwriteFileIdStart = null,
-		Func<int, string>? fileFieldNameFactory = null
+		Func<int, string>? fileFieldNameFactory = null,
+		CancellationToken cancellationToken = default
 	)
-		: base(client, bucket, url, method, route, headers, ratelimitWaitOverride)
+		: base(client, bucket, url, method, route, headers, ratelimitWaitOverride, cancellationToken)
 	{
 		this.Values = values;
 		this.OverwriteFileIdStart = overwriteFileIdStart;
@@ -60,6 +63,7 @@ internal sealed class MultipartWebRequest : BaseRestRequest
 	/// <param name="ratelimitWaitOverride">The ratelimit_wait_override.</param>
 	/// <param name="overwriteFileIdStart">The file id start.</param>
 	/// <param name="fileFieldNameFactory">The file field name factory.</param>
+	/// <param name="cancellationToken">Optional cancellation token for caller-initiated cancellation.</param>
 	internal MultipartWebRequest(
 		DiscordOAuth2Client client,
 		RateLimitBucket bucket,
@@ -71,9 +75,10 @@ internal sealed class MultipartWebRequest : BaseRestRequest
 		IEnumerable<DiscordMessageFile>? files = null,
 		double? ratelimitWaitOverride = null,
 		int? overwriteFileIdStart = null,
-		Func<int, string>? fileFieldNameFactory = null
+		Func<int, string>? fileFieldNameFactory = null,
+		CancellationToken cancellationToken = default
 	)
-		: base(client, bucket, url, method, route, headers, ratelimitWaitOverride)
+		: base(client, bucket, url, method, route, headers, ratelimitWaitOverride, cancellationToken)
 	{
 		this.Values = values;
 		this.OverwriteFileIdStart = overwriteFileIdStart;
@@ -121,6 +126,7 @@ internal sealed class MultipartStickerWebRequest : BaseRestRequest
 	/// <param name="headers">The headers.</param>
 	/// <param name="file">The file.</param>
 	/// <param name="ratelimitWaitOverride">The ratelimit_wait_override.</param>
+	/// <param name="cancellationToken">Optional cancellation token for caller-initiated cancellation.</param>
 	internal MultipartStickerWebRequest(
 		BaseDiscordClient client,
 		RateLimitBucket bucket,
@@ -132,9 +138,10 @@ internal sealed class MultipartStickerWebRequest : BaseRestRequest
 		string? description = null,
 		IReadOnlyDictionary<string, string>? headers = null,
 		DiscordMessageFile? file = null,
-		double? ratelimitWaitOverride = null
+		double? ratelimitWaitOverride = null,
+		CancellationToken cancellationToken = default
 	)
-		: base(client, bucket, url, method, route, headers, ratelimitWaitOverride)
+		: base(client, bucket, url, method, route, headers, ratelimitWaitOverride, cancellationToken)
 	{
 		this.File = file;
 		this.Name = name;

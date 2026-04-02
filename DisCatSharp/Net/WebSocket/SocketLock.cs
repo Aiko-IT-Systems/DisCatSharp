@@ -22,6 +22,11 @@ internal sealed class SocketLock : IDisposable
 	private readonly int _maxConcurrency;
 
 	/// <summary>
+	///     Gets the socket lock timeout.
+	/// </summary>
+	private readonly TimeSpan _lockTimeout;
+
+	/// <summary>
 	///     Gets the cancel token.
 	/// </summary>
 	private CancellationToken? _timeoutCancel;
@@ -41,12 +46,14 @@ internal sealed class SocketLock : IDisposable
 	/// </summary>
 	/// <param name="appId">The app id.</param>
 	/// <param name="maxConcurrency">The max concurrency.</param>
-	public SocketLock(ulong appId, int maxConcurrency)
+	/// <param name="lockTimeout">Maximum time to hold the lock before auto-unlock.</param>
+	public SocketLock(ulong appId, int maxConcurrency, TimeSpan lockTimeout)
 	{
 		this.ApplicationId = appId;
 		this._timeoutCancelSource = null!;
 		this._timeoutCancel = null!;
 		this._maxConcurrency = maxConcurrency;
+		this._lockTimeout = lockTimeout;
 		this._lockSemaphore = new(maxConcurrency);
 	}
 
@@ -78,7 +85,7 @@ internal sealed class SocketLock : IDisposable
 
 		this._timeoutCancelSource = new();
 		this._timeoutCancel = this._timeoutCancelSource.Token;
-		this._unlockTask = Task.Delay(TimeSpan.FromSeconds(30), this._timeoutCancel.Value);
+		this._unlockTask = Task.Delay(this._lockTimeout, this._timeoutCancel.Value);
 		// CancellationToken.None + TaskScheduler.Default prevent ambient sync-context capture.
 		_ = this._unlockTask.ContinueWith(this.InternalUnlock, CancellationToken.None, TaskContinuationOptions.NotOnCanceled, TaskScheduler.Default);
 	}

@@ -230,12 +230,13 @@ public static class MessageExtensions
 	///     <see cref="InteractivityConfiguration.PaginationBehaviour" />
 	/// </param>
 	/// <param name="timeoutOverride">Overrides the timeout set in <see cref="InteractivityConfiguration.Timeout" /></param>
+	/// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
 	/// <exception cref="InvalidOperationException">
 	///     Thrown if interactivity is not enabled for the client associated with the
 	///     message.
 	/// </exception>
-	public static Task<ReadOnlyCollection<PollEmoji>> DoPollAsync(this DiscordMessage message, IEnumerable<DiscordEmoji> emojis, PollBehaviour? behaviorOverride = null, TimeSpan? timeoutOverride = null)
-		=> GetInteractivity(message).DoPollAsync(message, emojis, behaviorOverride, timeoutOverride);
+	public static Task<ReadOnlyCollection<PollEmoji>> DoPollAsync(this DiscordMessage message, IEnumerable<DiscordEmoji> emojis, PollBehaviour? behaviorOverride = null, TimeSpan? timeoutOverride = null, CancellationToken cancellationToken = default)
+		=> GetInteractivity(message).DoPollAsync(message, emojis, behaviorOverride, timeoutOverride, cancellationToken);
 
 	/// <summary>
 	///     Retrieves an interactivity instance from a message instance.

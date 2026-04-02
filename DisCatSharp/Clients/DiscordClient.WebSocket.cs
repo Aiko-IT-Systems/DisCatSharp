@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
@@ -35,7 +36,8 @@ public sealed partial class DiscordClient
 	{
 		var appId = this.CurrentApplication?.Id ?? 0ul;
 		var maxConcurrency = this.GatewayInfo?.SessionBucket.MaxConcurrency ?? 1;
-		return s_socketLocks.GetOrAdd(appId, new SocketLock(appId, maxConcurrency));
+		var lockTimeout = this.Configuration.Gateway.Advanced.SocketLockTimeout;
+		return s_socketLocks.GetOrAdd(appId, _ => new SocketLock(appId, maxConcurrency, lockTimeout));
 	}
 
 	#endregion
@@ -96,6 +98,29 @@ public sealed partial class DiscordClient
 	///     Gets the cancel token.
 	/// </summary>
 	private CancellationToken _cancelToken;
+
+	/// <summary>
+	///     Gets the ordered dispatch queue for this shard/client.
+	///     All dispatch payloads are written here and processed sequentially by <see cref="_dispatchConsumerTask" />.
+	/// </summary>
+	private Channel<GatewayPayload>? _dispatchQueue;
+
+	/// <summary>
+	///     Gets the background task that consumes payloads from <see cref="_dispatchQueue" />.
+	/// </summary>
+	private Task? _dispatchConsumerTask;
+
+	/// <summary>
+	///     Gets the dedicated presence update channel.
+	///     PRESENCE_UPDATE payloads bypass the main dispatch queue and are routed here
+	///     to avoid starving other event types under high presence volume.
+	/// </summary>
+	private Channel<GatewayPayload>? _presenceChannel;
+
+	/// <summary>
+	///     Gets the background task that consumes payloads from <see cref="_presenceChannel" />.
+	/// </summary>
+	private Task? _presenceConsumerTask;
 
 	#endregion
 
@@ -167,46 +192,66 @@ public sealed partial class DiscordClient
 			throw;
 		}
 
-		if (!this.Presences.ContainsKey(this.CurrentUser.Id))
-			this.CacheAggregatePresence(new()
+		// Initialize bot's own presence from _status or defaults.
+		this._currentPresence = this._status is { } s
+			? new DiscordPresence
+			{
+				Discord = this,
+				Activity = s.ActivitiesInternal?.FirstOrDefault(),
+				InternalActivities = s.ActivitiesInternal,
+				Status = s.Status,
+				InternalUser = new() { Id = this.CurrentUser.Id }
+			}
+			: new DiscordPresence
 			{
 				Discord = this,
 				RawActivity = new(),
 				Activity = new(),
 				Status = UserStatus.Online,
-				InternalUser = new()
-				{
-					Id = this.CurrentUser.Id
-				}
-			});
-		else
-		{
-			var pr = this.PresencesInternal[this.CurrentUser.Id];
-			pr.RawActivity = new();
-			pr.Activity = new();
-			pr.Status = UserStatus.Online;
-			this.CacheAggregatePresence(pr);
-		}
+				InternalUser = new() { Id = this.CurrentUser.Id }
+			};
 
 		Volatile.Write(ref this._skippedHeartbeats, 0);
 
-		this.WebSocketClient = this.Configuration.WebSocketClientFactory(this.Configuration.Proxy, this.ServiceProvider);
+		this.WebSocketClient = this.Configuration.Gateway.WebSocketClientFactory(this.Configuration.Proxy, this.ServiceProvider);
 		this.WebSocketClient.AddDefaultHeader(CommonHeaders.USER_AGENT, Utilities.GetUserAgent());
-		this._payloadDecompressor = this.Configuration.GatewayCompressionLevel is not GatewayCompressionLevel.None
-			? new PayloadDecompressor(this.Configuration.GatewayCompressionLevel)
+		this._payloadDecompressor = this.Configuration.Gateway.CompressionLevel is not GatewayCompressionLevel.None
+			? new PayloadDecompressor(this.Configuration.Gateway.CompressionLevel)
 			: null;
 
 		this._cancelTokenSource = new();
 		this._cancelToken = this._cancelTokenSource.Token;
+
+		// Initialize the ordered dispatch queue.
+		var capacity = this.Configuration.Gateway.Advanced.DispatchQueueCapacity;
+		this._dispatchQueue = capacity > 0
+			? Channel.CreateBounded<GatewayPayload>(new BoundedChannelOptions(capacity)
+			{
+				SingleReader = true,
+				SingleWriter = true
+			})
+			: Channel.CreateUnbounded<GatewayPayload>(new UnboundedChannelOptions
+			{
+				SingleReader = true,
+				SingleWriter = true
+			});
+
+		// Initialize the dedicated presence update channel (always unbounded — presence updates
+		// are high-volume but individually cheap; dropping them silently is worse than buffering).
+		this._presenceChannel = Channel.CreateUnbounded<GatewayPayload>(new UnboundedChannelOptions
+		{
+			SingleReader = true,
+			SingleWriter = true
+		});
 
 		this.WebSocketClient.Connected += SocketOnConnect;
 		this.WebSocketClient.Disconnected += SocketOnDisconnect;
 		this.WebSocketClient.MessageReceived += SocketOnMessage;
 		this.WebSocketClient.ExceptionThrown += SocketOnException;
 
-		var gwuri = this.GatewayUri.AddParameter("v", this.Configuration.ApiVersion).AddParameter("encoding", "json");
+		var gwuri = this.GatewayUri.AddParameter("v", this.Configuration.Api.Version).AddParameter("encoding", "json");
 
-		if (this.Configuration.GatewayCompressionLevel == GatewayCompressionLevel.Stream)
+		if (this.Configuration.Gateway.CompressionLevel == GatewayCompressionLevel.Stream)
 			gwuri = gwuri.AddParameter("compress", "zlib-stream");
 
 		this.GatewayUri = gwuri;
@@ -217,8 +262,12 @@ public sealed partial class DiscordClient
 		await this.WebSocketClient.ConnectAsync(this.GatewayUri).ConfigureAwait(false);
 		return;
 
-		Task SocketOnConnect(IWebSocketClient sender, SocketEventArgs e)
-			=> this._socketOpened.InvokeAsync(this, e);
+		async Task SocketOnConnect(IWebSocketClient sender, SocketEventArgs e)
+		{
+			this._dispatchConsumerTask = Task.Run(() => this.DispatchConsumerLoopAsync(this._cancelToken), this._cancelToken);
+			this._presenceConsumerTask = Task.Run(() => this.PresenceConsumerLoopAsync(this._cancelToken), this._cancelToken);
+			await this._socketOpened.InvokeAsync(this, e).ConfigureAwait(false);
+		}
 
 		async Task SocketOnMessage(IWebSocketClient sender, SocketMessageEventArgs e)
 		{
@@ -319,7 +368,7 @@ public sealed partial class DiscordClient
 				this._sessionId = null;
 			}
 
-			if (this.Configuration.AutoReconnect && shouldReconnect)
+			if (this.Configuration.Gateway.AutoReconnect && shouldReconnect)
 			{
 				this.Logger.LogCritical(LoggerEvents.ConnectionClose, "Connection terminated ({CloseCode}, '{Reason}'), reconnecting", e.CloseCode, e.CloseMessage ?? "No reason given");
 				this._identified = false;
@@ -331,7 +380,7 @@ public sealed partial class DiscordClient
 
 				await this.ConnectAsync(this._status?.ActivitiesInternal?.FirstOrDefault(), this._status?.Status, this._status?.IdleSince is not null ? Utilities.GetDateTimeOffsetFromMilliseconds(this._status.IdleSince.Value) : null).ConfigureAwait(false);
 			}
-			else if (this.Configuration.AutoReconnect)
+			else if (this.Configuration.Gateway.AutoReconnect)
 			{
 				this._sessionId = null;
 				this._identified = false;
@@ -367,11 +416,19 @@ public sealed partial class DiscordClient
 		switch (payload.OpCode)
 		{
 			case GatewayOpCode.Dispatch:
-				_ = Task.Run(async () => await this.HandleDispatchSafelyAsync(payload).ConfigureAwait(false), this._cancelToken);
+				if (payload.EventName is "PRESENCE_UPDATE")
+				{
+					// Route presence updates to the dedicated fast-path channel to avoid
+					// starving the main dispatch queue under high presence volume.
+					if (!this._presenceChannel!.Writer.TryWrite(payload))
+						this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Presence channel is full or completed; dropping PRESENCE_UPDATE (seq {Sequence}).", payload.Sequence);
+				}
+				else if (!this._dispatchQueue!.Writer.TryWrite(payload))
+					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Dispatch queue is full; dropping event {EventName} (seq {Sequence}). Consider increasing DispatchQueueCapacity.", payload.EventName, payload.Sequence);
 				break;
 
 			case GatewayOpCode.Heartbeat:
-				await this.OnHeartbeatAsync((long)payload.Data).ConfigureAwait(false);
+				await this.OnHeartbeatAsync(this.GetHeartbeatSequence(payload.Data)).ConfigureAwait(false);
 				break;
 
 			case GatewayOpCode.Reconnect:
@@ -404,7 +461,7 @@ public sealed partial class DiscordClient
 
 				if (this.DiagnosticsSink.IsEnabled)
 				{
-					var scrubbedPayload = Utilities.StripTokensAndOptIdsInJson(data, this.Configuration.EnableDiscordIdScrubber);
+					var scrubbedPayload = Utilities.StripTokensAndOptIdsInJson(data, this.Configuration.Telemetry.EnableDiscordIdScrubber);
 					byte[]? filePayload = null;
 					string? filePayloadName = null;
 					if (scrubbedPayload is not null && scrubbedPayload.Length > 8192)
@@ -440,6 +497,23 @@ public sealed partial class DiscordClient
 				break;
 		}
 	}
+
+	/// <summary>
+	///     Gets the heartbeat sequence from the gateway payload, falling back to the last known sequence when Discord sends
+	///     a heartbeat request without one.
+	/// </summary>
+	/// <param name="data">The heartbeat payload data.</param>
+	/// <returns>The sequence to send back with the heartbeat.</returns>
+	private long GetHeartbeatSequence(object? data)
+		=> data switch
+		{
+			null => this._lastSequence,
+			long sequence => sequence,
+			int sequence => sequence,
+			JValue { Type: JTokenType.Integer } sequence => sequence.Value<long>(),
+			JValue { Type: JTokenType.Null } => this._lastSequence,
+			_ => this._lastSequence
+		};
 
 	/// <summary>
 	///     Handles the heartbeat.
@@ -478,7 +552,7 @@ public sealed partial class DiscordClient
 		if (data)
 		{
 			this.Logger.LogTrace(LoggerEvents.WebSocketReceive, "Received INVALID_SESSION (OP9, true)");
-			await Task.Delay(6000, this._cancelToken).ConfigureAwait(false);
+			await Task.Delay(this.Configuration.Gateway.Advanced.ReconnectDelay, this._cancelToken).ConfigureAwait(false);
 			await this.SendResumeAsync().ConfigureAwait(false);
 		}
 		else
@@ -591,6 +665,150 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
+	///     Sequentially consumes dispatch payloads from <see cref="_dispatchQueue" />, ensuring FIFO ordering
+	///     for internal cache and state mutations.
+	/// </summary>
+	/// <remarks>
+	///     The consumer always awaits each dispatch event sequentially to guarantee ordered cache mutations.
+	///     The configured <see cref="GatewayDispatchMode" /> controls whether user event handlers are awaited
+	///     inline or fire-and-forget — that logic lives in <see cref="RaiseEventAsync{TArgs}" />.
+	/// </remarks>
+	/// <param name="cancellationToken">Token that signals shutdown.</param>
+	private async Task DispatchConsumerLoopAsync(CancellationToken cancellationToken)
+	{
+		var mode = this.Configuration.Gateway.Advanced.DispatchMode;
+		this.Logger.LogDebug(LoggerEvents.Startup, "Dispatch consumer loop started (mode: {DispatchMode})", mode);
+
+		try
+		{
+			await foreach (var payload in this._dispatchQueue!.Reader.ReadAllAsync(cancellationToken).ConfigureAwait(false))
+				await this.HandleDispatchSafelyAsync(payload).ConfigureAwait(false);
+		}
+		catch (OperationCanceledException)
+		{
+			// Expected during shutdown — the cancellation token was triggered.
+		}
+		catch (ChannelClosedException)
+		{
+			// Expected if the channel writer is completed (rare but safe).
+		}
+		catch (Exception ex)
+		{
+			this.Logger.LogCritical(LoggerEvents.WebSocketReceiveFailure, ex, "Dispatch consumer loop terminated unexpectedly");
+
+			if (this.DiagnosticsSink.IsEnabled)
+				this.DiagnosticsSink.CaptureException("DisCatSharp", ex, new Dictionary<string, object>
+				{
+					["component"] = "DispatchConsumerLoop"
+				}, new Dictionary<string, string>
+				{
+					[Telemetry.DiagnosticTags.ErrorOrigin] = Telemetry.DiagnosticTags.OriginLibrary
+				});
+		}
+
+		this.Logger.LogDebug(LoggerEvents.Misc, "Dispatch consumer loop stopped");
+	}
+
+	/// <summary>
+	///     Consumes PRESENCE_UPDATE payloads from the dedicated <see cref="_presenceChannel" />.
+	///     Runs independently of the main dispatch loop so presence spam cannot starve other events.
+	///     Coalesces rapid same-user updates: when multiple updates for the same user are queued,
+	///     only the latest payload is processed (latest-wins deduplication).
+	/// </summary>
+	/// <param name="cancellationToken">Token that signals shutdown.</param>
+	private async Task PresenceConsumerLoopAsync(CancellationToken cancellationToken)
+	{
+		this.Logger.LogDebug(LoggerEvents.Startup, "Presence consumer loop started");
+
+		// Reusable dictionary for coalescing within each drain cycle.
+		// Key is (guildId, userId) to preserve per-guild presence state.
+		var coalesceBatch = new Dictionary<(ulong GuildId, ulong UserId), GatewayPayload>(64);
+
+		try
+		{
+			var reader = this._presenceChannel!.Reader;
+
+			while (await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false))
+			{
+				coalesceBatch.Clear();
+
+				// Drain all immediately available items and coalesce by (guildId, userId) — latest wins.
+				while (reader.TryRead(out var payload))
+				{
+					try
+					{
+						var dat = (JObject)payload.Data;
+						var uid = (ulong)dat["user"]!["id"]!;
+						var gid = (ulong?)dat["guild_id"] ?? 0;
+						coalesceBatch[(gid, uid)] = payload;
+					}
+					catch
+					{
+						// Malformed payload — process it directly to let the handler report the error.
+						await this.HandlePresenceDispatchSafelyAsync(payload).ConfigureAwait(false);
+					}
+				}
+
+				// Process coalesced payloads.
+				foreach (var payload in coalesceBatch.Values)
+					await this.HandlePresenceDispatchSafelyAsync(payload).ConfigureAwait(false);
+			}
+		}
+		catch (OperationCanceledException)
+		{
+			// Expected during shutdown.
+		}
+		catch (ChannelClosedException)
+		{
+			// Expected if the channel writer is completed.
+		}
+		catch (Exception ex)
+		{
+			this.Logger.LogCritical(LoggerEvents.WebSocketReceiveFailure, ex, "Presence consumer loop terminated unexpectedly");
+
+			if (this.DiagnosticsSink.IsEnabled)
+				this.DiagnosticsSink.CaptureException("DisCatSharp", ex, new Dictionary<string, object>
+				{
+					["component"] = "PresenceConsumerLoop"
+				}, new Dictionary<string, string>
+				{
+					[Telemetry.DiagnosticTags.ErrorOrigin] = Telemetry.DiagnosticTags.OriginLibrary
+				});
+		}
+
+		this.Logger.LogDebug(LoggerEvents.Misc, "Presence consumer loop stopped");
+	}
+
+	/// <summary>
+	///     Handles a single PRESENCE_UPDATE payload from the presence fast-path channel.
+	///     Cache updates happen inline; the user event fires fire-and-forget.
+	/// </summary>
+	/// <param name="payload">The gateway payload.</param>
+	private async Task HandlePresenceDispatchSafelyAsync(GatewayPayload payload)
+	{
+		try
+		{
+			var dat = (JObject)payload.Data;
+			await this.OnPresenceUpdateEventAsync(dat, (JObject)dat["user"]!).ConfigureAwait(false);
+		}
+		catch (Exception ex)
+		{
+			this.Logger.LogError(LoggerEvents.EventHandlerException, ex, "Exception in presence update handler");
+
+			if (this.DiagnosticsSink.IsEnabled)
+				this.DiagnosticsSink.CaptureException("DisCatSharp", ex, new Dictionary<string, object>
+				{
+					["component"] = "PresenceConsumerLoop",
+					["event"] = "PRESENCE_UPDATE",
+					["sequence"] = payload.Sequence ?? -1
+				}, new Dictionary<string, string>
+				{
+					[Telemetry.DiagnosticTags.ErrorOrigin] = Telemetry.DiagnosticTags.OriginLibrary
+				});
+		}
+	}
+
+	/// <summary>
 	///     Handles the heartbeat loop.
 	/// </summary>
 	internal async Task HeartbeatLoopAsync()
@@ -648,25 +866,15 @@ public sealed partial class DiscordClient
 
 		await this.WsSendAsync(statusstr).ConfigureAwait(false);
 
-		if (!this.PresencesInternal.TryGetValue(this.CurrentUser.Id, out var value))
-			this.CacheAggregatePresence(new()
-			{
-				Discord = this,
-				Activity = acts.First(),
-				InternalActivities = acts,
-				Status = userStatus ?? UserStatus.Online,
-				InternalUser = new()
-				{
-					Id = this.CurrentUser.Id
-				}
-			});
-		else
+		// Update bot's own presence locally (bots never receive PRESENCE_UPDATE for themselves).
+		this._currentPresence = new()
 		{
-			value.Activity = acts.First();
-			value.InternalActivities = acts;
-			value.Status = userStatus ?? value.Status;
-			this.CacheAggregatePresence(value);
-		}
+			Discord = this,
+			Activity = acts.First(),
+			InternalActivities = acts,
+			Status = userStatus ?? UserStatus.Online,
+			InternalUser = new() { Id = this.CurrentUser.Id }
+		};
 	}
 
 	/// <summary>
@@ -675,14 +883,15 @@ public sealed partial class DiscordClient
 	/// <param name="seq">The sequenze.</param>
 	internal async Task SendHeartbeatAsync(long seq)
 	{
-		var moreThan5 = Volatile.Read(ref this._skippedHeartbeats) > 5;
+		var zombieThreshold = this.Configuration.Gateway.Advanced.HeartbeatZombieThreshold;
+		var isZombie = Volatile.Read(ref this._skippedHeartbeats) >= zombieThreshold;
 		var guildsComp = Volatile.Read(ref this._guildDownloadCompleted);
 
 		switch (guildsComp)
 		{
-			case true when moreThan5:
+			case true when isZombie:
 			{
-				this.Logger.LogCritical(LoggerEvents.HeartbeatFailure, "Server failed to acknowledge more than 5 heartbeats - connection is zombie");
+				this.Logger.LogCritical(LoggerEvents.HeartbeatFailure, "Server failed to acknowledge {Threshold} or more heartbeats - connection is zombie", zombieThreshold);
 
 				var args = new ZombiedEventArgs(this.ServiceProvider)
 				{
@@ -694,7 +903,7 @@ public sealed partial class DiscordClient
 				await this.InternalReconnectAsync(code: 4001, message: "Too many heartbeats missed").ConfigureAwait(false);
 				return;
 			}
-			case false when moreThan5:
+			case false when isZombie:
 			{
 				var args = new ZombiedEventArgs(this.ServiceProvider)
 				{
@@ -703,7 +912,7 @@ public sealed partial class DiscordClient
 				};
 				await this._zombied.InvokeAsync(this, args).ConfigureAwait(false);
 
-				this.Logger.LogWarning(LoggerEvents.HeartbeatFailure, "Server failed to acknowledge more than 5 heartbeats, but the guild download is still running - check your connection speed");
+				this.Logger.LogWarning(LoggerEvents.HeartbeatFailure, "Server failed to acknowledge {Threshold} or more heartbeats, but the guild download is still running - check your connection speed", zombieThreshold);
 				break;
 			}
 		}
@@ -734,17 +943,17 @@ public sealed partial class DiscordClient
 		var identify = new GatewayIdentify
 		{
 			Token = Utilities.GetFormattedToken(this),
-			Compress = this.Configuration.GatewayCompressionLevel == GatewayCompressionLevel.Payload,
-			LargeThreshold = this.Configuration.LargeThreshold,
+			Compress = this.Configuration.Gateway.CompressionLevel == GatewayCompressionLevel.Payload,
+			LargeThreshold = this.Configuration.Gateway.LargeThreshold,
 			ShardInfo = new()
 			{
-				ShardId = this.Configuration.ShardId,
-				ShardCount = this.Configuration.ShardCount
+				ShardId = this.Configuration.Gateway.ShardId,
+				ShardCount = this.Configuration.Gateway.ShardCount
 			},
 			Presence = status,
 			Intents = this.Configuration.Intents,
 			Discord = this,
-			Capabilities = this.Configuration.Capabilities
+			Capabilities = this.Configuration.Gateway.Capabilities
 		};
 		var payload = new GatewayPayload
 		{
@@ -791,9 +1000,8 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	///     Internals the update gateway async.
+	///     Updates the gateway info.
 	/// </summary>
-	/// <returns>A Task.</returns>
 	internal async Task InternalUpdateGatewayAsync()
 	{
 		var info = await this.GetGatewayInfoAsync().ConfigureAwait(false);

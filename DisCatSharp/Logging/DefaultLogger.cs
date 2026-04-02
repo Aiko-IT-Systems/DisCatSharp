@@ -27,7 +27,7 @@ public class DefaultLogger : ILogger<BaseDiscordClient>
 	/// </summary>
 	/// <param name="client">The client.</param>
 	internal DefaultLogger(BaseDiscordClient client)
-		: this(client.Configuration.MinimumLogLevel, client.Configuration.LogTimestampFormat)
+		: this(client.Configuration.Logging.MinimumLogLevel, client.Configuration.Logging.LogTimestampFormat)
 	{ }
 
 	/// <summary>

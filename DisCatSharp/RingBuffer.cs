@@ -22,7 +22,7 @@ public class RingBuffer<T> : ICollection<T>
 	///     Tracks which slots have been explicitly written. Required to correctly distinguish
 	///     uninitialised default-valued struct slots from slots that have been written with Add.
 	/// </summary>
-	private bool[] _occupied;
+	private readonly bool[] _occupied;
 
 	/// <summary>
 	///     Creates a new ring buffer with specified size.

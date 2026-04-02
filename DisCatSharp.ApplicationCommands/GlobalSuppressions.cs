@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.s_registeredCommands")]
-[assembly: SuppressMessage("Usage", "CA2254:Template should be a static expression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.UpdateAsync~System.Threading.Tasks.Task")]
 [assembly: SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.GlobalCommands")]
 [assembly: SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.GuildCommands")]
 [assembly: SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.RegisteredCommands")]

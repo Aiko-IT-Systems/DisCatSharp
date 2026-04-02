@@ -106,17 +106,6 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 	private static readonly DiagnosticDescriptor s_discordUnreleasedRule = new DiagnosticDescriptor(DisCatSharpDiagnosticIds.DiscordUnreleased, s_titleDiscordUnreleased, s_messageFormatDiscordUnreleased, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionDiscordUnreleased, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0103");
 
 	/// <inheritdoc cref="DiagnosticDescriptor" />
-	private static readonly DiagnosticDescriptor s_presenceAccessMigrationRule = new(
-		DisCatSharpDiagnosticIds.PresenceAccessMigration,
-		"[DCS] Presence access migration",
-		"Use 'GetPresences({0})' instead of filtering 'Presences' manually",
-		CATEGORY,
-		DiagnosticSeverity.Warning,
-		true,
-		"Use DiscordClient.GetPresences(userId) for user-specific presence lookups instead of filtering the aggregate Presences cache manually.",
-		"https://docs.dcs.aitsys.dev/vs/analyzer/dcs/1101");
-
-	/// <inheritdoc cref="DiagnosticDescriptor" />
 	private static readonly DiagnosticDescriptor s_requiresFeatureRule = new DiagnosticDescriptor(DisCatSharpDiagnosticIds.RequiresFeature, s_titleRequiresFeature, s_messageFormatRequiresFeature, CATEGORY, DiagnosticSeverity.Info, true, s_descriptionRequiresFeature, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0200");
 
 	/// <inheritdoc cref="DiagnosticDescriptor" />
@@ -144,9 +133,62 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 		new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionBanDeleteMessageDaysMigration), Resources.ResourceManager, typeof(Resources)),
 		"https://docs.dcs.aitsys.dev/vs/analyzer/dcs/1102");
 
+	/// <inheritdoc cref="LocalizableString" />
+	private static readonly LocalizableString s_titleConfigPropertyMigration = new LocalizableResourceString(nameof(Resources.AnalyzerTitleConfigPropertyMigration), Resources.ResourceManager, typeof(Resources));
+
+	/// <inheritdoc cref="LocalizableString" />
+	private static readonly LocalizableString s_messageFormatConfigPropertyMigration = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormatConfigPropertyMigration), Resources.ResourceManager, typeof(Resources));
+
+	/// <inheritdoc cref="LocalizableString" />
+	private static readonly LocalizableString s_descriptionConfigPropertyMigration = new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionConfigPropertyMigration), Resources.ResourceManager, typeof(Resources));
+
+	/// <inheritdoc cref="DiagnosticDescriptor" />
+	private static readonly DiagnosticDescriptor s_presencesPropertyRemovalRule = new(
+		DisCatSharpDiagnosticIds.PresencesPropertyRemoval,
+		"[DCS] Presences property removed",
+		"'DiscordClient.Presences' has been removed. Use 'GetPresences(userId)' for user-specific lookups, 'guild.Presences' for guild-scoped, or 'CurrentPresence' for the bot's own presence.",
+		CATEGORY,
+		DiagnosticSeverity.Error,
+		true,
+		"The aggregate Presences flat view has been removed. Use DiscordClient.GetPresences(userId), DiscordGuild.Presences, or DiscordClient.CurrentPresence instead.",
+		"https://docs.dcs.aitsys.dev/vs/analyzer/dcs/1103");
+
+	/// <inheritdoc cref="DiagnosticDescriptor" />
+	private static readonly DiagnosticDescriptor s_configPropertyMigrationRule = new(
+		DisCatSharpDiagnosticIds.ConfigPropertyMigration,
+		s_titleConfigPropertyMigration,
+		s_messageFormatConfigPropertyMigration,
+		CATEGORY,
+		DiagnosticSeverity.Warning,
+		isEnabledByDefault: true,
+		description: s_descriptionConfigPropertyMigration,
+		helpLinkUri: "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/1201");
+
+	/// <inheritdoc cref="DiagnosticDescriptor" />
+	private static readonly DiagnosticDescriptor s_asyncDisposalUsingMigrationRule = new(
+		DisCatSharpDiagnosticIds.AsyncDisposalUsingMigration,
+		"[DCS] Prefer 'await using' for async-disposable clients",
+		"'{0}' implements IAsyncDisposable. Use 'await using' instead of 'using' for proper async disposal.",
+		CATEGORY,
+		DiagnosticSeverity.Warning,
+		isEnabledByDefault: true,
+		description: "DisCatSharp client types now implement IAsyncDisposable. Using 'await using' ensures resources are released asynchronously without blocking threads.",
+		helpLinkUri: "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/1301");
+
+	/// <inheritdoc cref="DiagnosticDescriptor" />
+	private static readonly DiagnosticDescriptor s_asyncDisposalDisposeMigrationRule = new(
+		DisCatSharpDiagnosticIds.AsyncDisposalDisposeMigration,
+		"[DCS] Prefer DisposeAsync() over Dispose()",
+		"'{0}.Dispose()' should be replaced with 'await {0}.DisposeAsync()'. The sync Dispose() path blocks the calling thread.",
+		CATEGORY,
+		DiagnosticSeverity.Warning,
+		isEnabledByDefault: true,
+		description: "DisCatSharp client types now implement IAsyncDisposable. Calling DisposeAsync() avoids blocking the calling thread during graceful shutdown.",
+		helpLinkUri: "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/1302");
+
 	/// <inheritdoc />
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
-		=> ImmutableArray.Create(s_experimentalRule, s_deprecatedRule, s_discordInExperimentRule, s_discordDeprecatedRule, s_discordUnreleasedRule, s_presenceAccessMigrationRule, s_requiresFeatureRule, s_requiresOverrideRule, s_applicationCommandChecksFailedMigrationRule, s_banDeleteMessageDaysMigrationRule);
+		=> ImmutableArray.Create(s_experimentalRule, s_deprecatedRule, s_discordInExperimentRule, s_discordDeprecatedRule, s_discordUnreleasedRule, s_requiresFeatureRule, s_requiresOverrideRule, s_applicationCommandChecksFailedMigrationRule, s_banDeleteMessageDaysMigrationRule, s_presencesPropertyRemovalRule, s_configPropertyMigrationRule, s_asyncDisposalUsingMigrationRule, s_asyncDisposalDisposeMigrationRule);
 
 	/// <inheritdoc />
 	public override void Initialize(AnalysisContext context)
@@ -164,9 +206,14 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 		context.RegisterSyntaxNodeAction(AnalyzeSyntaxNode, SyntaxKind.ObjectCreationExpression);
 		context.RegisterSyntaxNodeAction(AnalyzeSyntaxNode, SyntaxKind.ElementAccessExpression);
 		context.RegisterSyntaxNodeAction(AnalyzeSyntaxNode, SyntaxKind.SimpleMemberAccessExpression);
-		context.RegisterSyntaxNodeAction(AnalyzePresenceAccessMigration, SyntaxKind.InvocationExpression);
+		context.RegisterSyntaxNodeAction(AnalyzePresencesPropertyRemoval, SyntaxKind.SimpleMemberAccessExpression);
 		context.RegisterSyntaxNodeAction(AnalyzeApplicationCommandChecksFailedMigration, SyntaxKind.AddAssignmentExpression);
 		context.RegisterSyntaxNodeAction(AnalyzeBanDeleteMessageDaysMigration, SyntaxKind.InvocationExpression);
+		context.RegisterSyntaxNodeAction(AnalyzeConfigPropertyAccess, SyntaxKind.SimpleMemberAccessExpression);
+		context.RegisterSyntaxNodeAction(AnalyzeInitializerAssignment, SyntaxKind.SimpleAssignmentExpression);
+		context.RegisterSyntaxNodeAction(AnalyzeAsyncDisposalUsing, SyntaxKind.LocalDeclarationStatement);
+		context.RegisterSyntaxNodeAction(AnalyzeAsyncDisposalUsing, SyntaxKind.UsingStatement);
+		context.RegisterSyntaxNodeAction(AnalyzeAsyncDisposalDispose, SyntaxKind.InvocationExpression);
 	}
 
 	/// <summary>
@@ -338,19 +385,15 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 			_ => "manual migration required"
 		};
 
-	private static void AnalyzePresenceAccessMigration(SyntaxNodeAnalysisContext context)
+	private static void AnalyzePresencesPropertyRemoval(SyntaxNodeAnalysisContext context)
 	{
-		if (context.Node is not InvocationExpressionSyntax invocation ||
-		    !PresenceAccessMigrationAnalysis.TryGetCandidate(context.SemanticModel, invocation, context.CancellationToken, out var candidate))
+		if (context.Node is not MemberAccessExpressionSyntax memberAccess ||
+		    !PresencesPropertyRemovalAnalysis.TryGetCandidate(context.SemanticModel, memberAccess, context.CancellationToken, out _))
 			return;
 
-		var userExpression = candidate.UserExpression.ToString();
-		var properties = DisCatSharpDiagnosticProperties.CreatePresenceAccessMigrationProperties(userExpression);
 		context.ReportDiagnostic(Diagnostic.Create(
-			s_presenceAccessMigrationRule,
-			candidate.PresencesAccess.Name.GetLocation(),
-			properties,
-			userExpression));
+			s_presencesPropertyRemovalRule,
+			memberAccess.Name.GetLocation()));
 	}
 
 	private static void AnalyzeBanDeleteMessageDaysMigration(SyntaxNodeAnalysisContext context)
@@ -362,6 +405,187 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 		context.ReportDiagnostic(Diagnostic.Create(
 			s_banDeleteMessageDaysMigrationRule,
 			nameColon.GetLocation()));
+	}
+
+	private static void AnalyzeConfigPropertyAccess(SyntaxNodeAnalysisContext context)
+	{
+		if (context.Node is not MemberAccessExpressionSyntax memberAccess)
+			return;
+
+		if (!ConfigPropertyMigrationAnalysis.TryGetMigration(
+				context.SemanticModel,
+				memberAccess,
+				context.CancellationToken,
+				out var oldName,
+				out var nestedPath,
+				out var newName))
+			return;
+
+		var fullNewPath = string.IsNullOrEmpty(nestedPath) ? newName : $"{nestedPath}.{newName}";
+		var properties = DisCatSharpDiagnosticProperties.CreateConfigPropertyMigrationProperties(nestedPath, newName);
+
+		context.ReportDiagnostic(Diagnostic.Create(
+			s_configPropertyMigrationRule,
+			memberAccess.Name.GetLocation(),
+			properties,
+			oldName,
+			fullNewPath));
+	}
+
+	/// <summary>
+	///     Analyzes property assignments inside object initializers.
+	///     Catches patterns like <c>new DiscordConfiguration { ApiChannel = ... }</c>.
+	/// </summary>
+	private static void AnalyzeInitializerAssignment(SyntaxNodeAnalysisContext context)
+	{
+		if (context.Node is not AssignmentExpressionSyntax { Parent: InitializerExpressionSyntax initializer, Left: IdentifierNameSyntax identifier })
+			return;
+
+		var symbolInfo = context.SemanticModel.GetSymbolInfo(identifier, context.CancellationToken);
+		var symbol = symbolInfo.Symbol;
+		if (symbol is null)
+			return;
+
+		var attributes = symbol.GetAttributes();
+		var name = GetDisplayName(symbol);
+		var kind = GetDisplayKind(symbol);
+		var location = identifier.GetLocation();
+
+		var experimentalAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(ExperimentalAttribute)));
+		var deprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(DeprecatedAttribute)));
+		var discordInExperimentAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(DiscordInExperimentAttribute)));
+		var discordDeprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(DiscordDeprecatedAttribute)));
+		var discordUnreleasedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(DiscordUnreleasedAttribute)));
+		var requiresFeatureAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(RequiresFeatureAttribute)));
+		var requiresOverrideAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel.Compilation, attr, typeof(RequiresOverrideAttribute)));
+
+		if (experimentalAttributeData != null)
+		{
+			var message = GetMessage(experimentalAttributeData);
+			context.ReportDiagnostic(Diagnostic.Create(s_experimentalRule, location, kind, name, message));
+		}
+
+		if (deprecatedAttributeData != null)
+		{
+			var message = GetMessage(deprecatedAttributeData);
+			context.ReportDiagnostic(Diagnostic.Create(s_deprecatedRule, location, kind, name, message));
+		}
+
+		if (discordInExperimentAttributeData != null)
+		{
+			var message = GetMessage(discordInExperimentAttributeData);
+			context.ReportDiagnostic(Diagnostic.Create(s_discordInExperimentRule, location, kind, name, message));
+		}
+
+		if (discordDeprecatedAttributeData != null)
+		{
+			var message = GetMessage(discordDeprecatedAttributeData);
+			context.ReportDiagnostic(Diagnostic.Create(s_discordDeprecatedRule, location, kind, name, message));
+		}
+
+		if (discordUnreleasedAttributeData != null)
+		{
+			var message = GetMessage(discordUnreleasedAttributeData);
+			context.ReportDiagnostic(Diagnostic.Create(s_discordUnreleasedRule, location, kind, name, message));
+		}
+
+		if (requiresFeatureAttributeData != null)
+		{
+			var message = GetFeatureMessage(requiresFeatureAttributeData);
+			context.ReportDiagnostic(Diagnostic.Create(s_requiresFeatureRule, location, kind, name, message));
+		}
+
+		if (requiresOverrideAttributeData != null)
+		{
+			var message = GetOverrideMessage(requiresOverrideAttributeData);
+			var overrideProperties = DisCatSharpDiagnosticProperties.CreateRequiresOverrideProperties(GetOverrideValue(requiresOverrideAttributeData), GetOverrideDate(requiresOverrideAttributeData));
+			context.ReportDiagnostic(Diagnostic.Create(s_requiresOverrideRule, location, overrideProperties, kind, name, message));
+		}
+
+		// Config property migration (DCS1201)
+		if (symbol is IPropertySymbol &&
+			ConfigPropertyMigrationAnalysis.TryGetMigrationFromInitializer(
+				context.SemanticModel, identifier, initializer, context.CancellationToken,
+				out var oldName, out var nestedPath, out var newName))
+		{
+			var fullNewPath = string.IsNullOrEmpty(nestedPath) ? newName : $"{nestedPath}.{newName}";
+			var migrationProperties = DisCatSharpDiagnosticProperties.CreateConfigPropertyMigrationProperties(nestedPath, newName);
+			context.ReportDiagnostic(Diagnostic.Create(
+				s_configPropertyMigrationRule,
+				location,
+				migrationProperties,
+				oldName,
+				fullNewPath));
+		}
+	}
+
+	/// <summary>
+	///     Detects <c>using</c> (non-<c>await</c>) patterns on DisCatSharp async-disposable types.
+	/// </summary>
+	private static void AnalyzeAsyncDisposalUsing(SyntaxNodeAnalysisContext context)
+	{
+		switch (context.Node)
+		{
+			case LocalDeclarationStatementSyntax localDecl
+				when AsyncDisposalMigrationAnalysis.IsNonAwaitUsingLocalDeclaration(context, localDecl):
+			{
+				var symbol = context.SemanticModel
+					.GetDeclaredSymbol(localDecl.Declaration.Variables[0], context.CancellationToken);
+				var typeName = symbol is ILocalSymbol localSym ? localSym.Type.Name : "client";
+				context.ReportDiagnostic(Diagnostic.Create(
+					s_asyncDisposalUsingMigrationRule,
+					localDecl.UsingKeyword.GetLocation(),
+					typeName));
+				break;
+			}
+
+			case UsingStatementSyntax usingStmt
+				when AsyncDisposalMigrationAnalysis.IsNonAwaitUsingStatement(context, usingStmt):
+			{
+				string typeName;
+				if (usingStmt.Declaration is not null)
+				{
+					var variable = usingStmt.Declaration.Variables.FirstOrDefault();
+					typeName = variable is not null
+						? context.SemanticModel.GetDeclaredSymbol(variable, context.CancellationToken) is ILocalSymbol local
+							? local.Type.Name
+							: "client"
+						: "client";
+				}
+				else
+				{
+					typeName = usingStmt.Expression is not null
+						? context.SemanticModel.GetTypeInfo(usingStmt.Expression, context.CancellationToken).Type?.Name ?? "client"
+						: "client";
+				}
+
+				context.ReportDiagnostic(Diagnostic.Create(
+					s_asyncDisposalUsingMigrationRule,
+					usingStmt.UsingKeyword.GetLocation(),
+					typeName));
+				break;
+			}
+		}
+	}
+
+	/// <summary>
+	///     Detects <c>.Dispose()</c> calls on DisCatSharp async-disposable types.
+	/// </summary>
+	private static void AnalyzeAsyncDisposalDispose(SyntaxNodeAnalysisContext context)
+	{
+		if (context.Node is not InvocationExpressionSyntax invocation)
+			return;
+
+		if (!AsyncDisposalMigrationAnalysis.IsSyncDisposeCallOnAsyncDisposable(context, invocation))
+			return;
+
+		var memberAccess = (MemberAccessExpressionSyntax)invocation.Expression;
+		var receiverText = memberAccess.Expression.ToString();
+
+		context.ReportDiagnostic(Diagnostic.Create(
+			s_asyncDisposalDisposeMigrationRule,
+			invocation.GetLocation(),
+			receiverText));
 	}
 
 	/// <summary>

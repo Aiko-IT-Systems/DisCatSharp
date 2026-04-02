@@ -363,6 +363,13 @@ public class StoreGatewayEventRegressionTests
 	private static DiscordClient CreateClient()
 		=> new(new DiscordConfiguration
 		{
-			Token = "1"
+			Token = "1",
+			Gateway =
+			{
+				Advanced =
+				{
+					DispatchMode = Enums.GatewayDispatchMode.SequentialHandlers
+				}
+			}
 		});
 }

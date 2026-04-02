@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Threading;
 
 using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
@@ -33,7 +34,7 @@ namespace DisCatSharp;
 /// <summary>
 ///     Represents a common base for various Discord Client implementations.
 /// </summary>
-public abstract class BaseDiscordClient : IDisposable
+public abstract class BaseDiscordClient : IDisposable, IAsyncDisposable
 {
 	/// <summary>
 	///     Gets the lazy voice regions.
@@ -61,23 +62,23 @@ public abstract class BaseDiscordClient : IDisposable
 	{
 		this.Configuration = new(config);
 		this.ServiceProvider = config.ServiceProvider;
-		if (this.Configuration.CustomSentryDsn != null)
-			SentryDsn = this.Configuration.CustomSentryDsn;
+		if (this.Configuration.Telemetry.CustomSentryDsn != null)
+			SentryDsn = this.Configuration.Telemetry.CustomSentryDsn;
 		if (this.ServiceProvider is not null)
 		{
-			this.Configuration.LoggerFactory ??= config.ServiceProvider.GetService<ILoggerFactory>()!;
+			this.Configuration.Logging.LoggerFactory ??= config.ServiceProvider.GetService<ILoggerFactory>()!;
 			this.Logger = config.ServiceProvider.GetService<ILogger<BaseDiscordClient>>()!;
 		}
 
-		if (this.Configuration.LoggerFactory is null)
+		if (this.Configuration.Logging.LoggerFactory is null)
 		{
-			this.Configuration.LoggerFactory = new DefaultLoggerFactory();
-			this.Configuration.LoggerFactory.AddProvider(new DefaultLoggerProvider(this));
+			this.Configuration.Logging.LoggerFactory = new DefaultLoggerFactory();
+			this.Configuration.Logging.LoggerFactory.AddProvider(new DefaultLoggerProvider(this));
 		}
 
-		this.DiagnosticsSink = !this.Configuration.HasShardLogger ? TelemetryBootstrap.CreateSink(this.Configuration) : NoOpDiagnosticsSink.Instance;
+		this.DiagnosticsSink = !this.Configuration.Logging.HasShardLogger ? TelemetryBootstrap.CreateSink(this.Configuration) : NoOpDiagnosticsSink.Instance;
 
-		this.Logger ??= this.Configuration.LoggerFactory!.CreateLogger<BaseDiscordClient>();
+		this.Logger ??= this.Configuration.Logging.LoggerFactory!.CreateLogger<BaseDiscordClient>();
 
 		this.ApiClient = new(this);
 		this.UserCache = new();
@@ -93,7 +94,7 @@ public abstract class BaseDiscordClient : IDisposable
 		};
 		this.RestClient = new(httphandler)
 		{
-			Timeout = this.Configuration.HttpTimeout
+			Timeout = this.Configuration.Rest.RequestTimeout
 		};
 		this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.USER_AGENT, Utilities.GetUserAgent());
 
@@ -122,6 +123,22 @@ public abstract class BaseDiscordClient : IDisposable
 	protected internal DiscordApiClient ApiClient { get; }
 
 	/// <summary>
+	///     Gets the REST diagnostics provider, exposing runtime metrics for bucket workers, queue depths, and circuit breaker state.
+	///     Returns a safe wrapper — the underlying <see cref="RestClient" /> cannot be accessed through this property.
+	/// </summary>
+	public IRestDiagnostics RestDiagnostics
+		=> new RestDiagnosticsWrapper(this.ApiClient.Rest);
+
+	/// <summary>
+	///     Cancels all pending REST requests across every bucket worker queue.
+	///     Each cancelled request is faulted with <see cref="OperationCanceledException" />.
+	///     Use this as an emergency stop when stuck queues or cascading failures need immediate clearing.
+	/// </summary>
+	/// <param name="reason">An optional reason included in the cancellation exception message.</param>
+	public void CancelAllPendingRequests(string? reason = null)
+		=> this.ApiClient.Rest.CancelAllPendingRequests(reason);
+
+	/// <summary>
 	///     Gets the library diagnostics sink for telemetry reporting.
 	/// </summary>
 	internal ILibraryDiagnosticsSink DiagnosticsSink { get; set; }
@@ -130,13 +147,13 @@ public abstract class BaseDiscordClient : IDisposable
 	///     Gets the current api channel.
 	/// </summary>
 	public ApiChannel ApiChannel
-		=> this.Configuration.ApiChannel;
+		=> this.Configuration.Api.Channel;
 
 	/// <summary>
 	///     Gets the current api version.
 	/// </summary>
 	public string ApiVersion
-		=> $"v{this.Configuration.ApiVersion}";
+		=> $"v{this.Configuration.Api.Version}";
 
 	/// <summary>
 	///     Gets the sentry dsn.
@@ -212,12 +229,12 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <summary>
 	///     Lock that serialises all mutations of and snapshots from <see cref="_readyGuildIds" />.
 	/// </summary>
-	private readonly object _readyGuildIdsLock = new();
+	private readonly Lock _readyGuildIdsLock = new();
 
 	/// <summary>
 	///     Backing store for <see cref="ReadyGuildIds" />.
 	/// </summary>
-	private List<ulong> _readyGuildIds = [];
+	private readonly List<ulong> _readyGuildIds = [];
 
 	/// <summary>
 	///     Gets a point-in-time snapshot of the guild ids received in the last READY payload for this shard.
@@ -280,11 +297,17 @@ public abstract class BaseDiscordClient : IDisposable
 	public abstract void Dispose();
 
 	/// <summary>
+	///     Asynchronously disposes this client.
+	/// </summary>
+	public abstract ValueTask DisposeAsync();
+
+	/// <summary>
 	///     Gets the current API application.
 	/// </summary>
-	public async Task<DiscordApplication> GetCurrentApplicationAsync()
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	public async Task<DiscordApplication> GetCurrentApplicationAsync(CancellationToken cancellationToken = default)
 	{
-		var tapp = await this.ApiClient.GetCurrentApplicationOauth2InfoAsync().ConfigureAwait(false);
+		var tapp = await this.ApiClient.GetCurrentApplicationOauth2InfoAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 		return new(tapp);
 	}
 
@@ -300,6 +323,7 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <param name="coverImage">The new application cover image.</param>
 	/// <param name="flags">The new application flags. Can be only limited gateway intents.</param>
 	/// <param name="installParams">The new install params.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The updated application.</returns>
 	[DiscordDeprecated("Install params is gonna be replaced by integration types config")]
 	public async Task<DiscordApplication> UpdateCurrentApplicationInfoAsync(
@@ -313,7 +337,7 @@ public abstract class BaseDiscordClient : IDisposable
 		Optional<ApplicationFlags> flags,
 		[DiscordDeprecated("Replaced by Optional<DiscordIntegrationTypesConfig?>")]
 		Optional<DiscordApplicationInstallParams?> installParams
-	)
+	, CancellationToken cancellationToken = default)
 	{
 		var iconb64 = MediaTool.Base64FromStream(icon);
 		var coverImageb64 = MediaTool.Base64FromStream(coverImage);
@@ -321,7 +345,7 @@ public abstract class BaseDiscordClient : IDisposable
 			if (tags.Value.Any(x => x.Length > 20))
 				throw new InvalidOperationException("Tags can not exceed 20 chars.");
 
-		DiscordApplication app = new(await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl, customInstallUrl, tags, iconb64, coverImageb64, flags, installParams, Optional.None).ConfigureAwait(false));
+		DiscordApplication app = new(await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl, customInstallUrl, tags, iconb64, coverImageb64, flags, installParams, Optional.None, cancellationToken: cancellationToken).ConfigureAwait(false));
 		this.CurrentApplication = app;
 		return app;
 	}
@@ -366,6 +390,7 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <param name="coverImage">The new application cover image.</param>
 	/// <param name="flags">The new application flags. Can be only limited gateway intents.</param>
 	/// <param name="integrationTypesConfig">The new integration types configuration.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The updated application.</returns>
 	public async Task<DiscordApplication> UpdateCurrentApplicationInfoAsync(
 		Optional<string?> description,
@@ -377,7 +402,7 @@ public abstract class BaseDiscordClient : IDisposable
 		Optional<Stream?> coverImage,
 		Optional<ApplicationFlags> flags,
 		Optional<DiscordIntegrationTypesConfig?> integrationTypesConfig
-	)
+	, CancellationToken cancellationToken = default)
 	{
 		var iconb64 = MediaTool.Base64FromStream(icon);
 		var coverImageb64 = MediaTool.Base64FromStream(coverImage);
@@ -385,7 +410,7 @@ public abstract class BaseDiscordClient : IDisposable
 			if (tags.Value.Any(x => x.Length > 20))
 				throw new InvalidOperationException("Tags can not exceed 20 chars.");
 
-		DiscordApplication app = new(await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl, customInstallUrl, tags, iconb64, coverImageb64, flags, Optional.None, integrationTypesConfig).ConfigureAwait(false));
+		DiscordApplication app = new(await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl, customInstallUrl, tags, iconb64, coverImageb64, flags, Optional.None, integrationTypesConfig, cancellationToken: cancellationToken).ConfigureAwait(false));
 		this.CurrentApplication = app;
 		return app;
 	}
@@ -393,27 +418,29 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <summary>
 	///     Gets a list of voice regions.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<IReadOnlyList<DiscordVoiceRegion>> ListVoiceRegionsAsync()
-		=> this.ApiClient.ListVoiceRegionsAsync();
+	public Task<IReadOnlyList<DiscordVoiceRegion>> ListVoiceRegionsAsync(CancellationToken cancellationToken = default)
+		=> this.ApiClient.ListVoiceRegionsAsync(cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Initializes this client. This method fetches information about current user, application, and voice regions.
 	/// </summary>
-	public virtual async Task InitializeAsync()
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	public virtual async Task InitializeAsync(CancellationToken cancellationToken = default)
 	{
 		if (this.CurrentUser is null)
 		{
-			this.CurrentUser = await this.ApiClient.GetCurrentUserAsync().ConfigureAwait(false);
+			this.CurrentUser = await this.ApiClient.GetCurrentUserAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 			this.UserCache.AddOrUpdate(this.CurrentUser.Id, this.CurrentUser, (id, xu) => this.CurrentUser);
 		}
 
 		if (this.Configuration.TokenType is TokenType.Bot && this.CurrentApplication is null)
-			this.CurrentApplication = await this.GetCurrentApplicationAsync().ConfigureAwait(false);
+			this.CurrentApplication = await this.GetCurrentApplicationAsync(cancellationToken).ConfigureAwait(false);
 
 		if (this.Configuration.TokenType is not TokenType.Bearer && this.InternalVoiceRegions.IsEmpty)
 		{
-			var vrs = await this.ListVoiceRegionsAsync().ConfigureAwait(false);
+			var vrs = await this.ListVoiceRegionsAsync(cancellationToken).ConfigureAwait(false);
 			foreach (var xvr in vrs)
 				this.InternalVoiceRegions.TryAdd(xvr.Id, xvr);
 		}
@@ -423,21 +450,23 @@ public abstract class BaseDiscordClient : IDisposable
 	///     Gets the current gateway info for the provided token.
 	///     <para>If no value is provided, the configuration value will be used instead.</para>
 	/// </summary>
+	/// <param name="token">The new token to use for the request.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A gateway info object.</returns>
-	public async Task<GatewayInfo> GetGatewayInfoAsync(string? token = null)
+	public async Task<GatewayInfo> GetGatewayInfoAsync(string? token = null, CancellationToken cancellationToken = default)
 	{
 		if (this.Configuration.TokenType is not TokenType.Bot)
 			throw new InvalidOperationException("Only bot tokens can access this info.");
 
 		if (!string.IsNullOrEmpty(this.Configuration.Token))
-			return await this.ApiClient.GetGatewayInfoAsync().ConfigureAwait(false);
+			return await this.ApiClient.GetGatewayInfoAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
 		if (string.IsNullOrEmpty(token))
 			throw new InvalidOperationException("Could not locate a valid token.");
 
 		this.Configuration.Token = token;
 
-		var res = await this.ApiClient.GetGatewayInfoAsync().ConfigureAwait(false);
+		var res = await this.ApiClient.GetGatewayInfoAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 		this.Configuration.Token = null;
 		return res;
 	}

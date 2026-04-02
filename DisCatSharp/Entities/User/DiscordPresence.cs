@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 using DisCatSharp.Net.Abstractions;
 
@@ -14,9 +15,8 @@ public sealed class DiscordPresence : ObservableApiObject
 	/// <summary>
 	///     Initializes a new instance of the <see cref="DiscordPresence" /> class.
 	/// </summary>
-	// TODO: Add broadcast field
 	internal DiscordPresence()
-		: base(["broadcast", "roles", "premium_since", "nick", "game", "processed_at_timestamp"])
+		: base(["processed_at_timestamp"])
 	{ }
 
 	/// <summary>
@@ -24,17 +24,21 @@ public sealed class DiscordPresence : ObservableApiObject
 	/// </summary>
 	/// <param name="other">The other.</param>
 	internal DiscordPresence(DiscordPresence other)
-		: base(["broadcast", "roles", "premium_since", "nick", "game", "processed_at_timestamp"])
+		: base(["processed_at_timestamp"])
 	{
 		this.Discord = other.Discord;
-		this.Activity = other.Activity;
+		this.Activity = other.Activity is not null ? new(other.Activity) : null;
 		this.RawActivity = other.RawActivity;
-		this.InternalActivities = other.InternalActivities;
-		this.RawActivities = other.RawActivities;
+		this.InternalActivities = other.InternalActivities is not null
+			? [.. other.InternalActivities.Select(static activity => new DiscordActivity(activity))]
+			: null;
+		this.RawActivities = other.RawActivities is not null
+			? [.. other.RawActivities]
+			: null;
 		this.Status = other.Status;
-		this.InternalUser = other.InternalUser;
+		this.InternalUser = other.InternalUser is not null ? new(other.InternalUser) : null;
 		this.GuildId = other.GuildId;
-		this.ClientStatus = other.ClientStatus;
+		this.ClientStatus = other.ClientStatus is not null ? new(other.ClientStatus) : null;
 	}
 
 	/// <summary>
@@ -118,6 +122,14 @@ public sealed class DiscordPresence : ObservableApiObject
 /// </summary>
 public sealed class UserWithIdOnly : ObservableApiObject
 {
+	internal UserWithIdOnly()
+	{ }
+
+	internal UserWithIdOnly(UserWithIdOnly other)
+	{
+		this.Id = other.Id;
+	}
+
 	[JsonProperty("id")]
 	public ulong Id { get; internal set; }
 }
@@ -127,6 +139,18 @@ public sealed class UserWithIdOnly : ObservableApiObject
 /// </summary>
 public sealed class DiscordClientStatus : ObservableApiObject
 {
+	internal DiscordClientStatus()
+	{ }
+
+	internal DiscordClientStatus(DiscordClientStatus other)
+	{
+		this.Desktop = other.Desktop;
+		this.Mobile = other.Mobile;
+		this.Web = other.Web;
+		this.Embedded = other.Embedded;
+		this.Vr = other.Vr;
+	}
+
 	/// <summary>
 	///     Gets the user's status set for an active desktop (Windows, Linux, Mac) application session.
 	/// </summary>

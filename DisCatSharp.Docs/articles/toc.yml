@@ -97,8 +97,12 @@ items:
                   uid: modules_interactivity_introduction
     - name: Topics
       items:
+          - name: Configuration Layout
+            uid: topics_configuration
           - name: Events
             uid: topics_events
+          - name: Gateway Dispatch
+            uid: topics_gateway_dispatch
           - name: Audit Logs
             uid: topics_audit_logs
           - name: Logging
@@ -111,8 +115,14 @@ items:
                   uid: topics_logging_di
           - name: Intents
             uid: topics_intents
-          - name: Presence Caching
+          - name: Presences & Activities
             uid: topics_presence_caching
+          - name: REST Client
+            uid: topics_rest
+          - name: Timeout Configuration
+            uid: topics_timeouts
+          - name: Async Disposal
+            uid: topics_async_disposal
           - name: Sharding
             uid: topics_sharding
           - name: Message Builder

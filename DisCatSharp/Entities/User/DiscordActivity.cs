@@ -181,8 +181,16 @@ public sealed class DiscordActivity
 		this.SessionId = other.SessionId;
 		this.SyncId = other.SyncId;
 		this.Platform = other.Platform;
-		this.RichPresence = new(other.RichPresence);
-		this.CustomStatus = new(other.CustomStatus);
+		this.Emoji = other.Emoji is not null
+			? new PartialEmoji
+			{
+				Id = other.Emoji.Id,
+				Name = other.Emoji.Name,
+				IsAnimated = other.Emoji.IsAnimated
+			}
+			: null;
+		this.RichPresence = other.RichPresence is not null ? new(other.RichPresence) : null;
+		this.CustomStatus = other.CustomStatus is not null ? new(other.CustomStatus) : null;
 	}
 
 	/// <summary>
@@ -292,7 +300,14 @@ public sealed class DiscordCustomStatus
 	{
 		this.Name = other.Name;
 		this.State = other.State;
-		this.Emoji = other.Emoji;
+		this.Emoji = other.Emoji is not null
+			? new PartialEmoji
+			{
+				Id = other.Emoji.Id,
+				Name = other.Emoji.Name,
+				IsAnimated = other.Emoji.IsAnimated
+			}
+			: null;
 	}
 
 	/// <summary>
@@ -355,18 +370,37 @@ public sealed class DiscordRichPresence
 		this.Instance = other.Instance;
 		this.LargeImageText = other.LargeImageText;
 		this.SmallImageText = other.SmallImageText;
-		this.LargeImage = other.LargeImage;
-		this.SmallImage = other.SmallImage;
+		this.LargeImage = CloneAsset(other.LargeImage);
+		this.SmallImage = CloneAsset(other.SmallImage);
 		this.CurrentPartySize = other.CurrentPartySize;
 		this.MaximumPartySize = other.MaximumPartySize;
 		this.PartyId = other.PartyId;
-		this.Buttons = other.Buttons;
+		this.Buttons = other.Buttons is not null ? [.. other.Buttons] : null;
 		this.StartTimestamp = other.StartTimestamp;
 		this.EndTimestamp = other.EndTimestamp;
 		this.JoinSecret = other.JoinSecret;
 		this.MatchSecret = other.MatchSecret;
 		this.SpectateSecret = other.SpectateSecret;
 	}
+
+	private static DiscordAsset? CloneAsset(DiscordAsset? asset)
+		=> asset switch
+		{
+			DiscordApplicationAsset appAsset => new DiscordApplicationAsset
+			{
+				Id = appAsset.Id,
+				Name = appAsset.Name,
+				Type = appAsset.Type,
+				Application = appAsset.Application,
+				Discord = appAsset.Discord
+			},
+			DiscordSpotifyAsset spotifyAsset => new DiscordSpotifyAsset
+			{
+				Id = spotifyAsset.Id
+			},
+			null => null,
+			_ => throw new ArgumentOutOfRangeException(nameof(asset), $"Unsupported asset type {asset.GetType().FullName}.")
+		};
 
 	/// <summary>
 	///     Gets the details of this presence.

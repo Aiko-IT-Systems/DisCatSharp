@@ -32,23 +32,9 @@ internal sealed class RateLimitBucket : IEquatable<RateLimitBucket>
 	internal volatile bool IsUnlimited;
 
 	/// <summary>
-	///     If the rate limit is currently being reset.
-	///     This is a int because booleans can't be accessed atomically.
-	///     0 => False, all other values => True
+	///     Synchronizes rate-limit reset logic so only one caller resets at a time.
 	/// </summary>
-	internal volatile int LimitResetting;
-
-	/// <summary>
-	///     Task to wait for the rate limit test to finish.
-	/// </summary>
-	internal volatile Task? LimitTestFinished;
-
-	/// <summary>
-	///     If the initial request for this bucket that is determining the rate limits is currently executing.
-	///     This is a int because booleans can't be accessed atomically.
-	///     0 => False, all other values => True
-	/// </summary>
-	internal volatile int LimitTesting;
+	private readonly SemaphoreSlim _resetLock = new(1, 1);
 
 	/// <summary>
 	///     If the rate limits have been determined.
@@ -234,27 +220,34 @@ internal sealed class RateLimitBucket : IEquatable<RateLimitBucket>
 	///     Sets remaining number of requests to the maximum when the ratelimit is reset
 	/// </summary>
 	/// <param name="now">The datetime offset.</param>
-	internal async Task TryResetLimitAsync(DateTimeOffset now)
+	internal async Task<bool> TryResetLimitAsync(DateTimeOffset now)
 	{
 		if (this.ResetAfter.HasValue)
 			this.ResetAfter = this.ResetAfterOffset - now;
 
 		if (this.NextReset is 0)
-			return;
+			return false;
 
 		if (this.NextReset > now.UtcTicks)
-			return;
+			return false;
 
-		while (Interlocked.CompareExchange(ref this.LimitResetting, 1, 0) != 0)
-			await Task.Yield();
+		await this._resetLock.WaitAsync().ConfigureAwait(false);
 
-		if (this.NextReset is not 0)
+		try
 		{
-			this.RemainingInternal = this.Maximum;
-			this.NextReset = 0;
-		}
+			if (this.NextReset is not 0)
+			{
+				this.RemainingInternal = this.Maximum;
+				this.NextReset = 0;
+				return true;
+			}
 
-		this.LimitResetting = 0;
+			return false;
+		}
+		finally
+		{
+			this._resetLock.Release();
+		}
 	}
 
 	/// <summary>
@@ -270,7 +263,5 @@ internal sealed class RateLimitBucket : IEquatable<RateLimitBucket>
 		this.NextReset = newReset.UtcTicks;
 
 		this.LimitValid = true;
-		this.LimitTestFinished = null;
-		this.LimitTesting = 0;
 	}
 }

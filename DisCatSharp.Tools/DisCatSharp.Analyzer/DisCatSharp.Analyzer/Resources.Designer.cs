@@ -302,5 +302,32 @@ namespace DisCatSharp.Analyzer {
                 return ResourceManager.GetString("AnalyzerDescriptionBanDeleteMessageDaysMigration", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DiscordConfiguration properties have been reorganized into nested sub-configurations (Api, Gateway, Rest, Cache, Logging, Diagnostics, Telemetry). Update your code to use the new nested paths..
+        /// </summary>
+        internal static string AnalyzerDescriptionConfigPropertyMigration {
+            get {
+                return ResourceManager.GetString("AnalyzerDescriptionConfigPropertyMigration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; has been moved. Use &apos;{1}&apos; instead. This property will be removed in a future version..
+        /// </summary>
+        internal static string AnalyzerMessageFormatConfigPropertyMigration {
+            get {
+                return ResourceManager.GetString("AnalyzerMessageFormatConfigPropertyMigration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [DCS] Configuration property moved to nested config.
+        /// </summary>
+        internal static string AnalyzerTitleConfigPropertyMigration {
+            get {
+                return ResourceManager.GetString("AnalyzerTitleConfigPropertyMigration", resourceCulture);
+            }
+        }
     }
 }

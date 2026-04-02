@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace DisCatSharp.Net;
 
@@ -19,8 +20,9 @@ internal sealed class RestRequest : BaseRestRequest
 	/// <param name="headers">The headers.</param>
 	/// <param name="payload">The payload.</param>
 	/// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
-	internal RestRequest(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string>? headers = null, string? payload = null, double? ratelimitWaitOverride = null)
-		: base(client, bucket, url, method, route, headers, ratelimitWaitOverride)
+	/// <param name="cancellationToken">Optional cancellation token for caller-initiated cancellation.</param>
+	internal RestRequest(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string>? headers = null, string? payload = null, double? ratelimitWaitOverride = null, CancellationToken cancellationToken = default)
+		: base(client, bucket, url, method, route, headers, ratelimitWaitOverride, cancellationToken)
 	{
 		this.Payload = payload;
 	}

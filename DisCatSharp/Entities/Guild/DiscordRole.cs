@@ -1,7 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Attributes;
@@ -268,6 +269,7 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// </summary>
 	/// <param name="position">New position</param>
 	/// <param name="reason">Reason why we moved it</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns></returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.ManageRoles" />
@@ -276,7 +278,7 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// <exception cref="NotFoundException">Thrown when the role does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task ModifyPositionAsync(int position, string? reason = null)
+	public Task ModifyPositionAsync(int position, string? reason = null, CancellationToken cancellationToken = default)
 	{
 		var roles = this.Guild.Roles.Values.OrderByDescending(xr => xr.Position)
 			.Select(x => new RestGuildRoleReorderPayload
@@ -289,7 +291,7 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 						: x.Position
 			});
 
-		return this.Discord.ApiClient.ModifyGuildRolePositionAsync(this.GuildId, roles, reason);
+		return this.Discord.ApiClient.ModifyGuildRolePositionAsync(this.GuildId, roles, reason, cancellationToken: cancellationToken);
 	}
 
 	/// <summary>
@@ -301,6 +303,7 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// <param name="hoist">New role hoist.</param>
 	/// <param name="mentionable">Whether this role is mentionable.</param>
 	/// <param name="reason">Audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.ManageRoles" />
 	///     permission.
@@ -308,13 +311,14 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// <exception cref="NotFoundException">Thrown when the role does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task ModifyAsync(string name = null, Permissions? permissions = null, DiscordColor? color = null, bool? hoist = null, bool? mentionable = null, string? reason = null)
-		=> this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, name, permissions, color?.Value, null, hoist, mentionable, Optional.None, Optional.None, reason);
+	public Task ModifyAsync(string name = null, Permissions? permissions = null, DiscordColor? color = null, bool? hoist = null, bool? mentionable = null, string? reason = null, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, name, permissions, color?.Value, null, hoist, mentionable, Optional.None, Optional.None, reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Updates this role.
 	/// </summary>
 	/// <param name="action">The action.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="Exceptions.UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageRoles" /> permission.
@@ -322,7 +326,7 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// <exception cref="NotFoundException">Thrown when the role does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task ModifyAsync(Action<RoleEditModel> action)
+	public Task ModifyAsync(Action<RoleEditModel> action, CancellationToken cancellationToken = default)
 	{
 		var mdl = new RoleEditModel();
 		action(mdl);
@@ -358,13 +362,14 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 
 		return mdl.Colors?.TertiaryColor is not null && mdl.Colors?.TertiaryColor?.Value is not 16761760 && mdl.Colors?.SecondaryColor?.Value is not 16759788 && mdl.Colors?.PrimaryColor.Value is not 11127295
 			? throw new ArgumentException("When using a holographic role style, the following colors must be set: primary (11127295), secondary (16759788) & tertiary (16761760). It cannot be any other value")
-			: (Task)(canContinue ? this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, mdl.Name, mdl.Permissions, mdl.Color?.Value, mdl.Colors, mdl.Hoist, mdl.Mentionable, iconb64, emoji, mdl.AuditLogReason) : throw new NotSupportedException("Cannot modify role icon. Guild needs boost tier two."));
+			: (Task)(canContinue ? this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, mdl.Name, mdl.Permissions, mdl.Color?.Value, mdl.Colors, mdl.Hoist, mdl.Mentionable, iconb64, emoji, mdl.AuditLogReason, cancellationToken: cancellationToken) : throw new NotSupportedException("Cannot modify role icon. Guild needs boost tier two."));
 	}
 
 	/// <summary>
 	///     Deletes this role.
 	/// </summary>
 	/// <param name="reason">Reason as to why this role has been deleted.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns></returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.ManageRoles" />
@@ -373,8 +378,8 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// <exception cref="NotFoundException">Thrown when the role does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task DeleteAsync(string? reason = null)
-		=> this.Discord.ApiClient.DeleteRoleAsync(this.GuildId, this.Id, reason);
+	public Task DeleteAsync(string? reason = null, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.DeleteRoleAsync(this.GuildId, this.Id, reason, cancellationToken: cancellationToken);
 
 	#endregion
 }

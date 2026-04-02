@@ -135,7 +135,7 @@ public static class DiscordJson
 			Source = "DisCatSharp",
 			Severity = Telemetry.DiagnosticSeverity.Error,
 			Logger = nameof(DiscordJson),
-			Message = Utilities.StripTokensAndOptIds(sentryMessage, discord.Configuration.EnableDiscordIdScrubber)!,
+			Message = Utilities.StripTokensAndOptIds(sentryMessage, discord.Configuration.Telemetry.EnableDiscordIdScrubber)!,
 			Exception = new DiscordJsonException(jre),
 			UserInfo = Telemetry.TelemetryBootstrap.BuildUserInfo(discord.Configuration, discord.CurrentUser)
 		});
@@ -190,14 +190,14 @@ public static class DiscordJson
 				discord.Logger.LogInformation("Found field {field}: {type} on {object}", ap.Key, fieldType, obj.GetType().Name);
 		}
 
-		if (!discord.Configuration.EnableSentry || sentryFields.Count is 0)
+		if (!discord.Configuration.Telemetry.EnableSentry || sentryFields.Count is 0)
 			return obj;
 
 		var sentryJson = JsonConvert.SerializeObject(sentryFields, Formatting.Indented);
 		sentryMessage += "\n\nNew fields: " + sentryJson;
 
 		// Scrub the raw payload for safe inclusion — strip tokens/IDs
-		var scrubbedPayload = Utilities.StripTokensAndOptIdsInJson(json, discord.Configuration.EnableDiscordIdScrubber);
+		var scrubbedPayload = Utilities.StripTokensAndOptIdsInJson(json, discord.Configuration.Telemetry.EnableDiscordIdScrubber);
 
 		// Large payloads: truncate inline extra but include full version as file payload
 		byte[]? filePayload = null;
@@ -301,13 +301,13 @@ public static class DiscordJson
 				discord.Logger.LogInformation("Found field {field}: {type} on {object}", ap.Key, fieldType, first.GetType().Name);
 		}
 
-		if (!discord.Configuration.EnableSentry || sentryFields.Count == 0)
+		if (!discord.Configuration.Telemetry.EnableSentry || sentryFields.Count == 0)
 			return obj;
 
 		var sentryJson = JsonConvert.SerializeObject(sentryFields, Formatting.Indented);
 		sentryMessage += "\n\nNew fields: " + sentryJson;
 
-		var scrubbedPayload = Utilities.StripTokensAndOptIdsInJson(json, discord.Configuration.EnableDiscordIdScrubber);
+		var scrubbedPayload = Utilities.StripTokensAndOptIdsInJson(json, discord.Configuration.Telemetry.EnableDiscordIdScrubber);
 
 		byte[]? filePayload = null;
 		string? filePayloadName = null;

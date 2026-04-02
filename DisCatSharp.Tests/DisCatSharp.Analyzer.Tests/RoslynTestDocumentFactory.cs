@@ -9,6 +9,7 @@ using DisCatSharp.Attributes;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
 
@@ -84,25 +85,6 @@ internal static class RoslynTestDocumentFactory
 		return text.ToString();
 	}
 
-	public static async Task<string> ApplyPresenceAccessMigrationFixAsync(string source)
-	{
-		using var workspace = new AdhocWorkspace();
-		var (solution, documentIds) = CreateProjectSolution(workspace, ImmutableDictionary<string, string>.Empty.Add("Test.cs", source));
-		var documentId = documentIds["Test.cs"];
-
-		var document = solution.GetDocument(documentId)!;
-		var compilation = await document.Project.GetCompilationAsync().ConfigureAwait(false);
-		var diagnostics = await compilation!
-			.WithAnalyzers([new DisCatSharpAnalyzer()])
-			.GetAnalyzerDiagnosticsAsync()
-			.ConfigureAwait(false);
-		var diagnostic = Assert.Single(diagnostics, x => x.Id == DisCatSharpDiagnosticIds.PresenceAccessMigration);
-
-		var fixedDocument = await DisCatSharpPresenceAccessMigrationCodeFix.ApplyFixToDocumentAsync(document, diagnostic, CancellationToken.None).ConfigureAwait(false);
-		var text = await fixedDocument.GetTextAsync().ConfigureAwait(false);
-		return text.ToString();
-	}
-
 	public static async Task<string> ApplyBanDeleteMessageDaysMigrationFixAsync(string source)
 	{
 		using var workspace = new AdhocWorkspace();
@@ -118,6 +100,93 @@ internal static class RoslynTestDocumentFactory
 		var diagnostic = Assert.Single(diagnostics, x => x.Id == DisCatSharpDiagnosticIds.BanDeleteMessageDaysMigration);
 
 		var fixedDocument = await DisCatSharpBanDeleteMessageDaysMigrationCodeFix.ApplyFixAsync(document, diagnostic, CancellationToken.None).ConfigureAwait(false);
+		var text = await fixedDocument.GetTextAsync().ConfigureAwait(false);
+		return text.ToString();
+	}
+
+	public static async Task<string> ApplyConfigPropertyMigrationFixAsync(string source)
+	{
+		using var workspace = new AdhocWorkspace();
+		var (solution, documentIds) = CreateProjectSolution(workspace, ImmutableDictionary<string, string>.Empty.Add("Test.cs", source));
+		var documentId = documentIds["Test.cs"];
+
+		var document = solution.GetDocument(documentId)!;
+		var compilation = await document.Project.GetCompilationAsync().ConfigureAwait(false);
+		var diagnostics = await compilation!
+			.WithAnalyzers([new DisCatSharpAnalyzer()])
+			.GetAnalyzerDiagnosticsAsync()
+			.ConfigureAwait(false);
+		var diagnostic = Assert.Single(diagnostics, x => x.Id == DisCatSharpDiagnosticIds.ConfigPropertyMigration);
+
+		var nestedPath = diagnostic.Properties[DisCatSharpDiagnosticProperties.ConfigNestedPath]!;
+		var newName = diagnostic.Properties[DisCatSharpDiagnosticProperties.ConfigNewName]!;
+
+		var fixedDocument = await DisCatSharpConfigPropertyMigrationCodeFix.ApplyFixToDocumentAsync(document, diagnostic, nestedPath, newName, CancellationToken.None).ConfigureAwait(false);
+		var text = await fixedDocument.GetTextAsync().ConfigureAwait(false);
+		return text.ToString();
+	}
+
+	public static async Task<string> ApplyConfigPropertyMigrationBatchFixAsync(string source)
+	{
+		using var workspace = new AdhocWorkspace();
+		var (solution, documentIds) = CreateProjectSolution(workspace, ImmutableDictionary<string, string>.Empty.Add("Test.cs", source));
+		var documentId = documentIds["Test.cs"];
+
+		var document = solution.GetDocument(documentId)!;
+		var root = await document.GetSyntaxRootAsync().ConfigureAwait(false);
+		var compilation = await document.Project.GetCompilationAsync().ConfigureAwait(false);
+		var diagnostics = await compilation!
+			.WithAnalyzers([new DisCatSharpAnalyzer()])
+			.GetAnalyzerDiagnosticsAsync()
+			.ConfigureAwait(false);
+		var configDiagnostics = diagnostics.Where(x => x.Id == DisCatSharpDiagnosticIds.ConfigPropertyMigration).ToList();
+		Assert.NotEmpty(configDiagnostics);
+
+		// Find the initializer from the first diagnostic
+		var firstNode = root!.FindNode(configDiagnostics[0].Location.SourceSpan);
+		var initializer = firstNode.FirstAncestorOrSelf<InitializerExpressionSyntax>()
+			?? (firstNode.Parent as AssignmentExpressionSyntax)?.Parent as InitializerExpressionSyntax;
+		Assert.NotNull(initializer);
+
+		var fixedDocument = await DisCatSharpConfigPropertyMigrationCodeFix.ApplyInitializerBatchFixAsync(document, initializer!, CancellationToken.None).ConfigureAwait(false);
+		var text = await fixedDocument.GetTextAsync().ConfigureAwait(false);
+		return text.ToString();
+	}
+
+	public static async Task<string> ApplyAsyncDisposalUsingFixAsync(string source)
+	{
+		using var workspace = new AdhocWorkspace();
+		var (solution, documentIds) = CreateProjectSolution(workspace, ImmutableDictionary<string, string>.Empty.Add("Test.cs", source));
+		var documentId = documentIds["Test.cs"];
+
+		var document = solution.GetDocument(documentId)!;
+		var compilation = await document.Project.GetCompilationAsync().ConfigureAwait(false);
+		var diagnostics = await compilation!
+			.WithAnalyzers([new DisCatSharpAnalyzer()])
+			.GetAnalyzerDiagnosticsAsync()
+			.ConfigureAwait(false);
+		var diagnostic = Assert.Single(diagnostics, x => x.Id == DisCatSharpDiagnosticIds.AsyncDisposalUsingMigration);
+
+		var fixedDocument = await DisCatSharpAsyncDisposalUsingCodeFix.ApplyFixAsync(document, diagnostic, CancellationToken.None).ConfigureAwait(false);
+		var text = await fixedDocument.GetTextAsync().ConfigureAwait(false);
+		return text.ToString();
+	}
+
+	public static async Task<string> ApplyAsyncDisposalDisposeFixAsync(string source)
+	{
+		using var workspace = new AdhocWorkspace();
+		var (solution, documentIds) = CreateProjectSolution(workspace, ImmutableDictionary<string, string>.Empty.Add("Test.cs", source));
+		var documentId = documentIds["Test.cs"];
+
+		var document = solution.GetDocument(documentId)!;
+		var compilation = await document.Project.GetCompilationAsync().ConfigureAwait(false);
+		var diagnostics = await compilation!
+			.WithAnalyzers([new DisCatSharpAnalyzer()])
+			.GetAnalyzerDiagnosticsAsync()
+			.ConfigureAwait(false);
+		var diagnostic = Assert.Single(diagnostics, x => x.Id == DisCatSharpDiagnosticIds.AsyncDisposalDisposeMigration);
+
+		var fixedDocument = await DisCatSharpAsyncDisposalDisposeCodeFix.ApplyFixAsync(document, diagnostic, CancellationToken.None).ConfigureAwait(false);
 		var text = await fixedDocument.GetTextAsync().ConfigureAwait(false);
 		return text.ToString();
 	}

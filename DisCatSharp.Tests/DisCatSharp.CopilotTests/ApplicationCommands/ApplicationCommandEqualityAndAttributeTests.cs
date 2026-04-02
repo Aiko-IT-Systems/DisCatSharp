@@ -83,10 +83,7 @@ public class ApplicationCommandEqualityAndAttributeTests
 	// ===== C7/M5: MinimumLength/MaximumLength validation =====
 
 	[Fact]
-	public void MinimumLengthAttribute_ValueOver6000_Throws()
-	{
-		Assert.Throws<ArgumentException>(() => new MinimumLengthAttribute(6001));
-	}
+	public void MinimumLengthAttribute_ValueOver6000_Throws() => Assert.Throws<ArgumentException>(() => new MinimumLengthAttribute(6001));
 
 	[Fact]
 	public void MinimumLengthAttribute_Value6000_DoesNotThrow()
@@ -103,10 +100,7 @@ public class ApplicationCommandEqualityAndAttributeTests
 	}
 
 	[Fact]
-	public void MinimumLengthAttribute_NegativeValue_Throws()
-	{
-		Assert.Throws<ArgumentException>(() => new MinimumLengthAttribute(-1));
-	}
+	public void MinimumLengthAttribute_NegativeValue_Throws() => Assert.Throws<ArgumentException>(() => new MinimumLengthAttribute(-1));
 
 	[Fact]
 	public void MinimumLengthAttribute_ZeroValue_DoesNotThrow()
@@ -116,10 +110,7 @@ public class ApplicationCommandEqualityAndAttributeTests
 	}
 
 	[Fact]
-	public void MaximumLengthAttribute_ValueOver6000_Throws()
-	{
-		Assert.Throws<ArgumentException>(() => new MaximumLengthAttribute(6001));
-	}
+	public void MaximumLengthAttribute_ValueOver6000_Throws() => Assert.Throws<ArgumentException>(() => new MaximumLengthAttribute(6001));
 
 	[Fact]
 	public void MaximumLengthAttribute_Value6000_DoesNotThrow()
@@ -136,24 +127,15 @@ public class ApplicationCommandEqualityAndAttributeTests
 	}
 
 	[Fact]
-	public void MaximumLengthAttribute_ValueZero_Throws()
-	{
-		Assert.Throws<ArgumentException>(() => new MaximumLengthAttribute(0));
-	}
+	public void MaximumLengthAttribute_ValueZero_Throws() => Assert.Throws<ArgumentException>(() => new MaximumLengthAttribute(0));
 
 	// ===== H6: ChoiceProvider/Autocomplete type validation =====
 
 	[Fact]
-	public void ChoiceProviderAttribute_InvalidType_Throws()
-	{
-		Assert.Throws<ArgumentException>(() => new ChoiceProviderAttribute(typeof(string)));
-	}
+	public void ChoiceProviderAttribute_InvalidType_Throws() => Assert.Throws<ArgumentException>(() => new ChoiceProviderAttribute(typeof(string)));
 
 	[Fact]
-	public void AutocompleteAttribute_InvalidType_Throws()
-	{
-		Assert.Throws<ArgumentException>(() => new AutocompleteAttribute(typeof(string)));
-	}
+	public void AutocompleteAttribute_InvalidType_Throws() => Assert.Throws<ArgumentException>(() => new AutocompleteAttribute(typeof(string)));
 
 	// ===== M1: SlashCommand name/description validation =====
 
@@ -165,10 +147,7 @@ public class ApplicationCommandEqualityAndAttributeTests
 	}
 
 	[Fact]
-	public void SlashCommandAttribute_EmptyName_Throws()
-	{
-		Assert.Throws<ArgumentException>(() => new SlashCommandAttribute("", "description"));
-	}
+	public void SlashCommandAttribute_EmptyName_Throws() => Assert.Throws<ArgumentException>(() => new SlashCommandAttribute("", "description"));
 
 	[Fact]
 	public void SlashCommandAttribute_DescriptionTooLong_Throws()
@@ -178,10 +157,7 @@ public class ApplicationCommandEqualityAndAttributeTests
 	}
 
 	[Fact]
-	public void SlashCommandAttribute_EmptyDescription_Throws()
-	{
-		Assert.Throws<ArgumentException>(() => new SlashCommandAttribute("name", ""));
-	}
+	public void SlashCommandAttribute_EmptyDescription_Throws() => Assert.Throws<ArgumentException>(() => new SlashCommandAttribute("name", ""));
 
 	[Fact]
 	public void SlashCommandAttribute_ValidArgs_DoesNotThrow()
@@ -199,18 +175,12 @@ public class ApplicationCommandEqualityAndAttributeTests
 	}
 
 	[Fact]
-	public void SlashCommandGroupAttribute_EmptyName_Throws()
-	{
-		Assert.Throws<ArgumentException>(() => new SlashCommandGroupAttribute("", "description"));
-	}
+	public void SlashCommandGroupAttribute_EmptyName_Throws() => Assert.Throws<ArgumentException>(() => new SlashCommandGroupAttribute("", "description"));
 
 	// ===== L2: Empty ChannelTypes validation =====
 
 	[Fact]
-	public void ChannelTypesAttribute_EmptyArray_Throws()
-	{
-		Assert.Throws<ArgumentException>(() => new ChannelTypesAttribute());
-	}
+	public void ChannelTypesAttribute_EmptyArray_Throws() => Assert.Throws<ArgumentException>(() => new ChannelTypesAttribute());
 
 	[Fact]
 	public void ChannelTypesAttribute_WithTypes_DoesNotThrow()

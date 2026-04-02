@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
@@ -43,12 +44,13 @@ internal sealed class DiscordApiClientHook
 	/// </summary>
 	/// <param name="guildId">The ID of the guild.</param>
 	/// <param name="searchParams">The search parameters.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="ValidationException">Thrown if the user gave an invalid input.</exception>
 	/// <exception cref="NotIndexedException">Thrown if the elastisearch endpoint has not finished indexing yet.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <returns>A list of messages that match the search criteria.</returns>
-	internal async Task<DiscordSearchGuildMessagesResponse?> SearchGuildMessagesAsync(ulong guildId, DiscordGuildMessageSearchParams searchParams)
+	internal async Task<DiscordSearchGuildMessagesResponse?> SearchGuildMessagesAsync(ulong guildId, DiscordGuildMessageSearchParams searchParams, CancellationToken cancellationToken = default)
 	{
 		/*
 		// TODO: Implement proper validation for message search params.
@@ -69,7 +71,7 @@ internal sealed class DiscordApiClientHook
 
 		var url = Utilities.GetApiUriFor(path, BuildGuildMessageSearchQueryString(searchParams), this.ApiClient.Discord.Configuration);
 
-		var res = await this.ApiClient.DoRequestAsync(this.ApiClient.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+		var res = await this.ApiClient.DoRequestAsync(this.ApiClient.Discord, bucket, url, RestRequestMethod.GET, route, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 		if (res.ResponseCode is HttpStatusCode.Accepted)
 			throw new NotIndexedException(res);
@@ -216,6 +218,7 @@ internal sealed class DiscordApiClientHook
 	/// </summary>
 	/// <param name="guildId">The ID of the guild.</param>
 	/// <param name="searchParams">The search parameters.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="ValidationException">Thrown if the user gave an invalid input.</exception>
 	/// <exception cref="NotIndexedException">Thrown if the elastisearch endpoint has not finished indexing yet.</exception>
 	/// <exception cref="UnauthorizedException">
@@ -225,7 +228,7 @@ internal sealed class DiscordApiClientHook
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <returns>A list of supplemental guild members that match the search criteria.</returns>
-	internal async Task<DiscordSearchGuildMembersResponse> SearchGuildMembersAsync(ulong guildId, DiscordGuildMemberSearchParams searchParams)
+	internal async Task<DiscordSearchGuildMembersResponse> SearchGuildMembersAsync(ulong guildId, DiscordGuildMemberSearchParams searchParams, CancellationToken cancellationToken = default)
 	{
 		var (isValid, errorMessage) = searchParams.Validate();
 		if (!isValid)
@@ -246,7 +249,7 @@ internal sealed class DiscordApiClientHook
 
 		var url = Utilities.GetApiUriFor(path, this.ApiClient.Discord.Configuration);
 
-		var res = await this.ApiClient.DoRequestAsync(this.ApiClient.Discord, bucket, url, RestRequestMethod.POST, route, payload: pld).ConfigureAwait(false);
+		var res = await this.ApiClient.DoRequestAsync(this.ApiClient.Discord, bucket, url, RestRequestMethod.POST, route, payload: pld, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 		if (res.ResponseCode is HttpStatusCode.Accepted)
 			throw new NotIndexedException(res);
@@ -299,8 +302,9 @@ internal sealed class DiscordApiClientHook
 	/// </summary>
 	/// <param name="channelId">The ID of the channel.</param>
 	/// <param name="attachment">The attachment information.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The GCP attachment response.</returns>
-	internal async Task<GcpAttachmentsResponse> RequestFileUploadAsync(ulong channelId, GcpAttachment attachment)
+	internal async Task<GcpAttachmentsResponse> RequestFileUploadAsync(ulong channelId, GcpAttachment attachment, CancellationToken cancellationToken = default)
 	{
 		var pld = new RestGcpAttachmentsPayload
 		{
@@ -314,7 +318,7 @@ internal sealed class DiscordApiClientHook
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.ApiClient.Discord.Configuration);
-		var res = await this.ApiClient.DoRequestAsync(this.ApiClient.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		var res = await this.ApiClient.DoRequestAsync(this.ApiClient.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld), cancellationToken: cancellationToken).ConfigureAwait(false);
 
 		return DiscordJson.DeserializeObject<GcpAttachmentsResponse>(res.Response, this.ApiClient.Discord);
 	}

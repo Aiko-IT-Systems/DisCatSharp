@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 using ConcurrentCollections;
@@ -31,9 +32,9 @@ internal class Paginator : IPaginator
 		this._client = client;
 		this._requests = [];
 
-		this._client.MessageReactionAdded += this.HandleReactionAdd;
-		this._client.MessageReactionRemoved += this.HandleReactionRemove;
-		this._client.MessageReactionsCleared += this.HandleReactionClear;
+		this._client.InternalMessageReactionAdded.Register(this.HandleReactionAdd);
+		this._client.InternalMessageReactionRemoved.Register(this.HandleReactionRemove);
+		this._client.InternalMessageReactionsCleared.Register(this.HandleReactionClear);
 	}
 
 	/// <summary>
@@ -82,9 +83,9 @@ internal class Paginator : IPaginator
 		var client = this._client;
 		if (client is not null)
 		{
-			client.MessageReactionAdded -= this.HandleReactionAdd;
-			client.MessageReactionRemoved -= this.HandleReactionRemove;
-			client.MessageReactionsCleared -= this.HandleReactionClear;
+			client.InternalMessageReactionAdded.Unregister(this.HandleReactionAdd);
+			client.InternalMessageReactionRemoved.Unregister(this.HandleReactionRemove);
+			client.InternalMessageReactionsCleared.Unregister(this.HandleReactionClear);
 		}
 
 		this._requests?.Clear();
@@ -287,7 +288,7 @@ internal class Paginator : IPaginator
 		if (page.Embed is not null)
 			builder.AddEmbed(page.Embed);
 
-		await builder.ModifyAsync(msg).ConfigureAwait(false);
+		await msg.ModifyAsync(builder).ConfigureAwait(false);
 	}
 
 	/// <inheritdoc />

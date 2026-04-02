@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DisCatSharp.Net;
@@ -20,15 +21,20 @@ public abstract class BaseRestRequest
 	/// <param name="route">The generic route the request url will use.</param>
 	/// <param name="headers">Additional headers for this request.</param>
 	/// <param name="ratelimitWaitOverride">Override for ratelimit bucket wait time.</param>
-	internal BaseRestRequest(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string>? headers = null, double? ratelimitWaitOverride = null)
+	/// <param name="cancellationToken">Optional cancellation token for caller-initiated cancellation.</param>
+	internal BaseRestRequest(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string>? headers = null, double? ratelimitWaitOverride = null, CancellationToken cancellationToken = default)
 	{
 		this.Discord = client;
 		this.RateLimitBucket = bucket;
 		this.RequestTaskSource = new();
+		this.CancellationTokenSource = cancellationToken.CanBeCanceled
+			? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken)
+			: new CancellationTokenSource();
 		this.Url = url;
 		this.Method = method;
 		this.Route = route;
 		this.RateLimitWaitOverride = ratelimitWaitOverride;
+		this.EnqueuedAt = DateTimeOffset.UtcNow;
 
 		if (headers is null)
 			return;
@@ -48,15 +54,20 @@ public abstract class BaseRestRequest
 	/// <param name="route">The generic route the request url will use.</param>
 	/// <param name="headers">Additional headers for this request.</param>
 	/// <param name="ratelimitWaitOverride">Override for ratelimit bucket wait time.</param>
-	internal BaseRestRequest(DiscordOAuth2Client client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string>? headers = null, double? ratelimitWaitOverride = null)
+	/// <param name="cancellationToken">Optional cancellation token for caller-initiated cancellation.</param>
+	internal BaseRestRequest(DiscordOAuth2Client client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string>? headers = null, double? ratelimitWaitOverride = null, CancellationToken cancellationToken = default)
 	{
 		this.OAuth2Client = client;
 		this.RateLimitBucket = bucket;
 		this.RequestTaskSource = new();
+		this.CancellationTokenSource = cancellationToken.CanBeCanceled
+			? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken)
+			: new CancellationTokenSource();
 		this.Url = url;
 		this.Method = method;
 		this.Route = route;
 		this.RateLimitWaitOverride = ratelimitWaitOverride;
+		this.EnqueuedAt = DateTimeOffset.UtcNow;
 
 		if (headers is null)
 			return;
@@ -112,6 +123,17 @@ public abstract class BaseRestRequest
 	internal RateLimitBucket RateLimitBucket { get; }
 
 	/// <summary>
+	///     Gets when this request was enqueued into the bucket worker.
+	/// </summary>
+	internal DateTimeOffset EnqueuedAt { get; }
+
+	/// <summary>
+	///     Gets the cancellation token source for caller-initiated cancellation.
+	///     When cancelled before execution starts, the request is failed without being sent.
+	/// </summary>
+	internal CancellationTokenSource CancellationTokenSource { get; }
+
+	/// <summary>
 	///     Asynchronously waits for this request to complete.
 	/// </summary>
 	/// <returns>HTTP response to this request.</returns>
@@ -138,4 +160,13 @@ public abstract class BaseRestRequest
 	/// <param name="ex">The exception to set.</param>
 	protected internal bool TrySetFaulted(Exception ex)
 		=> this.RequestTaskSource.TrySetException(ex);
+
+	/// <summary>
+	///     Tries to set as completed. Used during fault recovery to safely complete
+	///     requests that were queued but never sent.
+	/// </summary>
+	/// <param name="response">The response to set.</param>
+	/// <returns><c>true</c> if the result was set; <c>false</c> if already completed/faulted.</returns>
+	protected internal bool TrySetCompleted(RestResponse response)
+		=> this.RequestTaskSource.TrySetResult(response);
 }

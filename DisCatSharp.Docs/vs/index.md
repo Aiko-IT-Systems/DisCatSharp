@@ -71,9 +71,12 @@ These analyzers check for the presence of attributes from the `DisCatSharp.Attri
 
 | Rule ID                              | Category | Severity | Notes                                                                                                                             |
 |--------------------------------------|----------|----------|-----------------------------------------------------------------------------------------------------------------------------------|
-| [DCS1101](xref:vs_analyzer_dcs_1101) | Usage    | Warning  | Prefer `DiscordClient.GetPresences(userId)` over manual `Presences` filtering                                                     |
+| [DCS1101](xref:vs_analyzer_dcs_1101) | Usage    | ~~Warning~~ | **Removed** — superseded by DCS1103                                                                                           |
 | [DCS1102](xref:vs_analyzer_dcs_1102) | Usage    | Warning  | `deleteMessageDays` renamed to `deleteMessageSeconds` on ban methods; named-argument callers auto-fixed                           |
+| [DCS1103](xref:vs_analyzer_dcs_1103) | Usage    | Error    | `DiscordClient.Presences` property removed; use `GetPresences(userId)`, `guild.Presences`, or `CurrentPresence`                   |
 | [DCS1201](xref:vs_analyzer_dcs_1201) | Usage    | Warning  | Config property migration analyzer and code fix for `DiscordConfiguration` (legacy properties moved to nested sub-configurations) |
+| [DCS1301](xref:vs_analyzer_dcs_1301) | Usage    | Warning  | `using` should be `await using` on DisCatSharp client types that implement `IAsyncDisposable`                                     |
+| [DCS1302](xref:vs_analyzer_dcs_1302) | Usage    | Warning  | `.Dispose()` should be `await .DisposeAsync()` on DisCatSharp client types that implement `IAsyncDisposable`                      |
 
 ##### Application command family
 

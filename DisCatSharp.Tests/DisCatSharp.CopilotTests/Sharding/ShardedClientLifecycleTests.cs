@@ -37,7 +37,14 @@ public class ShardedClientLifecycleTests
 	public void DiscordShardedClient_ImplementsIDisposable()
 	{
 		using var client = CreateClient();
-		Assert.IsAssignableFrom<IDisposable>(client);
+		Assert.IsType<IDisposable>(client, exactMatch: false);
+	}
+
+	[Fact]
+	public void DiscordShardedClient_ImplementsIAsyncDisposable()
+	{
+		using var client = CreateClient();
+		Assert.IsType<IAsyncDisposable>(client, exactMatch: false);
 	}
 
 	[Fact]
@@ -45,7 +52,7 @@ public class ShardedClientLifecycleTests
 	{
 		var client = CreateClient();
 
-		var ex = Record.Exception(() => client.Dispose());
+		var ex = Record.Exception(client.Dispose);
 
 		Assert.Null(ex);
 	}
@@ -59,6 +66,31 @@ public class ShardedClientLifecycleTests
 		{
 			client.Dispose();
 			client.Dispose();
+			client.Dispose();
+		});
+
+		Assert.Null(ex);
+	}
+
+	[Fact]
+	public async Task DisposeAsync_OnNeverStartedClient_DoesNotThrow()
+	{
+		var client = CreateClient();
+
+		var ex = await Record.ExceptionAsync(async () => await client.DisposeAsync());
+
+		Assert.Null(ex);
+	}
+
+	[Fact]
+	public async Task DisposeAsync_CalledMultipleTimes_IsIdempotent()
+	{
+		var client = CreateClient();
+
+		var ex = await Record.ExceptionAsync(async () =>
+		{
+			await client.DisposeAsync();
+			await client.DisposeAsync();
 			client.Dispose();
 		});
 
@@ -241,6 +273,15 @@ public class ShardedClientLifecycleTests
 		client.Dispose();
 
 		await Assert.ThrowsAsync<ObjectDisposedException>(() => client.UpdateStatusAsync());
+	}
+
+	[Fact]
+	public async Task StartAsync_AfterDisposeAsync_ThrowsObjectDisposedException()
+	{
+		var client = CreateClient();
+		await client.DisposeAsync();
+
+		await Assert.ThrowsAsync<ObjectDisposedException>(() => client.StartAsync());
 	}
 
 	#endregion

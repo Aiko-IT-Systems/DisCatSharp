@@ -10,9 +10,12 @@ internal static class DisCatSharpDiagnosticIds
 	public const string DiscordInExperiment = DisCatSharpAnalyzer.DIAGNOSTIC_ID_PREFIX + "0101";
 	public const string DiscordDeprecated = DisCatSharpAnalyzer.DIAGNOSTIC_ID_PREFIX + "0102";
 	public const string DiscordUnreleased = DisCatSharpAnalyzer.DIAGNOSTIC_ID_PREFIX + "0103";
-	public const string PresenceAccessMigration = DisCatSharpAnalyzer.DIAGNOSTIC_ID_PREFIX + "1101";
 	public const string RequiresFeature = DisCatSharpAnalyzer.DIAGNOSTIC_ID_PREFIX + "0200";
 	public const string RequiresOverride = DisCatSharpAnalyzer.DIAGNOSTIC_ID_PREFIX + "0201";
 	public const string ApplicationCommandChecksFailedMigration = DisCatSharpAnalyzer.DIAGNOSTIC_ID_PREFIX + "2101";
 	public const string BanDeleteMessageDaysMigration = DisCatSharpAnalyzer.DIAGNOSTIC_ID_PREFIX + "1102";
+	public const string PresencesPropertyRemoval = DisCatSharpAnalyzer.DIAGNOSTIC_ID_PREFIX + "1103";
+	public const string ConfigPropertyMigration = DisCatSharpAnalyzer.DIAGNOSTIC_ID_PREFIX + "1201";
+	public const string AsyncDisposalUsingMigration = DisCatSharpAnalyzer.DIAGNOSTIC_ID_PREFIX + "1301";
+	public const string AsyncDisposalDisposeMigration = DisCatSharpAnalyzer.DIAGNOSTIC_ID_PREFIX + "1302";
 }

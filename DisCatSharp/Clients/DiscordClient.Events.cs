@@ -1448,6 +1448,76 @@ public sealed partial class DiscordClient
 
 	#endregion
 
+	#region Internal Extension Events
+
+	/// <summary>
+	///     Internal event raised before the public <see cref="Ready" /> event.
+	///     Used by library extensions for reliable, ordered delivery.
+	/// </summary>
+	internal AsyncEvent<DiscordClient, ReadyEventArgs> InternalReadyEv;
+
+	/// <summary>
+	///     Internal event raised before the public <see cref="InteractionCreated" /> event.
+	///     Used by library extensions for reliable, ordered delivery.
+	/// </summary>
+	internal AsyncEvent<DiscordClient, InteractionCreateEventArgs> InternalInteractionCreated;
+
+	/// <summary>
+	///     Internal event raised before the public <see cref="ContextMenuInteractionCreated" /> event.
+	///     Used by library extensions for reliable, ordered delivery.
+	/// </summary>
+	internal AsyncEvent<DiscordClient, ContextMenuInteractionCreateEventArgs> InternalContextMenuInteractionCreated;
+
+	/// <summary>
+	///     Internal event raised before the public <see cref="MessageCreated" /> event.
+	///     Used by library extensions for reliable, ordered delivery.
+	/// </summary>
+	internal AsyncEvent<DiscordClient, MessageCreateEventArgs> InternalMessageCreated;
+
+	/// <summary>
+	///     Internal event raised before the public <see cref="MessageReactionAdded" /> event.
+	///     Used by library extensions for reliable, ordered delivery.
+	/// </summary>
+	internal AsyncEvent<DiscordClient, MessageReactionAddEventArgs> InternalMessageReactionAdded;
+
+	/// <summary>
+	///     Internal event raised before the public <see cref="MessageReactionRemoved" /> event.
+	///     Used by library extensions for reliable, ordered delivery.
+	/// </summary>
+	internal AsyncEvent<DiscordClient, MessageReactionRemoveEventArgs> InternalMessageReactionRemoved;
+
+	/// <summary>
+	///     Internal event raised before the public <see cref="MessageReactionsCleared" /> event.
+	///     Used by library extensions for reliable, ordered delivery.
+	/// </summary>
+	internal AsyncEvent<DiscordClient, MessageReactionsClearEventArgs> InternalMessageReactionsCleared;
+
+	/// <summary>
+	///     Internal event raised before the public <see cref="TypingStarted" /> event.
+	///     Used by library extensions for reliable, ordered delivery.
+	/// </summary>
+	internal AsyncEvent<DiscordClient, TypingStartEventArgs> InternalTypingStarted;
+
+	/// <summary>
+	///     Internal event raised before the public <see cref="ComponentInteractionCreated" /> event.
+	///     Used by library extensions for reliable, ordered delivery.
+	/// </summary>
+	internal AsyncEvent<DiscordClient, ComponentInteractionCreateEventArgs> InternalComponentInteractionCreated;
+
+	/// <summary>
+	///     Internal event raised before the public <see cref="VoiceStateUpdated" /> event.
+	///     Used by library extensions for reliable, ordered delivery.
+	/// </summary>
+	internal AsyncEvent<DiscordClient, VoiceStateUpdateEventArgs> InternalVoiceStateUpdated;
+
+	/// <summary>
+	///     Internal event raised before the public <see cref="VoiceServerUpdated" /> event.
+	///     Used by library extensions for reliable, ordered delivery.
+	/// </summary>
+	internal AsyncEvent<DiscordClient, VoiceServerUpdateEventArgs> InternalVoiceServerUpdated;
+
+	#endregion
+
 	#region Error Handling
 
 	/// <summary>

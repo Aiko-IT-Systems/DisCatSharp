@@ -302,7 +302,7 @@ internal static class ApplicationCommandEqualityChecks
 					reasons.Add($"{optName}: description localizations mismatch");
 			}
 
-			if ((sourceOption.Choices is null) != (targetOption.Choices is null))
+			if (sourceOption.Choices is null != targetOption.Choices is null)
 			{
 				reasons.Add($"{optName}: choices null mismatch");
 			}
@@ -328,7 +328,7 @@ internal static class ApplicationCommandEqualityChecks
 				}
 			}
 
-			if ((sourceOption.ChannelTypes is null) != (targetOption.ChannelTypes is null))
+			if (sourceOption.ChannelTypes is null != targetOption.ChannelTypes is null)
 			{
 				reasons.Add($"{optName}: channel types null mismatch");
 			}

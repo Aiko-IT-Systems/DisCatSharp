@@ -1,7 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Attributes;
@@ -211,6 +212,7 @@ public class DiscordInvite : SnowflakeObject
 	///     Deletes the invite.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns></returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -219,18 +221,19 @@ public class DiscordInvite : SnowflakeObject
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordInvite> DeleteAsync(string reason = null)
-		=> this.Discord.ApiClient.DeleteInviteAsync(this.Code, reason);
+	public Task<DiscordInvite> DeleteAsync(string reason = null, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.DeleteInviteAsync(this.Code, reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Gets the target users allowed to accept an invite.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>An allowlist of user ids.</returns>
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<IReadOnlyList<ulong>> GetTargetUsersAsync()
-		=> this.Discord.ApiClient.GetInviteTargetUsersAsync(this.Code);
+	public Task<IReadOnlyList<ulong>> GetTargetUsersAsync(CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.GetInviteTargetUsersAsync(this.Code, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Updates the target users allowed to accept an invite using a CSV stream.
@@ -240,43 +243,47 @@ public class DiscordInvite : SnowflakeObject
 	///     (and only) column header is <c>Users</c>, and each subsequent line must contain exactly one user ID.
 	/// </param>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task UpdateTargetUsersAsync(Stream targetUsersCsv, string reason = null)
-		=> this.Discord.ApiClient.UpdateInviteTargetUsersAsync(this.Code, targetUsersCsv, null, null, reason);
+	public Task UpdateTargetUsersAsync(Stream targetUsersCsv, string reason = null, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.UpdateInviteTargetUsersAsync(this.Code, targetUsersCsv, null, null, reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Updates the target users allowed to accept an invite using user ids.
 	/// </summary>
 	/// <param name="targetUserIds">User ids allowed to accept the invite.</param>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task UpdateTargetUsersAsync(IEnumerable<ulong> targetUserIds, string reason = null)
-		=> this.Discord.ApiClient.UpdateInviteTargetUsersAsync(this.Code, null, targetUserIds, null, reason);
+	public Task UpdateTargetUsersAsync(IEnumerable<ulong> targetUserIds, string reason = null, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.UpdateInviteTargetUsersAsync(this.Code, null, targetUserIds, null, reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Updates the target users allowed to accept an invite using user objects.
 	/// </summary>
 	/// <param name="targetUsers">Users allowed to accept the invite.</param>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task UpdateTargetUsersAsync(IEnumerable<DiscordUser> targetUsers, string reason = null)
-		=> this.Discord.ApiClient.UpdateInviteTargetUsersAsync(this.Code, null, null, targetUsers, reason);
+	public Task UpdateTargetUsersAsync(IEnumerable<DiscordUser> targetUsers, string reason = null, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.UpdateInviteTargetUsersAsync(this.Code, null, null, targetUsers, reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Gets the invite target users job status.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The job status.</returns>
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordInviteTargetUsersJobStatus> GetTargetUsersJobStatusAsync()
-		=> this.Discord.ApiClient.GetInviteTargetUsersJobStatusAsync(this.Code);
+	public Task<DiscordInviteTargetUsersJobStatus> GetTargetUsersJobStatusAsync(CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.GetInviteTargetUsersJobStatusAsync(this.Code, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Converts this invite into a link.

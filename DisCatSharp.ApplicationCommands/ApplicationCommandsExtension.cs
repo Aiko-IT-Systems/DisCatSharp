@@ -335,14 +335,14 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		ShardCount = client.ShardCount;
 		Logger = client.Logger;
 
-		this.Client.Ready += (c, e) =>
+		this.Client.InternalReadyEv.Register((c, e) =>
 		{
 			if (!this.ShardStartupFinished)
 				_ = Task.Run(async () => await this.UpdateAsync().ConfigureAwait(false));
 			return Task.CompletedTask;
-		};
-		this.Client.InteractionCreated += this.CatchInteractionsOnStartup;
-		this.Client.ContextMenuInteractionCreated += this.CatchContextMenuInteractionsOnStartup;
+		});
+		this.Client.InternalInteractionCreated.Register(this.CatchInteractionsOnStartup);
+		this.Client.InternalContextMenuInteractionCreated.Register(this.CatchContextMenuInteractionsOnStartup);
 	}
 
 	/// <summary>
@@ -382,11 +382,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	private void FinishedRegistration()
 	{
-		this.Client.InteractionCreated -= this.CatchInteractionsOnStartup;
-		this.Client.ContextMenuInteractionCreated -= this.CatchContextMenuInteractionsOnStartup;
+		this.Client.InternalInteractionCreated.Unregister(this.CatchInteractionsOnStartup);
+		this.Client.InternalContextMenuInteractionCreated.Unregister(this.CatchContextMenuInteractionsOnStartup);
 
-		this.Client.InteractionCreated += this.InteractionHandler;
-		this.Client.ContextMenuInteractionCreated += this.ContextMenuHandler;
+		this.Client.InternalInteractionCreated.Register(this.InteractionHandler);
+		this.Client.InternalContextMenuInteractionCreated.Register(this.ContextMenuHandler);
 	}
 
 	/// <summary>
@@ -426,18 +426,20 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	///     Cleans all guild application commands.
 	///     <note type="caution">You normally don't need to execute it.</note>
 	/// </summary>
-	public async Task CleanGuildCommandsAsync()
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	public async Task CleanGuildCommandsAsync(CancellationToken cancellationToken = default)
 	{
 		foreach (var guild in this.Client.Guilds.Values)
-			await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guild.Id, []).ConfigureAwait(false);
+			await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guild.Id, [], cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
 	///     Cleans all global application commands.
 	///     <note type="caution">You normally don't need to execute it.</note>
 	/// </summary>
-	public async Task CleanGlobalCommandsAsync()
-		=> await this.Client.BulkOverwriteGlobalApplicationCommandsAsync([]).ConfigureAwait(false);
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	public async Task CleanGlobalCommandsAsync(CancellationToken cancellationToken = default)
+		=> await this.Client.BulkOverwriteGlobalApplicationCommandsAsync([], cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Registers all commands from a given assembly. The command classes need to be public to be considered for
@@ -593,7 +595,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	///     Used for RegisterCommands and the <see cref="DisCatSharp.DiscordClient.Ready" /> event.
 	/// </summary>
-	internal async Task UpdateAsync()
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	internal async Task UpdateAsync(CancellationToken cancellationToken = default)
 	{
 		this.Client.Logger.Log(LogLevel.Information, "Request to register commands on shard {shard}", this.Client.ShardId);
 
@@ -610,14 +613,14 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Shard {shard} has {guilds} guilds", this.Client.ShardId, this.Client.ReadyGuildIds.Count);
 			List<ulong> failedGuilds = [];
-			var globalCommands = IsCalledByUnitTest ? null : (await this.Client.GetGlobalApplicationCommandsAsync(Configuration?.EnableLocalization ?? false).ConfigureAwait(false))?.ToList() ?? null;
+			var globalCommands = IsCalledByUnitTest ? null : (await this.Client.GetGlobalApplicationCommandsAsync(Configuration?.EnableLocalization ?? false, cancellationToken).ConfigureAwait(false))?.ToList() ?? null;
 
 			var guilds = CheckAllGuilds ? this.Client.ReadyGuildIds : this._updateList.Where(x => x.Key is not null)?.Select(x => x.Key!.Value).Distinct().ToList();
-			var wrongShards = guilds is not null && this.Client.ReadyGuildIds.Count is not 0 ? guilds.Where(x => !this.Client.ReadyGuildIds.Contains(x)).ToList() : [];
-			if (wrongShards.Count is not 0)
+			var unknownGuilds = guilds is not null && this.Client.ReadyGuildIds.Count is not 0 ? guilds.Where(x => !this.Client.ReadyGuildIds.Contains(x)).ToList() : [];
+			if (unknownGuilds.Count is not 0)
 			{
-				this.Client.Logger.Log(ApplicationCommandsLogLevel, "Some guilds are not on the same shard as the client. Removing them from the update list");
-				foreach (var guild in wrongShards)
+				this.Client.Logger.Log(LogLevel.Warning, "Shard {Shard}: {Count} registered guild(s) are not present in the READY payload (bot may have left them or they belong to a different shard). Removing: {GuildIds}", this.Client.ShardId, unknownGuilds.Count, string.Join(", ", unknownGuilds));
+				foreach (var guild in unknownGuilds)
 				{
 					this._updateList.RemoveAll(x => x.Key == guild);
 					guilds?.Remove(guild);
@@ -633,7 +636,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					var unauthorized = false;
 					try
 					{
-						commands = (await this.Client.GetGuildApplicationCommandsAsync(guild, Configuration?.EnableLocalization ?? false).ConfigureAwait(false)).ToList() ?? null;
+						commands = (await this.Client.GetGuildApplicationCommandsAsync(guild, Configuration?.EnableLocalization ?? false, cancellationToken).ConfigureAwait(false)).ToList() ?? null;
 					}
 					catch (UnauthorizedException)
 					{
@@ -696,7 +699,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						}
 						else
 						{
+#pragma warning disable DCS0002
 							entryPointCommand.HandlerType = this.Client.Configuration.ActivityHandlerType;
+#pragma warning restore DCS0002
 						}
 
 						// Strip localizations from entry point when localization is disabled
@@ -715,14 +720,15 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 			foreach (var key in commandsPending)
 			{
-				this.Client.Logger.Log(ApplicationCommandsLogLevel, key.HasValue ? $"Registering commands in guild {key.Value}" : "Registering global commands");
+				var logText = key.HasValue ? $"Registering commands in guild {key.Value}" : "Registering global commands";
+				this.Client.Logger.Log(ApplicationCommandsLogLevel, "{text}", logText);
 				if (key.HasValue)
 				{
 					this.Client.Logger.Log(ApplicationCommandsLogLevel, "Found guild {guild} in shard {shard}!", key.Value, this.Client.ShardId);
 					this.Client.Logger.Log(ApplicationCommandsLogLevel, "Registering");
 				}
 
-				await this.RegisterCommands([.. this._updateList.Where(x => x.Key == key).Select(x => x.Value)], key).ConfigureAwait(false);
+				await this.RegisterCommands([.. this._updateList.Where(x => x.Key == key).Select(x => x.Value)], key, cancellationToken).ConfigureAwait(false);
 			}
 
 			this.MISSING_SCOPE_GUILD_IDS = [.. failedGuilds];
@@ -746,8 +752,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		{
 			this.DiagnosticsSink.CaptureException("DisCatSharp.ApplicationCommands", ex);
 			this.Client.Logger.LogCritical(ex, "There was an error during the application commands setup");
-			this.Client.Logger.LogError(ex.Message);
-			this.Client.Logger.LogError(ex.StackTrace);
+			this.Client.Logger.LogError(ex, "{msg}", ex.Message);
+			this.Client.Logger.LogError(ex, "{stack}", ex.StackTrace);
 		}
 	}
 
@@ -756,7 +762,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	/// <param name="types">The types.</param>
 	/// <param name="guildId">The optional guild id.</param>
-	private async Task RegisterCommands(List<ApplicationCommandsModuleConfiguration> types, ulong? guildId)
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	private async Task RegisterCommands(List<ApplicationCommandsModuleConfiguration> types, ulong? guildId, CancellationToken cancellationToken = default)
 	{
 		this.Client.Logger.Log(LogLevel.Information, "Registering commands on shard {shard}", this.Client.ShardId);
 		//Initialize empty lists to be added to the global ones at the end
@@ -978,7 +985,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						{
 							if (updateList.Count is not 0)
 							{
-								var regCommands = await RegistrationWorker.RegisterGlobalCommandsAsync(this.Client, updateList, EntryPointCommand).ConfigureAwait(false);
+								var regCommands = await RegistrationWorker.RegisterGlobalCommandsAsync(this.Client, updateList, EntryPointCommand, cancellationToken).ConfigureAwait(false);
 								if (regCommands is not null)
 								{
 									var actualCommands = regCommands.Distinct().ToList();
@@ -994,7 +1001,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 									try
 									{
 										if (EntryPointCommand is null || cmd.Type is not ApplicationCommandType.PrimaryEntryPoint)
-											await this.Client.DeleteGlobalApplicationCommandAsync(cmd.Id).ConfigureAwait(false);
+											await this.Client.DeleteGlobalApplicationCommandAsync(cmd.Id, cancellationToken).ConfigureAwait(false);
 									}
 									catch (NotFoundException)
 									{
@@ -1005,7 +1012,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						{
 							if (updateList.Count is not 0)
 							{
-								var regCommands = await RegistrationWorker.RegisterGuildCommandsAsync(this.Client, guildId.Value, updateList).ConfigureAwait(false);
+								var regCommands = await RegistrationWorker.RegisterGuildCommandsAsync(this.Client, guildId.Value, updateList, cancellationToken).ConfigureAwait(false);
 								if (regCommands is not null)
 								{
 									var actualCommands = regCommands.Distinct().ToList();
@@ -1027,7 +1034,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								foreach (var cmd in GuildDiscordCommands.First(x => x.Key == guildId.Value).Value)
 									try
 									{
-										await this.Client.DeleteGuildApplicationCommandAsync(guildId.Value, cmd.Id).ConfigureAwait(false);
+										await this.Client.DeleteGuildApplicationCommandAsync(guildId.Value, cmd.Id, cancellationToken).ConfigureAwait(false);
 									}
 									catch (NotFoundException)
 									{

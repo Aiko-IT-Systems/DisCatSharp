@@ -387,8 +387,8 @@ public sealed class VoiceConnection : IDisposable
 		this._keepaliveTimestamps = new();
 		this._pauseEvent = new(true);
 
-		this._udpClient = this._discord.Configuration.UdpClientFactory();
-		this._voiceWs = this._discord.Configuration.WebSocketClientFactory(this._discord.Configuration.Proxy, this._discord.ServiceProvider);
+		this._udpClient = this._discord.Configuration.Gateway.UdpClientFactory();
+		this._voiceWs = this._discord.Configuration.Gateway.WebSocketClientFactory(this._discord.Configuration.Proxy, this._discord.ServiceProvider);
 		this._voiceWs.Disconnected += this.VoiceWS_SocketClosed;
 		this._voiceWs.MessageReceived += this.VoiceWS_SocketMessage;
 		this._voiceWs.Connected += this.VoiceWS_SocketOpened;
@@ -943,12 +943,14 @@ public sealed class VoiceConnection : IDisposable
 				var totalLen = sendHeaderLength + opus.Length + Sodium.AES_GCM_TAG_SIZE + Sodium.AEAD_NONCE_SUFFIX_SIZE;
 				var diagLast20 = packet.Slice(totalLen - 20, 20);
 
+#pragma warning disable CA1872 // Prefer 'Convert.ToHexString' and 'Convert.ToHexStringLower' over call chains based on 'BitConverter.ToString'
 				this._voiceLogger.VoiceDebug(VoiceEvents.VoiceHandshake,
 					"[AEAD send diag] mode={Mode} packetLen={PktLen} aeadHdrLen={HdrLen} ciphertextLen={CLen} tagLen=16 counterValue={CVal} counter=[{CBytes}] nonce=[{NBytes}]",
 					this._selectedEncryptionMode, totalLen, sendHeaderLength, opus.Length,
 					counterVal,
 					BitConverter.ToString(nonceCounter4.ToArray()).Replace("-", ""),
 					BitConverter.ToString(diagNonce.ToArray()).Replace("-", ""));
+#pragma warning restore CA1872 // Prefer 'Convert.ToHexString' and 'Convert.ToHexStringLower' over call chains based on 'BitConverter.ToString'
 				this._voiceLogger.VoiceDebug(VoiceEvents.VoiceHandshake,
 					"[AEAD send diag] ciphertext first 8 bytes: {Bytes}",
 					BitConverter.ToString(diagCipher.ToArray()));
@@ -2141,7 +2143,7 @@ public sealed class VoiceConnection : IDisposable
 			this.ClearAudioSenders();
 			this._daveSession?.Reset();
 			this._tokenSource = new();
-			this._voiceWs = this._discord.Configuration.WebSocketClientFactory(this._discord.Configuration.Proxy, this._discord.ServiceProvider);
+			this._voiceWs = this._discord.Configuration.Gateway.WebSocketClientFactory(this._discord.Configuration.Proxy, this._discord.ServiceProvider);
 			this._voiceWs.Disconnected += this.VoiceWS_SocketClosed;
 			this._voiceWs.MessageReceived += this.VoiceWS_SocketMessage;
 			this._voiceWs.Connected += this.VoiceWS_SocketOpened;

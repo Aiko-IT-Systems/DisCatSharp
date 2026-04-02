@@ -35,6 +35,6 @@ public class DisCatSharpExceptionFilter : IExceptionFilter
 			? wrapper.InnerException
 			: ex;
 
-		return !this.Config.TrackExceptions.Contains(trackedException.GetType());
+		return !this.Config.Telemetry.TrackExceptions.Contains(trackedException.GetType());
 	}
 }

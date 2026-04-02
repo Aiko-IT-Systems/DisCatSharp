@@ -153,16 +153,16 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 	/// <param name="eventArgs">The event's arguments.</param>
 	private Task HandleEvent(DiscordClient client, T eventArgs)
 	{
-		if (!this._disposed)
-		{
-			foreach (var req in this._matchRequests)
-				if (req.Predicate(eventArgs))
-					req.Tcs.TrySetResult(eventArgs);
+		if (this._disposed)
+			return Task.CompletedTask;
 
-			foreach (var req in this._collectRequests)
-				if (req.Predicate(eventArgs))
-					req.Collected.Add(eventArgs);
-		}
+		foreach (var req in this._matchRequests)
+			if (req.Predicate(eventArgs))
+				req.Tcs.TrySetResult(eventArgs);
+
+		foreach (var req in this._collectRequests)
+			if (req.Predicate(eventArgs))
+				req.Collected.Add(eventArgs);
 
 		return Task.CompletedTask;
 	}

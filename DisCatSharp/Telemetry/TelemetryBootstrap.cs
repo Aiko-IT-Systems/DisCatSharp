@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -16,7 +17,7 @@ namespace DisCatSharp.Telemetry;
 /// </summary>
 internal static class TelemetryBootstrap
 {
-	private static readonly IReadOnlyDictionary<string, string> SourceCodeRoots = new Dictionary<string, string>(StringComparer.Ordinal)
+	private static readonly ReadOnlyDictionary<string, string> s_sourceCodeRoots = new Dictionary<string, string>(StringComparer.Ordinal)
 	{
 		["DisCatSharp"] = "DisCatSharp",
 		["DisCatSharp.ApplicationCommands"] = "DisCatSharp.ApplicationCommands",
@@ -29,7 +30,7 @@ internal static class TelemetryBootstrap
 		["DisCatSharp.Configuration"] = "DisCatSharp.Configuration",
 		["DisCatSharp.Common"] = "DisCatSharp.Common",
 		["DisCatSharp.Experimental"] = "DisCatSharp.Experimental"
-	};
+	}.AsReadOnly();
 
 	/// <summary>
 	///     Creates the appropriate diagnostics sink based on the configuration.
@@ -39,7 +40,7 @@ internal static class TelemetryBootstrap
 	/// <returns>A configured diagnostics sink.</returns>
 	internal static ILibraryDiagnosticsSink CreateSink(DiscordConfiguration config)
 	{
-		if (!config.EnableSentry)
+		if (!config.Telemetry.EnableSentry)
 			return NoOpDiagnosticsSink.Instance;
 
 		var options = BuildSentryOptions(config);
@@ -72,13 +73,13 @@ internal static class TelemetryBootstrap
 			IsEnvironmentUser = false,
 			UseAsyncFileIO = true,
 			EnableScopeSync = true,
-			Debug = config.SentryDebug,
-			MaxBreadcrumbs = config.AttachRecentLogEntries ? 100 : 0
+			Debug = config.Telemetry.SentryDebug,
+			MaxBreadcrumbs = config.Telemetry.AttachRecentLogEntries ? 100 : 0
 		};
 
 		options.AddInAppInclude("DisCatSharp");
 
-		if (!config.DisableExceptionFilter)
+		if (!config.Telemetry.DisableExceptionFilter)
 			options.AddExceptionFilter(new DisCatSharpExceptionFilter(config));
 
 		ConfigureScrubbers(options, config);
@@ -92,16 +93,16 @@ internal static class TelemetryBootstrap
 	/// </summary>
 	private static void ConfigureScrubbers(SentryOptions options, DiscordConfiguration config)
 	{
-		if (config.DisableScrubber)
+		if (config.Telemetry.DisableScrubber)
 			return;
 
 		options.SetBeforeBreadcrumb((b, _)
 			=> new(
-				Utilities.StripTokensAndOptIds(b.Message, config.EnableDiscordIdScrubber)!,
+				Utilities.StripTokensAndOptIds(b.Message, config.Telemetry.EnableDiscordIdScrubber)!,
 				b.Type!,
 				b.Data?.Select(x => new KeyValuePair<string, string>(
 					x.Key,
-					Utilities.StripTokensAndOptIds(x.Value, config.EnableDiscordIdScrubber)!))
+					Utilities.StripTokensAndOptIds(x.Value, config.Telemetry.EnableDiscordIdScrubber)!))
 					.ToDictionary(x => x.Key, x => x.Value),
 				b.Category,
 				b.Level));
@@ -109,7 +110,7 @@ internal static class TelemetryBootstrap
 		options.SetBeforeSendTransaction((tr, _) =>
 		{
 			if (tr.Request.Data is string str)
-				tr.Request.Data = Utilities.StripTokensAndOptIds(str, config.EnableDiscordIdScrubber);
+				tr.Request.Data = Utilities.StripTokensAndOptIds(str, config.Telemetry.EnableDiscordIdScrubber);
 
 			return tr;
 		});
@@ -122,7 +123,7 @@ internal static class TelemetryBootstrap
 	{
 		options.SetBeforeSend((e, _) =>
 		{
-			if (!config.DisableExceptionFilter)
+			if (!config.Telemetry.DisableExceptionFilter)
 			{
 				if (e.Exception is not null)
 				{
@@ -130,7 +131,7 @@ internal static class TelemetryBootstrap
 						? wrapper.InnerException
 						: e.Exception;
 
-					if (!config.TrackExceptions.Contains(trackedException.GetType()))
+					if (!config.Telemetry.TrackExceptions.Contains(trackedException.GetType()))
 						return null;
 				}
 				else if (e.Extra.ContainsKey("Found Fields"))
@@ -158,7 +159,7 @@ internal static class TelemetryBootstrap
 	internal static void RewriteStackFramePaths(SentryEvent e)
 	{
 		if (!e.Tags.TryGetValue(DiagnosticTags.Source, out var source)
-			|| !SourceCodeRoots.TryGetValue(source, out var sourceRoot))
+			|| !s_sourceCodeRoots.TryGetValue(source, out var sourceRoot))
 			return;
 
 		foreach (var sentryException in e.SentryExceptions ?? [])
@@ -199,10 +200,10 @@ internal static class TelemetryBootstrap
 		var isRootedPath = Path.IsPathRooted(trimmedOriginalPath)
 			|| trimmedOriginalPath.StartsWith(@"\\", StringComparison.Ordinal)
 			|| trimmedOriginalPath.StartsWith("//", StringComparison.Ordinal)
-			|| trimmedOriginalPath.Length >= 3
+			|| (trimmedOriginalPath.Length >= 3
 			&& char.IsLetter(trimmedOriginalPath[0])
 			&& trimmedOriginalPath[1] == ':'
-			&& (trimmedOriginalPath[2] == '\\' || trimmedOriginalPath[2] == '/');
+			&& (trimmedOriginalPath[2] == '\\' || trimmedOriginalPath[2] == '/'));
 
 		var normalizedPath = trimmedOriginalPath.Replace('/', '\\');
 
@@ -233,7 +234,7 @@ internal static class TelemetryBootstrap
 	///     Resolves the effective Sentry DSN, preferring custom DSN over default.
 	/// </summary>
 	private static string GetDsn(DiscordConfiguration config)
-		=> config.CustomSentryDsn ?? BaseDiscordClient.SentryDsn;
+		=> config.Telemetry.CustomSentryDsn ?? BaseDiscordClient.SentryDsn;
 
 	/// <summary>
 	///     Gets the library version string for Sentry release tagging.
@@ -272,12 +273,7 @@ internal static class TelemetryBootstrap
 	///     Stable versions are treated as dev when the assembly metadata says the build did not come from CI.
 	/// </remarks>
 	internal static bool GetSentryEnvironment(string release)
-	{
-		if (IsPreRelease(release))
-			return true;
-
-		return !IsCiBuild(typeof(DiscordClient).GetTypeInfo().Assembly);
-	}
+		=> IsPreRelease(release) || !IsCiBuild(typeof(DiscordClient).GetTypeInfo().Assembly);
 
 	/// <summary>
 	///     Returns whether the current assembly was produced by a CI build.
@@ -295,15 +291,14 @@ internal static class TelemetryBootstrap
 	/// <returns>User info, or <c>null</c> if not configured or unavailable.</returns>
 	internal static DiagnosticUserInfo? BuildUserInfo(DiscordConfiguration config, Entities.DiscordUser? currentUser)
 	{
-		if (!config.AttachUserInfo || currentUser is null)
-			return null;
-
-		return new()
+		return !config.Telemetry.AttachUserInfo || currentUser is null
+			? null
+			: new()
 		{
 			Id = currentUser.Id.ToString(),
 			Username = currentUser.UsernameWithDiscriminator,
-			DeveloperUserId = config.DeveloperUserId?.ToString(),
-			FeedbackEmail = config.FeedbackEmail
+			DeveloperUserId = config.Telemetry.DeveloperUserId?.ToString(),
+			FeedbackEmail = config.Telemetry.FeedbackEmail
 		};
 	}
 }

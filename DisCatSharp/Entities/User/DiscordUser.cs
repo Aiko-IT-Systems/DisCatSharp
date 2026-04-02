@@ -1,7 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Attributes;
@@ -315,21 +316,6 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	public DiscordAccessToken? AccessToken { get; set; }
 
 	/// <summary>
-	///     Gets this user's presence.
-	/// </summary>
-	[JsonIgnore]
-	public DiscordPresence? Presence
-		=> this.Discord is not DiscordClient dc
-			? null
-			: this is DiscordMember member
-				? dc.InternalGetCachedGuild(member.GuildId)?.PresencesInternal.TryGetValue(this.Id, out var memberPresence) == true
-					? memberPresence
-					: null
-				: dc.TryGetPresence(this.Id, null, out var presence)
-					? presence
-					: null;
-
-	/// <summary>
 	///     Checks whether this <see cref="DiscordUser" /> is equal to another <see cref="DiscordUser" />.
 	/// </summary>
 	/// <param name="e"><see cref="DiscordUser" /> to compare to.</param>
@@ -340,19 +326,21 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <summary>
 	///     Fetches the user from the API.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The user with fresh data from the API.</returns>
-	public async Task<DiscordUser> GetFromApiAsync()
-		=> await this.Discord.ApiClient.GetUserAsync(this.Id).ConfigureAwait(false);
+	public async Task<DiscordUser> GetFromApiAsync(CancellationToken cancellationToken = default)
+		=> await this.Discord.ApiClient.GetUserAsync(this.Id, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Gets additional information about an application if the user is an bot.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The rpc info or <see langword="null" /></returns>
 	/// <exception cref="NotFoundException">Thrown when the application does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordRpcApplication?> GetRpcInfoAsync()
-		=> this.IsBot ? await this.Discord.ApiClient.GetApplicationRpcInfoAsync(this.Id).ConfigureAwait(false) : await Task.FromResult<DiscordRpcApplication?>(null).ConfigureAwait(false);
+	public async Task<DiscordRpcApplication?> GetRpcInfoAsync(CancellationToken cancellationToken = default)
+		=> this.IsBot ? await this.Discord.ApiClient.GetApplicationRpcInfoAsync(this.Id, cancellationToken: cancellationToken).ConfigureAwait(false) : await Task.FromResult<DiscordRpcApplication?>(null).ConfigureAwait(false);
 
 	/// <summary>
 	///     Whether this user is in a <see cref="DiscordGuild" />
@@ -463,6 +451,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <summary>
 	///     Creates a direct message channel to this user.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>Direct message channel to this user.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the user has the bot blocked, the member shares no guild with the
@@ -471,13 +460,14 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <exception cref="NotFoundException">Thrown when the user does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordDmChannel> CreateDmChannelAsync()
-		=> this.Discord.ApiClient.CreateDmAsync(this.Id);
+	public Task<DiscordDmChannel> CreateDmChannelAsync(CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.CreateDmAsync(this.Id, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Sends a direct message to this user. Creates a direct message channel if one does not exist already.
 	/// </summary>
 	/// <param name="content">Content of the message to send.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the user has the bot blocked, the member shares no guild with the
@@ -486,19 +476,20 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <exception cref="NotFoundException">Thrown when the user does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordMessage> SendMessageAsync(string content)
+	public async Task<DiscordMessage> SendMessageAsync(string content, CancellationToken cancellationToken = default)
 	{
 		if (this.IsBot && this.Discord.CurrentUser.IsBot)
 			throw new ArgumentException("Bots cannot DM each other.");
 
-		var chn = await this.CreateDmChannelAsync().ConfigureAwait(false);
-		return await chn.SendMessageAsync(content).ConfigureAwait(false);
+		var chn = await this.CreateDmChannelAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+		return await chn.SendMessageAsync(content, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
 	///     Sends a direct message to this user. Creates a direct message channel if one does not exist already.
 	/// </summary>
 	/// <param name="embed">Embed to attach to the message.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the user has the bot blocked, the member shares no guild with the
@@ -507,13 +498,13 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <exception cref="NotFoundException">Thrown when the user does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordMessage> SendMessageAsync(DiscordEmbed embed)
+	public async Task<DiscordMessage> SendMessageAsync(DiscordEmbed embed, CancellationToken cancellationToken = default)
 	{
 		if (this.IsBot && this.Discord.CurrentUser.IsBot)
 			throw new ArgumentException("Bots cannot DM each other.");
 
-		var chn = await this.CreateDmChannelAsync().ConfigureAwait(false);
-		return await chn.SendMessageAsync(embed).ConfigureAwait(false);
+		var chn = await this.CreateDmChannelAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+		return await chn.SendMessageAsync(embed, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -521,6 +512,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// </summary>
 	/// <param name="content">Content of the message to send.</param>
 	/// <param name="embed">Embed to attach to the message.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the user has the bot blocked, the member shares no guild with the
@@ -529,19 +521,20 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <exception cref="NotFoundException">Thrown when the user does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed)
+	public async Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed, CancellationToken cancellationToken = default)
 	{
 		if (this.IsBot && this.Discord.CurrentUser.IsBot)
 			throw new ArgumentException("Bots cannot DM each other.");
 
-		var chn = await this.CreateDmChannelAsync().ConfigureAwait(false);
-		return await chn.SendMessageAsync(content, embed).ConfigureAwait(false);
+		var chn = await this.CreateDmChannelAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+		return await chn.SendMessageAsync(content, embed, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
 	///     Sends a direct message to this user. Creates a direct message channel if one does not exist already.
 	/// </summary>
 	/// <param name="message">Builder to with the message.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the user has the bot blocked, the member shares no guild with the
@@ -550,13 +543,13 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <exception cref="NotFoundException">Thrown when the user does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordMessage> SendMessageAsync(DiscordMessageBuilder message)
+	public async Task<DiscordMessage> SendMessageAsync(DiscordMessageBuilder message, CancellationToken cancellationToken = default)
 	{
 		if (this.IsBot && this.Discord.CurrentUser.IsBot)
 			throw new ArgumentException("Bots cannot DM each other.");
 
-		var chn = await this.CreateDmChannelAsync().ConfigureAwait(false);
-		return await chn.SendMessageAsync(message).ConfigureAwait(false);
+		var chn = await this.CreateDmChannelAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+		return await chn.SendMessageAsync(message, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>

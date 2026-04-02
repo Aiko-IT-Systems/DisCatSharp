@@ -234,14 +234,14 @@ public static class Utilities
 	/// <param name="config">The config</param>
 	/// <returns>A string.</returns>
 	internal static string GetApiBaseUri(DiscordConfiguration? config = null)
-		=> (config?.ApiChannel ?? ApiChannel.Stable) switch
+		=> (config?.Api.Channel ?? ApiChannel.Stable) switch
 		{
 			ApiChannel.Stable => Endpoints.BASE_URI,
 			ApiChannel.Canary => Endpoints.CANARY_URI,
 			ApiChannel.Ptb => Endpoints.PTB_URI,
 			ApiChannel.Staging => Endpoints.STAGING_URI,
 			_ => Endpoints.BASE_URI
-		} + (config?.ApiVersion ?? "10");
+		} + (config?.Api.Version ?? "10");
 
 	/// <summary>
 	///     Gets the api uri for a given <paramref name="path"/>.
@@ -714,7 +714,7 @@ public static class Utilities
 			}
 
 			string? releaseNotes = null;
-			if (client.Configuration.ShowReleaseNotesInUpdateCheck)
+			if (client.Configuration.Diagnostics.UpdateChecks.ShowReleaseNotes)
 			{
 				var assetUrl = latest.Assets.FirstOrDefault(x => x.Name is "RELEASENOTES.md")?.BrowserDownloadUrl;
 				if (assetUrl is not null)
@@ -749,7 +749,7 @@ public static class Utilities
 			else
 				client.Logger.LogInformation("[{Type}] Your version of {Product} is up to date!\n\tCurrent version: v{CurrentVersion}", fromShard ? "ShardedClient" : "Client", productName, version);
 
-			if (client.Configuration.ShowReleaseNotesInUpdateCheck)
+			if (client.Configuration.Diagnostics.UpdateChecks.ShowReleaseNotes)
 			{
 				if (!string.IsNullOrEmpty(releaseNotes))
 					client.Logger.LogInformation("Release Notes:\n{ReleaseNotes}", releaseNotes);
@@ -809,7 +809,7 @@ public static class Utilities
 
 			var latestPackageVersion = latestVersions.First(x => string.Equals(x.Key, packageId, StringComparison.InvariantCultureIgnoreCase)).Value;
 			string? releaseNotes = null;
-			if (client.Configuration.ShowReleaseNotesInUpdateCheck)
+			if (client.Configuration.Diagnostics.UpdateChecks.ShowReleaseNotes)
 			{
 				var dResource = await repository.GetResourceAsync<FindPackageByIdResource>();
 
@@ -837,7 +837,7 @@ public static class Utilities
 			else
 				client.Logger.LogInformation("[{Type}] Your version of {Product} is up to date!\n\tCurrent version: v{CurrentVersion}", fromShard ? "ShardedClient" : "Client", packageId, currentPackageVersion.OriginalVersion);
 
-			if (client.Configuration.ShowReleaseNotesInUpdateCheck)
+			if (client.Configuration.Diagnostics.UpdateChecks.ShowReleaseNotes)
 			{
 				if (!string.IsNullOrEmpty(releaseNotes))
 					client.Logger.LogInformation("Release Notes:\n{ReleaseNotes}", releaseNotes);

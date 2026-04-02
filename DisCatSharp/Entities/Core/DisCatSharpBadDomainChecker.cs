@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
@@ -38,32 +39,51 @@ public static class DisCatSharpBadDomainChecker
 	private static DiscordConfiguration? s_config { get; set; }
 
 	/// <summary>
+	/// Guards against concurrent or duplicate initialization.
+	/// 0 = not started, 1 = in progress or done.
+	/// </summary>
+	private static int _initialized;
+
+	/// <summary>
 	/// Loads the bad domain hashes from Discord API and initializes the domain parser.
+	/// Only runs once — subsequent calls are no-ops.
 	/// </summary>
 	/// <param name="client">The Discord client instance.</param>
 	/// <exception cref="InvalidOperationException">Thrown if the Discord configuration is null.</exception>
 	internal static async Task LoadAndInitBadDomainHashesAsync(BaseDiscordClient client)
 	{
-		s_config = client.Configuration ?? throw new InvalidOperationException("DiscordConfiguration is null.");
-		if (s_config.EnableBadDomainCheckerSupport)
-		{
-			client.Logger.LogDebug("Loading bad domain hashes from Discord API...");
-			BadHashes = await client.ApiClient.GetBadDomainHashesAsync().ConfigureAwait(false);
-			s_cacheProvider ??= new LocalFileSystemCacheProvider();
+		if (Interlocked.Exchange(ref _initialized, 1) == 1)
+			return;
 
-			if (s_parser is null)
+		try
+		{
+			s_config = client.Configuration ?? throw new InvalidOperationException("DiscordConfiguration is null.");
+			if (s_config.EnableBadDomainCheckerSupport)
 			{
-				client.Logger.LogDebug("Initializing domain parser for bad domain checking...");
-				var ruleProvider = new CachedHttpRuleProvider(s_cacheProvider, client.RestClient);
-				client.Logger.LogDebug("Downloading public suffix list...");
-				await ruleProvider.BuildAsync().ConfigureAwait(false);
-				s_parser = new DomainParser(ruleProvider);
-				client.Logger.LogDebug("Domain parser initialized.");
+				client.Logger.LogDebug("Loading bad domain hashes from Discord API...");
+				BadHashes = await client.ApiClient.GetBadDomainHashesAsync().ConfigureAwait(false);
+				s_cacheProvider ??= new LocalFileSystemCacheProvider();
+
+				if (s_parser is null)
+				{
+					client.Logger.LogDebug("Initializing domain parser for bad domain checking...");
+					var ruleProvider = new CachedHttpRuleProvider(s_cacheProvider, client.RestClient);
+					client.Logger.LogDebug("Downloading public suffix list...");
+					await ruleProvider.BuildAsync().ConfigureAwait(false);
+					s_parser = new DomainParser(ruleProvider);
+					client.Logger.LogDebug("Domain parser initialized.");
+				}
+				client.Logger.LogDebug("Loaded {count} bad domain hashes.", BadHashes.Count);
 			}
-			client.Logger.LogDebug("Loaded {count} bad domain hashes.", BadHashes.Count);
+			else
+				client.Logger.LogDebug("DisCatSharp bad domain checker support is disabled in the configuration.");
 		}
-		else
-			client.Logger.LogDebug("DisCatSharp bad domain checker support is disabled in the configuration.");
+		catch (Exception ex)
+		{
+			// Reset so a subsequent client can retry initialization
+			Interlocked.Exchange(ref _initialized, 0);
+			client.Logger.LogError(ex, "Failed to initialize bad domain checker — will retry on next client startup");
+		}
 	}
 
 	/// <summary>

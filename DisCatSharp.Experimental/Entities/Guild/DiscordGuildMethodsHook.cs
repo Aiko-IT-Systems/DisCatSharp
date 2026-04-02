@@ -1,3 +1,4 @@
+﻿using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
@@ -19,6 +20,7 @@ public static class DiscordGuildMethodsHook
 	/// </summary>
 	/// <param name="guild">The guild.</param>
 	/// <param name="searchParams">The guild member search params</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="ValidationException">Thrown if the user gave an invalid input.</exception>
 	/// <exception cref="NotIndexedException">Thrown if the elasticsearch endpoint has not finished indexing yet.</exception>
 	/// <exception cref="UnauthorizedException">
@@ -27,10 +29,10 @@ public static class DiscordGuildMethodsHook
 	/// </exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public static async Task<DiscordSearchGuildMembersResponse> SearchMembersAsync(this DiscordGuild guild, DiscordGuildMemberSearchParams searchParams)
+	public static async Task<DiscordSearchGuildMembersResponse> SearchMembersAsync(this DiscordGuild guild, DiscordGuildMemberSearchParams searchParams, CancellationToken cancellationToken = default)
 	{
 		DiscordApiClientHook hook = new(guild.Discord.ApiClient);
-		return await hook.SearchGuildMembersAsync(guild.Id, searchParams);
+		return await hook.SearchGuildMembersAsync(guild.Id, searchParams, cancellationToken);
 	}
 
 	/// <summary>
@@ -41,6 +43,7 @@ public static class DiscordGuildMethodsHook
 	/// </summary>
 	/// <param name="guild">The guild.</param>
 	/// <param name="searchParams">The guild messages search params</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="ValidationException">Thrown if the user gave an invalid input.</exception>
 	/// <exception cref="NotIndexedException">Thrown if the elasticsearch endpoint has not finished indexing yet.</exception>
 	/// <exception cref="UnauthorizedException">
@@ -49,9 +52,9 @@ public static class DiscordGuildMethodsHook
 	/// </exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public static async Task<DiscordSearchGuildMessagesResponse?> SearchMessagesAsync(this DiscordGuild guild, DiscordGuildMessageSearchParams searchParams)
+	public static async Task<DiscordSearchGuildMessagesResponse?> SearchMessagesAsync(this DiscordGuild guild, DiscordGuildMessageSearchParams searchParams, CancellationToken cancellationToken = default)
 	{
 		DiscordApiClientHook hook = new(guild.Discord.ApiClient);
-		return await hook.SearchGuildMessagesAsync(guild.Id, searchParams);
+		return await hook.SearchGuildMessagesAsync(guild.Id, searchParams, cancellationToken);
 	}
 }

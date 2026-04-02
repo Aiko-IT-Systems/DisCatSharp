@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Exceptions;
@@ -92,33 +93,35 @@ public sealed class DiscordScheduledEventException : ObservableApiObject, IEquat
 	///     Modifies this scheduled event exception.
 	/// </summary>
 	/// <param name="action">The action to apply to the edit model.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The updated scheduled event exception.</returns>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the correct permissions.</exception>
 	/// <exception cref="NotFoundException">Thrown when the event or exception does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordScheduledEventException> ModifyAsync(Action<ScheduledEventExceptionEditModel> action)
+	public Task<DiscordScheduledEventException> ModifyAsync(Action<ScheduledEventExceptionEditModel> action, CancellationToken cancellationToken = default)
 	{
 		var mdl = new ScheduledEventExceptionEditModel();
 		action(mdl);
 
 		var scheduledEvent = this.ScheduledEvent ?? throw new InvalidOperationException("Unable to resolve the parent scheduled event for this exception.");
-		return this.Discord.ApiClient.ModifyGuildScheduledEventExceptionAsync(scheduledEvent.GuildId, this.EventId, this.Id, mdl.ScheduledStartTime, mdl.ScheduledEndTime, mdl.IsCanceled, mdl.AuditLogReason);
+		return this.Discord.ApiClient.ModifyGuildScheduledEventExceptionAsync(scheduledEvent.GuildId, this.EventId, this.Id, mdl.ScheduledStartTime, mdl.ScheduledEndTime, mdl.IsCanceled, mdl.AuditLogReason, cancellationToken: cancellationToken);
 	}
 
 	/// <summary>
 	///     Deletes this scheduled event exception.
 	/// </summary>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A task that represents the asynchronous operation.</returns>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the correct permissions.</exception>
 	/// <exception cref="NotFoundException">Thrown when the event or exception does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task DeleteAsync(string? reason = null)
+	public Task DeleteAsync(string? reason = null, CancellationToken cancellationToken = default)
 	{
 		var scheduledEvent = this.ScheduledEvent ?? throw new InvalidOperationException("Unable to resolve the parent scheduled event for this exception.");
-		return this.Discord.ApiClient.DeleteGuildScheduledEventExceptionAsync(scheduledEvent.GuildId, this.EventId, this.Id, reason);
+		return this.Discord.ApiClient.DeleteGuildScheduledEventExceptionAsync(scheduledEvent.GuildId, this.EventId, this.Id, reason, cancellationToken: cancellationToken);
 	}
 
 	/// <summary>
@@ -128,15 +131,16 @@ public sealed class DiscordScheduledEventException : ObservableApiObject, IEquat
 	/// <param name="before">Get users before this user id.</param>
 	/// <param name="after">Get users after this user id.</param>
 	/// <param name="withMember">Whether to include guild member data.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A map of subscribed users by user id.</returns>
 	/// <exception cref="NotFoundException">Thrown when the event does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 
-	public Task<IReadOnlyDictionary<ulong, DiscordScheduledEventUser>> GetUsersAsync(int? limit = null, ulong? before = null, ulong? after = null, bool? withMember = null)
+	public Task<IReadOnlyDictionary<ulong, DiscordScheduledEventUser>> GetUsersAsync(int? limit = null, ulong? before = null, ulong? after = null, bool? withMember = null, CancellationToken cancellationToken = default)
 	{
 		var scheduledEvent = this.ScheduledEvent ?? throw new InvalidOperationException("Unable to resolve the parent scheduled event for this exception.");
-		return this.Discord.ApiClient.GetGuildScheduledEventExceptionUsersAsync(scheduledEvent.GuildId, this.EventId, this.Id, limit, before, after, withMember);
+		return this.Discord.ApiClient.GetGuildScheduledEventExceptionUsersAsync(scheduledEvent.GuildId, this.EventId, this.Id, limit, before, after, withMember, cancellationToken: cancellationToken);
 	}
 
 	/// <summary>

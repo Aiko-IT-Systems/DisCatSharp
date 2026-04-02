@@ -56,7 +56,7 @@ internal sealed class ClientProperties : ObservableApiObject
 	{
 		get
 		{
-			if (this.Discord.Configuration.MobileStatus)
+			if (this.Discord.Configuration.Gateway.MobileStatus)
 				return "Discord Android";
 
 			var a = typeof(DiscordClient).GetTypeInfo().Assembly;

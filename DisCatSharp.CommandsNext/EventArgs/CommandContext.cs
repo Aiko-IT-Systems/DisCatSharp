@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
@@ -112,42 +113,47 @@ public sealed class CommandContext : DisCatSharpCommandContext
 	///     Quickly respond to the message that triggered the command.
 	/// </summary>
 	/// <param name="content">Message to respond with.</param>
+	/// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
 	/// <returns></returns>
-	public Task<DiscordMessage> RespondAsync(string content)
-		=> this.Message.RespondAsync(content);
+	public Task<DiscordMessage> RespondAsync(string content, CancellationToken cancellationToken = default)
+		=> this.Message.RespondAsync(content, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Quickly respond to the message that triggered the command.
 	/// </summary>
 	/// <param name="embed">Embed to attach.</param>
+	/// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
 	/// <returns></returns>
-	public Task<DiscordMessage> RespondAsync(DiscordEmbed embed)
-		=> this.Message.RespondAsync(embed);
+	public Task<DiscordMessage> RespondAsync(DiscordEmbed embed, CancellationToken cancellationToken = default)
+		=> this.Message.RespondAsync(embed, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Quickly respond to the message that triggered the command.
 	/// </summary>
 	/// <param name="content">Message to respond with.</param>
 	/// <param name="embed">Embed to attach.</param>
+	/// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
 	/// <returns></returns>
-	public Task<DiscordMessage> RespondAsync(string content, DiscordEmbed embed)
-		=> this.Message.RespondAsync(content, embed);
+	public Task<DiscordMessage> RespondAsync(string content, DiscordEmbed embed, CancellationToken cancellationToken = default)
+		=> this.Message.RespondAsync(content, embed, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Quickly respond to the message that triggered the command.
 	/// </summary>
 	/// <param name="builder">The Discord Message builder.</param>
+	/// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
 	/// <returns></returns>
-	public Task<DiscordMessage> RespondAsync(DiscordMessageBuilder builder)
-		=> this.Message.RespondAsync(builder);
+	public Task<DiscordMessage> RespondAsync(DiscordMessageBuilder builder, CancellationToken cancellationToken = default)
+		=> this.Message.RespondAsync(builder, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Quickly respond to the message that triggered the command.
 	/// </summary>
 	/// <param name="action">The Discord Message builder.</param>
+	/// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
 	/// <returns></returns>
-	public Task<DiscordMessage> RespondAsync(Action<DiscordMessageBuilder> action)
-		=> this.Message.RespondAsync(action);
+	public Task<DiscordMessage> RespondAsync(Action<DiscordMessageBuilder> action, CancellationToken cancellationToken = default)
+		=> this.Message.RespondAsync(action, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Triggers typing in the channel containing the message that triggered the command.
