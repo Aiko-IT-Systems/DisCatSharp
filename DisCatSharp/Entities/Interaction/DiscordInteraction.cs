@@ -226,7 +226,8 @@ public sealed class DiscordInteraction : SnowflakeObject
 		builder.Validate(isInteractionResponse: true);
 		if (builder.KeepAttachmentsInternal.HasValue && builder.KeepAttachmentsInternal.Value)
 		{
-			var attachments = this.Discord.ApiClient.GetOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token, cancellationToken: cancellationToken).Result.Attachments;
+			var originalResponse = await this.Discord.ApiClient.GetOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token, cancellationToken: cancellationToken).ConfigureAwait(false);
+			var attachments = originalResponse.Attachments;
 			if (attachments?.Count > 0)
 			{
 				builder.AttachmentsInternal ??= [];
