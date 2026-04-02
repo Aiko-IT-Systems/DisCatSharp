@@ -309,6 +309,41 @@ internal class Sodium : IDisposable
 	}
 
 	/// <summary>
+	///     One-shot decrypt aead diagnostics.
+	/// </summary>
+	/// <param name="logger">The logger instance.</param>
+	/// <param name="mode">The AEAD encryption mode.</param>
+	/// <param name="ciphertextLength">The ciphertext payload length.</param>
+	/// <param name="aadLength">The additional authenticated data length.</param>
+	/// <param name="keyLength">The key length..</param>
+	/// <param name="nonceCounter4">4-byte little-endian nonce counter read from the end of the received packet.</param>
+	private static void LogDecryptAeadDiagnosticsOnce(ILogger? logger, SodiumEncryptionMode mode, int ciphertextLength, int aadLength, int keyLength, ReadOnlySpan<byte> nonceCounter4)
+	{
+		if (logger == null)
+			return;
+
+		if (Interlocked.CompareExchange(ref _decryptDiagLogged, 1, 0) != 0)
+			return;
+
+		var counterValue = BinaryPrimitives.ReadUInt32LittleEndian(nonceCounter4);
+
+		// Build the full nonce so we can log the exact bytes passed to the cipher.
+		var nonceLen = mode == SodiumEncryptionMode.AeadAes256GcmRtpSize ? 12 : 24;
+		Span<byte> diagNonce = stackalloc byte[nonceLen]; // zero-initialized
+		BinaryPrimitives.WriteUInt32LittleEndian(diagNonce, counterValue);
+
+		logger.VoiceDebug(
+			"[AEAD decrypt diag] mode={Mode} ciphertextLen={CLen} aadLen={AadLen} keyLen={KeyLen}",
+			mode, ciphertextLength, aadLength, keyLength);
+		logger.VoiceDebug(
+			"[AEAD decrypt diag] counter bytes: {Bytes} = LE uint32 {Value}",
+			BitConverter.ToString(nonceCounter4.ToArray()), counterValue);
+		logger.VoiceDebug(
+			"[AEAD decrypt diag] nonce bytes ({NonceLen}): {Nonce}",
+			nonceLen, BitConverter.ToString(diagNonce.ToArray()));
+	}
+
+	/// <summary>
 	///     Decrypts <paramref name="ciphertext" /> using the specified AEAD mode.
 	/// </summary>
 	/// <param name="ciphertext">Ciphertext payload to decrypt.</param>
@@ -325,25 +360,7 @@ internal class Sodium : IDisposable
 		if (nonceCounter4.Length != AEAD_NONCE_SUFFIX_SIZE)
 			throw new ArgumentException($"Nonce counter must be exactly {AEAD_NONCE_SUFFIX_SIZE} bytes.", nameof(nonceCounter4));
 
-		if (this._logger != null && Interlocked.CompareExchange(ref _decryptDiagLogged, 1, 0) == 0)
-		{
-			var counterValue = BinaryPrimitives.ReadUInt32LittleEndian(nonceCounter4);
-
-			// Build the full nonce so we can log the exact bytes passed to the cipher.
-			var nonceLen = mode == SodiumEncryptionMode.AeadAes256GcmRtpSize ? 12 : 24;
-			Span<byte> diagNonce = stackalloc byte[nonceLen]; // zero-initialized
-			BinaryPrimitives.WriteUInt32LittleEndian(diagNonce, counterValue);
-
-			this._logger.VoiceDebug(
-				"[AEAD decrypt diag] mode={Mode} ciphertextLen={CLen} aadLen={AadLen} keyLen={KeyLen}",
-				mode, ciphertext.Length, aad.Length, this._key.Length);
-			this._logger.VoiceDebug(
-				"[AEAD decrypt diag] counter bytes: {Bytes} = LE uint32 {Value}",
-				BitConverter.ToString(nonceCounter4.ToArray()), counterValue);
-			this._logger.VoiceDebug(
-				"[AEAD decrypt diag] nonce bytes ({NonceLen}): {Nonce}",
-				nonceLen, BitConverter.ToString(diagNonce.ToArray()));
-		}
+		LogDecryptAeadDiagnosticsOnce(this._logger, mode, ciphertext.Length, aad.Length, this._key.Length, nonceCounter4);
 
 		switch (mode)
 		{
