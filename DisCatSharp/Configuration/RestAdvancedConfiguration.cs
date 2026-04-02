@@ -30,6 +30,7 @@ public sealed class RestAdvancedConfiguration
 		this.RetryTransientErrors = other.RetryTransientErrors;
 		this.CircuitBreakerThreshold = other.CircuitBreakerThreshold;
 		this.CircuitBreakerResetTimeout = other.CircuitBreakerResetTimeout;
+		this.FailFastMode = other.FailFastMode;
 	}
 
 	/// <summary>
@@ -160,4 +161,30 @@ public sealed class RestAdvancedConfiguration
 			field = value;
 		}
 	} = TimeSpan.FromSeconds(30);
+
+	/// <summary>
+	///     Enables fail-fast mode: disables all retries and circuit breaker cooldown, and sets a short queue timeout.
+	///     When enabled, any REST failure is surfaced immediately without automatic recovery attempts.
+	/// </summary>
+	/// <remarks>
+	///     <para>This overrides <see cref="MaxRetries" />, <see cref="RetryTransientErrors" />,
+	///     <see cref="CircuitBreakerThreshold" />, and <see cref="QueueTimeout" /> when set to <see langword="true" />.</para>
+	///     <para>Intended for library developer diagnostics. Not part of the public API surface.</para>
+	/// </remarks>
+	internal bool FailFastMode
+	{
+		get;
+		set
+		{
+			field = value;
+
+			if (!value)
+				return;
+
+			this.MaxRetries = 0;
+			this.RetryTransientErrors = false;
+			this.CircuitBreakerThreshold = 0;
+			this.QueueTimeout = TimeSpan.FromSeconds(10);
+		}
+	}
 }
