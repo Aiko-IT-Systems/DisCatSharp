@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DisCatSharp.Net;
@@ -29,6 +30,7 @@ public abstract class BaseRestRequest
 		this.Method = method;
 		this.Route = route;
 		this.RateLimitWaitOverride = ratelimitWaitOverride;
+		this.EnqueuedAt = DateTimeOffset.UtcNow;
 
 		if (headers is null)
 			return;
@@ -57,6 +59,7 @@ public abstract class BaseRestRequest
 		this.Method = method;
 		this.Route = route;
 		this.RateLimitWaitOverride = ratelimitWaitOverride;
+		this.EnqueuedAt = DateTimeOffset.UtcNow;
 
 		if (headers is null)
 			return;
@@ -110,6 +113,17 @@ public abstract class BaseRestRequest
 	///     Gets the rate limit bucket this request is in.
 	/// </summary>
 	internal RateLimitBucket RateLimitBucket { get; }
+
+	/// <summary>
+	///     Gets when this request was enqueued into the bucket worker.
+	/// </summary>
+	internal DateTimeOffset EnqueuedAt { get; }
+
+	/// <summary>
+	///     Gets the cancellation token source for caller-initiated cancellation.
+	///     When cancelled before execution starts, the request is failed without being sent.
+	/// </summary>
+	internal CancellationTokenSource CancellationTokenSource { get; } = new();
 
 	/// <summary>
 	///     Asynchronously waits for this request to complete.

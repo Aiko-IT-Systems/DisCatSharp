@@ -156,4 +156,14 @@ public static class LoggerEvents
 	///     Events is library side.
 	/// </summary>
 	public static EventId Library { get; } = new(129, nameof(Library));
+
+	/// <summary>
+	///     Events emitted when a REST request times out waiting in a bucket queue.
+	/// </summary>
+	public static EventId RestQueueTimeout { get; } = new(130, nameof(RestQueueTimeout));
+
+	/// <summary>
+	///     Events emitted when a REST request is experiencing queue pressure (long wait).
+	/// </summary>
+	public static EventId RestQueuePressure { get; } = new(131, nameof(RestQueuePressure));
 }
