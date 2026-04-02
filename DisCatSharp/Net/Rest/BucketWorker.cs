@@ -524,10 +524,12 @@ internal sealed class BucketWorker : IDisposable
 	{
 		var failures = Interlocked.Increment(ref this._consecutiveFailures);
 
-		if (this._config.CircuitBreakerThreshold > 0 && failures == this._config.CircuitBreakerThreshold)
+		if (this._config.CircuitBreakerThreshold > 0 && failures >= this._config.CircuitBreakerThreshold)
 		{
 			this._circuitOpenSince = DateTimeOffset.UtcNow;
-			this._logger.LogWarning(LoggerEvents.RestError, "Circuit breaker opened for {Bucket} after {Failures} consecutive failures", this._bucket, failures);
+
+			if (failures == this._config.CircuitBreakerThreshold)
+				this._logger.LogWarning(LoggerEvents.RestError, "Circuit breaker opened for {Bucket} after {Failures} consecutive failures", this._bucket, failures);
 		}
 	}
 

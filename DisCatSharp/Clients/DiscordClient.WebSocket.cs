@@ -420,7 +420,8 @@ public sealed partial class DiscordClient
 				{
 					// Route presence updates to the dedicated fast-path channel to avoid
 					// starving the main dispatch queue under high presence volume.
-					this._presenceChannel!.Writer.TryWrite(payload);
+					if (!this._presenceChannel!.Writer.TryWrite(payload))
+						this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Presence channel is full or completed; dropping PRESENCE_UPDATE (seq {Sequence}).", payload.Sequence);
 				}
 				else if (!this._dispatchQueue!.Writer.TryWrite(payload))
 					this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Dispatch queue is full; dropping event {EventName} (seq {Sequence}). Consider increasing DispatchQueueCapacity.", payload.EventName, payload.Sequence);
