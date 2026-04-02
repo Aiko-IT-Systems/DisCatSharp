@@ -122,6 +122,12 @@ public abstract class BaseDiscordClient : IDisposable
 	protected internal DiscordApiClient ApiClient { get; }
 
 	/// <summary>
+	///     Gets the REST diagnostics provider, exposing runtime metrics for bucket workers, queue depths, and circuit breaker state.
+	/// </summary>
+	public IRestDiagnostics RestDiagnostics
+		=> this.ApiClient.Rest;
+
+	/// <summary>
 	///     Gets the library diagnostics sink for telemetry reporting.
 	/// </summary>
 	internal ILibraryDiagnosticsSink DiagnosticsSink { get; set; }

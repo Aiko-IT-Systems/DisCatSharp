@@ -1,4 +1,7 @@
 using System;
+using System.IO;
+using System.Net.Http;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -32,6 +35,10 @@ internal sealed class BucketWorker : IDisposable
 	private volatile bool _disposed;
 	private Task? _loopTask;
 
+	// ── Circuit breaker state ────────────────────────────────────────────────
+	private int _consecutiveFailures;
+	private DateTimeOffset _circuitOpenSince;
+
 	internal BucketWorker(RestClient client, RateLimitBucket bucket, RestAdvancedConfiguration config, ILogger logger)
 	{
 		this._client = client;
@@ -39,16 +46,33 @@ internal sealed class BucketWorker : IDisposable
 		this._config = config;
 		this._logger = logger;
 		this._cts = new();
-		this._queue = Channel.CreateUnbounded<BaseRestRequest>(new()
-		{
-			SingleReader = true
-		});
+
+		// Use bounded channel if MaxQueueDepthPerBucket is configured, otherwise unbounded
+		this._queue = config.MaxQueueDepthPerBucket > 0
+			? Channel.CreateBounded<BaseRestRequest>(new BoundedChannelOptions(config.MaxQueueDepthPerBucket)
+			{
+				SingleReader = true,
+				FullMode = BoundedChannelFullMode.DropWrite
+			})
+			: Channel.CreateUnbounded<BaseRestRequest>(new()
+			{
+				SingleReader = true
+			});
 	}
 
 	/// <summary>
 	///     Gets the number of requests currently queued.
 	/// </summary>
 	internal int QueueLength => this._queue.Reader.Count;
+
+	/// <summary>
+	///     Attempts to dequeue a pending request without executing it.
+	///     Used by cancel/flush operations to drain the queue.
+	/// </summary>
+	/// <param name="request">The dequeued request, if any.</param>
+	/// <returns><c>true</c> if a request was dequeued; <c>false</c> if the queue is empty.</returns>
+	internal bool TryDequeue([System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out BaseRestRequest? request)
+		=> this._queue.Reader.TryRead(out request);
 
 	/// <summary>
 	///     Gets the total number of requests that completed (success or fault).
@@ -94,12 +118,50 @@ internal sealed class BucketWorker : IDisposable
 	/// <summary>
 	///     Enqueues a request into this worker's FIFO queue.
 	///     Starts the worker loop if it is not already running.
+	///     Rejects the request if the circuit breaker is open or the queue is full.
 	/// </summary>
 	internal void Enqueue(BaseRestRequest request)
 	{
-		if (this._disposed || !this._queue.Writer.TryWrite(request))
+		if (this._disposed)
 		{
 			request.TrySetFaulted(new ObjectDisposedException(nameof(BucketWorker), "Bucket worker has been disposed."));
+			return;
+		}
+
+		// Circuit breaker check
+		if (this._config.CircuitBreakerThreshold > 0 && this._consecutiveFailures >= this._config.CircuitBreakerThreshold)
+		{
+			var elapsed = DateTimeOffset.UtcNow - this._circuitOpenSince;
+			if (elapsed < this._config.CircuitBreakerResetTimeout)
+			{
+				request.TrySetFaulted(new RestCircuitBrokenException(
+					request.Route,
+					this._bucket.BucketId,
+					this._consecutiveFailures,
+					this._circuitOpenSince));
+				return;
+			}
+
+			// Half-open: allow this one probe request through, reset will happen on success
+			this._logger.LogInformation(LoggerEvents.RestError, "Circuit breaker half-open for {Bucket}, allowing probe request", this._bucket);
+		}
+
+		if (!this._queue.Writer.TryWrite(request))
+		{
+			// Queue is full (bounded channel) or writer completed (migration)
+			if (this._config.MaxQueueDepthPerBucket > 0)
+			{
+				request.TrySetFaulted(new RestQueueFullException(
+					request.Route,
+					this._bucket.BucketId,
+					this.QueueLength,
+					this._config.MaxQueueDepthPerBucket));
+			}
+			else
+			{
+				request.TrySetFaulted(new ObjectDisposedException(nameof(BucketWorker), "Bucket worker queue is closed."));
+			}
+
 			return;
 		}
 
@@ -299,7 +361,7 @@ internal sealed class BucketWorker : IDisposable
 				var isProbe = !this._bucket.LimitValid;
 				var result = await this._client.SendAndParseAsync(request, this._bucket, isProbe);
 
-				// 4. Handle retry on 429
+				// 4. Handle retry on 429, 5xx, or transient network errors
 				if (result.ShouldRetry && retries < maxRetries)
 				{
 					retries++;
@@ -309,6 +371,14 @@ internal sealed class BucketWorker : IDisposable
 					{
 						this._logger.LogError(LoggerEvents.RatelimitHit, "Global ratelimit hit, cooling down for {Url}", request.Url.AbsoluteUri);
 						await this._client.EnforceGlobalRateLimitAsync(result.RetryDelay, ct);
+					}
+					else if (result.IsTransientNetworkError)
+					{
+						// Exponential backoff for transient network errors (DNS, socket, timeout)
+						var backoff = TimeSpan.FromSeconds(Math.Pow(2, retries - 1));
+						this._logger.LogWarning(LoggerEvents.RestError, "Transient network error, retrying {Url} after {Delay:F1}s (attempt {Retry}/{Max})",
+							request.Url.AbsoluteUri, backoff.TotalSeconds, retries, maxRetries);
+						await Task.Delay(backoff, ct);
 					}
 					else if (result.IsServerError)
 					{
@@ -330,15 +400,17 @@ internal sealed class BucketWorker : IDisposable
 					continue; // Retry
 				}
 
-				// 5. Complete or fault the request
+				// 5. Complete or fault the request + circuit breaker tracking
 				if (result.Error is not null)
 				{
 					this._client.ReportDiagnostics(request, result.Response, result.Error);
 					request.SetFaulted(result.Error);
+					this.RecordFailure();
 				}
 				else
 				{
 					request.SetCompleted(result.Response);
+					this.RecordSuccess();
 				}
 
 				Interlocked.Increment(ref this.Processed);
@@ -359,6 +431,40 @@ internal sealed class BucketWorker : IDisposable
 				Interlocked.Increment(ref this.Processed);
 				return;
 			}
+		}
+	}
+
+	// ── Circuit breaker tracking ─────────────────────────────────────────────
+
+	/// <summary>
+	///     Gets the number of consecutive failures on this bucket.
+	/// </summary>
+	internal int ConsecutiveFailures => this._consecutiveFailures;
+
+	/// <summary>
+	///     Records a successful request — resets the circuit breaker.
+	/// </summary>
+	private void RecordSuccess()
+	{
+		if (this._consecutiveFailures > 0)
+		{
+			Interlocked.Exchange(ref this._consecutiveFailures, 0);
+			this._circuitOpenSince = default;
+		}
+	}
+
+	/// <summary>
+	///     Records a failed request — increments the consecutive failure counter.
+	///     When the threshold is reached, the circuit breaker opens.
+	/// </summary>
+	private void RecordFailure()
+	{
+		var failures = Interlocked.Increment(ref this._consecutiveFailures);
+
+		if (this._config.CircuitBreakerThreshold > 0 && failures == this._config.CircuitBreakerThreshold)
+		{
+			this._circuitOpenSince = DateTimeOffset.UtcNow;
+			this._logger.LogWarning(LoggerEvents.RestError, "Circuit breaker opened for {Bucket} after {Failures} consecutive failures", this._bucket, failures);
 		}
 	}
 

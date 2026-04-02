@@ -22,6 +22,12 @@ namespace DisCatSharp.Net;
 internal sealed class BucketRegistry : IDisposable
 {
 	/// <summary>
+	///     Caches reflected <see cref="PropertyInfo" /> arrays per route-parameter type so that
+	///     <see cref="GetBucket" /> (a hot path) does not call reflection on every request.
+	/// </summary>
+	private static readonly ConcurrentDictionary<Type, PropertyInfo[]> s_propertyCache = new();
+
+	/// <summary>
 	///     Maps generic route patterns (e.g. "POST:/channels/:channel_id/messages") to rate-limit hashes.
 	/// </summary>
 	private readonly ConcurrentDictionary<string, string> _routesToHashes = new();
@@ -140,9 +146,7 @@ internal sealed class BucketRegistry : IDisposable
 	/// <returns>The rate-limit bucket for this request.</returns>
 	internal RateLimitBucket GetBucket(RestRequestMethod method, string route, object routeParams, out string url)
 	{
-		var rparamsProps = routeParams.GetType()
-			.GetTypeInfo()
-			.DeclaredProperties;
+		var rparamsProps = s_propertyCache.GetOrAdd(routeParams.GetType(), static t => t.GetTypeInfo().DeclaredProperties.ToArray());
 		var rparams = new Dictionary<string, string>();
 		foreach (var xp in rparamsProps)
 		{
@@ -308,13 +312,13 @@ internal sealed class BucketRegistry : IDisposable
 	/// </summary>
 	private async Task CleanupBucketsAsync()
 	{
-		while (!this._bucketCleanerTokenSource?.IsCancellationRequested ?? false)
+		while (this._bucketCleanerTokenSource is { IsCancellationRequested: false })
 		{
 			try
 			{
 				await Task.Delay(this._bucketCleanupDelay, this._bucketCleanerTokenSource.Token).ConfigureAwait(false);
 			}
-			catch
+			catch (OperationCanceledException)
 			{ }
 
 			ObjectDisposedException.ThrowIf(this._disposed, this);
@@ -409,7 +413,7 @@ internal sealed class BucketRegistry : IDisposable
 				break;
 		}
 
-		if (!this._bucketCleanerTokenSource?.IsCancellationRequested ?? true)
+		if (this._bucketCleanerTokenSource is { IsCancellationRequested: false })
 			this._bucketCleanerTokenSource?.Cancel();
 
 		this._cleanerRunning = false;
@@ -434,7 +438,7 @@ internal sealed class BucketRegistry : IDisposable
 
 		this._bucketWorkers.Clear();
 
-		if (this._bucketCleanerTokenSource?.IsCancellationRequested is false)
+		if (this._bucketCleanerTokenSource is { IsCancellationRequested: false })
 		{
 			this._bucketCleanerTokenSource?.Cancel();
 			this._logger.LogDebug(LoggerEvents.RestCleaner, "Bucket cleaner task stopped.");
@@ -445,10 +449,77 @@ internal sealed class BucketRegistry : IDisposable
 			this._cleanerTask?.Dispose();
 			this._bucketCleanerTokenSource?.Dispose();
 		}
-		catch
+		catch (Exception ex) when (ex is ObjectDisposedException or InvalidOperationException)
 		{ }
 
 		this._routesToHashes.Clear();
 		this._hashesToBuckets.Clear();
+	}
+
+	// ── Diagnostics helpers ─────────────────────────────────────────────────
+
+	/// <summary>
+	///     Gets the number of active bucket workers.
+	/// </summary>
+	internal int GetActiveWorkerCount()
+		=> this._bucketWorkers.Count;
+
+	/// <summary>
+	///     Gets the total number of queued requests across all workers.
+	/// </summary>
+	internal int GetTotalQueuedRequests()
+	{
+		var total = 0;
+		foreach (var kvp in this._bucketWorkers)
+			total += kvp.Value.QueueLength;
+
+		return total;
+	}
+
+	/// <summary>
+	///     Gets a diagnostic snapshot of all bucket workers.
+	/// </summary>
+	internal List<BucketDiagnostics> GetBucketSnapshots()
+	{
+		var snapshots = new List<BucketDiagnostics>(this._bucketWorkers.Count);
+		foreach (var kvp in this._bucketWorkers)
+		{
+			var worker = kvp.Value;
+			snapshots.Add(new(
+				BucketId: kvp.Key.ToString(),
+				QueueLength: worker.QueueLength,
+				Processed: Interlocked.Read(ref worker.Processed),
+				Retried: Interlocked.Read(ref worker.Retried),
+				TimedOut: Interlocked.Read(ref worker.TimedOut),
+				Cancelled: Interlocked.Read(ref worker.Cancelled),
+				ConsecutiveFailures: worker.ConsecutiveFailures,
+				IsAlive: worker.IsAlive,
+				IsFaulted: worker.IsFaulted));
+		}
+
+		return snapshots;
+	}
+
+	/// <summary>
+	///     Drains all bucket worker queues and faults each pending request with <see cref="OperationCanceledException" />.
+	/// </summary>
+	/// <param name="reason">The cancellation reason.</param>
+	/// <returns>The total number of requests cancelled.</returns>
+	internal int CancelAllPendingRequests(string reason)
+	{
+		var cancelled = 0;
+		var ex = new OperationCanceledException(reason);
+
+		foreach (var kvp in this._bucketWorkers)
+		{
+			var worker = kvp.Value;
+			while (worker.TryDequeue(out var request))
+			{
+				request.TrySetFaulted(ex);
+				cancelled++;
+			}
+		}
+
+		return cancelled;
 	}
 }

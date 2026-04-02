@@ -34,6 +34,11 @@ internal readonly struct SendResult
 	internal bool IsServerError { get; init; }
 
 	/// <summary>
+	///     Gets whether the retry is due to a transient network error (DNS, socket, timeout).
+	/// </summary>
+	internal bool IsTransientNetworkError { get; init; }
+
+	/// <summary>
 	///     Gets the exception mapped from the response status, if any.
 	/// </summary>
 	internal Exception? Error { get; init; }

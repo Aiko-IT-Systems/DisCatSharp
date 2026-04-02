@@ -32,11 +32,9 @@ internal sealed class RateLimitBucket : IEquatable<RateLimitBucket>
 	internal volatile bool IsUnlimited;
 
 	/// <summary>
-	///     If the rate limit is currently being reset.
-	///     This is a int because booleans can't be accessed atomically.
-	///     0 => False, all other values => True
+	///     Synchronizes rate-limit reset logic so only one caller resets at a time.
 	/// </summary>
-	internal volatile int LimitResetting;
+	private readonly SemaphoreSlim _resetLock = new(1, 1);
 
 	/// <summary>
 	///     If the rate limits have been determined.
@@ -233,19 +231,23 @@ internal sealed class RateLimitBucket : IEquatable<RateLimitBucket>
 		if (this.NextReset > now.UtcTicks)
 			return false;
 
-		while (Interlocked.CompareExchange(ref this.LimitResetting, 1, 0) != 0)
-			await Task.Yield();
+		await this._resetLock.WaitAsync().ConfigureAwait(false);
 
-		var didReset = false;
-		if (this.NextReset is not 0)
+		try
 		{
-			this.RemainingInternal = this.Maximum;
-			this.NextReset = 0;
-			didReset = true;
-		}
+			if (this.NextReset is not 0)
+			{
+				this.RemainingInternal = this.Maximum;
+				this.NextReset = 0;
+				return true;
+			}
 
-		this.LimitResetting = 0;
-		return didReset;
+			return false;
+		}
+		finally
+		{
+			this._resetLock.Release();
+		}
 	}
 
 	/// <summary>

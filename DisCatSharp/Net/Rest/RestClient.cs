@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -20,8 +19,7 @@ namespace DisCatSharp.Net;
 ///     Requests are processed through per-bucket <see cref="BucketWorker" /> instances that enforce
 ///     FIFO ordering and independent rate-limit management per bucket.
 /// </summary>
-[SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
-internal sealed class RestClient : IDisposable
+internal sealed class RestClient : IDisposable, IRestDiagnostics
 {
 	/// <summary>
 	///     Gets the discord client.
@@ -201,6 +199,17 @@ internal sealed class RestClient : IDisposable
 	public Task ExecuteFormRequestAsync(BaseRestRequest request)
 		=> this.ExecuteRequestAsync(request);
 
+	/// <summary>
+	///     Cancels all pending requests across all bucket workers by draining their queues
+	///     and faulting each request with <see cref="OperationCanceledException" />.
+	/// </summary>
+	/// <param name="reason">Optional reason message for the cancellation.</param>
+	public void CancelAllPendingRequests(string? reason = null)
+	{
+		var cancelled = this.Registry.CancelAllPendingRequests(reason ?? "All pending REST requests were cancelled by the application.");
+		this._logger.LogInformation(LoggerEvents.RestCleaner, "Cancelled {Count} pending REST requests", cancelled);
+	}
+
 	// ── Internal methods called by BucketWorker ──────────────────────────────
 
 	/// <summary>
@@ -331,9 +340,14 @@ internal sealed class RestClient : IDisposable
 			if (isProbe)
 				this.ResetProbeState(request.RateLimitBucket);
 
+			// Classify transient vs permanent network errors
+			var isTransient = IsTransientHttpError(httpEx);
+
 			return new()
 			{
-				Error = httpEx
+				Error = httpEx,
+				ShouldRetry = isTransient,
+				IsTransientNetworkError = isTransient
 			};
 		}
 		finally
@@ -449,6 +463,18 @@ internal sealed class RestClient : IDisposable
 	}
 
 	/// <summary>
+	///     Classifies whether an <see cref="HttpRequestException" /> is transient (worth retrying)
+	///     or permanent (should fail immediately).
+	/// </summary>
+	/// <param name="ex">The HTTP exception to classify.</param>
+	/// <returns><c>true</c> if the error is transient (DNS, socket, timeout); <c>false</c> otherwise.</returns>
+	private static bool IsTransientHttpError(HttpRequestException ex)
+		=> ex.InnerException is System.Net.Sockets.SocketException
+			or System.IO.IOException
+			or TimeoutException
+			or OperationCanceledException;
+
+	/// <summary>
 	///     Builds the form data request.
 	/// </summary>
 	/// <param name="request">The request.</param>
@@ -515,7 +541,7 @@ internal sealed class RestClient : IDisposable
 			{
 				this._logger.LogTrace(LoggerEvents.RestTx, "<multipart request>");
 
-				var boundary = "---------------------------" + DateTime.Now.Ticks.ToString("x");
+				var boundary = "---------------------------" + Guid.NewGuid().ToString("N");
 
 				req.Headers.Add(CommonHeaders.CONNECTION, CommonHeaders.CONNECTION_KEEP_ALIVE);
 				req.Headers.Add(CommonHeaders.KEEP_ALIVE, "600");
@@ -546,7 +572,7 @@ internal sealed class RestClient : IDisposable
 			{
 				this._logger.LogTrace(LoggerEvents.RestTx, "<multipart request>");
 
-				var boundary = "---------------------------" + DateTime.Now.Ticks.ToString("x");
+				var boundary = "---------------------------" + Guid.NewGuid().ToString("N");
 
 				req.Headers.Add(CommonHeaders.CONNECTION, CommonHeaders.CONNECTION_KEEP_ALIVE);
 				req.Headers.Add(CommonHeaders.KEEP_ALIVE, "600");
@@ -697,4 +723,18 @@ internal sealed class RestClient : IDisposable
 	{
 		this.Dispose();
 	}
+
+	// ── IRestDiagnostics ────────────────────────────────────────────────────
+
+	/// <inheritdoc />
+	public int ActiveWorkerCount
+		=> this.Registry.GetActiveWorkerCount();
+
+	/// <inheritdoc />
+	public int TotalQueuedRequests
+		=> this.Registry.GetTotalQueuedRequests();
+
+	/// <inheritdoc />
+	public IReadOnlyList<BucketDiagnostics> GetBucketSnapshots()
+		=> this.Registry.GetBucketSnapshots();
 }
