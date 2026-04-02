@@ -275,7 +275,8 @@ internal sealed class RestClient : IDisposable, IRestDiagnostics
 	///     Builds an HTTP request, sends it, parses the response, and updates the bucket from headers.
 	///     Returns a <see cref="SendResult" /> indicating success, retry, or error.
 	/// </summary>
-	internal async Task<SendResult> SendAndParseAsync(BaseRestRequest request, RateLimitBucket bucket, bool isProbe)
+	/// <param name="cancellationToken">Cancellation token for aborting the HTTP request.</param>
+	internal async Task<SendResult> SendAndParseAsync(BaseRestRequest request, RateLimitBucket bucket, bool isProbe, CancellationToken cancellationToken = default)
 	{
 		HttpResponseMessage? httpRes = null;
 
@@ -303,9 +304,9 @@ internal sealed class RestClient : IDisposable, IRestDiagnostics
 
 			ObjectDisposedException.ThrowIf(this._disposed, this);
 
-			httpRes = await this.HttpClient.SendAsync(httpReq, HttpCompletionOption.ResponseContentRead, CancellationToken.None).ConfigureAwait(false);
+			httpRes = await this.HttpClient.SendAsync(httpReq, HttpCompletionOption.ResponseContentRead, cancellationToken).ConfigureAwait(false);
 
-			var bts = await httpRes.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+			var bts = await httpRes.Content.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
 			var txt = Utilities.UTF8.GetString(bts, 0, bts.Length);
 
 			if (this.Debug)

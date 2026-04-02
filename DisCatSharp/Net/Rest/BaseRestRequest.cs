@@ -21,11 +21,15 @@ public abstract class BaseRestRequest
 	/// <param name="route">The generic route the request url will use.</param>
 	/// <param name="headers">Additional headers for this request.</param>
 	/// <param name="ratelimitWaitOverride">Override for ratelimit bucket wait time.</param>
-	internal BaseRestRequest(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string>? headers = null, double? ratelimitWaitOverride = null)
+	/// <param name="cancellationToken">Optional cancellation token for caller-initiated cancellation.</param>
+	internal BaseRestRequest(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string>? headers = null, double? ratelimitWaitOverride = null, CancellationToken cancellationToken = default)
 	{
 		this.Discord = client;
 		this.RateLimitBucket = bucket;
 		this.RequestTaskSource = new();
+		this.CancellationTokenSource = cancellationToken.CanBeCanceled
+			? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken)
+			: new CancellationTokenSource();
 		this.Url = url;
 		this.Method = method;
 		this.Route = route;
@@ -50,11 +54,15 @@ public abstract class BaseRestRequest
 	/// <param name="route">The generic route the request url will use.</param>
 	/// <param name="headers">Additional headers for this request.</param>
 	/// <param name="ratelimitWaitOverride">Override for ratelimit bucket wait time.</param>
-	internal BaseRestRequest(DiscordOAuth2Client client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string>? headers = null, double? ratelimitWaitOverride = null)
+	/// <param name="cancellationToken">Optional cancellation token for caller-initiated cancellation.</param>
+	internal BaseRestRequest(DiscordOAuth2Client client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string>? headers = null, double? ratelimitWaitOverride = null, CancellationToken cancellationToken = default)
 	{
 		this.OAuth2Client = client;
 		this.RateLimitBucket = bucket;
 		this.RequestTaskSource = new();
+		this.CancellationTokenSource = cancellationToken.CanBeCanceled
+			? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken)
+			: new CancellationTokenSource();
 		this.Url = url;
 		this.Method = method;
 		this.Route = route;
@@ -123,7 +131,7 @@ public abstract class BaseRestRequest
 	///     Gets the cancellation token source for caller-initiated cancellation.
 	///     When cancelled before execution starts, the request is failed without being sent.
 	/// </summary>
-	internal CancellationTokenSource CancellationTokenSource { get; } = new();
+	internal CancellationTokenSource CancellationTokenSource { get; }
 
 	/// <summary>
 	///     Asynchronously waits for this request to complete.
