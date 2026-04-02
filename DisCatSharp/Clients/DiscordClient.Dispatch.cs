@@ -2769,34 +2769,37 @@ public sealed partial class DiscordClient
 	internal async Task OnGuildRoleUpdateEventAsync(DiscordRole role, DiscordGuild guild)
 	{
 		var newRole = guild.GetRole(role.Id);
-		var oldRole = new DiscordRole
-		{
-			GuildId = guild.Id,
-			ColorInternal = newRole.ColorInternal,
-			Discord = this,
-			IsHoisted = newRole.IsHoisted,
-			Id = newRole.Id,
-			IsManaged = newRole.IsManaged,
-			IsMentionable = newRole.IsMentionable,
-			Name = newRole.Name,
-			Permissions = newRole.Permissions,
-			Position = newRole.Position,
-			IconHash = newRole.IconHash,
-			Tags = newRole.Tags ?? null,
-			UnicodeEmojiString = newRole.UnicodeEmojiString
-		};
+		var oldRole = CreateRoleSnapshot(newRole ?? role, guild);
 
-		newRole.GuildId = guild.Id;
-		newRole.ColorInternal = role.ColorInternal;
-		newRole.IsHoisted = role.IsHoisted;
-		newRole.IsManaged = role.IsManaged;
-		newRole.IsMentionable = role.IsMentionable;
-		newRole.Name = role.Name;
-		newRole.Permissions = role.Permissions;
-		newRole.Position = role.Position;
-		newRole.IconHash = role.IconHash;
-		newRole.Tags = role.Tags ?? null;
-		newRole.UnicodeEmojiString = role.UnicodeEmojiString;
+		if (newRole is null)
+		{
+			this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received guild_role_update for uncached role {RoleId} in guild {GuildId}; refreshing cache from payload.", role.Id, guild.Id);
+			role.Discord = this;
+			role.GuildId = guild.Id;
+			role.GuildInternal = guild;
+			guild.RolesInternal[role.Id] = role;
+			newRole = role;
+		}
+		else
+		{
+			newRole.GuildId = guild.Id;
+			newRole.ColorInternal = role.ColorInternal;
+			newRole.Discord = this;
+			newRole.GuildInternal = guild;
+			newRole.IsHoisted = role.IsHoisted;
+			newRole.IsManaged = role.IsManaged;
+			newRole.IsMentionable = role.IsMentionable;
+			newRole.Name = role.Name;
+			newRole.Version = role.Version;
+			newRole.Description = role.Description;
+			newRole.Permissions = role.Permissions;
+			newRole.Position = role.Position;
+			newRole.IconHash = role.IconHash;
+			newRole.Tags = role.Tags;
+			newRole.UnicodeEmojiString = role.UnicodeEmojiString;
+			newRole.Flags = role.Flags;
+			newRole.Colors = role.Colors;
+		}
 
 		var ea = new GuildRoleUpdateEventArgs(this.ServiceProvider)
 		{
@@ -2806,6 +2809,29 @@ public sealed partial class DiscordClient
 		};
 		await this.RaiseEventAsync(this._guildRoleUpdated, ea).ConfigureAwait(false);
 	}
+
+	private DiscordRole CreateRoleSnapshot(DiscordRole source, DiscordGuild guild)
+		=> new()
+		{
+			Id = source.Id,
+			Discord = this,
+			GuildId = guild.Id,
+			GuildInternal = guild,
+			Name = source.Name,
+			Version = source.Version,
+			Description = source.Description,
+			ColorInternal = source.ColorInternal,
+			IsHoisted = source.IsHoisted,
+			Position = source.Position,
+			Permissions = source.Permissions,
+			IsManaged = source.IsManaged,
+			IsMentionable = source.IsMentionable,
+			Tags = source.Tags,
+			IconHash = source.IconHash,
+			UnicodeEmojiString = source.UnicodeEmojiString,
+			Flags = source.Flags,
+			Colors = source.Colors
+		};
 
 	/// <summary>
 	///     Handles the guild role delete event.

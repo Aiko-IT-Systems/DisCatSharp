@@ -31,6 +31,9 @@ public class DisCatSharpExceptionFilter : IExceptionFilter
 	/// <param name="ex">The exception to check.</param>
 	public bool Filter(Exception ex)
 	{
+		if (ex.Data[DiagnosticTags.ErrorOrigin] as string == DiagnosticTags.OriginLibrary)
+			return false;
+
 		var trackedException = ex is SentryCapturableException { InnerException: not null } wrapper
 			? wrapper.InnerException
 			: ex;

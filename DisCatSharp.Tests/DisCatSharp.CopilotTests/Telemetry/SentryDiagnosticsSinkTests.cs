@@ -49,6 +49,35 @@ public class SentryDiagnosticsSinkTests
 	}
 
 	[Fact]
+	public void ExceptionFilter_AllowsLibraryOriginExceptionOutsideTrackedList()
+	{
+		var config = new DiscordConfiguration
+		{
+			EnableLibraryDeveloperMode = true
+		};
+		config.TrackExceptions = [typeof(DiscordJsonException)];
+		var filter = new DisCatSharpExceptionFilter(config);
+		var exception = new NullReferenceException("library bug");
+		exception.Data[DiagnosticTags.ErrorOrigin] = DiagnosticTags.OriginLibrary;
+
+		Assert.False(filter.Filter(exception));
+	}
+
+	[Fact]
+	public void ShouldSendEvent_AllowsLibraryOriginExceptionOutsideTrackedList()
+	{
+		var config = new DiscordConfiguration
+		{
+			EnableLibraryDeveloperMode = true
+		};
+		config.TrackExceptions = [typeof(DiscordJsonException)];
+		var evt = new SentryEvent(new NullReferenceException("library bug"));
+		evt.SetTag(DiagnosticTags.ErrorOrigin, DiagnosticTags.OriginLibrary);
+
+		Assert.True(TelemetryBootstrap.ShouldSendEvent(evt, config));
+	}
+
+	[Fact]
 	public void ApplyContext_AttachesStructuredContextToEvent()
 	{
 		var evt = new SentryEvent(new InvalidOperationException("boom"));

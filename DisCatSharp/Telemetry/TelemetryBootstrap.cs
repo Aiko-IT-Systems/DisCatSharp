@@ -123,26 +123,8 @@ internal static class TelemetryBootstrap
 	{
 		options.SetBeforeSend((e, _) =>
 		{
-			if (!config.Telemetry.DisableExceptionFilter)
-			{
-				if (e.Exception is not null)
-				{
-					var trackedException = e.Exception is SentryCapturableException { InnerException: not null } wrapper
-						? wrapper.InnerException
-						: e.Exception;
-
-					if (!config.Telemetry.TrackExceptions.Contains(trackedException.GetType()))
-						return null;
-				}
-				else if (e.Extra.ContainsKey("Found Fields"))
-				{
-					// Missing-field reports are allowed through the non-exception path.
-				}
-				else if (!e.Tags.ContainsKey(DiagnosticTags.Source))
-				{
-					return null;
-				}
-			}
+			if (!ShouldSendEvent(e, config))
+				return null;
 
 			if (!e.Extra.ContainsKey("Found Fields") && (e.Fingerprint is null || e.Fingerprint.Count is 0))
 				e.SetFingerprint(SentryDiagnosticsSink.GenerateFingerprint(e));
@@ -151,6 +133,32 @@ internal static class TelemetryBootstrap
 
 			return e;
 		});
+	}
+
+	internal static bool ShouldSendEvent(SentryEvent e, DiscordConfiguration config)
+	{
+		if (config.Telemetry.DisableExceptionFilter)
+			return true;
+
+		var isLibraryOrigin = e.Tags.TryGetValue(DiagnosticTags.ErrorOrigin, out var errorOrigin)
+			&& errorOrigin == DiagnosticTags.OriginLibrary;
+
+		if (e.Exception is not null)
+		{
+			if (isLibraryOrigin)
+				return true;
+
+			var trackedException = e.Exception is SentryCapturableException { InnerException: not null } wrapper
+				? wrapper.InnerException
+				: e.Exception;
+
+			return config.Telemetry.TrackExceptions.Contains(trackedException.GetType());
+		}
+
+		if (e.Extra.ContainsKey("Found Fields"))
+			return true;
+
+		return e.Tags.ContainsKey(DiagnosticTags.Source);
 	}
 
 	/// <summary>

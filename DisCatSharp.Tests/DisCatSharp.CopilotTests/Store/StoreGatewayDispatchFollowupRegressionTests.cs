@@ -355,6 +355,49 @@ public class StoreGatewayDispatchFollowupRegressionTests
 	}
 
 	[Fact]
+	public async Task GuildRoleUpdate_MissingRoleCache_DoesNotThrowAndRefreshesGuildRoleCache()
+	{
+		var client = CreateClient();
+		const ulong guildId = 804032421678153819;
+		const ulong roleId = 9001;
+
+		var guild = new DiscordGuild
+		{
+			Id = guildId,
+			Discord = client
+		};
+		client.GuildsInternal[guildId] = guild;
+
+		GuildRoleUpdateEventArgs? captured = null;
+		client.GuildRoleUpdated += (_, args) =>
+		{
+			captured = args;
+			return Task.CompletedTask;
+		};
+
+		var role = new DiscordRole
+		{
+			Id = roleId,
+			Name = "mods",
+			Discord = client,
+			Permissions = Permissions.Administrator,
+			Position = 7,
+			IsMentionable = true
+		};
+
+		var exception = await Record.ExceptionAsync(() => client.OnGuildRoleUpdateEventAsync(role, guild));
+
+		Assert.Null(exception);
+		Assert.NotNull(captured);
+		Assert.Equal(guildId, captured!.Guild.Id);
+		Assert.Equal(roleId, captured.RoleAfter.Id);
+		Assert.Equal("mods", captured.RoleAfter.Name);
+		Assert.Equal(roleId, captured.RoleBefore.Id);
+		Assert.Equal("mods", captured.RoleBefore.Name);
+		Assert.Same(captured.RoleAfter, guild.GetRole(roleId));
+	}
+
+	[Fact]
 	public async Task HandleSocketMessageAsync_HeartbeatWithNullData_UsesLastKnownSequence()
 	{
 		var client = CreateClient();

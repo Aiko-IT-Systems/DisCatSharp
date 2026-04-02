@@ -40,6 +40,10 @@ internal sealed class SentryDiagnosticsSink : ILibraryDiagnosticsSink
 	/// <inheritdoc />
 	public void CaptureException(string source, Exception exception, IDictionary<string, object>? context = null, IDictionary<string, string>? tags = null)
 	{
+		exception.Data[DiagnosticTags.Source] = source;
+		if (tags?.TryGetValue(DiagnosticTags.ErrorOrigin, out var errorOrigin) is true)
+			exception.Data[DiagnosticTags.ErrorOrigin] = errorOrigin;
+
 		if (context is not null && exception is SentryCapturableException sce)
 			sce.AddSentryContext("Request", context);
 
