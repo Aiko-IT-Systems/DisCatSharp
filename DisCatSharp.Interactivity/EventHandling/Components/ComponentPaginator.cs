@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
@@ -135,7 +136,8 @@ internal class ComponentPaginator : IPaginator
 	/// </summary>
 	/// <param name="request">The request.</param>
 	/// <param name="args">The arguments.</param>
-	private async Task HandlePaginationAsync(IPaginationRequest request, ComponentInteractionCreateEventArgs args)
+	/// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
+	private async Task HandlePaginationAsync(IPaginationRequest request, ComponentInteractionCreateEventArgs args, CancellationToken cancellationToken = default)
 	{
 		var buttons = this._config.PaginationButtons;
 		var msg = await request.GetMessageAsync().ConfigureAwait(false);
@@ -221,6 +223,6 @@ internal class ComponentPaginator : IPaginator
 			msgBuilder.AddComponents(new DiscordActionRowComponent(bts));
 		}
 
-		await msgBuilder.ModifyAsync(msg).ConfigureAwait(false);
+		await msg.ModifyAsync(msgBuilder, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 }

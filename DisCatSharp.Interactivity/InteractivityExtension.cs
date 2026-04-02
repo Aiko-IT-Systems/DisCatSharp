@@ -83,8 +83,9 @@ public class InteractivityExtension : BaseExtension, IDisposable
 	/// <param name="emojis">Emojis to use for this poll.</param>
 	/// <param name="behaviour">What to do when the poll ends.</param>
 	/// <param name="timeout">Override timeout period.</param>
+	/// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
 	/// <returns></returns>
-	public async Task<ReadOnlyCollection<PollEmoji>> DoPollAsync(DiscordMessage m, IEnumerable<DiscordEmoji> emojis, PollBehaviour? behaviour = default, TimeSpan? timeout = null)
+	public async Task<ReadOnlyCollection<PollEmoji>> DoPollAsync(DiscordMessage m, IEnumerable<DiscordEmoji> emojis, PollBehaviour? behaviour = default, TimeSpan? timeout = null, CancellationToken cancellationToken = default)
 	{
 		if (!Utilities.HasReactionIntents(this.Client.Configuration.Intents))
 			throw new InvalidOperationException("No reaction intents are enabled.");
@@ -93,7 +94,7 @@ public class InteractivityExtension : BaseExtension, IDisposable
 			throw new ArgumentException("You need to provide at least one emoji for a poll!");
 
 		foreach (var em in emojis)
-			await m.CreateReactionAsync(em).ConfigureAwait(false);
+			await m.CreateReactionAsync(em, cancellationToken).ConfigureAwait(false);
 
 		var res = await this._poller.DoPollAsync(new(m, timeout ?? this.Config.Timeout, emojis)).ConfigureAwait(false);
 
@@ -101,7 +102,7 @@ public class InteractivityExtension : BaseExtension, IDisposable
 		var thisMember = await m.Channel.Guild.GetMemberAsync(this.Client.CurrentUser.Id).ConfigureAwait(false);
 
 		if (pollBehaviour == PollBehaviour.DeleteEmojis && m.Channel.PermissionsFor(thisMember).HasPermission(Permissions.ManageMessages))
-			await m.DeleteAllReactionsAsync().ConfigureAwait(false);
+			await m.DeleteAllReactionsAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
 		return new([.. res]);
 	}
@@ -907,6 +908,7 @@ public class InteractivityExtension : BaseExtension, IDisposable
 	/// <param name="behaviour">Pagination behaviour (when hitting max and min indices).</param>
 	/// <param name="deletion">Deletion behaviour.</param>
 	/// <param name="timeoutOverride">Override timeout period.</param>
+	/// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
 	public async Task SendPaginatedMessageAsync(
 		DiscordChannel channel,
 		DiscordUser user,
@@ -914,7 +916,8 @@ public class InteractivityExtension : BaseExtension, IDisposable
 		PaginationEmojis? emojis = null,
 		PaginationBehaviour? behaviour = default,
 		PaginationDeletion? deletion = default,
-		TimeSpan? timeoutOverride = null
+		TimeSpan? timeoutOverride = null,
+		CancellationToken cancellationToken = default
 	)
 	{
 		var pageList = pages as IList<Page> ?? [.. pages];

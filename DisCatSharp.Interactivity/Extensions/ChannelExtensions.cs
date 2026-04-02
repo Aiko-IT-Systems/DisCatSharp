@@ -77,12 +77,13 @@ public static class ChannelExtensions
 	/// <param name="behaviour">Pagination behaviour (when hitting max and min indices).</param>
 	/// <param name="deletion">Deletion behaviour.</param>
 	/// <param name="timeoutOverride">Override timeout period.</param>
+	/// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
 	/// <exception cref="InvalidOperationException">
 	///     Thrown if interactivity is not enabled for the client associated with the
 	///     channel.
 	/// </exception>
-	public static Task SendPaginatedMessageAsync(this DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, PaginationEmojis emojis, PaginationBehaviour? behaviour = default, PaginationDeletion? deletion = default, TimeSpan? timeoutOverride = null)
-		=> GetInteractivity(channel).SendPaginatedMessageAsync(channel, user, pages, emojis, behaviour, deletion, timeoutOverride);
+	public static Task SendPaginatedMessageAsync(this DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, PaginationEmojis emojis, PaginationBehaviour? behaviour = default, PaginationDeletion? deletion = default, TimeSpan? timeoutOverride = null, CancellationToken cancellationToken = default)
+		=> GetInteractivity(channel).SendPaginatedMessageAsync(channel, user, pages, emojis, behaviour, deletion, timeoutOverride, cancellationToken);
 
 	/// <summary>
 	///     Sends a new paginated message with buttons.
