@@ -264,9 +264,6 @@ public sealed partial class DiscordClient
 
 		async Task SocketOnConnect(IWebSocketClient sender, SocketEventArgs e)
 		{
-			try { if (this._dispatchConsumerTask is { IsCompleted: false }) await this._dispatchConsumerTask.ConfigureAwait(false); } catch { /* old task faulted or cancelled; safe to ignore */ }
-			try { if (this._presenceConsumerTask is { IsCompleted: false }) await this._presenceConsumerTask.ConfigureAwait(false); } catch { /* old task faulted or cancelled; safe to ignore */ }
-
 			this._dispatchConsumerTask = Task.Run(() => this.DispatchConsumerLoopAsync(this._cancelToken), this._cancelToken);
 			this._presenceConsumerTask = Task.Run(() => this.PresenceConsumerLoopAsync(this._cancelToken), this._cancelToken);
 			await this._socketOpened.InvokeAsync(this, e).ConfigureAwait(false);
