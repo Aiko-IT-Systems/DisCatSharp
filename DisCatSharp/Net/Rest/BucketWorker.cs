@@ -274,36 +274,45 @@ internal sealed class BucketWorker : IDisposable
 					return;
 				}
 
-				// Best-effort pre-execution cancellation
-				if (request.CancellationTokenSource.IsCancellationRequested)
+				try
 				{
-					request.TrySetFaulted(new OperationCanceledException("Request was cancelled before execution."));
-					Interlocked.Increment(ref this.Cancelled);
-					continue;
-				}
-
-				// Queue timeout check — fail requests that have been waiting too long
-				if (this._config.QueueTimeout > TimeSpan.Zero)
-				{
-					var waited = DateTimeOffset.UtcNow - request.EnqueuedAt;
-
-					if (waited >= this._config.QueueTimeout)
+					// Best-effort pre-execution cancellation
+					if (request.CancellationTokenSource.IsCancellationRequested)
 					{
-						Interlocked.Increment(ref this.TimedOut);
-						var ex = new RestQueueTimeoutException(
-							request.Route,
-							this._bucket.BucketId,
-							waited,
-							this.QueueLength,
-							this._client.IsGlobalGateBlocked
-						);
-						this._logger.LogError(LoggerEvents.RestQueueTimeout, ex, "Request to {Url} timed out in queue after {Duration:F1}s", request.Url.AbsoluteUri, waited.TotalSeconds);
-						request.TrySetFaulted(ex);
+						request.TrySetFaulted(new OperationCanceledException("Request was cancelled before execution."));
+						Interlocked.Increment(ref this.Cancelled);
 						continue;
 					}
-				}
 
-				await this.ExecuteAsync(request, ct);
+					// Queue timeout check — fail requests that have been waiting too long
+					if (this._config.QueueTimeout > TimeSpan.Zero)
+					{
+						var waited = DateTimeOffset.UtcNow - request.EnqueuedAt;
+
+						if (waited >= this._config.QueueTimeout)
+						{
+							Interlocked.Increment(ref this.TimedOut);
+							var ex = new RestQueueTimeoutException(
+								request.Route,
+								this._bucket.BucketId,
+								waited,
+								this.QueueLength,
+								this._client.IsGlobalGateBlocked
+							);
+							this._logger.LogError(LoggerEvents.RestQueueTimeout, ex, "Request to {Url} timed out in queue after {Duration:F1}s", request.Url.AbsoluteUri, waited.TotalSeconds);
+							request.TrySetFaulted(ex);
+							continue;
+						}
+					}
+
+					await this.ExecuteAsync(request, ct);
+				}
+				finally
+				{
+					// Dispose the per-request linked CTS to release callback registrations
+					// from long-lived caller tokens and avoid memory leaks.
+					request.CancellationTokenSource.Dispose();
+				}
 			}
 		}
 		catch (OperationCanceledException) when (ct.IsCancellationRequested)

@@ -99,7 +99,7 @@ public class InteractivityExtension : BaseExtension, IDisposable
 		var res = await this._poller.DoPollAsync(new(m, timeout ?? this.Config.Timeout, emojis)).ConfigureAwait(false);
 
 		var pollBehaviour = behaviour ?? this.Config.PollBehaviour;
-		var thisMember = await m.Channel.Guild.GetMemberAsync(this.Client.CurrentUser.Id).ConfigureAwait(false);
+		var thisMember = await m.Channel.Guild.GetMemberAsync(this.Client.CurrentUser.Id, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 		if (pollBehaviour == PollBehaviour.DeleteEmojis && m.Channel.PermissionsFor(thisMember).HasPermission(Permissions.ManageMessages))
 			await m.DeleteAllReactionsAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -908,7 +908,7 @@ public class InteractivityExtension : BaseExtension, IDisposable
 	/// <param name="behaviour">Pagination behaviour (when hitting max and min indices).</param>
 	/// <param name="deletion">Deletion behaviour.</param>
 	/// <param name="timeoutOverride">Override timeout period.</param>
-	/// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
+	/// <param name="cancellationToken">A cancellation token that can be used to cancel the pagination.</param>
 	public async Task SendPaginatedMessageAsync(
 		DiscordChannel channel,
 		DiscordUser user,
@@ -939,7 +939,7 @@ public class InteractivityExtension : BaseExtension, IDisposable
 		var del = deletion ?? this.Config.PaginationDeletion;
 		var ems = emojis ?? this.Config.PaginationEmojis;
 
-		var pRequest = new PaginationRequest(m, user, bhv, del, ems, timeout, pageList);
+		var pRequest = new PaginationRequest(m, user, bhv, del, ems, timeout, pageList, cancellationToken);
 
 		await this._paginator.DoPaginationAsync(pRequest).ConfigureAwait(false);
 	}

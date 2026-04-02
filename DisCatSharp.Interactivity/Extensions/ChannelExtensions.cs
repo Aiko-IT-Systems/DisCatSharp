@@ -77,7 +77,7 @@ public static class ChannelExtensions
 	/// <param name="behaviour">Pagination behaviour (when hitting max and min indices).</param>
 	/// <param name="deletion">Deletion behaviour.</param>
 	/// <param name="timeoutOverride">Override timeout period.</param>
-	/// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
+	/// <param name="cancellationToken">A cancellation token that can be used to cancel the pagination.</param>
 	/// <exception cref="InvalidOperationException">
 	///     Thrown if interactivity is not enabled for the client associated with the
 	///     channel.

@@ -34,6 +34,7 @@ internal class PaginationRequest : IPaginationRequest
 	/// <param name="emojis">Emojis for this pagination object</param>
 	/// <param name="timeout">Timeout time</param>
 	/// <param name="pages">Pagination pages</param>
+	/// <param name="cancellationToken">Optional caller-provided cancellation token.</param>
 	internal PaginationRequest(
 		DiscordMessage message,
 		DiscordUser user,
@@ -41,11 +42,15 @@ internal class PaginationRequest : IPaginationRequest
 		PaginationDeletion deletion,
 		PaginationEmojis emojis,
 		TimeSpan timeout,
-		IEnumerable<Page> pages
+		IEnumerable<Page> pages,
+		CancellationToken cancellationToken = default
 	)
 	{
 		this._tcs = new();
-		this._ct = new(timeout);
+		this._ct = cancellationToken.CanBeCanceled
+			? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken)
+			: new CancellationTokenSource();
+		this._ct.CancelAfter(timeout);
 		this._ct.Token.Register(() => this._tcs.TrySetResult(true));
 		this._timeout = timeout;
 

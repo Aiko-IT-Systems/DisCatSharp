@@ -178,15 +178,15 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Target) && overwriteEntry.OverwrittenEntityId.HasValue)
 				{
 					if (overwriteEntry.TargetsRole)
-						overwriteEntry.OverwrittenRole = await this.TryHydrateRoleAsync(overwriteEntry.OverwrittenEntityId.Value, force).ConfigureAwait(false) ?? overwriteEntry.OverwrittenRole;
+						overwriteEntry.OverwrittenRole = await this.TryHydrateRoleAsync(overwriteEntry.OverwrittenEntityId.Value, force, cancellationToken).ConfigureAwait(false) ?? overwriteEntry.OverwrittenRole;
 					else if (overwriteEntry.TargetsMember)
-						overwriteEntry.OverwrittenMember = await this.TryHydrateMemberAsync(overwriteEntry.OverwrittenEntityId.Value, force).ConfigureAwait(false) ?? overwriteEntry.OverwrittenMember;
+						overwriteEntry.OverwrittenMember = await this.TryHydrateMemberAsync(overwriteEntry.OverwrittenEntityId.Value, force, cancellationToken).ConfigureAwait(false) ?? overwriteEntry.OverwrittenMember;
 				}
 				break;
 
 			case DiscordMemberAuditLogEntry memberEntry:
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Target) && memberEntry.TargetMember is { Id: not 0 })
-					memberEntry.TargetMember = await this.TryHydrateMemberAsync(memberEntry.TargetMember.Id, force).ConfigureAwait(false) ?? memberEntry.TargetMember;
+					memberEntry.TargetMember = await this.TryHydrateMemberAsync(memberEntry.TargetMember.Id, force, cancellationToken).ConfigureAwait(false) ?? memberEntry.TargetMember;
 
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Related) && memberEntry.Channel is { Id: not 0 })
 					memberEntry.Channel = await this.TryHydrateChannelAsync(memberEntry.Channel.Id, force, cancellationToken).ConfigureAwait(false) ?? memberEntry.Channel;
@@ -194,7 +194,7 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 
 			case DiscordRoleAuditLogEntry roleEntry:
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Target) && roleEntry.TargetRole is { Id: not 0 })
-					roleEntry.TargetRole = await this.TryHydrateRoleAsync(roleEntry.TargetRole.Id, force).ConfigureAwait(false) ?? roleEntry.TargetRole;
+					roleEntry.TargetRole = await this.TryHydrateRoleAsync(roleEntry.TargetRole.Id, force, cancellationToken).ConfigureAwait(false) ?? roleEntry.TargetRole;
 				break;
 
 			case DiscordInviteAuditLogEntry inviteEntry:
@@ -209,17 +209,17 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 
 			case DiscordEmojiAuditLogEntry emojiEntry:
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Target) && emojiEntry.EmojiId.HasValue)
-					emojiEntry.TargetEmoji = await this.TryHydrateEmojiAsync(emojiEntry.EmojiId.Value, force).ConfigureAwait(false) ?? emojiEntry.TargetEmoji;
+					emojiEntry.TargetEmoji = await this.TryHydrateEmojiAsync(emojiEntry.EmojiId.Value, force, cancellationToken).ConfigureAwait(false) ?? emojiEntry.TargetEmoji;
 				break;
 
 			case DiscordStickerAuditLogEntry stickerEntry:
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Target) && stickerEntry.StickerId.HasValue)
-					stickerEntry.TargetSticker = await this.TryHydrateStickerAsync(stickerEntry.StickerId.Value, force).ConfigureAwait(false) ?? stickerEntry.TargetSticker;
+					stickerEntry.TargetSticker = await this.TryHydrateStickerAsync(stickerEntry.StickerId.Value, force, cancellationToken).ConfigureAwait(false) ?? stickerEntry.TargetSticker;
 				break;
 
 			case DiscordMessageAuditLogEntry messageEntry:
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Target) && messageEntry.TargetMember is { Id: not 0 })
-					messageEntry.TargetMember = await this.TryHydrateMemberAsync(messageEntry.TargetMember.Id, force).ConfigureAwait(false) ?? messageEntry.TargetMember;
+					messageEntry.TargetMember = await this.TryHydrateMemberAsync(messageEntry.TargetMember.Id, force, cancellationToken).ConfigureAwait(false) ?? messageEntry.TargetMember;
 
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Related) && messageEntry.Channel is { Id: not 0 })
 					messageEntry.Channel = await this.TryHydrateChannelAsync(messageEntry.Channel.Id, force, cancellationToken).ConfigureAwait(false) ?? messageEntry.Channel;
@@ -227,7 +227,7 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 
 			case DiscordIntegrationAuditLogEntry integrationEntry:
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Target) && integrationEntry.IntegrationId.HasValue)
-					integrationEntry.TargetIntegration = await this.TryHydrateIntegrationAsync(integrationEntry.IntegrationId.Value, force).ConfigureAwait(false) ?? integrationEntry.TargetIntegration;
+					integrationEntry.TargetIntegration = await this.TryHydrateIntegrationAsync(integrationEntry.IntegrationId.Value, force, cancellationToken).ConfigureAwait(false) ?? integrationEntry.TargetIntegration;
 				break;
 
 			case DiscordStageInstanceAuditLogEntry stageEntry:
@@ -240,12 +240,12 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 
 			case DiscordGuildScheduledEventAuditLogEntry scheduledEventEntry:
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Target) && scheduledEventEntry.TargetGuildScheduledEvent is { Id: not 0 })
-					scheduledEventEntry.TargetGuildScheduledEvent = await this.TryHydrateScheduledEventAsync(scheduledEventEntry.TargetGuildScheduledEvent.Id, force).ConfigureAwait(false) ?? scheduledEventEntry.TargetGuildScheduledEvent;
+					scheduledEventEntry.TargetGuildScheduledEvent = await this.TryHydrateScheduledEventAsync(scheduledEventEntry.TargetGuildScheduledEvent.Id, force, cancellationToken).ConfigureAwait(false) ?? scheduledEventEntry.TargetGuildScheduledEvent;
 				break;
 
 			case DiscordGuildScheduledEventExceptionAuditLogEntry scheduledEventExceptionEntry:
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Target) && scheduledEventExceptionEntry.TargetGuildScheduledEvent is { Id: not 0 })
-					scheduledEventExceptionEntry.TargetGuildScheduledEvent = await this.TryHydrateScheduledEventAsync(scheduledEventExceptionEntry.TargetGuildScheduledEvent.Id, force).ConfigureAwait(false) ?? scheduledEventExceptionEntry.TargetGuildScheduledEvent;
+					scheduledEventExceptionEntry.TargetGuildScheduledEvent = await this.TryHydrateScheduledEventAsync(scheduledEventExceptionEntry.TargetGuildScheduledEvent.Id, force, cancellationToken).ConfigureAwait(false) ?? scheduledEventExceptionEntry.TargetGuildScheduledEvent;
 				break;
 
 			case DiscordThreadAuditLogEntry threadEntry:
@@ -260,12 +260,12 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 
 			case DiscordSoundboardSoundAuditLogEntry soundboardEntry:
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Target) && soundboardEntry.SoundboardSoundId.HasValue)
-					soundboardEntry.TargetSoundboardSound = await this.TryHydrateSoundboardSoundAsync(soundboardEntry.SoundboardSoundId.Value, force).ConfigureAwait(false) ?? soundboardEntry.TargetSoundboardSound;
+					soundboardEntry.TargetSoundboardSound = await this.TryHydrateSoundboardSoundAsync(soundboardEntry.SoundboardSoundId.Value, force, cancellationToken).ConfigureAwait(false) ?? soundboardEntry.TargetSoundboardSound;
 				break;
 
 			case DiscordAutoModerationRuleAuditLogEntry autoModerationEntry:
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Target) && autoModerationEntry.TargetMember is { Id: not 0 })
-					autoModerationEntry.TargetMember = await this.TryHydrateMemberAsync(autoModerationEntry.TargetMember.Id, force).ConfigureAwait(false) ?? autoModerationEntry.TargetMember;
+					autoModerationEntry.TargetMember = await this.TryHydrateMemberAsync(autoModerationEntry.TargetMember.Id, force, cancellationToken).ConfigureAwait(false) ?? autoModerationEntry.TargetMember;
 
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Related) && autoModerationEntry.Channel is { Id: not 0 })
 					autoModerationEntry.Channel = await this.TryHydrateChannelAsync(autoModerationEntry.Channel.Id, force, cancellationToken).ConfigureAwait(false) ?? autoModerationEntry.Channel;
@@ -329,12 +329,13 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 	/// </summary>
 	/// <param name="memberId">The member id to resolve.</param>
 	/// <param name="force">Whether REST calls are allowed when the member is not already cached.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The resolved member, or <see langword="null" /> when it could not be resolved.</returns>
-	private async Task<DiscordMember?> TryHydrateMemberAsync(ulong memberId, bool force)
+	private async Task<DiscordMember?> TryHydrateMemberAsync(ulong memberId, bool force, CancellationToken cancellationToken = default)
 	{
 		return !force
 			? this.Guild.MembersInternal.TryGetValue(memberId, out var cachedMember) ? cachedMember : null
-			: await this.Guild.TryGetMemberAsync(memberId, true).ConfigureAwait(false);
+			: await this.Guild.TryGetMemberAsync(memberId, true, cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -386,15 +387,16 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 	/// </summary>
 	/// <param name="roleId">The role id to resolve.</param>
 	/// <param name="force">Whether REST calls are allowed when the role is not already cached.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The resolved role, or <see langword="null" /> when it could not be resolved.</returns>
-	private async Task<DiscordRole?> TryHydrateRoleAsync(ulong roleId, bool force)
+	private async Task<DiscordRole?> TryHydrateRoleAsync(ulong roleId, bool force, CancellationToken cancellationToken = default)
 	{
 		if (!force)
 			return this.Guild.RolesInternal.TryGetValue(roleId, out var cachedRole) ? cachedRole : null;
 
 		try
 		{
-			return await this.Guild.GetRoleAsync(roleId).ConfigureAwait(false);
+			return await this.Guild.GetRoleAsync(roleId, cancellationToken).ConfigureAwait(false);
 		}
 		catch (NotFoundException)
 		{
@@ -429,15 +431,16 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 	/// </summary>
 	/// <param name="emojiId">The emoji id to resolve.</param>
 	/// <param name="force">Whether REST calls are allowed when the emoji is not already cached.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The resolved emoji, or <see langword="null" /> when it could not be resolved.</returns>
-	private async Task<DiscordGuildEmoji?> TryHydrateEmojiAsync(ulong emojiId, bool force)
+	private async Task<DiscordGuildEmoji?> TryHydrateEmojiAsync(ulong emojiId, bool force, CancellationToken cancellationToken = default)
 	{
 		if (!force)
 			return null;
 
 		try
 		{
-			return await this.Guild.GetEmojiAsync(emojiId).ConfigureAwait(false);
+			return await this.Guild.GetEmojiAsync(emojiId, cancellationToken).ConfigureAwait(false);
 		}
 		catch (NotFoundException)
 		{
@@ -450,15 +453,16 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 	/// </summary>
 	/// <param name="stickerId">The sticker id to resolve.</param>
 	/// <param name="force">Whether REST calls are allowed when the sticker is not already cached.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The resolved sticker, or <see langword="null" /> when it could not be resolved.</returns>
-	private async Task<DiscordSticker?> TryHydrateStickerAsync(ulong stickerId, bool force)
+	private async Task<DiscordSticker?> TryHydrateStickerAsync(ulong stickerId, bool force, CancellationToken cancellationToken = default)
 	{
 		if (!force)
 			return null;
 
 		try
 		{
-			return await this.Guild.GetStickerAsync(stickerId).ConfigureAwait(false);
+			return await this.Guild.GetStickerAsync(stickerId, cancellationToken).ConfigureAwait(false);
 		}
 		catch (NotFoundException)
 		{
@@ -471,9 +475,10 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 	/// </summary>
 	/// <param name="integrationId">The integration id to resolve.</param>
 	/// <param name="force">Whether REST calls are allowed when the integration is not already cached.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The resolved integration, or <see langword="null" /> when it could not be resolved.</returns>
-	private async Task<DiscordIntegration?> TryHydrateIntegrationAsync(ulong integrationId, bool force)
-		=> !force ? null : (await this.Guild.GetIntegrationsAsync().ConfigureAwait(false)).FirstOrDefault(x => x.Id == integrationId);
+	private async Task<DiscordIntegration?> TryHydrateIntegrationAsync(ulong integrationId, bool force, CancellationToken cancellationToken = default)
+		=> !force ? null : (await this.Guild.GetIntegrationsAsync(cancellationToken).ConfigureAwait(false)).FirstOrDefault(x => x.Id == integrationId);
 
 	/// <summary>
 	///     Tries to replace a partial stage instance reference with a live stage instance.
@@ -490,7 +495,7 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 
 		try
 		{
-			return await hydratedChannel.GetStageAsync().ConfigureAwait(false);
+			return await hydratedChannel.GetStageAsync(cancellationToken).ConfigureAwait(false);
 		}
 		catch (NotFoundException)
 		{
@@ -503,15 +508,16 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 	/// </summary>
 	/// <param name="scheduledEventId">The scheduled event id to resolve.</param>
 	/// <param name="force">Whether REST calls are allowed when the scheduled event is not already cached.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The resolved scheduled event, or <see langword="null" /> when it could not be resolved.</returns>
-	private async Task<DiscordScheduledEvent?> TryHydrateScheduledEventAsync(ulong scheduledEventId, bool force)
+	private async Task<DiscordScheduledEvent?> TryHydrateScheduledEventAsync(ulong scheduledEventId, bool force, CancellationToken cancellationToken = default)
 	{
 		if (!force)
 			return this.Guild.ScheduledEventsInternal.TryGetValue(scheduledEventId, out var cachedScheduledEvent) ? cachedScheduledEvent : null;
 
 		try
 		{
-			return await this.Guild.GetScheduledEventAsync(scheduledEventId).ConfigureAwait(false);
+			return await this.Guild.GetScheduledEventAsync(scheduledEventId, cancellationToken: cancellationToken).ConfigureAwait(false);
 		}
 		catch (NotFoundException)
 		{
@@ -534,7 +540,7 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 		try
 		{
 			var applicationId = this.Discord.CurrentApplication?.Id
-				?? (await this.Discord.GetCurrentApplicationAsync().ConfigureAwait(false)).Id;
+				?? (await this.Discord.GetCurrentApplicationAsync(cancellationToken).ConfigureAwait(false)).Id;
 			return await this.Discord.ApiClient.GetGuildApplicationCommandAsync(applicationId, this.Guild.Id, commandId, cancellationToken: cancellationToken).ConfigureAwait(false);
 		}
 		catch (NotFoundException)
@@ -548,8 +554,9 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 	/// </summary>
 	/// <param name="soundId">The soundboard sound id to resolve.</param>
 	/// <param name="force">Whether REST calls are allowed when the soundboard sound is not already cached.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The resolved soundboard sound, or <see langword="null" /> when it could not be resolved.</returns>
-	private async Task<DiscordSoundboardSound?> TryHydrateSoundboardSoundAsync(ulong soundId, bool force)
+	private async Task<DiscordSoundboardSound?> TryHydrateSoundboardSoundAsync(ulong soundId, bool force, CancellationToken cancellationToken = default)
 	{
 		if (!force)
 			return null;
