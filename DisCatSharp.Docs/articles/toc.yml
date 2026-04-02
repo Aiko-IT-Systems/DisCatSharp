@@ -115,6 +115,8 @@ items:
             uid: topics_intents
           - name: Presences & Activities
             uid: topics_presence_caching
+          - name: REST Client
+            uid: topics_rest
           - name: Sharding
             uid: topics_sharding
           - name: Message Builder
