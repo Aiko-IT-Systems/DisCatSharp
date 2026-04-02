@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Common.Utilities;
@@ -92,8 +93,9 @@ public sealed class LavalinkExtension : BaseExtension
 	///     Connect to a Lavalink session.
 	/// </summary>
 	/// <param name="config">Lavalink client configuration.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The established Lavalink connection.</returns>
-	public async Task<LavalinkSession> ConnectAsync(LavalinkConfiguration config)
+	public async Task<LavalinkSession> ConnectAsync(LavalinkConfiguration config, CancellationToken cancellationToken = default)
 	{
 		if (this._connectedSessions.TryGetValue(config.SocketEndpoint, out var session))
 			return session;
@@ -104,7 +106,7 @@ public sealed class LavalinkExtension : BaseExtension
 		{
 			this.REST ??= new(this.CONFIGURATION, this.Client);
 
-			var versionInfo = await this.REST.GetVersionAsync().ConfigureAwait(false);
+			var versionInfo = await this.REST.GetVersionAsync(cancellationToken).ConfigureAwait(false);
 			if (!versionInfo.Headers.Contains("Lavalink-Api-Version"))
 				throw new("Lavalink v4 is required");
 

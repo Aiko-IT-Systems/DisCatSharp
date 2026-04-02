@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Common.RegularExpressions;
@@ -135,7 +136,8 @@ internal sealed class LavalinkRestClient
 	/// <param name="path">The path.</param>
 	/// <param name="headers">The headers.</param>
 	/// <param name="payload">The payload.</param>
-	private async Task<LavalinkRestResponse> DoRequestAsync(HttpMethod method, string path, IReadOnlyDictionary<string, string>? headers = null, string? payload = null)
+	/// <param name="cancellationToken">The cancellation token.</param>
+	private async Task<LavalinkRestResponse> DoRequestAsync(HttpMethod method, string path, IReadOnlyDictionary<string, string>? headers = null, string? payload = null, CancellationToken cancellationToken = default)
 	{
 		HttpRequestMessage request = new();
 		if (headers != null)
@@ -149,11 +151,11 @@ internal sealed class LavalinkRestClient
 
 		request.Method = method;
 		request.RequestUri = new(this.HttpClient.BaseAddress!, path);
-		var response = await this.HttpClient.SendAsync(request, HttpCompletionOption.ResponseContentRead).ConfigureAwait(false);
+		var response = await this.HttpClient.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken).ConfigureAwait(false);
 
 		if (!response.IsSuccessStatusCode)
 		{
-			var data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var data = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 			var ex = LavalinkJson.DeserializeObject<LavalinkRestException?>(data) ?? new LavalinkRestException();
 			ex.Headers = response.Headers;
 			ex.Json = data;
@@ -171,7 +173,7 @@ internal sealed class LavalinkRestClient
 		var res = new LavalinkRestResponse
 		{
 			ResponseCode = response.StatusCode,
-			Response = response.StatusCode != HttpStatusCode.NoContent ? await response.Content.ReadAsStringAsync().ConfigureAwait(false) : null,
+			Response = response.StatusCode != HttpStatusCode.NoContent ? await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false) : null,
 			Headers = response.Headers
 		};
 
@@ -182,26 +184,28 @@ internal sealed class LavalinkRestClient
 	///     Requests Lavalink server version.
 	/// </summary>
 	/// <returns>The version <see cref="string" />.</returns>
-	internal async Task<LavalinkRestResponse> GetVersionAsync()
+	/// <param name="cancellationToken">The cancellation token.</param>
+	internal async Task<LavalinkRestResponse> GetVersionAsync(CancellationToken cancellationToken = default)
 	{
 		var queryDict = this.GetDefaultParams();
 		var route = $"{Endpoints.VERSION}";
 		var path = GetPath(route, new
 		{ });
-		return await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
+		return await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}", cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
 	///     Requests Lavalink server information.
 	/// </summary>
 	/// <returns>A <see cref="LavalinkInfo" /> object.</returns>
-	internal async Task<LavalinkInfo> GetInfoAsync()
+	/// <param name="cancellationToken">The cancellation token.</param>
+	internal async Task<LavalinkInfo> GetInfoAsync(CancellationToken cancellationToken = default)
 	{
 		var queryDict = this.GetDefaultParams();
 		var route = $"{Endpoints.V4}{Endpoints.INFO}";
 		var path = GetPath(route, new
 		{ });
-		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
+		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}", cancellationToken: cancellationToken).ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<LavalinkInfo>(res.Response!)!;
 	}
 
@@ -209,13 +213,14 @@ internal sealed class LavalinkRestClient
 	///     Requests Lavalink server statistics.
 	/// </summary>
 	/// <returns>A <see cref="LavalinkStats" /> object.</returns>
-	internal async Task<LavalinkStats> GetStatsAsync()
+	/// <param name="cancellationToken">The cancellation token.</param>
+	internal async Task<LavalinkStats> GetStatsAsync(CancellationToken cancellationToken = default)
 	{
 		var queryDict = this.GetDefaultParams();
 		var route = $"{Endpoints.V4}{Endpoints.STATS}";
 		var path = GetPath(route, new
 		{ });
-		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
+		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}", cancellationToken: cancellationToken).ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<LavalinkStats>(res.Response!)!;
 	}
 
@@ -224,8 +229,9 @@ internal sealed class LavalinkRestClient
 	/// </summary>
 	/// <param name="sessionId">The session id.</param>
 	/// <param name="config">The session config.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The updated <see cref="LavalinkSessionConfiguration" />.</returns>
-	internal async Task<LavalinkSessionConfiguration> UpdateSessionAsync(string sessionId, LavalinkSessionConfiguration config)
+	internal async Task<LavalinkSessionConfiguration> UpdateSessionAsync(string sessionId, LavalinkSessionConfiguration config, CancellationToken cancellationToken = default)
 	{
 		var queryDict = this.GetDefaultParams();
 		var route = $"{Endpoints.V4}{Endpoints.SESSIONS}/:session_id";
@@ -233,7 +239,7 @@ internal sealed class LavalinkRestClient
 		{
 			session_id = sessionId
 		});
-		var res = await this.DoRequestAsync(HttpMethod.Patch, $"{path}{BuildQueryString(queryDict)}", payload: LavalinkJson.SerializeObject(config)).ConfigureAwait(false);
+		var res = await this.DoRequestAsync(HttpMethod.Patch, $"{path}{BuildQueryString(queryDict)}", payload: LavalinkJson.SerializeObject(config), cancellationToken: cancellationToken).ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<LavalinkSessionConfiguration>(res.Response!)!;
 	}
 
@@ -241,8 +247,9 @@ internal sealed class LavalinkRestClient
 	///     Returns a list of players for the given session id.
 	/// </summary>
 	/// <param name="sessionId">The session id.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>A <see cref="IReadOnlyList{T}" /> of <see cref="LavalinkPlayer" />s.</returns>
-	internal async Task<IReadOnlyList<LavalinkPlayer>> GetPlayersAsync(string sessionId)
+	internal async Task<IReadOnlyList<LavalinkPlayer>> GetPlayersAsync(string sessionId, CancellationToken cancellationToken = default)
 	{
 		var queryDict = this.GetDefaultParams();
 		var route = $"{Endpoints.V4}{Endpoints.SESSIONS}/:session_id{Endpoints.PLAYERS}";
@@ -250,7 +257,7 @@ internal sealed class LavalinkRestClient
 		{
 			session_id = sessionId
 		});
-		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
+		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}", cancellationToken: cancellationToken).ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<List<LavalinkPlayer>>(res.Response!)!;
 	}
 
@@ -260,7 +267,8 @@ internal sealed class LavalinkRestClient
 	/// <param name="sessionId">The session id.</param>
 	/// <param name="guildId">The guild id this player should be created for.</param>
 	/// <param name="defaultVolume">The default volume level which should be used.</param>
-	internal async Task CreatePlayerAsync(string sessionId, ulong guildId, int defaultVolume)
+	/// <param name="cancellationToken">The cancellation token.</param>
+	internal async Task CreatePlayerAsync(string sessionId, ulong guildId, int defaultVolume, CancellationToken cancellationToken = default)
 	{
 		var queryDict = this.GetDefaultParams();
 		queryDict.Add("noReplace", "false");
@@ -271,7 +279,7 @@ internal sealed class LavalinkRestClient
 			session_id = sessionId,
 			guild_id = guildId
 		});
-		await this.DoRequestAsync(HttpMethod.Patch, $"{path}{BuildQueryString(queryDict)}", payload: LavalinkJson.SerializeObject(pld)).ConfigureAwait(false);
+		await this.DoRequestAsync(HttpMethod.Patch, $"{path}{BuildQueryString(queryDict)}", payload: LavalinkJson.SerializeObject(pld), cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -279,8 +287,9 @@ internal sealed class LavalinkRestClient
 	/// </summary>
 	/// <param name="sessionId">The session id.</param>
 	/// <param name="guildId">The guild id this player should be created/updated for.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The <see cref="LavalinkPlayer" /> for <paramref name="guildId" />.</returns>
-	internal async Task<LavalinkPlayer> GetPlayerAsync(string sessionId, ulong guildId)
+	internal async Task<LavalinkPlayer> GetPlayerAsync(string sessionId, ulong guildId, CancellationToken cancellationToken = default)
 	{
 		var queryDict = this.GetDefaultParams();
 		var route = $"{Endpoints.V4}{Endpoints.SESSIONS}/:session_id{Endpoints.PLAYERS}/:guild_id";
@@ -289,7 +298,7 @@ internal sealed class LavalinkRestClient
 			session_id = sessionId,
 			guild_id = guildId
 		});
-		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
+		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}", cancellationToken: cancellationToken).ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<LavalinkPlayer>(res.Response!)!;
 	}
 
@@ -307,6 +316,7 @@ internal sealed class LavalinkRestClient
 	/// <param name="paused">Whether to pause the track.</param>
 	/// <param name="filters">The filters.</param>
 	/// <param name="userData">The user data.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The updated <see cref="LavalinkPlayer" /> object.</returns>
 	internal async Task<LavalinkPlayer> UpdatePlayerAsync(
 		string sessionId,
@@ -319,7 +329,8 @@ internal sealed class LavalinkRestClient
 		Optional<int> volume = default,
 		Optional<bool> paused = default,
 		Optional<LavalinkFilters> filters = default,
-		Optional<object> userData = default
+		Optional<object> userData = default,
+		CancellationToken cancellationToken = default
 	)
 	{
 		var queryDict = this.GetDefaultParams();
@@ -351,7 +362,7 @@ internal sealed class LavalinkRestClient
 			session_id = sessionId,
 			guild_id = guildId
 		});
-		var res = await this.DoRequestAsync(HttpMethod.Patch, $"{path}{BuildQueryString(queryDict)}", payload: LavalinkJson.SerializeObject(pld)).ConfigureAwait(false);
+		var res = await this.DoRequestAsync(HttpMethod.Patch, $"{path}{BuildQueryString(queryDict)}", payload: LavalinkJson.SerializeObject(pld), cancellationToken: cancellationToken).ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<LavalinkPlayer>(res.Response!)!;
 	}
 
@@ -361,8 +372,9 @@ internal sealed class LavalinkRestClient
 	/// <param name="sessionId">The session id.</param>
 	/// <param name="guildId">The guild id this player voice state should be updated for.</param>
 	/// <param name="state">The state to update with.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns></returns>
-	internal async Task UpdatePlayerVoiceStateAsync(string sessionId, ulong guildId, LavalinkVoiceState state)
+	internal async Task UpdatePlayerVoiceStateAsync(string sessionId, ulong guildId, LavalinkVoiceState state, CancellationToken cancellationToken = default)
 	{
 		var queryDict = this.GetDefaultParams();
 		queryDict.Add("noReplace", "true");
@@ -374,7 +386,7 @@ internal sealed class LavalinkRestClient
 			session_id = sessionId,
 			guild_id = guildId
 		});
-		await this.DoRequestAsync(HttpMethod.Patch, $"{path}{BuildQueryString(queryDict)}", payload: LavalinkJson.SerializeObject(pld)).ConfigureAwait(false);
+		await this.DoRequestAsync(HttpMethod.Patch, $"{path}{BuildQueryString(queryDict)}", payload: LavalinkJson.SerializeObject(pld), cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -382,8 +394,9 @@ internal sealed class LavalinkRestClient
 	/// </summary>
 	/// <param name="sessionId">The session id.</param>
 	/// <param name="guildId">The guild id this player should be created/updated for.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns></returns>
-	internal async Task DestroyPlayerAsync(string sessionId, ulong guildId)
+	internal async Task DestroyPlayerAsync(string sessionId, ulong guildId, CancellationToken cancellationToken = default)
 	{
 		var queryDict = this.GetDefaultParams();
 		var route = $"{Endpoints.V4}{Endpoints.SESSIONS}/:session_id{Endpoints.PLAYERS}/:guild_id";
@@ -392,25 +405,26 @@ internal sealed class LavalinkRestClient
 			session_id = sessionId,
 			guild_id = guildId
 		});
-		await this.DoRequestAsync(HttpMethod.Delete, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
+		await this.DoRequestAsync(HttpMethod.Delete, $"{path}{BuildQueryString(queryDict)}", cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
 	///     Resolves audio tracks for use with the <see cref="UpdatePlayerAsync" /> method.
 	/// </summary>
 	/// <param name="identifier">The identifier to resolve tracks with.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>
 	///     A <see cref="LavalinkTrackLoadingResult" /> where <see cref="LavalinkTrackLoadingResult.Result" /> is dynamic
 	///     based on <see cref="LavalinkTrackLoadingResult.LoadType" />.
 	/// </returns>
-	internal async Task<LavalinkTrackLoadingResult> LoadTracksAsync(string identifier)
+	internal async Task<LavalinkTrackLoadingResult> LoadTracksAsync(string identifier, CancellationToken cancellationToken = default)
 	{
 		var queryDict = this.GetDefaultParams();
 		queryDict.Add("identifier", identifier);
 		var route = $"{Endpoints.V4}{Endpoints.LOAD_TRACKS}";
 		var path = GetPath(route, new
 		{ });
-		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
+		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}", cancellationToken: cancellationToken).ConfigureAwait(false);
 		var obj = JObject.Parse(res.Response!);
 		return new()
 		{
@@ -426,8 +440,9 @@ internal sealed class LavalinkRestClient
 	/// <param name="skipTrackSource">Whether to skip the current track source and fetch from highest priority source.</param>
 	/// <param name="sessionId">The optional session id a player is associated with.</param>
 	/// <param name="guildId">The optional guild id a player is associated with.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The <see cref="LavalinkLyricsResult" /> or <see langword="null" />.</returns>
-	internal async Task<LavalinkLyricsResult?> GetLyricsAsync(string encodedTrack, bool skipTrackSource, string? sessionId = null, ulong? guildId = null)
+	internal async Task<LavalinkLyricsResult?> GetLyricsAsync(string encodedTrack, bool skipTrackSource, string? sessionId = null, ulong? guildId = null, CancellationToken cancellationToken = default)
 	{
 		var queryDict = this.GetDefaultParams();
 		queryDict.Add("track", encodedTrack);
@@ -435,7 +450,7 @@ internal sealed class LavalinkRestClient
 		var route = $"{Endpoints.V4}{Endpoints.LYRICS}";
 		var path = GetPath(route, new
 		{ });
-		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
+		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}", cancellationToken: cancellationToken).ConfigureAwait(false);
 
 		return res.ResponseCode is HttpStatusCode.NoContent or HttpStatusCode.NotFound || res.Response is null
 			? null
@@ -448,8 +463,9 @@ internal sealed class LavalinkRestClient
 	/// <param name="sessionId">The session id a player is associated with.</param>
 	/// <param name="guildId">The guild id a player is associated with.</param>
 	/// <param name="skipTrackSource">Whether to skip the current track source and fetch from highest priority source.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The <see cref="LavalinkLyricsResult" /> or <see langword="null" />.</returns>
-	internal async Task<LavalinkLyricsResult?> GetLyricsForCurrentTrackAsync(string sessionId, ulong guildId, bool skipTrackSource)
+	internal async Task<LavalinkLyricsResult?> GetLyricsForCurrentTrackAsync(string sessionId, ulong guildId, bool skipTrackSource, CancellationToken cancellationToken = default)
 	{
 		var queryDict = this.GetDefaultParams();
 		queryDict.Add("skipTrackSource", skipTrackSource.ToString().ToLowerInvariant());
@@ -459,7 +475,7 @@ internal sealed class LavalinkRestClient
 			session_id = sessionId,
 			guild_id = guildId
 		});
-		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
+		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}", cancellationToken: cancellationToken).ConfigureAwait(false);
 
 		return res.ResponseCode is HttpStatusCode.NoContent or HttpStatusCode.NotFound || res.Response is null
 			? null
@@ -470,15 +486,16 @@ internal sealed class LavalinkRestClient
 	///     Decode a single track into its info, where <paramref name="base64Track" /> is the encoded base64 data.
 	/// </summary>
 	/// <param name="base64Track">The encoded track <see cref="string" />.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The decoded <see cref="LavalinkTrack" />.</returns>
-	internal async Task<LavalinkTrack> DecodeTrackAsync(string base64Track)
+	internal async Task<LavalinkTrack> DecodeTrackAsync(string base64Track, CancellationToken cancellationToken = default)
 	{
 		var queryDict = this.GetDefaultParams();
 		queryDict.Add("encodedTrack", base64Track);
 		var route = $"{Endpoints.V4}{Endpoints.DECODE_TRACK}";
 		var path = GetPath(route, new
 		{ });
-		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
+		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}", cancellationToken: cancellationToken).ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<LavalinkTrack>(res.Response!)!;
 	}
 
@@ -486,14 +503,15 @@ internal sealed class LavalinkRestClient
 	///     Decodes multiple tracks into their info.
 	/// </summary>
 	/// <param name="base64Tracks"><see cref="List{T}" /> of encoded track <see cref="string" />s.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>A <see cref="IReadOnlyList{T}" /> of decoded <see cref="LavalinkTrack" />s.</returns>
-	internal async Task<IReadOnlyList<LavalinkTrack>> DecodeTracksAsync(IEnumerable<string> base64Tracks)
+	internal async Task<IReadOnlyList<LavalinkTrack>> DecodeTracksAsync(IEnumerable<string> base64Tracks, CancellationToken cancellationToken = default)
 	{
 		var queryDict = this.GetDefaultParams();
 		var route = $"{Endpoints.V4}{Endpoints.DECODE_TRACKS}";
 		var path = GetPath(route, new
 		{ });
-		var res = await this.DoRequestAsync(HttpMethod.Post, $"{path}{BuildQueryString(queryDict)}", payload: LavalinkJson.SerializeObject(base64Tracks)).ConfigureAwait(false);
+		var res = await this.DoRequestAsync(HttpMethod.Post, $"{path}{BuildQueryString(queryDict)}", payload: LavalinkJson.SerializeObject(base64Tracks), cancellationToken: cancellationToken).ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<List<LavalinkTrack>>(res.Response!)!;
 	}
 }
