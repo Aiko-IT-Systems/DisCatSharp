@@ -1664,6 +1664,9 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		if (this.Type != ChannelType.Stage)
 			throw new ArgumentException("Voice state can only be updated in a stage channel.");
 
+		if (this.GuildId is null)
+			throw new InvalidOperationException("Cannot update voice state for a channel without a guild.");
+
 		await this.Discord.ApiClient.UpdateCurrentUserVoiceStateAsync(this.GuildId.Value, this.Id, suppress, requestToSpeakTimestamp, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
