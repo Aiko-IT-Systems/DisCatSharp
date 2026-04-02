@@ -288,10 +288,7 @@ public sealed class DiscordAuditLogChange
 	private static bool TryGetSnowflake(JToken? token, out ulong id)
 	{
 		id = default;
-		if (token is null)
-			return false;
-
-		return token.Type switch
+		return token is not null && token.Type switch
 		{
 			JTokenType.Integer => ulong.TryParse(token.Value<long>().ToString(CultureInfo.InvariantCulture), NumberStyles.Integer, CultureInfo.InvariantCulture, out id),
 			JTokenType.String => ulong.TryParse(token.Value<string>(), NumberStyles.Integer, CultureInfo.InvariantCulture, out id),
@@ -308,10 +305,7 @@ public sealed class DiscordAuditLogChange
 	private static bool TryGetBoolean(JToken? token, out bool value)
 	{
 		value = default;
-		if (token is null)
-			return false;
-
-		return token.Type switch
+		return token is not null && token.Type switch
 		{
 			JTokenType.Boolean => (value = token.Value<bool>()) is var _,
 			JTokenType.String => bool.TryParse(token.Value<string>(), out value),
@@ -329,10 +323,7 @@ public sealed class DiscordAuditLogChange
 	private static bool TryGetInt32(JToken? token, out int value)
 	{
 		value = default;
-		if (token is null)
-			return false;
-
-		return token.Type switch
+		return token is not null && token.Type switch
 		{
 			JTokenType.Integer => int.TryParse(token.Value<long>().ToString(CultureInfo.InvariantCulture), NumberStyles.Integer, CultureInfo.InvariantCulture, out value),
 			JTokenType.String => int.TryParse(token.Value<string>(), NumberStyles.Integer, CultureInfo.InvariantCulture, out value),
@@ -349,10 +340,7 @@ public sealed class DiscordAuditLogChange
 	private static bool TryGetInt64(JToken? token, out long value)
 	{
 		value = default;
-		if (token is null)
-			return false;
-
-		return token.Type switch
+		return token is not null && token.Type switch
 		{
 			JTokenType.Integer => (value = token.Value<long>()) is var _,
 			JTokenType.String => long.TryParse(token.Value<string>(), NumberStyles.Integer, CultureInfo.InvariantCulture, out value),
@@ -369,10 +357,7 @@ public sealed class DiscordAuditLogChange
 	private static bool TryGetDateTimeOffset(JToken? token, out DateTimeOffset value)
 	{
 		value = default;
-		if (token is null)
-			return false;
-
-		return token.Type switch
+		return token is not null && token.Type switch
 		{
 			JTokenType.Date => (value = token.Value<DateTimeOffset>()) is var _,
 			JTokenType.String => DateTimeOffset.TryParse(token.Value<string>(), CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out value),

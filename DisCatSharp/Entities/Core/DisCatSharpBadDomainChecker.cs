@@ -42,7 +42,7 @@ public static class DisCatSharpBadDomainChecker
 	/// Guards against concurrent or duplicate initialization.
 	/// 0 = not started, 1 = in progress or done.
 	/// </summary>
-	private static int s_initialized;
+	private static int _initialized;
 
 	/// <summary>
 	/// Loads the bad domain hashes from Discord API and initializes the domain parser.
@@ -52,7 +52,7 @@ public static class DisCatSharpBadDomainChecker
 	/// <exception cref="InvalidOperationException">Thrown if the Discord configuration is null.</exception>
 	internal static async Task LoadAndInitBadDomainHashesAsync(BaseDiscordClient client)
 	{
-		if (Interlocked.Exchange(ref s_initialized, 1) == 1)
+		if (Interlocked.Exchange(ref _initialized, 1) == 1)
 			return;
 
 		try
@@ -81,7 +81,7 @@ public static class DisCatSharpBadDomainChecker
 		catch (Exception ex)
 		{
 			// Reset so a subsequent client can retry initialization
-			Interlocked.Exchange(ref s_initialized, 0);
+			Interlocked.Exchange(ref _initialized, 0);
 			client.Logger.LogError(ex, "Failed to initialize bad domain checker — will retry on next client startup");
 		}
 	}

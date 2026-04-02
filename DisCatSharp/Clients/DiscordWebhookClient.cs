@@ -1,10 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Threading;
 
 using DisCatSharp.Common.RegularExpressions;
 using DisCatSharp.Entities;
@@ -114,8 +115,9 @@ public class DiscordWebhookClient
 	/// </summary>
 	/// <param name="id">The ID of the webhook to add.</param>
 	/// <param name="token">The token of the webhook to add.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The registered webhook.</returns>
-	public async Task<DiscordWebhook> AddWebhookAsync(ulong id, string token)
+	public async Task<DiscordWebhook> AddWebhookAsync(ulong id, string token, CancellationToken cancellationToken = default)
 	{
 		if (string.IsNullOrWhiteSpace(token))
 			throw new ArgumentNullException(nameof(token));
@@ -125,7 +127,7 @@ public class DiscordWebhookClient
 		if (this.Hooks.Any(x => x.Id == id))
 			throw new InvalidOperationException("This webhook is registered with this client.");
 
-		var wh = await this.ApiClient.GetWebhookWithTokenAsync(id, token).ConfigureAwait(false);
+		var wh = await this.ApiClient.GetWebhookWithTokenAsync(id, token, cancellationToken: cancellationToken).ConfigureAwait(false);
 		this.Hooks.Add(wh);
 
 		return wh;
@@ -158,15 +160,16 @@ public class DiscordWebhookClient
 	/// </summary>
 	/// <param name="id">ID of the webhook to register.</param>
 	/// <param name="client">Discord client to which the webhook will belong.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The registered webhook.</returns>
-	public async Task<DiscordWebhook> AddWebhookAsync(ulong id, BaseDiscordClient client)
+	public async Task<DiscordWebhook> AddWebhookAsync(ulong id, BaseDiscordClient client, CancellationToken cancellationToken = default)
 	{
 		ArgumentNullException.ThrowIfNull(client);
 
 		if (this.Hooks.Any(x => x.Id == id))
 			throw new ArgumentException("This webhook is already registered with this client.");
 
-		var wh = await client.ApiClient.GetWebhookAsync(id).ConfigureAwait(false);
+		var wh = await client.ApiClient.GetWebhookAsync(id, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 		this.Hooks.Add(wh);
 

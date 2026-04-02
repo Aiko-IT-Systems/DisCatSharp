@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
@@ -509,25 +510,27 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	///     <para>Ends the poll on this message.</para>
 	///     <para>Works only for own polls and if they are not expired yet. </para>
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The fresh discord message.</returns>
 	/// <exception cref="InvalidOperationException">
 	///     Thrown when the message has no poll, the author is not us, or the poll has
 	///     been already ended.
 	/// </exception>
-	public async Task<DiscordMessage> EndPollAsync()
+	public async Task<DiscordMessage> EndPollAsync(CancellationToken cancellationToken = default)
 		=> this.Poll is null
 			? throw new InvalidOperationException("This message has no poll.")
 			: this.Author.Id != this.Discord.CurrentUser.Id
 				? throw new InvalidOperationException("Can only end own polls.")
 				: this.Poll.Results?.IsFinalized ?? false
 					? throw new InvalidOperationException("The poll was already ended.")
-					: await this.Discord.ApiClient.EndPollAsync(this.ChannelId, this.Id);
+					: await this.Discord.ApiClient.EndPollAsync(this.ChannelId, this.Id, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Forwards this message to another channel.
 	/// </summary>
 	/// <param name="targetChannel">The channel to forward this message to.</param>
 	/// <param name="content">Content is not available at the moment, but already added for the future.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the bot tries forwarding a message it doesn't has access to or the
 	///     client tried to modify a message not sent by them.
@@ -535,8 +538,8 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="NotFoundException">Thrown when the target channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordMessage> ForwardMessageAsync(DiscordChannel targetChannel, string? content = null)
-		=> await this.Discord.ApiClient.ForwardMessageAsync(this, targetChannel.Id, content);
+	public async Task<DiscordMessage> ForwardMessageAsync(DiscordChannel targetChannel, string? content = null, CancellationToken cancellationToken = default)
+		=> await this.Discord.ApiClient.ForwardMessageAsync(this, targetChannel.Id, content, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Build the message reference.
@@ -662,18 +665,19 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// </summary>
 	/// <param name="builder">The builder of the message to edit.</param>
 	/// <param name="modifyMode">The mode of modification.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordMessage> ModifyAsync(DiscordMessageBuilder builder, ModifyMode modifyMode = ModifyMode.Update)
+	public async Task<DiscordMessage> ModifyAsync(DiscordMessageBuilder builder, ModifyMode modifyMode = ModifyMode.Update, CancellationToken cancellationToken = default)
 	{
 		if (modifyMode == ModifyMode.Replace)
 			builder.DoConditionalReplace();
 		builder.MentionsInternal ??= this.GetMentions();
 		if (builder.KeepAttachmentsInternal.GetValueOrDefault())
 			builder.ModifyAttachments(this.Attachments);
-		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder).ConfigureAwait(false);
+		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -681,11 +685,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// </summary>
 	/// <param name="action">The builder of the message to edit.</param>
 	/// <param name="modifyMode">The mode of modification.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordMessage> ModifyAsync(Action<DiscordMessageBuilder> action, ModifyMode modifyMode = ModifyMode.Update)
+	public async Task<DiscordMessage> ModifyAsync(Action<DiscordMessageBuilder> action, ModifyMode modifyMode = ModifyMode.Update, CancellationToken cancellationToken = default)
 	{
 		var builder = new DiscordMessageBuilder();
 		if (modifyMode == ModifyMode.Replace)
@@ -694,29 +699,31 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		builder.MentionsInternal ??= this.GetMentions();
 		if (builder.KeepAttachmentsInternal.GetValueOrDefault())
 			builder.ModifyAttachments(this.Attachments);
-		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder, builder.KeepAttachmentsInternal.GetValueOrDefault() ? this.Attachments : null).ConfigureAwait(false);
+		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder, builder.KeepAttachmentsInternal.GetValueOrDefault() ? this.Attachments : null, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
 	///		Modifies the message by removing components.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> RemoveComponentsAsync()
-		=> this.ModifyAsync(x => x.ClearComponents());
+	public Task<DiscordMessage> RemoveComponentsAsync(CancellationToken cancellationToken = default)
+		=> this.ModifyAsync(x => x.ClearComponents(), cancellationToken: cancellationToken);
 
 	/// <summary>
 	///		Modifies the message by editing the content.
 	/// </summary>
 	/// <param name="content">The content to edit.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> ModifyAsync(string content)
-		=> this.ModifyAsync(x => x.WithContent(content));
+	public Task<DiscordMessage> ModifyAsync(string content, CancellationToken cancellationToken = default)
+		=> this.ModifyAsync(x => x.WithContent(content), cancellationToken: cancellationToken);
 
 	/// <summary>
 	///		Modifies the message by adding an embed.
@@ -763,16 +770,19 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <summary>
 	///     Edits the message embed suppression.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> SuppressEmbedsAsync()
-		=> this.ModifyAsync(x => x.SuppressEmbeds());
+	public Task<DiscordMessage> SuppressEmbedsAsync(CancellationToken cancellationToken = default)
+		=> this.ModifyAsync(x => x.SuppressEmbeds(), cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Deletes the message.
 	/// </summary>
+	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageMessages" /> permission.
@@ -780,8 +790,8 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task DeleteAsync(string reason = null)
-		=> this.Discord.ApiClient.DeleteMessageAsync(this.ChannelId, this.Id, reason);
+	public Task DeleteAsync(string? reason = null, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.DeleteMessageAsync(this.ChannelId, this.Id, reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Creates a thread.
@@ -795,6 +805,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// </param>
 	/// <param name="rateLimitPerUser">The per user ratelimit, aka slowdown.</param>
 	/// <param name="reason">The reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.CreatePrivateThreads" /> or <see cref="Permissions.SendMessagesInThreads" /> permission.
@@ -802,13 +813,14 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordThreadChannel> CreateThreadAsync(string name, ThreadAutoArchiveDuration autoArchiveDuration = ThreadAutoArchiveDuration.OneHour, int? rateLimitPerUser = null, string? reason = null)
-		=> await this.Discord.ApiClient.CreateThreadAsync(this.ChannelId, this.Id, name, autoArchiveDuration, this.Channel.Type == ChannelType.News ? ChannelType.NewsThread : ChannelType.PublicThread, rateLimitPerUser, isForum: false, reason: reason).ConfigureAwait(false);
+	public async Task<DiscordThreadChannel> CreateThreadAsync(string name, ThreadAutoArchiveDuration autoArchiveDuration = ThreadAutoArchiveDuration.OneHour, int? rateLimitPerUser = null, string? reason = null, CancellationToken cancellationToken = default)
+		=> await this.Discord.ApiClient.CreateThreadAsync(this.ChannelId, this.Id, name, autoArchiveDuration, this.Channel.Type == ChannelType.News ? ChannelType.NewsThread : ChannelType.PublicThread, rateLimitPerUser, isForum: false, reason: reason, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Pins the message in its channel.
 	/// </summary>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageMessages" /> permission.
@@ -816,13 +828,14 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task PinAsync(string? reason = null)
-		=> this.Discord.ApiClient.PinMessageAsync(this.ChannelId, this.Id, reason);
+	public Task PinAsync(string? reason = null, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.PinMessageAsync(this.ChannelId, this.Id, reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Unpins the message in its channel.
 	/// </summary>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageMessages" /> permission.
@@ -830,14 +843,15 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task UnpinAsync(string? reason = null)
-		=> this.Discord.ApiClient.UnpinMessageAsync(this.ChannelId, this.Id, reason);
+	public Task UnpinAsync(string? reason = null, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.UnpinMessageAsync(this.ChannelId, this.Id, reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Responds to the message. This produces a reply.
 	/// </summary>
 	/// <param name="content">Message content to respond with.</param>
 	/// <param name="mention">Whether to mention on reply.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -846,14 +860,15 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> RespondAsync(string content, bool mention = true)
-		=> this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, content, null, null, this.Id, mention, false);
+	public Task<DiscordMessage> RespondAsync(string content, bool mention = true, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, content, null, null, this.Id, mention, false, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Responds to the message. This produces a reply.
 	/// </summary>
 	/// <param name="embed">Embed to attach to the message.</param>
 	/// <param name="mention">Whether to mention on reply.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -862,10 +877,10 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> RespondAsync(DiscordEmbed embed, bool mention = true)
+	public Task<DiscordMessage> RespondAsync(DiscordEmbed embed, bool mention = true, CancellationToken cancellationToken = default)
 		=> this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, null, embed != null
 			? new[] { embed }
-			: null, null, this.Id, mention, false);
+			: null, null, this.Id, mention, false, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Responds to the message. This produces a reply.
@@ -873,6 +888,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <param name="content">Message content to respond with.</param>
 	/// <param name="embed">Embed to attach to the message.</param>
 	/// <param name="mention">Whether to mention on reply.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -882,16 +898,17 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public
-		Task<DiscordMessage> RespondAsync(string content, DiscordEmbed embed, bool mention = true)
+		Task<DiscordMessage> RespondAsync(string content, DiscordEmbed embed, bool mention = true, CancellationToken cancellationToken = default)
 		=> this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, content, embed != null
 			? new[] { embed }
-			: null, null, this.Id, mention, false);
+			: null, null, this.Id, mention, false, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Responds to the message. This produces a reply.
 	/// </summary>
 	/// <param name="builder">The Discord message builder.</param>
 	/// <param name="mention">Whether to mention on reply.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -901,14 +918,15 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public
-		Task<DiscordMessage> RespondAsync(DiscordMessageBuilder builder, bool mention = true)
-		=> this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, builder.WithReply(this.Id, mention));
+		Task<DiscordMessage> RespondAsync(DiscordMessageBuilder builder, bool mention = true, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, builder.WithReply(this.Id, mention), cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Responds to the message. This produces a reply.
 	/// </summary>
 	/// <param name="action">The Discord message builder.</param>
 	/// <param name="mention">Whether to mention on reply.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -917,17 +935,18 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> RespondAsync(Action<DiscordMessageBuilder> action, bool mention = true)
+	public Task<DiscordMessage> RespondAsync(Action<DiscordMessageBuilder> action, bool mention = true, CancellationToken cancellationToken = default)
 	{
 		var builder = new DiscordMessageBuilder();
 		action(builder);
-		return this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, builder.WithReply(this.Id, mention));
+		return this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, builder.WithReply(this.Id, mention), cancellationToken: cancellationToken);
 	}
 
 	/// <summary>
 	///     Creates a reaction to this message.
 	/// </summary>
 	/// <param name="emoji">The emoji you want to react with, either an emoji or name:id</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.AddReactions" /> permission.
@@ -935,18 +954,19 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task CreateReactionAsync(DiscordEmoji emoji)
-		=> this.Discord.ApiClient.CreateReactionAsync(this.ChannelId, this.Id, emoji.ToReactionString());
+	public Task CreateReactionAsync(DiscordEmoji emoji, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.CreateReactionAsync(this.ChannelId, this.Id, emoji.ToReactionString(), cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Deletes your own reaction
 	/// </summary>
 	/// <param name="emoji">Emoji for the reaction you want to remove, either an emoji or name:id</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task DeleteOwnReactionAsync(DiscordEmoji emoji)
-		=> this.Discord.ApiClient.DeleteOwnReactionAsync(this.ChannelId, this.Id, emoji.ToReactionString());
+	public Task DeleteOwnReactionAsync(DiscordEmoji emoji, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.DeleteOwnReactionAsync(this.ChannelId, this.Id, emoji.ToReactionString(), cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Deletes another user's reaction.
@@ -954,6 +974,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <param name="emoji">Emoji for the reaction you want to remove, either an emoji or name:id.</param>
 	/// <param name="user">Member you want to remove the reaction for</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageMessages" /> permission.
@@ -961,8 +982,8 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task DeleteReactionAsync(DiscordEmoji emoji, DiscordUser user, string reason = null)
-		=> this.Discord.ApiClient.DeleteUserReactionAsync(this.ChannelId, this.Id, user.Id, emoji.ToReactionString(), reason);
+	public Task DeleteReactionAsync(DiscordEmoji emoji, DiscordUser user, string reason = null, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.DeleteUserReactionAsync(this.ChannelId, this.Id, user.Id, emoji.ToReactionString(), reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Gets users that reacted with this emoji.
@@ -970,16 +991,18 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <param name="emoji">Emoji to react with.</param>
 	/// <param name="limit">Limit of users to fetch.</param>
 	/// <param name="after">Fetch users after this user's id.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<IReadOnlyList<DiscordUser>> GetReactionsAsync(DiscordEmoji emoji, int limit = 25, ulong? after = null)
-		=> this.GetReactionsInternalAsync(emoji, limit, after);
+	public Task<IReadOnlyList<DiscordUser>> GetReactionsAsync(DiscordEmoji emoji, int limit = 25, ulong? after = null, CancellationToken cancellationToken = default)
+		=> this.GetReactionsInternalAsync(emoji, limit, after, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Deletes all reactions for this message.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageMessages" /> permission.
@@ -987,13 +1010,14 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task DeleteAllReactionsAsync(string reason = null)
-		=> this.Discord.ApiClient.DeleteAllReactionsAsync(this.ChannelId, this.Id, reason);
+	public Task DeleteAllReactionsAsync(string reason = null, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.DeleteAllReactionsAsync(this.ChannelId, this.Id, reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Deletes all reactions of a specific reaction for this message.
 	/// </summary>
 	/// <param name="emoji">The emoji to clear, either an emoji or name:id.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageMessages" /> permission.
@@ -1001,8 +1025,8 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task DeleteReactionsEmojiAsync(DiscordEmoji emoji)
-		=> this.Discord.ApiClient.DeleteReactionsEmojiAsync(this.ChannelId, this.Id, emoji.ToReactionString());
+	public Task DeleteReactionsEmojiAsync(DiscordEmoji emoji, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.DeleteReactionsEmojiAsync(this.ChannelId, this.Id, emoji.ToReactionString(), cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Gets the reactions.
@@ -1010,7 +1034,8 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <param name="emoji">The emoji to search for.</param>
 	/// <param name="limit">The limit of results.</param>
 	/// <param name="after">Get the reasctions after snowflake.</param>
-	private async Task<IReadOnlyList<DiscordUser>> GetReactionsInternalAsync(DiscordEmoji emoji, int limit = 25, ulong? after = null)
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	private async Task<IReadOnlyList<DiscordUser>> GetReactionsInternalAsync(DiscordEmoji emoji, int limit = 25, ulong? after = null, CancellationToken cancellationToken = default)
 	{
 		if (limit < 0)
 			throw new ArgumentException("Cannot get a negative number of reactions' users.");
@@ -1026,7 +1051,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		do
 		{
 			var fetchSize = remaining > 100 ? 100 : remaining;
-			var fetch = await this.Discord.ApiClient.GetReactionsAsync(this.Channel.Id, this.Id, emoji.ToReactionString(), last, fetchSize).ConfigureAwait(false);
+			var fetch = await this.Discord.ApiClient.GetReactionsAsync(this.Channel.Id, this.Id, emoji.ToReactionString(), last, fetchSize, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 			lastCount = fetch.Count;
 			remaining -= lastCount;

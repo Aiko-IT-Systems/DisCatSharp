@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
@@ -96,6 +97,7 @@ public sealed class DiscordSoundboardSound : SnowflakeObject
 	///     Modifies the soundboard sound.
 	/// </summary>
 	/// <param name="action">The action to configure the soundboard sound edit model.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Throws when the soundboard sound cannot be found</exception>
 	/// <exception cref="UnauthorizedException">
 	///     Throws when the client does not have the <see cref="Permissions.ManageGuildExpressions" />
@@ -103,7 +105,7 @@ public sealed class DiscordSoundboardSound : SnowflakeObject
 	/// </exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <returns>The updated <see cref="DiscordSoundboardSound" />.</returns>
-	public async Task<DiscordSoundboardSound> ModifyAsync(Action<SoundboardSoundEditModel> action)
+	public async Task<DiscordSoundboardSound> ModifyAsync(Action<SoundboardSoundEditModel> action, CancellationToken cancellationToken = default)
 	{
 		if (!this.GuildId.HasValue)
 			throw new InvalidOperationException("You can only edit guild soundboard sounds.");
@@ -117,7 +119,8 @@ public sealed class DiscordSoundboardSound : SnowflakeObject
 			mdl.Name,
 			mdl.Volume,
 			mdl.EmojiId,
-			mdl.EmojiName
+			mdl.EmojiName,
+			cancellationToken: cancellationToken
 		).ConfigureAwait(false);
 	}
 
@@ -125,12 +128,13 @@ public sealed class DiscordSoundboardSound : SnowflakeObject
 	///     Deletes the soundboard sound.
 	/// </summary>
 	/// <param name="reason">The reason for deleting the sound, to be logged in the audit log. Optional.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Throws when the soundboard sound cannot be found</exception>
 	/// <exception cref="UnauthorizedException">
 	///     Throws when the client does not have the <see cref="Permissions.ManageGuildExpressions" />
 	///     permission.
 	/// </exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task DeleteSoundboardSoundAsync(string? reason = null)
-		=> this.GuildId.HasValue ? this.Discord.ApiClient.DeleteGuildSoundboardSoundAsync(this.GuildId.Value, this.Id, reason) : throw new InvalidOperationException("You can only delete guild soundboard sounds.");
+	public Task DeleteSoundboardSoundAsync(string? reason = null, CancellationToken cancellationToken = default)
+		=> this.GuildId.HasValue ? this.Discord.ApiClient.DeleteGuildSoundboardSoundAsync(this.GuildId.Value, this.Id, reason, cancellationToken: cancellationToken) : throw new InvalidOperationException("You can only delete guild soundboard sounds.");
 }

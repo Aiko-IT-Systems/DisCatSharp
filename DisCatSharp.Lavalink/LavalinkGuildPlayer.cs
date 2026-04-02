@@ -276,27 +276,30 @@ public sealed class LavalinkGuildPlayer
 	///     <para>Might not work with pre 4.0 tracks.</para>
 	/// </summary>
 	/// <param name="tracks">The tracks to decode.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>A <see cref="List{T}" /> of decoded <see cref="LavalinkTrack" />s.</returns>
-	public async Task<IReadOnlyList<LavalinkTrack>> DecodeTracksAsync(IEnumerable<string> tracks)
-		=> await this.Session.DecodeTracksAsync(tracks).ConfigureAwait(false);
+	public async Task<IReadOnlyList<LavalinkTrack>> DecodeTracksAsync(IEnumerable<string> tracks, CancellationToken cancellationToken = default)
+		=> await this.Session.DecodeTracksAsync(tracks, cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Decodes an encoded <see cref="LavalinkTrack" />.
 	///     <para>Might not work with some pre 4.0 tracks.</para>
 	/// </summary>
 	/// <param name="track">The track to decode.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The decoded <see cref="LavalinkTrack" />.</returns>
-	public async Task<LavalinkTrack> DecodeTrackAsync(string track)
-		=> await this.Session.DecodeTrackAsync(track).ConfigureAwait(false);
+	public async Task<LavalinkTrack> DecodeTrackAsync(string track, CancellationToken cancellationToken = default)
+		=> await this.Session.DecodeTrackAsync(track, cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Loads tracks by <paramref name="identifier" />.
 	///     Returns a dynamic object you have to parse with (Type)Result.
 	/// </summary>
 	/// <param name="identifier">The identifier to load.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>A track loading result.</returns>
-	public async Task<LavalinkTrackLoadingResult> LoadTracksAsync(string identifier)
-		=> await this.Session.LoadTracksAsync(identifier).ConfigureAwait(false);
+	public async Task<LavalinkTrackLoadingResult> LoadTracksAsync(string identifier, CancellationToken cancellationToken = default)
+		=> await this.Session.LoadTracksAsync(identifier, cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Loads tracks by <paramref name="identifier" />.
@@ -304,25 +307,28 @@ public sealed class LavalinkGuildPlayer
 	/// </summary>
 	/// <param name="searchType">The search type to use. Some types need additional setup.</param>
 	/// <param name="identifier">The identifier to load.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>A track loading result.</returns>
-	public async Task<LavalinkTrackLoadingResult> LoadTracksAsync(LavalinkSearchType searchType, string identifier)
-		=> await this.Session.LoadTracksAsync(searchType, identifier).ConfigureAwait(false);
+	public async Task<LavalinkTrackLoadingResult> LoadTracksAsync(LavalinkSearchType searchType, string identifier, CancellationToken cancellationToken = default)
+		=> await this.Session.LoadTracksAsync(searchType, identifier, cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Gets the lyrics for the currently playing track.
 	/// </summary>
 	/// <param name="skipTrackSource">Whether to skip the current track source and fetch from highest priority source.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The <see cref="LavalinkLyricsResult" /> or <see langword="null" />.</returns>
-	public async Task<LavalinkLyricsResult?> GetLyricsAsync(bool skipTrackSource = false)
-		=> await this.Session.Rest.GetLyricsForCurrentTrackAsync(this.Session.Config.SessionId!, this.GuildId, skipTrackSource).ConfigureAwait(false);
+	public async Task<LavalinkLyricsResult?> GetLyricsAsync(bool skipTrackSource = false, CancellationToken cancellationToken = default)
+		=> await this.Session.Rest.GetLyricsForCurrentTrackAsync(this.Session.Config.SessionId!, this.GuildId, skipTrackSource, cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Updates the <see cref="LavalinkPlayer" />.
 	/// </summary>
 	/// <param name="action">The action to perform on the player.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The updated guild player.</returns>
 	/// <exception cref="InvalidOperationException">Thrown when both <c>EncodedTrack</c> and <c>Identifier</c> are set.</exception>
-	public async Task<LavalinkGuildPlayer> UpdateAsync(Action<LavalinkPlayerUpdateModel> action)
+	public async Task<LavalinkGuildPlayer> UpdateAsync(Action<LavalinkPlayerUpdateModel> action, CancellationToken cancellationToken = default)
 	{
 		var mdl = new LavalinkPlayerUpdateModel();
 		action(mdl);
@@ -336,7 +342,8 @@ public sealed class LavalinkGuildPlayer
 			mdl.Position, mdl.EndTime,
 			mdl.Volume, mdl.Paused,
 			mdl.Filters,
-			mdl.UserData
+			mdl.UserData,
+			cancellationToken
 		).ConfigureAwait(false);
 		return this;
 	}
@@ -347,11 +354,12 @@ public sealed class LavalinkGuildPlayer
 	/// <param name="identifier">The identifier to play.</param>
 	/// <param name="startTime">The start time.</param>
 	/// <param name="endTime">The end time.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The updated guild player.</returns>
-	public async Task<LavalinkGuildPlayer> PlayPartialAsync(string identifier, TimeSpan startTime, TimeSpan endTime)
+	public async Task<LavalinkGuildPlayer> PlayPartialAsync(string identifier, TimeSpan startTime, TimeSpan endTime, CancellationToken cancellationToken = default)
 	{
 		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, identifier: identifier, position: (int)startTime.TotalMilliseconds,
-			endTime: (int)endTime.TotalMilliseconds).ConfigureAwait(false);
+			endTime: (int)endTime.TotalMilliseconds, cancellationToken: cancellationToken).ConfigureAwait(false);
 		return this;
 	}
 
@@ -361,11 +369,12 @@ public sealed class LavalinkGuildPlayer
 	/// <param name="track">The track to play.</param>
 	/// <param name="startTime">The start time.</param>
 	/// <param name="endTime">The end time.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The updated guild player.</returns>
-	public async Task<LavalinkGuildPlayer> PlayPartialAsync(LavalinkTrack track, TimeSpan startTime, TimeSpan endTime)
+	public async Task<LavalinkGuildPlayer> PlayPartialAsync(LavalinkTrack track, TimeSpan startTime, TimeSpan endTime, CancellationToken cancellationToken = default)
 	{
 		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, identifier: track.Info.Uri.ToString(),
-			position: (int)startTime.TotalMilliseconds, endTime: (int)endTime.TotalMilliseconds).ConfigureAwait(false);
+			position: (int)startTime.TotalMilliseconds, endTime: (int)endTime.TotalMilliseconds, cancellationToken: cancellationToken).ConfigureAwait(false);
 		return this;
 	}
 
@@ -375,11 +384,12 @@ public sealed class LavalinkGuildPlayer
 	/// <param name="encodedTrack">The encoded track to play.</param>
 	/// <param name="startTime">The start time.</param>
 	/// <param name="endTime">The end time.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The updated guild player.</returns>
-	public async Task<LavalinkGuildPlayer> PlayPartialEncodedAsync(string encodedTrack, TimeSpan startTime, TimeSpan endTime)
+	public async Task<LavalinkGuildPlayer> PlayPartialEncodedAsync(string encodedTrack, TimeSpan startTime, TimeSpan endTime, CancellationToken cancellationToken = default)
 	{
 		this.Player = await this.Session.Rest
-			.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, encodedTrack, position: (int)startTime.TotalMilliseconds, endTime: (int)endTime.TotalMilliseconds)
+			.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, encodedTrack, position: (int)startTime.TotalMilliseconds, endTime: (int)endTime.TotalMilliseconds, cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 		return this;
 	}
@@ -388,10 +398,11 @@ public sealed class LavalinkGuildPlayer
 	///     Plays a song by its identifier.
 	/// </summary>
 	/// <param name="identifier">The identifier to play.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The updated guild player.</returns>
-	public async Task<LavalinkGuildPlayer> PlayAsync(string identifier)
+	public async Task<LavalinkGuildPlayer> PlayAsync(string identifier, CancellationToken cancellationToken = default)
 	{
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, identifier: identifier).ConfigureAwait(false);
+		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, identifier: identifier, cancellationToken: cancellationToken).ConfigureAwait(false);
 		return this;
 	}
 
@@ -399,10 +410,11 @@ public sealed class LavalinkGuildPlayer
 	///     Plays a track.
 	/// </summary>
 	/// <param name="track">The track to play.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The updated guild player.</returns>
-	public async Task<LavalinkGuildPlayer> PlayAsync(LavalinkTrack track)
+	public async Task<LavalinkGuildPlayer> PlayAsync(LavalinkTrack track, CancellationToken cancellationToken = default)
 	{
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, identifier: track.Info.Uri.ToString()).ConfigureAwait(false);
+		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, identifier: track.Info.Uri.ToString(), cancellationToken: cancellationToken).ConfigureAwait(false);
 		return this;
 	}
 
@@ -410,10 +422,11 @@ public sealed class LavalinkGuildPlayer
 	///     Plays a song by its encoded track string.
 	/// </summary>
 	/// <param name="encodedTrack">The encoded track to play.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The updated guild player.</returns>
-	public async Task<LavalinkGuildPlayer> PlayEncodedAsync(string encodedTrack)
+	public async Task<LavalinkGuildPlayer> PlayEncodedAsync(string encodedTrack, CancellationToken cancellationToken = default)
 	{
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, encodedTrack).ConfigureAwait(false);
+		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, encodedTrack, cancellationToken: cancellationToken).ConfigureAwait(false);
 		return this;
 	}
 
@@ -421,10 +434,11 @@ public sealed class LavalinkGuildPlayer
 	///     Seeks the player to the position in <paramref name="seconds" />.
 	/// </summary>
 	/// <param name="seconds">The seconds to seek to.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The updated guild player.</returns>
-	public async Task<LavalinkGuildPlayer> SeekAsync(int seconds)
+	public async Task<LavalinkGuildPlayer> SeekAsync(int seconds, CancellationToken cancellationToken = default)
 	{
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, true, position: seconds * 1000).ConfigureAwait(false);
+		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, true, position: seconds * 1000, cancellationToken: cancellationToken).ConfigureAwait(false);
 		return this;
 	}
 
@@ -432,10 +446,11 @@ public sealed class LavalinkGuildPlayer
 	///     Seeks the player to the position.
 	/// </summary>
 	/// <param name="position">The position to seek to.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The updated guild player.</returns>
-	public async Task<LavalinkGuildPlayer> SeekAsync(TimeSpan position)
+	public async Task<LavalinkGuildPlayer> SeekAsync(TimeSpan position, CancellationToken cancellationToken = default)
 	{
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, true, position: (int)position.TotalMilliseconds).ConfigureAwait(false);
+		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, true, position: (int)position.TotalMilliseconds, cancellationToken: cancellationToken).ConfigureAwait(false);
 		return this;
 	}
 
@@ -443,61 +458,67 @@ public sealed class LavalinkGuildPlayer
 	///     Modifies the volume of the player.
 	/// </summary>
 	/// <param name="volume">The volume of the player, range <c>0</c>-<c>1000</c>, in percentage.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The updated guild player.</returns>
 	/// <exception cref="ArgumentException">Thrown when the <paramref name="volume" /> is out of range.</exception>
-	public async Task<LavalinkGuildPlayer> SetVolumeAsync(int volume)
+	public async Task<LavalinkGuildPlayer> SetVolumeAsync(int volume, CancellationToken cancellationToken = default)
 	{
 		if (volume is < 0 or > 1000)
 			throw new ArgumentException("Volume can only be between 0 and 1000", nameof(volume));
 
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, true, volume: volume).ConfigureAwait(false);
+		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, true, volume: volume, cancellationToken: cancellationToken).ConfigureAwait(false);
 		return this;
 	}
 
 	/// <summary>
 	///     Pauses the player.
 	/// </summary>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The updated guild player.</returns>
-	public async Task<LavalinkGuildPlayer> PauseAsync()
+	public async Task<LavalinkGuildPlayer> PauseAsync(CancellationToken cancellationToken = default)
 	{
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, true, paused: true).ConfigureAwait(false);
+		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, true, paused: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 		return this;
 	}
 
 	/// <summary>
 	///     Resumes the player.
 	/// </summary>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The updated guild player.</returns>
-	public async Task<LavalinkGuildPlayer> ResumeAsync()
+	public async Task<LavalinkGuildPlayer> ResumeAsync(CancellationToken cancellationToken = default)
 	{
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, true, paused: false).ConfigureAwait(false);
+		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, true, paused: false, cancellationToken: cancellationToken).ConfigureAwait(false);
 		return this;
 	}
 
 	/// <summary>
 	///     Stops the player.
 	/// </summary>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The updated guild player.</returns>
-	public async Task<LavalinkGuildPlayer> StopAsync()
+	public async Task<LavalinkGuildPlayer> StopAsync(CancellationToken cancellationToken = default)
 	{
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, null).ConfigureAwait(false);
+		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, null, cancellationToken: cancellationToken).ConfigureAwait(false);
 		return this;
 	}
 
 	/// <summary>
 	///     Skips the current track.
 	/// </summary>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The updated guild player.</returns>
-	public Task<LavalinkGuildPlayer> SkipAsync()
-		=> this.StopAsync();
+	public Task<LavalinkGuildPlayer> SkipAsync(CancellationToken cancellationToken = default)
+		=> this.StopAsync(cancellationToken);
 
 	/// <summary>
 	///     Directly plays a song by url.
 	/// </summary>
 	/// <param name="url">The url to play.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns></returns>
 	/// <exception cref="NotSupportedException">Thrown when the <paramref name="url" /> is a pure youtube playlist.</exception>
-	public async Task<LavalinkGuildPlayer> PlayDirectUrlAsync(string url)
+	public async Task<LavalinkGuildPlayer> PlayDirectUrlAsync(string url, CancellationToken cancellationToken = default)
 	{
 		if (CommonRegEx.AdvancedYoutubeRegex().IsMatch(url))
 		{
@@ -518,7 +539,7 @@ public sealed class LavalinkGuildPlayer
 			}
 		}
 
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, identifier: url).ConfigureAwait(false);
+		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, identifier: url, cancellationToken: cancellationToken).ConfigureAwait(false);
 		return this;
 	}
 
@@ -527,8 +548,9 @@ public sealed class LavalinkGuildPlayer
 	/// </summary>
 	/// <param name="channel">The new channel to switch to.</param>
 	/// <param name="deafened">Whether to join deafened.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <exception cref="ArgumentException">Thrown when the target channel is not of the base type voice.</exception>
-	public async Task SwitchChannelAsync(DiscordChannel channel, bool deafened = true)
+	public async Task SwitchChannelAsync(DiscordChannel channel, bool deafened = true, CancellationToken cancellationToken = default)
 	{
 		if (channel.Type != ChannelType.Stage && channel.Type != ChannelType.Voice)
 			throw new ArgumentException("Cannot switch to a non-voice channel", nameof(channel));
@@ -565,9 +587,10 @@ public sealed class LavalinkGuildPlayer
 	/// <summary>
 	///     Disconnect the guild player from the channel.
 	/// </summary>
-	public async Task DisconnectAsync()
+	/// <param name="cancellationToken">The cancellation token.</param>
+	public async Task DisconnectAsync(CancellationToken cancellationToken = default)
 	{
-		await this.Session.Rest.DestroyPlayerAsync(this.Session.Config.SessionId!, this.GuildId).ConfigureAwait(false);
+		await this.Session.Rest.DestroyPlayerAsync(this.Session.Config.SessionId!, this.GuildId, cancellationToken).ConfigureAwait(false);
 		await this.DisconnectVoiceAsync().ConfigureAwait(false);
 		this.CurrentUsersInternal.Clear();
 		Volatile.Write(ref this._isDisposed, true);

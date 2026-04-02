@@ -285,16 +285,18 @@ public sealed class LavalinkSession
 	///     Gets the lavalink server information.
 	/// </summary>
 	/// <returns>A <see cref="LavalinkInfo" /> object.</returns>
-	public async Task<LavalinkInfo> GetLavalinkInfoAsync()
-		=> await this.Rest.GetInfoAsync().ConfigureAwait(false);
+	/// <param name="cancellationToken">The cancellation token.</param>
+	public async Task<LavalinkInfo> GetLavalinkInfoAsync(CancellationToken cancellationToken = default)
+		=> await this.Rest.GetInfoAsync(cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Gets the lavalink server version
 	/// </summary>
 	/// <returns>The version <see langword="string" />.</returns>
-	public async Task<string> GetLavalinkVersionAsync()
+	/// <param name="cancellationToken">The cancellation token.</param>
+	public async Task<string> GetLavalinkVersionAsync(CancellationToken cancellationToken = default)
 	{
-		var versionInfo = await this.Rest.GetVersionAsync().ConfigureAwait(false);
+		var versionInfo = await this.Rest.GetVersionAsync(cancellationToken).ConfigureAwait(false);
 		return versionInfo.Headers.TryGetValues("Lavalink-Api-Version", out var headerValues)
 			? headerValues.First()
 			: versionInfo.Response!;
@@ -304,9 +306,10 @@ public sealed class LavalinkSession
 	///     Gets the lavalink server statistics.
 	/// </summary>
 	/// <returns>A <see cref="LavalinkStats" /> object.</returns>
-	public async Task<LavalinkStats> GetLavalinkStatsAsync()
+	/// <param name="cancellationToken">The cancellation token.</param>
+	public async Task<LavalinkStats> GetLavalinkStatsAsync(CancellationToken cancellationToken = default)
 	{
-		var stats = await this.Rest.GetStatsAsync().ConfigureAwait(false);
+		var stats = await this.Rest.GetStatsAsync(cancellationToken).ConfigureAwait(false);
 		this.Statistics = new(stats, this.Statistics);
 		return this.Statistics;
 	}
@@ -314,9 +317,10 @@ public sealed class LavalinkSession
 	/// <summary>
 	///     Destroys the current session, disconnecting all players.
 	/// </summary>
-	public async Task DestroyAsync()
+	/// <param name="cancellationToken">The cancellation token.</param>
+	public async Task DestroyAsync(CancellationToken cancellationToken = default)
 	{
-		await this.DestroyGuildPlayersAsync().ConfigureAwait(false);
+		await this.DestroyGuildPlayersAsync(cancellationToken).ConfigureAwait(false);
 		Volatile.Write(ref this._isDisposed, true);
 		await this._webSocket.DisconnectAsync(1000, "Shutting down Lavalink Session").ConfigureAwait(false);
 	}
@@ -324,11 +328,12 @@ public sealed class LavalinkSession
 	/// <summary>
 	///     Destroys all players.
 	/// </summary>
-	public async Task DestroyGuildPlayersAsync()
+	/// <param name="cancellationToken">The cancellation token.</param>
+	public async Task DestroyGuildPlayersAsync(CancellationToken cancellationToken = default)
 	{
 		if (!this.ConnectedPlayersInternal.IsEmpty)
 			foreach (var player in this.ConnectedPlayersInternal.Values)
-				await player.DisconnectAsync().ConfigureAwait(false);
+				await player.DisconnectAsync(cancellationToken).ConfigureAwait(false);
 		this.ConnectedPlayersInternal.Clear();
 	}
 
@@ -350,9 +355,10 @@ public sealed class LavalinkSession
 	/// </summary>
 	/// <param name="channel">The channel to join.</param>
 	/// <param name="deafened">Whether to join the channel deafened.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The created <see cref="LavalinkGuildPlayer" />.</returns>
 	/// <exception cref="ArgumentException"></exception>
-	public async Task<LavalinkGuildPlayer> ConnectAsync(DiscordChannel channel, bool deafened = true)
+	public async Task<LavalinkGuildPlayer> ConnectAsync(DiscordChannel channel, bool deafened = true, CancellationToken cancellationToken = default)
 	{
 		if (this.ConnectedPlayersInternal.TryGetValue(channel.Guild.Id, out var connectedGuild))
 			return connectedGuild;
@@ -376,7 +382,7 @@ public sealed class LavalinkSession
 				Muted = false
 			}
 		};
-		await this.Rest.CreatePlayerAsync(this.Config.SessionId!, channel.Guild.Id, this.Config.DefaultVolume).ConfigureAwait(false);
+		await this.Rest.CreatePlayerAsync(this.Config.SessionId!, channel.Guild.Id, this.Config.DefaultVolume, cancellationToken).ConfigureAwait(false);
 		await this.Discord.WsSendAsync(LavalinkJson.SerializeObject(vsd)).ConfigureAwait(false); // Send voice dispatch to trigger voice state & voice server update
 		var vst = await vstut.Task.ConfigureAwait(false); // Wait for voice state update to get session_id
 		var vsr = await vsrut.Task.ConfigureAwait(false); // Wait for voice server update to get token, guild_id & endpoint
@@ -388,9 +394,9 @@ public sealed class LavalinkSession
 			SessionId = vst.SessionId,
 			ChannelId = channel.Id
 		};
-		await this.Rest.UpdatePlayerVoiceStateAsync(this.Config.SessionId!, channel.Guild.Id, voiceState)
+		await this.Rest.UpdatePlayerVoiceStateAsync(this.Config.SessionId!, channel.Guild.Id, voiceState, cancellationToken)
 			.ConfigureAwait(false);
-		var player = await this.Rest.GetPlayerAsync(this.Config.SessionId!, channel.Guild.Id).ConfigureAwait(false);
+		var player = await this.Rest.GetPlayerAsync(this.Config.SessionId!, channel.Guild.Id, cancellationToken).ConfigureAwait(false);
 
 		var con = new LavalinkGuildPlayer(this, channel.Guild.Id, player)
 		{
@@ -405,10 +411,11 @@ public sealed class LavalinkSession
 	///     Configures the current lavalink session.
 	/// </summary>
 	/// <param name="config">The config update to set.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The updated session.</returns>
-	public async Task<LavalinkSession> ConfigureAsync(LavalinkSessionConfiguration config)
+	public async Task<LavalinkSession> ConfigureAsync(LavalinkSessionConfiguration config, CancellationToken cancellationToken = default)
 	{
-		var newConfig = await this.Rest.UpdateSessionAsync(this.Config.SessionId!, config).ConfigureAwait(false);
+		var newConfig = await this.Rest.UpdateSessionAsync(this.Config.SessionId!, config, cancellationToken).ConfigureAwait(false);
 		this.Configuration = newConfig;
 		return this;
 	}
@@ -437,53 +444,59 @@ public sealed class LavalinkSession
 	///     <para>Use <see cref="GetGuildPlayer" /> if you want to interact with the actual player.</para>
 	/// </summary>
 	/// <param name="guild">The guild to get the player for.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The found player or <see langword="null" />.</returns>
-	public async Task<LavalinkPlayer> GetPlayerAsync(DiscordGuild guild)
-		=> await this.Rest.GetPlayerAsync(this.Config.SessionId!, guild.Id).ConfigureAwait(false);
+	public async Task<LavalinkPlayer> GetPlayerAsync(DiscordGuild guild, CancellationToken cancellationToken = default)
+		=> await this.Rest.GetPlayerAsync(this.Config.SessionId!, guild.Id, cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Gets all lavalink players.
 	///     <para>Use <see cref="GetGuildPlayersAsync" /> if you want to interact with the actual players.</para>
 	/// </summary>
 	/// <returns>The found players or <see langword="null" />.</returns>
-	public async Task<IReadOnlyList<LavalinkPlayer>> GetPlayersAsync()
-		=> await this.Rest.GetPlayersAsync(this.Config.SessionId!).ConfigureAwait(false);
+	/// <param name="cancellationToken">The cancellation token.</param>
+	public async Task<IReadOnlyList<LavalinkPlayer>> GetPlayersAsync(CancellationToken cancellationToken = default)
+		=> await this.Rest.GetPlayersAsync(this.Config.SessionId!, cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Decodes encoded <see cref="LavalinkTrack" />s.
 	///     <para>Might not work with pre 3.0 tracks.</para>
 	/// </summary>
 	/// <param name="tracks">The tracks to decode.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>A <see cref="List{T}" /> of decoded <see cref="LavalinkTrack" />s.</returns>
-	public async Task<IReadOnlyList<LavalinkTrack>> DecodeTracksAsync(IEnumerable<string> tracks)
-		=> await this.Rest.DecodeTracksAsync(tracks).ConfigureAwait(false);
+	public async Task<IReadOnlyList<LavalinkTrack>> DecodeTracksAsync(IEnumerable<string> tracks, CancellationToken cancellationToken = default)
+		=> await this.Rest.DecodeTracksAsync(tracks, cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Decodes an encoded <see cref="LavalinkTrack" />.
 	///     <para>Might not work with pre 3.0 tracks.</para>
 	/// </summary>
 	/// <param name="track">The track to decode.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The decoded <see cref="LavalinkTrack" />.</returns>
-	public async Task<LavalinkTrack> DecodeTrackAsync(string track)
-		=> await this.Rest.DecodeTrackAsync(track).ConfigureAwait(false);
+	public async Task<LavalinkTrack> DecodeTrackAsync(string track, CancellationToken cancellationToken = default)
+		=> await this.Rest.DecodeTrackAsync(track, cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Loads tracks by <paramref name="identifier" />.
 	///     Returns a dynamic object you have to parse with (Type)Result.
 	/// </summary>
 	/// <param name="identifier">The identifier to load.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>A track loading result.</returns>
-	public async Task<LavalinkTrackLoadingResult> LoadTracksAsync(string identifier)
-		=> await this.Rest.LoadTracksAsync(identifier).ConfigureAwait(false);
+	public async Task<LavalinkTrackLoadingResult> LoadTracksAsync(string identifier, CancellationToken cancellationToken = default)
+		=> await this.Rest.LoadTracksAsync(identifier, cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Gets the lyrics for a track.
 	/// </summary>
 	/// <param name="track">The track to fetch the lyrics for.</param>
 	/// <param name="skipTrackSource">Whether to skip the current track source and fetch from highest priority source.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The <see cref="LavalinkLyricsResult" /> or <see langword="null" />.</returns>
-	public async Task<LavalinkLyricsResult?> GetLyricsAsync(LavalinkTrack track, bool skipTrackSource = false)
-		=> await this.Rest.GetLyricsAsync(track.Encoded, skipTrackSource).ConfigureAwait(false);
+	public async Task<LavalinkLyricsResult?> GetLyricsAsync(LavalinkTrack track, bool skipTrackSource = false, CancellationToken cancellationToken = default)
+		=> await this.Rest.GetLyricsAsync(track.Encoded, skipTrackSource, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Gets the lyrics for a currently playing track.
@@ -491,9 +504,10 @@ public sealed class LavalinkSession
 	/// <param name="sessionId">The session id a player is associated with.</param>
 	/// <param name="guildId">The guild id a player is associated with.</param>
 	/// <param name="skipTrackSource">Whether to skip the current track source and fetch from highest priority source.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The <see cref="LavalinkLyricsResult" /> or <see langword="null" />.</returns>
-	public async Task<LavalinkLyricsResult?> GetLyricsForCurrentTrackAsync(string sessionId, ulong guildId, bool skipTrackSource)
-		=> await this.Rest.GetLyricsForCurrentTrackAsync(sessionId, guildId, skipTrackSource).ConfigureAwait(false);
+	public async Task<LavalinkLyricsResult?> GetLyricsForCurrentTrackAsync(string sessionId, ulong guildId, bool skipTrackSource, CancellationToken cancellationToken = default)
+		=> await this.Rest.GetLyricsForCurrentTrackAsync(sessionId, guildId, skipTrackSource, cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Loads tracks by <paramref name="identifier" />.
@@ -501,8 +515,9 @@ public sealed class LavalinkSession
 	/// </summary>
 	/// <param name="searchType">The search type to use. Some types need additional setup.</param>
 	/// <param name="identifier">The identifier to load.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>A track loading result.</returns>
-	public async Task<LavalinkTrackLoadingResult> LoadTracksAsync(LavalinkSearchType searchType, string identifier)
+	public async Task<LavalinkTrackLoadingResult> LoadTracksAsync(LavalinkSearchType searchType, string identifier, CancellationToken cancellationToken = default)
 	{
 		var type = searchType switch
 		{
@@ -517,7 +532,7 @@ public sealed class LavalinkSession
 			LavalinkSearchType.Plain => string.Empty,
 			_ => throw new ArgumentOutOfRangeException(nameof(searchType), searchType, "Invalid search type.")
 		};
-		return await this.LoadTracksAsync($"{type}{identifier}").ConfigureAwait(false);
+		return await this.LoadTracksAsync($"{type}{identifier}", cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>

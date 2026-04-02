@@ -1,5 +1,6 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.ApplicationCommands.Checks;
@@ -23,8 +24,9 @@ internal class RegistrationWorker
 	/// <param name="client">The discord client.</param>
 	/// <param name="commands">The command list.</param>
 	/// <param name="entryPointCommand">The entry point command.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A list of registered commands.</returns>
-	internal static async Task<List<DiscordApplicationCommand>?> RegisterGlobalCommandsAsync(DiscordClient client, List<DiscordApplicationCommand> commands, DiscordApplicationCommand? entryPointCommand = null)
+	internal static async Task<List<DiscordApplicationCommand>?> RegisterGlobalCommandsAsync(DiscordClient client, List<DiscordApplicationCommand> commands, DiscordApplicationCommand? entryPointCommand = null, CancellationToken cancellationToken = default)
 	{
 		// Include entry point in the command list for proper change detection
 		var allCommands = entryPointCommand is not null
@@ -43,7 +45,7 @@ internal class RegistrationWorker
 
 			foreach (var cmd in globalCommandsCreateList)
 			{
-				var discordBackendCommand = await client.CreateGlobalApplicationCommandAsync(cmd).ConfigureAwait(false);
+				var discordBackendCommand = await client.CreateGlobalApplicationCommandAsync(cmd, cancellationToken).ConfigureAwait(false);
 				resultCommands.Add(discordBackendCommand);
 			}
 
@@ -63,7 +65,7 @@ internal class RegistrationWorker
 					action.AllowedContexts = command.AllowedContexts;
 					action.IntegrationTypes = command.IntegrationTypes;
 					action.HandlerType = command.HandlerType;
-				}).ConfigureAwait(false);
+				}, cancellationToken).ConfigureAwait(false);
 
 				resultCommands.Add(discordBackendCommand);
 			}
@@ -76,7 +78,7 @@ internal class RegistrationWorker
 
 			foreach (var cmd in globalCommandsCreateList)
 			{
-				var discordBackendCommand = await client.CreateGlobalApplicationCommandAsync(cmd).ConfigureAwait(false);
+				var discordBackendCommand = await client.CreateGlobalApplicationCommandAsync(cmd, cancellationToken).ConfigureAwait(false);
 				resultCommands.Add(discordBackendCommand);
 			}
 
@@ -97,7 +99,7 @@ internal class RegistrationWorker
 						action.AllowedContexts = command.AllowedContexts;
 						action.IntegrationTypes = command.IntegrationTypes;
 						action.HandlerType = command.HandlerType;
-					}).ConfigureAwait(false);
+					}, cancellationToken).ConfigureAwait(false);
 
 					resultCommands.Add(discordBackendCommand);
 				}
@@ -125,7 +127,7 @@ internal class RegistrationWorker
 					action.AllowedContexts = command.AllowedContexts;
 					action.IntegrationTypes = command.IntegrationTypes;
 					action.HandlerType = command.HandlerType;
-				}).ConfigureAwait(false);
+				}, cancellationToken).ConfigureAwait(false);
 
 				resultCommands.Add(discordBackendCommand);
 			}
@@ -143,14 +145,14 @@ internal class RegistrationWorker
 				overwriteList.Add(cmd);
 			}
 
-			var discordBackendCommands = await client.BulkOverwriteGlobalApplicationCommandsAsync(overwriteList).ConfigureAwait(false);
+			var discordBackendCommands = await client.BulkOverwriteGlobalApplicationCommandsAsync(overwriteList, cancellationToken).ConfigureAwait(false);
 			resultCommands.AddRange(discordBackendCommands);
 		}
 		else if (globalCommandsCreateList!.NotEmptyAndNotNull() && changedCommands!.EmptyOrNull() && unchangedCommands!.EmptyOrNull())
 		{
 			client.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, "[AC GLOBAL] Creating all application commands");
 
-			var cmds = await client.BulkOverwriteGlobalApplicationCommandsAsync(globalCommandsCreateList).ConfigureAwait(false);
+			var cmds = await client.BulkOverwriteGlobalApplicationCommandsAsync(globalCommandsCreateList, cancellationToken).ConfigureAwait(false);
 			resultCommands.AddRange(cmds);
 		}
 		else if (globalCommandsCreateList!.EmptyOrNull() && changedCommands!.EmptyOrNull() && unchangedCommands!.NotEmptyAndNotNull())
@@ -168,7 +170,7 @@ internal class RegistrationWorker
 		foreach (var cmdId in globalCommandsDeleteList)
 			try
 			{
-				await client.DeleteGlobalApplicationCommandAsync(cmdId).ConfigureAwait(false);
+				await client.DeleteGlobalApplicationCommandAsync(cmdId, cancellationToken).ConfigureAwait(false);
 			}
 			catch (NotFoundException)
 			{
@@ -184,8 +186,9 @@ internal class RegistrationWorker
 	/// <param name="client">The discord client.</param>
 	/// <param name="guildId">The target guild id.</param>
 	/// <param name="commands">The command list.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A list of registered commands.</returns>
-	internal static async Task<List<DiscordApplicationCommand>?> RegisterGuildCommandsAsync(DiscordClient client, ulong guildId, List<DiscordApplicationCommand> commands)
+	internal static async Task<List<DiscordApplicationCommand>?> RegisterGuildCommandsAsync(DiscordClient client, ulong guildId, List<DiscordApplicationCommand> commands, CancellationToken cancellationToken = default)
 	{
 		var (changedCommands, unchangedCommands) = BuildGuildOverwriteList(client, guildId, commands);
 		var guildCommandsCreateList = BuildGuildCreateList(client, guildId, commands);
@@ -199,7 +202,7 @@ internal class RegistrationWorker
 
 			foreach (var cmd in guildCommandsCreateList)
 			{
-				var discordBackendCommand = await client.CreateGuildApplicationCommandAsync(guildId, cmd).ConfigureAwait(false);
+				var discordBackendCommand = await client.CreateGuildApplicationCommandAsync(guildId, cmd, cancellationToken).ConfigureAwait(false);
 				resultCommands.Add(discordBackendCommand);
 			}
 
@@ -218,7 +221,7 @@ internal class RegistrationWorker
 					action.IsNsfw = command.IsNsfw;
 					action.AllowedContexts = command.AllowedContexts;
 					action.IntegrationTypes = command.IntegrationTypes;
-				}).ConfigureAwait(false);
+				}, cancellationToken).ConfigureAwait(false);
 
 				resultCommands.Add(discordBackendCommand);
 			}
@@ -231,7 +234,7 @@ internal class RegistrationWorker
 
 			foreach (var cmd in guildCommandsCreateList)
 			{
-				var discordBackendCommand = await client.CreateGuildApplicationCommandAsync(guildId, cmd).ConfigureAwait(false);
+				var discordBackendCommand = await client.CreateGuildApplicationCommandAsync(guildId, cmd, cancellationToken).ConfigureAwait(false);
 				resultCommands.Add(discordBackendCommand);
 			}
 
@@ -251,7 +254,7 @@ internal class RegistrationWorker
 						action.IsNsfw = command.IsNsfw;
 						action.AllowedContexts = command.AllowedContexts;
 						action.IntegrationTypes = command.IntegrationTypes;
-					}).ConfigureAwait(false);
+					}, cancellationToken).ConfigureAwait(false);
 
 					resultCommands.Add(discordBackendCommand);
 				}
@@ -279,7 +282,7 @@ internal class RegistrationWorker
 					action.IsNsfw = command.IsNsfw;
 					action.AllowedContexts = command.AllowedContexts;
 					action.IntegrationTypes = command.IntegrationTypes;
-				}).ConfigureAwait(false);
+				}, cancellationToken).ConfigureAwait(false);
 
 				resultCommands.Add(discordBackendCommand);
 			}
@@ -297,14 +300,14 @@ internal class RegistrationWorker
 				overwriteList.Add(cmd);
 			}
 
-			var discordBackendCommands = await client.BulkOverwriteGuildApplicationCommandsAsync(guildId, overwriteList).ConfigureAwait(false);
+			var discordBackendCommands = await client.BulkOverwriteGuildApplicationCommandsAsync(guildId, overwriteList, cancellationToken).ConfigureAwait(false);
 			resultCommands.AddRange(discordBackendCommands);
 		}
 		else if (guildCommandsCreateList!.NotEmptyAndNotNull() && changedCommands!.EmptyOrNull() && unchangedCommands!.EmptyOrNull())
 		{
 			client.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, "[AC GUILD] Creating all application commands. Guild ID: {guild}", guildId);
 
-			var cmds = await client.BulkOverwriteGuildApplicationCommandsAsync(guildId, guildCommandsCreateList).ConfigureAwait(false);
+			var cmds = await client.BulkOverwriteGuildApplicationCommandsAsync(guildId, guildCommandsCreateList, cancellationToken).ConfigureAwait(false);
 			resultCommands.AddRange(cmds);
 		}
 		else if (guildCommandsCreateList!.EmptyOrNull() && changedCommands!.EmptyOrNull() && unchangedCommands!.NotEmptyAndNotNull())
@@ -322,7 +325,7 @@ internal class RegistrationWorker
 			client.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, "[AC GUILD] Deleting missing application commands. Guild ID: {guild}", guildId);
 			try
 			{
-				await client.DeleteGuildApplicationCommandAsync(guildId, cmdId).ConfigureAwait(false);
+				await client.DeleteGuildApplicationCommandAsync(guildId, cmdId, cancellationToken).ConfigureAwait(false);
 			}
 			catch (NotFoundException)
 			{

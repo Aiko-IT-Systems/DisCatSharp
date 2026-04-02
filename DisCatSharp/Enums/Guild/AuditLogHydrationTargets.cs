@@ -4,7 +4,7 @@ namespace DisCatSharp.Enums;
 
 /// <summary>
 ///     Controls which audit log references should be upgraded by
-///     <see cref="Entities.DiscordAuditLogEntry.HydrateAsync(AuditLogHydrationTargets, bool)" />.
+///     <see cref="Entities.DiscordAuditLogEntry.HydrateAsync(AuditLogHydrationTargets, bool, System.Threading.CancellationToken)" />.
 /// </summary>
 /// <remarks>
 ///     Audit log parsing is intentionally side-effect free and may therefore produce partial or synthetic entities.

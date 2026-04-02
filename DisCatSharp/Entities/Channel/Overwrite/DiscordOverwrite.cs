@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
@@ -64,6 +65,7 @@ public class DiscordOverwrite : SnowflakeObject
 	///     Deletes this channel overwrite.
 	/// </summary>
 	/// <param name="reason">Reason as to why this overwrite gets deleted.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.ManageRoles" />
 	///     permission.
@@ -71,7 +73,8 @@ public class DiscordOverwrite : SnowflakeObject
 	/// <exception cref="NotFoundException">Thrown when the overwrite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task DeleteAsync(string reason = null) => this.Discord.ApiClient.DeleteChannelPermissionAsync(this.ChannelId, this.Id, reason);
+	public Task DeleteAsync(string reason = null, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.DeleteChannelPermissionAsync(this.ChannelId, this.Id, reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Updates this channel overwrite.
@@ -79,6 +82,7 @@ public class DiscordOverwrite : SnowflakeObject
 	/// <param name="allow">Permissions that are allowed.</param>
 	/// <param name="deny">Permissions that are denied.</param>
 	/// <param name="reason">Reason as to why you made this change.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.ManageRoles" />
 	///     permission.
@@ -86,12 +90,13 @@ public class DiscordOverwrite : SnowflakeObject
 	/// <exception cref="NotFoundException">Thrown when the overwrite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task UpdateAsync(Permissions? allow = null, Permissions? deny = null, string reason = null)
-		=> this.Discord.ApiClient.EditChannelPermissionsAsync(this.ChannelId, this.Id, allow ?? this.Allowed, deny ?? this.Denied, this.Type.ToString().ToLowerInvariant(), reason);
+	public Task UpdateAsync(Permissions? allow = null, Permissions? deny = null, string reason = null, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.EditChannelPermissionsAsync(this.ChannelId, this.Id, allow ?? this.Allowed, deny ?? this.Denied, this.Type.ToString().ToLowerInvariant(), reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Gets the DiscordMember that is affected by this overwrite.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The DiscordMember that is affected by this overwrite</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -100,22 +105,23 @@ public class DiscordOverwrite : SnowflakeObject
 	/// <exception cref="NotFoundException">Thrown when the overwrite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordMember> GetMemberAsync() =>
+	public async Task<DiscordMember> GetMemberAsync(CancellationToken cancellationToken = default) =>
 		this.Type != OverwriteType.Member
-			? throw new ArgumentException(nameof(this.Type), "This overwrite is for a role, not a member.")
-			: await (await this.Discord.ApiClient.GetChannelAsync(this.ChannelId).ConfigureAwait(false)).Guild.GetMemberAsync(this.Id).ConfigureAwait(false);
+			? throw new ArgumentException("This overwrite is for a role, not a member.", nameof(this.Type))
+			: await (await this.Discord.ApiClient.GetChannelAsync(this.ChannelId, cancellationToken: cancellationToken).ConfigureAwait(false)).Guild.GetMemberAsync(this.Id, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Gets the DiscordRole that is affected by this overwrite.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The DiscordRole that is affected by this overwrite</returns>
 	/// <exception cref="NotFoundException">Thrown when the role does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordRole> GetRoleAsync() =>
+	public async Task<DiscordRole> GetRoleAsync(CancellationToken cancellationToken = default) =>
 		this.Type != OverwriteType.Role
-			? throw new ArgumentException(nameof(this.Type), "This overwrite is for a member, not a role.")
-			: (await this.Discord.ApiClient.GetChannelAsync(this.ChannelId).ConfigureAwait(false)).Guild.GetRole(this.Id);
+			? throw new ArgumentException("This overwrite is for a member, not a role.", nameof(this.Type))
+			: (await this.Discord.ApiClient.GetChannelAsync(this.ChannelId, cancellationToken: cancellationToken).ConfigureAwait(false)).Guild.GetRole(this.Id);
 
 	/// <summary>
 	///     Converts this <see cref="DiscordOverwrite" /> into a <see cref="DiscordOverwriteBuilder" />.

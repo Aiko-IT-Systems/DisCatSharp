@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
@@ -233,6 +234,7 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	///     Modifies the current scheduled event.
 	/// </summary>
 	/// <param name="action">Action to perform on this thread</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="ValidationException">Thrown if the user gave an invalid input.</exception>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -241,7 +243,7 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// <exception cref="NotFoundException">Thrown when the event does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task ModifyAsync(Action<ScheduledEventEditModel> action)
+	public async Task ModifyAsync(Action<ScheduledEventEditModel> action, CancellationToken cancellationToken = default)
 	{
 		var mdl = new ScheduledEventEditModel();
 		action(mdl);
@@ -259,12 +261,14 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 		if (mdl.ScheduledEndTime.HasValue && mdl.EntityType.HasValue ? mdl.EntityType == ScheduledEventEntityType.External : this.EntityType == ScheduledEventEntityType.External)
 			scheduledEndTime = mdl.ScheduledEndTime.Value;
 
-		await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, channelId, this.EntityType == ScheduledEventEntityType.External ? new DiscordScheduledEventEntityMetadata(mdl.Location.Value) : null, mdl.Name, mdl.ScheduledStartTime, scheduledEndTime, mdl.Description, mdl.EntityType, mdl.Status, coverb64, mdl.RecurrenceRule, mdl.AuditLogReason).ConfigureAwait(false);
+		await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, channelId, this.EntityType == ScheduledEventEntityType.External ? new DiscordScheduledEventEntityMetadata(mdl.Location.Value) : null, mdl.Name, mdl.ScheduledStartTime, scheduledEndTime, mdl.Description, mdl.EntityType, mdl.Status, coverb64, mdl.RecurrenceRule, mdl.AuditLogReason, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
 	///     Starts the current scheduled event.
 	/// </summary>
+	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageEvents" /> permission.
@@ -272,13 +276,14 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// <exception cref="NotFoundException">Thrown when the event does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordScheduledEvent> StartAsync(string reason = null)
-		=> this.Status == ScheduledEventStatus.Scheduled ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Active, reason).ConfigureAwait(false) : throw new InvalidOperationException("You can only start scheduled events");
+	public async Task<DiscordScheduledEvent> StartAsync(string reason = null, CancellationToken cancellationToken = default)
+		=> this.Status == ScheduledEventStatus.Scheduled ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Active, reason, cancellationToken: cancellationToken).ConfigureAwait(false) : throw new InvalidOperationException("You can only start scheduled events");
 
 	/// <summary>
 	///     Cancels the current scheduled event.
 	/// </summary>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageEvents" /> permission.
@@ -286,13 +291,14 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// <exception cref="NotFoundException">Thrown when the event does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordScheduledEvent> CancelAsync(string reason = null)
-		=> this.Status == ScheduledEventStatus.Scheduled ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Canceled, reason).ConfigureAwait(false) : throw new InvalidOperationException("You can only cancel scheduled events");
+	public async Task<DiscordScheduledEvent> CancelAsync(string reason = null, CancellationToken cancellationToken = default)
+		=> this.Status == ScheduledEventStatus.Scheduled ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Canceled, reason, cancellationToken: cancellationToken).ConfigureAwait(false) : throw new InvalidOperationException("You can only cancel scheduled events");
 
 	/// <summary>
 	///     Ends the current scheduled event.
 	/// </summary>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageEvents" /> permission.
@@ -300,8 +306,8 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// <exception cref="NotFoundException">Thrown when the event does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordScheduledEvent> EndAsync(string reason = null)
-		=> this.Status == ScheduledEventStatus.Active ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Completed, reason).ConfigureAwait(false) : throw new InvalidOperationException("You can only stop active events");
+	public async Task<DiscordScheduledEvent> EndAsync(string reason = null, CancellationToken cancellationToken = default)
+		=> this.Status == ScheduledEventStatus.Active ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Completed, reason, cancellationToken: cancellationToken).ConfigureAwait(false) : throw new InvalidOperationException("You can only stop active events");
 
 	/// <summary>
 	///     Gets a list of users RSVP'd to the scheduled event.
@@ -310,27 +316,29 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// <param name="before">Get results of <see cref="DiscordScheduledEventUser" /> before the given snowflake.</param>
 	/// <param name="after">Get results of <see cref="DiscordScheduledEventUser" /> after the given snowflake.</param>
 	/// <param name="withMember">Whether to include guild member data.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the correct permissions.</exception>
 	/// <exception cref="NotFoundException">Thrown when the event does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<IReadOnlyDictionary<ulong, DiscordScheduledEventUser>> GetUsersAsync(int? limit = null, ulong? before = null, ulong? after = null, bool? withMember = null)
-		=> await this.Discord.ApiClient.GetGuildScheduledEventRspvUsersAsync(this.GuildId, this.Id, limit, before, after, withMember).ConfigureAwait(false);
+	public async Task<IReadOnlyDictionary<ulong, DiscordScheduledEventUser>> GetUsersAsync(int? limit = null, ulong? before = null, ulong? after = null, bool? withMember = null, CancellationToken cancellationToken = default)
+		=> await this.Discord.ApiClient.GetGuildScheduledEventRspvUsersAsync(this.GuildId, this.Id, limit, before, after, withMember, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Creates an exception for this scheduled event.
 	/// </summary>
 	/// <param name="action">Action to perform on the exception create model.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The created exception.</returns>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the correct permissions.</exception>
 	/// <exception cref="NotFoundException">Thrown when the event does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordScheduledEventException> CreateExceptionAsync(Action<ScheduledEventExceptionCreateModel> action)
+	public async Task<DiscordScheduledEventException> CreateExceptionAsync(Action<ScheduledEventExceptionCreateModel> action, CancellationToken cancellationToken = default)
 	{
 		var mdl = new ScheduledEventExceptionCreateModel();
 		action(mdl);
-		return await this.Discord.ApiClient.CreateGuildScheduledEventExceptionAsync(this.GuildId, this.Id, mdl.OriginalScheduledStartTime, mdl.ScheduledStartTime, mdl.ScheduledEndTime, mdl.IsCanceled, mdl.AuditLogReason).ConfigureAwait(false);
+		return await this.Discord.ApiClient.CreateGuildScheduledEventExceptionAsync(this.GuildId, this.Id, mdl.OriginalScheduledStartTime, mdl.ScheduledStartTime, mdl.ScheduledEndTime, mdl.IsCanceled, mdl.AuditLogReason, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -341,28 +349,31 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// <param name="before">Get users before this user id.</param>
 	/// <param name="after">Get users after this user id.</param>
 	/// <param name="withMember">Whether to include guild member data.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A map of subscribed users by user id.</returns>
 	/// <exception cref="NotFoundException">Thrown when the event exception does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<IReadOnlyDictionary<ulong, DiscordScheduledEventUser>> GetExceptionUsersAsync(ulong exceptionId, int? limit = null, ulong? before = null, ulong? after = null, bool? withMember = null)
-		=> this.Discord.ApiClient.GetGuildScheduledEventExceptionUsersAsync(this.GuildId, this.Id, exceptionId, limit, before, after, withMember);
+	public Task<IReadOnlyDictionary<ulong, DiscordScheduledEventUser>> GetExceptionUsersAsync(ulong exceptionId, int? limit = null, ulong? before = null, ulong? after = null, bool? withMember = null, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.GetGuildScheduledEventExceptionUsersAsync(this.GuildId, this.Id, exceptionId, limit, before, after, withMember, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Gets user counts for this scheduled event and optionally specific exceptions.
 	/// </summary>
 	/// <param name="exceptionIds">The exception ids to get counts for. Optional, if not provided only the count for the scheduled event will be returned.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>User counts for the scheduled event and optionally the specified exceptions.</returns>
 	/// <exception cref="NotFoundException">Thrown when the event does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordScheduledEventUserCounts> GetUserCountsAsync(IEnumerable<ulong>? exceptionIds = null)
-		=> this.Discord.ApiClient.GetGuildScheduledEventUserCountsAsync(this.GuildId, this.Id, exceptionIds);
+	public Task<DiscordScheduledEventUserCounts> GetUserCountsAsync(IEnumerable<ulong>? exceptionIds = null, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.GetGuildScheduledEventUserCountsAsync(this.GuildId, this.Id, exceptionIds, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Deletes a scheduled event.
 	/// </summary>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageEvents" /> permission.
@@ -370,8 +381,8 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// <exception cref="NotFoundException">Thrown when the event does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task DeleteAsync(string reason = null)
-		=> await this.Discord.ApiClient.DeleteGuildScheduledEventAsync(this.GuildId, this.Id, reason).ConfigureAwait(false);
+	public async Task DeleteAsync(string reason = null, CancellationToken cancellationToken = default)
+		=> await this.Discord.ApiClient.DeleteGuildScheduledEventAsync(this.GuildId, this.Id, reason, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	#endregion
 }

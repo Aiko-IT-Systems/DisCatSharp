@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -16,7 +17,7 @@ namespace DisCatSharp.Telemetry;
 /// </summary>
 internal static class TelemetryBootstrap
 {
-	private static readonly IReadOnlyDictionary<string, string> s_sourceCodeRoots = new Dictionary<string, string>(StringComparer.Ordinal)
+	private static readonly ReadOnlyDictionary<string, string> s_sourceCodeRoots = new Dictionary<string, string>(StringComparer.Ordinal)
 	{
 		["DisCatSharp"] = "DisCatSharp",
 		["DisCatSharp.ApplicationCommands"] = "DisCatSharp.ApplicationCommands",
@@ -199,10 +200,10 @@ internal static class TelemetryBootstrap
 		var isRootedPath = Path.IsPathRooted(trimmedOriginalPath)
 			|| trimmedOriginalPath.StartsWith(@"\\", StringComparison.Ordinal)
 			|| trimmedOriginalPath.StartsWith("//", StringComparison.Ordinal)
-			|| trimmedOriginalPath.Length >= 3
+			|| (trimmedOriginalPath.Length >= 3
 			&& char.IsLetter(trimmedOriginalPath[0])
 			&& trimmedOriginalPath[1] == ':'
-			&& (trimmedOriginalPath[2] == '\\' || trimmedOriginalPath[2] == '/');
+			&& (trimmedOriginalPath[2] == '\\' || trimmedOriginalPath[2] == '/'));
 
 		var normalizedPath = trimmedOriginalPath.Replace('/', '\\');
 
@@ -272,12 +273,7 @@ internal static class TelemetryBootstrap
 	///     Stable versions are treated as dev when the assembly metadata says the build did not come from CI.
 	/// </remarks>
 	internal static bool GetSentryEnvironment(string release)
-	{
-		if (IsPreRelease(release))
-			return true;
-
-		return !IsCiBuild(typeof(DiscordClient).GetTypeInfo().Assembly);
-	}
+		=> IsPreRelease(release) || !IsCiBuild(typeof(DiscordClient).GetTypeInfo().Assembly);
 
 	/// <summary>
 	///     Returns whether the current assembly was produced by a CI build.
@@ -295,10 +291,9 @@ internal static class TelemetryBootstrap
 	/// <returns>User info, or <c>null</c> if not configured or unavailable.</returns>
 	internal static DiagnosticUserInfo? BuildUserInfo(DiscordConfiguration config, Entities.DiscordUser? currentUser)
 	{
-		if (!config.Telemetry.AttachUserInfo || currentUser is null)
-			return null;
-
-		return new()
+		return !config.Telemetry.AttachUserInfo || currentUser is null
+			? null
+			: new()
 		{
 			Id = currentUser.Id.ToString(),
 			Username = currentUser.UsernameWithDiscriminator,

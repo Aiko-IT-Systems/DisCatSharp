@@ -263,8 +263,10 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 				kdv = kdv.Next;
 			}
 
+#pragma warning disable IDE0031 // Use null propagation
 			if (kdvLast is not null)
 				kdvLast.Next = new(k, hash, v);
+#pragma warning restore IDE0031 // Use null propagation
 			count++;
 		}
 

@@ -224,7 +224,7 @@ internal class ButtonPaginationRequest : IPaginationRequest
 					builder.AddComponents(new DiscordActionRowComponent(buttons));
 				}
 
-				await builder.ModifyAsync(this._message).ConfigureAwait(false);
+				await this._message.ModifyAsync(builder, cancellationToken: this._token).ConfigureAwait(false);
 				break;
 
 			case ButtonPaginationBehavior.DeleteButtons:
@@ -242,11 +242,11 @@ internal class ButtonPaginationRequest : IPaginationRequest
 					builder.AddComponents(page.ComponentsInternal);
 				}
 
-				await builder.ModifyAsync(this._message).ConfigureAwait(false);
+				await this._message.ModifyAsync(builder, cancellationToken: this._token).ConfigureAwait(false);
 				break;
 
 			case ButtonPaginationBehavior.DeleteMessage:
-				await this._message.DeleteAsync().ConfigureAwait(false);
+				await this._message.DeleteAsync(cancellationToken: this._token).ConfigureAwait(false);
 				break;
 
 			case ButtonPaginationBehavior.Ignore:

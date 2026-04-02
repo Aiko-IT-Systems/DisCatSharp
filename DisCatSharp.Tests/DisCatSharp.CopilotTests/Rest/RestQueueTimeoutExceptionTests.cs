@@ -51,6 +51,6 @@ public class RestQueueTimeoutExceptionTests
 	public void IsDisCatSharpException()
 	{
 		var ex = new RestQueueTimeoutException("GET:/test", "b1", TimeSpan.FromSeconds(1), 0, false);
-		Assert.IsAssignableFrom<DisCatSharpException>(ex);
+		Assert.IsType<DisCatSharpException>(ex, exactMatch: false);
 	}
 }

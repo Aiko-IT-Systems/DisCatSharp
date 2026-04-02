@@ -37,7 +37,6 @@ internal sealed class LibDaveEncryptor : IDaveEncryptor
 	// safe way to snapshot or atomically exchange this state, so lock(_sync) serialises all
 	// operations on the native handle.
 	private readonly Lock _sync = new();
-	private bool _isActive;
 	private uint _registeredSsrc;
 	private bool _ssrcRegistered;
 
@@ -53,7 +52,7 @@ internal sealed class LibDaveEncryptor : IDaveEncryptor
 	}
 
 	/// <inheritdoc/>
-	public bool IsActive => this._isActive;
+	public bool IsActive { get; private set; }
 
 	/// <inheritdoc/>
 	public void InstallRatchet(DaveRatchetInstaller installer)
@@ -65,7 +64,7 @@ internal sealed class LibDaveEncryptor : IDaveEncryptor
 		{
 			DaveNative.EncryptorSetKeyRatchet(this._handle, installer.NativeHandle);
 			installer.NativeHandle!.Dispose(); // libdave copied the ratchet; release our reference
-			this._isActive = true;
+			this.IsActive = true;
 		}
 	}
 
@@ -76,7 +75,7 @@ internal sealed class LibDaveEncryptor : IDaveEncryptor
 		{
 			DaveNative.EncryptorSetPassthroughMode(this._handle, passthrough);
 			if (passthrough)
-				this._isActive = false;
+				this.IsActive = false;
 		}
 	}
 
@@ -88,7 +87,7 @@ internal sealed class LibDaveEncryptor : IDaveEncryptor
 
 		lock (this._sync)
 		{
-			if (!this._isActive || frame.IsEmpty)
+			if (!this.IsActive || frame.IsEmpty)
 				return false;
 
 			var outCapacity = (nuint)(frame.Length + MaxEncryptedOverhead);

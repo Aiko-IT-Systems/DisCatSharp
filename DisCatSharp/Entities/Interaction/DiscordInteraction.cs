@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
@@ -63,8 +64,8 @@ public sealed class DiscordInteraction : SnowflakeObject
 	{
 		get
 		{
-			if (this.Discord is DiscordClient dc)
-				return dc.InternalGetCachedChannel(this.ChannelId) ?? (DiscordChannel)dc.InternalGetCachedThread(this.ChannelId) ?? (this.Guild is null
+			return this.Discord is DiscordClient dc
+				? dc.InternalGetCachedChannel(this.ChannelId) ?? (DiscordChannel)dc.InternalGetCachedThread(this.ChannelId) ?? (this.Guild is null
 					? new DiscordDmChannel
 					{
 						Id = this.ChannelId,
@@ -75,9 +76,8 @@ public sealed class DiscordInteraction : SnowflakeObject
 					{
 						Id = this.ChannelId,
 						Discord = this.Discord
-					});
-
-			return this.Guild is null
+					})
+				: this.Guild is null
 				? new DiscordDmChannel
 				{
 					Id = this.ChannelId,
@@ -171,23 +171,25 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <param name="type">The type of the response.</param>
 	/// <param name="builder">The data, if any, to send.</param>
 	/// <param name="modifyMode">The modify mode. Only useful for <see cref="InteractionResponseType.UpdateMessage"/>.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>
 	///     The created <see cref="DiscordMessage" />, or <see langword="null" /> if <paramref name="type" /> creates no
 	///     content.
 	/// </returns>
-	public async Task<DiscordInteractionCallbackResponse> CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder? builder = null, ModifyMode modifyMode = ModifyMode.Update)
+	public async Task<DiscordInteractionCallbackResponse> CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder? builder = null, ModifyMode modifyMode = ModifyMode.Update, CancellationToken cancellationToken = default)
 	{
 		if (modifyMode is ModifyMode.Replace)
 			builder.DoConditionalReplace();
-		return await this.Discord.ApiClient.CreateInteractionResponseAsync(this.Id, this.Token, type, builder);
+		return await this.Discord.ApiClient.CreateInteractionResponseAsync(this.Id, this.Token, type, builder, cancellationToken: cancellationToken);
 	}
 
 	/// <summary>
 	///     Creates a modal response to this interaction.
 	/// </summary>
 	/// <param name="builder">The data to send.</param>
-	public Task CreateInteractionModalResponseAsync(DiscordInteractionModalBuilder builder)
-		=> this.Type is not InteractionType.Ping && this.Type is not InteractionType.ModalSubmit ? this.Discord.ApiClient.CreateInteractionModalResponseAsync(this.Id, this.Token, InteractionResponseType.Modal, builder) : throw new NotSupportedException("You can't respond to a PING with a modal.");
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	public Task CreateInteractionModalResponseAsync(DiscordInteractionModalBuilder builder, CancellationToken cancellationToken = default)
+		=> this.Type is not InteractionType.Ping && this.Type is not InteractionType.ModalSubmit ? this.Discord.ApiClient.CreateInteractionModalResponseAsync(this.Id, this.Token, InteractionResponseType.Modal, builder, cancellationToken: cancellationToken) : throw new NotSupportedException("You can't respond to a PING with a modal.");
 
 	/// <summary>
 	///     Creates an iframe response to this interaction.
@@ -196,23 +198,26 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <param name="title">The title of the iframe.</param>
 	/// <param name="modalSize">The size of the iframe.</param>
 	/// <param name="iFramePath">The path of the iframe. Uses %application_id%.discordsays.com/<c>:iframe_path</c>.</param>
-	public Task CreateInteractionIframeResponseAsync(string customId, string title, IframeModalSize modalSize = IframeModalSize.Normal, string? iFramePath = null)
-		=> this.Type is not InteractionType.Ping ? this.Discord.ApiClient.CreateInteractionIframeResponseAsync(this.Id, this.Token, InteractionResponseType.Iframe, customId, title, modalSize, iFramePath) : throw new NotSupportedException("You can't respond to a PING with an iframe.");
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	public Task CreateInteractionIframeResponseAsync(string customId, string title, IframeModalSize modalSize = IframeModalSize.Normal, string? iFramePath = null, CancellationToken cancellationToken = default)
+		=> this.Type is not InteractionType.Ping ? this.Discord.ApiClient.CreateInteractionIframeResponseAsync(this.Id, this.Token, InteractionResponseType.Iframe, customId, title, modalSize, iFramePath, cancellationToken: cancellationToken) : throw new NotSupportedException("You can't respond to a PING with an iframe.");
 
 	/// <summary>
 	///     Gets the original interaction response.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The original message that was sent. This <b>does not work on ephemeral messages.</b></returns>
-	public Task<DiscordMessage> GetOriginalResponseAsync()
-		=> this.Discord.ApiClient.GetOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token);
+	public Task<DiscordMessage> GetOriginalResponseAsync(CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.GetOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Edits the original interaction response.
 	/// </summary>
 	/// <param name="builder">The webhook builder.</param>
 	/// <param name="modifyMode">The modify mode.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The edited <see cref="DiscordMessage" />.</returns>
-	public async Task<DiscordMessage> EditOriginalResponseAsync(DiscordWebhookBuilder builder, ModifyMode modifyMode = ModifyMode.Update)
+	public async Task<DiscordMessage> EditOriginalResponseAsync(DiscordWebhookBuilder builder, ModifyMode modifyMode = ModifyMode.Update, CancellationToken cancellationToken = default)
 	{
 		if (modifyMode is ModifyMode.Replace)
 			builder.DoConditionalReplace();
@@ -221,7 +226,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 		builder.Validate(isInteractionResponse: true);
 		if (builder.KeepAttachmentsInternal.HasValue && builder.KeepAttachmentsInternal.Value)
 		{
-			var attachments = this.Discord.ApiClient.GetOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token).Result.Attachments;
+			var attachments = this.Discord.ApiClient.GetOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token, cancellationToken: cancellationToken).Result.Attachments;
 			if (attachments?.Count > 0)
 			{
 				builder.AttachmentsInternal ??= [];
@@ -231,34 +236,37 @@ public sealed class DiscordInteraction : SnowflakeObject
 		else if (builder.KeepAttachmentsInternal.HasValue)
 			builder.AttachmentsInternal?.Clear();
 
-		return await this.Discord.ApiClient.EditOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token, builder).ConfigureAwait(false);
+		return await this.Discord.ApiClient.EditOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token, builder, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
 	///     Deletes the original interaction response.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// >
-	public Task DeleteOriginalResponseAsync()
-		=> this.Discord.ApiClient.DeleteOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token);
+	public Task DeleteOriginalResponseAsync(CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.DeleteOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Creates a follow-up message to this interaction.
 	/// </summary>
 	/// <param name="builder">The webhook builder.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The created <see cref="DiscordMessage" />.</returns>
-	public async Task<DiscordMessage> CreateFollowupMessageAsync(DiscordFollowupMessageBuilder builder)
+	public async Task<DiscordMessage> CreateFollowupMessageAsync(DiscordFollowupMessageBuilder builder, CancellationToken cancellationToken = default)
 	{
 		builder.Validate();
 
-		return await this.Discord.ApiClient.CreateFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, builder).ConfigureAwait(false);
+		return await this.Discord.ApiClient.CreateFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, builder, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
 	///     Gets a follow-up message.
 	/// </summary>
 	/// <param name="messageId">The id of the follow-up message.</param>
-	public Task<DiscordMessage> GetFollowupMessageAsync(ulong messageId)
-		=> this.Discord.ApiClient.GetFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId);
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	public Task<DiscordMessage> GetFollowupMessageAsync(ulong messageId, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.GetFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Edits a follow-up message.
@@ -266,16 +274,17 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <param name="messageId">The id of the follow-up message.</param>
 	/// <param name="builder">The webhook builder.</param>
 	/// <param name="modifyMode">The modify mode.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The edited <see cref="DiscordMessage" />.</returns>
-	public async Task<DiscordMessage> EditFollowupMessageAsync(ulong messageId, DiscordWebhookBuilder builder, ModifyMode modifyMode = ModifyMode.Update)
+	public async Task<DiscordMessage> EditFollowupMessageAsync(ulong messageId, DiscordWebhookBuilder builder, ModifyMode modifyMode = ModifyMode.Update, CancellationToken cancellationToken = default)
 	{
 		if (modifyMode is ModifyMode.Replace)
 			builder.DoConditionalReplace();
-		builder.MentionsInternal ??= this.GetFollowupMessageAsync(messageId).Result.GetMentions();
+		builder.MentionsInternal ??= this.GetFollowupMessageAsync(messageId, cancellationToken).Result.GetMentions();
 		builder.Validate(isFollowup: true);
 		if (builder.KeepAttachmentsInternal.HasValue && builder.KeepAttachmentsInternal.Value)
 		{
-			var attachments = this.Discord.ApiClient.GetFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId).Result.Attachments;
+			var attachments = this.Discord.ApiClient.GetFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId, cancellationToken: cancellationToken).Result.Attachments;
 			if (attachments?.Count > 0)
 			{
 				builder.AttachmentsInternal ??= [];
@@ -285,13 +294,14 @@ public sealed class DiscordInteraction : SnowflakeObject
 		else if (builder.KeepAttachmentsInternal.HasValue)
 			builder.AttachmentsInternal?.Clear();
 
-		return await this.Discord.ApiClient.EditFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId, builder).ConfigureAwait(false);
+		return await this.Discord.ApiClient.EditFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId, builder, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
 	///     Deletes a follow-up message.
 	/// </summary>
 	/// <param name="messageId">The id of the follow-up message.</param>
-	public Task DeleteFollowupMessageAsync(ulong messageId)
-		=> this.Discord.ApiClient.DeleteFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId);
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	public Task DeleteFollowupMessageAsync(ulong messageId, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.DeleteFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId, cancellationToken: cancellationToken);
 }

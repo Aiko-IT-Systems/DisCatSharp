@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 using ConcurrentCollections;
@@ -287,7 +288,7 @@ internal class Paginator : IPaginator
 		if (page.Embed is not null)
 			builder.AddEmbed(page.Embed);
 
-		await builder.ModifyAsync(msg).ConfigureAwait(false);
+		await msg.ModifyAsync(builder).ConfigureAwait(false);
 	}
 
 	/// <inheritdoc />

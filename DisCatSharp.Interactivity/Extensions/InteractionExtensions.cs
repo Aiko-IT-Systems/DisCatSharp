@@ -44,7 +44,7 @@ public static class InteractionExtensions
 	///     <para>
 	///         <b>
 	///             After the last modal, this method automatically responds with the thinking state. Use
-	///             <see cref="DiscordInteraction.EditOriginalResponseAsync(DiscordWebhookBuilder, DisCatSharp.Enums.Core.ModifyMode)" /> to interact with the
+	///             <see cref="DiscordInteraction.EditOriginalResponseAsync(DiscordWebhookBuilder, DisCatSharp.Enums.Core.ModifyMode, CancellationToken)" /> to interact with the
 	///             response.
 	///         </b>
 	///     </para>

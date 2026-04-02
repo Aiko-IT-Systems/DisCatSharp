@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
@@ -221,6 +222,6 @@ internal class ComponentPaginator : IPaginator
 			msgBuilder.AddComponents(new DiscordActionRowComponent(bts));
 		}
 
-		await msgBuilder.ModifyAsync(msg).ConfigureAwait(false);
+		await msg.ModifyAsync(msgBuilder).ConfigureAwait(false);
 	}
 }

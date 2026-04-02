@@ -478,10 +478,10 @@ public class StoreGatewayDispatchFollowupRegressionTests
 		public bool IsEnabled => true;
 
 		public void CaptureException(string source, Exception exception, IDictionary<string, object>? context = null, IDictionary<string, string>? tags = null)
-			=> this._exceptionSource.TrySetResult(new(source, exception, context is null ? new Dictionary<string, object>() : new(context), tags is null ? new Dictionary<string, string>() : new(tags)));
+			=> this._exceptionSource.TrySetResult(new(source, exception, context is null ? [] : new(context), tags is null ? [] : new(tags)));
 
 		public void CaptureReport(DiagnosticReport report)
-			=> this._reportSource.TrySetResult(new(report.Source, report.Severity, report.Logger, report.Message, report.Extra is null ? new Dictionary<string, object>() : new(report.Extra), report.Tags is null ? new Dictionary<string, string>() : new(report.Tags)));
+			=> this._reportSource.TrySetResult(new(report.Source, report.Severity, report.Logger, report.Message, report.Extra is null ? [] : new(report.Extra), report.Tags is null ? [] : new(report.Tags)));
 
 		public void StartSession()
 		{ }

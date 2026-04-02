@@ -1269,10 +1269,11 @@ public sealed partial class DiscordClient
 	///     Refreshes the channels.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
-	internal async Task RefreshChannelsAsync(ulong guildId)
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	internal async Task RefreshChannelsAsync(ulong guildId, CancellationToken cancellationToken = default)
 	{
 		var guild = this.InternalGetCachedGuild(guildId);
-		var channels = await this.ApiClient.GetGuildChannelsAsync(guildId).ConfigureAwait(false);
+		var channels = await this.ApiClient.GetGuildChannelsAsync(guildId, cancellationToken: cancellationToken).ConfigureAwait(false);
 		guild.ChannelsInternal.Clear();
 		foreach (var channel in channels.ToList())
 		{
@@ -1432,7 +1433,7 @@ public sealed partial class DiscordClient
 		{
 			xse.Discord = this;
 			xse.GuildId = guild.Id;
-			if (xse.Creator != null)
+			if (xse.Creator is not null)
 				xse.Creator.Discord = this;
 		}
 
@@ -1440,7 +1441,7 @@ public sealed partial class DiscordClient
 		{
 			xse.Discord = this;
 			xse.GuildId = guild.Id;
-			if (xse.TransportUser != null)
+			if (xse.TransportUser is not null)
 				xse.User = new(xse.TransportUser)
 				{
 					Discord = this
@@ -2563,7 +2564,7 @@ public sealed partial class DiscordClient
 		var avOld = old.AvatarHash;
 		var nickOld = mbr.Nickname;
 		var pendingOld = mbr.IsPending;
-		var rolesOld = new ReadOnlyCollection<DiscordRole>(new List<DiscordRole>(mbr.Roles));
+		var rolesOld = new ReadOnlyCollection<DiscordRole>([.. mbr.Roles]);
 		var cduOld = mbr.CommunicationDisabledUntil;
 		var udauOld = mbr.UnusualDmActivityUntil;
 		mbr.MemberFlags = member.MemberFlags;
@@ -2619,7 +2620,7 @@ public sealed partial class DiscordClient
 			Guild = guild,
 			Member = mbr,
 			NicknameAfter = mbr.Nickname,
-			RolesAfter = new ReadOnlyCollection<DiscordRole>(new List<DiscordRole>(mbr.Roles)),
+			RolesAfter = new ReadOnlyCollection<DiscordRole>([.. mbr.Roles]),
 			PendingAfter = mbr.IsPending,
 			TimeoutAfter = mbr.CommunicationDisabledUntil,
 			AvatarHashAfter = mbr.AvatarHash,
@@ -4014,13 +4015,14 @@ public sealed partial class DiscordClient
 	///     Handles the thread member update event.
 	/// </summary>
 	/// <param name="member">The updated member.</param>
-	internal async Task OnThreadMemberUpdateEventAsync(DiscordThreadChannelMember member)
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	internal async Task OnThreadMemberUpdateEventAsync(DiscordThreadChannelMember member, CancellationToken cancellationToken = default)
 	{
 		member.Discord = this;
 		var thread = this.InternalGetCachedThread(member.Id);
 		if (thread == null)
 		{
-			var tempThread = await this.ApiClient.GetThreadAsync(member.Id).ConfigureAwait(false);
+			var tempThread = await this.ApiClient.GetThreadAsync(member.Id, cancellationToken: cancellationToken).ConfigureAwait(false);
 			if (!this.GuildsInternal.TryGetValue(member.GuildId, out var tmGuild))
 			{
 				this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received thread_member_update for unknown guild {GuildId}, skipping.", member.GuildId);
@@ -4048,12 +4050,13 @@ public sealed partial class DiscordClient
 	/// <param name="membersAdded">The added members.</param>
 	/// <param name="membersRemoved">The ids of the removed members.</param>
 	/// <param name="memberCount">The new member count.</param>
-	internal async Task OnThreadMembersUpdateEventAsync(DiscordGuild guild, ulong threadId, JArray membersAdded, JArray membersRemoved, int memberCount)
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	internal async Task OnThreadMembersUpdateEventAsync(DiscordGuild guild, ulong threadId, JArray membersAdded, JArray membersRemoved, int memberCount, CancellationToken cancellationToken = default)
 	{
 		var thread = this.InternalGetCachedThread(threadId);
 		if (thread == null)
 		{
-			var tempThread = await this.ApiClient.GetThreadAsync(threadId).ConfigureAwait(false);
+			var tempThread = await this.ApiClient.GetThreadAsync(threadId, cancellationToken: cancellationToken).ConfigureAwait(false);
 			thread = guild.ThreadsInternal.AddOrUpdate(threadId, tempThread, (old, newThread) => newThread);
 		}
 

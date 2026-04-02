@@ -1,3 +1,4 @@
+﻿using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Exceptions;
@@ -27,19 +28,21 @@ public sealed class DiscordApplicationEmoji : DiscordEmoji
 	///     Modifies this emoji.
 	/// </summary>
 	/// <param name="name">New name for this emoji.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The modified emoji.</returns>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordApplicationEmoji> ModifyAsync(string name)
-		=> this.Discord.ApiClient.ModifyApplicationEmojiAsync(this.Discord.CurrentApplication.Id, this.Id, name);
+	public Task<DiscordApplicationEmoji> ModifyAsync(string name, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.ModifyApplicationEmojiAsync(this.Discord.CurrentApplication.Id, this.Id, name, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Deletes this emoji.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task DeleteAsync()
-		=> this.Discord.ApiClient.DeleteApplicationEmojiAsync(this.Discord.CurrentApplication.Id, this.Id);
+	public Task DeleteAsync(CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.DeleteApplicationEmojiAsync(this.Discord.CurrentApplication.Id, this.Id, cancellationToken: cancellationToken);
 }

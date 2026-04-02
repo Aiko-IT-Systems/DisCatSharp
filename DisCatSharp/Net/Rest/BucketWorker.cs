@@ -51,13 +51,9 @@ internal sealed class BucketWorker : IDisposable
 		this._queue = config.MaxQueueDepthPerBucket > 0
 			? Channel.CreateBounded<BaseRestRequest>(new BoundedChannelOptions(config.MaxQueueDepthPerBucket)
 			{
-				SingleReader = true,
 				FullMode = BoundedChannelFullMode.Wait
 			})
-			: Channel.CreateUnbounded<BaseRestRequest>(new()
-			{
-				SingleReader = true
-			});
+			: Channel.CreateUnbounded<BaseRestRequest>();
 	}
 
 	/// <summary>
@@ -125,6 +121,7 @@ internal sealed class BucketWorker : IDisposable
 		if (this._disposed)
 		{
 			request.TrySetFaulted(new ObjectDisposedException(nameof(BucketWorker), "Bucket worker has been disposed."));
+			request.CancellationTokenSource.Dispose();
 			return;
 		}
 
@@ -139,6 +136,7 @@ internal sealed class BucketWorker : IDisposable
 					this._bucket.BucketId,
 					this._consecutiveFailures,
 					this._circuitOpenSince));
+				request.CancellationTokenSource.Dispose();
 				return;
 			}
 
@@ -162,6 +160,7 @@ internal sealed class BucketWorker : IDisposable
 				request.TrySetFaulted(new ObjectDisposedException(nameof(BucketWorker), "Bucket worker queue is closed."));
 			}
 
+			request.CancellationTokenSource.Dispose();
 			return;
 		}
 
@@ -243,7 +242,10 @@ internal sealed class BucketWorker : IDisposable
 			if (target.EnqueueDirect(request))
 				migrated++;
 			else
+			{
 				request.TrySetFaulted(new ObjectDisposedException(nameof(BucketWorker), "Target worker queue is closed during migration."));
+				request.CancellationTokenSource.Dispose();
+			}
 		}
 
 		return migrated;
@@ -274,36 +276,45 @@ internal sealed class BucketWorker : IDisposable
 					return;
 				}
 
-				// Best-effort pre-execution cancellation
-				if (request.CancellationTokenSource.IsCancellationRequested)
+				try
 				{
-					request.TrySetFaulted(new OperationCanceledException("Request was cancelled before execution."));
-					Interlocked.Increment(ref this.Cancelled);
-					continue;
-				}
-
-				// Queue timeout check — fail requests that have been waiting too long
-				if (this._config.QueueTimeout > TimeSpan.Zero)
-				{
-					var waited = DateTimeOffset.UtcNow - request.EnqueuedAt;
-
-					if (waited >= this._config.QueueTimeout)
+					// Best-effort pre-execution cancellation
+					if (request.CancellationTokenSource.IsCancellationRequested)
 					{
-						Interlocked.Increment(ref this.TimedOut);
-						var ex = new RestQueueTimeoutException(
-							request.Route,
-							this._bucket.BucketId,
-							waited,
-							this.QueueLength,
-							this._client.IsGlobalGateBlocked
-						);
-						this._logger.LogError(LoggerEvents.RestQueueTimeout, ex, "Request to {Url} timed out in queue after {Duration:F1}s", request.Url.AbsoluteUri, waited.TotalSeconds);
-						request.TrySetFaulted(ex);
+						request.TrySetFaulted(new OperationCanceledException("Request was cancelled before execution."));
+						Interlocked.Increment(ref this.Cancelled);
 						continue;
 					}
-				}
 
-				await this.ExecuteAsync(request, ct);
+					// Queue timeout check — fail requests that have been waiting too long
+					if (this._config.QueueTimeout > TimeSpan.Zero)
+					{
+						var waited = DateTimeOffset.UtcNow - request.EnqueuedAt;
+
+						if (waited >= this._config.QueueTimeout)
+						{
+							Interlocked.Increment(ref this.TimedOut);
+							var ex = new RestQueueTimeoutException(
+								request.Route,
+								this._bucket.BucketId,
+								waited,
+								this.QueueLength,
+								this._client.IsGlobalGateBlocked
+							);
+							this._logger.LogError(LoggerEvents.RestQueueTimeout, ex, "Request to {Url} timed out in queue after {Duration:F1}s", request.Url.AbsoluteUri, waited.TotalSeconds);
+							request.TrySetFaulted(ex);
+							continue;
+						}
+					}
+
+					await this.ExecuteAsync(request, ct);
+				}
+				finally
+				{
+					// Dispose the per-request linked CTS to release callback registrations
+					// from long-lived caller tokens and avoid memory leaks.
+					request.CancellationTokenSource.Dispose();
+				}
 			}
 		}
 		catch (OperationCanceledException) when (ct.IsCancellationRequested)
@@ -334,6 +345,10 @@ internal sealed class BucketWorker : IDisposable
 		var maxRetries = this._config.MaxRetries;
 		var warnEmitted = false;
 
+		// Combine worker shutdown token with request-level cancellation token
+		using var linked = CancellationTokenSource.CreateLinkedTokenSource(ct, request.CancellationTokenSource.Token);
+		var effectiveCt = linked.Token;
+
 		while (true)
 		{
 			ct.ThrowIfCancellationRequested();
@@ -360,7 +375,7 @@ internal sealed class BucketWorker : IDisposable
 			try
 			{
 				// 1. Wait for the global rate limit gate to open (cancellable to avoid deadlock on dispose)
-				await this._client.WaitForGlobalGateAsync(ct);
+				await this._client.WaitForGlobalGateAsync(effectiveCt);
 
 				// 2. Per-bucket preemptive rate limiting (skip for unprobed buckets)
 				if (this._bucket.LimitValid)
@@ -386,7 +401,7 @@ internal sealed class BucketWorker : IDisposable
 								delay = TimeSpan.FromMilliseconds(100);
 
 							this._logger.LogWarning(LoggerEvents.RatelimitPreemptive, "Preemptive ratelimit for {Bucket} — waiting {Delay:c}", this._bucket, delay);
-							await Task.Delay(delay, ct);
+							await Task.Delay(delay, effectiveCt);
 						}
 
 						continue; // Re-check after waiting
@@ -401,7 +416,7 @@ internal sealed class BucketWorker : IDisposable
 
 				// 3. Build, send, parse response, update bucket headers
 				var isProbe = !this._bucket.LimitValid;
-				var result = await this._client.SendAndParseAsync(request, this._bucket, isProbe);
+				var result = await this._client.SendAndParseAsync(request, isProbe, effectiveCt);
 
 				// 4. Handle retry on 429, 5xx, or transient network errors
 				if (result.ShouldRetry && retries < maxRetries)
@@ -412,7 +427,7 @@ internal sealed class BucketWorker : IDisposable
 					if (result.IsGlobalRateLimit)
 					{
 						this._logger.LogError(LoggerEvents.RatelimitHit, "Global ratelimit hit, cooling down for {Url}", request.Url.AbsoluteUri);
-						await this._client.EnforceGlobalRateLimitAsync(result.RetryDelay, ct);
+						await this._client.EnforceGlobalRateLimitAsync(result.RetryDelay, effectiveCt);
 					}
 					else if (result.IsTransientNetworkError)
 					{
@@ -420,7 +435,7 @@ internal sealed class BucketWorker : IDisposable
 						var backoff = TimeSpan.FromSeconds(Math.Pow(2, retries - 1));
 						this._logger.LogWarning(LoggerEvents.RestError, "Transient network error, retrying {Url} after {Delay:F1}s (attempt {Retry}/{Max})",
 							request.Url.AbsoluteUri, backoff.TotalSeconds, retries, maxRetries);
-						await Task.Delay(backoff, ct);
+						await Task.Delay(backoff, effectiveCt);
 					}
 					else if (result.IsServerError)
 					{
@@ -428,7 +443,7 @@ internal sealed class BucketWorker : IDisposable
 						var backoff = TimeSpan.FromSeconds(Math.Pow(2, retries - 1));
 						this._logger.LogWarning(LoggerEvents.RestError, "Server error ({Status}), retrying {Url} after {Delay:F1}s (attempt {Retry}/{Max})",
 							result.Response.ResponseCode, request.Url.AbsoluteUri, backoff.TotalSeconds, retries, maxRetries);
-						await Task.Delay(backoff, ct);
+						await Task.Delay(backoff, effectiveCt);
 					}
 					else
 					{
@@ -436,7 +451,7 @@ internal sealed class BucketWorker : IDisposable
 						await this._client.RaiseRateLimitHitAsync(request, result.Error as RateLimitException);
 
 						if (result.RetryDelay > TimeSpan.Zero)
-							await Task.Delay(result.RetryDelay, ct);
+							await Task.Delay(result.RetryDelay, effectiveCt);
 					}
 
 					continue; // Retry
@@ -462,6 +477,12 @@ internal sealed class BucketWorker : IDisposable
 			{
 				request.TrySetFaulted(new OperationCanceledException("Bucket worker was disposed during request processing."));
 				throw;
+			}
+			catch (OperationCanceledException) when (request.CancellationTokenSource.IsCancellationRequested)
+			{
+				request.TrySetFaulted(new OperationCanceledException("Request was cancelled during processing."));
+				Interlocked.Increment(ref this.Cancelled);
+				return;
 			}
 			catch (Exception ex)
 			{
@@ -522,7 +543,10 @@ internal sealed class BucketWorker : IDisposable
 
 		// Drain remaining queued requests and fail them explicitly — no silent loss
 		while (this._queue.Reader.TryRead(out var request))
+		{
 			request.TrySetFaulted(new ObjectDisposedException(nameof(BucketWorker), "Bucket worker was disposed with pending requests."));
+			request.CancellationTokenSource.Dispose();
+		}
 
 		this._cts.Dispose();
 	}

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
@@ -399,6 +400,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	///     Sends a message to this channel.
 	/// </summary>
 	/// <param name="content">Content of the message to send.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -408,15 +410,16 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> SendMessageAsync(string content) =>
+	public Task<DiscordMessage> SendMessageAsync(string content, CancellationToken cancellationToken = default) =>
 		!this.IsWritable()
 			? throw new ArgumentException("Cannot send a text message to a non-text channel.")
-			: this.Discord.ApiClient.CreateMessageAsync(this.Id, content, null, null, null, false, false);
+			: this.Discord.ApiClient.CreateMessageAsync(this.Id, content, null, null, null, false, false, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Sends a message to this channel.
 	/// </summary>
 	/// <param name="embed">Embed to attach to the message.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -425,18 +428,19 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> SendMessageAsync(DiscordEmbed embed) =>
+	public Task<DiscordMessage> SendMessageAsync(DiscordEmbed embed, CancellationToken cancellationToken = default) =>
 		!this.IsWritable()
 			? throw new ArgumentException("Cannot send a text message to a non-text channel.")
 			: this.Discord.ApiClient.CreateMessageAsync(this.Id, null, embed != null
 				? new[] { embed }
-				: null, null, null, false, false);
+				: null, null, null, false, false, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Sends a message to this channel.
 	/// </summary>
 	/// <param name="embed">Embed to attach to the message.</param>
 	/// <param name="content">Content of the message to send.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -447,17 +451,18 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public
-		Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed) =>
+		Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed, CancellationToken cancellationToken = default) =>
 		!this.IsWritable()
 			? throw new ArgumentException("Cannot send a text message to a non-text channel.")
 			: this.Discord.ApiClient.CreateMessageAsync(this.Id, content, embed != null
 				? new[] { embed }
-				: null, null, null, false, false);
+				: null, null, null, false, false, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Sends a message to this channel.
 	/// </summary>
 	/// <param name="builder">The builder with all the items to send.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -468,13 +473,14 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public
-		Task<DiscordMessage> SendMessageAsync(DiscordMessageBuilder builder)
-		=> this.Discord.ApiClient.CreateMessageAsync(this.Id, builder);
+		Task<DiscordMessage> SendMessageAsync(DiscordMessageBuilder builder, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.CreateMessageAsync(this.Id, builder, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Sends a message to this channel.
 	/// </summary>
 	/// <param name="action">The builder with all the items to send.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -484,14 +490,14 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> SendMessageAsync(Action<DiscordMessageBuilder> action)
+	public Task<DiscordMessage> SendMessageAsync(Action<DiscordMessageBuilder> action, CancellationToken cancellationToken = default)
 	{
 		var builder = new DiscordMessageBuilder();
 		action(builder);
 
 		return !this.IsWritable()
 			? throw new ArgumentException("Cannot send a text message to a non-text channel.")
-			: this.Discord.ApiClient.CreateMessageAsync(this.Id, builder);
+			: this.Discord.ApiClient.CreateMessageAsync(this.Id, builder, cancellationToken: cancellationToken);
 	}
 
 	/// <summary>
@@ -517,6 +523,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	///     Deletes a guild channel
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageChannels" /> permission.
@@ -524,8 +531,8 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task DeleteAsync(string reason = null)
-		=> this.Discord.ApiClient.DeleteChannelAsync(this.Id, reason);
+	public Task DeleteAsync(string reason = null, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.DeleteChannelAsync(this.Id, reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Clones this channel. This operation will create a channel with identical settings to this one. Note that this will
@@ -572,6 +579,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="id">The id of the message</param>
 	/// <param name="fetch">Whether to bypass the cache. Defaults to false.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ReadMessageHistory" /> permission.
@@ -579,30 +587,31 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordMessage> GetMessageAsync(ulong id, bool fetch = false) =>
+	public async Task<DiscordMessage> GetMessageAsync(ulong id, bool fetch = false, CancellationToken cancellationToken = default) =>
 		this.Discord.Configuration.Cache.MessageCacheSize > 0
 		&& !fetch
 		&& this.Discord is DiscordClient { MessageCache: not null } dc
 		&& dc.MessageCache.TryGet(xm => xm.Id == id && xm.ChannelId == this.Id, out var msg)
 			? msg
-			: await this.Discord.ApiClient.GetMessageAsync(this.Id, id).ConfigureAwait(false);
+			: await this.Discord.ApiClient.GetMessageAsync(this.Id, id, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Tries to get a specific message.
 	/// </summary>
 	/// <param name="id">The id of the message</param>
 	/// <param name="fetch">Whether to bypass the cache. Defaults to true.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ReadMessageHistory" /> permission.
 	/// </exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordMessage?> TryGetMessageAsync(ulong id, bool fetch = true)
+	public async Task<DiscordMessage?> TryGetMessageAsync(ulong id, bool fetch = true, CancellationToken cancellationToken = default)
 	{
 		try
 		{
-			return await this.GetMessageAsync(id, fetch).ConfigureAwait(false);
+			return await this.GetMessageAsync(id, fetch, cancellationToken: cancellationToken).ConfigureAwait(false);
 		}
 		catch (NotFoundException)
 		{
@@ -614,6 +623,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	///     Modifies the current channel.
 	/// </summary>
 	/// <param name="action">Action to perform on this channel</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageChannels" />.
@@ -625,7 +635,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task ModifyAsync(Action<ChannelEditModel> action)
+	public Task ModifyAsync(Action<ChannelEditModel> action, CancellationToken cancellationToken = default)
 	{
 		if (this.Type == ChannelType.Forum)
 			throw new NotSupportedException("Cannot execute this request on a forum channel.");
@@ -635,13 +645,14 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 
 		return this.Discord.ApiClient.ModifyChannelAsync(this.Id, mdl.Name, mdl.Position, mdl.Topic, mdl.Nsfw,
 			mdl.Parent.Map(p => p?.Id), mdl.Bitrate, mdl.UserLimit, mdl.PerUserRateLimit, mdl.RtcRegion.Map(r => r?.Id),
-			mdl.QualityMode, mdl.ForumLayout, mdl.DefaultAutoArchiveDuration, mdl.Type, mdl.PermissionOverwrites, mdl.Flags, mdl.AuditLogReason);
+			mdl.QualityMode, mdl.ForumLayout, mdl.DefaultAutoArchiveDuration, mdl.Type, mdl.PermissionOverwrites, mdl.Flags, mdl.AuditLogReason, cancellationToken: cancellationToken);
 	}
 
 	/// <summary>
 	///     Modifies the current forum channel.
 	/// </summary>
 	/// <param name="action">Action to perform on this channel</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageChannels" />.
@@ -653,7 +664,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task ModifyForumAsync(Action<ForumChannelEditModel> action)
+	public Task ModifyForumAsync(Action<ForumChannelEditModel> action, CancellationToken cancellationToken = default)
 	{
 		if (this.Type != ChannelType.Forum)
 			throw new NotSupportedException("Cannot execute this request on a non-forum channel.");
@@ -665,7 +676,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 			? throw new NotSupportedException("Cannot have more than 20 tags in a forum channel.")
 			: (Task)this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, mdl.Name, mdl.Position, mdl.Topic, mdl.Template, mdl.Nsfw,
 				mdl.Parent.Map(p => p?.Id), mdl.AvailableTags, mdl.DefaultReactionEmoji, mdl.PerUserRateLimit, mdl.PostCreateUserRateLimit,
-				mdl.DefaultSortOrder, mdl.DefaultForumLayout, mdl.DefaultAutoArchiveDuration, mdl.DefaultTagSetting, mdl.PermissionOverwrites, mdl.Flags, mdl.AuditLogReason);
+				mdl.DefaultSortOrder, mdl.DefaultForumLayout, mdl.DefaultAutoArchiveDuration, mdl.DefaultTagSetting, mdl.PermissionOverwrites, mdl.Flags, mdl.AuditLogReason, cancellationToken: cancellationToken);
 	}
 
 	/// <summary>
@@ -676,6 +687,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="position">Position the channel should be moved to.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageChannels" /> permission.
@@ -683,7 +695,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task ModifyPositionAsync(int position, string reason = null)
+	public Task ModifyPositionAsync(int position, string reason = null, CancellationToken cancellationToken = default)
 	{
 		if (this.Guild == null)
 			throw new ArgumentException("Cannot modify order of non-guild channels.");
@@ -703,7 +715,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 						: x.Position
 			});
 
-		return this.Discord.ApiClient.ModifyGuildChannelPositionAsync(this.Guild.Id, pmds, reason);
+		return this.Discord.ApiClient.ModifyGuildChannelPositionAsync(this.Guild.Id, pmds, reason, cancellationToken: cancellationToken);
 	}
 
 	/// <summary>
@@ -714,6 +726,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="position">The position.</param>
 	/// <param name="reason">The reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageChannels" /> permission.
@@ -723,14 +736,14 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="IndexOutOfRangeException">Thrown when <paramref name="position" /> is out of range.</exception>
 	/// <exception cref="ArgumentException">Thrown when function is called on a channel without a parent channel.</exception>
-	public async Task ModifyPositionInCategoryAsync(int position, string reason = null)
+	public async Task ModifyPositionInCategoryAsync(int position, string reason = null, CancellationToken cancellationToken = default)
 	{
 		if (!this.IsMovableInParent())
 			throw new NotSupportedException("You can't move this type of channel in categories.");
 
 		var isUp = position > this.Position;
 
-		var channels = await this.InternalRefreshChannelsAsync().ConfigureAwait(false);
+		var channels = await this.InternalRefreshChannelsAsync(cancellationToken).ConfigureAwait(false);
 
 		var chns = this.ParentId != null
 			? this.Type == ChannelType.Text || this.Type == ChannelType.News
@@ -765,15 +778,15 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 			}
 		);
 
-		await this.Discord.ApiClient.ModifyGuildChannelPositionAsync(this.Guild.Id, pmds, reason).ConfigureAwait(false);
+		await this.Discord.ApiClient.ModifyGuildChannelPositionAsync(this.Guild.Id, pmds, reason, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
 	///     Internally refreshes the channel list.
 	/// </summary>
-	private async Task<IReadOnlyList<DiscordChannel>> InternalRefreshChannelsAsync()
+	private async Task<IReadOnlyList<DiscordChannel>> InternalRefreshChannelsAsync(CancellationToken cancellationToken = default)
 	{
-		await this.RefreshPositionsAsync().ConfigureAwait(false);
+		await this.RefreshPositionsAsync(cancellationToken).ConfigureAwait(false);
 		return this.Guild.Channels.Values.ToList().AsReadOnly();
 	}
 
@@ -798,9 +811,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <summary>
 	///     Refreshes the positions.
 	/// </summary>
-	public async Task RefreshPositionsAsync()
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	public async Task RefreshPositionsAsync(CancellationToken cancellationToken = default)
 	{
-		var channels = await this.Discord.ApiClient.GetGuildChannelsAsync(this.Guild.Id).ConfigureAwait(false);
+		var channels = await this.Discord.ApiClient.GetGuildChannelsAsync(this.Guild.Id, cancellationToken: cancellationToken).ConfigureAwait(false);
 		this.Guild.ChannelsInternal.Clear();
 		foreach (var channel in channels.ToList())
 		{
@@ -819,6 +833,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="mode">The mode. Valid: '+' or 'down' to move a channel down | '-' or 'up' to move a channel up</param>
 	/// <param name="position">The position.</param>
 	/// <param name="reason">The reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageChannels" /> permission.
@@ -831,7 +846,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	///     Thrown when function is called on a channel without a parent channel, a wrong mode
 	///     is given or given position is zero.
 	/// </exception>
-	public Task ModifyPositionInCategorySmartAsync(string mode, int position, string reason = null)
+	public Task ModifyPositionInCategorySmartAsync(string mode, int position, string reason = null, CancellationToken cancellationToken = default)
 	{
 		if (!this.IsMovableInParent())
 			throw new NotSupportedException("You can't move this type of channel in categories.");
@@ -843,11 +858,11 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		var negative = mode == "-" || mode == "negative" || mode == "up";
 		return positive
 			? position < this.GetMaxPosition()
-				? this.ModifyPositionInCategoryAsync(this.Position + position, reason)
+				? this.ModifyPositionInCategoryAsync(this.Position + position, reason, cancellationToken: cancellationToken)
 				: throw new IndexOutOfRangeException("Position is not in range of category.")
 			: negative
 				? position > this.GetMinPosition()
-					? this.ModifyPositionInCategoryAsync(this.Position - position, reason)
+					? this.ModifyPositionInCategoryAsync(this.Position - position, reason, cancellationToken: cancellationToken)
 					: throw new IndexOutOfRangeException("Position is not in range of category.")
 				: throw new ArgumentException("You can only modify with +X or -X. 0 is not valid.");
 	}
@@ -855,9 +870,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <summary>
 	///     Updates the channel parent, moving the channel to the bottom of the new category.
 	/// </summary>
-	/// <param name="newParent">New parent for channel. Use <see cref="RemoveParentAsync(string)" /> to remove from parent.</param>
+	/// <param name="newParent">New parent for channel. Use <see cref="RemoveParentAsync(string, CancellationToken)" /> to remove from parent.</param>
 	/// <param name="lockPermissions">Sync permissions with parent. Defaults to null.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageChannels" /> permission.
@@ -865,7 +881,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task ModifyParentAsync(DiscordChannel newParent, bool? lockPermissions = null, string reason = null)
+	public Task ModifyParentAsync(DiscordChannel newParent, bool? lockPermissions = null, string reason = null, CancellationToken cancellationToken = default)
 	{
 		if (this.Guild == null)
 			throw new ArgumentException("Cannot modify parent of non-guild channels.");
@@ -896,13 +912,14 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 				return pmd;
 			});
 
-		return this.Discord.ApiClient.ModifyGuildChannelParentAsync(this.Guild.Id, pmds, reason);
+		return this.Discord.ApiClient.ModifyGuildChannelParentAsync(this.Guild.Id, pmds, reason, cancellationToken: cancellationToken);
 	}
 
 	/// <summary>
 	///     Moves the channel out of a category.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageChannels" /> permission.
@@ -910,7 +927,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task RemoveParentAsync(string reason = null)
+	public Task RemoveParentAsync(string reason = null, CancellationToken cancellationToken = default)
 	{
 		if (this.Guild == null)
 			throw new ArgumentException("Cannot modify parent of non-guild channels.");
@@ -936,7 +953,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 				return pmd;
 			});
 
-		return this.Discord.ApiClient.DetachGuildChannelParentAsync(this.Guild.Id, pmds, reason);
+		return this.Discord.ApiClient.DetachGuildChannelParentAsync(this.Guild.Id, pmds, reason, cancellationToken: cancellationToken);
 	}
 
 	/// <summary>
@@ -1056,6 +1073,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="messages">A collection of messages to delete.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageMessages" /> permission.
@@ -1063,21 +1081,20 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task DeleteMessagesAsync(IEnumerable<DiscordMessage> messages, string reason = null)
+	public async Task DeleteMessagesAsync(IEnumerable<DiscordMessage> messages, string reason = null, CancellationToken cancellationToken = default)
 	{
-		// don't enumerate more than once
 		var msgs = messages.Where(x => x.Channel.Id == this.Id).Select(x => x.Id).ToArray();
-		if (messages == null || !msgs.Any())
+		if (messages is null || msgs.Length is 0)
 			throw new ArgumentException("You need to specify at least one message to delete.");
 
 		if (msgs.Length < 2)
 		{
-			await this.Discord.ApiClient.DeleteMessageAsync(this.Id, msgs.Single(), reason).ConfigureAwait(false);
+			await this.Discord.ApiClient.DeleteMessageAsync(this.Id, msgs.Single(), reason, cancellationToken: cancellationToken).ConfigureAwait(false);
 			return;
 		}
 
 		for (var i = 0; i < msgs.Length; i += 100)
-			await this.Discord.ApiClient.DeleteMessagesAsync(this.Id, msgs.Skip(i).Take(100), reason).ConfigureAwait(false);
+			await this.Discord.ApiClient.DeleteMessagesAsync(this.Id, msgs.Skip(i).Take(100), reason, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -1085,6 +1102,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="message">The message to be deleted.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageMessages" /> permission.
@@ -1092,12 +1110,13 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task DeleteMessageAsync(DiscordMessage message, string reason = null)
-		=> this.Discord.ApiClient.DeleteMessageAsync(this.Id, message.Id, reason);
+	public Task DeleteMessageAsync(DiscordMessage message, string reason = null, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.DeleteMessageAsync(this.Id, message.Id, reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Returns a list of invite objects
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.CreateInstantInvite" /> permission.
@@ -1105,10 +1124,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<IReadOnlyList<DiscordInvite>> GetInvitesAsync() =>
+	public Task<IReadOnlyList<DiscordInvite>> GetInvitesAsync(CancellationToken cancellationToken = default) =>
 		this.Guild == null
 			? throw new ArgumentException("Cannot get the invites of a channel that does not belong to a guild.")
-			: this.Discord.ApiClient.GetChannelInvitesAsync(this.Id);
+			: this.Discord.ApiClient.GetChannelInvitesAsync(this.Id, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Create a new invite object
@@ -1125,6 +1144,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="targetUserIds">Allowed target user ids for the invite.</param>
 	/// <param name="targetUsers">Allowed target users for the invite.</param>
 	/// <param name="targetUsersCsv">Optional CSV stream defining allowed users.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.CreateInstantInvite" /> permission.
@@ -1133,11 +1153,11 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="ArgumentException">Thrown when the provided stream is not readable.</exception>
-	public Task<DiscordInvite> CreateInviteAsync(int maxAge = 86400, int maxUses = 0, bool temporary = false, bool unique = false, TargetType? targetType = null, ulong? targetApplicationId = null, ulong? targetUser = null, string reason = null, IEnumerable<ulong>? roleIds = null, IEnumerable<ulong>? targetUserIds = null, IEnumerable<DiscordUser>? targetUsers = null, Stream? targetUsersCsv = null)
+	public Task<DiscordInvite> CreateInviteAsync(int maxAge = 86400, int maxUses = 0, bool temporary = false, bool unique = false, TargetType? targetType = null, ulong? targetApplicationId = null, ulong? targetUser = null, string reason = null, IEnumerable<ulong>? roleIds = null, IEnumerable<ulong>? targetUserIds = null, IEnumerable<DiscordUser>? targetUsers = null, Stream? targetUsersCsv = null, CancellationToken cancellationToken = default)
 	{
 		return targetUsersCsv is not null && !targetUsersCsv.CanRead
 			? throw new ArgumentException("The provided stream must be readable.", nameof(targetUsersCsv))
-			: this.Discord.ApiClient.CreateChannelInviteAsync(this.Id, maxAge, maxUses, targetType, targetApplicationId, targetUser, temporary, unique, reason, roleIds, targetUserIds, targetUsers, targetUsersCsv);
+			: this.Discord.ApiClient.CreateChannelInviteAsync(this.Id, maxAge, maxUses, targetType, targetApplicationId, targetUser, temporary, unique, reason, roleIds, targetUserIds, targetUsers, targetUsersCsv, cancellationToken: cancellationToken);
 	}
 
 	#region Voice Channel
@@ -1146,20 +1166,23 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	///     Sets a voice channels status.
 	/// </summary>
 	/// <param name="status">Status of the voice channel.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the voice channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task SetVoiceChannelStatusAsync(string status)
-		=> this.Type != ChannelType.Voice ? throw new NotSupportedException("Cannot execute this request on a non-voice channel.") : this.Discord.ApiClient.ModifyVoiceChannelStatusAsync(this.Id, status);
+	public Task SetVoiceChannelStatusAsync(string status, CancellationToken cancellationToken = default)
+		=> this.Type != ChannelType.Voice ? throw new NotSupportedException("Cannot execute this request on a non-voice channel.") : this.Discord.ApiClient.ModifyVoiceChannelStatusAsync(this.Id, status, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Removes a voice channels status.
 	/// </summary>
+	/// <param name="reason">Audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the voice channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task RemoveVoiceChannelStatusAsync(string reason = null)
-		=> this.Type != ChannelType.Voice ? throw new NotSupportedException("Cannot execute this request on a non-voice channel.") : this.Discord.ApiClient.ModifyVoiceChannelStatusAsync(this.Id, null);
+	public Task RemoveVoiceChannelStatusAsync(string? reason = null, CancellationToken cancellationToken = default)
+		=> this.Type != ChannelType.Voice ? throw new NotSupportedException("Cannot execute this request on a non-voice channel.") : this.Discord.ApiClient.ModifyVoiceChannelStatusAsync(this.Id, null, cancellationToken: cancellationToken);
 
 	#endregion
 
@@ -1172,6 +1195,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="sendStartNotification">Whether @everyone should be notified.</param>
 	/// <param name="scheduledEventId">The associated scheduled event id.</param>
 	/// <param name="reason">Audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>Stage instance</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -1180,14 +1204,15 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordStageInstance> OpenStageAsync(string topic, bool sendStartNotification = false, ulong? scheduledEventId = null, string reason = null)
-		=> await this.Discord.ApiClient.CreateStageInstanceAsync(this.Id, topic, sendStartNotification, scheduledEventId, reason).ConfigureAwait(false);
+	public async Task<DiscordStageInstance> OpenStageAsync(string topic, bool sendStartNotification = false, ulong? scheduledEventId = null, string reason = null, CancellationToken cancellationToken = default)
+		=> await this.Discord.ApiClient.CreateStageInstanceAsync(this.Id, topic, sendStartNotification, scheduledEventId, reason, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Modifies a stage topic.
 	/// </summary>
 	/// <param name="topic">New topic of the stage.</param>
 	/// <param name="reason">Audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageChannels" /> permission.
@@ -1195,13 +1220,14 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task ModifyStageAsync(Optional<string> topic, string reason = null)
-		=> await this.Discord.ApiClient.ModifyStageInstanceAsync(this.Id, topic, reason).ConfigureAwait(false);
+	public async Task ModifyStageAsync(Optional<string> topic, string reason = null, CancellationToken cancellationToken = default)
+		=> await this.Discord.ApiClient.ModifyStageInstanceAsync(this.Id, topic, reason, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Closes a stage.
 	/// </summary>
 	/// <param name="reason">Audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageChannels" /> permission.
@@ -1209,12 +1235,13 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task CloseStageAsync(string reason = null)
-		=> await this.Discord.ApiClient.DeleteStageInstanceAsync(this.Id, reason).ConfigureAwait(false);
+	public async Task CloseStageAsync(string reason = null, CancellationToken cancellationToken = default)
+		=> await this.Discord.ApiClient.DeleteStageInstanceAsync(this.Id, reason, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Gets a stage.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The requested stage.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -1223,8 +1250,8 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordStageInstance> GetStageAsync()
-		=> await this.Discord.ApiClient.GetStageInstanceAsync(this.Id).ConfigureAwait(false);
+	public async Task<DiscordStageInstance> GetStageAsync(CancellationToken cancellationToken = default)
+		=> await this.Discord.ApiClient.GetStageInstanceAsync(this.Id, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	#endregion
 
@@ -1272,6 +1299,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </param>
 	/// <param name="rateLimitPerUser">The per user ratelimit, aka slowdown.</param>
 	/// <param name="reason">Audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The created thread.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -1282,7 +1310,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="NotSupportedException">Thrown when a wrong <paramref name="type" /> was given.</exception>
-	public async Task<DiscordThreadChannel> CreateThreadAsync(string name, ThreadAutoArchiveDuration autoArchiveDuration = ThreadAutoArchiveDuration.OneHour, ChannelType type = ChannelType.PublicThread, int? rateLimitPerUser = null, string reason = null) =>
+	public async Task<DiscordThreadChannel> CreateThreadAsync(string name, ThreadAutoArchiveDuration autoArchiveDuration = ThreadAutoArchiveDuration.OneHour, ChannelType type = ChannelType.PublicThread, int? rateLimitPerUser = null, string reason = null, CancellationToken cancellationToken = default) =>
 		type != ChannelType.NewsThread && type != ChannelType.PublicThread && type != ChannelType.PrivateThread
 			? throw new NotSupportedException("Wrong thread type given.")
 			: !this.IsThreadHolder()
@@ -1291,7 +1319,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 					? ChannelType.NewsThread
 					: type == ChannelType.PrivateThread
 						? ChannelType.PrivateThread
-						: ChannelType.PublicThread, rateLimitPerUser, isForum: false, reason: reason).ConfigureAwait(false);
+						: ChannelType.PublicThread, rateLimitPerUser, isForum: false, reason: reason, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Creates a forum post.
@@ -1301,6 +1329,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="rateLimitPerUser">The per user ratelimit, aka slowdown.</param>
 	/// <param name="tags">The tags to add on creation.</param>
 	/// <param name="reason">Audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The created thread.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -1309,8 +1338,8 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the guild hasn't enabled threads atm.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordThreadChannel> CreatePostAsync(string name, DiscordMessageBuilder builder, int? rateLimitPerUser = null, IEnumerable<ForumPostTag>? tags = null, string reason = null)
-		=> this.Type != ChannelType.Forum ? throw new NotSupportedException("Parent channel must be forum.") : await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, null, null, rateLimitPerUser, tags, builder, true, reason).ConfigureAwait(false);
+	public async Task<DiscordThreadChannel> CreatePostAsync(string name, DiscordMessageBuilder builder, int? rateLimitPerUser = null, IEnumerable<ForumPostTag>? tags = null, string reason = null, CancellationToken cancellationToken = default)
+		=> this.Type != ChannelType.Forum ? throw new NotSupportedException("Parent channel must be forum.") : await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, null, null, rateLimitPerUser, tags, builder, true, reason, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Gets joined archived private threads. Can contain more threads.
@@ -1318,6 +1347,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="before">Get threads created before this thread id.</param>
 	/// <param name="limit">Defines the limit of returned <see cref="DiscordThreadResult" />.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ReadMessageHistory" /> permission.
@@ -1325,8 +1355,8 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordThreadResult> GetJoinedPrivateArchivedThreadsAsync(ulong? before, int? limit)
-		=> await this.Discord.ApiClient.GetJoinedPrivateArchivedThreadsAsync(this.Id, before, limit).ConfigureAwait(false);
+	public async Task<DiscordThreadResult> GetJoinedPrivateArchivedThreadsAsync(ulong? before, int? limit, CancellationToken cancellationToken = default)
+		=> await this.Discord.ApiClient.GetJoinedPrivateArchivedThreadsAsync(this.Id, before, limit, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Gets archived public threads. Can contain more threads.
@@ -1334,6 +1364,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="before">Get threads created before this thread id.</param>
 	/// <param name="limit">Defines the limit of returned <see cref="DiscordThreadResult" />.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ReadMessageHistory" /> permission.
@@ -1341,8 +1372,8 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordThreadResult> GetPublicArchivedThreadsAsync(ulong? before, int? limit)
-		=> await this.Discord.ApiClient.GetPublicArchivedThreadsAsync(this.Id, before, limit).ConfigureAwait(false);
+	public async Task<DiscordThreadResult> GetPublicArchivedThreadsAsync(ulong? before, int? limit, CancellationToken cancellationToken = default)
+		=> await this.Discord.ApiClient.GetPublicArchivedThreadsAsync(this.Id, before, limit, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Gets archived private threads. Can contain more threads.
@@ -1350,6 +1381,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="before">Get threads created before this thread id.</param>
 	/// <param name="limit">Defines the limit of returned <see cref="DiscordThreadResult" />.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageThreads" /> or <see cref="Permissions.ReadMessageHistory" /> permission.
@@ -1357,8 +1389,8 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordThreadResult> GetPrivateArchivedThreadsAsync(ulong? before, int? limit)
-		=> await this.Discord.ApiClient.GetPrivateArchivedThreadsAsync(this.Id, before, limit).ConfigureAwait(false);
+	public async Task<DiscordThreadResult> GetPrivateArchivedThreadsAsync(ulong? before, int? limit, CancellationToken cancellationToken = default)
+		=> await this.Discord.ApiClient.GetPrivateArchivedThreadsAsync(this.Id, before, limit, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Gets a forum channel tag.
@@ -1400,6 +1432,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </param>
 	/// <param name="moderated">Whether only moderators should be able to apply this tag.</param>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageChannels" /> permission.
@@ -1407,7 +1440,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the tag does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordChannel> CreateForumPostTagAsync(string name, DiscordEmoji emoji = null, bool moderated = false, string reason = null)
+	public async Task<DiscordChannel> CreateForumPostTagAsync(string name, DiscordEmoji emoji = null, bool moderated = false, string reason = null, CancellationToken cancellationToken = default)
 		=> this.Type != ChannelType.Forum
 			? throw new NotSupportedException("Channel needs to be type of Forum")
 			: this.AvailableTags.Count == 20
@@ -1419,13 +1452,14 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 					   UnicodeEmojiString = emoji?.Id == null || emoji?.Id == 0 ? emoji?.Name ?? null : null,
 					   Moderated = moderated,
 					   Id = null
-				   }).ToList(), Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, null, Optional.None, reason).ConfigureAwait(false);
+				   }).ToList(), Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, null, Optional.None, reason, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Deletes a forum channel tag.
 	/// </summary>
 	/// <param name="id">The id of the tag to delete.</param>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageChannels" /> permission.
@@ -1433,8 +1467,8 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the tag does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordChannel> DeleteForumPostTag(ulong id, string reason = null)
-		=> this.Type != ChannelType.Forum ? throw new NotSupportedException("Channel needs to be type of Forum") : await this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, Optional.None, Optional.None, null, Optional.None, this.InternalAvailableTags?.Where(x => x.Id != id)?.ToList(), Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, null, Optional.None, reason).ConfigureAwait(false);
+	public async Task<DiscordChannel> DeleteForumPostTag(ulong id, string reason = null, CancellationToken cancellationToken = default)
+		=> this.Type != ChannelType.Forum ? throw new NotSupportedException("Channel needs to be type of Forum") : await this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, Optional.None, Optional.None, null, Optional.None, this.InternalAvailableTags?.Where(x => x.Id != id)?.ToList(), Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, null, Optional.None, reason, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	#endregion
 
@@ -1445,6 +1479,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="allow">The permissions to allow.</param>
 	/// <param name="deny">The permissions to deny.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.ManageRoles" />
 	///     permission.
@@ -1452,8 +1487,8 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task AddOverwriteAsync(DiscordRole role, Permissions allow = Permissions.None, Permissions deny = Permissions.None, string reason = null)
-		=> this.Discord.ApiClient.EditChannelPermissionsAsync(this.Id, role.Id, allow, deny, "role", reason);
+	public Task AddOverwriteAsync(DiscordRole role, Permissions allow = Permissions.None, Permissions deny = Permissions.None, string reason = null, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.EditChannelPermissionsAsync(this.Id, role.Id, allow, deny, "role", reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Adds a channel permission overwrite for specified member.
@@ -1462,6 +1497,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="allow">The permissions to allow.</param>
 	/// <param name="deny">The permissions to deny.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.ManageRoles" />
 	///     permission.
@@ -1469,14 +1505,15 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task AddOverwriteAsync(DiscordMember member, Permissions allow = Permissions.None, Permissions deny = Permissions.None, string reason = null)
-		=> this.Discord.ApiClient.EditChannelPermissionsAsync(this.Id, member.Id, allow, deny, "member", reason);
+	public Task AddOverwriteAsync(DiscordMember member, Permissions allow = Permissions.None, Permissions deny = Permissions.None, string reason = null, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.EditChannelPermissionsAsync(this.Id, member.Id, allow, deny, "member", reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Deletes a channel permission overwrite for specified member.
 	/// </summary>
 	/// <param name="member">The member to have the permission deleted.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.ManageRoles" />
 	///     permission.
@@ -1484,14 +1521,15 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task DeleteOverwriteAsync(DiscordMember member, string reason = null)
-		=> this.Discord.ApiClient.DeleteChannelPermissionAsync(this.Id, member.Id, reason);
+	public Task DeleteOverwriteAsync(DiscordMember member, string reason = null, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.DeleteChannelPermissionAsync(this.Id, member.Id, reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Deletes a channel permission overwrite for specified role.
 	/// </summary>
 	/// <param name="role">The role to have the permission deleted.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.ManageRoles" />
 	///     permission.
@@ -1499,25 +1537,27 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task DeleteOverwriteAsync(DiscordRole role, string reason = null)
-		=> this.Discord.ApiClient.DeleteChannelPermissionAsync(this.Id, role.Id, reason);
+	public Task DeleteOverwriteAsync(DiscordRole role, string reason = null, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.DeleteChannelPermissionAsync(this.Id, role.Id, reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Post a typing indicator.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task TriggerTypingAsync() =>
+	public Task TriggerTypingAsync(CancellationToken cancellationToken = default) =>
 		!this.IsWritable()
 			? throw new ArgumentException("Cannot start typing in a non-text channel.")
-			: this.Discord.ApiClient.TriggerTypingAsync(this.Id);
+			: this.Discord.ApiClient.TriggerTypingAsync(this.Id, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Returns the pinned messages.
 	/// </summary>
 	/// <param name="before">Get messages pinned before this timestamp.</param>
 	/// <param name="limit">Max number of pins to return (1-50).</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.AccessChannels" /> permission.
@@ -1525,10 +1565,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<IReadOnlyList<DiscordMessage>> GetPinnedMessagesAsync(ulong? before = null, int limit = 50)
+	public Task<IReadOnlyList<DiscordMessage>> GetPinnedMessagesAsync(ulong? before = null, int limit = 50, CancellationToken cancellationToken = default)
 	=> !this.IsWritable()
 			? throw new ArgumentException("A non-text channel does not have pinned messages.")
-			: this.Discord.ApiClient.GetPinnedMessagesAsync(this.Id, before, limit);
+			: this.Discord.ApiClient.GetPinnedMessagesAsync(this.Id, before, limit, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Create a new webhook.
@@ -1536,6 +1576,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="name">The name of the webhook.</param>
 	/// <param name="avatar">The image for the default webhook avatar.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageWebhooks" /> permission.
@@ -1543,26 +1584,28 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordWebhook> CreateWebhookAsync(string name, Optional<Stream> avatar = default, string reason = null)
+	public async Task<DiscordWebhook> CreateWebhookAsync(string name, Optional<Stream> avatar = default, string reason = null, CancellationToken cancellationToken = default)
 		=> await this.Discord.ApiClient.CreateWebhookAsync(this.IsThread() ? this.ParentId!.Value : this.Id, name,
-			MediaTool.Base64FromStream(avatar), reason).ConfigureAwait(false);
+			MediaTool.Base64FromStream(avatar), reason, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Returns a list of webhooks.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageWebhooks" /> permission.
 	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<IReadOnlyList<DiscordWebhook>> GetWebhooksAsync()
-		=> this.Discord.ApiClient.GetChannelWebhooksAsync(this.IsThread() ? this.ParentId!.Value : this.Id);
+	public Task<IReadOnlyList<DiscordWebhook>> GetWebhooksAsync(CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.GetChannelWebhooksAsync(this.IsThread() ? this.ParentId!.Value : this.Id, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Moves a member to this voice channel.
 	/// </summary>
 	/// <param name="member">The member to be moved.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.MoveMembers" />
 	///     permission.
@@ -1570,55 +1613,58 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exists or if the Member does not exists.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task PlaceMemberAsync(DiscordMember member)
+	public async Task PlaceMemberAsync(DiscordMember member, CancellationToken cancellationToken = default)
 	{
 		if (!this.IsVoiceJoinable())
 			throw new ArgumentException("Cannot place a member in a non-voice channel.");
 
 		await this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, member.Id, default, default, default,
-			default, this.Id, default, member.MemberFlags, null).ConfigureAwait(false);
+			default, this.Id, default, member.MemberFlags, null, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
 	///     Follows a news channel.
 	/// </summary>
 	/// <param name="targetChannel">Channel to crosspost messages to.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="ArgumentException">Thrown when trying to follow a non-news channel.</exception>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the current user doesn't have
 	///     <see cref="Permissions.ManageWebhooks" /> on the target channel.
 	/// </exception>
-	public Task<DiscordFollowedChannel> FollowAsync(DiscordChannel targetChannel) =>
+	public Task<DiscordFollowedChannel> FollowAsync(DiscordChannel targetChannel, CancellationToken cancellationToken = default) =>
 		this.Type != ChannelType.News
 			? throw new ArgumentException("Cannot follow a non-news channel.")
-			: this.Discord.ApiClient.FollowChannelAsync(this.Id, targetChannel.Id);
+			: this.Discord.ApiClient.FollowChannelAsync(this.Id, targetChannel.Id, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Publishes a message in a news channel to following channels.
 	/// </summary>
 	/// <param name="message">Message to publish.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="ArgumentException">Thrown when the message has already been crossposted.</exception>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the current user doesn't have <see cref="Permissions.ManageWebhooks" /> and/or
 	///     <see cref="Permissions.SendMessages" />
 	/// </exception>
-	public Task<DiscordMessage> CrosspostMessageAsync(DiscordMessage message) =>
+	public Task<DiscordMessage> CrosspostMessageAsync(DiscordMessage message, CancellationToken cancellationToken = default) =>
 		(message.Flags & MessageFlags.Crossposted) == MessageFlags.Crossposted
 			? throw new ArgumentException("Message is already crossposted.")
-			: this.Discord.ApiClient.CrosspostMessageAsync(this.Id, message.Id);
+			: this.Discord.ApiClient.CrosspostMessageAsync(this.Id, message.Id, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Updates the current user's suppress state in this channel, if stage channel.
 	/// </summary>
 	/// <param name="suppress">Toggles the suppress state.</param>
 	/// <param name="requestToSpeakTimestamp">Sets the time the user requested to speak.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="ArgumentException">Thrown when the channel is not a stage channel.</exception>
-	public async Task UpdateCurrentUserVoiceStateAsync(bool? suppress, DateTimeOffset? requestToSpeakTimestamp = null)
+	public async Task UpdateCurrentUserVoiceStateAsync(bool? suppress, DateTimeOffset? requestToSpeakTimestamp = null, CancellationToken cancellationToken = default)
 	{
 		if (this.Type != ChannelType.Stage)
 			throw new ArgumentException("Voice state can only be updated in a stage channel.");
 
-		await this.Discord.ApiClient.UpdateCurrentUserVoiceStateAsync(this.GuildId.Value, this.Id, suppress, requestToSpeakTimestamp).ConfigureAwait(false);
+		await this.Discord.ApiClient.UpdateCurrentUserVoiceStateAsync(this.GuildId.Value, this.Id, suppress, requestToSpeakTimestamp, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>

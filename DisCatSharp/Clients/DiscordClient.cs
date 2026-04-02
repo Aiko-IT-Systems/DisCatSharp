@@ -171,10 +171,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </returns>
 	public IReadOnlyDictionary<ulong, DiscordPresence> GetPresences(ulong userId)
 	{
-		if (!this.PresenceStore.TryGetValue(userId, out var inner))
-			return ReadOnlyDictionary<ulong, DiscordPresence>.Empty;
-
-		return new ReadOnlyDictionary<ulong, DiscordPresence>(new Dictionary<ulong, DiscordPresence>(inner));
+		return !this.PresenceStore.TryGetValue(userId, out var inner)
+			? ReadOnlyDictionary<ulong, DiscordPresence>.Empty
+			: new ReadOnlyDictionary<ulong, DiscordPresence>(new Dictionary<ulong, DiscordPresence>(inner));
 	}
 
 	/// <summary>
@@ -440,13 +439,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="activity">The activity to set. Defaults to null.</param>
 	/// <param name="status">The optional status to set. Defaults to null.</param>
 	/// <param name="idlesince">Since when is the client performing the specified activity. Defaults to null.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <exception cref="UnauthorizedException">Thrown when an invalid token was provided.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task ConnectAsync(DiscordActivity? activity = null, UserStatus? status = null, DateTimeOffset? idlesince = null)
+	public async Task ConnectAsync(DiscordActivity? activity = null, UserStatus? status = null, DateTimeOffset? idlesince = null, CancellationToken cancellationToken = default)
 	{
 		// Check if connection lock is already set, and set it if it isn't
-		if (!this._connectionLock.Wait(0))
+		if (!this._connectionLock.Wait(0, cancellationToken))
 			throw new InvalidOperationException("This client is already connected.");
 
 		this._connectionLock.Set();
@@ -475,7 +475,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 		if (!this.IsShard)
 		{
-			if (this.Configuration.TokenType != TokenType.Bot)
+			if (this.Configuration.TokenType is not TokenType.Bot)
 				this.Logger.LogWarning(LoggerEvents.Misc, "You are logging in with a token that is not a bot token. This is not officially supported by Discord, and can result in your account being terminated if you aren't careful");
 			var versionParts = this.VersionString.Split('+');
 			var version = versionParts[0];
@@ -542,7 +542,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		if (this.Configuration.Cache.AutoFetchSkuIds)
 			try
 			{
-				var skus = await this.ApiClient.GetSkusAsync(this.CurrentApplication.Id).ConfigureAwait(false);
+				var skus = await this.ApiClient.GetSkusAsync(this.CurrentApplication.Id, cancellationToken: cancellationToken).ConfigureAwait(false);
 				if (!skus.Any())
 					return;
 
@@ -556,7 +556,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		if (this.Configuration.Cache.AutoFetchApplicationEmojis)
 			try
 			{
-				await this.ApiClient.GetApplicationEmojisAsync(this.CurrentApplication.Id);
+				await this.ApiClient.GetApplicationEmojisAsync(this.CurrentApplication.Id, cancellationToken: cancellationToken);
 			}
 			catch (Exception ex)
 			{
@@ -640,16 +640,17 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="userId">Id of the user</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to false.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The requested user.</returns>
 	/// <exception cref="NotFoundException">Thrown when the user does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordUser> GetUserAsync(ulong userId, bool fetch = false)
+	public async Task<DiscordUser> GetUserAsync(ulong userId, bool fetch = false, CancellationToken cancellationToken = default)
 	{
 		if (!fetch && this.TryGetCachedUserInternal(userId, out var cachedUsr))
 			return cachedUsr;
 
-		var usr = await this.ApiClient.GetUserAsync(userId).ConfigureAwait(false);
+		var usr = await this.ApiClient.GetUserAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
 		usr = this.UserCache.AddOrUpdate(userId, usr, (id, old) =>
 		{
 			old.Username = usr.Username;
@@ -675,22 +676,24 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Gets a applications rpc information.
 	/// </summary>
 	/// <param name="applicationId">Id of the application</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The requested application.</returns>
 	/// <exception cref="NotFoundException">Thrown when the application does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordRpcApplication> GetRpcApplicationAsync(ulong applicationId)
-		=> await this.ApiClient.GetApplicationRpcInfoAsync(applicationId).ConfigureAwait(false);
+	public async Task<DiscordRpcApplication> GetRpcApplicationAsync(ulong applicationId, CancellationToken cancellationToken = default)
+		=> await this.ApiClient.GetApplicationRpcInfoAsync(applicationId, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Gets the current applications information.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The requested application.</returns>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordApplication> GetCurrentApplicationInfoAsync()
+	public async Task<DiscordApplication> GetCurrentApplicationInfoAsync(CancellationToken cancellationToken = default)
 	{
-		var tapp = await this.ApiClient.GetCurrentApplicationInfoAsync().ConfigureAwait(false);
+		var tapp = await this.ApiClient.GetCurrentApplicationInfoAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 		return new(tapp);
 	}
 
@@ -719,24 +722,26 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Gets the published store sku listings (premium application subscription).
 	/// </summary>
 	/// <param name="applicationId">The application id to fetch the listings for.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A list of published listings with <see cref="DiscordStoreSku" />s.</returns>
 	[RequiresFeature(Features.MonetizedApplication)]
-	public async Task<IReadOnlyList<DiscordStoreSku>> GetPublishedListingsAsync(ulong applicationId)
-		=> await this.ApiClient.GetPublishedListingsAsync(applicationId).ConfigureAwait(false);
+	public async Task<IReadOnlyList<DiscordStoreSku>> GetPublishedListingsAsync(ulong applicationId, CancellationToken cancellationToken = default)
+		=> await this.ApiClient.GetPublishedListingsAsync(applicationId, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Validates an activity instance for the current application.
 	/// </summary>
 	/// <param name="instanceId">The activity instance id to validate.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The validated <see cref="DiscordActivityInstance" />.</returns>
 	/// <exception cref="NotFoundException">Thrown when the activity instance does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordActivityInstance> GetActivityInstanceAsync(string instanceId)
+	public async Task<DiscordActivityInstance> GetActivityInstanceAsync(string instanceId, CancellationToken cancellationToken = default)
 	{
 		ArgumentException.ThrowIfNullOrWhiteSpace(instanceId);
-		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync().ConfigureAwait(false)).Id;
-		return await this.ApiClient.GetActivityInstanceAsync(applicationId, instanceId).ConfigureAwait(false);
+		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync(cancellationToken).ConfigureAwait(false)).Id;
+		return await this.ApiClient.GetActivityInstanceAsync(applicationId, instanceId, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -747,7 +752,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="description">The quick link description.</param>
 	/// <param name="title">The quick link title.</param>
 	/// <param name="image">The base64-encoded image.</param>
-	public async Task<DiscordActivityQuickLink> CreateActivityQuickLinkAsync(string accessToken, string customId, string description, string title, string image)
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	public async Task<DiscordActivityQuickLink> CreateActivityQuickLinkAsync(string accessToken, string customId, string description, string title, string image, CancellationToken cancellationToken = default)
 	{
 		ArgumentException.ThrowIfNullOrWhiteSpace(accessToken);
 		ArgumentException.ThrowIfNullOrWhiteSpace(customId);
@@ -755,8 +761,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		ArgumentException.ThrowIfNullOrWhiteSpace(title);
 		ArgumentException.ThrowIfNullOrWhiteSpace(image);
 
-		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync().ConfigureAwait(false)).Id;
-		return await this.ApiClient.CreateActivityQuickLinkAsync(applicationId, accessToken, customId, description, title, image).ConfigureAwait(false);
+		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync(cancellationToken).ConfigureAwait(false)).Id;
+		return await this.ApiClient.CreateActivityQuickLinkAsync(applicationId, accessToken, customId, description, title, image, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -766,24 +772,26 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="stream">The file stream.</param>
 	/// <param name="fileName">The file name.</param>
 	/// <param name="contentType">The MIME content type.</param>
-	public async Task<DiscordActivityAttachmentUpload> CreateActivityAttachmentAsync(string accessToken, Stream stream, string fileName, string? contentType = null)
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	public async Task<DiscordActivityAttachmentUpload> CreateActivityAttachmentAsync(string accessToken, Stream stream, string fileName, string? contentType = null, CancellationToken cancellationToken = default)
 	{
 		ArgumentException.ThrowIfNullOrWhiteSpace(accessToken);
 		ArgumentNullException.ThrowIfNull(stream);
 		ArgumentException.ThrowIfNullOrWhiteSpace(fileName);
 
-		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync().ConfigureAwait(false)).Id;
-		return await this.ApiClient.CreateActivityAttachmentAsync(applicationId, accessToken, stream, fileName, contentType).ConfigureAwait(false);
+		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync(cancellationToken).ConfigureAwait(false)).Id;
+		return await this.ApiClient.CreateActivityAttachmentAsync(applicationId, accessToken, stream, fileName, contentType, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
 	///     Gets the applications skus.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A list of published listings with <see cref="DiscordSku" />s.</returns>
 	/// <exception cref="NotFoundException">Thrown when the skus do not exist.</exception>
 	[RequiresFeature(Features.MonetizedApplication)]
-	public async Task<IReadOnlyList<DiscordSku>> GetSkusAsync()
-		=> await this.ApiClient.GetSkusAsync(this.CurrentApplication.Id).ConfigureAwait(false);
+	public async Task<IReadOnlyList<DiscordSku>> GetSkusAsync(CancellationToken cancellationToken = default)
+		=> await this.ApiClient.GetSkusAsync(this.CurrentApplication.Id, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Gets the application's entitlements.
@@ -802,29 +810,32 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Whether or not deleted entitlements should be omitted. Defaults to true, deleted
 	///     entitlements are not included by default.
 	/// </param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A list of <see cref="DiscordEntitlement" />.</returns>
 	/// <exception cref="NotFoundException">Thrown when the entitlements do not exist.</exception>
 	[RequiresFeature(Features.MonetizedApplication)]
-	public async Task<IReadOnlyList<DiscordEntitlement>> GetEntitlementsAsync(ulong? guildId = null, ulong? userId = null, List<ulong>? skuIds = null, ulong? before = null, ulong? after = null, int limit = 100, bool? excludeEnded = null, bool? excludeDeleted = null)
-		=> await this.ApiClient.GetEntitlementsAsync(this.CurrentApplication.Id, guildId, userId, skuIds, before, after, limit, excludeEnded, excludeDeleted).ConfigureAwait(false);
+	public async Task<IReadOnlyList<DiscordEntitlement>> GetEntitlementsAsync(ulong? guildId = null, ulong? userId = null, List<ulong>? skuIds = null, ulong? before = null, ulong? after = null, int limit = 100, bool? excludeEnded = null, bool? excludeDeleted = null, CancellationToken cancellationToken = default)
+		=> await this.ApiClient.GetEntitlementsAsync(this.CurrentApplication.Id, guildId, userId, skuIds, before, after, limit, excludeEnded, excludeDeleted, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Gets an entitlement.
 	/// </summary>
 	/// <param name="entitlementId">The entitlement id to fetch.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The requested <see cref="DiscordEntitlement" />.</returns>
 	[RequiresFeature(Features.MonetizedApplication)]
-	public async Task<DiscordEntitlement?> GetEntitlementAsync(ulong entitlementId)
-		=> await this.ApiClient.GetEntitlementAsync(this.CurrentApplication.Id, entitlementId).ConfigureAwait(false);
+	public async Task<DiscordEntitlement?> GetEntitlementAsync(ulong entitlementId, CancellationToken cancellationToken = default)
+		=> await this.ApiClient.GetEntitlementAsync(this.CurrentApplication.Id, entitlementId, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///    Consumes an entitlement.
 	/// </summary>
 	/// <param name="entitlementId">The entitlement id to consume.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>Whether the entitlement was consumed.</returns>
 	[RequiresFeature(Features.MonetizedApplication)]
-	public async Task<bool> ConsumeEntitlementAsync(ulong entitlementId)
-		=> await this.ApiClient.ConsumeEntitlementAsync(this.CurrentApplication.Id, entitlementId).ConfigureAwait(false);
+	public async Task<bool> ConsumeEntitlementAsync(ulong entitlementId, CancellationToken cancellationToken = default)
+		=> await this.ApiClient.ConsumeEntitlementAsync(this.CurrentApplication.Id, entitlementId, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Gets the subscriptions of an sku.
@@ -834,20 +845,22 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="before">List subscriptions before this ID.</param>
 	/// <param name="after">List subscriptions after this ID.</param>
 	/// <param name="limit">Number of results to return (1-100).</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A list of <see cref="DiscordSubscription" />.</returns>
 	/// <exception cref="NotFoundException">Thrown when the subscriptions do not exist.</exception>
 	[RequiresFeature(Features.MonetizedApplication)]
-	public async Task<IReadOnlyList<DiscordSubscription>> GetSkuSubscriptionsAsync(ulong skuId, ulong userId, ulong? before = null, ulong? after = null, int limit = 100)
-		=> await this.ApiClient.GetSkuSubscriptionsAsync(skuId, userId, before, after, limit).ConfigureAwait(false);
+	public async Task<IReadOnlyList<DiscordSubscription>> GetSkuSubscriptionsAsync(ulong skuId, ulong userId, ulong? before = null, ulong? after = null, int limit = 100, CancellationToken cancellationToken = default)
+		=> await this.ApiClient.GetSkuSubscriptionsAsync(skuId, userId, before, after, limit, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Gets a subscription of an sku.
 	/// </summary>
 	/// <param name="skuId">The sku id to fetch the subscription for.</param>
 	/// <param name="subscriptionId">The subscription id to fetch.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The requested <see cref="DiscordSubscription" />.</returns>
-	public async Task<DiscordSubscription?> GetSkuSubscriptionAsync(ulong skuId, ulong subscriptionId)
-		=> await this.ApiClient.GetSkuSubscriptionAsync(skuId, subscriptionId).ConfigureAwait(false);
+	public async Task<DiscordSubscription?> GetSkuSubscriptionAsync(ulong skuId, ulong subscriptionId, CancellationToken cancellationToken = default)
+		=> await this.ApiClient.GetSkuSubscriptionAsync(skuId, subscriptionId, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Creates a test entitlement.
@@ -855,45 +868,51 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="skuId">The sku id to create the entitlement for.</param>
 	/// <param name="ownerId">The owner id to create the entitlement for.</param>
 	/// <param name="ownerType">The owner type to create the entitlement for.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A partial <see cref="DiscordEntitlement" />.</returns>
 	[RequiresFeature(Features.MonetizedApplication)]
-	public async Task<DiscordEntitlement> CreateTestEntitlementAsync(ulong skuId, ulong ownerId, EntitlementOwnerType ownerType)
-		=> await this.ApiClient.CreateTestEntitlementAsync(this.CurrentApplication.Id, skuId, ownerId, ownerType).ConfigureAwait(false);
+	public async Task<DiscordEntitlement> CreateTestEntitlementAsync(ulong skuId, ulong ownerId, EntitlementOwnerType ownerType, CancellationToken cancellationToken = default)
+		=> await this.ApiClient.CreateTestEntitlementAsync(this.CurrentApplication.Id, skuId, ownerId, ownerType, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Deletes a test entitlement.
 	/// </summary>
 	/// <param name="entitlementId">The entitlement id to delete.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	[RequiresFeature(Features.MonetizedApplication)]
-	public async Task DeleteTestEntitlementAsync(ulong entitlementId)
-		=> await this.ApiClient.DeleteTestEntitlementAsync(this.CurrentApplication.Id, entitlementId).ConfigureAwait(false);
+	public async Task DeleteTestEntitlementAsync(ulong entitlementId, CancellationToken cancellationToken = default)
+		=> await this.ApiClient.DeleteTestEntitlementAsync(this.CurrentApplication.Id, entitlementId, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Gets the applications role connection metadata.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A list of metadata records or <see langword="null" />.</returns>
-	public async Task<IReadOnlyList<DiscordApplicationRoleConnectionMetadata>> GetRoleConnectionMetadata()
-		=> await this.ApiClient.GetRoleConnectionMetadataRecords(this.CurrentApplication.Id).ConfigureAwait(false);
+	public async Task<IReadOnlyList<DiscordApplicationRoleConnectionMetadata>> GetRoleConnectionMetadata(CancellationToken cancellationToken = default)
+		=> await this.ApiClient.GetRoleConnectionMetadataRecords(this.CurrentApplication.Id, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Updates the applications role connection metadata.
 	/// </summary>
 	/// <param name="metadata">A list of metadata objects. Max 5.</param>
-	public async Task<IReadOnlyList<DiscordApplicationRoleConnectionMetadata>> UpdateRoleConnectionMetadata(IEnumerable<DiscordApplicationRoleConnectionMetadata> metadata)
-		=> await this.ApiClient.UpdateRoleConnectionMetadataRecords(this.CurrentApplication.Id, metadata).ConfigureAwait(false);
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	public async Task<IReadOnlyList<DiscordApplicationRoleConnectionMetadata>> UpdateRoleConnectionMetadata(IEnumerable<DiscordApplicationRoleConnectionMetadata> metadata, CancellationToken cancellationToken = default)
+		=> await this.ApiClient.UpdateRoleConnectionMetadataRecords(this.CurrentApplication.Id, metadata, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Removes all global application commands.
 	/// </summary>
-	public async Task RemoveGlobalApplicationCommandsAsync()
-		=> await this.ApiClient.BulkOverwriteGlobalApplicationCommandsAsync(this.CurrentApplication.Id, []).ConfigureAwait(false);
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	public async Task RemoveGlobalApplicationCommandsAsync(CancellationToken cancellationToken = default)
+		=> await this.ApiClient.BulkOverwriteGlobalApplicationCommandsAsync(this.CurrentApplication.Id, [], cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Removes all global application commands for a specific guild id.
 	/// </summary>
 	/// <param name="guildId">The target guild id.</param>
-	public async Task RemoveGuildApplicationCommandsAsync(ulong guildId)
-		=> await this.ApiClient.BulkOverwriteGuildApplicationCommandsAsync(this.CurrentApplication.Id, guildId, []).ConfigureAwait(false);
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	public async Task RemoveGuildApplicationCommandsAsync(ulong guildId, CancellationToken cancellationToken = default)
+		=> await this.ApiClient.BulkOverwriteGuildApplicationCommandsAsync(this.CurrentApplication.Id, guildId, [], cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Removes all global application commands for a specific guild.
@@ -905,34 +924,37 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <summary>
 	///     Gets the application emojis.
 	///     <param name="fetch">Whether to ignore the cache. Defaults to false.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// </summary>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<IReadOnlyList<DiscordApplicationEmoji>> GetApplicationEmojisAsync(bool fetch = false)
-		=> (fetch ? null : this.InternalGetCachedApplicationEmojis()) ?? await this.ApiClient.GetApplicationEmojisAsync(this.CurrentApplication.Id).ConfigureAwait(false);
+	public async Task<IReadOnlyList<DiscordApplicationEmoji>> GetApplicationEmojisAsync(bool fetch = false, CancellationToken cancellationToken = default)
+		=> (fetch ? null : this.InternalGetCachedApplicationEmojis()) ?? await this.ApiClient.GetApplicationEmojisAsync(this.CurrentApplication.Id, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Gets an application emoji.
 	/// </summary>
 	/// <param name="id">The emoji id.</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to false.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordApplicationEmoji?> GetApplicationEmojiAsync(ulong id, bool fetch = false)
-		=> (fetch ? null : this.InternalGetCachedApplicationEmoji(id)) ?? await this.ApiClient.GetApplicationEmojiAsync(this.CurrentApplication.Id, id).ConfigureAwait(false);
+	public async Task<DiscordApplicationEmoji?> GetApplicationEmojiAsync(ulong id, bool fetch = false, CancellationToken cancellationToken = default)
+		=> (fetch ? null : this.InternalGetCachedApplicationEmoji(id)) ?? await this.ApiClient.GetApplicationEmojiAsync(this.CurrentApplication.Id, id, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Creates an application emoji.
 	/// </summary>
 	/// <param name="name">The name.</param>
 	/// <param name="image">The image.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordApplicationEmoji> CreateApplicationEmojiAsync(string name, Stream image)
+	public async Task<DiscordApplicationEmoji> CreateApplicationEmojiAsync(string name, Stream image, CancellationToken cancellationToken = default)
 	{
 		var imageb64 = MediaTool.Base64FromStream(image);
-		return await this.ApiClient.CreateApplicationEmojiAsync(this.CurrentApplication.Id, name, imageb64);
+		return await this.ApiClient.CreateApplicationEmojiAsync(this.CurrentApplication.Id, name, imageb64, cancellationToken: cancellationToken);
 	}
 
 	/// <summary>
@@ -940,33 +962,36 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="id">The emoji id.</param>
 	/// <param name="name">The name.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordApplicationEmoji> ModifyApplicationEmojiAsync(ulong id, string name)
-		=> this.ApiClient.ModifyApplicationEmojiAsync(this.CurrentApplication.Id, id, name);
+	public Task<DiscordApplicationEmoji> ModifyApplicationEmojiAsync(ulong id, string name, CancellationToken cancellationToken = default)
+		=> this.ApiClient.ModifyApplicationEmojiAsync(this.CurrentApplication.Id, id, name, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Deletes an application emoji.
 	/// </summary>
 	/// <param name="id">The emoji id.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task DeleteApplicationEmojiAsync(ulong id)
-		=> this.ApiClient.DeleteApplicationEmojiAsync(this.CurrentApplication.Id, id);
+	public Task DeleteApplicationEmojiAsync(ulong id, CancellationToken cancellationToken = default)
+		=> this.ApiClient.DeleteApplicationEmojiAsync(this.CurrentApplication.Id, id, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Gets a channel.
 	/// </summary>
 	/// <param name="id">The id of the channel to get.</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to false.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The requested channel.</returns>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordChannel> GetChannelAsync(ulong id, bool fetch = false)
-		=> (fetch ? null : this.InternalGetCachedChannel(id)) ?? await this.ApiClient.GetChannelAsync(id).ConfigureAwait(false);
+	public async Task<DiscordChannel> GetChannelAsync(ulong id, bool fetch = false, CancellationToken cancellationToken = default)
+		=> (fetch ? null : this.InternalGetCachedChannel(id)) ?? await this.ApiClient.GetChannelAsync(id, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Tries to get a channel.
@@ -994,12 +1019,13 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="id">The id of the thread to get.</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to false.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The requested thread.</returns>
 	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordThreadChannel> GetThreadAsync(ulong id, bool fetch = false)
-		=> (fetch ? null : this.InternalGetCachedThread(id)) ?? await this.ApiClient.GetThreadAsync(id).ConfigureAwait(false);
+	public async Task<DiscordThreadChannel> GetThreadAsync(ulong id, bool fetch = false, CancellationToken cancellationToken = default)
+		=> (fetch ? null : this.InternalGetCachedThread(id)) ?? await this.ApiClient.GetThreadAsync(id, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Tries to get a thread.
@@ -1027,6 +1053,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="channel">The channel to send to.</param>
 	/// <param name="content">The message content to send.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The message that was sent.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -1035,14 +1062,15 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, string content)
-		=> this.ApiClient.CreateMessageAsync(channel.Id, content, null, null, null, false, false);
+	public Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, string content, CancellationToken cancellationToken = default)
+		=> this.ApiClient.CreateMessageAsync(channel.Id, content, null, null, null, false, false, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Sends a message with an embed.
 	/// </summary>
 	/// <param name="channel">The channel to send to.</param>
 	/// <param name="embed">The embed to attach to the message.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The message that was sent.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -1051,10 +1079,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordEmbed embed)
+	public Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordEmbed embed, CancellationToken cancellationToken = default)
 		=> this.ApiClient.CreateMessageAsync(channel.Id, null, embed != null
 			? new[] { embed }
-			: null, null, null, false, false);
+			: null, null, null, false, false, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Sends a message with content and an embed.
@@ -1062,6 +1090,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="channel">Channel to send to.</param>
 	/// <param name="content">The message content to send.</param>
 	/// <param name="embed">The embed to attach to the message.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The message that was sent.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -1071,16 +1100,17 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public
-		Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, string content, DiscordEmbed embed)
+		Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, string content, DiscordEmbed embed, CancellationToken cancellationToken = default)
 		=> this.ApiClient.CreateMessageAsync(channel.Id, content, embed != null
 			? new[] { embed }
-			: null, null, null, false, false);
+			: null, null, null, false, false, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Sends a message with the <see cref="DisCatSharp.Entities.DiscordMessageBuilder" />.
 	/// </summary>
 	/// <param name="channel">The channel to send the message to.</param>
 	/// <param name="builder">The message builder.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The message that was sent.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -1091,14 +1121,15 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public
-		Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuilder builder)
-		=> this.ApiClient.CreateMessageAsync(channel.Id, builder);
+		Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuilder builder, CancellationToken cancellationToken = default)
+		=> this.ApiClient.CreateMessageAsync(channel.Id, builder, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Sends a message with an <see cref="Action{DiscordMessageBuilder}" />.
 	/// </summary>
 	/// <param name="channel">The channel to send the message to.</param>
 	/// <param name="action">The message builder.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The message that was sent.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -1108,12 +1139,12 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, Action<DiscordMessageBuilder> action)
+	public Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, Action<DiscordMessageBuilder> action, CancellationToken cancellationToken = default)
 	{
 		var builder = new DiscordMessageBuilder();
 		action(builder);
 
-		return this.ApiClient.CreateMessageAsync(channel.Id, builder);
+		return this.ApiClient.CreateMessageAsync(channel.Id, builder, cancellationToken: cancellationToken);
 	}
 
 	/// <summary>
@@ -1123,17 +1154,18 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="id">The guild ID to search for.</param>
 	/// <param name="withCounts">Whether to include approximate presence and member counts in the returned guild.</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to false.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The requested Guild.</returns>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordGuild> GetGuildAsync(ulong id, bool? withCounts = null, bool fetch = false)
+	public async Task<DiscordGuild> GetGuildAsync(ulong id, bool? withCounts = null, bool fetch = false, CancellationToken cancellationToken = default)
 	{
 		if (!fetch && this.GuildsInternal.TryGetValue(id, out var guild) && (!withCounts.HasValue || !withCounts.Value))
 			return guild;
 
-		guild = await this.ApiClient.GetGuildAsync(id, withCounts).ConfigureAwait(false);
-		var channels = await this.ApiClient.GetGuildChannelsAsync(guild.Id).ConfigureAwait(false);
+		guild = await this.ApiClient.GetGuildAsync(id, withCounts, cancellationToken: cancellationToken).ConfigureAwait(false);
+		var channels = await this.ApiClient.GetGuildChannelsAsync(guild.Id, cancellationToken: cancellationToken).ConfigureAwait(false);
 		foreach (var channel in channels) guild.ChannelsInternal[channel.Id] = channel;
 
 		return guild;
@@ -1166,24 +1198,26 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Gets a guild preview.
 	/// </summary>
 	/// <param name="id">The guild ID.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A preview of the requested guild.</returns>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordGuildPreview> GetGuildPreviewAsync(ulong id)
-		=> this.ApiClient.GetGuildPreviewAsync(id);
+	public Task<DiscordGuildPreview> GetGuildPreviewAsync(ulong id, CancellationToken cancellationToken = default)
+		=> this.ApiClient.GetGuildPreviewAsync(id, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Tries to get a guild preview.
 	/// </summary>
 	/// <param name="id">The guild ID.</param>
 	/// <param name="preview">The preview, if found.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>True if the preview was found, otherwise false.</returns>
-	public bool TryGetGuildPreview(ulong id, [NotNullWhen(true)] out DiscordGuildPreview? preview)
+	public bool TryGetGuildPreview(ulong id, [NotNullWhen(true)] out DiscordGuildPreview? preview, CancellationToken cancellationToken = default)
 	{
 		try
 		{
-			preview = this.ApiClient.GetGuildPreviewAsync(id).ConfigureAwait(false).GetAwaiter().GetResult();
+			preview = this.ApiClient.GetGuildPreviewAsync(id, cancellationToken: cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
 			return true;
 		}
 		catch (NotFoundException)
@@ -1197,23 +1231,25 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Gets a guild widget.
 	/// </summary>
 	/// <param name="id">The Guild Id.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A guild widget.</returns>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordWidget> GetGuildWidgetAsync(ulong id)
-		=> this.ApiClient.GetGuildWidgetAsync(id);
+	public Task<DiscordWidget> GetGuildWidgetAsync(ulong id, CancellationToken cancellationToken = default)
+		=> this.ApiClient.GetGuildWidgetAsync(id, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Tries to get a guild widget.
 	/// </summary>
 	/// <param name="id">The Guild Id.</param>
 	/// <param name="widget">The widget, if found.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>True if the widget was found, otherwise false.</returns>
-	public bool TryGetGuildWidget(ulong id, [NotNullWhen(true)] out DiscordWidget? widget)
+	public bool TryGetGuildWidget(ulong id, [NotNullWhen(true)] out DiscordWidget? widget, CancellationToken cancellationToken = default)
 	{
 		try
 		{
-			widget = this.ApiClient.GetGuildWidgetAsync(id).ConfigureAwait(false).GetAwaiter().GetResult();
+			widget = this.ApiClient.GetGuildWidgetAsync(id, cancellationToken: cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
 			return true;
 		}
 		catch (NotFoundException)
@@ -1235,12 +1271,13 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="withCounts">Whether to include presence and total member counts in the returned invite.</param>
 	/// <param name="scheduledEventId">The scheduled event id.</param>
 	/// <param name="withPermissions">Whether to include the invite's permissions.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The requested invite.</returns>
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordInvite> GetInviteByCodeAsync(string code, bool? withCounts = null, ulong? scheduledEventId = null, bool? withPermissions = null)
-		=> this.ApiClient.GetInviteAsync(code, withCounts, scheduledEventId, withPermissions);
+	public Task<DiscordInvite> GetInviteByCodeAsync(string code, bool? withCounts = null, ulong? scheduledEventId = null, bool? withPermissions = null, CancellationToken cancellationToken = default)
+		=> this.ApiClient.GetInviteAsync(code, withCounts, scheduledEventId, withPermissions, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Tries to get an invite.
@@ -1269,12 +1306,13 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Gets the target users allowed to accept an invite.
 	/// </summary>
 	/// <param name="inviteCode">The invite code.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>An allowlist of user ids.</returns>
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<IReadOnlyList<ulong>> GetInviteTargetUsersAsync(string inviteCode)
-		=> this.ApiClient.GetInviteTargetUsersAsync(inviteCode);
+	public Task<IReadOnlyList<ulong>> GetInviteTargetUsersAsync(string inviteCode, CancellationToken cancellationToken = default)
+		=> this.ApiClient.GetInviteTargetUsersAsync(inviteCode, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Updates the target users allowed to accept an invite using a CSV stream.
@@ -1285,11 +1323,12 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     (and only) column header is <c>Users</c>, and each subsequent line must contain exactly one user ID.
 	/// </param>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task UpdateInviteTargetUsersAsync(string inviteCode, Stream targetUsersCsv, string reason = null)
-		=> this.ApiClient.UpdateInviteTargetUsersAsync(inviteCode, targetUsersCsv, null, null, reason);
+	public Task UpdateInviteTargetUsersAsync(string inviteCode, Stream targetUsersCsv, string reason = null, CancellationToken cancellationToken = default)
+		=> this.ApiClient.UpdateInviteTargetUsersAsync(inviteCode, targetUsersCsv, null, null, reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Updates the target users allowed to accept an invite using user ids.
@@ -1297,11 +1336,12 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="inviteCode">The invite code.</param>
 	/// <param name="targetUserIds">User ids allowed to accept the invite.</param>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task UpdateInviteTargetUsersAsync(string inviteCode, IEnumerable<ulong> targetUserIds, string reason = null)
-		=> this.ApiClient.UpdateInviteTargetUsersAsync(inviteCode, null, targetUserIds, null, reason);
+	public Task UpdateInviteTargetUsersAsync(string inviteCode, IEnumerable<ulong> targetUserIds, string reason = null, CancellationToken cancellationToken = default)
+		=> this.ApiClient.UpdateInviteTargetUsersAsync(inviteCode, null, targetUserIds, null, reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Updates the target users allowed to accept an invite using user objects.
@@ -1309,22 +1349,24 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="inviteCode">The invite code.</param>
 	/// <param name="targetUsers">Users allowed to accept the invite.</param>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task UpdateInviteTargetUsersAsync(string inviteCode, IEnumerable<DiscordUser> targetUsers, string reason = null)
-		=> this.ApiClient.UpdateInviteTargetUsersAsync(inviteCode, null, null, targetUsers, reason);
+	public Task UpdateInviteTargetUsersAsync(string inviteCode, IEnumerable<DiscordUser> targetUsers, string reason = null, CancellationToken cancellationToken = default)
+		=> this.ApiClient.UpdateInviteTargetUsersAsync(inviteCode, null, null, targetUsers, reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Gets the invite target users job status.
 	/// </summary>
 	/// <param name="inviteCode">The invite code.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The job status.</returns>
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordInviteTargetUsersJobStatus> GetInviteTargetUsersJobStatusAsync(string inviteCode)
-		=> this.ApiClient.GetInviteTargetUsersJobStatusAsync(inviteCode);
+	public Task<DiscordInviteTargetUsersJobStatus> GetInviteTargetUsersJobStatusAsync(string inviteCode, CancellationToken cancellationToken = default)
+		=> this.ApiClient.GetInviteTargetUsersJobStatusAsync(inviteCode, cancellationToken: cancellationToken);
 
 	/// <inheritdoc cref="DiscordMessage.FromJumpLinkAsync"/>
 	public async Task<DiscordMessage> GetMessageFromJumpLinkAsync(string jumpLink)
@@ -1333,21 +1375,23 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <summary>
 	///     Gets a list of user connections.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<IReadOnlyList<DiscordConnection>> GetConnectionsAsync()
-		=> this.ApiClient.GetUserConnectionsAsync();
+	public Task<IReadOnlyList<DiscordConnection>> GetConnectionsAsync(CancellationToken cancellationToken = default)
+		=> this.ApiClient.GetUserConnectionsAsync(cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Gets a sticker.
 	/// </summary>
 	/// <returns>The requested sticker.</returns>
 	/// <param name="id">The id of the sticker.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the sticker does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordSticker> GetStickerAsync(ulong id)
-		=> this.ApiClient.GetStickerAsync(id);
+	public Task<DiscordSticker> GetStickerAsync(ulong id, CancellationToken cancellationToken = default)
+		=> this.ApiClient.GetStickerAsync(id, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Tries to get a sticker.
@@ -1373,20 +1417,22 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Gets a sticker pack.
 	/// </summary>
 	/// <param name="id">The sticker pack's id.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sticker pack.</returns>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordStickerPack> GetStickerPackAsync(ulong id)
-		=> this.ApiClient.GetStickerPackAsync(id);
+	public Task<DiscordStickerPack> GetStickerPackAsync(ulong id, CancellationToken cancellationToken = default)
+		=> this.ApiClient.GetStickerPackAsync(id, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Gets all nitro sticker packs.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>List of sticker packs.</returns>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<IReadOnlyList<DiscordStickerPack>> GetStickerPacksAsync()
-		=> this.ApiClient.GetStickerPacksAsync();
+	public Task<IReadOnlyList<DiscordStickerPack>> GetStickerPacksAsync(CancellationToken cancellationToken = default)
+		=> this.ApiClient.GetStickerPacksAsync(cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Gets the In-App OAuth Url for the current application.
@@ -1464,12 +1510,13 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Gets a webhook.
 	/// </summary>
 	/// <param name="id">The target webhook id.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The requested webhook.</returns>
 	/// <exception cref="NotFoundException">Thrown when the webhook does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordWebhook> GetWebhookAsync(ulong id)
-		=> this.ApiClient.GetWebhookAsync(id);
+	public Task<DiscordWebhook> GetWebhookAsync(ulong id, CancellationToken cancellationToken = default)
+		=> this.ApiClient.GetWebhookAsync(id, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Tries to get a webhook.
@@ -1496,12 +1543,13 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="id">The target webhook id.</param>
 	/// <param name="token">The target webhook token.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The requested webhook.</returns>
 	/// <exception cref="NotFoundException">Thrown when the webhook does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordWebhook> GetWebhookWithTokenAsync(ulong id, string token)
-		=> this.ApiClient.GetWebhookWithTokenAsync(id, token);
+	public Task<DiscordWebhook> GetWebhookWithTokenAsync(ulong id, string token, CancellationToken cancellationToken = default)
+		=> this.ApiClient.GetWebhookWithTokenAsync(id, token, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Tries to get a webhook with a token.
@@ -1540,16 +1588,17 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="username">New username.</param>
 	/// <param name="avatar">New avatar.</param>
 	/// <param name="banner">New banner.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The modified user.</returns>
 	/// <exception cref="NotFoundException">Thrown when the user does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordUser> UpdateCurrentUserAsync(string? username = null, Optional<Stream?> avatar = default, Optional<Stream?> banner = default)
+	public async Task<DiscordUser> UpdateCurrentUserAsync(string? username = null, Optional<Stream?> avatar = default, Optional<Stream?> banner = default, CancellationToken cancellationToken = default)
 	{
 		var av64 = MediaTool.Base64FromStream(avatar);
 		var ba64 = MediaTool.Base64FromStream(banner);
 
-		var usr = await this.ApiClient.ModifyCurrentUserAsync(username ?? this.CurrentUser.Username, av64, ba64).ConfigureAwait(false);
+		var usr = await this.ApiClient.ModifyCurrentUserAsync(username ?? this.CurrentUser.Username, av64, ba64, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 		this.CurrentUser.Username = usr.Username;
 		this.CurrentUser.Discriminator = usr.Discriminator;
@@ -1562,74 +1611,82 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Gets a guild template by the code.
 	/// </summary>
 	/// <param name="code">The code of the template.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The guild template for the code.</returns>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordGuildTemplate> GetTemplateAsync(string code)
-		=> this.ApiClient.GetTemplateAsync(code);
+	public Task<DiscordGuildTemplate> GetTemplateAsync(string code, CancellationToken cancellationToken = default)
+		=> this.ApiClient.GetTemplateAsync(code, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Gets all the global application commands for this application.
 	/// </summary>
 	/// <param name="withLocalizations">Whether to get the full localization dict.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A list of global application commands.</returns>
-	public Task<IReadOnlyList<DiscordApplicationCommand>> GetGlobalApplicationCommandsAsync(bool withLocalizations = false) =>
-		this.ApiClient.GetGlobalApplicationCommandsAsync(this.CurrentApplication.Id, withLocalizations);
+	public Task<IReadOnlyList<DiscordApplicationCommand>> GetGlobalApplicationCommandsAsync(bool withLocalizations = false, CancellationToken cancellationToken = default) =>
+		this.ApiClient.GetGlobalApplicationCommandsAsync(this.CurrentApplication.Id, withLocalizations, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Overwrites the existing global application commands. New commands are automatically created and missing commands
 	///     are automatically deleted.
 	/// </summary>
 	/// <param name="commands">The list of commands to overwrite with.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The list of global commands.</returns>
-	public Task<IReadOnlyList<DiscordApplicationCommand>> BulkOverwriteGlobalApplicationCommandsAsync(IEnumerable<DiscordApplicationCommand> commands) =>
-		this.ApiClient.BulkOverwriteGlobalApplicationCommandsAsync(this.CurrentApplication.Id, commands);
+	public Task<IReadOnlyList<DiscordApplicationCommand>> BulkOverwriteGlobalApplicationCommandsAsync(IEnumerable<DiscordApplicationCommand> commands, CancellationToken cancellationToken = default) =>
+		this.ApiClient.BulkOverwriteGlobalApplicationCommandsAsync(this.CurrentApplication.Id, commands, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Creates or overwrites a global application command.
 	/// </summary>
 	/// <param name="command">The command to create.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The created command.</returns>
-	public Task<DiscordApplicationCommand> CreateGlobalApplicationCommandAsync(DiscordApplicationCommand command) =>
-		this.ApiClient.CreateGlobalApplicationCommandAsync(this.CurrentApplication.Id, command);
+	public Task<DiscordApplicationCommand> CreateGlobalApplicationCommandAsync(DiscordApplicationCommand command, CancellationToken cancellationToken = default) =>
+		this.ApiClient.CreateGlobalApplicationCommandAsync(this.CurrentApplication.Id, command, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Gets a global application command by its id.
 	/// </summary>
 	/// <param name="commandId">The id of the command to get.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The command with the id.</returns>
-	public Task<DiscordApplicationCommand> GetGlobalApplicationCommandAsync(ulong commandId) =>
-		this.ApiClient.GetGlobalApplicationCommandAsync(this.CurrentApplication.Id, commandId);
+	public Task<DiscordApplicationCommand> GetGlobalApplicationCommandAsync(ulong commandId, CancellationToken cancellationToken = default) =>
+		this.ApiClient.GetGlobalApplicationCommandAsync(this.CurrentApplication.Id, commandId, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Edits a global application command.
 	/// </summary>
 	/// <param name="commandId">The id of the command to edit.</param>
 	/// <param name="action">Action to perform.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The edited command.</returns>
-	public async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong commandId, Action<ApplicationCommandEditModel> action)
+	public async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong commandId, Action<ApplicationCommandEditModel> action, CancellationToken cancellationToken = default)
 	{
 		var mdl = new ApplicationCommandEditModel();
 		action(mdl);
-		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync().ConfigureAwait(false)).Id;
-		return await this.ApiClient.EditGlobalApplicationCommandAsync(applicationId, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.IsNsfw, mdl.AllowedContexts, mdl.IntegrationTypes, mdl.HandlerType).ConfigureAwait(false);
+		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync(cancellationToken).ConfigureAwait(false)).Id;
+		return await this.ApiClient.EditGlobalApplicationCommandAsync(applicationId, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.IsNsfw, mdl.AllowedContexts, mdl.IntegrationTypes, mdl.HandlerType, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
 	///     Deletes a global application command.
 	/// </summary>
 	/// <param name="commandId">The id of the command to delete.</param>
-	public Task DeleteGlobalApplicationCommandAsync(ulong commandId) =>
-		this.ApiClient.DeleteGlobalApplicationCommandAsync(this.CurrentApplication.Id, commandId);
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	public Task DeleteGlobalApplicationCommandAsync(ulong commandId, CancellationToken cancellationToken = default) =>
+		this.ApiClient.DeleteGlobalApplicationCommandAsync(this.CurrentApplication.Id, commandId, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Gets all the application commands for a guild.
 	/// </summary>
 	/// <param name="guildId">The id of the guild to get application commands for.</param>
 	/// <param name="withLocalizations">Whether to get the full localization dict.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A list of application commands in the guild.</returns>
-	public Task<IReadOnlyList<DiscordApplicationCommand>> GetGuildApplicationCommandsAsync(ulong guildId, bool withLocalizations = false) =>
-		this.ApiClient.GetGuildApplicationCommandsAsync(this.CurrentApplication.Id, guildId, withLocalizations);
+	public Task<IReadOnlyList<DiscordApplicationCommand>> GetGuildApplicationCommandsAsync(ulong guildId, bool withLocalizations = false, CancellationToken cancellationToken = default) =>
+		this.ApiClient.GetGuildApplicationCommandsAsync(this.CurrentApplication.Id, guildId, withLocalizations, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Overwrites the existing application commands in a guild. New commands are automatically created and missing
@@ -1637,27 +1694,30 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="guildId">The id of the guild.</param>
 	/// <param name="commands">The list of commands to overwrite with.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The list of guild commands.</returns>
-	public Task<IReadOnlyList<DiscordApplicationCommand>> BulkOverwriteGuildApplicationCommandsAsync(ulong guildId, IEnumerable<DiscordApplicationCommand> commands) =>
-		this.ApiClient.BulkOverwriteGuildApplicationCommandsAsync(this.CurrentApplication.Id, guildId, commands);
+	public Task<IReadOnlyList<DiscordApplicationCommand>> BulkOverwriteGuildApplicationCommandsAsync(ulong guildId, IEnumerable<DiscordApplicationCommand> commands, CancellationToken cancellationToken = default) =>
+		this.ApiClient.BulkOverwriteGuildApplicationCommandsAsync(this.CurrentApplication.Id, guildId, commands, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Creates or overwrites a guild application command.
 	/// </summary>
 	/// <param name="guildId">The id of the guild to create the application command in.</param>
 	/// <param name="command">The command to create.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The created command.</returns>
-	public Task<DiscordApplicationCommand> CreateGuildApplicationCommandAsync(ulong guildId, DiscordApplicationCommand command) =>
-		this.ApiClient.CreateGuildApplicationCommandAsync(this.CurrentApplication.Id, guildId, command);
+	public Task<DiscordApplicationCommand> CreateGuildApplicationCommandAsync(ulong guildId, DiscordApplicationCommand command, CancellationToken cancellationToken = default) =>
+		this.ApiClient.CreateGuildApplicationCommandAsync(this.CurrentApplication.Id, guildId, command, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Gets a application command in a guild by its id.
 	/// </summary>
 	/// <param name="guildId">The id of the guild the application command is in.</param>
 	/// <param name="commandId">The id of the command to get.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The command with the id.</returns>
-	public Task<DiscordApplicationCommand> GetGuildApplicationCommandAsync(ulong guildId, ulong commandId) =>
-		this.ApiClient.GetGuildApplicationCommandAsync(this.CurrentApplication.Id, guildId, commandId);
+	public Task<DiscordApplicationCommand> GetGuildApplicationCommandAsync(ulong guildId, ulong commandId, CancellationToken cancellationToken = default) =>
+		this.ApiClient.GetGuildApplicationCommandAsync(this.CurrentApplication.Id, guildId, commandId, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Edits a application command in a guild.
@@ -1665,13 +1725,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="guildId">The id of the guild the application command is in.</param>
 	/// <param name="commandId">The id of the command to edit.</param>
 	/// <param name="action">Action to perform.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The edited command.</returns>
-	public async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong guildId, ulong commandId, Action<ApplicationCommandEditModel> action)
+	public async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong guildId, ulong commandId, Action<ApplicationCommandEditModel> action, CancellationToken cancellationToken = default)
 	{
 		var mdl = new ApplicationCommandEditModel();
 		action(mdl);
-		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync().ConfigureAwait(false)).Id;
-		return await this.ApiClient.EditGuildApplicationCommandAsync(applicationId, guildId, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.IsNsfw, mdl.AllowedContexts, mdl.IntegrationTypes).ConfigureAwait(false);
+		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync(cancellationToken).ConfigureAwait(false)).Id;
+		return await this.ApiClient.EditGuildApplicationCommandAsync(applicationId, guildId, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.IsNsfw, mdl.AllowedContexts, mdl.IntegrationTypes, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -1679,8 +1740,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="guildId">The id of the guild to delete the application command in.</param>
 	/// <param name="commandId">The id of the command.</param>
-	public Task DeleteGuildApplicationCommandAsync(ulong guildId, ulong commandId) =>
-		this.ApiClient.DeleteGuildApplicationCommandAsync(this.CurrentApplication.Id, guildId, commandId);
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	public Task DeleteGuildApplicationCommandAsync(ulong guildId, ulong commandId, CancellationToken cancellationToken = default) =>
+		this.ApiClient.DeleteGuildApplicationCommandAsync(this.CurrentApplication.Id, guildId, commandId, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Gets all default soundboard sounds available for all users.
@@ -1802,10 +1864,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <returns>A read-only dictionary of presences keyed by guild id.</returns>
 	internal IReadOnlyDictionary<ulong, DiscordPresence> GetAllPresences(ulong userId)
 	{
-		if (!this.PresenceStore.TryGetValue(userId, out var inner))
-			return ReadOnlyDictionary<ulong, DiscordPresence>.Empty;
-
-		return new ReadOnlyDictionary<ulong, DiscordPresence>(new Dictionary<ulong, DiscordPresence>(inner));
+		return !this.PresenceStore.TryGetValue(userId, out var inner)
+			? ReadOnlyDictionary<ulong, DiscordPresence>.Empty
+			: new ReadOnlyDictionary<ulong, DiscordPresence>(new Dictionary<ulong, DiscordPresence>(inner));
 	}
 
 	/// <summary>
@@ -1986,8 +2047,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				Discord = this
 			};
 
+#pragma warning disable IDE0031 // Use null propagation
 			if (member is not null)
 				member.User = author;
+#pragma warning restore IDE0031 // Use null propagation
 
 			message.Author = this.UpdateUser(usr, guild?.Id, guild, member);
 		}
