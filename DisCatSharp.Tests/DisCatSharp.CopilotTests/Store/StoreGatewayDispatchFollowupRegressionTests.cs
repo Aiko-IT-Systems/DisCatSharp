@@ -495,6 +495,130 @@ public class StoreGatewayDispatchFollowupRegressionTests
 	}
 
 	[Fact]
+	public async Task GuildCreateEvent_PopulatesGuildChannelCache()
+	{
+		var client = CreateClient();
+		const ulong guildId = 804032421678153819;
+		const ulong channelId = 9001;
+
+		var guild = new DiscordGuild
+		{
+			Id = guildId,
+			Discord = client,
+			MemberCount = 0
+		};
+		guild.ChannelsInternal[channelId] = new DiscordChannel
+		{
+			Id = channelId,
+			GuildId = guildId,
+			Name = "appeals-queue",
+			Type = ChannelType.Text
+		};
+
+		await client.OnGuildCreateEventAsync(guild, new JArray(), null);
+
+		var cachedGuild = client.GuildsInternal[guildId];
+		var cachedChannel = cachedGuild.GetChannel(channelId);
+
+		Assert.NotNull(cachedChannel);
+		Assert.Equal(guildId, cachedChannel!.GuildId);
+		Assert.Same(client, cachedChannel.Discord);
+	}
+
+	[Fact]
+	public async Task GuildUpdateEvent_PreservesExistingGuildChannelCacheWhenPayloadOmitsChannels()
+	{
+		var client = CreateClient();
+		const ulong guildId = 804032421678153819;
+		const ulong channelId = 9001;
+
+		var guild = new DiscordGuild
+		{
+			Id = guildId,
+			Discord = client,
+			Name = "old-name"
+		};
+		guild.ChannelsInternal[channelId] = new DiscordChannel
+		{
+			Id = channelId,
+			GuildId = guildId,
+			Name = "appeals-queue",
+			Type = ChannelType.Text,
+			Discord = client
+		};
+		client.GuildsInternal[guildId] = guild;
+
+		var updatedGuild = new DiscordGuild
+		{
+			Id = guildId,
+			Name = "new-name"
+		};
+
+		await client.OnGuildUpdateEventAsync(updatedGuild, new JArray());
+
+		var cachedGuild = client.GuildsInternal[guildId];
+		var cachedChannel = cachedGuild.GetChannel(channelId);
+
+		Assert.NotNull(cachedChannel);
+		Assert.Equal("appeals-queue", cachedChannel!.Name);
+	}
+
+	[Fact]
+	public async Task ChannelCreateEvent_AddsChannelToCachedGuildChannelCache()
+	{
+		var client = CreateClient();
+		const ulong guildId = 804032421678153819;
+		const ulong channelId = 9001;
+
+		var guild = new DiscordGuild
+		{
+			Id = guildId,
+			Discord = client
+		};
+		client.GuildsInternal[guildId] = guild;
+
+		var channel = new DiscordChannel
+		{
+			Id = channelId,
+			GuildId = guildId,
+			Name = "appeals-queue",
+			Type = ChannelType.Text
+		};
+
+		await client.OnChannelCreateEventAsync(channel);
+
+		Assert.Same(channel, guild.GetChannel(channelId));
+	}
+
+	[Fact]
+	public async Task ChannelDeleteEvent_RemovesChannelFromCachedGuildChannelCache()
+	{
+		var client = CreateClient();
+		const ulong guildId = 804032421678153819;
+		const ulong channelId = 9001;
+
+		var guild = new DiscordGuild
+		{
+			Id = guildId,
+			Discord = client
+		};
+		var channel = new DiscordChannel
+		{
+			Id = channelId,
+			GuildId = guildId,
+			Name = "appeals-queue",
+			Type = ChannelType.Text,
+			Discord = client
+		};
+		guild.ChannelsInternal[channelId] = channel;
+		client.GuildsInternal[guildId] = guild;
+
+		await client.OnChannelDeleteEventAsync(channel);
+
+		Assert.Null(guild.GetChannel(channelId));
+	}
+
+	[Fact]
 	public async Task ChannelCreate_MissingGuildCache_DoesNotThrowAndStillRaisesEvent()
 	{
 		var client = CreateClient();
