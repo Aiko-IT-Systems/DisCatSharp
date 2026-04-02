@@ -136,8 +136,7 @@ internal class ComponentPaginator : IPaginator
 	/// </summary>
 	/// <param name="request">The request.</param>
 	/// <param name="args">The arguments.</param>
-	/// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
-	private async Task HandlePaginationAsync(IPaginationRequest request, ComponentInteractionCreateEventArgs args, CancellationToken cancellationToken = default)
+	private async Task HandlePaginationAsync(IPaginationRequest request, ComponentInteractionCreateEventArgs args)
 	{
 		var buttons = this._config.PaginationButtons;
 		var msg = await request.GetMessageAsync().ConfigureAwait(false);
@@ -223,6 +222,6 @@ internal class ComponentPaginator : IPaginator
 			msgBuilder.AddComponents(new DiscordActionRowComponent(bts));
 		}
 
-		await msg.ModifyAsync(msgBuilder, cancellationToken: cancellationToken).ConfigureAwait(false);
+		await msg.ModifyAsync(msgBuilder).ConfigureAwait(false);
 	}
 }

@@ -227,8 +227,7 @@ internal class Paginator : IPaginator
 	///     Resets the reactions async.
 	/// </summary>
 	/// <param name="p">The p.</param>
-	/// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
-	private async Task ResetReactionsAsync(IPaginationRequest p, CancellationToken cancellationToken = default)
+	private async Task ResetReactionsAsync(IPaginationRequest p)
 	{
 		var msg = await p.GetMessageAsync().ConfigureAwait(false);
 		var emojis = await p.GetEmojisAsync().ConfigureAwait(false);
@@ -238,23 +237,23 @@ internal class Paginator : IPaginator
 		var mbr = gld?.CurrentMember;
 
 		if (mbr is not null && (chn.PermissionsFor(mbr) & Permissions.ManageMessages) != 0)
-			await msg.DeleteAllReactionsAsync("Pagination", cancellationToken).ConfigureAwait(false);
+			await msg.DeleteAllReactionsAsync("Pagination").ConfigureAwait(false);
 
 		if (p.PageCount > 1)
 		{
 			if (emojis.SkipLeft is not null)
-				await msg.CreateReactionAsync(emojis.SkipLeft, cancellationToken).ConfigureAwait(false);
+				await msg.CreateReactionAsync(emojis.SkipLeft).ConfigureAwait(false);
 			if (emojis.Left is not null)
-				await msg.CreateReactionAsync(emojis.Left, cancellationToken).ConfigureAwait(false);
+				await msg.CreateReactionAsync(emojis.Left).ConfigureAwait(false);
 			if (emojis.Right is not null)
-				await msg.CreateReactionAsync(emojis.Right, cancellationToken).ConfigureAwait(false);
+				await msg.CreateReactionAsync(emojis.Right).ConfigureAwait(false);
 			if (emojis.SkipRight is not null)
-				await msg.CreateReactionAsync(emojis.SkipRight, cancellationToken).ConfigureAwait(false);
+				await msg.CreateReactionAsync(emojis.SkipRight).ConfigureAwait(false);
 			if (emojis.Stop is not null)
-				await msg.CreateReactionAsync(emojis.Stop, cancellationToken).ConfigureAwait(false);
+				await msg.CreateReactionAsync(emojis.Stop).ConfigureAwait(false);
 		}
 		else if (emojis.Stop is not null && p is PaginationRequest { PaginationDeletion: PaginationDeletion.DeleteMessage })
-			await msg.CreateReactionAsync(emojis.Stop, cancellationToken).ConfigureAwait(false);
+			await msg.CreateReactionAsync(emojis.Stop).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -262,8 +261,7 @@ internal class Paginator : IPaginator
 	/// </summary>
 	/// <param name="p">The p.</param>
 	/// <param name="emoji">The emoji.</param>
-	/// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
-	private async Task PaginateAsync(IPaginationRequest p, DiscordEmoji emoji, CancellationToken cancellationToken = default)
+	private async Task PaginateAsync(IPaginationRequest p, DiscordEmoji emoji)
 	{
 		var emojis = await p.GetEmojisAsync().ConfigureAwait(false);
 		var msg = await p.GetMessageAsync().ConfigureAwait(false);
@@ -290,7 +288,7 @@ internal class Paginator : IPaginator
 		if (page.Embed is not null)
 			builder.AddEmbed(page.Embed);
 
-		await msg.ModifyAsync(builder, cancellationToken: cancellationToken).ConfigureAwait(false);
+		await msg.ModifyAsync(builder).ConfigureAwait(false);
 	}
 
 	/// <inheritdoc />
