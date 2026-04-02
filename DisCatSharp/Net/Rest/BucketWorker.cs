@@ -125,6 +125,7 @@ internal sealed class BucketWorker : IDisposable
 		if (this._disposed)
 		{
 			request.TrySetFaulted(new ObjectDisposedException(nameof(BucketWorker), "Bucket worker has been disposed."));
+			request.CancellationTokenSource.Dispose();
 			return;
 		}
 
@@ -139,6 +140,7 @@ internal sealed class BucketWorker : IDisposable
 					this._bucket.BucketId,
 					this._consecutiveFailures,
 					this._circuitOpenSince));
+				request.CancellationTokenSource.Dispose();
 				return;
 			}
 
@@ -162,6 +164,7 @@ internal sealed class BucketWorker : IDisposable
 				request.TrySetFaulted(new ObjectDisposedException(nameof(BucketWorker), "Bucket worker queue is closed."));
 			}
 
+			request.CancellationTokenSource.Dispose();
 			return;
 		}
 
@@ -243,7 +246,10 @@ internal sealed class BucketWorker : IDisposable
 			if (target.EnqueueDirect(request))
 				migrated++;
 			else
+			{
 				request.TrySetFaulted(new ObjectDisposedException(nameof(BucketWorker), "Target worker queue is closed during migration."));
+				request.CancellationTokenSource.Dispose();
+			}
 		}
 
 		return migrated;
@@ -541,7 +547,10 @@ internal sealed class BucketWorker : IDisposable
 
 		// Drain remaining queued requests and fail them explicitly — no silent loss
 		while (this._queue.Reader.TryRead(out var request))
+		{
 			request.TrySetFaulted(new ObjectDisposedException(nameof(BucketWorker), "Bucket worker was disposed with pending requests."));
+			request.CancellationTokenSource.Dispose();
+		}
 
 		this._cts.Dispose();
 	}

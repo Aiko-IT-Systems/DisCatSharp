@@ -376,7 +376,10 @@ internal sealed class BucketRegistry : IDisposable
 
 								// Drain remaining requests and fail them explicitly — better than silent ObjectDisposedException
 								while (replacement.TryDequeue(out var orphaned))
+								{
 									orphaned.TrySetFaulted(new InvalidOperationException($"Fault recovery failed for bucket {key}: worker could not be registered."));
+									orphaned.CancellationTokenSource.Dispose();
+								}
 
 								replacement.Dispose();
 								continue;
@@ -540,6 +543,7 @@ internal sealed class BucketRegistry : IDisposable
 			while (worker.TryDequeue(out var request))
 			{
 				request.TrySetFaulted(ex);
+				request.CancellationTokenSource.Dispose();
 				cancelled++;
 			}
 		}
