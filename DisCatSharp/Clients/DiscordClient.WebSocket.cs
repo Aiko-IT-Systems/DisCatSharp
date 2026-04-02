@@ -36,7 +36,8 @@ public sealed partial class DiscordClient
 	{
 		var appId = this.CurrentApplication?.Id ?? 0ul;
 		var maxConcurrency = this.GatewayInfo?.SessionBucket.MaxConcurrency ?? 1;
-		return s_socketLocks.GetOrAdd(appId, new SocketLock(appId, maxConcurrency));
+		var lockTimeout = this.Configuration.Gateway.Advanced.SocketLockTimeout;
+		return s_socketLocks.GetOrAdd(appId, _ => new SocketLock(appId, maxConcurrency, lockTimeout));
 	}
 
 	#endregion
@@ -533,7 +534,7 @@ public sealed partial class DiscordClient
 		if (data)
 		{
 			this.Logger.LogTrace(LoggerEvents.WebSocketReceive, "Received INVALID_SESSION (OP9, true)");
-			await Task.Delay(6000, this._cancelToken).ConfigureAwait(false);
+			await Task.Delay(this.Configuration.Gateway.Advanced.ReconnectDelay, this._cancelToken).ConfigureAwait(false);
 			await this.SendResumeAsync().ConfigureAwait(false);
 		}
 		else
@@ -864,14 +865,15 @@ public sealed partial class DiscordClient
 	/// <param name="seq">The sequenze.</param>
 	internal async Task SendHeartbeatAsync(long seq)
 	{
-		var moreThan5 = Volatile.Read(ref this._skippedHeartbeats) > 5;
+		var zombieThreshold = this.Configuration.Gateway.Advanced.HeartbeatZombieThreshold;
+		var isZombie = Volatile.Read(ref this._skippedHeartbeats) >= zombieThreshold;
 		var guildsComp = Volatile.Read(ref this._guildDownloadCompleted);
 
 		switch (guildsComp)
 		{
-			case true when moreThan5:
+			case true when isZombie:
 			{
-				this.Logger.LogCritical(LoggerEvents.HeartbeatFailure, "Server failed to acknowledge more than 5 heartbeats - connection is zombie");
+				this.Logger.LogCritical(LoggerEvents.HeartbeatFailure, "Server failed to acknowledge {Threshold} or more heartbeats - connection is zombie", zombieThreshold);
 
 				var args = new ZombiedEventArgs(this.ServiceProvider)
 				{
@@ -883,7 +885,7 @@ public sealed partial class DiscordClient
 				await this.InternalReconnectAsync(code: 4001, message: "Too many heartbeats missed").ConfigureAwait(false);
 				return;
 			}
-			case false when moreThan5:
+			case false when isZombie:
 			{
 				var args = new ZombiedEventArgs(this.ServiceProvider)
 				{
@@ -892,7 +894,7 @@ public sealed partial class DiscordClient
 				};
 				await this._zombied.InvokeAsync(this, args).ConfigureAwait(false);
 
-				this.Logger.LogWarning(LoggerEvents.HeartbeatFailure, "Server failed to acknowledge more than 5 heartbeats, but the guild download is still running - check your connection speed");
+				this.Logger.LogWarning(LoggerEvents.HeartbeatFailure, "Server failed to acknowledge {Threshold} or more heartbeats, but the guild download is still running - check your connection speed", zombieThreshold);
 				break;
 			}
 		}

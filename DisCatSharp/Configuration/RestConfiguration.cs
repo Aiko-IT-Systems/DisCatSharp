@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 
 namespace DisCatSharp;
 
@@ -26,10 +27,21 @@ public sealed class RestConfiguration
 
 	/// <summary>
 	///     <para>Sets the timeout for HTTP requests.</para>
-	///     <para>Set to <see cref="System.Threading.Timeout.InfiniteTimeSpan" /> to disable timeouts.</para>
+	///     <para>Set to <see cref="Timeout.InfiniteTimeSpan" /> to disable timeouts.</para>
+	///     <para>Must be a positive duration or <see cref="Timeout.InfiniteTimeSpan" />.</para>
 	///     <para>Defaults to 20 seconds.</para>
 	/// </summary>
-	public TimeSpan RequestTimeout { internal get; set; } = TimeSpan.FromSeconds(20);
+	public TimeSpan RequestTimeout
+	{
+		internal get;
+		set
+		{
+			if (value != Timeout.InfiniteTimeSpan && value <= TimeSpan.Zero)
+				throw new ArgumentOutOfRangeException(nameof(value), value, "RequestTimeout must be positive or Timeout.InfiniteTimeSpan.");
+
+			field = value;
+		}
+	} = TimeSpan.FromSeconds(20);
 
 	/// <summary>
 	///     <para>
