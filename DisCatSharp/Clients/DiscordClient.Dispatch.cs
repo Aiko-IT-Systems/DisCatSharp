@@ -1093,13 +1093,19 @@ public sealed partial class DiscordClient
 	{
 		channel.Initialize(this);
 
-		if (!this.GuildsInternal.TryGetValue(channel.GuildId.Value, out var cachedGuild))
+		if (!channel.GuildId.HasValue)
 		{
-			this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received channel_create for unknown guild {GuildId}, skipping.", channel.GuildId.Value);
+			this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received channel_create without a guild_id for channel {ChannelId}, skipping.", channel.Id);
 			return;
 		}
 
-		cachedGuild.ChannelsInternal[channel.Id] = channel;
+		var guild = this.GetCachedOrTransientGuild(channel.GuildId.Value);
+		if (this.GuildsInternal.TryGetValue(channel.GuildId.Value, out var cachedGuild))
+			cachedGuild.ChannelsInternal[channel.Id] = channel;
+		else
+		{
+			this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received channel_create for unknown guild {GuildId}; raising event with transient guild.", channel.GuildId.Value);
+		}
 
 		/*if (this.Configuration.Cache.AutoRefreshChannelCache)
             {
@@ -1109,7 +1115,7 @@ public sealed partial class DiscordClient
 		await this.RaiseEventAsync(this._channelCreated, new(this.ServiceProvider)
 		{
 			Channel = channel,
-			Guild = channel.Guild
+			Guild = guild
 		}).ConfigureAwait(false);
 	}
 
@@ -1124,7 +1130,14 @@ public sealed partial class DiscordClient
 
 		channel.Discord = this;
 
-		var gld = channel.Guild;
+		if (!channel.GuildId.HasValue)
+		{
+			this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received channel_update without a guild_id for channel {ChannelId}, skipping.", channel.Id);
+			return;
+		}
+
+		var cachedGuild = this.InternalGetCachedGuild(channel.GuildId.Value);
+		var eventGuild = cachedGuild ?? this.CreateTransientGuild(channel.GuildId.Value);
 
 		var channelNew = this.InternalGetCachedChannel(channel.Id);
 		DiscordChannel channelOld = null;
@@ -1208,21 +1221,26 @@ public sealed partial class DiscordClient
 			channelOld.Initialize(this);
 			channelNew.Initialize(this);
 
-			if (this.Configuration.Cache.AutoRefreshChannelCache && gld != null)
-				await this.RefreshChannelsAsync(channel.Guild.Id).ConfigureAwait(false);
+			if (this.Configuration.Cache.AutoRefreshChannelCache && cachedGuild is not null)
+				await this.RefreshChannelsAsync(channel.GuildId.Value).ConfigureAwait(false);
 		}
-		else if (gld != null)
+		else if (cachedGuild is not null)
 		{
-			gld.ChannelsInternal[channel.Id] = channel;
+			cachedGuild.ChannelsInternal[channel.Id] = channel;
 
 			if (this.Configuration.Cache.AutoRefreshChannelCache)
-				await this.RefreshChannelsAsync(channel.Guild.Id).ConfigureAwait(false);
+				await this.RefreshChannelsAsync(channel.GuildId.Value).ConfigureAwait(false);
+		}
+		else
+		{
+			channelNew = channel;
+			this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received channel_update for unknown guild {GuildId}; raising event with transient guild.", channel.GuildId.Value);
 		}
 
 		await this.RaiseEventAsync(this._channelUpdated, new(this.ServiceProvider)
 		{
-			ChannelAfter = channelNew,
-			Guild = gld,
+			ChannelAfter = channelNew ?? channel,
+			Guild = eventGuild,
 			ChannelBefore = channelOld
 		}).ConfigureAwait(false);
 	}
@@ -1250,17 +1268,28 @@ public sealed partial class DiscordClient
 		}
 		else
 		{
-			var gld = channel.Guild;
+			if (!channel.GuildId.HasValue)
+			{
+				this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received channel_delete without a guild_id for channel {ChannelId}, skipping.", channel.Id);
+				return;
+			}
 
-			if (gld.ChannelsInternal.TryRemove(channel.Id, out var cachedChannel)) channel = cachedChannel;
+			var cachedGuild = this.InternalGetCachedGuild(channel.GuildId.Value);
+			var eventGuild = cachedGuild ?? this.CreateTransientGuild(channel.GuildId.Value);
 
-			if (this.Configuration.Cache.AutoRefreshChannelCache)
-				await this.RefreshChannelsAsync(channel.Guild.Id).ConfigureAwait(false);
+			if (cachedGuild?.ChannelsInternal.TryRemove(channel.Id, out var cachedChannel) is true)
+				channel = cachedChannel;
+
+			if (this.Configuration.Cache.AutoRefreshChannelCache && cachedGuild is not null)
+				await this.RefreshChannelsAsync(channel.GuildId.Value).ConfigureAwait(false);
+
+			if (cachedGuild is null)
+				this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received channel_delete for unknown guild {GuildId}; raising event with transient guild.", channel.GuildId.Value);
 
 			await this.RaiseEventAsync(this._channelDeleted, new(this.ServiceProvider)
 			{
 				Channel = channel,
-				Guild = gld
+				Guild = eventGuild
 			}).ConfigureAwait(false);
 		}
 	}
@@ -2833,6 +2862,16 @@ public sealed partial class DiscordClient
 			Colors = source.Colors
 		};
 
+	private DiscordGuild GetCachedOrTransientGuild(ulong guildId)
+		=> this.InternalGetCachedGuild(guildId) ?? this.CreateTransientGuild(guildId);
+
+	private DiscordGuild CreateTransientGuild(ulong guildId)
+		=> new()
+		{
+			Id = guildId,
+			Discord = this
+		};
+
 	/// <summary>
 	///     Handles the guild role delete event.
 	/// </summary>
@@ -3764,12 +3803,15 @@ public sealed partial class DiscordClient
 		stage.Discord = this;
 
 		var guild = this.InternalGetCachedGuild(stage.GuildId);
-		guild.StageInstancesInternal[stage.Id] = stage;
+		if (guild is not null)
+			guild.StageInstancesInternal[stage.Id] = stage;
+		else
+			this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received stage_instance_create for unknown guild {GuildId}; raising event with transient guild.", stage.GuildId);
 
 		await this.RaiseEventAsync(this._stageInstanceCreated, new(this.ServiceProvider)
 		{
 			StageInstance = stage,
-			Guild = stage.Guild
+			Guild = guild ?? this.CreateTransientGuild(stage.GuildId)
 		}).ConfigureAwait(false);
 	}
 
@@ -3781,12 +3823,15 @@ public sealed partial class DiscordClient
 	{
 		stage.Discord = this;
 		var guild = this.InternalGetCachedGuild(stage.GuildId);
-		guild.StageInstancesInternal[stage.Id] = stage;
+		if (guild is not null)
+			guild.StageInstancesInternal[stage.Id] = stage;
+		else
+			this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received stage_instance_update for unknown guild {GuildId}; raising event with transient guild.", stage.GuildId);
 
 		await this.RaiseEventAsync(this._stageInstanceUpdated, new(this.ServiceProvider)
 		{
 			StageInstance = stage,
-			Guild = stage.Guild
+			Guild = guild ?? this.CreateTransientGuild(stage.GuildId)
 		}).ConfigureAwait(false);
 	}
 
@@ -3800,11 +3845,13 @@ public sealed partial class DiscordClient
 		var guild = this.InternalGetCachedGuild(stage.GuildId);
 		if (guild?.StageInstancesInternal.TryRemove(stage.Id, out var cachedStage) ?? false)
 			stage = cachedStage;
+		else if (guild is null)
+			this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received stage_instance_delete for unknown guild {GuildId}; raising event with transient guild.", stage.GuildId);
 
 		await this.RaiseEventAsync(this._stageInstanceDeleted, new(this.ServiceProvider)
 		{
 			StageInstance = stage,
-			Guild = guild ?? stage.Guild
+			Guild = guild ?? this.CreateTransientGuild(stage.GuildId)
 		}).ConfigureAwait(false);
 	}
 

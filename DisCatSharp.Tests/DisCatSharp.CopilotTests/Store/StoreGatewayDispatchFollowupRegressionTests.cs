@@ -495,6 +495,175 @@ public class StoreGatewayDispatchFollowupRegressionTests
 	}
 
 	[Fact]
+	public async Task ChannelCreate_MissingGuildCache_DoesNotThrowAndStillRaisesEvent()
+	{
+		var client = CreateClient();
+		var channel = new DiscordChannel
+		{
+			Id = 124,
+			GuildId = 804032421678153819,
+			Name = "fresh-channel",
+			Type = ChannelType.Text
+		};
+
+		ChannelCreateEventArgs? captured = null;
+		client.ChannelCreated += (_, args) =>
+		{
+			captured = args;
+			return Task.CompletedTask;
+		};
+
+		var exception = await Record.ExceptionAsync(() => client.OnChannelCreateEventAsync(channel));
+
+		Assert.Null(exception);
+		Assert.NotNull(captured);
+		Assert.Same(channel, captured!.Channel);
+		Assert.Equal(channel.GuildId, captured.Guild.Id);
+		Assert.False(client.GuildsInternal.ContainsKey(channel.GuildId.GetValueOrDefault()));
+	}
+
+	[Fact]
+	public async Task ChannelUpdate_MissingGuildCache_DoesNotThrowAndStillRaisesEvent()
+	{
+		var client = CreateClient();
+		var channel = new DiscordChannel
+		{
+			Id = 125,
+			GuildId = 804032421678153819,
+			Name = "updated-channel",
+			Type = ChannelType.Text
+		};
+
+		ChannelUpdateEventArgs? captured = null;
+		client.ChannelUpdated += (_, args) =>
+		{
+			captured = args;
+			return Task.CompletedTask;
+		};
+
+		var exception = await Record.ExceptionAsync(() => client.OnChannelUpdateEventAsync(channel));
+
+		Assert.Null(exception);
+		Assert.NotNull(captured);
+		Assert.Equal(channel.GuildId, captured!.Guild.Id);
+		Assert.Same(channel, captured.ChannelAfter);
+		Assert.Null(captured.ChannelBefore);
+		Assert.False(client.GuildsInternal.ContainsKey(channel.GuildId.GetValueOrDefault()));
+	}
+
+	[Fact]
+	public async Task ChannelDelete_MissingGuildCache_DoesNotThrowAndStillRaisesEvent()
+	{
+		var client = CreateClient();
+		var channel = new DiscordChannel
+		{
+			Id = 126,
+			GuildId = 804032421678153819,
+			Name = "deleted-channel",
+			Type = ChannelType.Text
+		};
+
+		ChannelDeleteEventArgs? captured = null;
+		client.ChannelDeleted += (_, args) =>
+		{
+			captured = args;
+			return Task.CompletedTask;
+		};
+
+		var exception = await Record.ExceptionAsync(() => client.OnChannelDeleteEventAsync(channel));
+
+		Assert.Null(exception);
+		Assert.NotNull(captured);
+		Assert.Same(channel, captured!.Channel);
+		Assert.Equal(channel.GuildId, captured.Guild.Id);
+		Assert.False(client.GuildsInternal.ContainsKey(channel.GuildId.GetValueOrDefault()));
+	}
+
+	[Fact]
+	public async Task StageInstanceCreate_MissingGuildCache_DoesNotThrowAndStillRaisesEvent()
+	{
+		var client = CreateClient();
+		var stage = new DiscordStageInstance
+		{
+			Id = 127,
+			GuildId = 804032421678153819,
+			ChannelId = 9001,
+			Topic = "fresh-stage"
+		};
+
+		StageInstanceCreateEventArgs? captured = null;
+		client.StageInstanceCreated += (_, args) =>
+		{
+			captured = args;
+			return Task.CompletedTask;
+		};
+
+		var exception = await Record.ExceptionAsync(() => client.OnStageInstanceCreateEventAsync(stage));
+
+		Assert.Null(exception);
+		Assert.NotNull(captured);
+		Assert.Same(stage, captured!.StageInstance);
+		Assert.Equal(stage.GuildId, captured.Guild.Id);
+		Assert.False(client.GuildsInternal.ContainsKey(stage.GuildId));
+	}
+
+	[Fact]
+	public async Task StageInstanceUpdate_MissingGuildCache_DoesNotThrowAndStillRaisesEvent()
+	{
+		var client = CreateClient();
+		var stage = new DiscordStageInstance
+		{
+			Id = 128,
+			GuildId = 804032421678153819,
+			ChannelId = 9001,
+			Topic = "updated-stage"
+		};
+
+		StageInstanceUpdateEventArgs? captured = null;
+		client.StageInstanceUpdated += (_, args) =>
+		{
+			captured = args;
+			return Task.CompletedTask;
+		};
+
+		var exception = await Record.ExceptionAsync(() => client.OnStageInstanceUpdateEventAsync(stage));
+
+		Assert.Null(exception);
+		Assert.NotNull(captured);
+		Assert.Same(stage, captured!.StageInstance);
+		Assert.Equal(stage.GuildId, captured.Guild.Id);
+		Assert.False(client.GuildsInternal.ContainsKey(stage.GuildId));
+	}
+
+	[Fact]
+	public async Task StageInstanceDelete_MissingGuildCache_DoesNotThrowAndStillRaisesEvent()
+	{
+		var client = CreateClient();
+		var stage = new DiscordStageInstance
+		{
+			Id = 129,
+			GuildId = 804032421678153819,
+			ChannelId = 9001,
+			Topic = "deleted-stage"
+		};
+
+		StageInstanceDeleteEventArgs? captured = null;
+		client.StageInstanceDeleted += (_, args) =>
+		{
+			captured = args;
+			return Task.CompletedTask;
+		};
+
+		var exception = await Record.ExceptionAsync(() => client.OnStageInstanceDeleteEventAsync(stage));
+
+		Assert.Null(exception);
+		Assert.NotNull(captured);
+		Assert.Same(stage, captured!.StageInstance);
+		Assert.Equal(stage.GuildId, captured.Guild.Id);
+		Assert.False(client.GuildsInternal.ContainsKey(stage.GuildId));
+	}
+
+	[Fact]
 	public async Task WebhooksUpdate_MissingGuildCache_DoesNotThrowAndStillRaisesEvent()
 	{
 		var client = CreateClient();
