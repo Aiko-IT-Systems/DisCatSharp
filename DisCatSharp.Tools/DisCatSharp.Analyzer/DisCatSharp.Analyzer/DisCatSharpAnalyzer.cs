@@ -164,9 +164,31 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 		description: s_descriptionConfigPropertyMigration,
 		helpLinkUri: "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/1201");
 
+	/// <inheritdoc cref="DiagnosticDescriptor" />
+	private static readonly DiagnosticDescriptor s_asyncDisposalUsingMigrationRule = new(
+		DisCatSharpDiagnosticIds.AsyncDisposalUsingMigration,
+		"[DCS] Prefer 'await using' for async-disposable clients",
+		"'{0}' implements IAsyncDisposable. Use 'await using' instead of 'using' for proper async disposal.",
+		CATEGORY,
+		DiagnosticSeverity.Warning,
+		isEnabledByDefault: true,
+		description: "DisCatSharp client types now implement IAsyncDisposable. Using 'await using' ensures resources are released asynchronously without blocking threads.",
+		helpLinkUri: "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/1301");
+
+	/// <inheritdoc cref="DiagnosticDescriptor" />
+	private static readonly DiagnosticDescriptor s_asyncDisposalDisposeMigrationRule = new(
+		DisCatSharpDiagnosticIds.AsyncDisposalDisposeMigration,
+		"[DCS] Prefer DisposeAsync() over Dispose()",
+		"'{0}.Dispose()' should be replaced with 'await {0}.DisposeAsync()'. The sync Dispose() path blocks the calling thread.",
+		CATEGORY,
+		DiagnosticSeverity.Warning,
+		isEnabledByDefault: true,
+		description: "DisCatSharp client types now implement IAsyncDisposable. Calling DisposeAsync() avoids blocking the calling thread during graceful shutdown.",
+		helpLinkUri: "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/1302");
+
 	/// <inheritdoc />
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
-		=> ImmutableArray.Create(s_experimentalRule, s_deprecatedRule, s_discordInExperimentRule, s_discordDeprecatedRule, s_discordUnreleasedRule, s_requiresFeatureRule, s_requiresOverrideRule, s_applicationCommandChecksFailedMigrationRule, s_banDeleteMessageDaysMigrationRule, s_presencesPropertyRemovalRule, s_configPropertyMigrationRule);
+		=> ImmutableArray.Create(s_experimentalRule, s_deprecatedRule, s_discordInExperimentRule, s_discordDeprecatedRule, s_discordUnreleasedRule, s_requiresFeatureRule, s_requiresOverrideRule, s_applicationCommandChecksFailedMigrationRule, s_banDeleteMessageDaysMigrationRule, s_presencesPropertyRemovalRule, s_configPropertyMigrationRule, s_asyncDisposalUsingMigrationRule, s_asyncDisposalDisposeMigrationRule);
 
 	/// <inheritdoc />
 	public override void Initialize(AnalysisContext context)
@@ -189,6 +211,9 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 		context.RegisterSyntaxNodeAction(AnalyzeBanDeleteMessageDaysMigration, SyntaxKind.InvocationExpression);
 		context.RegisterSyntaxNodeAction(AnalyzeConfigPropertyAccess, SyntaxKind.SimpleMemberAccessExpression);
 		context.RegisterSyntaxNodeAction(AnalyzeInitializerAssignment, SyntaxKind.SimpleAssignmentExpression);
+		context.RegisterSyntaxNodeAction(AnalyzeAsyncDisposalUsing, SyntaxKind.LocalDeclarationStatement);
+		context.RegisterSyntaxNodeAction(AnalyzeAsyncDisposalUsing, SyntaxKind.UsingStatement);
+		context.RegisterSyntaxNodeAction(AnalyzeAsyncDisposalDispose, SyntaxKind.InvocationExpression);
 	}
 
 	/// <summary>
@@ -492,6 +517,75 @@ public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 				oldName,
 				fullNewPath));
 		}
+	}
+
+	/// <summary>
+	///     Detects <c>using</c> (non-<c>await</c>) patterns on DisCatSharp async-disposable types.
+	/// </summary>
+	private static void AnalyzeAsyncDisposalUsing(SyntaxNodeAnalysisContext context)
+	{
+		switch (context.Node)
+		{
+			case LocalDeclarationStatementSyntax localDecl
+				when AsyncDisposalMigrationAnalysis.IsNonAwaitUsingLocalDeclaration(context, localDecl):
+			{
+				var symbol = context.SemanticModel
+					.GetDeclaredSymbol(localDecl.Declaration.Variables[0], context.CancellationToken);
+				var typeName = symbol is ILocalSymbol localSym ? localSym.Type.Name : "client";
+				context.ReportDiagnostic(Diagnostic.Create(
+					s_asyncDisposalUsingMigrationRule,
+					localDecl.UsingKeyword.GetLocation(),
+					typeName));
+				break;
+			}
+
+			case UsingStatementSyntax usingStmt
+				when AsyncDisposalMigrationAnalysis.IsNonAwaitUsingStatement(context, usingStmt):
+			{
+				string typeName;
+				if (usingStmt.Declaration is not null)
+				{
+					var variable = usingStmt.Declaration.Variables.FirstOrDefault();
+					typeName = variable is not null
+						? context.SemanticModel.GetDeclaredSymbol(variable, context.CancellationToken) is ILocalSymbol local
+							? local.Type.Name
+							: "client"
+						: "client";
+				}
+				else
+				{
+					typeName = usingStmt.Expression is not null
+						? context.SemanticModel.GetTypeInfo(usingStmt.Expression, context.CancellationToken).Type?.Name ?? "client"
+						: "client";
+				}
+
+				context.ReportDiagnostic(Diagnostic.Create(
+					s_asyncDisposalUsingMigrationRule,
+					usingStmt.UsingKeyword.GetLocation(),
+					typeName));
+				break;
+			}
+		}
+	}
+
+	/// <summary>
+	///     Detects <c>.Dispose()</c> calls on DisCatSharp async-disposable types.
+	/// </summary>
+	private static void AnalyzeAsyncDisposalDispose(SyntaxNodeAnalysisContext context)
+	{
+		if (context.Node is not InvocationExpressionSyntax invocation)
+			return;
+
+		if (!AsyncDisposalMigrationAnalysis.IsSyncDisposeCallOnAsyncDisposable(context, invocation))
+			return;
+
+		var memberAccess = (MemberAccessExpressionSyntax)invocation.Expression;
+		var receiverText = memberAccess.Expression.ToString();
+
+		context.ReportDiagnostic(Diagnostic.Create(
+			s_asyncDisposalDisposeMigrationRule,
+			invocation.GetLocation(),
+			receiverText));
 	}
 
 	/// <summary>
