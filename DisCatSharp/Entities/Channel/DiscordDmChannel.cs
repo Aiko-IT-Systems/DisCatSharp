@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
@@ -61,8 +62,8 @@ public class DiscordDmChannel : DiscordChannel
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task AddDmRecipientAsync(ulong userId, string accessToken, string nickname)
-		=> this.Discord.ApiClient.AddGroupDmRecipientAsync(this.Id, userId, accessToken, nickname);
+	public Task AddDmRecipientAsync(ulong userId, string accessToken, string nickname, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.AddGroupDmRecipientAsync(this.Id, userId, accessToken, nickname, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Only use for Group DMs! Whitelisted bots only. Requires user's oauth2 access token.
@@ -72,6 +73,6 @@ public class DiscordDmChannel : DiscordChannel
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task RemoveDmRecipientAsync(ulong userId, string accessToken)
-		=> this.Discord.ApiClient.RemoveGroupDmRecipientAsync(this.Id, userId);
+	public Task RemoveDmRecipientAsync(ulong userId, string accessToken, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.RemoveGroupDmRecipientAsync(this.Id, userId, cancellationToken: cancellationToken);
 }

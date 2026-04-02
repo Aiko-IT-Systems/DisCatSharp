@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Exceptions;
@@ -97,13 +98,13 @@ public sealed class DiscordScheduledEventException : ObservableApiObject, IEquat
 	/// <exception cref="NotFoundException">Thrown when the event or exception does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordScheduledEventException> ModifyAsync(Action<ScheduledEventExceptionEditModel> action)
+	public Task<DiscordScheduledEventException> ModifyAsync(Action<ScheduledEventExceptionEditModel> action, CancellationToken cancellationToken = default)
 	{
 		var mdl = new ScheduledEventExceptionEditModel();
 		action(mdl);
 
 		var scheduledEvent = this.ScheduledEvent ?? throw new InvalidOperationException("Unable to resolve the parent scheduled event for this exception.");
-		return this.Discord.ApiClient.ModifyGuildScheduledEventExceptionAsync(scheduledEvent.GuildId, this.EventId, this.Id, mdl.ScheduledStartTime, mdl.ScheduledEndTime, mdl.IsCanceled, mdl.AuditLogReason);
+		return this.Discord.ApiClient.ModifyGuildScheduledEventExceptionAsync(scheduledEvent.GuildId, this.EventId, this.Id, mdl.ScheduledStartTime, mdl.ScheduledEndTime, mdl.IsCanceled, mdl.AuditLogReason, cancellationToken: cancellationToken);
 	}
 
 	/// <summary>
@@ -115,10 +116,10 @@ public sealed class DiscordScheduledEventException : ObservableApiObject, IEquat
 	/// <exception cref="NotFoundException">Thrown when the event or exception does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task DeleteAsync(string? reason = null)
+	public Task DeleteAsync(string? reason = null, CancellationToken cancellationToken = default)
 	{
 		var scheduledEvent = this.ScheduledEvent ?? throw new InvalidOperationException("Unable to resolve the parent scheduled event for this exception.");
-		return this.Discord.ApiClient.DeleteGuildScheduledEventExceptionAsync(scheduledEvent.GuildId, this.EventId, this.Id, reason);
+		return this.Discord.ApiClient.DeleteGuildScheduledEventExceptionAsync(scheduledEvent.GuildId, this.EventId, this.Id, reason, cancellationToken: cancellationToken);
 	}
 
 	/// <summary>
@@ -133,10 +134,10 @@ public sealed class DiscordScheduledEventException : ObservableApiObject, IEquat
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 
-	public Task<IReadOnlyDictionary<ulong, DiscordScheduledEventUser>> GetUsersAsync(int? limit = null, ulong? before = null, ulong? after = null, bool? withMember = null)
+	public Task<IReadOnlyDictionary<ulong, DiscordScheduledEventUser>> GetUsersAsync(int? limit = null, ulong? before = null, ulong? after = null, bool? withMember = null, CancellationToken cancellationToken = default)
 	{
 		var scheduledEvent = this.ScheduledEvent ?? throw new InvalidOperationException("Unable to resolve the parent scheduled event for this exception.");
-		return this.Discord.ApiClient.GetGuildScheduledEventExceptionUsersAsync(scheduledEvent.GuildId, this.EventId, this.Id, limit, before, after, withMember);
+		return this.Discord.ApiClient.GetGuildScheduledEventExceptionUsersAsync(scheduledEvent.GuildId, this.EventId, this.Id, limit, before, after, withMember, cancellationToken: cancellationToken);
 	}
 
 	/// <summary>

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -10,6 +10,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using System.Threading;
 
 using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
@@ -307,65 +308,65 @@ public sealed class DiscordOAuth2Client : IDisposable
 	///     Exchanges a code for an discord access token.
 	/// </summary>
 	/// <param name="code">The exchange code.</param>
-	public async Task<DiscordAccessToken> ExchangeAccessTokenAsync(string code)
-		=> await this.ApiClient.ExchangeOAuth2AccessTokenAsync(code);
+	public async Task<DiscordAccessToken> ExchangeAccessTokenAsync(string code, CancellationToken cancellationToken = default)
+		=> await this.ApiClient.ExchangeOAuth2AccessTokenAsync(code, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Exchanges a refresh token for a new discord access token.
 	/// </summary>
 	/// <param name="accessToken">The current discord access token.</param>
-	public async Task<DiscordAccessToken> RefreshAccessTokenAsync(DiscordAccessToken accessToken)
-		=> await this.ApiClient.RefreshOAuth2AccessTokenAsync(accessToken.RefreshToken);
+	public async Task<DiscordAccessToken> RefreshAccessTokenAsync(DiscordAccessToken accessToken, CancellationToken cancellationToken = default)
+		=> await this.ApiClient.RefreshOAuth2AccessTokenAsync(accessToken.RefreshToken, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Revokes an OAuth2 token via its access token.
 	/// </summary>
 	/// <param name="accessToken">The current discord access token.</param>
-	public async Task RevokeByAccessTokenAsync(DiscordAccessToken accessToken)
-		=> await this.ApiClient.RevokeOAuth2TokenAsync(accessToken.AccessToken, "access_token");
+	public async Task RevokeByAccessTokenAsync(DiscordAccessToken accessToken, CancellationToken cancellationToken = default)
+		=> await this.ApiClient.RevokeOAuth2TokenAsync(accessToken.AccessToken, "access_token", cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Revokes an OAuth2 token via its refresh token.
 	/// </summary>
 	/// <param name="accessToken">The current discord access token.</param>
-	public async Task RevokeByRefreshTokenAsync(DiscordAccessToken accessToken)
-		=> await this.ApiClient.RevokeOAuth2TokenAsync(accessToken.RefreshToken, "refresh_token");
+	public async Task RevokeByRefreshTokenAsync(DiscordAccessToken accessToken, CancellationToken cancellationToken = default)
+		=> await this.ApiClient.RevokeOAuth2TokenAsync(accessToken.RefreshToken, "refresh_token", cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Gets the current authorization information.
 	/// </summary>
 	/// <param name="accessToken">The discord access token.</param>
-	public async Task<DiscordAuthorizationInformation> GetCurrentAuthorizationInformationAsync(DiscordAccessToken accessToken)
-		=> await this.ApiClient.GetCurrentOAuth2AuthorizationInformationAsync(accessToken.AccessToken);
+	public async Task<DiscordAuthorizationInformation> GetCurrentAuthorizationInformationAsync(DiscordAccessToken accessToken, CancellationToken cancellationToken = default)
+		=> await this.ApiClient.GetCurrentOAuth2AuthorizationInformationAsync(accessToken.AccessToken, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Gets the current user.
 	/// </summary>
 	/// <param name="accessToken">The discord access token.</param>
-	public async Task<DiscordUser> GetCurrentUserAsync(DiscordAccessToken accessToken)
-		=> accessToken.Scope.Split(' ').Any(x => x == "identify") ? await this.ApiClient.GetCurrentUserAsync(accessToken.AccessToken) : throw new AccessViolationException("Access token does not include identify scope");
+	public async Task<DiscordUser> GetCurrentUserAsync(DiscordAccessToken accessToken, CancellationToken cancellationToken = default)
+		=> accessToken.Scope.Split(' ').Any(x => x == "identify") ? await this.ApiClient.GetCurrentUserAsync(accessToken.AccessToken, cancellationToken: cancellationToken) : throw new AccessViolationException("Access token does not include identify scope");
 
 	/// <summary>
 	///     Gets the current user's connections.
 	/// </summary>
 	/// <param name="accessToken">The discord access token.</param>
-	public async Task<IReadOnlyList<DiscordConnection>> GetCurrentUserConnectionsAsync(DiscordAccessToken accessToken)
-		=> accessToken.Scope.Split(' ').Any(x => x == "connections") ? await this.ApiClient.GetCurrentUserConnectionsAsync(accessToken.AccessToken) : throw new AccessViolationException("Access token does not include connections scope");
+	public async Task<IReadOnlyList<DiscordConnection>> GetCurrentUserConnectionsAsync(DiscordAccessToken accessToken, CancellationToken cancellationToken = default)
+		=> accessToken.Scope.Split(' ').Any(x => x == "connections") ? await this.ApiClient.GetCurrentUserConnectionsAsync(accessToken.AccessToken, cancellationToken: cancellationToken) : throw new AccessViolationException("Access token does not include connections scope");
 
 	/// <summary>
 	///     Gets the current user's guilds.
 	/// </summary>
 	/// <param name="accessToken">The discord access token.</param>
-	public async Task<IReadOnlyList<DiscordGuild>> GetCurrentUserGuildsAsync(DiscordAccessToken accessToken)
-		=> accessToken.Scope.Split(' ').Any(x => x == "guilds") ? await this.ApiClient.GetCurrentUserGuildsAsync(accessToken.AccessToken) : throw new AccessViolationException("Access token does not include guilds scope");
+	public async Task<IReadOnlyList<DiscordGuild>> GetCurrentUserGuildsAsync(DiscordAccessToken accessToken, CancellationToken cancellationToken = default)
+		=> accessToken.Scope.Split(' ').Any(x => x == "guilds") ? await this.ApiClient.GetCurrentUserGuildsAsync(accessToken.AccessToken, cancellationToken: cancellationToken) : throw new AccessViolationException("Access token does not include guilds scope");
 
 	/// <summary>
 	///     Gets the current user's guild member for given <paramref name="guildId" />.
 	/// </summary>
 	/// <param name="accessToken">The discord access token.</param>
 	/// <param name="guildId">The guild id to get the member for.</param>
-	public async Task<DiscordMember> GetCurrentUserGuildMemberAsync(DiscordAccessToken accessToken, ulong guildId)
-		=> accessToken.Scope.Split(' ').Any(x => x == "guilds.members.read") ? await this.ApiClient.GetCurrentUserGuildMemberAsync(accessToken.AccessToken, guildId) : throw new AccessViolationException("Access token does not include guilds.members.read scope");
+	public async Task<DiscordMember> GetCurrentUserGuildMemberAsync(DiscordAccessToken accessToken, ulong guildId, CancellationToken cancellationToken = default)
+		=> accessToken.Scope.Split(' ').Any(x => x == "guilds.members.read") ? await this.ApiClient.GetCurrentUserGuildMemberAsync(accessToken.AccessToken, guildId, cancellationToken: cancellationToken) : throw new AccessViolationException("Access token does not include guilds.members.read scope");
 
 	/// <summary>
 	///     <para>Adds the current user to the given <paramref name="guildId" />.</para>
@@ -381,8 +382,8 @@ public sealed class DiscordOAuth2Client : IDisposable
 	/// <param name="roles">The new roles.</param>
 	/// <param name="muted">Whether this user has to be muted.</param>
 	/// <param name="deafened">Whether this user has to be deafened.</param>
-	public async Task<DiscordMember> AddCurrentUserToGuildAsync(DiscordAccessToken accessToken, ulong guildId, string? nickname = null, IEnumerable<DiscordRole>? roles = null, bool? muted = null, bool? deafened = null)
-		=> accessToken.Scope.Split(' ').Any(x => x == "guilds.join") ? await this.ApiClient.AddGuildMemberAsync(guildId, (await this.GetCurrentUserAsync(accessToken)).Id, accessToken.AccessToken, nickname, roles, muted, deafened) : throw new AccessViolationException("Access token does not include guilds.join scope");
+	public async Task<DiscordMember> AddCurrentUserToGuildAsync(DiscordAccessToken accessToken, ulong guildId, string? nickname = null, IEnumerable<DiscordRole>? roles = null, bool? muted = null, bool? deafened = null, CancellationToken cancellationToken = default)
+		=> accessToken.Scope.Split(' ').Any(x => x == "guilds.join") ? await this.ApiClient.AddGuildMemberAsync(guildId, (await this.GetCurrentUserAsync(accessToken)).Id, accessToken.AccessToken, nickname, roles, muted, deafened, cancellationToken: cancellationToken) : throw new AccessViolationException("Access token does not include guilds.join scope");
 
 	/// <summary>
 	///     <para>Adds the given <paramref name="userId" /> to the given <paramref name="guildId" />.</para>
@@ -399,15 +400,15 @@ public sealed class DiscordOAuth2Client : IDisposable
 	/// <param name="roles">The new roles.</param>
 	/// <param name="muted">Whether this user has to be muted.</param>
 	/// <param name="deafened">Whether this user has to be deafened.</param>
-	public async Task<DiscordMember> AddCurrentUserToGuildAsync(DiscordAccessToken accessToken, ulong userId, ulong guildId, string? nickname = null, IEnumerable<DiscordRole>? roles = null, bool? muted = null, bool? deafened = null)
-		=> accessToken.Scope.Split(' ').Any(x => x == "guilds.join") ? await this.ApiClient.AddGuildMemberAsync(guildId, userId, accessToken.AccessToken, nickname, roles, muted, deafened) : throw new AccessViolationException("Access token does not include guilds.join scope");
+	public async Task<DiscordMember> AddCurrentUserToGuildAsync(DiscordAccessToken accessToken, ulong userId, ulong guildId, string? nickname = null, IEnumerable<DiscordRole>? roles = null, bool? muted = null, bool? deafened = null, CancellationToken cancellationToken = default)
+		=> accessToken.Scope.Split(' ').Any(x => x == "guilds.join") ? await this.ApiClient.AddGuildMemberAsync(guildId, userId, accessToken.AccessToken, nickname, roles, muted, deafened, cancellationToken: cancellationToken) : throw new AccessViolationException("Access token does not include guilds.join scope");
 
 	/// <summary>
 	///     Gets the current user's application role connection.
 	/// </summary>
 	/// <param name="accessToken">The discord access token.</param>
-	public async Task<DiscordApplicationRoleConnection> GetCurrentUserApplicationRoleConnectionAsync(DiscordAccessToken accessToken)
-		=> accessToken.Scope.Split(' ').Any(x => x == "role_connections.write") ? await this.ApiClient.GetCurrentUserApplicationRoleConnectionAsync(accessToken.AccessToken) : throw new AccessViolationException("Access token does not include role_connections.write scope");
+	public async Task<DiscordApplicationRoleConnection> GetCurrentUserApplicationRoleConnectionAsync(DiscordAccessToken accessToken, CancellationToken cancellationToken = default)
+		=> accessToken.Scope.Split(' ').Any(x => x == "role_connections.write") ? await this.ApiClient.GetCurrentUserApplicationRoleConnectionAsync(accessToken.AccessToken, cancellationToken: cancellationToken) : throw new AccessViolationException("Access token does not include role_connections.write scope");
 
 	/// <summary>
 	///     Updates the current user's application role connection.
@@ -416,8 +417,8 @@ public sealed class DiscordOAuth2Client : IDisposable
 	/// <param name="platformName">The platform name.</param>
 	/// <param name="platformUsername">The platform username.</param>
 	/// <param name="metadata">The metadata.</param>
-	public async Task<DiscordApplicationRoleConnection> UpdateCurrentUserApplicationRoleConnectionAsync(DiscordAccessToken accessToken, string platformName, string platformUsername, ApplicationRoleConnectionMetadata metadata)
-		=> accessToken.Scope.Split(' ').Any(x => x == "role_connections.write") ? await this.ApiClient.ModifyCurrentUserApplicationRoleConnectionAsync(accessToken.AccessToken, platformName, platformUsername, metadata) : throw new AccessViolationException("Access token does not include role_connections.write scope");
+	public async Task<DiscordApplicationRoleConnection> UpdateCurrentUserApplicationRoleConnectionAsync(DiscordAccessToken accessToken, string platformName, string platformUsername, ApplicationRoleConnectionMetadata metadata, CancellationToken cancellationToken = default)
+		=> accessToken.Scope.Split(' ').Any(x => x == "role_connections.write") ? await this.ApiClient.ModifyCurrentUserApplicationRoleConnectionAsync(accessToken.AccessToken, platformName, platformUsername, metadata, cancellationToken: cancellationToken) : throw new AccessViolationException("Access token does not include role_connections.write scope");
 
 	/// <summary>
 	///     Creates a custom activity quick link for the current application.
@@ -427,7 +428,7 @@ public sealed class DiscordOAuth2Client : IDisposable
 	/// <param name="description">The quick link description.</param>
 	/// <param name="title">The quick link title.</param>
 	/// <param name="image">The base64-encoded image.</param>
-	public async Task<DiscordActivityQuickLink> CreateActivityQuickLinkAsync(DiscordAccessToken accessToken, string customId, string description, string title, string image)
+	public async Task<DiscordActivityQuickLink> CreateActivityQuickLinkAsync(DiscordAccessToken accessToken, string customId, string description, string title, string image, CancellationToken cancellationToken = default)
 	{
 		ArgumentNullException.ThrowIfNull(accessToken);
 		ArgumentException.ThrowIfNullOrWhiteSpace(customId);
@@ -435,7 +436,7 @@ public sealed class DiscordOAuth2Client : IDisposable
 		ArgumentException.ThrowIfNullOrWhiteSpace(title);
 		ArgumentException.ThrowIfNullOrWhiteSpace(image);
 
-		return await this.ApiClient.CreateActivityQuickLinkAsync(accessToken.AccessToken, customId, description, title, image).ConfigureAwait(false);
+		return await this.ApiClient.CreateActivityQuickLinkAsync(accessToken.AccessToken, customId, description, title, image, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -445,13 +446,13 @@ public sealed class DiscordOAuth2Client : IDisposable
 	/// <param name="stream">The file stream.</param>
 	/// <param name="fileName">The file name.</param>
 	/// <param name="contentType">The MIME content type.</param>
-	public async Task<DiscordActivityAttachmentUpload> CreateActivityAttachmentAsync(DiscordAccessToken accessToken, Stream stream, string fileName, string? contentType = null)
+	public async Task<DiscordActivityAttachmentUpload> CreateActivityAttachmentAsync(DiscordAccessToken accessToken, Stream stream, string fileName, string? contentType = null, CancellationToken cancellationToken = default)
 	{
 		ArgumentNullException.ThrowIfNull(accessToken);
 		ArgumentNullException.ThrowIfNull(stream);
 		ArgumentException.ThrowIfNullOrWhiteSpace(fileName);
 
-		return await this.ApiClient.CreateActivityAttachmentAsync(accessToken.AccessToken, stream, fileName, contentType).ConfigureAwait(false);
+		return await this.ApiClient.CreateActivityAttachmentAsync(accessToken.AccessToken, stream, fileName, contentType, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>

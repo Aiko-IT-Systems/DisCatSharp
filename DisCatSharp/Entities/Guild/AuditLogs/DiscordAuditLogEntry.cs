@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
@@ -154,24 +155,24 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 	/// <exception cref="UnauthorizedException">Thrown when Discord denies one of the requested live fetches.</exception>
 	/// <exception cref="BadRequestException">Thrown when Discord rejects one of the requested live fetches.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process one of the requested live fetches.</exception>
-	public async Task HydrateAsync(AuditLogHydrationTargets targets = AuditLogHydrationTargets.All, bool force = true)
+	public async Task HydrateAsync(AuditLogHydrationTargets targets = AuditLogHydrationTargets.All, bool force = true, CancellationToken cancellationToken = default)
 	{
 		if (targets is AuditLogHydrationTargets.None)
 			return;
 
 		if (ShouldHydrate(targets, AuditLogHydrationTargets.Actor) && this.Actor is { Id: not 0 })
-			this.Actor = await this.TryHydrateUserAsync(this.Actor.Id, force).ConfigureAwait(false) ?? this.Actor;
+			this.Actor = await this.TryHydrateUserAsync(this.Actor.Id, force, cancellationToken).ConfigureAwait(false) ?? this.Actor;
 
 		switch (this)
 		{
 			case DiscordChannelAuditLogEntry channelEntry:
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Target) && channelEntry.TargetChannel is { Id: not 0 })
-					channelEntry.TargetChannel = await this.TryHydrateChannelAsync(channelEntry.TargetChannel.Id, force).ConfigureAwait(false) ?? channelEntry.TargetChannel;
+					channelEntry.TargetChannel = await this.TryHydrateChannelAsync(channelEntry.TargetChannel.Id, force, cancellationToken).ConfigureAwait(false) ?? channelEntry.TargetChannel;
 				break;
 
 			case DiscordOverwriteAuditLogEntry overwriteEntry:
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Related) && overwriteEntry.Channel is { Id: not 0 })
-					overwriteEntry.Channel = await this.TryHydrateChannelAsync(overwriteEntry.Channel.Id, force).ConfigureAwait(false) ?? overwriteEntry.Channel;
+					overwriteEntry.Channel = await this.TryHydrateChannelAsync(overwriteEntry.Channel.Id, force, cancellationToken).ConfigureAwait(false) ?? overwriteEntry.Channel;
 
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Target) && overwriteEntry.OverwrittenEntityId.HasValue)
 				{
@@ -187,7 +188,7 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 					memberEntry.TargetMember = await this.TryHydrateMemberAsync(memberEntry.TargetMember.Id, force).ConfigureAwait(false) ?? memberEntry.TargetMember;
 
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Related) && memberEntry.Channel is { Id: not 0 })
-					memberEntry.Channel = await this.TryHydrateChannelAsync(memberEntry.Channel.Id, force).ConfigureAwait(false) ?? memberEntry.Channel;
+					memberEntry.Channel = await this.TryHydrateChannelAsync(memberEntry.Channel.Id, force, cancellationToken).ConfigureAwait(false) ?? memberEntry.Channel;
 				break;
 
 			case DiscordRoleAuditLogEntry roleEntry:
@@ -197,12 +198,12 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 
 			case DiscordInviteAuditLogEntry inviteEntry:
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Related) && inviteEntry.Channel is { Id: not 0 })
-					inviteEntry.Channel = await this.TryHydrateChannelAsync(inviteEntry.Channel.Id, force).ConfigureAwait(false) ?? inviteEntry.Channel;
+					inviteEntry.Channel = await this.TryHydrateChannelAsync(inviteEntry.Channel.Id, force, cancellationToken).ConfigureAwait(false) ?? inviteEntry.Channel;
 				break;
 
 			case DiscordWebhookAuditLogEntry webhookEntry:
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Target) && webhookEntry.TargetWebhook is { Id: not 0 })
-					webhookEntry.TargetWebhook = await this.TryHydrateWebhookAsync(webhookEntry.TargetWebhook.Id, force).ConfigureAwait(false) ?? webhookEntry.TargetWebhook;
+					webhookEntry.TargetWebhook = await this.TryHydrateWebhookAsync(webhookEntry.TargetWebhook.Id, force, cancellationToken).ConfigureAwait(false) ?? webhookEntry.TargetWebhook;
 				break;
 
 			case DiscordEmojiAuditLogEntry emojiEntry:
@@ -220,7 +221,7 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 					messageEntry.TargetMember = await this.TryHydrateMemberAsync(messageEntry.TargetMember.Id, force).ConfigureAwait(false) ?? messageEntry.TargetMember;
 
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Related) && messageEntry.Channel is { Id: not 0 })
-					messageEntry.Channel = await this.TryHydrateChannelAsync(messageEntry.Channel.Id, force).ConfigureAwait(false) ?? messageEntry.Channel;
+					messageEntry.Channel = await this.TryHydrateChannelAsync(messageEntry.Channel.Id, force, cancellationToken).ConfigureAwait(false) ?? messageEntry.Channel;
 				break;
 
 			case DiscordIntegrationAuditLogEntry integrationEntry:
@@ -230,10 +231,10 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 
 			case DiscordStageInstanceAuditLogEntry stageEntry:
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Related) && stageEntry.Channel is { Id: not 0 })
-					stageEntry.Channel = await this.TryHydrateChannelAsync(stageEntry.Channel.Id, force).ConfigureAwait(false) ?? stageEntry.Channel;
+					stageEntry.Channel = await this.TryHydrateChannelAsync(stageEntry.Channel.Id, force, cancellationToken).ConfigureAwait(false) ?? stageEntry.Channel;
 
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Target) && stageEntry.Channel is not null)
-					stageEntry.TargetStageInstance = await this.TryHydrateStageInstanceAsync(stageEntry.Channel, force).ConfigureAwait(false) ?? stageEntry.TargetStageInstance;
+					stageEntry.TargetStageInstance = await this.TryHydrateStageInstanceAsync(stageEntry.Channel, force, cancellationToken).ConfigureAwait(false) ?? stageEntry.TargetStageInstance;
 				break;
 
 			case DiscordGuildScheduledEventAuditLogEntry scheduledEventEntry:
@@ -248,12 +249,12 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 
 			case DiscordThreadAuditLogEntry threadEntry:
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Target) && threadEntry.TargetThread is { Id: not 0 })
-					threadEntry.TargetThread = await this.TryHydrateThreadAsync(threadEntry.TargetThread.Id, force).ConfigureAwait(false) ?? threadEntry.TargetThread;
+					threadEntry.TargetThread = await this.TryHydrateThreadAsync(threadEntry.TargetThread.Id, force, cancellationToken).ConfigureAwait(false) ?? threadEntry.TargetThread;
 				break;
 
 			case DiscordApplicationCommandAuditLogEntry applicationCommandEntry:
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Target) && applicationCommandEntry.CommandId.HasValue)
-					applicationCommandEntry.TargetCommand = await this.TryHydrateApplicationCommandAsync(applicationCommandEntry.CommandId.Value, force).ConfigureAwait(false) ?? applicationCommandEntry.TargetCommand;
+					applicationCommandEntry.TargetCommand = await this.TryHydrateApplicationCommandAsync(applicationCommandEntry.CommandId.Value, force, cancellationToken).ConfigureAwait(false) ?? applicationCommandEntry.TargetCommand;
 				break;
 
 			case DiscordSoundboardSoundAuditLogEntry soundboardEntry:
@@ -266,12 +267,12 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 					autoModerationEntry.TargetMember = await this.TryHydrateMemberAsync(autoModerationEntry.TargetMember.Id, force).ConfigureAwait(false) ?? autoModerationEntry.TargetMember;
 
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Related) && autoModerationEntry.Channel is { Id: not 0 })
-					autoModerationEntry.Channel = await this.TryHydrateChannelAsync(autoModerationEntry.Channel.Id, force).ConfigureAwait(false) ?? autoModerationEntry.Channel;
+					autoModerationEntry.Channel = await this.TryHydrateChannelAsync(autoModerationEntry.Channel.Id, force, cancellationToken).ConfigureAwait(false) ?? autoModerationEntry.Channel;
 				break;
 
 			case DiscordVoiceChannelStatusAuditLogEntry voiceChannelStatusEntry:
 				if (ShouldHydrate(targets, AuditLogHydrationTargets.Related) && voiceChannelStatusEntry.Channel is { Id: not 0 })
-					voiceChannelStatusEntry.Channel = await this.TryHydrateChannelAsync(voiceChannelStatusEntry.Channel.Id, force).ConfigureAwait(false) ?? voiceChannelStatusEntry.Channel;
+					voiceChannelStatusEntry.Channel = await this.TryHydrateChannelAsync(voiceChannelStatusEntry.Channel.Id, force, cancellationToken).ConfigureAwait(false) ?? voiceChannelStatusEntry.Channel;
 				break;
 		}
 	}
@@ -287,8 +288,8 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 	///     This is a convenience wrapper around <see cref="HydrateAsync(AuditLogHydrationTargets, bool)" /> with
 	///     <see cref="AuditLogHydrationTargets.All" />.
 	/// </remarks>
-	public Task HydrateAllAsync(bool force = true)
-		=> this.HydrateAsync(AuditLogHydrationTargets.All, force);
+	public Task HydrateAllAsync(bool force = true, CancellationToken cancellationToken = default)
+		=> this.HydrateAsync(AuditLogHydrationTargets.All, force, cancellationToken);
 
 	/// <summary>
 	///     Gets whether a hydration flag is enabled.
@@ -305,14 +306,14 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 	/// <param name="userId">The user id to resolve.</param>
 	/// <param name="force">Whether REST calls are allowed when the user is not already cached.</param>
 	/// <returns>The resolved user, or <see langword="null" /> when it could not be resolved.</returns>
-	private async Task<DiscordUser?> TryHydrateUserAsync(ulong userId, bool force)
+	private async Task<DiscordUser?> TryHydrateUserAsync(ulong userId, bool force, CancellationToken cancellationToken = default)
 	{
 		if (!force)
 			return this.Discord.UserCache.TryGetValue(userId, out var cachedUser) ? cachedUser : null;
 
 		try
 		{
-			return await this.Discord.ApiClient.GetUserAsync(userId).ConfigureAwait(false);
+			return await this.Discord.ApiClient.GetUserAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
 		}
 		catch (NotFoundException)
 		{
@@ -339,14 +340,14 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 	/// <param name="channelId">The channel id to resolve.</param>
 	/// <param name="force">Whether REST calls are allowed when the channel is not already cached.</param>
 	/// <returns>The resolved channel, or <see langword="null" /> when it could not be resolved.</returns>
-	private async Task<DiscordChannel?> TryHydrateChannelAsync(ulong channelId, bool force)
+	private async Task<DiscordChannel?> TryHydrateChannelAsync(ulong channelId, bool force, CancellationToken cancellationToken = default)
 	{
 		if (!force)
 			return this.Guild.GetThread(channelId) ?? this.Guild.GetChannel(channelId);
 
 		try
 		{
-			return await this.Discord.ApiClient.GetChannelAsync(channelId).ConfigureAwait(false);
+			return await this.Discord.ApiClient.GetChannelAsync(channelId, cancellationToken: cancellationToken).ConfigureAwait(false);
 		}
 		catch (NotFoundException)
 		{
@@ -360,14 +361,14 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 	/// <param name="threadId">The thread id to resolve.</param>
 	/// <param name="force">Whether REST calls are allowed when the thread is not already cached.</param>
 	/// <returns>The resolved thread, or <see langword="null" /> when it could not be resolved.</returns>
-	private async Task<DiscordThreadChannel?> TryHydrateThreadAsync(ulong threadId, bool force)
+	private async Task<DiscordThreadChannel?> TryHydrateThreadAsync(ulong threadId, bool force, CancellationToken cancellationToken = default)
 	{
 		if (!force)
 			return this.Guild.GetThread(threadId);
 
 		try
 		{
-			return await this.Discord.ApiClient.GetThreadAsync(threadId).ConfigureAwait(false);
+			return await this.Discord.ApiClient.GetThreadAsync(threadId, cancellationToken: cancellationToken).ConfigureAwait(false);
 		}
 		catch (NotFoundException)
 		{
@@ -402,14 +403,14 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 	/// <param name="webhookId">The webhook id to resolve.</param>
 	/// <param name="force">Whether REST calls are allowed when the webhook is not already cached.</param>
 	/// <returns>The resolved webhook, or <see langword="null" /> when it could not be resolved.</returns>
-	private async Task<DiscordWebhook?> TryHydrateWebhookAsync(ulong webhookId, bool force)
+	private async Task<DiscordWebhook?> TryHydrateWebhookAsync(ulong webhookId, bool force, CancellationToken cancellationToken = default)
 	{
 		if (!force)
 			return null;
 
 		try
 		{
-			return await this.Discord.ApiClient.GetWebhookAsync(webhookId).ConfigureAwait(false);
+			return await this.Discord.ApiClient.GetWebhookAsync(webhookId, cancellationToken: cancellationToken).ConfigureAwait(false);
 		}
 		catch (NotFoundException)
 		{
@@ -474,10 +475,10 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 	/// <param name="channel">The stage channel the instance belongs to.</param>
 	/// <param name="force">Whether REST calls are allowed when the stage channel is not already cached.</param>
 	/// <returns>The resolved stage instance, or <see langword="null" /> when it could not be resolved.</returns>
-	private async Task<DiscordStageInstance?> TryHydrateStageInstanceAsync(DiscordChannel channel, bool force)
+	private async Task<DiscordStageInstance?> TryHydrateStageInstanceAsync(DiscordChannel channel, bool force, CancellationToken cancellationToken = default)
 	{
 		var hydratedChannel = force
-			? await this.TryHydrateChannelAsync(channel.Id, true).ConfigureAwait(false) ?? channel
+			? await this.TryHydrateChannelAsync(channel.Id, true, cancellationToken).ConfigureAwait(false) ?? channel
 			: channel;
 
 		try
@@ -517,7 +518,7 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 	/// <param name="commandId">The command id to resolve.</param>
 	/// <param name="force">Whether REST calls are allowed when the command is not already cached.</param>
 	/// <returns>The resolved application command, or <see langword="null" /> when it could not be resolved.</returns>
-	private async Task<DiscordApplicationCommand?> TryHydrateApplicationCommandAsync(ulong commandId, bool force)
+	private async Task<DiscordApplicationCommand?> TryHydrateApplicationCommandAsync(ulong commandId, bool force, CancellationToken cancellationToken = default)
 	{
 		if (!force)
 			return null;
@@ -526,7 +527,7 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 		{
 			var applicationId = this.Discord.CurrentApplication?.Id
 				?? (await this.Discord.GetCurrentApplicationAsync().ConfigureAwait(false)).Id;
-			return await this.Discord.ApiClient.GetGuildApplicationCommandAsync(applicationId, this.Guild.Id, commandId).ConfigureAwait(false);
+			return await this.Discord.ApiClient.GetGuildApplicationCommandAsync(applicationId, this.Guild.Id, commandId, cancellationToken: cancellationToken).ConfigureAwait(false);
 		}
 		catch (NotFoundException)
 		{

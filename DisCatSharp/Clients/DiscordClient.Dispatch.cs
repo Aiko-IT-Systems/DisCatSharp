@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -1269,10 +1269,10 @@ public sealed partial class DiscordClient
 	///     Refreshes the channels.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
-	internal async Task RefreshChannelsAsync(ulong guildId)
+	internal async Task RefreshChannelsAsync(ulong guildId, CancellationToken cancellationToken = default)
 	{
 		var guild = this.InternalGetCachedGuild(guildId);
-		var channels = await this.ApiClient.GetGuildChannelsAsync(guildId).ConfigureAwait(false);
+		var channels = await this.ApiClient.GetGuildChannelsAsync(guildId, cancellationToken: cancellationToken).ConfigureAwait(false);
 		guild.ChannelsInternal.Clear();
 		foreach (var channel in channels.ToList())
 		{
@@ -4014,13 +4014,13 @@ public sealed partial class DiscordClient
 	///     Handles the thread member update event.
 	/// </summary>
 	/// <param name="member">The updated member.</param>
-	internal async Task OnThreadMemberUpdateEventAsync(DiscordThreadChannelMember member)
+	internal async Task OnThreadMemberUpdateEventAsync(DiscordThreadChannelMember member, CancellationToken cancellationToken = default)
 	{
 		member.Discord = this;
 		var thread = this.InternalGetCachedThread(member.Id);
 		if (thread == null)
 		{
-			var tempThread = await this.ApiClient.GetThreadAsync(member.Id).ConfigureAwait(false);
+			var tempThread = await this.ApiClient.GetThreadAsync(member.Id, cancellationToken: cancellationToken).ConfigureAwait(false);
 			if (!this.GuildsInternal.TryGetValue(member.GuildId, out var tmGuild))
 			{
 				this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Received thread_member_update for unknown guild {GuildId}, skipping.", member.GuildId);
@@ -4048,12 +4048,12 @@ public sealed partial class DiscordClient
 	/// <param name="membersAdded">The added members.</param>
 	/// <param name="membersRemoved">The ids of the removed members.</param>
 	/// <param name="memberCount">The new member count.</param>
-	internal async Task OnThreadMembersUpdateEventAsync(DiscordGuild guild, ulong threadId, JArray membersAdded, JArray membersRemoved, int memberCount)
+	internal async Task OnThreadMembersUpdateEventAsync(DiscordGuild guild, ulong threadId, JArray membersAdded, JArray membersRemoved, int memberCount, CancellationToken cancellationToken = default)
 	{
 		var thread = this.InternalGetCachedThread(threadId);
 		if (thread == null)
 		{
-			var tempThread = await this.ApiClient.GetThreadAsync(threadId).ConfigureAwait(false);
+			var tempThread = await this.ApiClient.GetThreadAsync(threadId, cancellationToken: cancellationToken).ConfigureAwait(false);
 			thread = guild.ThreadsInternal.AddOrUpdate(threadId, tempThread, (old, newThread) => newThread);
 		}
 

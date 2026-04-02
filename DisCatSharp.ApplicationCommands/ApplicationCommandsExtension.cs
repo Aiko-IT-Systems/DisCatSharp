@@ -429,7 +429,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	public async Task CleanGuildCommandsAsync(CancellationToken cancellationToken = default)
 	{
 		foreach (var guild in this.Client.Guilds.Values)
-			await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guild.Id, []).ConfigureAwait(false);
+			await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guild.Id, [], cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -437,7 +437,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	///     <note type="caution">You normally don't need to execute it.</note>
 	/// </summary>
 	public async Task CleanGlobalCommandsAsync(CancellationToken cancellationToken = default)
-		=> await this.Client.BulkOverwriteGlobalApplicationCommandsAsync([]).ConfigureAwait(false);
+		=> await this.Client.BulkOverwriteGlobalApplicationCommandsAsync([], cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Registers all commands from a given assembly. The command classes need to be public to be considered for
@@ -610,7 +610,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Shard {shard} has {guilds} guilds", this.Client.ShardId, this.Client.ReadyGuildIds.Count);
 			List<ulong> failedGuilds = [];
-			var globalCommands = IsCalledByUnitTest ? null : (await this.Client.GetGlobalApplicationCommandsAsync(Configuration?.EnableLocalization ?? false).ConfigureAwait(false))?.ToList() ?? null;
+			var globalCommands = IsCalledByUnitTest ? null : (await this.Client.GetGlobalApplicationCommandsAsync(Configuration?.EnableLocalization ?? false, cancellationToken).ConfigureAwait(false))?.ToList() ?? null;
 
 			var guilds = CheckAllGuilds ? this.Client.ReadyGuildIds : this._updateList.Where(x => x.Key is not null)?.Select(x => x.Key!.Value).Distinct().ToList();
 			var unknownGuilds = guilds is not null && this.Client.ReadyGuildIds.Count is not 0 ? guilds.Where(x => !this.Client.ReadyGuildIds.Contains(x)).ToList() : [];
@@ -633,7 +633,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					var unauthorized = false;
 					try
 					{
-						commands = (await this.Client.GetGuildApplicationCommandsAsync(guild, Configuration?.EnableLocalization ?? false).ConfigureAwait(false)).ToList() ?? null;
+						commands = (await this.Client.GetGuildApplicationCommandsAsync(guild, Configuration?.EnableLocalization ?? false, cancellationToken).ConfigureAwait(false)).ToList() ?? null;
 					}
 					catch (UnauthorizedException)
 					{
@@ -996,7 +996,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 									try
 									{
 										if (EntryPointCommand is null || cmd.Type is not ApplicationCommandType.PrimaryEntryPoint)
-											await this.Client.DeleteGlobalApplicationCommandAsync(cmd.Id).ConfigureAwait(false);
+											await this.Client.DeleteGlobalApplicationCommandAsync(cmd.Id, cancellationToken).ConfigureAwait(false);
 									}
 									catch (NotFoundException)
 									{
@@ -1029,7 +1029,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								foreach (var cmd in GuildDiscordCommands.First(x => x.Key == guildId.Value).Value)
 									try
 									{
-										await this.Client.DeleteGuildApplicationCommandAsync(guildId.Value, cmd.Id).ConfigureAwait(false);
+										await this.Client.DeleteGuildApplicationCommandAsync(guildId.Value, cmd.Id, cancellationToken).ConfigureAwait(false);
 									}
 									catch (NotFoundException)
 									{

@@ -537,7 +537,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordMessage> ForwardMessageAsync(DiscordChannel targetChannel, string? content = null, CancellationToken cancellationToken = default)
-		=> await this.Discord.ApiClient.ForwardMessageAsync(this, targetChannel.Id, content);
+		=> await this.Discord.ApiClient.ForwardMessageAsync(this, targetChannel.Id, content, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Build the message reference.

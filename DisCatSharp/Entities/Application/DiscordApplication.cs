@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Attributes;
@@ -469,9 +470,9 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	///     Retrieves this application's assets.
 	/// </summary>
 	/// <returns>This application's assets.</returns>
-	public async Task<IReadOnlyList<DiscordApplicationAsset>> GetAssetsAsync()
+	public async Task<IReadOnlyList<DiscordApplicationAsset>> GetAssetsAsync(CancellationToken cancellationToken = default)
 	{
-		this._assets ??= await this.Discord.ApiClient.GetApplicationAssetsAsync(this).ConfigureAwait(false);
+		this._assets ??= await this.Discord.ApiClient.GetApplicationAssetsAsync(this, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 		return this._assets;
 	}

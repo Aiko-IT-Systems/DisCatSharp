@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Threading;
 
 using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
@@ -298,9 +299,9 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <summary>
 	///     Gets the current API application.
 	/// </summary>
-	public async Task<DiscordApplication> GetCurrentApplicationAsync()
+	public async Task<DiscordApplication> GetCurrentApplicationAsync(CancellationToken cancellationToken = default)
 	{
-		var tapp = await this.ApiClient.GetCurrentApplicationOauth2InfoAsync().ConfigureAwait(false);
+		var tapp = await this.ApiClient.GetCurrentApplicationOauth2InfoAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 		return new(tapp);
 	}
 
@@ -329,7 +330,7 @@ public abstract class BaseDiscordClient : IDisposable
 		Optional<ApplicationFlags> flags,
 		[DiscordDeprecated("Replaced by Optional<DiscordIntegrationTypesConfig?>")]
 		Optional<DiscordApplicationInstallParams?> installParams
-	)
+	, CancellationToken cancellationToken = default)
 	{
 		var iconb64 = MediaTool.Base64FromStream(icon);
 		var coverImageb64 = MediaTool.Base64FromStream(coverImage);
@@ -337,7 +338,7 @@ public abstract class BaseDiscordClient : IDisposable
 			if (tags.Value.Any(x => x.Length > 20))
 				throw new InvalidOperationException("Tags can not exceed 20 chars.");
 
-		DiscordApplication app = new(await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl, customInstallUrl, tags, iconb64, coverImageb64, flags, installParams, Optional.None).ConfigureAwait(false));
+		DiscordApplication app = new(await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl, customInstallUrl, tags, iconb64, coverImageb64, flags, installParams, Optional.None, cancellationToken: cancellationToken).ConfigureAwait(false));
 		this.CurrentApplication = app;
 		return app;
 	}
@@ -393,7 +394,7 @@ public abstract class BaseDiscordClient : IDisposable
 		Optional<Stream?> coverImage,
 		Optional<ApplicationFlags> flags,
 		Optional<DiscordIntegrationTypesConfig?> integrationTypesConfig
-	)
+	, CancellationToken cancellationToken = default)
 	{
 		var iconb64 = MediaTool.Base64FromStream(icon);
 		var coverImageb64 = MediaTool.Base64FromStream(coverImage);
@@ -401,7 +402,7 @@ public abstract class BaseDiscordClient : IDisposable
 			if (tags.Value.Any(x => x.Length > 20))
 				throw new InvalidOperationException("Tags can not exceed 20 chars.");
 
-		DiscordApplication app = new(await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl, customInstallUrl, tags, iconb64, coverImageb64, flags, Optional.None, integrationTypesConfig).ConfigureAwait(false));
+		DiscordApplication app = new(await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl, customInstallUrl, tags, iconb64, coverImageb64, flags, Optional.None, integrationTypesConfig, cancellationToken: cancellationToken).ConfigureAwait(false));
 		this.CurrentApplication = app;
 		return app;
 	}
@@ -410,17 +411,17 @@ public abstract class BaseDiscordClient : IDisposable
 	///     Gets a list of voice regions.
 	/// </summary>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<IReadOnlyList<DiscordVoiceRegion>> ListVoiceRegionsAsync()
-		=> this.ApiClient.ListVoiceRegionsAsync();
+	public Task<IReadOnlyList<DiscordVoiceRegion>> ListVoiceRegionsAsync(CancellationToken cancellationToken = default)
+		=> this.ApiClient.ListVoiceRegionsAsync(cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Initializes this client. This method fetches information about current user, application, and voice regions.
 	/// </summary>
-	public virtual async Task InitializeAsync()
+	public virtual async Task InitializeAsync(CancellationToken cancellationToken = default)
 	{
 		if (this.CurrentUser is null)
 		{
-			this.CurrentUser = await this.ApiClient.GetCurrentUserAsync().ConfigureAwait(false);
+			this.CurrentUser = await this.ApiClient.GetCurrentUserAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 			this.UserCache.AddOrUpdate(this.CurrentUser.Id, this.CurrentUser, (id, xu) => this.CurrentUser);
 		}
 
@@ -440,20 +441,20 @@ public abstract class BaseDiscordClient : IDisposable
 	///     <para>If no value is provided, the configuration value will be used instead.</para>
 	/// </summary>
 	/// <returns>A gateway info object.</returns>
-	public async Task<GatewayInfo> GetGatewayInfoAsync(string? token = null)
+	public async Task<GatewayInfo> GetGatewayInfoAsync(string? token = null, CancellationToken cancellationToken = default)
 	{
 		if (this.Configuration.TokenType is not TokenType.Bot)
 			throw new InvalidOperationException("Only bot tokens can access this info.");
 
 		if (!string.IsNullOrEmpty(this.Configuration.Token))
-			return await this.ApiClient.GetGatewayInfoAsync().ConfigureAwait(false);
+			return await this.ApiClient.GetGatewayInfoAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
 		if (string.IsNullOrEmpty(token))
 			throw new InvalidOperationException("Could not locate a valid token.");
 
 		this.Configuration.Token = token;
 
-		var res = await this.ApiClient.GetGatewayInfoAsync().ConfigureAwait(false);
+		var res = await this.ApiClient.GetGatewayInfoAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 		this.Configuration.Token = null;
 		return res;
 	}

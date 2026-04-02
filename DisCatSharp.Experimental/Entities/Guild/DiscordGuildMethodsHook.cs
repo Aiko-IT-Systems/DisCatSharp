@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
@@ -27,10 +28,10 @@ public static class DiscordGuildMethodsHook
 	/// </exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public static async Task<DiscordSearchGuildMembersResponse> SearchMembersAsync(this DiscordGuild guild, DiscordGuildMemberSearchParams searchParams)
+	public static async Task<DiscordSearchGuildMembersResponse> SearchMembersAsync(this DiscordGuild guild, DiscordGuildMemberSearchParams searchParams, CancellationToken cancellationToken = default)
 	{
 		DiscordApiClientHook hook = new(guild.Discord.ApiClient);
-		return await hook.SearchGuildMembersAsync(guild.Id, searchParams);
+		return await hook.SearchGuildMembersAsync(guild.Id, searchParams, cancellationToken);
 	}
 
 	/// <summary>
@@ -49,9 +50,9 @@ public static class DiscordGuildMethodsHook
 	/// </exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public static async Task<DiscordSearchGuildMessagesResponse?> SearchMessagesAsync(this DiscordGuild guild, DiscordGuildMessageSearchParams searchParams)
+	public static async Task<DiscordSearchGuildMessagesResponse?> SearchMessagesAsync(this DiscordGuild guild, DiscordGuildMessageSearchParams searchParams, CancellationToken cancellationToken = default)
 	{
 		DiscordApiClientHook hook = new(guild.Discord.ApiClient);
-		return await hook.SearchGuildMessagesAsync(guild.Id, searchParams);
+		return await hook.SearchGuildMessagesAsync(guild.Id, searchParams, cancellationToken);
 	}
 }

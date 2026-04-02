@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
@@ -103,7 +104,7 @@ public sealed class DiscordSoundboardSound : SnowflakeObject
 	/// </exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <returns>The updated <see cref="DiscordSoundboardSound" />.</returns>
-	public async Task<DiscordSoundboardSound> ModifyAsync(Action<SoundboardSoundEditModel> action)
+	public async Task<DiscordSoundboardSound> ModifyAsync(Action<SoundboardSoundEditModel> action, CancellationToken cancellationToken = default)
 	{
 		if (!this.GuildId.HasValue)
 			throw new InvalidOperationException("You can only edit guild soundboard sounds.");
@@ -117,7 +118,8 @@ public sealed class DiscordSoundboardSound : SnowflakeObject
 			mdl.Name,
 			mdl.Volume,
 			mdl.EmojiId,
-			mdl.EmojiName
+			mdl.EmojiName,
+			cancellationToken: cancellationToken
 		).ConfigureAwait(false);
 	}
 
@@ -131,6 +133,6 @@ public sealed class DiscordSoundboardSound : SnowflakeObject
 	///     permission.
 	/// </exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task DeleteSoundboardSoundAsync(string? reason = null)
-		=> this.GuildId.HasValue ? this.Discord.ApiClient.DeleteGuildSoundboardSoundAsync(this.GuildId.Value, this.Id, reason) : throw new InvalidOperationException("You can only delete guild soundboard sounds.");
+	public Task DeleteSoundboardSoundAsync(string? reason = null, CancellationToken cancellationToken = default)
+		=> this.GuildId.HasValue ? this.Discord.ApiClient.DeleteGuildSoundboardSoundAsync(this.GuildId.Value, this.Id, reason, cancellationToken: cancellationToken) : throw new InvalidOperationException("You can only delete guild soundboard sounds.");
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
@@ -49,7 +50,7 @@ public sealed class DiscordStickerPack : SnowflakeObject
 	/// <summary>
 	///     Gets the pack's cover sticker.
 	/// </summary>
-	public Task<DiscordSticker> CoverSticker => this.Discord.ApiClient.GetStickerAsync(this.CoverStickerId);
+	public Task<DiscordSticker> GetCoverStickerAsync(CancellationToken cancellationToken = default) => this.Discord.ApiClient.GetStickerAsync(this.CoverStickerId, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Gets the Id of this pack's banner.

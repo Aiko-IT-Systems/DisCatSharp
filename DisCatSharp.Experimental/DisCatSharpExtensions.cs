@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Attributes;
@@ -16,9 +17,9 @@ public static class DisCatSharpExtensions
 	/// <param name="id">The id of the user to get the username of.</param>
 	/// <returns>The username of the user with the given id.</returns>
 	[Experimental("This function is being tested and might change at any time."), RequiresFeature(Features.MonetizedApplication)]
-	public static async Task<string> GetUsernameAsync(this DiscordClient client, ulong id)
+	public static async Task<string> GetUsernameAsync(this DiscordClient client, ulong id, CancellationToken cancellationToken = default)
 	{
-		var user = await client.ApiClient.GetUserAsync(id);
+		var user = await client.ApiClient.GetUserAsync(id, cancellationToken: cancellationToken);
 		return user.UsernameWithDiscriminator;
 	}
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Attributes;
@@ -219,8 +220,8 @@ public class DiscordInvite : SnowflakeObject
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordInvite> DeleteAsync(string reason = null)
-		=> this.Discord.ApiClient.DeleteInviteAsync(this.Code, reason);
+	public Task<DiscordInvite> DeleteAsync(string reason = null, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.DeleteInviteAsync(this.Code, reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Gets the target users allowed to accept an invite.
@@ -229,8 +230,8 @@ public class DiscordInvite : SnowflakeObject
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<IReadOnlyList<ulong>> GetTargetUsersAsync()
-		=> this.Discord.ApiClient.GetInviteTargetUsersAsync(this.Code);
+	public Task<IReadOnlyList<ulong>> GetTargetUsersAsync(CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.GetInviteTargetUsersAsync(this.Code, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Updates the target users allowed to accept an invite using a CSV stream.
@@ -243,8 +244,8 @@ public class DiscordInvite : SnowflakeObject
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task UpdateTargetUsersAsync(Stream targetUsersCsv, string reason = null)
-		=> this.Discord.ApiClient.UpdateInviteTargetUsersAsync(this.Code, targetUsersCsv, null, null, reason);
+	public Task UpdateTargetUsersAsync(Stream targetUsersCsv, string reason = null, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.UpdateInviteTargetUsersAsync(this.Code, targetUsersCsv, null, null, reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Updates the target users allowed to accept an invite using user ids.
@@ -254,8 +255,8 @@ public class DiscordInvite : SnowflakeObject
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task UpdateTargetUsersAsync(IEnumerable<ulong> targetUserIds, string reason = null)
-		=> this.Discord.ApiClient.UpdateInviteTargetUsersAsync(this.Code, null, targetUserIds, null, reason);
+	public Task UpdateTargetUsersAsync(IEnumerable<ulong> targetUserIds, string reason = null, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.UpdateInviteTargetUsersAsync(this.Code, null, targetUserIds, null, reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Updates the target users allowed to accept an invite using user objects.
@@ -265,8 +266,8 @@ public class DiscordInvite : SnowflakeObject
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task UpdateTargetUsersAsync(IEnumerable<DiscordUser> targetUsers, string reason = null)
-		=> this.Discord.ApiClient.UpdateInviteTargetUsersAsync(this.Code, null, null, targetUsers, reason);
+	public Task UpdateTargetUsersAsync(IEnumerable<DiscordUser> targetUsers, string reason = null, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.UpdateInviteTargetUsersAsync(this.Code, null, null, targetUsers, reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Gets the invite target users job status.
@@ -275,8 +276,8 @@ public class DiscordInvite : SnowflakeObject
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordInviteTargetUsersJobStatus> GetTargetUsersJobStatusAsync()
-		=> this.Discord.ApiClient.GetInviteTargetUsersJobStatusAsync(this.Code);
+	public Task<DiscordInviteTargetUsersJobStatus> GetTargetUsersJobStatusAsync(CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.GetInviteTargetUsersJobStatusAsync(this.Code, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Converts this invite into a link.

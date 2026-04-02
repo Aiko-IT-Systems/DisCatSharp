@@ -2274,7 +2274,7 @@ public sealed class DiscordApiClient
 	/// <param name="emojiId">The new custom emoji ID (optional).</param>
 	/// <param name="emojiName">The new standard emoji name (optional).</param>
 	/// <param name="reason">The reason.</param>
-	public async Task<DiscordSoundboardSound> ModifyGuildSoundboardSoundAsync(ulong guildId, ulong soundId, Optional<string> name, Optional<double?> volume, Optional<ulong?> emojiId, Optional<string?> emojiName, string? reason = null)
+	public async Task<DiscordSoundboardSound> ModifyGuildSoundboardSoundAsync(ulong guildId, ulong soundId, Optional<string> name, Optional<double?> volume, Optional<ulong?> emojiId, Optional<string?> emojiName, string? reason = null, CancellationToken cancellationToken = default)
 	{
 		var pld = new RestSoundboardSoundModifyPayload
 		{
@@ -2295,7 +2295,7 @@ public sealed class DiscordApiClient
 			sound_id = soundId
 		}, out var path);
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld), cancellationToken: cancellationToken).ConfigureAwait(false);
 
 		return DiscordJson.DeserializeObject<DiscordSoundboardSound>(res.Response, this.Discord);
 	}
@@ -2306,7 +2306,7 @@ public sealed class DiscordApiClient
 	/// <param name="guildId">The guild ID.</param>
 	/// <param name="soundId">The soundboard sound ID.</param>
 	/// <param name="reason">The reason.</param>
-	public async Task DeleteGuildSoundboardSoundAsync(ulong guildId, ulong soundId, string? reason = null)
+	public async Task DeleteGuildSoundboardSoundAsync(ulong guildId, ulong soundId, string? reason = null, CancellationToken cancellationToken = default)
 	{
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -2318,7 +2318,7 @@ public sealed class DiscordApiClient
 			sound_id = soundId
 		}, out var path);
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers).ConfigureAwait(false);
+		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -3573,7 +3573,7 @@ public sealed class DiscordApiClient
 	/// <param name="targetChannelId">The target channel id to forward the message to.</param>
 	/// <param name="content">The content to attach.</param>
 	/// <exception cref="ArgumentException">Thrown when the <paramref name="content" /> exceeds 2000 characters.</exception>
-	public async Task<DiscordMessage> ForwardMessageAsync(DiscordMessage forwardMessage, ulong targetChannelId, string? content)
+	public async Task<DiscordMessage> ForwardMessageAsync(DiscordMessage forwardMessage, ulong targetChannelId, string? content, CancellationToken cancellationToken = default)
 	{
 		if (content is { Length: > 2000 })
 			throw new ArgumentException("Message content length cannot exceed 2000 characters.");
@@ -3598,7 +3598,7 @@ public sealed class DiscordApiClient
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld), cancellationToken: cancellationToken).ConfigureAwait(false);
 
 		var ret = this.PrepareMessage(JObject.Parse(res.Response));
 

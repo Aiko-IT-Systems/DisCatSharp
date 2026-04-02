@@ -140,14 +140,14 @@ public class BaseContext : DisCatSharpCommandContext
 	///     content.
 	/// </returns>
 	public async Task<DiscordInteractionCallbackResponse> CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder? builder = null, ModifyMode modifyMode = ModifyMode.Update, CancellationToken cancellationToken = default)
-		=> await this.Interaction.CreateResponseAsync(type, builder, modifyMode);
+		=> await this.Interaction.CreateResponseAsync(type, builder, modifyMode, cancellationToken);
 
 	/// <summary>
 	///     Creates a modal response to this interaction.
 	/// </summary>
 	/// <param name="builder">The data to send.</param>
 	public Task CreateModalResponseAsync(DiscordInteractionModalBuilder builder, CancellationToken cancellationToken = default)
-		=> this.Interaction.Type is not InteractionType.Ping && this.Interaction.Type is not InteractionType.ModalSubmit ? this.Interaction.CreateInteractionModalResponseAsync(builder) : throw new NotSupportedException("You can't respond to a PING with a modal.");
+		=> this.Interaction.Type is not InteractionType.Ping && this.Interaction.Type is not InteractionType.ModalSubmit ? this.Interaction.CreateInteractionModalResponseAsync(builder, cancellationToken) : throw new NotSupportedException("You can't respond to a PING with a modal.");
 
 	/// <summary>
 	///     Creates an iframe response to this interaction.
@@ -157,7 +157,7 @@ public class BaseContext : DisCatSharpCommandContext
 	/// <param name="modalSize">The size of the iframe.</param>
 	/// <param name="iFramePath">The path of the iframe.</param>
 	public Task CreateInteractionIframeResponseAsync(string customId, string title, IframeModalSize modalSize = IframeModalSize.Normal, string? iFramePath = null, CancellationToken cancellationToken = default)
-		=> this.Interaction.Type is not InteractionType.Ping ? this.Interaction.CreateInteractionIframeResponseAsync(customId, title, modalSize, iFramePath) : throw new NotSupportedException("You can't respond to a PING with an iframe.");
+		=> this.Interaction.Type is not InteractionType.Ping ? this.Interaction.CreateInteractionIframeResponseAsync(customId, title, modalSize, iFramePath, cancellationToken) : throw new NotSupportedException("You can't respond to a PING with an iframe.");
 
 	/// <summary>
 	///     Edits the interaction response.
@@ -166,7 +166,7 @@ public class BaseContext : DisCatSharpCommandContext
 	/// <param name="modifyMode">The modify mode.</param>
 	/// <returns></returns>
 	public Task<DiscordMessage> EditResponseAsync(DiscordWebhookBuilder builder, ModifyMode modifyMode = ModifyMode.Update, CancellationToken cancellationToken = default)
-		=> this.Interaction.EditOriginalResponseAsync(builder, modifyMode);
+		=> this.Interaction.EditOriginalResponseAsync(builder, modifyMode, cancellationToken);
 
 	/// <summary>
 	///     Edits the interaction response.
@@ -174,14 +174,14 @@ public class BaseContext : DisCatSharpCommandContext
 	/// <param name="content">The content to edit the response with.</param>
 	/// <returns></returns>
 	public Task<DiscordMessage> EditResponseAsync(string content, CancellationToken cancellationToken = default)
-		=> this.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder().WithContent(content));
+		=> this.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder().WithContent(content), cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Deletes the interaction response.
 	/// </summary>
 	/// <returns></returns>
 	public Task DeleteResponseAsync(CancellationToken cancellationToken = default)
-		=> this.Interaction.DeleteOriginalResponseAsync();
+		=> this.Interaction.DeleteOriginalResponseAsync(cancellationToken);
 
 	/// <summary>
 	///     Creates a follow up message to the interaction.
@@ -189,7 +189,7 @@ public class BaseContext : DisCatSharpCommandContext
 	/// <param name="builder">The message to be sent, in the form of a webhook.</param>
 	/// <returns>The created message.</returns>
 	public Task<DiscordMessage> FollowUpAsync(DiscordFollowupMessageBuilder builder, CancellationToken cancellationToken = default)
-		=> this.Interaction.CreateFollowupMessageAsync(builder);
+		=> this.Interaction.CreateFollowupMessageAsync(builder, cancellationToken);
 
 	/// <summary>
 	///     Creates a follow up message to the interaction.
@@ -207,7 +207,7 @@ public class BaseContext : DisCatSharpCommandContext
 	/// <param name="modifyMode">The modify mode.</param>
 	/// <returns>The created message.</returns>
 	public Task<DiscordMessage> EditFollowupAsync(ulong followupMessageId, DiscordWebhookBuilder builder, ModifyMode modifyMode = ModifyMode.Update, CancellationToken cancellationToken = default)
-		=> this.Interaction.EditFollowupMessageAsync(followupMessageId, builder, modifyMode);
+		=> this.Interaction.EditFollowupMessageAsync(followupMessageId, builder, modifyMode, cancellationToken);
 
 	/// <summary>
 	///     Edits a followup message.
@@ -224,19 +224,19 @@ public class BaseContext : DisCatSharpCommandContext
 	/// <param name="followupMessageId">The id of the followup message to delete.</param>
 	/// <returns></returns>
 	public Task DeleteFollowupAsync(ulong followupMessageId, CancellationToken cancellationToken = default)
-		=> this.Interaction.DeleteFollowupMessageAsync(followupMessageId);
+		=> this.Interaction.DeleteFollowupMessageAsync(followupMessageId, cancellationToken);
 
 	/// <summary>
 	///     Gets the followup message.
 	/// </summary>
 	/// <param name="followupMessageId">The followup message id.</param>
 	public Task<DiscordMessage> GetFollowupMessageAsync(ulong followupMessageId, CancellationToken cancellationToken = default)
-		=> this.Interaction.GetFollowupMessageAsync(followupMessageId);
+		=> this.Interaction.GetFollowupMessageAsync(followupMessageId, cancellationToken);
 
 	/// <summary>
 	///     Gets the original interaction response.
 	/// </summary>
 	/// <returns>The original interaction response.</returns>
 	public Task<DiscordMessage> GetOriginalResponseAsync(CancellationToken cancellationToken = default)
-		=> this.Interaction.GetOriginalResponseAsync();
+		=> this.Interaction.GetOriginalResponseAsync(cancellationToken);
 }

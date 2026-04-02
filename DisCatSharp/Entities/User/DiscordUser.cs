@@ -1,7 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Attributes;
@@ -326,8 +327,8 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	///     Fetches the user from the API.
 	/// </summary>
 	/// <returns>The user with fresh data from the API.</returns>
-	public async Task<DiscordUser> GetFromApiAsync()
-		=> await this.Discord.ApiClient.GetUserAsync(this.Id).ConfigureAwait(false);
+	public async Task<DiscordUser> GetFromApiAsync(CancellationToken cancellationToken = default)
+		=> await this.Discord.ApiClient.GetUserAsync(this.Id, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Gets additional information about an application if the user is an bot.
@@ -336,8 +337,8 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <exception cref="NotFoundException">Thrown when the application does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordRpcApplication?> GetRpcInfoAsync()
-		=> this.IsBot ? await this.Discord.ApiClient.GetApplicationRpcInfoAsync(this.Id).ConfigureAwait(false) : await Task.FromResult<DiscordRpcApplication?>(null).ConfigureAwait(false);
+	public async Task<DiscordRpcApplication?> GetRpcInfoAsync(CancellationToken cancellationToken = default)
+		=> this.IsBot ? await this.Discord.ApiClient.GetApplicationRpcInfoAsync(this.Id, cancellationToken: cancellationToken).ConfigureAwait(false) : await Task.FromResult<DiscordRpcApplication?>(null).ConfigureAwait(false);
 
 	/// <summary>
 	///     Whether this user is in a <see cref="DiscordGuild" />
@@ -456,8 +457,8 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <exception cref="NotFoundException">Thrown when the user does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordDmChannel> CreateDmChannelAsync()
-		=> this.Discord.ApiClient.CreateDmAsync(this.Id);
+	public Task<DiscordDmChannel> CreateDmChannelAsync(CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.CreateDmAsync(this.Id, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Sends a direct message to this user. Creates a direct message channel if one does not exist already.
@@ -471,13 +472,13 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <exception cref="NotFoundException">Thrown when the user does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordMessage> SendMessageAsync(string content)
+	public async Task<DiscordMessage> SendMessageAsync(string content, CancellationToken cancellationToken = default)
 	{
 		if (this.IsBot && this.Discord.CurrentUser.IsBot)
 			throw new ArgumentException("Bots cannot DM each other.");
 
-		var chn = await this.CreateDmChannelAsync().ConfigureAwait(false);
-		return await chn.SendMessageAsync(content).ConfigureAwait(false);
+		var chn = await this.CreateDmChannelAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+		return await chn.SendMessageAsync(content, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -492,13 +493,13 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <exception cref="NotFoundException">Thrown when the user does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordMessage> SendMessageAsync(DiscordEmbed embed)
+	public async Task<DiscordMessage> SendMessageAsync(DiscordEmbed embed, CancellationToken cancellationToken = default)
 	{
 		if (this.IsBot && this.Discord.CurrentUser.IsBot)
 			throw new ArgumentException("Bots cannot DM each other.");
 
-		var chn = await this.CreateDmChannelAsync().ConfigureAwait(false);
-		return await chn.SendMessageAsync(embed).ConfigureAwait(false);
+		var chn = await this.CreateDmChannelAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+		return await chn.SendMessageAsync(embed, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -514,13 +515,13 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <exception cref="NotFoundException">Thrown when the user does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed)
+	public async Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed, CancellationToken cancellationToken = default)
 	{
 		if (this.IsBot && this.Discord.CurrentUser.IsBot)
 			throw new ArgumentException("Bots cannot DM each other.");
 
-		var chn = await this.CreateDmChannelAsync().ConfigureAwait(false);
-		return await chn.SendMessageAsync(content, embed).ConfigureAwait(false);
+		var chn = await this.CreateDmChannelAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+		return await chn.SendMessageAsync(content, embed, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -535,13 +536,13 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <exception cref="NotFoundException">Thrown when the user does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordMessage> SendMessageAsync(DiscordMessageBuilder message)
+	public async Task<DiscordMessage> SendMessageAsync(DiscordMessageBuilder message, CancellationToken cancellationToken = default)
 	{
 		if (this.IsBot && this.Discord.CurrentUser.IsBot)
 			throw new ArgumentException("Bots cannot DM each other.");
 
-		var chn = await this.CreateDmChannelAsync().ConfigureAwait(false);
-		return await chn.SendMessageAsync(message).ConfigureAwait(false);
+		var chn = await this.CreateDmChannelAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+		return await chn.SendMessageAsync(message, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>

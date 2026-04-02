@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
@@ -154,7 +155,7 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	/// </exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
-	public Task<DiscordSticker> ModifyAsync(Optional<string> name, Optional<string> description, Optional<string> tags, string reason = null) =>
+	public Task<DiscordSticker> ModifyAsync(Optional<string> name, Optional<string> description, Optional<string> tags, string reason = null, CancellationToken cancellationToken = default) =>
 		!this.GuildId.HasValue
 			? throw new ArgumentException("This sticker does not belong to a guild.")
 			: name.HasValue && (name.Value.Length < 2 || name.Value.Length > 30)
@@ -163,7 +164,7 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 					? throw new ArgumentException("Sticker description needs to be between 1 and 100 characters long.")
 					: tags.HasValue && !DiscordEmoji.TryFromUnicode(this.Discord, tags.Value, out var emoji)
 						? throw new ArgumentException("Sticker tags needs to be a unicode emoji.")
-						: this.Discord.ApiClient.ModifyGuildStickerAsync(this.GuildId.Value, this.Id, name, description, tags, reason);
+						: this.Discord.ApiClient.ModifyGuildStickerAsync(this.GuildId.Value, this.Id, name, description, tags, reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Deletes the sticker
@@ -176,8 +177,8 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	/// </exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
-	public Task DeleteAsync(string reason = null)
-		=> this.GuildId.HasValue ? this.Discord.ApiClient.DeleteGuildStickerAsync(this.GuildId.Value, this.Id, reason) : throw new ArgumentException("The requested sticker is no guild sticker.");
+	public Task DeleteAsync(string reason = null, CancellationToken cancellationToken = default)
+		=> this.GuildId.HasValue ? this.Discord.ApiClient.DeleteGuildStickerAsync(this.GuildId.Value, this.Id, reason, cancellationToken: cancellationToken) : throw new ArgumentException("The requested sticker is no guild sticker.");
 }
 
 /// <summary>

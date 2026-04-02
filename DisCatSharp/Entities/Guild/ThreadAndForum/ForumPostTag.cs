@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Net.Models;
@@ -90,7 +91,7 @@ public class ForumPostTag : NullableSnowflakeObject, IEquatable<ForumPostTag>
 	///     Modifies the tag.
 	/// </summary>
 	/// <exception cref="NotImplementedException">This method is currently not implemented.</exception>
-	public async Task<ForumPostTag> ModifyAsync(Action<ForumPostTagEditModel> action)
+	public async Task<ForumPostTag> ModifyAsync(Action<ForumPostTagEditModel> action, CancellationToken cancellationToken = default)
 	{
 		var mdl = new ForumPostTagEditModel();
 		action(mdl);
@@ -104,7 +105,7 @@ public class ForumPostTag : NullableSnowflakeObject, IEquatable<ForumPostTag>
 			Moderated = mdl.Moderated.HasValue ? mdl.Moderated.Value : this.Moderated,
 			Name = mdl.Name.HasValue ? mdl.Name.Value : this.Name,
 			UnicodeEmojiString = mdl.Emoji.HasValue ? mdl.Emoji.Value.Name : this.UnicodeEmojiString
-		}).ToList(), null, null, null, null, null, null, null, null, null, mdl.AuditLogReason);
+		}).ToList(), null, null, null, null, null, null, null, null, null, mdl.AuditLogReason, cancellationToken: cancellationToken);
 		return res.InternalAvailableTags.First(x => x.Id == this.Id);
 	}
 
@@ -112,8 +113,8 @@ public class ForumPostTag : NullableSnowflakeObject, IEquatable<ForumPostTag>
 	///     Deletes the tag.
 	/// </summary>
 	/// <exception cref="NotImplementedException">This method is currently not implemented.</exception>
-	public Task DeleteAsync(string reason = null)
-	=> this.Discord.ApiClient.ModifyForumChannelAsync(this.ChannelId, null, null, null, null, null, null, this.Channel.InternalAvailableTags.Where(x => x.Id != this.Id).ToList(), null, null, null, null, null, null, null, null, null, reason);
+	public Task DeleteAsync(string reason = null, CancellationToken cancellationToken = default)
+	=> this.Discord.ApiClient.ModifyForumChannelAsync(this.ChannelId, null, null, null, null, null, null, this.Channel.InternalAvailableTags.Where(x => x.Id != this.Id).ToList(), null, null, null, null, null, null, null, null, null, reason, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Checks whether this <see cref="ForumPostTag" /> is equal to another object.
