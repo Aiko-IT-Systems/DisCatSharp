@@ -213,6 +213,18 @@ public sealed partial class DiscordClient
 
 		Volatile.Write(ref this._skippedHeartbeats, 0);
 
+		// Ensure old consumer tasks from a previous connection have fully stopped before
+		// creating new channels/tokens. The CTS was already cancelled in SocketOnDisconnect;
+		// we just need to observe their completion so there's no overlap with new consumers.
+		if (this._dispatchConsumerTask is { IsCompleted: false } oldDispatch)
+			await oldDispatch.ConfigureAwait(false);
+
+		if (this._presenceConsumerTask is { IsCompleted: false } oldPresence)
+			await oldPresence.ConfigureAwait(false);
+
+		this._dispatchConsumerTask = null;
+		this._presenceConsumerTask = null;
+
 		this.WebSocketClient = this.Configuration.Gateway.WebSocketClientFactory(this.Configuration.Proxy, this.ServiceProvider);
 		this.WebSocketClient.AddDefaultHeader(CommonHeaders.USER_AGENT, Utilities.GetUserAgent());
 		this._payloadDecompressor = this.Configuration.Gateway.CompressionLevel is not GatewayCompressionLevel.None
