@@ -45,9 +45,9 @@ internal class Sodium : IDisposable
 	private readonly ReadOnlyMemory<byte> _key;
 
 	/// <summary>
-	/// 	AES-256-GCM instance for AEAD encryption/decryption.
+	/// 	AES-256-GCM instance for AEAD encryption/decryption. Lazily initialized on first AES-GCM use.
 	/// </summary>
-	private readonly AesGcm? _aesGcm;
+	private AesGcm? _aesGcm;
 
 	/// <summary>
 	/// 	Optional logger for one-shot diagnostics.
@@ -57,7 +57,7 @@ internal class Sodium : IDisposable
 	/// <summary>
 	/// 	One-shot guard for DecryptAead diagnostics (0 = not yet logged, 1 = logged).
 	/// </summary>
-	private static volatile int _decryptDiagLogged;
+	private static int _decryptDiagLogged;
 
 	/// <summary>
 	///     Initializes a new instance of the <see cref="Sodium" /> class.
@@ -92,7 +92,6 @@ internal class Sodium : IDisposable
 
 		this._csprng = RandomNumberGenerator.Create();
 		this._buffer = new byte[SodiumNative.SodiumNonceSize];
-		this._aesGcm = new AesGcm(key.Span, AES_GCM_TAG_SIZE);
 	}
 
 	/// <summary>
@@ -289,7 +288,11 @@ internal class Sodium : IDisposable
 				var counterValue = BinaryPrimitives.ReadUInt32LittleEndian(nonceCounter4);
 				Span<byte> nonce = stackalloc byte[12]; // zero-initialized
 				BinaryPrimitives.WriteUInt32LittleEndian(nonce, counterValue);
-				this._aesGcm!.Encrypt(nonce, source, ciphertextDest, tagDest, aad);
+				this._aesGcm ??= new AesGcm(this._key.Span, AES_GCM_TAG_SIZE);
+				var aesGcm = this._aesGcm;
+				if (aesGcm is null)
+					throw new CryptographicException("AES-GCM AEAD encryption was requested, but the AES-GCM instance was not initialized.");
+				aesGcm.Encrypt(nonce, source, ciphertextDest, tagDest, aad);
 				break;
 			}
 			case SodiumEncryptionMode.AeadXChaCha20Poly1305RtpSize:
@@ -309,6 +312,41 @@ internal class Sodium : IDisposable
 	}
 
 	/// <summary>
+	///     One-shot decrypt aead diagnostics.
+	/// </summary>
+	/// <param name="logger">The logger instance.</param>
+	/// <param name="mode">The AEAD encryption mode.</param>
+	/// <param name="ciphertextLength">The ciphertext payload length.</param>
+	/// <param name="aadLength">The additional authenticated data length.</param>
+	/// <param name="keyLength">The key length.</param>
+	/// <param name="nonceCounter4">4-byte little-endian nonce counter read from the end of the received packet.</param>
+	private static void LogDecryptAeadDiagnosticsOnce(ILogger? logger, SodiumEncryptionMode mode, int ciphertextLength, int aadLength, int keyLength, ReadOnlySpan<byte> nonceCounter4)
+	{
+		if (logger == null)
+			return;
+
+		if (Interlocked.CompareExchange(ref _decryptDiagLogged, 1, 0) != 0)
+			return;
+
+		var counterValue = BinaryPrimitives.ReadUInt32LittleEndian(nonceCounter4);
+
+		// Build the full nonce so we can log the exact bytes passed to the cipher.
+		var nonceLen = mode == SodiumEncryptionMode.AeadAes256GcmRtpSize ? 12 : 24;
+		Span<byte> diagNonce = stackalloc byte[nonceLen]; // zero-initialized
+		BinaryPrimitives.WriteUInt32LittleEndian(diagNonce, counterValue);
+
+		logger.VoiceDebug(
+			"[AEAD decrypt diag] mode={Mode} ciphertextLen={CLen} aadLen={AadLen} keyLen={KeyLen}",
+			mode, ciphertextLength, aadLength, keyLength);
+		logger.VoiceDebug(
+			"[AEAD decrypt diag] counter bytes: {Bytes} = LE uint32 {Value}",
+			BitConverter.ToString(nonceCounter4.ToArray()), counterValue);
+		logger.VoiceDebug(
+			"[AEAD decrypt diag] nonce bytes ({NonceLen}): {Nonce}",
+			nonceLen, BitConverter.ToString(diagNonce.ToArray()));
+	}
+
+	/// <summary>
 	///     Decrypts <paramref name="ciphertext" /> using the specified AEAD mode.
 	/// </summary>
 	/// <param name="ciphertext">Ciphertext payload to decrypt.</param>
@@ -325,25 +363,7 @@ internal class Sodium : IDisposable
 		if (nonceCounter4.Length != AEAD_NONCE_SUFFIX_SIZE)
 			throw new ArgumentException($"Nonce counter must be exactly {AEAD_NONCE_SUFFIX_SIZE} bytes.", nameof(nonceCounter4));
 
-		if (this._logger != null && Interlocked.CompareExchange(ref _decryptDiagLogged, 1, 0) == 0)
-		{
-			var counterValue = BinaryPrimitives.ReadUInt32LittleEndian(nonceCounter4);
-
-			// Build the full nonce so we can log the exact bytes passed to the cipher.
-			var nonceLen = mode == SodiumEncryptionMode.AeadAes256GcmRtpSize ? 12 : 24;
-			Span<byte> diagNonce = stackalloc byte[nonceLen]; // zero-initialized
-			BinaryPrimitives.WriteUInt32LittleEndian(diagNonce, counterValue);
-
-			this._logger.VoiceDebug(
-				"[AEAD decrypt diag] mode={Mode} ciphertextLen={CLen} aadLen={AadLen} keyLen={KeyLen}",
-				mode, ciphertext.Length, aad.Length, this._key.Length);
-			this._logger.VoiceDebug(
-				"[AEAD decrypt diag] counter bytes: {Bytes} = LE uint32 {Value}",
-				BitConverter.ToString(nonceCounter4.ToArray()), counterValue);
-			this._logger.VoiceDebug(
-				"[AEAD decrypt diag] nonce bytes ({NonceLen}): {Nonce}",
-				nonceLen, BitConverter.ToString(diagNonce.ToArray()));
-		}
+		LogDecryptAeadDiagnosticsOnce(this._logger, mode, ciphertext.Length, aad.Length, this._key.Length, nonceCounter4);
 
 		switch (mode)
 		{
@@ -354,7 +374,10 @@ internal class Sodium : IDisposable
 				var counterValue = BinaryPrimitives.ReadUInt32LittleEndian(nonceCounter4);
 				Span<byte> nonce = stackalloc byte[12]; // zero-initialized
 				BinaryPrimitives.WriteUInt32LittleEndian(nonce, counterValue);
-				this._aesGcm!.Decrypt(nonce, ciphertext, tag, plaintextDest, aad);
+				this._aesGcm ??= new AesGcm(this._key.Span, AES_GCM_TAG_SIZE);
+				if (this._aesGcm is null)
+					throw new InvalidOperationException("AES-GCM decrypt requested, but AES-GCM was not initialized for this Sodium instance.");
+				this._aesGcm.Decrypt(nonce, ciphertext, tag, plaintextDest, aad);
 				break;
 			}
 			case SodiumEncryptionMode.AeadXChaCha20Poly1305RtpSize:
