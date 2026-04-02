@@ -38,18 +38,38 @@ public sealed class RestAdvancedConfiguration
 	/// </summary>
 	/// <remarks>
 	///     <para>Set to <see cref="TimeSpan.Zero" /> to disable the timeout entirely (wait forever).</para>
-	///     <para>The default is 5 minutes, which covers normal rate-limit back-off while catching stuck queues.</para>
+	///     <para>Must be non-negative. The default is 5 minutes.</para>
 	/// </remarks>
-	public TimeSpan QueueTimeout { get; set; } = TimeSpan.FromMinutes(5);
+	public TimeSpan QueueTimeout
+	{
+		get;
+		set
+		{
+			if (value < TimeSpan.Zero)
+				throw new ArgumentOutOfRangeException(nameof(value), value, "QueueTimeout must be non-negative. Use TimeSpan.Zero to disable.");
+
+			field = value;
+		}
+	} = TimeSpan.FromMinutes(5);
 
 	/// <summary>
 	///     Gets or sets the duration after which a warning log is emitted for a queued request that has not yet started.
 	/// </summary>
 	/// <remarks>
 	///     <para>Set to <see cref="TimeSpan.Zero" /> to disable the warning.</para>
-	///     <para>Defaults to 2 minutes. Must be less than <see cref="QueueTimeout" /> when both are non-zero.</para>
+	///     <para>Must be non-negative. Defaults to 2 minutes.</para>
 	/// </remarks>
-	public TimeSpan QueueWarningThreshold { get; set; } = TimeSpan.FromMinutes(2);
+	public TimeSpan QueueWarningThreshold
+	{
+		get;
+		set
+		{
+			if (value < TimeSpan.Zero)
+				throw new ArgumentOutOfRangeException(nameof(value), value, "QueueWarningThreshold must be non-negative. Use TimeSpan.Zero to disable.");
+
+			field = value;
+		}
+	} = TimeSpan.FromMinutes(2);
 
 	/// <summary>
 	///     Gets or sets the maximum number of automatic retries for a request that receives a retryable response.
@@ -57,9 +77,19 @@ public sealed class RestAdvancedConfiguration
 	///     Server errors use exponential backoff (1s, 2s, 4s, …); rate limits use the server-provided Retry-After.
 	/// </summary>
 	/// <remarks>
-	///     Defaults to 5. Set to 0 to disable retries entirely.
+	///     Must be non-negative. Defaults to 5. Set to 0 to disable retries entirely.
 	/// </remarks>
-	public int MaxRetries { get; set; } = 5;
+	public int MaxRetries
+	{
+		get;
+		set
+		{
+			if (value < 0)
+				throw new ArgumentOutOfRangeException(nameof(value), value, "MaxRetries must be non-negative.");
+
+			field = value;
+		}
+	} = 5;
 
 	/// <summary>
 	///     Gets or sets the maximum number of requests that can be queued per bucket.
@@ -67,10 +97,20 @@ public sealed class RestAdvancedConfiguration
 	///     <see cref="Exceptions.RestQueueFullException" />.
 	/// </summary>
 	/// <remarks>
-	///     <para>Set to 0 to disable the limit (unbounded queue). Defaults to 1000.</para>
+	///     <para>Must be non-negative. Set to 0 to disable the limit (unbounded queue). Defaults to 1000.</para>
 	///     <para>This protects against OOM from runaway request patterns on a single endpoint.</para>
 	/// </remarks>
-	public int MaxQueueDepthPerBucket { get; set; } = 1000;
+	public int MaxQueueDepthPerBucket
+	{
+		get;
+		set
+		{
+			if (value < 0)
+				throw new ArgumentOutOfRangeException(nameof(value), value, "MaxQueueDepthPerBucket must be non-negative. Use 0 for unbounded.");
+
+			field = value;
+		}
+	} = 1000;
 
 	/// <summary>
 	///     Gets or sets whether transient HTTP errors (DNS failures, socket errors, connection timeouts)
@@ -87,17 +127,37 @@ public sealed class RestAdvancedConfiguration
 	///     When open, new requests to that bucket are immediately failed without sending HTTP requests.
 	/// </summary>
 	/// <remarks>
-	///     <para>Set to 0 to disable the circuit breaker. Defaults to 10.</para>
+	///     <para>Must be non-negative. Set to 0 to disable the circuit breaker. Defaults to 10.</para>
 	///     <para>The circuit breaker resets after <see cref="CircuitBreakerResetTimeout" /> with no new failures.</para>
 	/// </remarks>
-	public int CircuitBreakerThreshold { get; set; } = 10;
+	public int CircuitBreakerThreshold
+	{
+		get;
+		set
+		{
+			if (value < 0)
+				throw new ArgumentOutOfRangeException(nameof(value), value, "CircuitBreakerThreshold must be non-negative. Use 0 to disable.");
+
+			field = value;
+		}
+	} = 10;
 
 	/// <summary>
 	///     Gets or sets the duration after which a tripped circuit breaker transitions to half-open,
 	///     allowing a single probe request through.
 	/// </summary>
 	/// <remarks>
-	///     Defaults to 30 seconds.
+	///     Must be positive. Defaults to 30 seconds.
 	/// </remarks>
-	public TimeSpan CircuitBreakerResetTimeout { get; set; } = TimeSpan.FromSeconds(30);
+	public TimeSpan CircuitBreakerResetTimeout
+	{
+		get;
+		set
+		{
+			if (value <= TimeSpan.Zero)
+				throw new ArgumentOutOfRangeException(nameof(value), value, "CircuitBreakerResetTimeout must be positive.");
+
+			field = value;
+		}
+	} = TimeSpan.FromSeconds(30);
 }
