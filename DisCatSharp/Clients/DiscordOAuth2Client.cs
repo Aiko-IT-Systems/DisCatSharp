@@ -393,7 +393,7 @@ public sealed class DiscordOAuth2Client : IDisposable
 	/// <param name="deafened">Whether this user has to be deafened.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	public async Task<DiscordMember> AddCurrentUserToGuildAsync(DiscordAccessToken accessToken, ulong guildId, string? nickname = null, IEnumerable<DiscordRole>? roles = null, bool? muted = null, bool? deafened = null, CancellationToken cancellationToken = default)
-		=> accessToken.Scope.Split(' ').Any(x => x == "guilds.join") ? await this.ApiClient.AddGuildMemberAsync(guildId, (await this.GetCurrentUserAsync(accessToken)).Id, accessToken.AccessToken, nickname, roles, muted, deafened, cancellationToken: cancellationToken) : throw new AccessViolationException("Access token does not include guilds.join scope");
+		=> accessToken.Scope.Split(' ').Any(x => x == "guilds.join") ? await this.ApiClient.AddGuildMemberAsync(guildId, (await this.GetCurrentUserAsync(accessToken, cancellationToken)).Id, accessToken.AccessToken, nickname, roles, muted, deafened, cancellationToken: cancellationToken) : throw new AccessViolationException("Access token does not include guilds.join scope");
 
 	/// <summary>
 	///     <para>Adds the given <paramref name="userId" /> to the given <paramref name="guildId" />.</para>

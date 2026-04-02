@@ -741,7 +741,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public async Task<DiscordActivityInstance> GetActivityInstanceAsync(string instanceId, CancellationToken cancellationToken = default)
 	{
 		ArgumentException.ThrowIfNullOrWhiteSpace(instanceId);
-		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync().ConfigureAwait(false)).Id;
+		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync(cancellationToken).ConfigureAwait(false)).Id;
 		return await this.ApiClient.GetActivityInstanceAsync(applicationId, instanceId, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
@@ -762,7 +762,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		ArgumentException.ThrowIfNullOrWhiteSpace(title);
 		ArgumentException.ThrowIfNullOrWhiteSpace(image);
 
-		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync().ConfigureAwait(false)).Id;
+		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync(cancellationToken).ConfigureAwait(false)).Id;
 		return await this.ApiClient.CreateActivityQuickLinkAsync(applicationId, accessToken, customId, description, title, image, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
@@ -780,7 +780,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		ArgumentNullException.ThrowIfNull(stream);
 		ArgumentException.ThrowIfNullOrWhiteSpace(fileName);
 
-		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync().ConfigureAwait(false)).Id;
+		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync(cancellationToken).ConfigureAwait(false)).Id;
 		return await this.ApiClient.CreateActivityAttachmentAsync(applicationId, accessToken, stream, fileName, contentType, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
@@ -1667,7 +1667,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	{
 		var mdl = new ApplicationCommandEditModel();
 		action(mdl);
-		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync().ConfigureAwait(false)).Id;
+		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync(cancellationToken).ConfigureAwait(false)).Id;
 		return await this.ApiClient.EditGlobalApplicationCommandAsync(applicationId, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.IsNsfw, mdl.AllowedContexts, mdl.IntegrationTypes, mdl.HandlerType, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
@@ -1732,7 +1732,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	{
 		var mdl = new ApplicationCommandEditModel();
 		action(mdl);
-		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync().ConfigureAwait(false)).Id;
+		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync(cancellationToken).ConfigureAwait(false)).Id;
 		return await this.ApiClient.EditGuildApplicationCommandAsync(applicationId, guildId, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.IsNsfw, mdl.AllowedContexts, mdl.IntegrationTypes, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
