@@ -2296,7 +2296,7 @@ public sealed class DiscordApiClient
 	/// <param name="emojiId">The ID of the custom emoji (optional).</param>
 	/// <param name="emojiName">The unicode character of the standard emoji (optional).</param>
 	/// <param name="reason">The reason.</param>
-	public async Task<DiscordSoundboardSound> CreateGuildSoundboardSoundAsync(ulong guildId, string name, string sound, double? volume = null, ulong? emojiId = null, string? emojiName = null, string? reason = null)
+	public async Task<DiscordSoundboardSound> CreateGuildSoundboardSoundAsync(ulong guildId, string name, string sound, double? volume = null, ulong? emojiId = null, string? emojiName = null, string? reason = null, CancellationToken cancellationToken = default)
 	{
 		var pld = new RestSoundboardSoundCreatePayload
 		{
@@ -2317,7 +2317,7 @@ public sealed class DiscordApiClient
 			guild_id = guildId
 		}, out var path);
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld), cancellationToken: cancellationToken).ConfigureAwait(false);
 
 		return DiscordJson.DeserializeObject<DiscordSoundboardSound>(res.Response, this.Discord);
 	}
@@ -2385,7 +2385,7 @@ public sealed class DiscordApiClient
 	///     Gets all soundboard sounds for a guild.
 	/// </summary>
 	/// <param name="guildId">The guild ID.</param>
-	public async Task<IReadOnlyList<DiscordSoundboardSound>> ListGuildSoundboardSoundsAsync(ulong guildId)
+	public async Task<IReadOnlyList<DiscordSoundboardSound>> ListGuildSoundboardSoundsAsync(ulong guildId, CancellationToken cancellationToken = default)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SOUNDBOARD_SOUNDS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
@@ -2393,7 +2393,7 @@ public sealed class DiscordApiClient
 			guild_id = guildId
 		}, out var path);
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route, cancellationToken: cancellationToken).ConfigureAwait(false);
 		var response = DiscordJson.DeserializeObject<RestGuildSoundboardSoundsResponse>(res.Response, this.Discord);
 		var sounds = response.GetItems(this.Discord, guildId);
 
@@ -2410,13 +2410,13 @@ public sealed class DiscordApiClient
 	/// <summary>
 	///     Gets all default soundboard sounds available for all users.
 	/// </summary>
-	public async Task<IReadOnlyList<DiscordSoundboardSound>> ListDefaultSoundboardSoundsAsync()
+	public async Task<IReadOnlyList<DiscordSoundboardSound>> ListDefaultSoundboardSoundsAsync(CancellationToken cancellationToken = default)
 	{
 		var route = $"{Endpoints.SOUNDBOARD_DEFAULT_SOUNDS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 		{ }, out var path);
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 		return DiscordJson.DeserializeIEnumerableObject<List<DiscordSoundboardSound>>(res.Response, this.Discord);
 	}
@@ -2450,7 +2450,7 @@ public sealed class DiscordApiClient
 	///     servers. Optional.
 	/// </param>
 	/// <returns>A task representing the asynchronous operation.</returns>
-	public async Task SendSoundboardSoundAsync(ulong channelId, ulong soundId, ulong? sourceGuildId = null)
+	public async Task SendSoundboardSoundAsync(ulong channelId, ulong soundId, ulong? sourceGuildId = null, CancellationToken cancellationToken = default)
 	{
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.SEND_SOUNDBOARD_SOUND}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
@@ -2465,7 +2465,7 @@ public sealed class DiscordApiClient
 		};
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld), cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	#endregion
@@ -6319,7 +6319,7 @@ public sealed class DiscordApiClient
 	/// <param name="threadId">The thread_id.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	internal Task<DiscordMessage> EditWebhookMessageAsync(ulong webhookId, string webhookToken, ulong messageId, DiscordWebhookBuilder builder, ulong threadId, CancellationToken cancellationToken = default) =>
-		this.EditWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), builder, threadId.ToString());
+		this.EditWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), builder, threadId.ToString(), cancellationToken);
 
 	/// <summary>
 	///     Gets the webhook message async.
@@ -6357,7 +6357,7 @@ public sealed class DiscordApiClient
 	/// <param name="messageId">The message_id.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	internal Task<DiscordMessage> GetWebhookMessageAsync(ulong webhookId, string webhookToken, ulong messageId, CancellationToken cancellationToken = default) =>
-		this.GetWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), null);
+		this.GetWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), null, cancellationToken);
 
 	/// <summary>
 	///     Gets the webhook message async.
@@ -6368,7 +6368,7 @@ public sealed class DiscordApiClient
 	/// <param name="threadId">The thread_id.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	internal Task<DiscordMessage> GetWebhookMessageAsync(ulong webhookId, string webhookToken, ulong messageId, ulong threadId, CancellationToken cancellationToken = default) =>
-		this.GetWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), threadId.ToString());
+		this.GetWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), threadId.ToString(), cancellationToken);
 
 	/// <summary>
 	///     Deletes the webhook message async.
@@ -6403,7 +6403,7 @@ public sealed class DiscordApiClient
 	/// <param name="messageId">The message_id.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	internal Task DeleteWebhookMessageAsync(ulong webhookId, string webhookToken, ulong messageId, CancellationToken cancellationToken = default) =>
-		this.DeleteWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), null);
+		this.DeleteWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), null, cancellationToken);
 
 	/// <summary>
 	///     Deletes the webhook message async.
@@ -6414,7 +6414,7 @@ public sealed class DiscordApiClient
 	/// <param name="threadId">The thread_id.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	internal Task DeleteWebhookMessageAsync(ulong webhookId, string webhookToken, ulong messageId, ulong threadId, CancellationToken cancellationToken = default) =>
-		this.DeleteWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), threadId.ToString());
+		this.DeleteWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), threadId.ToString(), cancellationToken);
 
 	#endregion
 
@@ -8191,7 +8191,7 @@ public sealed class DiscordApiClient
 	/// <param name="interactionToken">The interaction token.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	internal Task<DiscordMessage> GetOriginalInteractionResponseAsync(ulong applicationId, string interactionToken, CancellationToken cancellationToken = default) =>
-		this.GetWebhookMessageAsync(applicationId, interactionToken, Endpoints.ORIGINAL, null);
+		this.GetWebhookMessageAsync(applicationId, interactionToken, Endpoints.ORIGINAL, null, cancellationToken);
 
 	/// <summary>
 	///     Edits the original interaction response.
@@ -8201,7 +8201,7 @@ public sealed class DiscordApiClient
 	/// <param name="builder">The builder.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	internal Task<DiscordMessage> EditOriginalInteractionResponseAsync(ulong applicationId, string interactionToken, DiscordWebhookBuilder builder, CancellationToken cancellationToken = default) =>
-		this.EditWebhookMessageAsync(applicationId, interactionToken, Endpoints.ORIGINAL, builder, null);
+		this.EditWebhookMessageAsync(applicationId, interactionToken, Endpoints.ORIGINAL, builder, null, cancellationToken);
 
 	/// <summary>
 	///     Deletes the original interaction response.
@@ -8210,7 +8210,7 @@ public sealed class DiscordApiClient
 	/// <param name="interactionToken">The interaction token.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	internal Task DeleteOriginalInteractionResponseAsync(ulong applicationId, string interactionToken, CancellationToken cancellationToken = default) =>
-		this.DeleteWebhookMessageAsync(applicationId, interactionToken, Endpoints.ORIGINAL, null);
+		this.DeleteWebhookMessageAsync(applicationId, interactionToken, Endpoints.ORIGINAL, null, cancellationToken);
 
 	/// <summary>
 	///     Creates the followup message.
@@ -8341,7 +8341,7 @@ public sealed class DiscordApiClient
 	/// <param name="messageId">The message id.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	internal Task<DiscordMessage> GetFollowupMessageAsync(ulong applicationId, string interactionToken, ulong messageId, CancellationToken cancellationToken = default) =>
-		this.GetWebhookMessageAsync(applicationId, interactionToken, messageId);
+		this.GetWebhookMessageAsync(applicationId, interactionToken, messageId, cancellationToken);
 
 	/// <summary>
 	///     Edits the followup message.
@@ -8352,7 +8352,7 @@ public sealed class DiscordApiClient
 	/// <param name="builder">The builder.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	internal Task<DiscordMessage> EditFollowupMessageAsync(ulong applicationId, string interactionToken, ulong messageId, DiscordWebhookBuilder builder, CancellationToken cancellationToken = default) =>
-		this.EditWebhookMessageAsync(applicationId, interactionToken, messageId.ToString(), builder, null);
+		this.EditWebhookMessageAsync(applicationId, interactionToken, messageId.ToString(), builder, null, cancellationToken);
 
 	/// <summary>
 	///     Deletes the followup message.
@@ -8362,7 +8362,7 @@ public sealed class DiscordApiClient
 	/// <param name="messageId">The message id.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	internal Task DeleteFollowupMessageAsync(ulong applicationId, string interactionToken, ulong messageId, CancellationToken cancellationToken = default) =>
-		this.DeleteWebhookMessageAsync(applicationId, interactionToken, messageId);
+		this.DeleteWebhookMessageAsync(applicationId, interactionToken, messageId, cancellationToken);
 
 	#endregion
 
