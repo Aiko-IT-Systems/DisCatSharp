@@ -24,13 +24,49 @@ internal static class AsyncDisposalMigrationAnalysis
 		if (type is null)
 			return false;
 
-		// Check namespace — must start with "DisCatSharp"
+		// Check namespace — must be "DisCatSharp" or a child namespace.
 		var ns = type.ContainingNamespace?.ToDisplayString();
-		if (ns is null || !ns.StartsWith(DisCatSharpNamespace, StringComparison.Ordinal))
+		if (!IsDisCatSharpNamespace(ns))
 			return false;
 
 		// Check interface implementation
 		return type.AllInterfaces.Any(i => i.ToDisplayString() == AsyncDisposableInterface);
+	}
+
+	/// <summary>
+	///     Returns <see langword="true" /> when the given namespace is exactly
+	///     <c>DisCatSharp</c> or a child namespace thereof.
+	/// </summary>
+	internal static bool IsDisCatSharpNamespace(string? ns)
+		=> ns is not null
+			&& (ns.Equals(DisCatSharpNamespace, StringComparison.Ordinal)
+				|| ns.StartsWith($"{DisCatSharpNamespace}.", StringComparison.Ordinal));
+
+	/// <summary>
+	///     Returns <see langword="true" /> when the node is contained in an async-capable
+	///     scope where introducing <c>await</c> will remain compilable.
+	/// </summary>
+	internal static bool IsInAsyncContext(SyntaxNode node)
+	{
+		for (SyntaxNode? current = node; current is not null; current = current.Parent)
+		{
+			switch (current)
+			{
+				case AnonymousFunctionExpressionSyntax anonymousFunction:
+					return anonymousFunction.AsyncKeyword != default;
+
+				case LocalFunctionStatementSyntax localFunction:
+					return localFunction.Modifiers.Any(static x => x.IsKind(Microsoft.CodeAnalysis.CSharp.SyntaxKind.AsyncKeyword));
+
+				case MethodDeclarationSyntax method:
+					return method.Modifiers.Any(static x => x.IsKind(Microsoft.CodeAnalysis.CSharp.SyntaxKind.AsyncKeyword));
+
+				case CompilationUnitSyntax:
+					return true;
+			}
+		}
+
+		return false;
 	}
 
 	/// <summary>

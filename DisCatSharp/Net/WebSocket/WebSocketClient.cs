@@ -412,8 +412,10 @@ public class WebSocketClient : IWebSocketClient
 		}
 
 		// Don't await or you deadlock
-		// DisconnectAsync waits for this method
-		_ = this.DisconnectAsync().ConfigureAwait(false);
+		// DisconnectAsync waits for this method.
+		// Skip the follow-up shutdown when Dispose()/DisconnectAsync() already initiated closure.
+		if (!this._isClientClose && !this._isDisposed)
+			_ = this.DisconnectAsync().ConfigureAwait(false);
 	}
 
 	/// <summary>

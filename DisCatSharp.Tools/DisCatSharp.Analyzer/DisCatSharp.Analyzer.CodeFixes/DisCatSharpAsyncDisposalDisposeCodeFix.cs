@@ -25,6 +25,14 @@ public sealed class DisCatSharpAsyncDisposalDisposeCodeFix : SingleDiagnosticCod
 	{
 		foreach (var diagnostic in diagnostics)
 		{
+			var root = context.Document.GetSyntaxRootAsync(context.CancellationToken).GetAwaiter().GetResult();
+			if (root is null)
+				continue;
+
+			var node = root.FindNode(diagnostic.Location.SourceSpan, getInnermostNodeForTie: true);
+			if (!AsyncDisposalMigrationAnalysis.IsInAsyncContext(node))
+				continue;
+
 			context.RegisterCodeFix(
 				CodeAction.Create(
 					"Use 'await DisposeAsync()' instead",
@@ -43,6 +51,9 @@ public sealed class DisCatSharpAsyncDisposalDisposeCodeFix : SingleDiagnosticCod
 			return document;
 
 		var node = root.FindNode(diagnostic.Location.SourceSpan, getInnermostNodeForTie: true);
+		if (!AsyncDisposalMigrationAnalysis.IsInAsyncContext(node))
+			return document;
+
 		var invocation = node.FirstAncestorOrSelf<InvocationExpressionSyntax>();
 		if (invocation?.Expression is not MemberAccessExpressionSyntax memberAccess)
 			return document;

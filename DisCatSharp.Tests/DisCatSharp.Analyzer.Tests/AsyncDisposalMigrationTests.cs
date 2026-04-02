@@ -129,6 +129,33 @@ public sealed class AsyncDisposalMigrationTests
 		Assert.Contains("DiscordWebhookClient", diagnostic.GetMessage());
 	}
 
+	[Fact]
+	public async Task DCS1301_No_diagnostic_on_non_discatsharp_prefix_namespace()
+	{
+		const string source = """
+			using System;
+			using System.Threading.Tasks;
+
+			namespace DisCatSharpExtensions;
+
+			public sealed class FakeClient : IAsyncDisposable
+			{
+				public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+			}
+
+			class Test
+			{
+				void Run()
+				{
+					using var client = new FakeClient();
+				}
+			}
+			""";
+
+		var diagnostics = await RoslynTestDocumentFactory.GetAnalyzerDiagnosticsAsync(source);
+		Assert.DoesNotContain(diagnostics, d => d.Id == DisCatSharpDiagnosticIds.AsyncDisposalUsingMigration);
+	}
+
 	#endregion
 
 	#region DCS1302 — Dispose() → DisposeAsync()
@@ -232,6 +259,30 @@ public sealed class AsyncDisposalMigrationTests
 	}
 
 	[Fact]
+	public async Task DCS1301_Fix_does_not_modify_sync_scope()
+	{
+		const string source = """
+			using DisCatSharp;
+			using DisCatSharp.Enums;
+
+			class Test
+			{
+				void Run()
+				{
+					using var client = new DiscordClient(new DiscordConfiguration
+					{
+						Token = "t",
+						TokenType = TokenType.Bot
+					});
+				}
+			}
+			""";
+
+		var fixedSource = await RoslynTestDocumentFactory.ApplyAsyncDisposalUsingFixAsync(source);
+		Assert.Equal(source.ReplaceLineEndings(), fixedSource.ReplaceLineEndings());
+	}
+
+	[Fact]
 	public async Task DCS1302_Fix_converts_Dispose_to_DisposeAsync()
 	{
 		const string source = """
@@ -257,6 +308,31 @@ public sealed class AsyncDisposalMigrationTests
 		Assert.Contains("DisposeAsync", fixedSource);
 		Assert.Contains("await", fixedSource);
 		Assert.DoesNotContain("client.Dispose()", fixedSource);
+	}
+
+	[Fact]
+	public async Task DCS1302_Fix_does_not_modify_sync_scope()
+	{
+		const string source = """
+			using DisCatSharp;
+			using DisCatSharp.Enums;
+
+			class Test
+			{
+				void Run()
+				{
+					var client = new DiscordClient(new DiscordConfiguration
+					{
+						Token = "t",
+						TokenType = TokenType.Bot
+					});
+					client.Dispose();
+				}
+			}
+			""";
+
+		var fixedSource = await RoslynTestDocumentFactory.ApplyAsyncDisposalDisposeFixAsync(source);
+		Assert.Equal(source.ReplaceLineEndings(), fixedSource.ReplaceLineEndings());
 	}
 
 	#endregion

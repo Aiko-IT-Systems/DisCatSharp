@@ -25,6 +25,14 @@ public sealed class DisCatSharpAsyncDisposalUsingCodeFix : SingleDiagnosticCodeF
 	{
 		foreach (var diagnostic in diagnostics)
 		{
+			var root = context.Document.GetSyntaxRootAsync(context.CancellationToken).GetAwaiter().GetResult();
+			if (root is null)
+				continue;
+
+			var node = root.FindNode(diagnostic.Location.SourceSpan, getInnermostNodeForTie: true);
+			if (!AsyncDisposalMigrationAnalysis.IsInAsyncContext(node))
+				continue;
+
 			context.RegisterCodeFix(
 				CodeAction.Create(
 					"Use 'await using' for async disposal",
@@ -43,6 +51,8 @@ public sealed class DisCatSharpAsyncDisposalUsingCodeFix : SingleDiagnosticCodeF
 			return document;
 
 		var node = root.FindNode(diagnostic.Location.SourceSpan, getInnermostNodeForTie: true);
+		if (!AsyncDisposalMigrationAnalysis.IsInAsyncContext(node))
+			return document;
 
 		// Walk up to the owning statement
 		var localDecl = node.FirstAncestorOrSelf<LocalDeclarationStatementSyntax>();
