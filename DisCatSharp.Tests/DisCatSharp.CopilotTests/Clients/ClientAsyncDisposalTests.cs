@@ -53,6 +53,32 @@ public class ClientAsyncDisposalTests
 	}
 
 	[Fact]
+	public async Task DiscordClient_DisposeThenDisposeAsync_IsIdempotent()
+	{
+		var client = CreateDiscordClient();
+
+		var ex = await Record.ExceptionAsync(async () =>
+		{
+			client.Dispose();
+			await client.DisposeAsync();
+		});
+
+		Assert.Null(ex);
+	}
+
+	[Fact]
+	public async Task DiscordClient_AwaitUsingPattern_DisposesCleanly()
+	{
+		var ex = await Record.ExceptionAsync(async () =>
+		{
+			await using var client = CreateDiscordClient();
+			// scope ends, DisposeAsync fires
+		});
+
+		Assert.Null(ex);
+	}
+
+	[Fact]
 	public void DiscordOAuth2Client_ImplementsIAsyncDisposable()
 		=> Assert.True(typeof(IAsyncDisposable).IsAssignableFrom(typeof(DiscordOAuth2Client)));
 
@@ -76,5 +102,24 @@ public class ClientAsyncDisposalTests
 		});
 
 		Assert.Null(ex);
+	}
+
+	[Fact]
+	public async Task DiscordWebhookClient_AwaitUsingPattern_DisposesCleanly()
+	{
+		var ex = await Record.ExceptionAsync(async () =>
+		{
+			await using var client = new DiscordWebhookClient();
+		});
+
+		Assert.Null(ex);
+	}
+
+	[Fact]
+	public void BaseDiscordClient_DeclaresBothDisposalInterfaces()
+	{
+		var type = typeof(BaseDiscordClient);
+		Assert.True(typeof(IDisposable).IsAssignableFrom(type));
+		Assert.True(typeof(IAsyncDisposable).IsAssignableFrom(type));
 	}
 }
