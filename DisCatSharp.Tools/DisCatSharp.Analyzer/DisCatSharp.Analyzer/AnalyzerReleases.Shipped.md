@@ -50,3 +50,12 @@ DCS1201 | Usage    | Warning  | Configuration property moved to nested config
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
 DCS1101 | Usage    | Warning  | Removed; superseded by DCS1103
+
+## Release 1.0.6.0
+
+### New Rules
+
+Rule ID | Category | Severity | Notes
+--------|----------|----------|-------
+DCS1301 | Usage    | Warning  | DisCatSharp client used with sync `using`; prefer `await using` for async disposal, [Documentation](https://docs.dcs.aitsys.dev/vs/analyzer/dcs/1301)
+DCS1302 | Usage    | Warning  | Sync `Dispose()` called on DisCatSharp client; prefer `await DisposeAsync()`, [Documentation](https://docs.dcs.aitsys.dev/vs/analyzer/dcs/1302)
