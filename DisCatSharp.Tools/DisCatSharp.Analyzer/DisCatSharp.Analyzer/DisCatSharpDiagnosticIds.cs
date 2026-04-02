@@ -16,4 +16,6 @@ internal static class DisCatSharpDiagnosticIds
 	public const string BanDeleteMessageDaysMigration = DisCatSharpAnalyzer.DIAGNOSTIC_ID_PREFIX + "1102";
 	public const string PresencesPropertyRemoval = DisCatSharpAnalyzer.DIAGNOSTIC_ID_PREFIX + "1103";
 	public const string ConfigPropertyMigration = DisCatSharpAnalyzer.DIAGNOSTIC_ID_PREFIX + "1201";
+	public const string AsyncDisposalUsingMigration = DisCatSharpAnalyzer.DIAGNOSTIC_ID_PREFIX + "1301";
+	public const string AsyncDisposalDisposeMigration = DisCatSharpAnalyzer.DIAGNOSTIC_ID_PREFIX + "1302";
 }

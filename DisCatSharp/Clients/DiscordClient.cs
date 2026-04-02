@@ -2531,14 +2531,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	#region Disposal
 
 	/// <summary>
-	///     Disposes the client.
-	/// </summary>
-	~DiscordClient()
-	{
-		this.Dispose();
-	}
-
-	/// <summary>
 	///     Whether the client is disposed.
 	/// </summary>
 	private volatile bool _disposed;
@@ -2547,6 +2539,12 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Disposes the client.
 	/// </summary>
 	public override void Dispose()
+		=> this.DisposeAsync().AsTask().ConfigureAwait(false).GetAwaiter().GetResult();
+
+	/// <summary>
+	///     Asynchronously disposes the client.
+	/// </summary>
+	public override async ValueTask DisposeAsync()
 	{
 		if (this._disposed)
 			return;
@@ -2564,33 +2562,19 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 		try
 		{
-			this.DisconnectAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+			await this.DisconnectAsync().ConfigureAwait(false);
 		}
 		catch
 		{ }
-
-		this.ApiClient.Rest.Dispose();
-		this.CurrentUser = null!;
-		this.CommandCooldownBuckets.Clear();
-
-		var extensions = this._extensions; // prevent _extensions being modified during dispose
-		this._extensions.Clear();
-		foreach (var extension in extensions)
-		{
-			if (extension is IDisposable disposable)
-				disposable.Dispose();
-		}
 
 		try
 		{
-			this._cancelTokenSource?.Cancel();
-			this._cancelTokenSource?.Dispose();
+			if (this._cancelTokenSource is not null)
+				await this._cancelTokenSource.CancelAsync().ConfigureAwait(false);
 		}
 		catch
 		{ }
 
-		// Complete the dispatch channel writer to signal the consumer loop to exit,
-		// then await the consumer task to ensure orderly shutdown.
 		try
 		{
 			this._dispatchQueue?.Writer.TryComplete();
@@ -2599,11 +2583,94 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		catch
 		{ }
 
+		try
+		{
+			if (this._heartbeatTask is { IsCompleted: false })
+				await this._heartbeatTask.ConfigureAwait(false);
+		}
+		catch
+		{ }
+
+		try
+		{
+			if (this._dispatchConsumerTask is { IsCompleted: false })
+				await this._dispatchConsumerTask.ConfigureAwait(false);
+		}
+		catch
+		{ }
+
+		try
+		{
+			if (this._presenceConsumerTask is { IsCompleted: false })
+				await this._presenceConsumerTask.ConfigureAwait(false);
+		}
+		catch
+		{ }
+
+		var extensions = this._extensions;
+		this._extensions.Clear();
+		foreach (var extension in extensions)
+		{
+			if (extension is IAsyncDisposable asyncDisposable)
+			{
+				try
+				{
+					await asyncDisposable.DisposeAsync().ConfigureAwait(false);
+				}
+				catch
+				{ }
+			}
+			else if (extension is IDisposable disposable)
+			{
+				try
+				{
+					disposable.Dispose();
+				}
+				catch
+				{ }
+			}
+		}
+
+		try
+		{
+			this.WebSocketClient?.Dispose();
+		}
+		catch
+		{ }
+
+		try
+		{
+			this._payloadDecompressor?.Dispose();
+		}
+		catch
+		{ }
+
+		try
+		{
+			this.ApiClient.Rest.Dispose();
+		}
+		catch
+		{ }
+
+		try
+		{
+			this.RestClient?.Dispose();
+		}
+		catch
+		{ }
+
+		try
+		{
+			this._cancelTokenSource?.Dispose();
+		}
+		catch
+		{ }
+
 		this.GuildsInternal.Clear();
 		this.EmojisInternal.Clear();
-		this._heartbeatTask?.Dispose();
+		this.CommandCooldownBuckets.Clear();
+		this.CurrentUser = null!;
 
-		GC.SuppressFinalize(this);
 	}
 
 	#endregion

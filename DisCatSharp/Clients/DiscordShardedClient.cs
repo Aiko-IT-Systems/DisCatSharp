@@ -21,7 +21,7 @@ namespace DisCatSharp;
 /// <summary>
 ///     A Discord client that shards automatically.
 /// </summary>
-public sealed partial class DiscordShardedClient : IDisposable
+public sealed partial class DiscordShardedClient : IDisposable, IAsyncDisposable
 {
 	#region Constructor
 
@@ -108,6 +108,12 @@ public sealed partial class DiscordShardedClient : IDisposable
 	///     Disposes the client and disconnects all shards.
 	/// </summary>
 	public void Dispose()
+		=> this.DisposeAsync().AsTask().ConfigureAwait(false).GetAwaiter().GetResult();
+
+	/// <summary>
+	///     Asynchronously disposes the client and disconnects all shards.
+	/// </summary>
+	public async ValueTask DisposeAsync()
 	{
 		if (this._disposed)
 			return;
@@ -122,22 +128,12 @@ public sealed partial class DiscordShardedClient : IDisposable
 
 		try
 		{
-			this.InternalStopAsync(false).ConfigureAwait(false).GetAwaiter().GetResult();
+			await this.InternalStopAsync(false).ConfigureAwait(false);
 		}
 		catch
 		{
 			// Swallow exceptions during disposal to prevent masking original errors.
 		}
-
-		GC.SuppressFinalize(this);
-	}
-
-	/// <summary>
-	///     Releases unmanaged resources if <see cref="Dispose" /> was not called.
-	/// </summary>
-	~DiscordShardedClient()
-	{
-		this.Dispose();
 	}
 
 	#endregion
@@ -508,10 +504,10 @@ public sealed partial class DiscordShardedClient : IDisposable
 	///     Stops all shards.
 	/// </summary>
 	/// <param name="enableLogger">Whether to enable the logger.</param>
-	private Task InternalStopAsync(bool enableLogger = true)
+	private async Task InternalStopAsync(bool enableLogger = true)
 	{
 		if (!this._isStarted && this._shards.IsEmpty)
-			return Task.CompletedTask;
+			return;
 
 		if (enableLogger)
 			this.Logger.LogInformation(LoggerEvents.ShardShutdown, "Disposing {0} shards.", this._shards.Count);
@@ -528,15 +524,13 @@ public sealed partial class DiscordShardedClient : IDisposable
 			{
 				this.UnhookEventHandlers(client);
 
-				client.Dispose();
+				await client.DisposeAsync().ConfigureAwait(false);
 
 				if (enableLogger)
 					this.Logger.LogInformation(LoggerEvents.ShardShutdown, "Disconnected shard {0}.", i);
 			}
 
 		this._shards.Clear();
-
-		return Task.CompletedTask;
 	}
 
 	#endregion

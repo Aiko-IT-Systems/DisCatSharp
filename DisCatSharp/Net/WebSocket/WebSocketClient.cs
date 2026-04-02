@@ -50,7 +50,7 @@ public class WebSocketClient : IWebSocketClient
 	private volatile bool _isConnected;
 
 	/// <summary>
-	///     Gets a value indicating whether this client is disposed.
+	///     Gets a value indicating whether this client instance is disposed.
 	/// </summary>
 	private bool _isDisposed;
 
@@ -199,19 +199,16 @@ public class WebSocketClient : IWebSocketClient
 			if (this._isConnected)
 				this._isConnected = false;
 
-			if (!this._isDisposed)
-			{
-				// Cancel all running tasks
-				if (this._socketToken.CanBeCanceled && this._socketTokenSource is not null)
-					this._socketTokenSource.Cancel();
-				this._socketTokenSource?.Dispose();
+			// Cancel all running tasks for this connection instance
+			if (this._socketToken.CanBeCanceled && this._socketTokenSource is not null)
+				this._socketTokenSource.Cancel();
+			this._socketTokenSource?.Dispose();
+			this._socketTokenSource = null;
 
-				if (this._receiverToken.CanBeCanceled && this._receiverTokenSource is not null)
-					this._receiverTokenSource.Cancel();
-				this._receiverTokenSource?.Dispose();
-
-				this._isDisposed = true;
-			}
+			if (this._receiverToken.CanBeCanceled && this._receiverTokenSource is not null)
+				this._receiverTokenSource.Cancel();
+			this._receiverTokenSource?.Dispose();
+			this._receiverTokenSource = null;
 		}
 		catch
 		{ }
@@ -322,8 +319,12 @@ public class WebSocketClient : IWebSocketClient
 
 		this.DisconnectAsync().ConfigureAwait(false).GetAwaiter().GetResult();
 
+		this._ws?.Dispose();
+		this._ws = null;
+
 		this._receiverTokenSource?.Dispose();
 		this._socketTokenSource?.Dispose();
+		this._senderLock.Dispose();
 		GC.SuppressFinalize(this);
 	}
 
@@ -411,8 +412,10 @@ public class WebSocketClient : IWebSocketClient
 		}
 
 		// Don't await or you deadlock
-		// DisconnectAsync waits for this method
-		_ = this.DisconnectAsync().ConfigureAwait(false);
+		// DisconnectAsync waits for this method.
+		// Skip the follow-up shutdown when Dispose()/DisconnectAsync() already initiated closure.
+		if (!this._isClientClose && !this._isDisposed)
+			_ = this.DisconnectAsync().ConfigureAwait(false);
 	}
 
 	/// <summary>

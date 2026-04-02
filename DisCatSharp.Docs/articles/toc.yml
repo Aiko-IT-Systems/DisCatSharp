@@ -119,6 +119,8 @@ items:
             uid: topics_rest
           - name: Timeout Configuration
             uid: topics_timeouts
+          - name: Async Disposal
+            uid: topics_async_disposal
           - name: Sharding
             uid: topics_sharding
           - name: Message Builder

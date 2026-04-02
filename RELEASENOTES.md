@@ -41,6 +41,8 @@ DisCatSharp Release Notes
     - Removed the separate `ReportMissingFields` telemetry switch so schema-drift diagnostics now follow `EnableSentry` directly.
     - Prevented the temporary sharded gateway-info client from reusing the parent telemetry sink and emitting spurious session-ended events.
     - Made `DiscordApplicationCommandLocalization.ValidLocales` a static `FrozenSet<string>` for O(1) lookup and zero per-instance allocation.
+    - Added `IAsyncDisposable` support across `DiscordClient`, `DiscordShardedClient`, `DiscordOAuth2Client`, and `DiscordWebhookClient`; synchronous `Dispose()` remains for compatibility and delegates to the async path.
+    - Added async-disposal migration guidance, including a dedicated documentation article and lifecycle regression coverage for mixed sync/async disposal patterns.
 
 DisCatSharp.Attributes Release Notes
 
@@ -152,3 +154,4 @@ DisCatSharp.Analyzer Release Notes
     - Added analyzer authoring documentation, diagnostic family guidance, release tracking files, and release workflow support for publishing `DisCatSharp.Analyzer`.
     - Added `DCS1102`, a ban-parameter migration analyzer/code fix: detects `deleteMessageDays:` named arguments on `BanAsync`/`BanMemberAsync` and renames them to `deleteMessageSeconds:`, multiplying integer literals by 86400 automatically.
     - Updated `DCS1201` config property migration to support root-level property targets (empty `NestedPath`) for `Proxy` and `EnableLibraryDeveloperMode`.
+    - Added `DCS1301`/`DCS1302` async-disposal migration diagnostics and code fixes for moving from `using`/`.Dispose()` to `await using`/`.DisposeAsync()` on DisCatSharp client types.
