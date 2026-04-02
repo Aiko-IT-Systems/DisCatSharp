@@ -273,6 +273,11 @@ internal sealed class BucketWorker : IDisposable
 		{
 			// Normal disposal — fall through
 		}
+		catch (ChannelClosedException)
+		{
+			// Normal shutdown after MigrateQueueTo completes the source writer — not a crash
+			this._logger.LogDebug(LoggerEvents.RestCleaner, "Bucket worker for {Bucket} exited after queue migration", this._bucket);
+		}
 		catch (Exception ex)
 		{
 			this._logger.LogError(LoggerEvents.RestError, ex, "Bucket worker crashed for {Bucket}", this._bucket);

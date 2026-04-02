@@ -82,7 +82,7 @@ internal sealed class BucketRegistry : IDisposable
 	/// <summary>
 	///     Whether the bucket cleaner is running.
 	/// </summary>
-	private volatile bool _cleanerRunning;
+	private int _cleanerRunning;
 
 	/// <summary>
 	///     The cleaner task.
@@ -238,14 +238,19 @@ internal sealed class BucketRegistry : IDisposable
 		if (!this._routesToHashes.TryGetValue(hashKey, out var oldHash))
 			return;
 
-		// Unlimited bucket with no new hash — just remove it
+		// Unlimited bucket with no new hash — just remove it and any stale alias
 		if (newHash is null)
 		{
 			lock (this._remapLock)
 			{
 				_ = this._routesToHashes.TryRemove(hashKey, out _);
+
+				// Remove the bucket by its ID
 				if (bucket.BucketId is not null)
 					_ = this._hashesToBuckets.TryRemove(bucket.BucketId, out _);
+
+				// Also remove the old hash alias to prevent stale resolution
+				_ = this._hashesToBuckets.TryRemove(oldHash, out _);
 			}
 
 			return;
@@ -296,10 +301,9 @@ internal sealed class BucketRegistry : IDisposable
 	/// </summary>
 	private void EnsureCleanerRunning()
 	{
-		if (this._cleanerRunning)
+		if (Interlocked.CompareExchange(ref this._cleanerRunning, 1, 0) != 0)
 			return;
 
-		this._cleanerRunning = true;
 		this._bucketCleanerTokenSource = new();
 		this._cleanerTask = Task.Run(this.CleanupBucketsAsync, this._bucketCleanerTokenSource.Token);
 		this._logger.LogDebug(LoggerEvents.RestCleaner, "Bucket cleaner task started.");
@@ -416,7 +420,7 @@ internal sealed class BucketRegistry : IDisposable
 		if (this._bucketCleanerTokenSource is { IsCancellationRequested: false })
 			this._bucketCleanerTokenSource?.Cancel();
 
-		this._cleanerRunning = false;
+		Interlocked.Exchange(ref this._cleanerRunning, 0);
 		this._logger.LogDebug(LoggerEvents.RestCleaner, "Bucket cleaner task stopped.");
 	}
 
