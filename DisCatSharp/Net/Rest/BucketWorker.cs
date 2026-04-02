@@ -76,6 +76,22 @@ internal sealed class BucketWorker : IDisposable
 	internal bool IsAlive => this._loopTask is { IsCompleted: false };
 
 	/// <summary>
+	///     Gets whether this worker's loop faulted (crashed with an unhandled exception).
+	///     Distinguishes crash from normal idle shutdown.
+	/// </summary>
+	internal bool IsFaulted => this._loopTask is { IsFaulted: true };
+
+	/// <summary>
+	///     Gets the exception that crashed the worker loop, if any.
+	/// </summary>
+	internal Exception? FaultException => this._loopTask?.Exception;
+
+	/// <summary>
+	///     Gets the total number of requests recovered from a faulted worker.
+	/// </summary>
+	internal long Recovered;
+
+	/// <summary>
 	///     Enqueues a request into this worker's FIFO queue.
 	///     Starts the worker loop if it is not already running.
 	/// </summary>
@@ -198,6 +214,10 @@ internal sealed class BucketWorker : IDisposable
 		catch (Exception ex)
 		{
 			this._logger.LogError(LoggerEvents.RestError, ex, "Bucket worker crashed for {Bucket}", this._bucket);
+
+			// Re-throw so the Task captures the exception — IsFaulted becomes true
+			// and the cleaner can detect the crash for fault recovery
+			throw;
 		}
 	}
 

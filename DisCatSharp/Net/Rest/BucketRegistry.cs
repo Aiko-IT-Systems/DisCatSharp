@@ -303,6 +303,8 @@ internal sealed class BucketRegistry : IDisposable
 
 	/// <summary>
 	///     Periodically cleans up dead workers and expired buckets.
+	///     Also performs fault recovery: detects crashed workers, requeues their pending work
+	///     into a fresh replacement worker, and disposes the faulted one.
 	/// </summary>
 	private async Task CleanupBucketsAsync()
 	{
@@ -317,11 +319,62 @@ internal sealed class BucketRegistry : IDisposable
 
 			ObjectDisposedException.ThrowIf(this._disposed, this);
 
-			// Clean up dead worker entries — only remove workers whose loop has naturally terminated
+			// ── Fault recovery and dead worker cleanup ────────────────────────
 			foreach (var key in this._bucketWorkers.Keys.ToList())
-				if (this._bucketWorkers.TryGetValue(key, out var worker) && !worker.IsAlive && worker.Processed > 0)
+			{
+				if (!this._bucketWorkers.TryGetValue(key, out var worker))
+					continue;
+
+				if (worker.IsAlive)
+					continue;
+
+				if (worker.IsFaulted)
+				{
+					// Worker crashed — recover queued work into a replacement
+					this._logger.LogWarning(
+						LoggerEvents.RestCleaner,
+						worker.FaultException,
+						"Bucket worker faulted for {Bucket} — recovering {QueueLength} queued request(s)",
+						key,
+						worker.QueueLength);
+
+					if (worker.QueueLength > 0)
+					{
+						// Create a fresh replacement worker for this bucket
+						var replacement = new BucketWorker(this._client, key, this._config, this._logger);
+
+						// Drain the faulted worker's remaining queue into the replacement
+						var recovered = worker.MigrateQueueTo(replacement);
+
+						if (recovered > 0)
+						{
+							Interlocked.Add(ref replacement.Recovered, recovered);
+							this._logger.LogInformation(
+								LoggerEvents.RestCleaner,
+								"Recovered {Count} request(s) from faulted worker for {Bucket}",
+								recovered,
+								key);
+						}
+
+						// Swap the worker in the registry — the replacement starts processing on next enqueue
+						this._bucketWorkers.TryUpdate(key, replacement, worker);
+					}
+					else
+					{
+						// No queued work — just remove the dead worker
+						if (this._bucketWorkers.TryRemove(key, out _))
+							this._logger.LogDebug(LoggerEvents.RestCleaner, "Removed faulted worker with empty queue for {Bucket}", key);
+					}
+
+					worker.Dispose();
+				}
+				else if (worker.Processed > 0)
+				{
+					// Normal idle shutdown — just clean up
 					if (this._bucketWorkers.TryRemove(key, out var removed))
 						removed.Dispose();
+				}
+			}
 
 			var removedBuckets = 0;
 			StringBuilder? bucketIdStrBuilder = default;
