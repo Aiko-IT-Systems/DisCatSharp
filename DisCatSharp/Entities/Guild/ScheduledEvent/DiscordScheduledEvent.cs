@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
@@ -234,6 +234,7 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	///     Modifies the current scheduled event.
 	/// </summary>
 	/// <param name="action">Action to perform on this thread</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="ValidationException">Thrown if the user gave an invalid input.</exception>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -266,6 +267,7 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// <summary>
 	///     Starts the current scheduled event.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageEvents" /> permission.
@@ -280,6 +282,7 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	///     Cancels the current scheduled event.
 	/// </summary>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageEvents" /> permission.
@@ -294,6 +297,7 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	///     Ends the current scheduled event.
 	/// </summary>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageEvents" /> permission.
@@ -311,6 +315,7 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// <param name="before">Get results of <see cref="DiscordScheduledEventUser" /> before the given snowflake.</param>
 	/// <param name="after">Get results of <see cref="DiscordScheduledEventUser" /> after the given snowflake.</param>
 	/// <param name="withMember">Whether to include guild member data.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the correct permissions.</exception>
 	/// <exception cref="NotFoundException">Thrown when the event does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -322,6 +327,7 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	///     Creates an exception for this scheduled event.
 	/// </summary>
 	/// <param name="action">Action to perform on the exception create model.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The created exception.</returns>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the correct permissions.</exception>
 	/// <exception cref="NotFoundException">Thrown when the event does not exist.</exception>
@@ -342,6 +348,7 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// <param name="before">Get users before this user id.</param>
 	/// <param name="after">Get users after this user id.</param>
 	/// <param name="withMember">Whether to include guild member data.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A map of subscribed users by user id.</returns>
 	/// <exception cref="NotFoundException">Thrown when the event exception does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -353,6 +360,7 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	///     Gets user counts for this scheduled event and optionally specific exceptions.
 	/// </summary>
 	/// <param name="exceptionIds">The exception ids to get counts for. Optional, if not provided only the count for the scheduled event will be returned.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>User counts for the scheduled event and optionally the specified exceptions.</returns>
 	/// <exception cref="NotFoundException">Thrown when the event does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -364,6 +372,7 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	///     Deletes a scheduled event.
 	/// </summary>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageEvents" /> permission.

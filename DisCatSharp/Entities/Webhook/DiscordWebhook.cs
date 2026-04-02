@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -109,6 +109,7 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// <param name="avatar">New avatar for this webhook.</param>
 	/// <param name="channelId">The new channel id to move the webhook to.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The modified webhook.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -129,6 +130,7 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// <summary>
 	///     Gets a previously-sent webhook message.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the webhook does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -138,6 +140,7 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// <summary>
 	///     Tries to get a previously-sent webhook message.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordMessage?> TryGetMessageAsync(ulong messageId, CancellationToken cancellationToken = default)
@@ -155,6 +158,7 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// <summary>
 	///     Gets a previously-sent webhook message.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the webhook does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -164,6 +168,7 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// <summary>
 	///     Tries to get a previously-sent webhook message.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordMessage> TryGetMessageAsync(ulong messageId, ulong threadId, CancellationToken cancellationToken = default)
@@ -181,6 +186,7 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// <summary>
 	///     Permanently deletes this webhook.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageWebhooks" /> permission.
@@ -196,6 +202,7 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// </summary>
 	/// <param name="builder">Webhook builder filled with data to send.</param>
 	/// <param name="threadId">Target thread id (Optional). Defaults to null.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the webhook does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -207,6 +214,7 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// </summary>
 	/// <param name="json">JSON containing Slack-compatible payload for this webhook.</param>
 	/// <param name="threadId">Target thread id (Optional). Defaults to null.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the webhook does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -218,6 +226,7 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// </summary>
 	/// <param name="json">JSON containing GitHub-compatible payload for this webhook.</param>
 	/// <param name="threadId">Target thread id (Optional). Defaults to null.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the webhook does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -231,6 +240,7 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// <param name="builder">The builder of the message to edit.</param>
 	/// <param name="threadId">Target thread id (Optional). Defaults to null.</param>
 	/// <param name="modifyMode">The mode of modification.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The modified <see cref="DiscordMessage" /></returns>
 	/// <exception cref="NotFoundException">Thrown when the webhook does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -250,6 +260,7 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	///     Deletes a message that was created by the webhook.
 	/// </summary>
 	/// <param name="messageId">The id of the message to delete</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the webhook does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -261,6 +272,7 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// </summary>
 	/// <param name="messageId">The id of the message to delete</param>
 	/// <param name="threadId">Target thread id (Optional). Defaults to null.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the webhook does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>

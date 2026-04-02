@@ -434,6 +434,7 @@ public sealed partial class DiscordShardedClient : IDisposable
 	/// <summary>
 	///     Gets the gateway info.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	private async Task<GatewayInfo> GetGatewayInfoAsync(CancellationToken cancellationToken = default)
 	{
 		this.Logger.LogDebug(LoggerEvents.ShardRest, "Obtaining gateway information from GET {Gateway}{Bot}...", Endpoints.GATEWAY, Endpoints.BOT);

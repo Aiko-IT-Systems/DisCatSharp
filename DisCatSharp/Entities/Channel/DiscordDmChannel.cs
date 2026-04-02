@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -59,6 +59,7 @@ public class DiscordDmChannel : DiscordChannel
 	/// <param name="userId">The id of the user to add.</param>
 	/// <param name="accessToken">The OAuth2 access token.</param>
 	/// <param name="nickname">The nickname to give to the user.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -70,6 +71,7 @@ public class DiscordDmChannel : DiscordChannel
 	/// </summary>
 	/// <param name="userId">The id of the User to remove.</param>
 	/// <param name="accessToken">The OAuth2 access token.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>

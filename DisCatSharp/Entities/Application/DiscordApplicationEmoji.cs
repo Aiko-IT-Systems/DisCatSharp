@@ -1,4 +1,4 @@
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Exceptions;
@@ -28,6 +28,7 @@ public sealed class DiscordApplicationEmoji : DiscordEmoji
 	///     Modifies this emoji.
 	/// </summary>
 	/// <param name="name">New name for this emoji.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The modified emoji.</returns>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -38,6 +39,7 @@ public sealed class DiscordApplicationEmoji : DiscordEmoji
 	/// <summary>
 	///     Deletes this emoji.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>

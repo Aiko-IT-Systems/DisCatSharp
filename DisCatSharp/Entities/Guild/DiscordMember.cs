@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -367,6 +367,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="mute">Whether the member is to be muted.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.MuteMembers" />
 	///     permission.
@@ -381,6 +382,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	///     Manually verifies the member to bypass the Membership Screening requirements.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	public Task VerifyAsync(string? reason = null, CancellationToken cancellationToken = default)
 		=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, default, default, default, true, this.MemberFlags, reason, cancellationToken: cancellationToken);
 
@@ -388,6 +390,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	///     Manually unverifies the member to not bypass the Membership Screening requirements anymore.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	public Task UnverifyAsync(string? reason = null, CancellationToken cancellationToken = default)
 		=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, default, default, default, false, this.MemberFlags, reason, cancellationToken: cancellationToken);
 
@@ -396,6 +399,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="deaf">Whether the member is to be deafened.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.DeafenMembers" /> permission.
@@ -410,6 +414,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	///     Modifies this member.
 	/// </summary>
 	/// <param name="action">Action to perform on this member.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.ChangeNickname" />, <see cref="Permissions.ManageNicknames" />, <see cref="Permissions.MuteMembers" />, <see cref="Permissions.DeafenMembers" />, <see cref="Permissions.MoveMembers" /> or <see cref="Permissions.ManageRoles" /> permission.
 	/// </exception>
@@ -443,6 +448,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <summary>
 	///     Disconnects the member from their current voice channel.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	public async Task DisconnectFromVoiceAsync(CancellationToken cancellationToken = default)
 		=> await this.ModifyAsync(x => x.VoiceChannel = null!, cancellationToken).ConfigureAwait(false);
 
@@ -451,6 +457,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="until">The datetime offset to time out the user. Up to 28 days.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ModerateMembers" /> permission.
@@ -466,6 +473,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="until">The timespan to time out the user. Up to 28 days.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ModerateMembers" /> permission.
@@ -481,6 +489,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="until">The datetime to time out the user. Up to 28 days.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ModerateMembers" /> permission.
@@ -495,6 +504,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	///     Removes the timeout from a member.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ModerateMembers" /> permission.
@@ -510,6 +520,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="role">Role to grant.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.ManageRoles" />
 	///     permission.
@@ -525,6 +536,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="role">Role to revoke.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.ManageRoles" />
 	///     permission.
@@ -540,6 +552,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="roles">Roles to set.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.ManageRoles" />
 	///     permission.
@@ -556,6 +569,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="deleteMessageSeconds">How many seconds of messages to delete. Minimum 0 seconds and maximum 604800 seconds (7 days).</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.BanMembers" />
 	///     permission.
@@ -569,6 +583,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <summary>
 	///     Unbans this member from their guild.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="Exceptions.UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.BanMembers" /> permission.
@@ -583,6 +598,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	///     Kicks this member from their guild.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns></returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.KickMembers" />
@@ -611,6 +627,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <summary>
 	///     Gets the member's voice state.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns></returns>
 	public async Task<DiscordVoiceState?> GetVoiceStateAsync(CancellationToken cancellationToken = default)
 		=> await this.Discord.ApiClient.GetMemberVoiceStateAsync(this.GuildId, this.Id, cancellationToken: cancellationToken);
@@ -620,6 +637,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="channel">The channel the member is currently in.</param>
 	/// <param name="suppress">Toggles the member's suppress state.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="ArgumentException">Thrown when the channel in not a voice channel.</exception>
 	public async Task UpdateVoiceStateAsync(DiscordChannel channel, bool? suppress, CancellationToken cancellationToken = default)
 	{
@@ -632,6 +650,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <summary>
 	///     Makes the user a speaker.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="ArgumentException">Thrown when the user is not inside an stage channel.</exception>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.MuteMembers" />
@@ -652,6 +671,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <summary>
 	///     Moves the user to audience.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="ArgumentException">Thrown when the user is not inside an stage channel.</exception>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.MuteMembers" />

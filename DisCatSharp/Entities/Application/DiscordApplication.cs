@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -469,6 +469,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// <summary>
 	///     Retrieves this application's assets.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>This application's assets.</returns>
 	public async Task<IReadOnlyList<DiscordApplicationAsset>> GetAssetsAsync(CancellationToken cancellationToken = default)
 	{

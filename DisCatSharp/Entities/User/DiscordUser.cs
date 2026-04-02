@@ -326,6 +326,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <summary>
 	///     Fetches the user from the API.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The user with fresh data from the API.</returns>
 	public async Task<DiscordUser> GetFromApiAsync(CancellationToken cancellationToken = default)
 		=> await this.Discord.ApiClient.GetUserAsync(this.Id, cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -333,6 +334,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <summary>
 	///     Gets additional information about an application if the user is an bot.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The rpc info or <see langword="null" /></returns>
 	/// <exception cref="NotFoundException">Thrown when the application does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -449,6 +451,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <summary>
 	///     Creates a direct message channel to this user.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>Direct message channel to this user.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the user has the bot blocked, the member shares no guild with the
@@ -464,6 +467,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	///     Sends a direct message to this user. Creates a direct message channel if one does not exist already.
 	/// </summary>
 	/// <param name="content">Content of the message to send.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the user has the bot blocked, the member shares no guild with the
@@ -485,6 +489,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	///     Sends a direct message to this user. Creates a direct message channel if one does not exist already.
 	/// </summary>
 	/// <param name="embed">Embed to attach to the message.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the user has the bot blocked, the member shares no guild with the
@@ -507,6 +512,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// </summary>
 	/// <param name="content">Content of the message to send.</param>
 	/// <param name="embed">Embed to attach to the message.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the user has the bot blocked, the member shares no guild with the
@@ -528,6 +534,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	///     Sends a direct message to this user. Creates a direct message channel if one does not exist already.
 	/// </summary>
 	/// <param name="message">Builder to with the message.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the user has the bot blocked, the member shares no guild with the

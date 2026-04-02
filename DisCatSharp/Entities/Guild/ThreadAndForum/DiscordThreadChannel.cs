@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -102,6 +102,7 @@ public class DiscordThreadChannel : DiscordChannel
 	///     Modifies the current thread.
 	/// </summary>
 	/// <param name="action">Action to perform on this thread</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageThreads" /> permission.
@@ -128,6 +129,7 @@ public class DiscordThreadChannel : DiscordChannel
 	/// </summary>
 	/// <param name="tag">The tag to add.</param>
 	/// <param name="reason">The reason for the audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageThreads" /> permission.
@@ -148,6 +150,7 @@ public class DiscordThreadChannel : DiscordChannel
 	/// </summary>
 	/// <param name="tag">The tag to remove.</param>
 	/// <param name="reason">The reason for the audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageThreads" /> permission.
@@ -162,6 +165,7 @@ public class DiscordThreadChannel : DiscordChannel
 	///     Archives a thread.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageThreads" /> permission.
@@ -176,6 +180,7 @@ public class DiscordThreadChannel : DiscordChannel
 	///     Unarchives a thread.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -186,6 +191,7 @@ public class DiscordThreadChannel : DiscordChannel
 	///     Locks a thread.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageThreads" /> permission.
@@ -200,6 +206,7 @@ public class DiscordThreadChannel : DiscordChannel
 	///     Unlocks a thread.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -212,6 +219,7 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <param name="withMember">Whether to request the member object. (If set to true, will paginate the result)</param>
 	/// <param name="after">Request all members after the specified. (Currently only utilized if withMember is set to true)</param>
 	/// <param name="limit">The amount of members to fetch. (Currently only utilized if withMember is set to true)</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -222,6 +230,7 @@ public class DiscordThreadChannel : DiscordChannel
 	///     Adds a member to this thread.
 	/// </summary>
 	/// <param name="memberId">The member id to be added.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -232,6 +241,7 @@ public class DiscordThreadChannel : DiscordChannel
 	///     Adds a member to this thread.
 	/// </summary>
 	/// <param name="member">The member to be added.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -243,6 +253,7 @@ public class DiscordThreadChannel : DiscordChannel
 	/// </summary>
 	/// <param name="memberId">The id of the member to get.</param>
 	/// <param name="withMember">Whether to request the member object.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the member is not part of the thread.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -254,6 +265,7 @@ public class DiscordThreadChannel : DiscordChannel
 	/// </summary>
 	/// <param name="memberId">The id of the member to get.</param>
 	/// <param name="withMember">Whether to request the member object.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordThreadChannelMember?> TryGetMemberAsync(ulong memberId, bool withMember = false, CancellationToken cancellationToken = default)
@@ -273,6 +285,7 @@ public class DiscordThreadChannel : DiscordChannel
 	/// </summary>
 	/// <param name="member">The member to get.</param>
 	/// <param name="withMember">Whether to request the member object.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the member is not part of the thread.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -284,6 +297,7 @@ public class DiscordThreadChannel : DiscordChannel
 	/// </summary>
 	/// <param name="member">The member to get.</param>
 	/// <param name="withMember">Whether to request the member object.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordThreadChannelMember?> TryGetMemberAsync(DiscordMember member, bool withMember = false, CancellationToken cancellationToken = default)
@@ -302,6 +316,7 @@ public class DiscordThreadChannel : DiscordChannel
 	///     Removes a member from this thread.
 	/// </summary>
 	/// <param name="memberId">The member id to be removed.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -312,6 +327,7 @@ public class DiscordThreadChannel : DiscordChannel
 	///     Removes a member from this thread. Only applicable to private threads.
 	/// </summary>
 	/// <param name="member">The member to be removed.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -322,6 +338,7 @@ public class DiscordThreadChannel : DiscordChannel
 	///     Adds a role to this thread. Only applicable to private threads.
 	/// </summary>
 	/// <param name="roleId">The role id to be added.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -338,6 +355,7 @@ public class DiscordThreadChannel : DiscordChannel
 	///     Adds a role to this thread. Only applicable to private threads.
 	/// </summary>
 	/// <param name="role">The role to be added.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -348,6 +366,7 @@ public class DiscordThreadChannel : DiscordChannel
 	///     Removes a role from this thread. Only applicable to private threads.
 	/// </summary>
 	/// <param name="roleId">The role id to be removed.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -364,6 +383,7 @@ public class DiscordThreadChannel : DiscordChannel
 	///     Removes a role from this thread. Only applicable to private threads.
 	/// </summary>
 	/// <param name="role">The role to be removed.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -373,6 +393,7 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <summary>
 	///     Joins a thread.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client has no access to this thread.</exception>
 	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -383,6 +404,7 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <summary>
 	///     Leaves a thread.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client has no access to this thread.</exception>
 	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>

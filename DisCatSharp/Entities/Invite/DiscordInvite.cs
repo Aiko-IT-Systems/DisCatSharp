@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -212,6 +212,7 @@ public class DiscordInvite : SnowflakeObject
 	///     Deletes the invite.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns></returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -226,6 +227,7 @@ public class DiscordInvite : SnowflakeObject
 	/// <summary>
 	///     Gets the target users allowed to accept an invite.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>An allowlist of user ids.</returns>
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -241,6 +243,7 @@ public class DiscordInvite : SnowflakeObject
 	///     (and only) column header is <c>Users</c>, and each subsequent line must contain exactly one user ID.
 	/// </param>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -252,6 +255,7 @@ public class DiscordInvite : SnowflakeObject
 	/// </summary>
 	/// <param name="targetUserIds">User ids allowed to accept the invite.</param>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -263,6 +267,7 @@ public class DiscordInvite : SnowflakeObject
 	/// </summary>
 	/// <param name="targetUsers">Users allowed to accept the invite.</param>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -272,6 +277,7 @@ public class DiscordInvite : SnowflakeObject
 	/// <summary>
 	///     Gets the invite target users job status.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The job status.</returns>
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>

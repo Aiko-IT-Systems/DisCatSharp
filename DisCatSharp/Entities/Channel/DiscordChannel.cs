@@ -400,6 +400,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	///     Sends a message to this channel.
 	/// </summary>
 	/// <param name="content">Content of the message to send.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -418,6 +419,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	///     Sends a message to this channel.
 	/// </summary>
 	/// <param name="embed">Embed to attach to the message.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -438,6 +440,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="embed">Embed to attach to the message.</param>
 	/// <param name="content">Content of the message to send.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -459,6 +462,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	///     Sends a message to this channel.
 	/// </summary>
 	/// <param name="builder">The builder with all the items to send.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -476,6 +480,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	///     Sends a message to this channel.
 	/// </summary>
 	/// <param name="action">The builder with all the items to send.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -518,6 +523,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	///     Deletes a guild channel
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageChannels" /> permission.
@@ -573,6 +579,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="id">The id of the message</param>
 	/// <param name="fetch">Whether to bypass the cache. Defaults to false.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ReadMessageHistory" /> permission.
@@ -593,6 +600,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="id">The id of the message</param>
 	/// <param name="fetch">Whether to bypass the cache. Defaults to true.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ReadMessageHistory" /> permission.
@@ -615,6 +623,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	///     Modifies the current channel.
 	/// </summary>
 	/// <param name="action">Action to perform on this channel</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageChannels" />.
@@ -643,6 +652,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	///     Modifies the current forum channel.
 	/// </summary>
 	/// <param name="action">Action to perform on this channel</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageChannels" />.
@@ -677,6 +687,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="position">Position the channel should be moved to.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageChannels" /> permission.
@@ -715,6 +726,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="position">The position.</param>
 	/// <param name="reason">The reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageChannels" /> permission.
@@ -799,6 +811,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <summary>
 	///     Refreshes the positions.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	public async Task RefreshPositionsAsync(CancellationToken cancellationToken = default)
 	{
 		var channels = await this.Discord.ApiClient.GetGuildChannelsAsync(this.Guild.Id, cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -820,6 +833,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="mode">The mode. Valid: '+' or 'down' to move a channel down | '-' or 'up' to move a channel up</param>
 	/// <param name="position">The position.</param>
 	/// <param name="reason">The reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageChannels" /> permission.
@@ -859,6 +873,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="newParent">New parent for channel. Use <see cref="RemoveParentAsync(string)" /> to remove from parent.</param>
 	/// <param name="lockPermissions">Sync permissions with parent. Defaults to null.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageChannels" /> permission.
@@ -904,6 +919,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	///     Moves the channel out of a category.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageChannels" /> permission.
@@ -1057,6 +1073,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="messages">A collection of messages to delete.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageMessages" /> permission.
@@ -1086,6 +1103,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="message">The message to be deleted.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageMessages" /> permission.
@@ -1099,6 +1117,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <summary>
 	///     Returns a list of invite objects
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.CreateInstantInvite" /> permission.
@@ -1126,6 +1145,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="targetUserIds">Allowed target user ids for the invite.</param>
 	/// <param name="targetUsers">Allowed target users for the invite.</param>
 	/// <param name="targetUsersCsv">Optional CSV stream defining allowed users.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.CreateInstantInvite" /> permission.
@@ -1147,6 +1167,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	///     Sets a voice channels status.
 	/// </summary>
 	/// <param name="status">Status of the voice channel.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the voice channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1156,6 +1177,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <summary>
 	///     Removes a voice channels status.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the voice channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1173,6 +1195,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="sendStartNotification">Whether @everyone should be notified.</param>
 	/// <param name="scheduledEventId">The associated scheduled event id.</param>
 	/// <param name="reason">Audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>Stage instance</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -1189,6 +1212,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="topic">New topic of the stage.</param>
 	/// <param name="reason">Audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageChannels" /> permission.
@@ -1203,6 +1227,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	///     Closes a stage.
 	/// </summary>
 	/// <param name="reason">Audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageChannels" /> permission.
@@ -1216,6 +1241,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <summary>
 	///     Gets a stage.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The requested stage.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -1273,6 +1299,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </param>
 	/// <param name="rateLimitPerUser">The per user ratelimit, aka slowdown.</param>
 	/// <param name="reason">Audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The created thread.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -1302,6 +1329,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="rateLimitPerUser">The per user ratelimit, aka slowdown.</param>
 	/// <param name="tags">The tags to add on creation.</param>
 	/// <param name="reason">Audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The created thread.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -1319,6 +1347,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="before">Get threads created before this thread id.</param>
 	/// <param name="limit">Defines the limit of returned <see cref="DiscordThreadResult" />.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ReadMessageHistory" /> permission.
@@ -1335,6 +1364,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="before">Get threads created before this thread id.</param>
 	/// <param name="limit">Defines the limit of returned <see cref="DiscordThreadResult" />.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ReadMessageHistory" /> permission.
@@ -1351,6 +1381,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="before">Get threads created before this thread id.</param>
 	/// <param name="limit">Defines the limit of returned <see cref="DiscordThreadResult" />.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageThreads" /> or <see cref="Permissions.ReadMessageHistory" /> permission.
@@ -1401,6 +1432,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </param>
 	/// <param name="moderated">Whether only moderators should be able to apply this tag.</param>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageChannels" /> permission.
@@ -1427,6 +1459,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="id">The id of the tag to delete.</param>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageChannels" /> permission.
@@ -1446,6 +1479,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="allow">The permissions to allow.</param>
 	/// <param name="deny">The permissions to deny.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.ManageRoles" />
 	///     permission.
@@ -1463,6 +1497,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="allow">The permissions to allow.</param>
 	/// <param name="deny">The permissions to deny.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.ManageRoles" />
 	///     permission.
@@ -1478,6 +1513,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="member">The member to have the permission deleted.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.ManageRoles" />
 	///     permission.
@@ -1493,6 +1529,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="role">The role to have the permission deleted.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.ManageRoles" />
 	///     permission.
@@ -1506,6 +1543,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <summary>
 	///     Post a typing indicator.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1519,6 +1557,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="before">Get messages pinned before this timestamp.</param>
 	/// <param name="limit">Max number of pins to return (1-50).</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.AccessChannels" /> permission.
@@ -1537,6 +1576,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="name">The name of the webhook.</param>
 	/// <param name="avatar">The image for the default webhook avatar.</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageWebhooks" /> permission.
@@ -1551,6 +1591,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <summary>
 	///     Returns a list of webhooks.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageWebhooks" /> permission.
@@ -1564,6 +1605,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	///     Moves a member to this voice channel.
 	/// </summary>
 	/// <param name="member">The member to be moved.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.MoveMembers" />
 	///     permission.
@@ -1584,6 +1626,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	///     Follows a news channel.
 	/// </summary>
 	/// <param name="targetChannel">Channel to crosspost messages to.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="ArgumentException">Thrown when trying to follow a non-news channel.</exception>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the current user doesn't have
@@ -1598,6 +1641,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	///     Publishes a message in a news channel to following channels.
 	/// </summary>
 	/// <param name="message">Message to publish.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="ArgumentException">Thrown when the message has already been crossposted.</exception>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the current user doesn't have <see cref="Permissions.ManageWebhooks" /> and/or
@@ -1613,6 +1657,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="suppress">Toggles the suppress state.</param>
 	/// <param name="requestToSpeakTimestamp">Sets the time the user requested to speak.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="ArgumentException">Thrown when the channel is not a stage channel.</exception>
 	public async Task UpdateCurrentUserVoiceStateAsync(bool? suppress, DateTimeOffset? requestToSpeakTimestamp = null, CancellationToken cancellationToken = default)
 	{

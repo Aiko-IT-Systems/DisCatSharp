@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -89,6 +89,7 @@ public sealed class DiscordPoll : ObservableApiObject
 	/// <param name="answerId">The id of the answer to get voters for.</param>
 	/// <param name="limit">The max number of users to return (<c>1</c>-<c>100</c>). Defaults to <c>25</c>.</param>
 	/// <param name="after">Get users after this user ID.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A read-only collection of users who voted for given answer.</returns>
 	public async Task<ReadOnlyCollection<DiscordUser>> GetAnswerVotersAsync(int answerId, int? limit = null, ulong? after = null, CancellationToken cancellationToken = default)
 		=> await this.Discord.ApiClient.GetAnswerVotersAsync(this.ChannelId, this.MessageId, answerId, limit, after, cancellationToken: cancellationToken);
@@ -97,6 +98,7 @@ public sealed class DiscordPoll : ObservableApiObject
 	///     <para>Ends the poll.</para>
 	///     <para>Works only for own polls and if they are not expired yet. </para>
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The fresh discord message.</returns>
 	/// <exception cref="InvalidOperationException">Thrown when the author is not us, or the poll has been already ended.</exception>
 	public async Task<DiscordMessage> EndAsync(CancellationToken cancellationToken = default)

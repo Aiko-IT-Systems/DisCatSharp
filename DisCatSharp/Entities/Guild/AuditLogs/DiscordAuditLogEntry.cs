@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -136,6 +136,7 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 	/// <param name="force">
 	///     Controls whether the helper may perform REST requests when the requested entities are not already cached.
 	/// </param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A task representing the asynchronous hydration operation.</returns>
 	/// <remarks>
 	///     <para>
@@ -283,6 +284,7 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 	/// <param name="force">
 	///     Controls whether the helper may perform REST requests when the requested entities are not already cached.
 	/// </param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A task representing the asynchronous hydration operation.</returns>
 	/// <remarks>
 	///     This is a convenience wrapper around <see cref="HydrateAsync(AuditLogHydrationTargets, bool)" /> with
@@ -305,6 +307,7 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 	/// </summary>
 	/// <param name="userId">The user id to resolve.</param>
 	/// <param name="force">Whether REST calls are allowed when the user is not already cached.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The resolved user, or <see langword="null" /> when it could not be resolved.</returns>
 	private async Task<DiscordUser?> TryHydrateUserAsync(ulong userId, bool force, CancellationToken cancellationToken = default)
 	{
@@ -339,6 +342,7 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 	/// </summary>
 	/// <param name="channelId">The channel id to resolve.</param>
 	/// <param name="force">Whether REST calls are allowed when the channel is not already cached.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The resolved channel, or <see langword="null" /> when it could not be resolved.</returns>
 	private async Task<DiscordChannel?> TryHydrateChannelAsync(ulong channelId, bool force, CancellationToken cancellationToken = default)
 	{
@@ -360,6 +364,7 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 	/// </summary>
 	/// <param name="threadId">The thread id to resolve.</param>
 	/// <param name="force">Whether REST calls are allowed when the thread is not already cached.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The resolved thread, or <see langword="null" /> when it could not be resolved.</returns>
 	private async Task<DiscordThreadChannel?> TryHydrateThreadAsync(ulong threadId, bool force, CancellationToken cancellationToken = default)
 	{
@@ -402,6 +407,7 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 	/// </summary>
 	/// <param name="webhookId">The webhook id to resolve.</param>
 	/// <param name="force">Whether REST calls are allowed when the webhook is not already cached.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The resolved webhook, or <see langword="null" /> when it could not be resolved.</returns>
 	private async Task<DiscordWebhook?> TryHydrateWebhookAsync(ulong webhookId, bool force, CancellationToken cancellationToken = default)
 	{
@@ -474,6 +480,7 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 	/// </summary>
 	/// <param name="channel">The stage channel the instance belongs to.</param>
 	/// <param name="force">Whether REST calls are allowed when the stage channel is not already cached.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The resolved stage instance, or <see langword="null" /> when it could not be resolved.</returns>
 	private async Task<DiscordStageInstance?> TryHydrateStageInstanceAsync(DiscordChannel channel, bool force, CancellationToken cancellationToken = default)
 	{
@@ -517,6 +524,7 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 	/// </summary>
 	/// <param name="commandId">The command id to resolve.</param>
 	/// <param name="force">Whether REST calls are allowed when the command is not already cached.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The resolved application command, or <see langword="null" /> when it could not be resolved.</returns>
 	private async Task<DiscordApplicationCommand?> TryHydrateApplicationCommandAsync(ulong commandId, bool force, CancellationToken cancellationToken = default)
 	{

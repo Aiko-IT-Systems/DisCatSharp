@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -65,6 +65,7 @@ public class DiscordOverwrite : SnowflakeObject
 	///     Deletes this channel overwrite.
 	/// </summary>
 	/// <param name="reason">Reason as to why this overwrite gets deleted.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.ManageRoles" />
 	///     permission.
@@ -80,6 +81,7 @@ public class DiscordOverwrite : SnowflakeObject
 	/// <param name="allow">Permissions that are allowed.</param>
 	/// <param name="deny">Permissions that are denied.</param>
 	/// <param name="reason">Reason as to why you made this change.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.ManageRoles" />
 	///     permission.
@@ -93,6 +95,7 @@ public class DiscordOverwrite : SnowflakeObject
 	/// <summary>
 	///     Gets the DiscordMember that is affected by this overwrite.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The DiscordMember that is affected by this overwrite</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -109,6 +112,7 @@ public class DiscordOverwrite : SnowflakeObject
 	/// <summary>
 	///     Gets the DiscordRole that is affected by this overwrite.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The DiscordRole that is affected by this overwrite</returns>
 	/// <exception cref="NotFoundException">Thrown when the role does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>

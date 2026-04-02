@@ -1,4 +1,4 @@
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
@@ -20,6 +20,7 @@ public static class DiscordGuildMethodsHook
 	/// </summary>
 	/// <param name="guild">The guild.</param>
 	/// <param name="searchParams">The guild member search params</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="ValidationException">Thrown if the user gave an invalid input.</exception>
 	/// <exception cref="NotIndexedException">Thrown if the elasticsearch endpoint has not finished indexing yet.</exception>
 	/// <exception cref="UnauthorizedException">
@@ -42,6 +43,7 @@ public static class DiscordGuildMethodsHook
 	/// </summary>
 	/// <param name="guild">The guild.</param>
 	/// <param name="searchParams">The guild messages search params</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="ValidationException">Thrown if the user gave an invalid input.</exception>
 	/// <exception cref="NotIndexedException">Thrown if the elasticsearch endpoint has not finished indexing yet.</exception>
 	/// <exception cref="UnauthorizedException">

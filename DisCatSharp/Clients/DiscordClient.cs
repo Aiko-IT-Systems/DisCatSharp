@@ -440,6 +440,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="activity">The activity to set. Defaults to null.</param>
 	/// <param name="status">The optional status to set. Defaults to null.</param>
 	/// <param name="idlesince">Since when is the client performing the specified activity. Defaults to null.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">Thrown when an invalid token was provided.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -640,6 +641,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="userId">Id of the user</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to false.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The requested user.</returns>
 	/// <exception cref="NotFoundException">Thrown when the user does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -675,6 +677,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Gets a applications rpc information.
 	/// </summary>
 	/// <param name="applicationId">Id of the application</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The requested application.</returns>
 	/// <exception cref="NotFoundException">Thrown when the application does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -685,6 +688,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <summary>
 	///     Gets the current applications information.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The requested application.</returns>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -719,6 +723,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Gets the published store sku listings (premium application subscription).
 	/// </summary>
 	/// <param name="applicationId">The application id to fetch the listings for.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A list of published listings with <see cref="DiscordStoreSku" />s.</returns>
 	[RequiresFeature(Features.MonetizedApplication)]
 	public async Task<IReadOnlyList<DiscordStoreSku>> GetPublishedListingsAsync(ulong applicationId, CancellationToken cancellationToken = default)
@@ -728,6 +733,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Validates an activity instance for the current application.
 	/// </summary>
 	/// <param name="instanceId">The activity instance id to validate.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The validated <see cref="DiscordActivityInstance" />.</returns>
 	/// <exception cref="NotFoundException">Thrown when the activity instance does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -747,6 +753,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="description">The quick link description.</param>
 	/// <param name="title">The quick link title.</param>
 	/// <param name="image">The base64-encoded image.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	public async Task<DiscordActivityQuickLink> CreateActivityQuickLinkAsync(string accessToken, string customId, string description, string title, string image, CancellationToken cancellationToken = default)
 	{
 		ArgumentException.ThrowIfNullOrWhiteSpace(accessToken);
@@ -766,6 +773,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="stream">The file stream.</param>
 	/// <param name="fileName">The file name.</param>
 	/// <param name="contentType">The MIME content type.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	public async Task<DiscordActivityAttachmentUpload> CreateActivityAttachmentAsync(string accessToken, Stream stream, string fileName, string? contentType = null, CancellationToken cancellationToken = default)
 	{
 		ArgumentException.ThrowIfNullOrWhiteSpace(accessToken);
@@ -779,6 +787,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <summary>
 	///     Gets the applications skus.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A list of published listings with <see cref="DiscordSku" />s.</returns>
 	/// <exception cref="NotFoundException">Thrown when the skus do not exist.</exception>
 	[RequiresFeature(Features.MonetizedApplication)]
@@ -802,6 +811,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Whether or not deleted entitlements should be omitted. Defaults to true, deleted
 	///     entitlements are not included by default.
 	/// </param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A list of <see cref="DiscordEntitlement" />.</returns>
 	/// <exception cref="NotFoundException">Thrown when the entitlements do not exist.</exception>
 	[RequiresFeature(Features.MonetizedApplication)]
@@ -812,6 +822,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Gets an entitlement.
 	/// </summary>
 	/// <param name="entitlementId">The entitlement id to fetch.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The requested <see cref="DiscordEntitlement" />.</returns>
 	[RequiresFeature(Features.MonetizedApplication)]
 	public async Task<DiscordEntitlement?> GetEntitlementAsync(ulong entitlementId, CancellationToken cancellationToken = default)
@@ -821,6 +832,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///    Consumes an entitlement.
 	/// </summary>
 	/// <param name="entitlementId">The entitlement id to consume.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>Whether the entitlement was consumed.</returns>
 	[RequiresFeature(Features.MonetizedApplication)]
 	public async Task<bool> ConsumeEntitlementAsync(ulong entitlementId, CancellationToken cancellationToken = default)
@@ -834,6 +846,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="before">List subscriptions before this ID.</param>
 	/// <param name="after">List subscriptions after this ID.</param>
 	/// <param name="limit">Number of results to return (1-100).</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A list of <see cref="DiscordSubscription" />.</returns>
 	/// <exception cref="NotFoundException">Thrown when the subscriptions do not exist.</exception>
 	[RequiresFeature(Features.MonetizedApplication)]
@@ -845,6 +858,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="skuId">The sku id to fetch the subscription for.</param>
 	/// <param name="subscriptionId">The subscription id to fetch.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The requested <see cref="DiscordSubscription" />.</returns>
 	public async Task<DiscordSubscription?> GetSkuSubscriptionAsync(ulong skuId, ulong subscriptionId, CancellationToken cancellationToken = default)
 		=> await this.ApiClient.GetSkuSubscriptionAsync(skuId, subscriptionId, cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -855,6 +869,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="skuId">The sku id to create the entitlement for.</param>
 	/// <param name="ownerId">The owner id to create the entitlement for.</param>
 	/// <param name="ownerType">The owner type to create the entitlement for.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A partial <see cref="DiscordEntitlement" />.</returns>
 	[RequiresFeature(Features.MonetizedApplication)]
 	public async Task<DiscordEntitlement> CreateTestEntitlementAsync(ulong skuId, ulong ownerId, EntitlementOwnerType ownerType, CancellationToken cancellationToken = default)
@@ -864,6 +879,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Deletes a test entitlement.
 	/// </summary>
 	/// <param name="entitlementId">The entitlement id to delete.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	[RequiresFeature(Features.MonetizedApplication)]
 	public async Task DeleteTestEntitlementAsync(ulong entitlementId, CancellationToken cancellationToken = default)
 		=> await this.ApiClient.DeleteTestEntitlementAsync(this.CurrentApplication.Id, entitlementId, cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -871,6 +887,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <summary>
 	///     Gets the applications role connection metadata.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A list of metadata records or <see langword="null" />.</returns>
 	public async Task<IReadOnlyList<DiscordApplicationRoleConnectionMetadata>> GetRoleConnectionMetadata(CancellationToken cancellationToken = default)
 		=> await this.ApiClient.GetRoleConnectionMetadataRecords(this.CurrentApplication.Id, cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -879,12 +896,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Updates the applications role connection metadata.
 	/// </summary>
 	/// <param name="metadata">A list of metadata objects. Max 5.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	public async Task<IReadOnlyList<DiscordApplicationRoleConnectionMetadata>> UpdateRoleConnectionMetadata(IEnumerable<DiscordApplicationRoleConnectionMetadata> metadata, CancellationToken cancellationToken = default)
 		=> await this.ApiClient.UpdateRoleConnectionMetadataRecords(this.CurrentApplication.Id, metadata, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Removes all global application commands.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	public async Task RemoveGlobalApplicationCommandsAsync(CancellationToken cancellationToken = default)
 		=> await this.ApiClient.BulkOverwriteGlobalApplicationCommandsAsync(this.CurrentApplication.Id, [], cancellationToken: cancellationToken).ConfigureAwait(false);
 
@@ -892,6 +911,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Removes all global application commands for a specific guild id.
 	/// </summary>
 	/// <param name="guildId">The target guild id.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	public async Task RemoveGuildApplicationCommandsAsync(ulong guildId, CancellationToken cancellationToken = default)
 		=> await this.ApiClient.BulkOverwriteGuildApplicationCommandsAsync(this.CurrentApplication.Id, guildId, [], cancellationToken: cancellationToken).ConfigureAwait(false);
 
@@ -905,6 +925,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <summary>
 	///     Gets the application emojis.
 	///     <param name="fetch">Whether to ignore the cache. Defaults to false.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// </summary>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -916,6 +937,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="id">The emoji id.</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to false.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -927,6 +949,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="name">The name.</param>
 	/// <param name="image">The image.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordApplicationEmoji> CreateApplicationEmojiAsync(string name, Stream image, CancellationToken cancellationToken = default)
@@ -940,6 +963,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="id">The emoji id.</param>
 	/// <param name="name">The name.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -950,6 +974,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Deletes an application emoji.
 	/// </summary>
 	/// <param name="id">The emoji id.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -961,6 +986,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="id">The id of the channel to get.</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to false.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The requested channel.</returns>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -994,6 +1020,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="id">The id of the thread to get.</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to false.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The requested thread.</returns>
 	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -1027,6 +1054,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="channel">The channel to send to.</param>
 	/// <param name="content">The message content to send.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The message that was sent.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -1043,6 +1071,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="channel">The channel to send to.</param>
 	/// <param name="embed">The embed to attach to the message.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The message that was sent.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -1062,6 +1091,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="channel">Channel to send to.</param>
 	/// <param name="content">The message content to send.</param>
 	/// <param name="embed">The embed to attach to the message.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The message that was sent.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -1081,6 +1111,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="channel">The channel to send the message to.</param>
 	/// <param name="builder">The message builder.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The message that was sent.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -1099,6 +1130,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="channel">The channel to send the message to.</param>
 	/// <param name="action">The message builder.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The message that was sent.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -1123,6 +1155,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="id">The guild ID to search for.</param>
 	/// <param name="withCounts">Whether to include approximate presence and member counts in the returned guild.</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to false.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The requested Guild.</returns>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -1166,6 +1199,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Gets a guild preview.
 	/// </summary>
 	/// <param name="id">The guild ID.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A preview of the requested guild.</returns>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -1178,6 +1212,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="id">The guild ID.</param>
 	/// <param name="preview">The preview, if found.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>True if the preview was found, otherwise false.</returns>
 	public bool TryGetGuildPreview(ulong id, [NotNullWhen(true)] out DiscordGuildPreview? preview, CancellationToken cancellationToken = default)
 	{
@@ -1197,6 +1232,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Gets a guild widget.
 	/// </summary>
 	/// <param name="id">The Guild Id.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A guild widget.</returns>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1208,6 +1244,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="id">The Guild Id.</param>
 	/// <param name="widget">The widget, if found.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>True if the widget was found, otherwise false.</returns>
 	public bool TryGetGuildWidget(ulong id, [NotNullWhen(true)] out DiscordWidget? widget, CancellationToken cancellationToken = default)
 	{
@@ -1235,6 +1272,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="withCounts">Whether to include presence and total member counts in the returned invite.</param>
 	/// <param name="scheduledEventId">The scheduled event id.</param>
 	/// <param name="withPermissions">Whether to include the invite's permissions.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The requested invite.</returns>
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -1269,6 +1307,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Gets the target users allowed to accept an invite.
 	/// </summary>
 	/// <param name="inviteCode">The invite code.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>An allowlist of user ids.</returns>
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -1285,6 +1324,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     (and only) column header is <c>Users</c>, and each subsequent line must contain exactly one user ID.
 	/// </param>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1297,6 +1337,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="inviteCode">The invite code.</param>
 	/// <param name="targetUserIds">User ids allowed to accept the invite.</param>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1309,6 +1350,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="inviteCode">The invite code.</param>
 	/// <param name="targetUsers">Users allowed to accept the invite.</param>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1319,6 +1361,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Gets the invite target users job status.
 	/// </summary>
 	/// <param name="inviteCode">The invite code.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The job status.</returns>
 	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -1333,6 +1376,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <summary>
 	///     Gets a list of user connections.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<IReadOnlyList<DiscordConnection>> GetConnectionsAsync(CancellationToken cancellationToken = default)
@@ -1343,6 +1387,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <returns>The requested sticker.</returns>
 	/// <param name="id">The id of the sticker.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the sticker does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1373,6 +1418,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Gets a sticker pack.
 	/// </summary>
 	/// <param name="id">The sticker pack's id.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sticker pack.</returns>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1382,6 +1428,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <summary>
 	///     Gets all nitro sticker packs.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>List of sticker packs.</returns>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1464,6 +1511,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Gets a webhook.
 	/// </summary>
 	/// <param name="id">The target webhook id.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The requested webhook.</returns>
 	/// <exception cref="NotFoundException">Thrown when the webhook does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -1496,6 +1544,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="id">The target webhook id.</param>
 	/// <param name="token">The target webhook token.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The requested webhook.</returns>
 	/// <exception cref="NotFoundException">Thrown when the webhook does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -1540,6 +1589,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="username">New username.</param>
 	/// <param name="avatar">New avatar.</param>
 	/// <param name="banner">New banner.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The modified user.</returns>
 	/// <exception cref="NotFoundException">Thrown when the user does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -1562,6 +1612,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Gets a guild template by the code.
 	/// </summary>
 	/// <param name="code">The code of the template.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The guild template for the code.</returns>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1572,6 +1623,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Gets all the global application commands for this application.
 	/// </summary>
 	/// <param name="withLocalizations">Whether to get the full localization dict.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A list of global application commands.</returns>
 	public Task<IReadOnlyList<DiscordApplicationCommand>> GetGlobalApplicationCommandsAsync(bool withLocalizations = false, CancellationToken cancellationToken = default) =>
 		this.ApiClient.GetGlobalApplicationCommandsAsync(this.CurrentApplication.Id, withLocalizations, cancellationToken: cancellationToken);
@@ -1581,6 +1633,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     are automatically deleted.
 	/// </summary>
 	/// <param name="commands">The list of commands to overwrite with.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The list of global commands.</returns>
 	public Task<IReadOnlyList<DiscordApplicationCommand>> BulkOverwriteGlobalApplicationCommandsAsync(IEnumerable<DiscordApplicationCommand> commands, CancellationToken cancellationToken = default) =>
 		this.ApiClient.BulkOverwriteGlobalApplicationCommandsAsync(this.CurrentApplication.Id, commands, cancellationToken: cancellationToken);
@@ -1589,6 +1642,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Creates or overwrites a global application command.
 	/// </summary>
 	/// <param name="command">The command to create.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The created command.</returns>
 	public Task<DiscordApplicationCommand> CreateGlobalApplicationCommandAsync(DiscordApplicationCommand command, CancellationToken cancellationToken = default) =>
 		this.ApiClient.CreateGlobalApplicationCommandAsync(this.CurrentApplication.Id, command, cancellationToken: cancellationToken);
@@ -1597,6 +1651,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Gets a global application command by its id.
 	/// </summary>
 	/// <param name="commandId">The id of the command to get.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The command with the id.</returns>
 	public Task<DiscordApplicationCommand> GetGlobalApplicationCommandAsync(ulong commandId, CancellationToken cancellationToken = default) =>
 		this.ApiClient.GetGlobalApplicationCommandAsync(this.CurrentApplication.Id, commandId, cancellationToken: cancellationToken);
@@ -1606,6 +1661,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="commandId">The id of the command to edit.</param>
 	/// <param name="action">Action to perform.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The edited command.</returns>
 	public async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong commandId, Action<ApplicationCommandEditModel> action, CancellationToken cancellationToken = default)
 	{
@@ -1619,6 +1675,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Deletes a global application command.
 	/// </summary>
 	/// <param name="commandId">The id of the command to delete.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	public Task DeleteGlobalApplicationCommandAsync(ulong commandId, CancellationToken cancellationToken = default) =>
 		this.ApiClient.DeleteGlobalApplicationCommandAsync(this.CurrentApplication.Id, commandId, cancellationToken: cancellationToken);
 
@@ -1627,6 +1684,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="guildId">The id of the guild to get application commands for.</param>
 	/// <param name="withLocalizations">Whether to get the full localization dict.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A list of application commands in the guild.</returns>
 	public Task<IReadOnlyList<DiscordApplicationCommand>> GetGuildApplicationCommandsAsync(ulong guildId, bool withLocalizations = false, CancellationToken cancellationToken = default) =>
 		this.ApiClient.GetGuildApplicationCommandsAsync(this.CurrentApplication.Id, guildId, withLocalizations, cancellationToken: cancellationToken);
@@ -1637,6 +1695,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="guildId">The id of the guild.</param>
 	/// <param name="commands">The list of commands to overwrite with.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The list of guild commands.</returns>
 	public Task<IReadOnlyList<DiscordApplicationCommand>> BulkOverwriteGuildApplicationCommandsAsync(ulong guildId, IEnumerable<DiscordApplicationCommand> commands, CancellationToken cancellationToken = default) =>
 		this.ApiClient.BulkOverwriteGuildApplicationCommandsAsync(this.CurrentApplication.Id, guildId, commands, cancellationToken: cancellationToken);
@@ -1646,6 +1705,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="guildId">The id of the guild to create the application command in.</param>
 	/// <param name="command">The command to create.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The created command.</returns>
 	public Task<DiscordApplicationCommand> CreateGuildApplicationCommandAsync(ulong guildId, DiscordApplicationCommand command, CancellationToken cancellationToken = default) =>
 		this.ApiClient.CreateGuildApplicationCommandAsync(this.CurrentApplication.Id, guildId, command, cancellationToken: cancellationToken);
@@ -1655,6 +1715,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="guildId">The id of the guild the application command is in.</param>
 	/// <param name="commandId">The id of the command to get.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The command with the id.</returns>
 	public Task<DiscordApplicationCommand> GetGuildApplicationCommandAsync(ulong guildId, ulong commandId, CancellationToken cancellationToken = default) =>
 		this.ApiClient.GetGuildApplicationCommandAsync(this.CurrentApplication.Id, guildId, commandId, cancellationToken: cancellationToken);
@@ -1665,6 +1726,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="guildId">The id of the guild the application command is in.</param>
 	/// <param name="commandId">The id of the command to edit.</param>
 	/// <param name="action">Action to perform.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The edited command.</returns>
 	public async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong guildId, ulong commandId, Action<ApplicationCommandEditModel> action, CancellationToken cancellationToken = default)
 	{
@@ -1679,6 +1741,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="guildId">The id of the guild to delete the application command in.</param>
 	/// <param name="commandId">The id of the command.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	public Task DeleteGuildApplicationCommandAsync(ulong guildId, ulong commandId, CancellationToken cancellationToken = default) =>
 		this.ApiClient.DeleteGuildApplicationCommandAsync(this.CurrentApplication.Id, guildId, commandId, cancellationToken: cancellationToken);
 

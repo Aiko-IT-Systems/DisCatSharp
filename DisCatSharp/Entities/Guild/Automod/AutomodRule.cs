@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -86,6 +86,7 @@ public class AutomodRule : SnowflakeObject
 	///     Modifies this auto mod rule.
 	/// </summary>
 	/// <param name="action">Action to perform on this rule.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The modified rule object.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.ManageGuild" />
@@ -119,6 +120,7 @@ public class AutomodRule : SnowflakeObject
 	///     Deletes this auto mod rule.
 	/// </summary>
 	/// <param name="reason">The reason for this deletion.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.ManageGuild" />
 	///     permission.

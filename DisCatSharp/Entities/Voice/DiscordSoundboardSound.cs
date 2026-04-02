@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -97,6 +97,7 @@ public sealed class DiscordSoundboardSound : SnowflakeObject
 	///     Modifies the soundboard sound.
 	/// </summary>
 	/// <param name="action">The action to configure the soundboard sound edit model.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Throws when the soundboard sound cannot be found</exception>
 	/// <exception cref="UnauthorizedException">
 	///     Throws when the client does not have the <see cref="Permissions.ManageGuildExpressions" />
@@ -127,6 +128,7 @@ public sealed class DiscordSoundboardSound : SnowflakeObject
 	///     Deletes the soundboard sound.
 	/// </summary>
 	/// <param name="reason">The reason for deleting the sound, to be logged in the audit log. Optional.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Throws when the soundboard sound cannot be found</exception>
 	/// <exception cref="UnauthorizedException">
 	///     Throws when the client does not have the <see cref="Permissions.ManageGuildExpressions" />

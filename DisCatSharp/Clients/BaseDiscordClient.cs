@@ -299,6 +299,7 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <summary>
 	///     Gets the current API application.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	public async Task<DiscordApplication> GetCurrentApplicationAsync(CancellationToken cancellationToken = default)
 	{
 		var tapp = await this.ApiClient.GetCurrentApplicationOauth2InfoAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -317,6 +318,7 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <param name="coverImage">The new application cover image.</param>
 	/// <param name="flags">The new application flags. Can be only limited gateway intents.</param>
 	/// <param name="installParams">The new install params.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The updated application.</returns>
 	[DiscordDeprecated("Install params is gonna be replaced by integration types config")]
 	public async Task<DiscordApplication> UpdateCurrentApplicationInfoAsync(
@@ -383,6 +385,7 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <param name="coverImage">The new application cover image.</param>
 	/// <param name="flags">The new application flags. Can be only limited gateway intents.</param>
 	/// <param name="integrationTypesConfig">The new integration types configuration.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The updated application.</returns>
 	public async Task<DiscordApplication> UpdateCurrentApplicationInfoAsync(
 		Optional<string?> description,
@@ -410,6 +413,7 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <summary>
 	///     Gets a list of voice regions.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<IReadOnlyList<DiscordVoiceRegion>> ListVoiceRegionsAsync(CancellationToken cancellationToken = default)
 		=> this.ApiClient.ListVoiceRegionsAsync(cancellationToken: cancellationToken);
@@ -417,6 +421,7 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <summary>
 	///     Initializes this client. This method fetches information about current user, application, and voice regions.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	public virtual async Task InitializeAsync(CancellationToken cancellationToken = default)
 	{
 		if (this.CurrentUser is null)
@@ -440,6 +445,7 @@ public abstract class BaseDiscordClient : IDisposable
 	///     Gets the current gateway info for the provided token.
 	///     <para>If no value is provided, the configuration value will be used instead.</para>
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A gateway info object.</returns>
 	public async Task<GatewayInfo> GetGatewayInfoAsync(string? token = null, CancellationToken cancellationToken = default)
 	{

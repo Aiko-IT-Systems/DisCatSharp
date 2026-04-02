@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -269,6 +269,7 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// </summary>
 	/// <param name="position">New position</param>
 	/// <param name="reason">Reason why we moved it</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns></returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.ManageRoles" />
@@ -302,6 +303,7 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// <param name="hoist">New role hoist.</param>
 	/// <param name="mentionable">Whether this role is mentionable.</param>
 	/// <param name="reason">Audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.ManageRoles" />
 	///     permission.
@@ -316,6 +318,7 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	///     Updates this role.
 	/// </summary>
 	/// <param name="action">The action.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="Exceptions.UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageRoles" /> permission.
@@ -366,6 +369,7 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	///     Deletes this role.
 	/// </summary>
 	/// <param name="reason">Reason as to why this role has been deleted.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns></returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the <see cref="Permissions.ManageRoles" />

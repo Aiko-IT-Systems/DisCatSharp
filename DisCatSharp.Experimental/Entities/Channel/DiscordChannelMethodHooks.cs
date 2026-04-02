@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,6 +19,7 @@ public static class DiscordChannelMethodHooks
 	/// <param name="name">The name of the file to upload.</param>
 	/// <param name="stream">The stream of the file to upload.</param>
 	/// <param name="description">The description of the file to upload.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The upload information.</returns>
 	public static async Task<GcpAttachmentUploadInformation> UploadFileAsync(this DiscordChannel channel, string name, Stream stream, string? description = null, CancellationToken cancellationToken = default)
 	{

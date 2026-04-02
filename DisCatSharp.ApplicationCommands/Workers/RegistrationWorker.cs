@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,6 +24,7 @@ internal class RegistrationWorker
 	/// <param name="client">The discord client.</param>
 	/// <param name="commands">The command list.</param>
 	/// <param name="entryPointCommand">The entry point command.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A list of registered commands.</returns>
 	internal static async Task<List<DiscordApplicationCommand>?> RegisterGlobalCommandsAsync(DiscordClient client, List<DiscordApplicationCommand> commands, DiscordApplicationCommand? entryPointCommand = null, CancellationToken cancellationToken = default)
 	{
@@ -185,6 +186,7 @@ internal class RegistrationWorker
 	/// <param name="client">The discord client.</param>
 	/// <param name="guildId">The target guild id.</param>
 	/// <param name="commands">The command list.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A list of registered commands.</returns>
 	internal static async Task<List<DiscordApplicationCommand>?> RegisterGuildCommandsAsync(DiscordClient client, ulong guildId, List<DiscordApplicationCommand> commands, CancellationToken cancellationToken = default)
 	{

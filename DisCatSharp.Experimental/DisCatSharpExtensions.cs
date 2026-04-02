@@ -1,4 +1,4 @@
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Attributes;
@@ -15,6 +15,7 @@ public static class DisCatSharpExtensions
 	/// </summary>
 	/// <param name="client">The discord client.</param>
 	/// <param name="id">The id of the user to get the username of.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The username of the user with the given id.</returns>
 	[Experimental("This function is being tested and might change at any time."), RequiresFeature(Features.MonetizedApplication)]
 	public static async Task<string> GetUsernameAsync(this DiscordClient client, ulong id, CancellationToken cancellationToken = default)

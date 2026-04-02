@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -172,6 +172,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <param name="type">The type of the response.</param>
 	/// <param name="builder">The data, if any, to send.</param>
 	/// <param name="modifyMode">The modify mode. Only useful for <see cref="InteractionResponseType.UpdateMessage"/>.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>
 	///     The created <see cref="DiscordMessage" />, or <see langword="null" /> if <paramref name="type" /> creates no
 	///     content.
@@ -187,6 +188,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	///     Creates a modal response to this interaction.
 	/// </summary>
 	/// <param name="builder">The data to send.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	public Task CreateInteractionModalResponseAsync(DiscordInteractionModalBuilder builder, CancellationToken cancellationToken = default)
 		=> this.Type is not InteractionType.Ping && this.Type is not InteractionType.ModalSubmit ? this.Discord.ApiClient.CreateInteractionModalResponseAsync(this.Id, this.Token, InteractionResponseType.Modal, builder, cancellationToken: cancellationToken) : throw new NotSupportedException("You can't respond to a PING with a modal.");
 
@@ -197,12 +199,14 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <param name="title">The title of the iframe.</param>
 	/// <param name="modalSize">The size of the iframe.</param>
 	/// <param name="iFramePath">The path of the iframe. Uses %application_id%.discordsays.com/<c>:iframe_path</c>.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	public Task CreateInteractionIframeResponseAsync(string customId, string title, IframeModalSize modalSize = IframeModalSize.Normal, string? iFramePath = null, CancellationToken cancellationToken = default)
 		=> this.Type is not InteractionType.Ping ? this.Discord.ApiClient.CreateInteractionIframeResponseAsync(this.Id, this.Token, InteractionResponseType.Iframe, customId, title, modalSize, iFramePath, cancellationToken: cancellationToken) : throw new NotSupportedException("You can't respond to a PING with an iframe.");
 
 	/// <summary>
 	///     Gets the original interaction response.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The original message that was sent. This <b>does not work on ephemeral messages.</b></returns>
 	public Task<DiscordMessage> GetOriginalResponseAsync(CancellationToken cancellationToken = default)
 		=> this.Discord.ApiClient.GetOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token, cancellationToken: cancellationToken);
@@ -212,6 +216,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// </summary>
 	/// <param name="builder">The webhook builder.</param>
 	/// <param name="modifyMode">The modify mode.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The edited <see cref="DiscordMessage" />.</returns>
 	public async Task<DiscordMessage> EditOriginalResponseAsync(DiscordWebhookBuilder builder, ModifyMode modifyMode = ModifyMode.Update, CancellationToken cancellationToken = default)
 	{
@@ -238,6 +243,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <summary>
 	///     Deletes the original interaction response.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// >
 	public Task DeleteOriginalResponseAsync(CancellationToken cancellationToken = default)
 		=> this.Discord.ApiClient.DeleteOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token, cancellationToken: cancellationToken);
@@ -246,6 +252,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	///     Creates a follow-up message to this interaction.
 	/// </summary>
 	/// <param name="builder">The webhook builder.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The created <see cref="DiscordMessage" />.</returns>
 	public async Task<DiscordMessage> CreateFollowupMessageAsync(DiscordFollowupMessageBuilder builder, CancellationToken cancellationToken = default)
 	{
@@ -258,6 +265,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	///     Gets a follow-up message.
 	/// </summary>
 	/// <param name="messageId">The id of the follow-up message.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	public Task<DiscordMessage> GetFollowupMessageAsync(ulong messageId, CancellationToken cancellationToken = default)
 		=> this.Discord.ApiClient.GetFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId, cancellationToken: cancellationToken);
 
@@ -267,6 +275,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <param name="messageId">The id of the follow-up message.</param>
 	/// <param name="builder">The webhook builder.</param>
 	/// <param name="modifyMode">The modify mode.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The edited <see cref="DiscordMessage" />.</returns>
 	public async Task<DiscordMessage> EditFollowupMessageAsync(ulong messageId, DiscordWebhookBuilder builder, ModifyMode modifyMode = ModifyMode.Update, CancellationToken cancellationToken = default)
 	{
@@ -293,6 +302,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	///     Deletes a follow-up message.
 	/// </summary>
 	/// <param name="messageId">The id of the follow-up message.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	public Task DeleteFollowupMessageAsync(ulong messageId, CancellationToken cancellationToken = default)
 		=> this.Discord.ApiClient.DeleteFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId, cancellationToken: cancellationToken);
 }

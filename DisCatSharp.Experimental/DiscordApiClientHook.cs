@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -44,6 +44,7 @@ internal sealed class DiscordApiClientHook
 	/// </summary>
 	/// <param name="guildId">The ID of the guild.</param>
 	/// <param name="searchParams">The search parameters.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="ValidationException">Thrown if the user gave an invalid input.</exception>
 	/// <exception cref="NotIndexedException">Thrown if the elastisearch endpoint has not finished indexing yet.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -217,6 +218,7 @@ internal sealed class DiscordApiClientHook
 	/// </summary>
 	/// <param name="guildId">The ID of the guild.</param>
 	/// <param name="searchParams">The search parameters.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="ValidationException">Thrown if the user gave an invalid input.</exception>
 	/// <exception cref="NotIndexedException">Thrown if the elastisearch endpoint has not finished indexing yet.</exception>
 	/// <exception cref="UnauthorizedException">
@@ -300,6 +302,7 @@ internal sealed class DiscordApiClientHook
 	/// </summary>
 	/// <param name="channelId">The ID of the channel.</param>
 	/// <param name="attachment">The attachment information.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The GCP attachment response.</returns>
 	internal async Task<GcpAttachmentsResponse> RequestFileUploadAsync(ulong channelId, GcpAttachment attachment, CancellationToken cancellationToken = default)
 	{

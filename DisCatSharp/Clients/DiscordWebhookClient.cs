@@ -115,6 +115,7 @@ public class DiscordWebhookClient
 	/// </summary>
 	/// <param name="id">The ID of the webhook to add.</param>
 	/// <param name="token">The token of the webhook to add.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The registered webhook.</returns>
 	public async Task<DiscordWebhook> AddWebhookAsync(ulong id, string token, CancellationToken cancellationToken = default)
 	{
@@ -159,6 +160,7 @@ public class DiscordWebhookClient
 	/// </summary>
 	/// <param name="id">ID of the webhook to register.</param>
 	/// <param name="client">Discord client to which the webhook will belong.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The registered webhook.</returns>
 	public async Task<DiscordWebhook> AddWebhookAsync(ulong id, BaseDiscordClient client, CancellationToken cancellationToken = default)
 	{

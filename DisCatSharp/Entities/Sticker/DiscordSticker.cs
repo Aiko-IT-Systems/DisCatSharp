@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -147,6 +147,7 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	/// <param name="description">The description of the sticker</param>
 	/// <param name="tags">The name of a unicode emoji representing the sticker's expression</param>
 	/// <param name="reason">Audit log reason</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A sticker object</returns>
 	/// <exception cref="UnauthorizedException">Thrown when the sticker could not be found.</exception>
 	/// <exception cref="UnauthorizedException">
@@ -170,6 +171,7 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	///     Deletes the sticker
 	/// </summary>
 	/// <param name="reason">Audit log reason</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the sticker could not be found.</exception>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the

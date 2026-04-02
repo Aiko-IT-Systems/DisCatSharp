@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -93,6 +93,7 @@ public sealed class DiscordScheduledEventException : ObservableApiObject, IEquat
 	///     Modifies this scheduled event exception.
 	/// </summary>
 	/// <param name="action">The action to apply to the edit model.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The updated scheduled event exception.</returns>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the correct permissions.</exception>
 	/// <exception cref="NotFoundException">Thrown when the event or exception does not exist.</exception>
@@ -111,6 +112,7 @@ public sealed class DiscordScheduledEventException : ObservableApiObject, IEquat
 	///     Deletes this scheduled event exception.
 	/// </summary>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A task that represents the asynchronous operation.</returns>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the correct permissions.</exception>
 	/// <exception cref="NotFoundException">Thrown when the event or exception does not exist.</exception>

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -510,6 +510,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	///     <para>Ends the poll on this message.</para>
 	///     <para>Works only for own polls and if they are not expired yet. </para>
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The fresh discord message.</returns>
 	/// <exception cref="InvalidOperationException">
 	///     Thrown when the message has no poll, the author is not us, or the poll has
@@ -529,6 +530,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// </summary>
 	/// <param name="targetChannel">The channel to forward this message to.</param>
 	/// <param name="content">Content is not available at the moment, but already added for the future.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the bot tries forwarding a message it doesn't has access to or the
 	///     client tried to modify a message not sent by them.
@@ -663,6 +665,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// </summary>
 	/// <param name="builder">The builder of the message to edit.</param>
 	/// <param name="modifyMode">The mode of modification.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -682,6 +685,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// </summary>
 	/// <param name="action">The builder of the message to edit.</param>
 	/// <param name="modifyMode">The mode of modification.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -701,6 +705,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <summary>
 	///		Modifies the message by removing components.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -712,6 +717,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	///		Modifies the message by editing the content.
 	/// </summary>
 	/// <param name="content">The content to edit.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -764,6 +770,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <summary>
 	///     Edits the message embed suppression.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -774,6 +781,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <summary>
 	///     Deletes the message.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageMessages" /> permission.
@@ -796,6 +804,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// </param>
 	/// <param name="rateLimitPerUser">The per user ratelimit, aka slowdown.</param>
 	/// <param name="reason">The reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.CreatePrivateThreads" /> or <see cref="Permissions.SendMessagesInThreads" /> permission.
@@ -810,6 +819,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	///     Pins the message in its channel.
 	/// </summary>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageMessages" /> permission.
@@ -824,6 +834,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	///     Unpins the message in its channel.
 	/// </summary>
 	/// <param name="reason">The audit log reason.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageMessages" /> permission.
@@ -839,6 +850,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// </summary>
 	/// <param name="content">Message content to respond with.</param>
 	/// <param name="mention">Whether to mention on reply.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -855,6 +867,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// </summary>
 	/// <param name="embed">Embed to attach to the message.</param>
 	/// <param name="mention">Whether to mention on reply.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -874,6 +887,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <param name="content">Message content to respond with.</param>
 	/// <param name="embed">Embed to attach to the message.</param>
 	/// <param name="mention">Whether to mention on reply.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -893,6 +907,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// </summary>
 	/// <param name="builder">The Discord message builder.</param>
 	/// <param name="mention">Whether to mention on reply.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -910,6 +925,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// </summary>
 	/// <param name="action">The Discord message builder.</param>
 	/// <param name="mention">Whether to mention on reply.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -929,6 +945,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	///     Creates a reaction to this message.
 	/// </summary>
 	/// <param name="emoji">The emoji you want to react with, either an emoji or name:id</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.AddReactions" /> permission.
@@ -943,6 +960,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	///     Deletes your own reaction
 	/// </summary>
 	/// <param name="emoji">Emoji for the reaction you want to remove, either an emoji or name:id</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -955,6 +973,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <param name="emoji">Emoji for the reaction you want to remove, either an emoji or name:id.</param>
 	/// <param name="user">Member you want to remove the reaction for</param>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageMessages" /> permission.
@@ -971,6 +990,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <param name="emoji">Emoji to react with.</param>
 	/// <param name="limit">Limit of users to fetch.</param>
 	/// <param name="after">Fetch users after this user's id.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -981,6 +1001,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	///     Deletes all reactions for this message.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageMessages" /> permission.
@@ -995,6 +1016,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	///     Deletes all reactions of a specific reaction for this message.
 	/// </summary>
 	/// <param name="emoji">The emoji to clear, either an emoji or name:id.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageMessages" /> permission.
@@ -1011,6 +1033,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <param name="emoji">The emoji to search for.</param>
 	/// <param name="limit">The limit of results.</param>
 	/// <param name="after">Get the reasctions after snowflake.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	private async Task<IReadOnlyList<DiscordUser>> GetReactionsInternalAsync(DiscordEmoji emoji, int limit = 25, ulong? after = null, CancellationToken cancellationToken = default)
 	{
 		if (limit < 0)

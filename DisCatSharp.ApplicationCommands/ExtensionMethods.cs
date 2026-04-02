@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -48,6 +48,7 @@ public static class ExtensionMethods
 	///     Gets the application commands from this <see cref="DiscordShardedClient" />.
 	/// </summary>
 	/// <param name="client">Client to get application commands from.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A dictionary of current <see cref="ApplicationCommandsExtension" /> with the key being the shard id.</returns>
 	public static async Task<IReadOnlyDictionary<int, ApplicationCommandsExtension>> GetApplicationCommandsAsync(this DiscordShardedClient client, CancellationToken cancellationToken = default)
 	{
@@ -144,6 +145,7 @@ public static class ExtensionMethods
 	/// </summary>
 	/// <param name="client">Client to enable application commands on.</param>
 	/// <param name="config">Configuration to use.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A dictionary of created <see cref="ApplicationCommandsExtension" /> with the key being the shard id.</returns>
 	public static async Task<IReadOnlyDictionary<int, ApplicationCommandsExtension>> UseApplicationCommandsAsync(this DiscordShardedClient client, ApplicationCommandsConfiguration? config = null, CancellationToken cancellationToken = default)
 	{

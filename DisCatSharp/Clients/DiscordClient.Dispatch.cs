@@ -1269,6 +1269,7 @@ public sealed partial class DiscordClient
 	///     Refreshes the channels.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	internal async Task RefreshChannelsAsync(ulong guildId, CancellationToken cancellationToken = default)
 	{
 		var guild = this.InternalGetCachedGuild(guildId);
@@ -4014,6 +4015,7 @@ public sealed partial class DiscordClient
 	///     Handles the thread member update event.
 	/// </summary>
 	/// <param name="member">The updated member.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	internal async Task OnThreadMemberUpdateEventAsync(DiscordThreadChannelMember member, CancellationToken cancellationToken = default)
 	{
 		member.Discord = this;
@@ -4048,6 +4050,7 @@ public sealed partial class DiscordClient
 	/// <param name="membersAdded">The added members.</param>
 	/// <param name="membersRemoved">The ids of the removed members.</param>
 	/// <param name="memberCount">The new member count.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	internal async Task OnThreadMembersUpdateEventAsync(DiscordGuild guild, ulong threadId, JArray membersAdded, JArray membersRemoved, int memberCount, CancellationToken cancellationToken = default)
 	{
 		var thread = this.InternalGetCachedThread(threadId);

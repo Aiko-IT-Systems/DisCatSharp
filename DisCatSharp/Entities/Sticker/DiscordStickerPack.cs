@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -50,6 +50,7 @@ public sealed class DiscordStickerPack : SnowflakeObject
 	/// <summary>
 	///     Gets the pack's cover sticker.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	public Task<DiscordSticker> GetCoverStickerAsync(CancellationToken cancellationToken = default) => this.Discord.ApiClient.GetStickerAsync(this.CoverStickerId, cancellationToken: cancellationToken);
 
 	/// <summary>

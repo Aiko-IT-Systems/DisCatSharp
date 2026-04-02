@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -426,6 +426,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	///     Cleans all guild application commands.
 	///     <note type="caution">You normally don't need to execute it.</note>
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	public async Task CleanGuildCommandsAsync(CancellationToken cancellationToken = default)
 	{
 		foreach (var guild in this.Client.Guilds.Values)
@@ -436,6 +437,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	///     Cleans all global application commands.
 	///     <note type="caution">You normally don't need to execute it.</note>
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	public async Task CleanGlobalCommandsAsync(CancellationToken cancellationToken = default)
 		=> await this.Client.BulkOverwriteGlobalApplicationCommandsAsync([], cancellationToken).ConfigureAwait(false);
 
@@ -593,6 +595,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	///     Used for RegisterCommands and the <see cref="DisCatSharp.DiscordClient.Ready" /> event.
 	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	internal async Task UpdateAsync(CancellationToken cancellationToken = default)
 	{
 		this.Client.Logger.Log(LogLevel.Information, "Request to register commands on shard {shard}", this.Client.ShardId);
@@ -758,6 +761,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	/// <param name="types">The types.</param>
 	/// <param name="guildId">The optional guild id.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	private async Task RegisterCommands(List<ApplicationCommandsModuleConfiguration> types, ulong? guildId, CancellationToken cancellationToken = default)
 	{
 		this.Client.Logger.Log(LogLevel.Information, "Registering commands on shard {shard}", this.Client.ShardId);
