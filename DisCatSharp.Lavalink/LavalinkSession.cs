@@ -115,7 +115,7 @@ public sealed class LavalinkSession
 	/// <summary>
 	///     <see cref="TaskCompletionSource" /> for the <see cref="LavalinkConfiguration.SessionId" />.
 	/// </summary>
-	private TaskCompletionSource<string> _sessionIdReceived = null!;
+	private TaskCompletionSource<string>? _sessionIdReceived;
 
 	/// <summary>
 	///     Gets the web socket.
@@ -567,6 +567,9 @@ public sealed class LavalinkSession
 
 			try
 			{
+				var sessionIdReceived = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
+				this._sessionIdReceived = sessionIdReceived;
+
 				if (this._backoff != 0)
 				{
 					await Task.Delay(this._backoff).ConfigureAwait(false);
@@ -577,22 +580,24 @@ public sealed class LavalinkSession
 
 				await this._webSocket.ConnectAsync(new($"{this.Config.SocketEndpoint.ToWebSocketString()}{Endpoints.V4}{Endpoints.WEBSOCKET}")).ConfigureAwait(false);
 
-				this._sessionIdReceived = new();
-				var sessionId = await this._sessionIdReceived.Task.ConfigureAwait(false);
+				var sessionId = await sessionIdReceived.Task.ConfigureAwait(false);
 				this.Config.SessionId = sessionId;
-				this._sessionIdReceived = null!;
+				this._sessionIdReceived = null;
 				break;
 			}
 			catch (PlatformNotSupportedException)
 			{
+				this._sessionIdReceived = null;
 				throw;
 			}
 			catch (NotImplementedException)
 			{
+				this._sessionIdReceived = null;
 				throw;
 			}
 			catch (Exception ex)
 			{
+				this._sessionIdReceived = null;
 				this.Discord.DiagnosticsSink.CaptureException("DisCatSharp.Lavalink", ex, tags: new Dictionary<string, string>
 				{
 					[DiagnosticTags.ErrorOrigin] = DiagnosticTags.OriginUpstream,
@@ -642,8 +647,8 @@ public sealed class LavalinkSession
 						this.Discord.Logger.LogTrace(LavalinkEvents.LavalinkWsRx, null,
 							"Received Lavalink Ready OP: {data}", json);
 						var ready = LavalinkJson.DeserializeObject<ReadyOp>(json)!;
-						if (this._sessionIdReceived != null!)
-							this._sessionIdReceived.SetResult(ready.SessionId);
+						if (this._sessionIdReceived is not null)
+							this._sessionIdReceived.TrySetResult(ready.SessionId);
 						else
 							this.Config.SessionId = ready.SessionId;
 						if (ready.Resumed)
