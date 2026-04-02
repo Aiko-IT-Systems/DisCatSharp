@@ -346,7 +346,7 @@ internal sealed class RestClient : IDisposable, IRestDiagnostics
 			return new()
 			{
 				Error = httpEx,
-				ShouldRetry = isTransient,
+				ShouldRetry = isTransient && this._advancedConfig.RetryTransientErrors,
 				IsTransientNetworkError = isTransient
 			};
 		}

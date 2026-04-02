@@ -364,8 +364,13 @@ internal sealed class BucketRegistry : IDisposable
 								key);
 						}
 
-						// Swap the worker in the registry — the replacement starts processing on next enqueue
-						this._bucketWorkers.TryUpdate(key, replacement, worker);
+						// Swap the worker in the registry — if the key was removed concurrently, dispose the orphan
+						if (!this._bucketWorkers.TryUpdate(key, replacement, worker))
+						{
+							this._logger.LogWarning(LoggerEvents.RestCleaner,
+								"Failed to swap replacement worker for {Bucket} — key was removed concurrently, disposing orphan", key);
+							replacement.Dispose();
+						}
 					}
 					else
 					{
