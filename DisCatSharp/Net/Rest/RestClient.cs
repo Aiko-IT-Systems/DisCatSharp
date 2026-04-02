@@ -183,6 +183,7 @@ internal sealed class RestClient : IDisposable, IRestDiagnostics
 		if (this._disposed)
 		{
 			request.SetFaulted(new ObjectDisposedException(nameof(RestClient), "Cannot execute request on a disposed RestClient."));
+			request.CancellationTokenSource.Dispose();
 			return;
 		}
 
