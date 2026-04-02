@@ -743,7 +743,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 
 		var isUp = position > this.Position;
 
-		var channels = await this.InternalRefreshChannelsAsync().ConfigureAwait(false);
+		var channels = await this.InternalRefreshChannelsAsync(cancellationToken).ConfigureAwait(false);
 
 		var chns = this.ParentId != null
 			? this.Type == ChannelType.Text || this.Type == ChannelType.News
@@ -784,9 +784,9 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <summary>
 	///     Internally refreshes the channel list.
 	/// </summary>
-	private async Task<IReadOnlyList<DiscordChannel>> InternalRefreshChannelsAsync()
+	private async Task<IReadOnlyList<DiscordChannel>> InternalRefreshChannelsAsync(CancellationToken cancellationToken = default)
 	{
-		await this.RefreshPositionsAsync().ConfigureAwait(false);
+		await this.RefreshPositionsAsync(cancellationToken).ConfigureAwait(false);
 		return this.Guild.Channels.Values.ToList().AsReadOnly();
 	}
 

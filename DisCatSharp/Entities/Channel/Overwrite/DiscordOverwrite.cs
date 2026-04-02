@@ -107,7 +107,7 @@ public class DiscordOverwrite : SnowflakeObject
 	public async Task<DiscordMember> GetMemberAsync(CancellationToken cancellationToken = default) =>
 		this.Type != OverwriteType.Member
 			? throw new ArgumentException(nameof(this.Type), "This overwrite is for a role, not a member.")
-			: await (await this.Discord.ApiClient.GetChannelAsync(this.ChannelId, cancellationToken: cancellationToken).ConfigureAwait(false)).Guild.GetMemberAsync(this.Id).ConfigureAwait(false);
+			: await (await this.Discord.ApiClient.GetChannelAsync(this.ChannelId, cancellationToken: cancellationToken).ConfigureAwait(false)).Guild.GetMemberAsync(this.Id, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Gets the DiscordRole that is affected by this overwrite.

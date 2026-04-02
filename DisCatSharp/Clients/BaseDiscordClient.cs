@@ -431,11 +431,11 @@ public abstract class BaseDiscordClient : IDisposable
 		}
 
 		if (this.Configuration.TokenType is TokenType.Bot && this.CurrentApplication is null)
-			this.CurrentApplication = await this.GetCurrentApplicationAsync().ConfigureAwait(false);
+			this.CurrentApplication = await this.GetCurrentApplicationAsync(cancellationToken).ConfigureAwait(false);
 
 		if (this.Configuration.TokenType is not TokenType.Bearer && this.InternalVoiceRegions.IsEmpty)
 		{
-			var vrs = await this.ListVoiceRegionsAsync().ConfigureAwait(false);
+			var vrs = await this.ListVoiceRegionsAsync(cancellationToken).ConfigureAwait(false);
 			foreach (var xvr in vrs)
 				this.InternalVoiceRegions.TryAdd(xvr.Id, xvr);
 		}

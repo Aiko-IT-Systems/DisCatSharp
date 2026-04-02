@@ -563,7 +563,7 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 
 		try
 		{
-			return await this.Guild.GetSoundboardSoundAsync(soundId).ConfigureAwait(false);
+			return await this.Guild.GetSoundboardSoundAsync(soundId, cancellationToken).ConfigureAwait(false);
 		}
 		catch (NotFoundException)
 		{

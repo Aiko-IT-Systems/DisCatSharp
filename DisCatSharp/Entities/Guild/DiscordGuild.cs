@@ -3115,11 +3115,12 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	///     Gets a soundboard sound by its ID.
 	/// </summary>
 	/// <param name="soundId">The ID of the sound to retrieve.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The requested <see cref="DiscordSoundboardSound" />.</returns>
 	/// <exception cref="NotFoundException">Thrown when the soundboard sound cannot be found.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordSoundboardSound> GetSoundboardSoundAsync(ulong soundId)
-		=> this.Discord.ApiClient.GetGuildSoundboardSoundAsync(this.Id, soundId);
+	public Task<DiscordSoundboardSound> GetSoundboardSoundAsync(ulong soundId, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.GetGuildSoundboardSoundAsync(this.Id, soundId, cancellationToken);
 
 	/// <summary>
 	///     Lists all soundboard sounds in the guild.

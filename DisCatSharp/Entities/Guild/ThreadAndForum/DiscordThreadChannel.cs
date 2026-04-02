@@ -345,7 +345,7 @@ public class DiscordThreadChannel : DiscordChannel
 	public async Task AddRoleAsync(ulong roleId, CancellationToken cancellationToken = default)
 	{
 		var role = this.Guild.GetRole(roleId);
-		var members = await this.Guild.GetAllMembersAsync().ConfigureAwait(false);
+		var members = await this.Guild.GetAllMembersAsync(cancellationToken).ConfigureAwait(false);
 		var roleMembers = members.Where(m => m.Roles.Contains(role));
 		foreach (var member in roleMembers)
 			await this.Discord.ApiClient.AddThreadMemberAsync(this.Id, member.Id, cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -373,7 +373,7 @@ public class DiscordThreadChannel : DiscordChannel
 	public async Task RemoveRoleAsync(ulong roleId, CancellationToken cancellationToken = default)
 	{
 		var role = this.Guild.GetRole(roleId);
-		var members = await this.Guild.GetAllMembersAsync().ConfigureAwait(false);
+		var members = await this.Guild.GetAllMembersAsync(cancellationToken).ConfigureAwait(false);
 		var roleMembers = members.Where(m => m.Roles.Contains(role));
 		foreach (var member in roleMembers)
 			await this.Discord.ApiClient.RemoveThreadMemberAsync(this.Id, member.Id, cancellationToken: cancellationToken).ConfigureAwait(false);

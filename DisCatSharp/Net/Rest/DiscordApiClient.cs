@@ -2426,7 +2426,7 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="guildId">The guild ID.</param>
 	/// <param name="soundId">The soundboard sound ID.</param>
-	public async Task<DiscordSoundboardSound> GetGuildSoundboardSoundAsync(ulong guildId, ulong soundId)
+	public async Task<DiscordSoundboardSound> GetGuildSoundboardSoundAsync(ulong guildId, ulong soundId, CancellationToken cancellationToken = default)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SOUNDBOARD_SOUNDS}/:sound_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
@@ -2435,7 +2435,7 @@ public sealed class DiscordApiClient
 			sound_id = soundId
 		}, out var path);
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 		return DiscordJson.DeserializeObject<DiscordSoundboardSound>(res.Response, this.Discord);
 	}
@@ -4601,7 +4601,7 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	internal Task<DiscordUser> GetCurrentUserAsync(CancellationToken cancellationToken = default)
-		=> this.GetUserAsync(Endpoints.ME);
+		=> this.GetUserAsync(Endpoints.ME, cancellationToken);
 
 	/// <summary>
 	///     Gets the user async.
@@ -4609,7 +4609,7 @@ public sealed class DiscordApiClient
 	/// <param name="userId">The user_id.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	internal Task<DiscordUser> GetUserAsync(ulong userId, CancellationToken cancellationToken = default)
-		=> this.GetUserAsync(userId.ToString(CultureInfo.InvariantCulture));
+		=> this.GetUserAsync(userId.ToString(CultureInfo.InvariantCulture), cancellationToken);
 
 	/// <summary>
 	///     Gets the user async.
@@ -8642,7 +8642,7 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	internal Task<TransportApplication> GetCurrentApplicationOauth2InfoAsync(CancellationToken cancellationToken = default)
-		=> this.GetApplicationOauth2InfoAsync(Endpoints.ME);
+		=> this.GetApplicationOauth2InfoAsync(Endpoints.ME, cancellationToken);
 
 	/// <summary>
 	///     Gets the application rpc info.
@@ -8650,7 +8650,7 @@ public sealed class DiscordApiClient
 	/// <param name="applicationId">The application_id.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	internal Task<DiscordRpcApplication> GetApplicationRpcInfoAsync(ulong applicationId, CancellationToken cancellationToken = default)
-		=> this.GetApplicationRpcInfoAsync(applicationId.ToString(CultureInfo.InvariantCulture));
+		=> this.GetApplicationRpcInfoAsync(applicationId.ToString(CultureInfo.InvariantCulture), cancellationToken);
 
 	/// <summary>
 	///     Gets the application info via oauth2.
@@ -8741,7 +8741,7 @@ public sealed class DiscordApiClient
 	///     Gets the application info.
 	/// </summary>
 	/// <param name="applicationId">The application_id.</param>
-	private async Task<DiscordRpcApplication> GetApplicationRpcInfoAsync(string applicationId)
+	private async Task<DiscordRpcApplication> GetApplicationRpcInfoAsync(string applicationId, CancellationToken cancellationToken = default)
 	{
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.RPC}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
@@ -8750,7 +8750,7 @@ public sealed class DiscordApiClient
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 		return DiscordJson.DeserializeObject<DiscordRpcApplication>(res.Response, this.Discord);
 	}
