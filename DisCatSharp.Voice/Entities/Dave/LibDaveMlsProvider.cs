@@ -37,10 +37,7 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 	private readonly ILogger _logger;
 	private DaveSessionSafeHandle? _session;
 	private bool _disposed;
-	private bool _groupReady;
-	private bool _sessionInitialized;
 	private ulong _selfUserId;
-	// Accessed only on the voice gateway thread. Not thread-safe by design.
 	private readonly List<ulong> _knownUserIds = [];
 
 	/// <summary>
@@ -59,10 +56,10 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 	}
 
 	/// <inheritdoc/>
-	public bool IsSessionInitialized => this._sessionInitialized;
+	public bool IsSessionInitialized { get; private set; }
 
 	/// <inheritdoc/>
-	public bool IsGroupReady => this._groupReady;
+	public bool IsGroupReady { get; private set; }
 
 	/// <inheritdoc/>
 	public void InitGroup(ulong selfUserId, int protocolVersion, byte[] groupId)
@@ -70,7 +67,7 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 		// Discord uses the voice channel ID as the MLS group ID.
 		// The groupId parameter from IMlsProvider is ignored intentionally.
 		this._selfUserId = selfUserId;
-		this._groupReady = false;
+		this.IsGroupReady = false;
 
 		// Create the native session ONCE per provider lifetime.
 		//
@@ -105,11 +102,11 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 				(ushort)this._protocolVersion,
 				this._channelId,
 				selfUserId.ToString());
-			this._sessionInitialized = true;
+			this.IsSessionInitialized = true;
 		}
 		catch
 		{
-			this._sessionInitialized = false;
+			this.IsSessionInitialized = false;
 			this._session.Dispose();
 			this._session = null;
 			throw;
@@ -252,7 +249,7 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 
 		if (!failed && !ignored)
 		{
-			this._groupReady = true;
+			this.IsGroupReady = true;
 			this._logger.VoiceDebug("[DAVE] MLS commit processed — group ready");
 		}
 		else
@@ -336,7 +333,7 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 			return;
 		}
 
-		this._groupReady = true;
+		this.IsGroupReady = true;
 		this._logger.VoiceDebug("[DAVE] MLS welcome processed — group ready");
 	}
 
@@ -394,8 +391,8 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 			return;
 		if (this._session is not null && !this._session.IsInvalid)
 			DaveNative.SessionReset(this._session);
-		this._sessionInitialized = false;
-		this._groupReady = false;
+		this.IsSessionInitialized = false;
+		this.IsGroupReady = false;
 		this._knownUserIds.Clear();
 	}
 
@@ -405,7 +402,7 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 		if (this._disposed)
 			return;
 		this._disposed = true;
-		this._sessionInitialized = false;
+		this.IsSessionInitialized = false;
 		this._session?.Dispose();
 		this._session = null;
 	}

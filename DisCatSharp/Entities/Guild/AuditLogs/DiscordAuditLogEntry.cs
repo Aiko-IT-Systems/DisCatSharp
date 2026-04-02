@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -287,7 +287,7 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A task representing the asynchronous hydration operation.</returns>
 	/// <remarks>
-	///     This is a convenience wrapper around <see cref="HydrateAsync(AuditLogHydrationTargets, bool)" /> with
+	///     This is a convenience wrapper around <see cref="HydrateAsync(AuditLogHydrationTargets, bool, CancellationToken)" /> with
 	///     <see cref="AuditLogHydrationTargets.All" />.
 	/// </remarks>
 	public Task HydrateAllAsync(bool force = true, CancellationToken cancellationToken = default)

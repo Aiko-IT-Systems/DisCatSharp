@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -870,7 +870,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <summary>
 	///     Updates the channel parent, moving the channel to the bottom of the new category.
 	/// </summary>
-	/// <param name="newParent">New parent for channel. Use <see cref="RemoveParentAsync(string)" /> to remove from parent.</param>
+	/// <param name="newParent">New parent for channel. Use <see cref="RemoveParentAsync(string, CancellationToken)" /> to remove from parent.</param>
 	/// <param name="lockPermissions">Sync permissions with parent. Defaults to null.</param>
 	/// <param name="reason">Reason for audit logs.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
@@ -1083,9 +1083,8 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task DeleteMessagesAsync(IEnumerable<DiscordMessage> messages, string reason = null, CancellationToken cancellationToken = default)
 	{
-		// don't enumerate more than once
 		var msgs = messages.Where(x => x.Channel.Id == this.Id).Select(x => x.Id).ToArray();
-		if (messages == null || !msgs.Any())
+		if (messages is null || msgs.Length is 0)
 			throw new ArgumentException("You need to specify at least one message to delete.");
 
 		if (msgs.Length < 2)
@@ -1177,11 +1176,12 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <summary>
 	///     Removes a voice channels status.
 	/// </summary>
+	/// <param name="reason">Audit log reason.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the voice channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task RemoveVoiceChannelStatusAsync(string reason = null, CancellationToken cancellationToken = default)
+	public Task RemoveVoiceChannelStatusAsync(string? reason = null, CancellationToken cancellationToken = default)
 		=> this.Type != ChannelType.Voice ? throw new NotSupportedException("Cannot execute this request on a non-voice channel.") : this.Discord.ApiClient.ModifyVoiceChannelStatusAsync(this.Id, null, cancellationToken: cancellationToken);
 
 	#endregion

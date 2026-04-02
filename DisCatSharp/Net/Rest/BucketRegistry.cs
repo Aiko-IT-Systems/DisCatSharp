@@ -146,7 +146,7 @@ internal sealed class BucketRegistry : IDisposable
 	/// <returns>The rate-limit bucket for this request.</returns>
 	internal RateLimitBucket GetBucket(RestRequestMethod method, string route, object routeParams, out string url)
 	{
-		var rparamsProps = s_propertyCache.GetOrAdd(routeParams.GetType(), static t => t.GetTypeInfo().DeclaredProperties.ToArray());
+		var rparamsProps = s_propertyCache.GetOrAdd(routeParams.GetType(), static t => [.. t.GetTypeInfo().DeclaredProperties]);
 		var rparams = new Dictionary<string, string>();
 		foreach (var xp in rparamsProps)
 		{
@@ -262,7 +262,7 @@ internal sealed class BucketRegistry : IDisposable
 
 		lock (this._remapLock)
 		{
-			this._logger.LogDebug(LoggerEvents.RestHashMover, "Updating hash in {0}: \"{1}\" -> \"{2}\"", hashKey, oldHash, newHash);
+			this._logger.LogDebug(LoggerEvents.RestHashMover, "Updating hash in {HashKey}: \"{OldHash}\" -> \"{NewHash}\"", hashKey, oldHash, newHash);
 			var bucketId = RateLimitBucket.GenerateBucketId(newHash, bucket.GuildId, bucket.ChannelId, bucket.WebhookId);
 
 			// Check for merge case: another route already registered a different bucket for this hash+params.
@@ -278,7 +278,7 @@ internal sealed class BucketRegistry : IDisposable
 				if (mergeBucket is not null)
 				{
 					// Merge case: migrate queued work from our worker to the existing bucket's worker
-					this._logger.LogDebug(LoggerEvents.RestHashMover, "Bucket merge detected for {0}: migrating work to existing bucket", bucketId);
+					this._logger.LogDebug(LoggerEvents.RestHashMover, "Bucket merge detected for {BucketId}: migrating work to existing bucket", bucketId);
 					this.MigrateBucketWorker(bucket, mergeBucket);
 				}
 				else
@@ -431,7 +431,7 @@ internal sealed class BucketRegistry : IDisposable
 			}
 
 			if (removedBuckets > 0)
-				this._logger.LogDebug(LoggerEvents.RestCleaner, "Removed {0} unused bucket{1}: [{2}]", removedBuckets, removedBuckets > 1 ? "s" : string.Empty, bucketIdStrBuilder.ToString().TrimEnd(',', ' '));
+				this._logger.LogDebug(LoggerEvents.RestCleaner, "Removed {RemovedBuckets} unused bucket{PluralSuffix}: [{BucketIds}]", removedBuckets, removedBuckets > 1 ? "s" : string.Empty, bucketIdStrBuilder.ToString().TrimEnd(',', ' '));
 
 			if (this._hashesToBuckets.Count > 10_000)
 				this._logger.LogWarning(LoggerEvents.RestCleaner, "Bucket accumulation warning: {Count} rate-limit buckets are currently tracked. Cleanup may not be keeping up; consider reviewing route cardinality.", this._hashesToBuckets.Count);

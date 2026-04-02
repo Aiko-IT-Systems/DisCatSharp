@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -720,7 +720,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 			foreach (var key in commandsPending)
 			{
-				this.Client.Logger.Log(ApplicationCommandsLogLevel, key.HasValue ? $"Registering commands in guild {key.Value}" : "Registering global commands");
+				var logText = key.HasValue ? $"Registering commands in guild {key.Value}" : "Registering global commands";
+				this.Client.Logger.Log(ApplicationCommandsLogLevel, "{text}", logText);
 				if (key.HasValue)
 				{
 					this.Client.Logger.Log(ApplicationCommandsLogLevel, "Found guild {guild} in shard {shard}!", key.Value, this.Client.ShardId);
@@ -751,8 +752,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		{
 			this.DiagnosticsSink.CaptureException("DisCatSharp.ApplicationCommands", ex);
 			this.Client.Logger.LogCritical(ex, "There was an error during the application commands setup");
-			this.Client.Logger.LogError(ex.Message);
-			this.Client.Logger.LogError(ex.StackTrace);
+			this.Client.Logger.LogError(ex, "{msg}", ex.Message);
+			this.Client.Logger.LogError(ex, "{stack}", ex.StackTrace);
 		}
 	}
 

@@ -29,8 +29,8 @@ public class PresenceCacheRegressionTests
 			Discriminator = "0001"
 		};
 
-		await client.OnGuildSyncEventAsync(guildA, false, new JArray(), [CreatePresence(userId, guildA.Id, UserStatus.Online, "Guild A")]);
-		await client.OnGuildSyncEventAsync(guildB, false, new JArray(), [CreatePresence(userId, guildB.Id, UserStatus.Idle, "Guild B")]);
+		await client.OnGuildSyncEventAsync(guildA, false, [], [CreatePresence(userId, guildA.Id, UserStatus.Online, "Guild A")]);
+		await client.OnGuildSyncEventAsync(guildB, false, [], [CreatePresence(userId, guildB.Id, UserStatus.Idle, "Guild B")]);
 
 		PresenceUpdateEventArgs? captured = null;
 		client.PresenceUpdated += (_, args) =>
@@ -135,8 +135,8 @@ public class PresenceCacheRegressionTests
 			Discriminator = "0001"
 		};
 
-		await client.OnGuildSyncEventAsync(guildA, false, new JArray(), [CreatePresence(userId, guildA.Id, UserStatus.Online, "Guild A")]);
-		await client.OnGuildSyncEventAsync(guildB, false, new JArray(), [CreatePresence(userId, guildB.Id, UserStatus.Idle, "Guild B")]);
+		await client.OnGuildSyncEventAsync(guildA, false, [], [CreatePresence(userId, guildA.Id, UserStatus.Online, "Guild A")]);
+		await client.OnGuildSyncEventAsync(guildB, false, [], [CreatePresence(userId, guildB.Id, UserStatus.Idle, "Guild B")]);
 
 		var presences = client.GetPresences(userId);
 
@@ -160,7 +160,7 @@ public class PresenceCacheRegressionTests
 			Discriminator = "0001"
 		};
 
-		await client.OnGuildSyncEventAsync(guild, false, new JArray(), [CreatePresence(userId, guild.Id, UserStatus.Online, "Original")]);
+		await client.OnGuildSyncEventAsync(guild, false, [], [CreatePresence(userId, guild.Id, UserStatus.Online, "Original")]);
 
 		await client.OnPresenceUpdateEventAsync(
 			JObject.Parse($$"""
@@ -211,7 +211,7 @@ public class PresenceCacheRegressionTests
 			Discriminator = "0001"
 		};
 
-		await client.OnGuildSyncEventAsync(guild, false, new JArray(), [CreatePresence(userId, guild.Id, UserStatus.Online, "Original")]);
+		await client.OnGuildSyncEventAsync(guild, false, [], [CreatePresence(userId, guild.Id, UserStatus.Online, "Original")]);
 
 		PresenceUpdateEventArgs? captured = null;
 		client.PresenceUpdated += (_, args) =>
@@ -269,7 +269,7 @@ public class PresenceCacheRegressionTests
 			Discriminator = "0001"
 		};
 
-		await client.OnGuildSyncEventAsync(guild, false, new JArray(), [CreatePresence(userId, guild.Id, UserStatus.Online, "Tracked")]);
+		await client.OnGuildSyncEventAsync(guild, false, [], [CreatePresence(userId, guild.Id, UserStatus.Online, "Tracked")]);
 
 		await client.OnPresenceUpdateEventAsync(
 			JObject.Parse($$"""
@@ -302,9 +302,9 @@ public class PresenceCacheRegressionTests
 		var guildB = CreateGuild(client, 620);
 		var guildC = CreateGuild(client, 630);
 
-		await client.OnGuildSyncEventAsync(guildA, false, new JArray(), [CreatePresence(611, guildA.Id, UserStatus.Online, "Guild A")]);
-		await client.OnGuildSyncEventAsync(guildB, false, new JArray(), [CreatePresence(621, guildB.Id, UserStatus.Idle, "Guild B")]);
-		await client.OnGuildSyncEventAsync(guildC, false, new JArray(), [CreatePresence(631, guildC.Id, UserStatus.DoNotDisturb, "Guild C")]);
+		await client.OnGuildSyncEventAsync(guildA, false, [], [CreatePresence(611, guildA.Id, UserStatus.Online, "Guild A")]);
+		await client.OnGuildSyncEventAsync(guildB, false, [], [CreatePresence(621, guildB.Id, UserStatus.Idle, "Guild B")]);
+		await client.OnGuildSyncEventAsync(guildC, false, [], [CreatePresence(631, guildC.Id, UserStatus.DoNotDisturb, "Guild C")]);
 
 		Assert.Equal(2, client.PresenceStore.Count);
 		Assert.False(client.PresenceStore.ContainsKey(611));
@@ -332,8 +332,8 @@ public class PresenceCacheRegressionTests
 			Discriminator = "0001"
 		};
 
-		await client.OnGuildSyncEventAsync(guildA, false, new JArray(), [CreatePresence(userId, guildA.Id, UserStatus.Online, "Guild A")]);
-		await client.OnGuildSyncEventAsync(guildB, false, new JArray(), [CreatePresence(userId, guildB.Id, UserStatus.Idle, "Guild B")]);
+		await client.OnGuildSyncEventAsync(guildA, false, [], [CreatePresence(userId, guildA.Id, UserStatus.Online, "Guild A")]);
+		await client.OnGuildSyncEventAsync(guildB, false, [], [CreatePresence(userId, guildB.Id, UserStatus.Idle, "Guild B")]);
 
 		await client.OnGuildDeleteEventAsync(new DiscordGuild
 		{
@@ -370,7 +370,7 @@ public class PresenceCacheRegressionTests
 			Discriminator = "0001"
 		};
 
-		await client.OnGuildSyncEventAsync(guild, false, new JArray(), [CreatePresence(userId, guild.Id, UserStatus.Online, "Tracked")]);
+		await client.OnGuildSyncEventAsync(guild, false, [], [CreatePresence(userId, guild.Id, UserStatus.Online, "Tracked")]);
 
 		await client.OnGuildMemberRemoveEventAsync(new DisCatSharp.Net.Abstractions.TransportUser
 		{

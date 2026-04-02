@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -64,8 +64,8 @@ public sealed class DiscordInteraction : SnowflakeObject
 	{
 		get
 		{
-			if (this.Discord is DiscordClient dc)
-				return dc.InternalGetCachedChannel(this.ChannelId) ?? (DiscordChannel)dc.InternalGetCachedThread(this.ChannelId) ?? (this.Guild is null
+			return this.Discord is DiscordClient dc
+				? dc.InternalGetCachedChannel(this.ChannelId) ?? (DiscordChannel)dc.InternalGetCachedThread(this.ChannelId) ?? (this.Guild is null
 					? new DiscordDmChannel
 					{
 						Id = this.ChannelId,
@@ -76,9 +76,8 @@ public sealed class DiscordInteraction : SnowflakeObject
 					{
 						Id = this.ChannelId,
 						Discord = this.Discord
-					});
-
-			return this.Guild is null
+					})
+				: this.Guild is null
 				? new DiscordDmChannel
 				{
 					Id = this.ChannelId,

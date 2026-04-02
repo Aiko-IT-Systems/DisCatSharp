@@ -229,12 +229,7 @@ internal sealed class RestClient : IDisposable, IRestDiagnostics
 	///     Computes the delay for a preemptive bucket rate limit.
 	/// </summary>
 	internal TimeSpan ComputeBucketDelay(RateLimitBucket bucket)
-	{
-		if (this._useResetAfter)
-			return bucket.ResetAfter ?? TimeSpan.Zero;
-
-		return bucket.Reset - DateTimeOffset.UtcNow;
-	}
+		=> this._useResetAfter ? bucket.ResetAfter ?? TimeSpan.Zero : bucket.Reset - DateTimeOffset.UtcNow;
 
 	/// <summary>
 	///     Blocks the global gate, waits the specified delay, then reopens it.
@@ -276,8 +271,10 @@ internal sealed class RestClient : IDisposable, IRestDiagnostics
 	///     Builds an HTTP request, sends it, parses the response, and updates the bucket from headers.
 	///     Returns a <see cref="SendResult" /> indicating success, retry, or error.
 	/// </summary>
+	/// <param name="request">The REST request being sent.</param>
+	/// <param name="isProbe">Indicates if this is a probe request.</param>
 	/// <param name="cancellationToken">Cancellation token for aborting the HTTP request.</param>
-	internal async Task<SendResult> SendAndParseAsync(BaseRestRequest request, RateLimitBucket bucket, bool isProbe, CancellationToken cancellationToken = default)
+	internal async Task<SendResult> SendAndParseAsync(BaseRestRequest request, bool isProbe, CancellationToken cancellationToken = default)
 	{
 		HttpResponseMessage? httpRes = null;
 
@@ -301,7 +298,7 @@ internal sealed class RestClient : IDisposable, IRestDiagnostics
 			}
 
 			if (this.Debug && httpReq.Content is not null)
-				this._logger.Log(LogLevel.Trace, LoggerEvents.RestTx, "Rest Request Content:\n{Content}", await httpReq.Content.ReadAsStringAsync());
+				this._logger.Log(LogLevel.Trace, LoggerEvents.RestTx, "Rest Request Content:\n{Content}", await httpReq.Content.ReadAsStringAsync(cancellationToken));
 
 			ObjectDisposedException.ThrowIf(this._disposed, this);
 

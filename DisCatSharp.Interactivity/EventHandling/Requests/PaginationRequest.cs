@@ -12,7 +12,7 @@ namespace DisCatSharp.Interactivity.EventHandling;
 /// <summary>
 ///     The pagination request.
 /// </summary>
-internal class PaginationRequest : IPaginationRequest
+internal class PaginationRequest : IPaginationRequest, IDisposable
 {
 	private readonly PaginationBehaviour _behaviour;
 	private readonly CancellationTokenSource _ct;

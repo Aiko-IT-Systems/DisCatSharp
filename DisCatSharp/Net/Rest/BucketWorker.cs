@@ -416,7 +416,7 @@ internal sealed class BucketWorker : IDisposable
 
 				// 3. Build, send, parse response, update bucket headers
 				var isProbe = !this._bucket.LimitValid;
-				var result = await this._client.SendAndParseAsync(request, this._bucket, isProbe, effectiveCt);
+				var result = await this._client.SendAndParseAsync(request, isProbe, effectiveCt);
 
 				// 4. Handle retry on 429, 5xx, or transient network errors
 				if (result.ShouldRetry && retries < maxRetries)

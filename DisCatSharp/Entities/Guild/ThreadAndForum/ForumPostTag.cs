@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -90,6 +90,7 @@ public class ForumPostTag : NullableSnowflakeObject, IEquatable<ForumPostTag>
 	/// <summary>
 	///     Modifies the tag.
 	/// </summary>
+	/// <param name="action">The action to perform on the edit model.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotImplementedException">This method is currently not implemented.</exception>
 	public async Task<ForumPostTag> ModifyAsync(Action<ForumPostTagEditModel> action, CancellationToken cancellationToken = default)
@@ -113,9 +114,10 @@ public class ForumPostTag : NullableSnowflakeObject, IEquatable<ForumPostTag>
 	/// <summary>
 	///     Deletes the tag.
 	/// </summary>
+	/// <param name="reason">The audit log reason.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotImplementedException">This method is currently not implemented.</exception>
-	public Task DeleteAsync(string reason = null, CancellationToken cancellationToken = default)
+	public Task DeleteAsync(string? reason = null, CancellationToken cancellationToken = default)
 	=> this.Discord.ApiClient.ModifyForumChannelAsync(this.ChannelId, null, null, null, null, null, null, this.Channel.InternalAvailableTags.Where(x => x.Id != this.Id).ToList(), null, null, null, null, null, null, null, null, null, reason, cancellationToken: cancellationToken);
 
 	/// <summary>

@@ -545,9 +545,7 @@ internal sealed class DaveSession : IDisposable
 		// decryptors from `updated`; any instance collected in toDispose is no longer reachable
 		// through _decryptors.  Each decryptor's internal lock(_sync) serialises any in-flight
 		// TryDecrypt call, so disposal is safe immediately after the exchange.
-#pragma warning disable CS0420 // Interlocked already provides full barriers — volatile is intentional
 		Interlocked.Exchange(ref this._decryptors, updated);
-#pragma warning restore CS0420
 
 		foreach (var dec in toDispose)
 			dec.Dispose();
@@ -575,9 +573,7 @@ internal sealed class DaveSession : IDisposable
 		if (!updated.Remove(userId, out var dec))
 			return;
 
-#pragma warning disable CS0420
 		Interlocked.Exchange(ref this._decryptors, updated);
-#pragma warning restore CS0420
 		dec.Dispose();
 	}
 
@@ -586,9 +582,7 @@ internal sealed class DaveSession : IDisposable
 	/// </summary>
 	private void ClearDecryptors()
 	{
-#pragma warning disable CS0420
 		var old = Interlocked.Exchange(ref this._decryptors, []);
-#pragma warning restore CS0420
 		foreach (var dec in old.Values)
 			dec.Dispose();
 	}

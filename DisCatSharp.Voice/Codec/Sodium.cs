@@ -289,9 +289,7 @@ internal class Sodium : IDisposable
 				Span<byte> nonce = stackalloc byte[12]; // zero-initialized
 				BinaryPrimitives.WriteUInt32LittleEndian(nonce, counterValue);
 				this._aesGcm ??= new AesGcm(this._key.Span, AES_GCM_TAG_SIZE);
-				var aesGcm = this._aesGcm;
-				if (aesGcm is null)
-					throw new CryptographicException("AES-GCM AEAD encryption was requested, but the AES-GCM instance was not initialized.");
+				var aesGcm = this._aesGcm ?? throw new CryptographicException("AES-GCM AEAD encryption was requested, but the AES-GCM instance was not initialized.");
 				aesGcm.Encrypt(nonce, source, ciphertextDest, tagDest, aad);
 				break;
 			}

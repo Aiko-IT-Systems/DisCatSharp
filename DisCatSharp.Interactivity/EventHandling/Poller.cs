@@ -17,7 +17,7 @@ namespace DisCatSharp.Interactivity.EventHandling;
 /// <summary>
 ///     The poller.
 /// </summary>
-internal class Poller
+internal class Poller : IDisposable
 {
 	private readonly DiscordClient _client;
 	private bool _disposed;

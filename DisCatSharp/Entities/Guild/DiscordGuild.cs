@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -414,14 +414,14 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 
 	/// <summary>
 	///     Gets the approximate number of members in this guild, when using
-	///     <see cref="DiscordClient.GetGuildAsync(ulong, bool?, bool)" /> and having withCounts set to true.
+	///     <see cref="DiscordClient.GetGuildAsync(ulong, bool?, bool, CancellationToken)" /> and having withCounts set to true.
 	/// </summary>
 	[JsonProperty("approximate_member_count", NullValueHandling = NullValueHandling.Ignore)]
 	public int? ApproximateMemberCount { get; internal set; }
 
 	/// <summary>
 	///     Gets the approximate number of presences in this guild, when using
-	///     <see cref="DiscordClient.GetGuildAsync(ulong, bool?, bool)" /> and having withCounts set to true.
+	///     <see cref="DiscordClient.GetGuildAsync(ulong, bool?, bool, CancellationToken)" /> and having withCounts set to true.
 	/// </summary>
 	[JsonProperty("approximate_presence_count", NullValueHandling = NullValueHandling.Ignore)]
 	public int? ApproximatePresenceCount { get; internal set; }
@@ -755,15 +755,16 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	///     Gets the current guild member's voice state.
 	/// </summary>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
-	/// <returns></returns>
+	/// <returns>The voice state of the current member.</returns>
 	public async Task<DiscordVoiceState?> GetCurrentMemberVoiceStateAsync(CancellationToken cancellationToken = default)
 		=> await this.Discord.ApiClient.GetCurrentUserVoiceStateAsync(this.Id, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Gets the current voice state for a member.
 	/// </summary>
+	/// <param name="memberId">The ID of the member.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
-	/// <returns></returns>
+	/// <returns>The voice state of the member.</returns>
 	public async Task<DiscordVoiceState?> GetMemberVoiceStateAsync(ulong memberId, CancellationToken cancellationToken = default)
 		=> await this.Discord.ApiClient.GetMemberVoiceStateAsync(this.Id, memberId, cancellationToken: cancellationToken);
 
@@ -968,7 +969,7 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	{
 		List<DiscordAuditLogEntry> entries = [];
 		ulong? before = null;
-		int? remaining = limit;
+		var remaining = limit;
 
 		while (!remaining.HasValue || remaining.Value > 0)
 		{
@@ -2688,6 +2689,7 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <summary>
 	///     Gets a sticker
 	/// </summary>
+	/// <param name="stickerId">The ID of the sticker.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the sticker could not be found.</exception>
 	/// <exception cref="UnauthorizedException">

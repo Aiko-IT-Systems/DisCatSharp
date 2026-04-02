@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
@@ -267,6 +267,7 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// <summary>
 	///     Starts the current scheduled event.
 	/// </summary>
+	/// <param name="reason">The audit log reason.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the

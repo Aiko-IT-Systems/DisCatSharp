@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -285,13 +285,11 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	{
 		get
 		{
-			if (this.Discord is not DiscordClient dc)
-				return null;
-
-			if (this.Id == dc.CurrentUser.Id)
-				return dc.CurrentPresence;
-
-			return dc.TryGetPresence(this.Id, this.GuildId, out var presence) ? presence : null;
+			return this.Discord is not DiscordClient dc
+				? null
+				: this.Id == dc.CurrentUser.Id
+				? dc.CurrentPresence
+				: dc.TryGetPresence(this.Id, this.GuildId, out var presence) ? presence : null;
 		}
 	}
 
@@ -583,6 +581,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <summary>
 	///     Unbans this member from their guild.
 	/// </summary>
+	/// <param name="reason">Reason for audit logs.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="Exceptions.UnauthorizedException">
 	///     Thrown when the client does not have the

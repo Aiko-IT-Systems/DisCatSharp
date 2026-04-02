@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -131,6 +131,7 @@ public sealed class DiscordScheduledEventException : ObservableApiObject, IEquat
 	/// <param name="before">Get users before this user id.</param>
 	/// <param name="after">Get users after this user id.</param>
 	/// <param name="withMember">Whether to include guild member data.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A map of subscribed users by user id.</returns>
 	/// <exception cref="NotFoundException">Thrown when the event does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>

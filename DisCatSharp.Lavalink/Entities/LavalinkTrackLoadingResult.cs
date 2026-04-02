@@ -8,8 +8,8 @@ namespace DisCatSharp.Lavalink.Entities;
 
 /// <summary>
 ///     Represents a loading result when looking up tracks with
-///     <see cref="LavalinkSession.LoadTracksAsync(LavalinkSearchType, string)" /> or
-///     <see cref="LavalinkGuildPlayer.LoadTracksAsync(string)" />.
+///     <see cref="LavalinkSession.LoadTracksAsync(LavalinkSearchType, string, System.Threading.CancellationToken)" /> or
+///     <see cref="LavalinkGuildPlayer.LoadTracksAsync(string, System.Threading.CancellationToken)" />.
 /// </summary>
 public sealed class LavalinkTrackLoadingResult
 {

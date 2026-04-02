@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -1187,6 +1187,10 @@ public sealed class DiscordApiClient
 	/// <summary>
 	///     Implements https://discord.com/developers/docs/resources/guild#get-guild-bans.
 	/// </summary>
+	/// <param name="guildId">The ID of the guild.</param>
+	/// <param name="limit">The maximum number of bans to retrieve.</param>
+	/// <param name="before">Retrieve bans before this user ID.</param>
+	/// <param name="after">Retrieve bans after this user ID.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	internal async Task<IReadOnlyList<DiscordBan>> GetGuildBansAsync(ulong guildId, int? limit, ulong? before, ulong? after, CancellationToken cancellationToken = default)
 	{
@@ -2295,7 +2299,8 @@ public sealed class DiscordApiClient
 	/// <param name="volume">The volume of the soundboard sound (optional, defaults to 1).</param>
 	/// <param name="emojiId">The ID of the custom emoji (optional).</param>
 	/// <param name="emojiName">The unicode character of the standard emoji (optional).</param>
-	/// <param name="reason">The reason.</param>
+	/// <param name="reason">The reason for this action.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	public async Task<DiscordSoundboardSound> CreateGuildSoundboardSoundAsync(ulong guildId, string name, string sound, double? volume = null, ulong? emojiId = null, string? emojiName = null, string? reason = null, CancellationToken cancellationToken = default)
 	{
 		var pld = new RestSoundboardSoundCreatePayload
@@ -2385,6 +2390,7 @@ public sealed class DiscordApiClient
 	///     Gets all soundboard sounds for a guild.
 	/// </summary>
 	/// <param name="guildId">The guild ID.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	public async Task<IReadOnlyList<DiscordSoundboardSound>> ListGuildSoundboardSoundsAsync(ulong guildId, CancellationToken cancellationToken = default)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SOUNDBOARD_SOUNDS}";
@@ -2426,6 +2432,7 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="guildId">The guild ID.</param>
 	/// <param name="soundId">The soundboard sound ID.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	public async Task<DiscordSoundboardSound> GetGuildSoundboardSoundAsync(ulong guildId, ulong soundId, CancellationToken cancellationToken = default)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SOUNDBOARD_SOUNDS}/:sound_id";
@@ -2449,6 +2456,7 @@ public sealed class DiscordApiClient
 	///     The ID of the guild the soundboard sound is from, required to play sounds from different
 	///     servers. Optional.
 	/// </param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A task representing the asynchronous operation.</returns>
 	public async Task SendSoundboardSoundAsync(ulong channelId, ulong soundId, ulong? sourceGuildId = null, CancellationToken cancellationToken = default)
 	{
@@ -2631,6 +2639,10 @@ public sealed class DiscordApiClient
 	/// <summary>
 	///     Modifies a scheduled event.
 	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="scheduledEventId">The scheduled event id.</param>
+	/// <param name="status">The new status of the scheduled event.</param>
+	/// <param name="reason">The reason for this action.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	internal async Task<DiscordScheduledEvent> ModifyGuildScheduledEventStatusAsync(ulong guildId, ulong scheduledEventId, ScheduledEventStatus status, string? reason = null, CancellationToken cancellationToken = default)
 	{
@@ -3306,8 +3318,8 @@ public sealed class DiscordApiClient
 	/// <param name="postCreateUserRateLimit">The per user post create rate limit.</param>
 	/// <param name="defaultAutoArchiveDuration">The default auto archive duration.</param>
 	/// <param name="flags">The channel flags.</param>
-	/// <param name="reason">The reason.</param>
-	/// <param name="forumLayout"></param>
+	/// <param name="reason">The reason for this action.</param>
+	/// <param name="forumLayout">The layout of the forum channel.</param>
 	/// <param name="defaultTagSetting">The default tag setting for the forum channel ("match_some" or "match_all").</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	internal async Task<DiscordChannel> ModifyForumChannelAsync(
@@ -8523,8 +8535,10 @@ public sealed class DiscordApiClient
 	/// <returns>A list of <see cref="DiscordSubscription" />.</returns>
 	internal async Task<IReadOnlyList<DiscordSubscription>> GetSkuSubscriptionsAsync(ulong skuId, ulong userId, ulong? before = null, ulong? after = null, int limit = 100, CancellationToken cancellationToken = default)
 	{
-		var urlParams = new Dictionary<string, string>();
-		urlParams["userId"] = userId.ToString();
+		var urlParams = new Dictionary<string, string>
+		{
+			["userId"] = userId.ToString()
+		};
 		if (before.HasValue)
 			urlParams["before"] = before.Value.ToString();
 		if (after.HasValue)
@@ -8696,7 +8710,18 @@ public sealed class DiscordApiClient
 	/// <summary>
 	///     Gets the application info.
 	/// </summary>
+	/// <param name="description">The description of the application.</param>
+	/// <param name="interactionsEndpointUrl">The interactions endpoint URL.</param>
+	/// <param name="roleConnectionsVerificationUrl">The role connections verification URL.</param>
+	/// <param name="customInstallUrl">The custom install URL.</param>
+	/// <param name="tags">The tags for the application.</param>
+	/// <param name="iconb64">The base64-encoded icon.</param>
+	/// <param name="coverImageb64">The base64-encoded cover image.</param>
+	/// <param name="flags">The application flags.</param>
+	/// <param name="installParams">The install parameters.</param>
+	/// <param name="integrationTypesConfig">The integration types configuration.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <returns>The modified application info.</returns>
 	internal async Task<TransportApplication> ModifyCurrentApplicationInfoAsync(
 		Optional<string?> description,
 		Optional<string?> interactionsEndpointUrl,
@@ -8741,6 +8766,7 @@ public sealed class DiscordApiClient
 	///     Gets the application info.
 	/// </summary>
 	/// <param name="applicationId">The application_id.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
 	private async Task<DiscordRpcApplication> GetApplicationRpcInfoAsync(string applicationId, CancellationToken cancellationToken = default)
 	{
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.RPC}";
@@ -8816,7 +8842,6 @@ public sealed class DiscordApiClient
 		if (this.Discord != null!)
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
 
-		// ReSharper disable once HeuristicUnreachableCode
 		var route = $"{Endpoints.OAUTH2}{Endpoints.ME}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 		{ }, out var path);
@@ -8841,7 +8866,6 @@ public sealed class DiscordApiClient
 		if (this.Discord != null!)
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
 
-		// ReSharper disable once HeuristicUnreachableCode
 		var route = $"{Endpoints.USERS}{Endpoints.ME}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route,
 			new
@@ -8869,7 +8893,6 @@ public sealed class DiscordApiClient
 		if (this.Discord != null!)
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
 
-		// ReSharper disable once HeuristicUnreachableCode
 		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.CONNECTIONS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 		{ }, out var path);
@@ -8893,7 +8916,6 @@ public sealed class DiscordApiClient
 		if (this.Discord != null!)
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
 
-		// ReSharper disable once HeuristicUnreachableCode
 		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.GUILDS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 		{ }, out var path);
@@ -8918,7 +8940,6 @@ public sealed class DiscordApiClient
 		if (this.Discord != null!)
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
 
-		// ReSharper disable once HeuristicUnreachableCode
 		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBER}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 		{
@@ -8945,7 +8966,6 @@ public sealed class DiscordApiClient
 		if (this.Discord != null!)
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
 
-		// ReSharper disable once HeuristicUnreachableCode
 		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.APPLICATIONS}/:application_id{Endpoints.ROLE_CONNECTION}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route,
 			new
@@ -8982,7 +9002,6 @@ public sealed class DiscordApiClient
 			Metadata = metadata.HasValue ? metadata.Value.GetKeyValuePairs() : Optional<Dictionary<string, string>>.None
 		};
 
-		// ReSharper disable once HeuristicUnreachableCode
 		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.APPLICATIONS}/:application_id{Endpoints.ROLE_CONNECTION}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new
 		{
@@ -9036,6 +9055,12 @@ public sealed class DiscordApiClient
 	/// <summary>
 	///     Creates an activity quick link for a specific application.
 	/// </summary>
+	/// <param name="applicationId">The ID of the application.</param>
+	/// <param name="accessToken">The access token.</param>
+	/// <param name="customId">The caller-defined quick link identifier.</param>
+	/// <param name="description">The quick link description.</param>
+	/// <param name="title">The quick link title.</param>
+	/// <param name="image">The base64-encoded image.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	internal async Task<DiscordActivityQuickLink> CreateActivityQuickLinkAsync(ulong applicationId, string accessToken, string customId, string description, string title, string image, CancellationToken cancellationToken = default)
 	{
@@ -9065,6 +9090,10 @@ public sealed class DiscordApiClient
 	/// <summary>
 	///     Creates an application attachment for activity sharing.
 	/// </summary>
+	/// <param name="accessToken">The access token.</param>
+	/// <param name="stream">The stream containing the file data.</param>
+	/// <param name="fileName">The name of the file.</param>
+	/// <param name="contentType">The content type of the file.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	internal async Task<DiscordActivityAttachmentUpload> CreateActivityAttachmentAsync(string accessToken, Stream stream, string fileName, string? contentType = null, CancellationToken cancellationToken = default)
 	{
@@ -9089,6 +9118,11 @@ public sealed class DiscordApiClient
 	/// <summary>
 	///     Creates an application attachment for activity sharing.
 	/// </summary>
+	/// <param name="applicationId">The application ID.</param>
+	/// <param name="accessToken">The access token.</param>
+	/// <param name="stream">The stream containing the file data.</param>
+	/// <param name="fileName">The name of the file.</param>
+	/// <param name="contentType">The content type of the file.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	internal async Task<DiscordActivityAttachmentUpload> CreateActivityAttachmentAsync(ulong applicationId, string accessToken, Stream stream, string fileName, string? contentType = null, CancellationToken cancellationToken = default)
 	{
@@ -9117,7 +9151,6 @@ public sealed class DiscordApiClient
 		if (this.Discord != null!)
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
 
-		// ReSharper disable once HeuristicUnreachableCode
 		var route = $"{Endpoints.OAUTH2}{Endpoints.TOKEN}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
 		{ }, out var path);
@@ -9148,7 +9181,6 @@ public sealed class DiscordApiClient
 		if (this.Discord != null!)
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
 
-		// ReSharper disable once HeuristicUnreachableCode
 		var route = $"{Endpoints.OAUTH2}{Endpoints.TOKEN}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
 		{ }, out var path);
@@ -9180,7 +9212,6 @@ public sealed class DiscordApiClient
 		if (this.Discord != null!)
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
 
-		// ReSharper disable once HeuristicUnreachableCode
 		var route = $"{Endpoints.OAUTH2}{Endpoints.TOKEN}{Endpoints.REVOKE}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
 		{ }, out var path);

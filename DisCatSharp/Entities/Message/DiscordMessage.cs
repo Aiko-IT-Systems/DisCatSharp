@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -781,6 +781,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <summary>
 	///     Deletes the message.
 	/// </summary>
+	/// <param name="reason">The audit log reason.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -789,7 +790,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task DeleteAsync(string reason = null, CancellationToken cancellationToken = default)
+	public Task DeleteAsync(string? reason = null, CancellationToken cancellationToken = default)
 		=> this.Discord.ApiClient.DeleteMessageAsync(this.ChannelId, this.Id, reason, cancellationToken: cancellationToken);
 
 	/// <summary>

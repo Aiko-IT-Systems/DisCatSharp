@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -171,10 +171,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </returns>
 	public IReadOnlyDictionary<ulong, DiscordPresence> GetPresences(ulong userId)
 	{
-		if (!this.PresenceStore.TryGetValue(userId, out var inner))
-			return ReadOnlyDictionary<ulong, DiscordPresence>.Empty;
-
-		return new ReadOnlyDictionary<ulong, DiscordPresence>(new Dictionary<ulong, DiscordPresence>(inner));
+		return !this.PresenceStore.TryGetValue(userId, out var inner)
+			? ReadOnlyDictionary<ulong, DiscordPresence>.Empty
+			: new ReadOnlyDictionary<ulong, DiscordPresence>(new Dictionary<ulong, DiscordPresence>(inner));
 	}
 
 	/// <summary>
@@ -440,14 +439,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="activity">The activity to set. Defaults to null.</param>
 	/// <param name="status">The optional status to set. Defaults to null.</param>
 	/// <param name="idlesince">Since when is the client performing the specified activity. Defaults to null.</param>
-	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <exception cref="UnauthorizedException">Thrown when an invalid token was provided.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task ConnectAsync(DiscordActivity? activity = null, UserStatus? status = null, DateTimeOffset? idlesince = null, CancellationToken cancellationToken = default)
 	{
 		// Check if connection lock is already set, and set it if it isn't
-		if (!this._connectionLock.Wait(0))
+		if (!this._connectionLock.Wait(0, cancellationToken))
 			throw new InvalidOperationException("This client is already connected.");
 
 		this._connectionLock.Set();
@@ -476,7 +475,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 		if (!this.IsShard)
 		{
-			if (this.Configuration.TokenType != TokenType.Bot)
+			if (this.Configuration.TokenType is not TokenType.Bot)
 				this.Logger.LogWarning(LoggerEvents.Misc, "You are logging in with a token that is not a bot token. This is not officially supported by Discord, and can result in your account being terminated if you aren't careful");
 			var versionParts = this.VersionString.Split('+');
 			var version = versionParts[0];
@@ -1865,10 +1864,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <returns>A read-only dictionary of presences keyed by guild id.</returns>
 	internal IReadOnlyDictionary<ulong, DiscordPresence> GetAllPresences(ulong userId)
 	{
-		if (!this.PresenceStore.TryGetValue(userId, out var inner))
-			return ReadOnlyDictionary<ulong, DiscordPresence>.Empty;
-
-		return new ReadOnlyDictionary<ulong, DiscordPresence>(new Dictionary<ulong, DiscordPresence>(inner));
+		return !this.PresenceStore.TryGetValue(userId, out var inner)
+			? ReadOnlyDictionary<ulong, DiscordPresence>.Empty
+			: new ReadOnlyDictionary<ulong, DiscordPresence>(new Dictionary<ulong, DiscordPresence>(inner));
 	}
 
 	/// <summary>
@@ -2049,8 +2047,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				Discord = this
 			};
 
+#pragma warning disable IDE0031 // Use null propagation
 			if (member is not null)
 				member.User = author;
+#pragma warning restore IDE0031 // Use null propagation
 
 			message.Author = this.UpdateUser(usr, guild?.Id, guild, member);
 		}

@@ -1029,7 +1029,7 @@ public class InteractivityExtension : BaseExtension, IDisposable
 			}
 			if (ephemeral)
 				builder = builder.AsEphemeral();
-			message = (await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, builder).ConfigureAwait(false)).Message!;
+			message = (await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, builder, cancellationToken: token).ConfigureAwait(false)).Message!;
 		}
 
 		var req = new InteractionPaginationRequest(interaction, message, user, bhv, del, bts, pageList, token);

@@ -13,7 +13,7 @@ namespace DisCatSharp.Interactivity.EventHandling;
 /// <summary>
 ///     The poll request.
 /// </summary>
-public class PollRequest
+public class PollRequest : IDisposable
 {
 	internal ConcurrentHashSet<PollEmoji> Collected;
 	internal CancellationTokenSource Ct;

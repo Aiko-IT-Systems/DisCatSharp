@@ -504,8 +504,10 @@ public sealed class CharSpanLookupDictionary<TValue> :
 			kdv = kdv.Next;
 		}
 
+#pragma warning disable IDE0031 // Use null propagation
 		if (kdvLast is not null)
 			kdvLast.Next = new(key, hash, value);
+#pragma warning restore IDE0031 // Use null propagation
 		this.Count++;
 		return true;
 	}

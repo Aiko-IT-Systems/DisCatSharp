@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -1433,7 +1433,7 @@ public sealed partial class DiscordClient
 		{
 			xse.Discord = this;
 			xse.GuildId = guild.Id;
-			if (xse.Creator != null)
+			if (xse.Creator is not null)
 				xse.Creator.Discord = this;
 		}
 
@@ -1441,7 +1441,7 @@ public sealed partial class DiscordClient
 		{
 			xse.Discord = this;
 			xse.GuildId = guild.Id;
-			if (xse.TransportUser != null)
+			if (xse.TransportUser is not null)
 				xse.User = new(xse.TransportUser)
 				{
 					Discord = this
@@ -2564,7 +2564,7 @@ public sealed partial class DiscordClient
 		var avOld = old.AvatarHash;
 		var nickOld = mbr.Nickname;
 		var pendingOld = mbr.IsPending;
-		var rolesOld = new ReadOnlyCollection<DiscordRole>(new List<DiscordRole>(mbr.Roles));
+		var rolesOld = new ReadOnlyCollection<DiscordRole>([.. mbr.Roles]);
 		var cduOld = mbr.CommunicationDisabledUntil;
 		var udauOld = mbr.UnusualDmActivityUntil;
 		mbr.MemberFlags = member.MemberFlags;
@@ -2620,7 +2620,7 @@ public sealed partial class DiscordClient
 			Guild = guild,
 			Member = mbr,
 			NicknameAfter = mbr.Nickname,
-			RolesAfter = new ReadOnlyCollection<DiscordRole>(new List<DiscordRole>(mbr.Roles)),
+			RolesAfter = new ReadOnlyCollection<DiscordRole>([.. mbr.Roles]),
 			PendingAfter = mbr.IsPending,
 			TimeoutAfter = mbr.CommunicationDisabledUntil,
 			AvatarHashAfter = mbr.AvatarHash,

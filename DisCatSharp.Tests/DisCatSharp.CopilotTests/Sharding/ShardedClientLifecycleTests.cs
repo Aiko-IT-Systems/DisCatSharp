@@ -37,7 +37,7 @@ public class ShardedClientLifecycleTests
 	public void DiscordShardedClient_ImplementsIDisposable()
 	{
 		using var client = CreateClient();
-		Assert.IsAssignableFrom<IDisposable>(client);
+		Assert.IsType<IDisposable>(client, exactMatch: false);
 	}
 
 	[Fact]
@@ -45,7 +45,7 @@ public class ShardedClientLifecycleTests
 	{
 		var client = CreateClient();
 
-		var ex = Record.Exception(() => client.Dispose());
+		var ex = Record.Exception(client.Dispose);
 
 		Assert.Null(ex);
 	}

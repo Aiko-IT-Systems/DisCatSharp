@@ -982,9 +982,8 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	///     Internals the update gateway async.
+	///     Updates the gateway info.
 	/// </summary>
-	/// <returns>A Task.</returns>
 	internal async Task InternalUpdateGatewayAsync()
 	{
 		var info = await this.GetGatewayInfoAsync().ConfigureAwait(false);

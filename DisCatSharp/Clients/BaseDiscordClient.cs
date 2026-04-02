@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -229,12 +229,12 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <summary>
 	///     Lock that serialises all mutations of and snapshots from <see cref="_readyGuildIds" />.
 	/// </summary>
-	private readonly object _readyGuildIdsLock = new();
+	private readonly Lock _readyGuildIdsLock = new();
 
 	/// <summary>
 	///     Backing store for <see cref="ReadyGuildIds" />.
 	/// </summary>
-	private List<ulong> _readyGuildIds = [];
+	private readonly List<ulong> _readyGuildIds = [];
 
 	/// <summary>
 	///     Gets a point-in-time snapshot of the guild ids received in the last READY payload for this shard.
@@ -445,6 +445,7 @@ public abstract class BaseDiscordClient : IDisposable
 	///     Gets the current gateway info for the provided token.
 	///     <para>If no value is provided, the configuration value will be used instead.</para>
 	/// </summary>
+	/// <param name="token">The new token to use for the request.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>A gateway info object.</returns>
 	public async Task<GatewayInfo> GetGatewayInfoAsync(string? token = null, CancellationToken cancellationToken = default)

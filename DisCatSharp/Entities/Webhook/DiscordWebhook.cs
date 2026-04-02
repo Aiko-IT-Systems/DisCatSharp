@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -130,6 +130,7 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// <summary>
 	///     Gets a previously-sent webhook message.
 	/// </summary>
+	/// <param name="messageId">The ID of the message to retrieve.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the webhook does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -140,6 +141,7 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// <summary>
 	///     Tries to get a previously-sent webhook message.
 	/// </summary>
+	/// <param name="messageId">The ID of the message to retrieve.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -158,6 +160,8 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// <summary>
 	///     Gets a previously-sent webhook message.
 	/// </summary>
+	/// <param name="messageId">The ID of the message to retrieve.</param>
+	/// <param name="threadId">The ID of the thread containing the message.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="NotFoundException">Thrown when the webhook does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -168,6 +172,8 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// <summary>
 	///     Tries to get a previously-sent webhook message.
 	/// </summary>
+	/// <param name="messageId">The ID of the message to retrieve.</param>
+	/// <param name="threadId">The ID of the thread containing the message.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>

@@ -551,8 +551,8 @@ public class RestRuntimeStressTests : IAsyncLifetime
 				}
 			})));
 
-		this.WriteLatencyReport("AITSYS GetChannel", aitsysLatencies, new());
-		this.WriteLatencyReport("Playground GetChannel", playgroundLatencies, new());
+		this.WriteLatencyReport("AITSYS GetChannel", aitsysLatencies, []);
+		this.WriteLatencyReport("Playground GetChannel", playgroundLatencies, []);
 		this._output.WriteLine($"Total errors: {errors.Count}");
 
 		Assert.Equal(requestCount, aitsysLatencies.Count + playgroundLatencies.Count + errors.Count);
@@ -607,8 +607,8 @@ public class RestRuntimeStressTests : IAsyncLifetime
 				}
 			})));
 
-		this.WriteLatencyReport("Channel A writes", latenciesA, new());
-		this.WriteLatencyReport("Channel B writes", latenciesB, new());
+		this.WriteLatencyReport("Channel A writes", latenciesA, []);
+		this.WriteLatencyReport("Channel B writes", latenciesB, []);
 		this._output.WriteLine($"Total errors: {errors.Count}");
 
 		// Cleanup

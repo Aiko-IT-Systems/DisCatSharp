@@ -356,13 +356,13 @@ public class WebSocketClient : IWebSocketClient
 					if (result.MessageType is WebSocketMessageType.Close)
 						break;
 
-					await bs.WriteAsync(buffer.Array!, 0, result.Count, this._receiverToken);
+					await bs.WriteAsync(buffer.Array, this._receiverToken);
 				}
 				while (!result.EndOfMessage);
 
 				var resultBytes = new byte[bs.Length];
 				bs.Position = 0;
-				_ = await bs.ReadAsync(resultBytes, 0, resultBytes.Length, this._receiverToken);
+				_ = await bs.ReadAsync(resultBytes, this._receiverToken);
 				bs.Position = 0;
 				bs.SetLength(0);
 
