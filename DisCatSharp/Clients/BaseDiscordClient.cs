@@ -34,7 +34,7 @@ namespace DisCatSharp;
 /// <summary>
 ///     Represents a common base for various Discord Client implementations.
 /// </summary>
-public abstract class BaseDiscordClient : IDisposable
+public abstract class BaseDiscordClient : IDisposable, IAsyncDisposable
 {
 	/// <summary>
 	///     Gets the lazy voice regions.
@@ -295,6 +295,11 @@ public abstract class BaseDiscordClient : IDisposable
 	///     Disposes this client.
 	/// </summary>
 	public abstract void Dispose();
+
+	/// <summary>
+	///     Asynchronously disposes this client.
+	/// </summary>
+	public abstract ValueTask DisposeAsync();
 
 	/// <summary>
 	///     Gets the current API application.

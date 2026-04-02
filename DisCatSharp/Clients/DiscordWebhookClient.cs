@@ -19,8 +19,13 @@ namespace DisCatSharp;
 /// <summary>
 ///     Represents a webhook-only client. This client can be used to execute Discord Webhooks.
 /// </summary>
-public class DiscordWebhookClient
+public class DiscordWebhookClient : IDisposable, IAsyncDisposable
 {
+	/// <summary>
+	///     Gets whether this client is disposed.
+	/// </summary>
+	private bool _disposed;
+
 	/// <summary>
 	///     Gets the API client for this webhook client.
 	/// </summary>
@@ -254,10 +259,22 @@ public class DiscordWebhookClient
 	/// <summary>
 	///     Disposes the client.
 	/// </summary>
-	~DiscordWebhookClient()
+	public void Dispose()
+		=> this.DisposeAsync().AsTask().ConfigureAwait(false).GetAwaiter().GetResult();
+
+	/// <summary>
+	///     Asynchronously disposes the client.
+	/// </summary>
+	public virtual ValueTask DisposeAsync()
 	{
+		if (this._disposed)
+			return ValueTask.CompletedTask;
+
+		this._disposed = true;
+
 		this.Hooks.Clear();
 		this.Hooks = null!;
 		this.ApiClient.Rest.Dispose();
+		return ValueTask.CompletedTask;
 	}
 }

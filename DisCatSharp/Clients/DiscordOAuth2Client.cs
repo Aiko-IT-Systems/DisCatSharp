@@ -27,8 +27,13 @@ namespace DisCatSharp;
 /// <summary>
 ///     Represents a <see cref="DiscordOAuth2Client" />.
 /// </summary>
-public sealed class DiscordOAuth2Client : IDisposable
+public sealed class DiscordOAuth2Client : IDisposable, IAsyncDisposable
 {
+	/// <summary>
+	///     Gets whether this client is disposed.
+	/// </summary>
+	private bool _disposed;
+
 	/// <summary>
 	///     Gets the file name for the rsa public/private key.
 	/// </summary>
@@ -204,9 +209,19 @@ public sealed class DiscordOAuth2Client : IDisposable
 
 	/// <inheritdoc />
 	public void Dispose()
+		=> this.DisposeAsync().AsTask().ConfigureAwait(false).GetAwaiter().GetResult();
+
+	/// <inheritdoc />
+	public ValueTask DisposeAsync()
 	{
+		if (this._disposed)
+			return ValueTask.CompletedTask;
+
+		this._disposed = true;
+
 		this.RSA_KEY.Dispose();
-		GC.SuppressFinalize(this);
+		this.ApiClient.Rest.Dispose();
+		return ValueTask.CompletedTask;
 	}
 
 	/// <summary>
@@ -515,11 +530,4 @@ public sealed class DiscordOAuth2Client : IDisposable
 	private void Goof<TSender, TArgs>(AsyncEvent<TSender, TArgs> asyncEvent, Exception ex, AsyncEventHandler<TSender, TArgs> handler, TSender sender, TArgs eventArgs)
 		where TArgs : AsyncEventArgs => this.Logger.LogCritical(LoggerEvents.EventHandlerException, ex, "Exception event handler {Method} (defined in {DeclaringType}) threw an exception", handler.Method, handler.Method.DeclaringType);
 
-	/// <summary>
-	///     Disposes the client.
-	/// </summary>
-	~DiscordOAuth2Client()
-	{
-		this.Dispose();
-	}
 }
