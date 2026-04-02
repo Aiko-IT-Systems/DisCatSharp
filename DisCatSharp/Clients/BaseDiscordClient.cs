@@ -122,6 +122,22 @@ public abstract class BaseDiscordClient : IDisposable
 	protected internal DiscordApiClient ApiClient { get; }
 
 	/// <summary>
+	///     Gets the REST diagnostics provider, exposing runtime metrics for bucket workers, queue depths, and circuit breaker state.
+	///     Returns a safe wrapper — the underlying <see cref="RestClient" /> cannot be accessed through this property.
+	/// </summary>
+	public IRestDiagnostics RestDiagnostics
+		=> new RestDiagnosticsWrapper(this.ApiClient.Rest);
+
+	/// <summary>
+	///     Cancels all pending REST requests across every bucket worker queue.
+	///     Each cancelled request is faulted with <see cref="OperationCanceledException" />.
+	///     Use this as an emergency stop when stuck queues or cascading failures need immediate clearing.
+	/// </summary>
+	/// <param name="reason">An optional reason included in the cancellation exception message.</param>
+	public void CancelAllPendingRequests(string? reason = null)
+		=> this.ApiClient.Rest.CancelAllPendingRequests(reason);
+
+	/// <summary>
 	///     Gets the library diagnostics sink for telemetry reporting.
 	/// </summary>
 	internal ILibraryDiagnosticsSink DiagnosticsSink { get; set; }

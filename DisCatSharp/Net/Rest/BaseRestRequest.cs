@@ -152,4 +152,13 @@ public abstract class BaseRestRequest
 	/// <param name="ex">The exception to set.</param>
 	protected internal bool TrySetFaulted(Exception ex)
 		=> this.RequestTaskSource.TrySetException(ex);
+
+	/// <summary>
+	///     Tries to set as completed. Used during fault recovery to safely complete
+	///     requests that were queued but never sent.
+	/// </summary>
+	/// <param name="response">The response to set.</param>
+	/// <returns><c>true</c> if the result was set; <c>false</c> if already completed/faulted.</returns>
+	protected internal bool TrySetCompleted(RestResponse response)
+		=> this.RequestTaskSource.TrySetResult(response);
 }

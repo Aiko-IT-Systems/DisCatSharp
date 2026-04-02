@@ -1,17 +1,12 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-using DisCatSharp.Common.RegularExpressions;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Telemetry;
 
@@ -24,14 +19,8 @@ namespace DisCatSharp.Net;
 ///     Requests are processed through per-bucket <see cref="BucketWorker" /> instances that enforce
 ///     FIFO ordering and independent rate-limit management per bucket.
 /// </summary>
-[SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
-internal sealed class RestClient : IDisposable
+internal sealed class RestClient : IDisposable, IRestDiagnostics
 {
-	/// <summary>
-	///     Gets the bucket cleanup delay.
-	/// </summary>
-	private readonly TimeSpan _bucketCleanupDelay = TimeSpan.FromSeconds(60);
-
 	/// <summary>
 	///     Gets the discord client.
 	/// </summary>
@@ -43,19 +32,9 @@ internal sealed class RestClient : IDisposable
 	private readonly AsyncManualResetEvent _globalRateLimitEvent;
 
 	/// <summary>
-	///     Gets the hashes to buckets.
-	/// </summary>
-	private readonly ConcurrentDictionary<string, RateLimitBucket> _hashesToBuckets;
-
-	/// <summary>
 	///     Gets the logger.
 	/// </summary>
 	private readonly ILogger _logger;
-
-	/// <summary>
-	///     Gets the routes to hashes.
-	/// </summary>
-	private readonly ConcurrentDictionary<string, string> _routesToHashes;
 
 	/// <summary>
 	///     Gets a value indicating whether use reset after.
@@ -66,26 +45,6 @@ internal sealed class RestClient : IDisposable
 	///     Gets the advanced REST configuration.
 	/// </summary>
 	private readonly RestAdvancedConfiguration _advancedConfig;
-
-	/// <summary>
-	///     Gets the bucket workers keyed by bucket reference for stable identity across hash transitions.
-	/// </summary>
-	private readonly ConcurrentDictionary<RateLimitBucket, BucketWorker> _bucketWorkers;
-
-	/// <summary>
-	///     Gets the bucket cleaner token source.
-	/// </summary>
-	private CancellationTokenSource? _bucketCleanerTokenSource;
-
-	/// <summary>
-	///     Gets whether the bucket cleaner is running.
-	/// </summary>
-	private volatile bool _cleanerRunning;
-
-	/// <summary>
-	///     Gets the cleaner task.
-	/// </summary>
-	private Task? _cleanerTask;
 
 	/// <summary>
 	///     Gets whether the client is disposed.
@@ -148,19 +107,22 @@ internal sealed class RestClient : IDisposable
 				this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.SUPER_PROPERTIES, configuration.Api.Override);
 		}
 
-		this._routesToHashes = new();
-		this._hashesToBuckets = new();
-		this._bucketWorkers = new(ReferenceEqualityComparer.Instance);
-
 		this._globalRateLimitEvent = new(true);
 		this._useResetAfter = configuration.Rest.UseRelativeRatelimit;
 		this._advancedConfig = new(configuration.Rest.Advanced);
+
+		this.Registry = new(this, this._advancedConfig, this._logger, this._useResetAfter, TimeSpan.FromSeconds(60));
 	}
 
 	/// <summary>
 	///     Gets the http client.
 	/// </summary>
 	internal HttpClient HttpClient { get; }
+
+	/// <summary>
+	///     Gets the bucket registry that manages route→hash→bucket→worker mappings.
+	/// </summary>
+	internal BucketRegistry Registry { get; }
 
 	/// <summary>
 	///     Gets a value indicating whether debug is enabled.
@@ -183,33 +145,18 @@ internal sealed class RestClient : IDisposable
 			this._disposed = true;
 		}
 
-		// Dispose all bucket workers first — cancels their CTS so they exit cleanly
-		// (must happen BEFORE resetting the global gate to avoid deadlock on WaitForGlobalGateAsync)
-		foreach (var (_, worker) in this._bucketWorkers)
-			worker.Dispose();
-
-		this._bucketWorkers.Clear();
+		// Dispose the registry — disposes all workers, stops the cleaner, clears caches
+		this.Registry.Dispose();
 
 		// Now reset the global gate — no workers are waiting on it anymore
 		this._globalRateLimitEvent.Reset();
 
-		if (this._bucketCleanerTokenSource?.IsCancellationRequested is false)
-		{
-			this._bucketCleanerTokenSource?.Cancel();
-			this._logger.LogDebug(LoggerEvents.RestCleaner, "Bucket cleaner task stopped.");
-		}
-
 		try
 		{
-			this._cleanerTask?.Dispose();
-			this._bucketCleanerTokenSource?.Dispose();
 			this.HttpClient?.Dispose();
 		}
 		catch
 		{ }
-
-		this._routesToHashes.Clear();
-		this._hashesToBuckets.Clear();
 
 		GC.SuppressFinalize(this);
 	}
@@ -223,65 +170,7 @@ internal sealed class RestClient : IDisposable
 	/// <param name="url">The url.</param>
 	/// <returns>A ratelimit bucket.</returns>
 	public RateLimitBucket GetBucket(RestRequestMethod method, string route, object routeParams, out string url)
-	{
-		var rparamsProps = routeParams.GetType()
-			.GetTypeInfo()
-			.DeclaredProperties;
-		var rparams = new Dictionary<string, string>();
-		foreach (var xp in rparamsProps)
-		{
-			var val = xp.GetValue(routeParams);
-			rparams[xp.Name] = val switch
-			{
-				string xs => xs,
-				DateTime dt => dt.ToString("yyyy-MM-ddTHH:mm:sszzz", CultureInfo.InvariantCulture),
-				DateTimeOffset dto => dto.ToString("yyyy-MM-ddTHH:mm:sszzz", CultureInfo.InvariantCulture),
-				IFormattable xf => xf.ToString(null, CultureInfo.InvariantCulture),
-				_ => val.ToString()
-			};
-		}
-
-		var guildId = rparams.GetValueOrDefault("guild_id", "");
-		var channelId = rparams.GetValueOrDefault("channel_id", "");
-		var webhookId = rparams.GetValueOrDefault("webhook_id", "");
-
-		// Create a generic route (minus major params) key
-		// ex: POST:/channels/channel_id/messages
-		var hashKey = RateLimitBucket.GenerateHashKey(method, route);
-
-		// We check if the hash is present, using our generic route (without major params)
-		// ex: in POST:/channels/channel_id/messages, out 80c17d2f203122d936070c88c8d10f33
-		// If it doesn't exist, we create an unlimited hash as our initial key in the form of the hash key + the unlimited constant
-		// and assign this to the route to hash cache
-		// ex: this.RoutesToHashes[POST:/channels/channel_id/messages] = POST:/channels/channel_id/messages:unlimited
-		var hash = this._routesToHashes.GetOrAdd(hashKey, RateLimitBucket.GenerateUnlimitedHash(method, route));
-
-		// Next we use the hash to generate the key to obtain the bucket.
-		// ex: 80c17d2f203122d936070c88c8d10f33:guild_id:506128773926879242:webhook_id
-		// or if unlimited: POST:/channels/channel_id/messages:unlimited:guild_id:506128773926879242:webhook_id
-		var bucketId = RateLimitBucket.GenerateBucketId(hash, guildId, channelId, webhookId);
-
-		// If it's not in cache, create a new bucket and index it by its bucket id.
-		var bucket = this._hashesToBuckets.GetOrAdd(bucketId, new RateLimitBucket(hash, guildId, channelId, webhookId));
-
-		bucket.LastAttemptAt = DateTimeOffset.UtcNow;
-
-		// Cache the routes for each bucket so it can be used for GC later.
-		if (!bucket.RouteHashes.Contains(bucketId))
-			bucket.RouteHashes.Add(bucketId);
-
-		// Start bucket cleaner if not already running.
-		if (!this._cleanerRunning)
-		{
-			this._cleanerRunning = true;
-			this._bucketCleanerTokenSource = new();
-			this._cleanerTask = Task.Run(this.CleanupBucketsAsync, this._bucketCleanerTokenSource.Token);
-			this._logger.LogDebug(LoggerEvents.RestCleaner, "Bucket cleaner task started.");
-		}
-
-		url = CommonRegEx.HttpRouteRegex().Replace(route, xm => rparams[xm.Groups[1].Value]);
-		return bucket;
-	}
+		=> this.Registry.GetBucket(method, route, routeParams, out url);
 
 	/// <summary>
 	///     Executes the request by enqueuing it into the appropriate bucket worker.
@@ -297,7 +186,7 @@ internal sealed class RestClient : IDisposable
 			return;
 		}
 
-		var worker = this.GetOrCreateWorker(request.RateLimitBucket);
+		var worker = this.Registry.GetOrCreateWorker(request.RateLimitBucket);
 		worker.Enqueue(request);
 		await request.WaitForCompletionAsync().ConfigureAwait(false);
 	}
@@ -311,11 +200,15 @@ internal sealed class RestClient : IDisposable
 		=> this.ExecuteRequestAsync(request);
 
 	/// <summary>
-	///     Gets or creates a <see cref="BucketWorker" /> for the given bucket.
-	///     Uses the bucket object reference as key to remain stable across hash transitions.
+	///     Cancels all pending requests across all bucket workers by draining their queues
+	///     and faulting each request with <see cref="OperationCanceledException" />.
 	/// </summary>
-	private BucketWorker GetOrCreateWorker(RateLimitBucket bucket)
-		=> this._bucketWorkers.GetOrAdd(bucket, static (b, ctx) => new(ctx.client, b, ctx.config, ctx.logger), (client: this, config: this._advancedConfig, logger: this._logger));
+	/// <param name="reason">Optional reason message for the cancellation.</param>
+	public void CancelAllPendingRequests(string? reason = null)
+	{
+		var cancelled = this.Registry.CancelAllPendingRequests(reason ?? "All pending REST requests were cancelled by the application.");
+		this._logger.LogInformation(LoggerEvents.RestCleaner, "Cancelled {Count} pending REST requests", cancelled);
+	}
 
 	// ── Internal methods called by BucketWorker ──────────────────────────────
 
@@ -447,9 +340,14 @@ internal sealed class RestClient : IDisposable
 			if (isProbe)
 				this.ResetProbeState(request.RateLimitBucket);
 
+			// Classify transient vs permanent network errors
+			var isTransient = IsTransientHttpError(httpEx);
+
 			return new()
 			{
-				Error = httpEx
+				Error = httpEx,
+				ShouldRetry = isTransient && this._advancedConfig.RetryTransientErrors,
+				IsTransientNetworkError = isTransient
 			};
 		}
 		finally
@@ -565,6 +463,18 @@ internal sealed class RestClient : IDisposable
 	}
 
 	/// <summary>
+	///     Classifies whether an <see cref="HttpRequestException" /> is transient (worth retrying)
+	///     or permanent (should fail immediately).
+	/// </summary>
+	/// <param name="ex">The HTTP exception to classify.</param>
+	/// <returns><c>true</c> if the error is transient (DNS, socket, timeout); <c>false</c> otherwise.</returns>
+	private static bool IsTransientHttpError(HttpRequestException ex)
+		=> ex.InnerException is System.Net.Sockets.SocketException
+			or System.IO.IOException
+			or TimeoutException
+			or OperationCanceledException;
+
+	/// <summary>
 	///     Builds the form data request.
 	/// </summary>
 	/// <param name="request">The request.</param>
@@ -631,7 +541,7 @@ internal sealed class RestClient : IDisposable
 			{
 				this._logger.LogTrace(LoggerEvents.RestTx, "<multipart request>");
 
-				var boundary = "---------------------------" + DateTime.Now.Ticks.ToString("x");
+				var boundary = "---------------------------" + Guid.NewGuid().ToString("N");
 
 				req.Headers.Add(CommonHeaders.CONNECTION, CommonHeaders.CONNECTION_KEEP_ALIVE);
 				req.Headers.Add(CommonHeaders.KEEP_ALIVE, "600");
@@ -662,7 +572,7 @@ internal sealed class RestClient : IDisposable
 			{
 				this._logger.LogTrace(LoggerEvents.RestTx, "<multipart request>");
 
-				var boundary = "---------------------------" + DateTime.Now.Ticks.ToString("x");
+				var boundary = "---------------------------" + Guid.NewGuid().ToString("N");
 
 				req.Headers.Add(CommonHeaders.CONNECTION, CommonHeaders.CONNECTION_KEEP_ALIVE);
 				req.Headers.Add(CommonHeaders.KEEP_ALIVE, "600");
@@ -715,7 +625,7 @@ internal sealed class RestClient : IDisposable
 				else if (bucket.LimitValid)
 				{
 					// Previously valid bucket lost its headers — reset to probe state
-					this.UpdateHashCaches(request, bucket);
+					this.Registry.UpdateHashCaches(request, bucket);
 					this.ResetProbeState(bucket);
 				}
 			}
@@ -755,7 +665,7 @@ internal sealed class RestClient : IDisposable
 					this.ResetProbeState(bucket);
 				else if (bucket.LimitValid)
 				{
-					this.UpdateHashCaches(request, bucket);
+					this.Registry.UpdateHashCaches(request, bucket);
 					this.ResetProbeState(bucket);
 				}
 			}
@@ -803,116 +713,7 @@ internal sealed class RestClient : IDisposable
 				bucket.NextReset = newReset.UtcTicks;
 		}
 
-		this.UpdateHashCaches(request, bucket, hash);
-	}
-
-	/// <summary>
-	///     Updates the hash caches.
-	/// </summary>
-	/// <param name="request">The request.</param>
-	/// <param name="bucket">The bucket.</param>
-	/// <param name="newHash">The new hash.</param>
-	private void UpdateHashCaches(BaseRestRequest request, RateLimitBucket bucket, string? newHash = null)
-	{
-		var hashKey = RateLimitBucket.GenerateHashKey(request.Method, request.Route);
-
-		if (!this._routesToHashes.TryGetValue(hashKey, out var oldHash))
-			return;
-
-		// This is an unlimited bucket, which we don't need to keep track of.
-		if (newHash is null)
-		{
-			_ = this._routesToHashes.TryRemove(hashKey, out _);
-			if (bucket.BucketId is not null)
-				_ = this._hashesToBuckets.TryRemove(bucket.BucketId, out _);
-			return;
-		}
-
-		// Only update the hash once, due to a bug on Discord's end.
-		// This will cause issues if the bucket hashes are dynamically changed from the API while running,
-		// in which case, Dispose will need to be called to clear the caches.
-		if (!bucket.IsUnlimited || newHash == oldHash)
-			return;
-
-		this._logger.LogDebug(LoggerEvents.RestHashMover, "Updating hash in {0}: \"{1}\" -> \"{2}\"", hashKey, oldHash, newHash);
-		var bucketId = RateLimitBucket.GenerateBucketId(newHash, bucket.GuildId, bucket.ChannelId, bucket.WebhookId);
-
-		_ = this._routesToHashes.AddOrUpdate(hashKey, newHash, (key, previousHash) =>
-		{
-			bucket.Hash = newHash;
-
-			var oldBucketId = RateLimitBucket.GenerateBucketId(oldHash!, bucket.GuildId, bucket.ChannelId, bucket.WebhookId);
-
-			// Remove the old unlimited bucket.
-			_ = this._hashesToBuckets.TryRemove(oldBucketId, out _);
-			_ = this._hashesToBuckets.AddOrUpdate(bucketId, bucket, (_, _) => bucket);
-
-			return newHash;
-		});
-	}
-
-	/// <summary>
-	///     Cleans the buckets.
-	/// </summary>
-	private async Task CleanupBucketsAsync()
-	{
-		while (!this._bucketCleanerTokenSource?.IsCancellationRequested ?? false)
-		{
-			try
-			{
-				await Task.Delay(this._bucketCleanupDelay, this._bucketCleanerTokenSource.Token).ConfigureAwait(false);
-			}
-			catch
-			{ }
-
-			ObjectDisposedException.ThrowIf(this._disposed, this);
-
-			// Clean up dead worker entries — only remove workers whose loop has naturally terminated
-			foreach (var key in this._bucketWorkers.Keys.ToList())
-				if (this._bucketWorkers.TryGetValue(key, out var worker) && !worker.IsAlive && worker.Processed > 0)
-					if (this._bucketWorkers.TryRemove(key, out var removed))
-						removed.Dispose();
-
-			var removedBuckets = 0;
-			StringBuilder? bucketIdStrBuilder = default;
-
-			foreach (var (key, value) in this._hashesToBuckets)
-			{
-				bucketIdStrBuilder ??= new();
-
-				// Don't remove the bucket if it has an active worker with pending requests
-				if (string.IsNullOrEmpty(value.BucketId))
-					continue;
-
-				if (this._bucketWorkers.TryGetValue(value, out var activeWorker) && activeWorker.IsAlive && !value.IsUnlimited)
-					continue;
-
-				var resetOffset = this._useResetAfter ? value.ResetAfterOffset : value.Reset;
-
-				// Don't remove the bucket if it's reset date is less than now + the additional wait time, unless it's an unlimited bucket.
-				if (!value.IsUnlimited && (resetOffset > DateTimeOffset.UtcNow || DateTimeOffset.UtcNow - resetOffset < this._bucketCleanupDelay))
-					continue;
-
-				_ = this._hashesToBuckets.TryRemove(key, out _);
-				removedBuckets++;
-				bucketIdStrBuilder.Append(value.BucketId).Append(", ");
-			}
-
-			if (removedBuckets > 0)
-				this._logger.LogDebug(LoggerEvents.RestCleaner, "Removed {0} unused bucket{1}: [{2}]", removedBuckets, removedBuckets > 1 ? "s" : string.Empty, bucketIdStrBuilder.ToString().TrimEnd(',', ' '));
-
-			if (this._hashesToBuckets.Count > 10_000)
-				this._logger.LogWarning(LoggerEvents.RestCleaner, "Bucket accumulation warning: {Count} rate-limit buckets are currently tracked. Cleanup may not be keeping up; consider reviewing route cardinality.", this._hashesToBuckets.Count);
-
-			if (this._hashesToBuckets.IsEmpty)
-				break;
-		}
-
-		if (!this._bucketCleanerTokenSource?.IsCancellationRequested ?? true)
-			this._bucketCleanerTokenSource?.Cancel();
-
-		this._cleanerRunning = false;
-		this._logger.LogDebug(LoggerEvents.RestCleaner, "Bucket cleaner task stopped.");
+		this.Registry.UpdateHashCaches(request, bucket, hash);
 	}
 
 	/// <summary>
@@ -922,4 +723,18 @@ internal sealed class RestClient : IDisposable
 	{
 		this.Dispose();
 	}
+
+	// ── IRestDiagnostics ────────────────────────────────────────────────────
+
+	/// <inheritdoc />
+	public int ActiveWorkerCount
+		=> this.Registry.GetActiveWorkerCount();
+
+	/// <inheritdoc />
+	public int TotalQueuedRequests
+		=> this.Registry.GetTotalQueuedRequests();
+
+	/// <inheritdoc />
+	public IReadOnlyList<BucketDiagnostics> GetBucketSnapshots()
+		=> this.Registry.GetBucketSnapshots();
 }
