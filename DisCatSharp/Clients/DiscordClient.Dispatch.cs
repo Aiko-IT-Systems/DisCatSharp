@@ -2798,7 +2798,7 @@ public sealed partial class DiscordClient
 	internal async Task OnGuildRoleUpdateEventAsync(DiscordRole role, DiscordGuild guild)
 	{
 		var newRole = guild.GetRole(role.Id);
-		var oldRole = CreateRoleSnapshot(newRole ?? role, guild);
+		var oldRole = this.CreateRoleSnapshot(newRole ?? role, guild);
 
 		if (newRole is null)
 		{

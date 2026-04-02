@@ -145,7 +145,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	[JsonIgnore]
 	public DiscordGuild? Guild
-		=> this.GuildId.HasValue && this.Discord.Guilds.TryGetValue(this.GuildId.Value, out var guild) ? guild : null;
+		=> this.GuildId.HasValue ? this.Discord is DiscordClient client && client.GuildsInternal.TryGetValue(this.GuildId.Value, out var guild) ? guild : this.Discord.Guilds.TryGetValue(this.GuildId.Value, out guild) ? guild : null : null;
 
 	/// <summary>
 	///     Gets a collection of permission overwrites for this channel.
