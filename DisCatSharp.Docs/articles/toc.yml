@@ -97,6 +97,8 @@ items:
                   uid: modules_interactivity_introduction
     - name: Topics
       items:
+          - name: Configuration Layout
+            uid: topics_configuration
           - name: Events
             uid: topics_events
           - name: Gateway Dispatch
