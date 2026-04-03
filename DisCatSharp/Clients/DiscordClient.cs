@@ -2325,13 +2325,17 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="newGuild">The new guild.</param>
 	/// <param name="rawMembers">The raw members.</param>
 	/// <param name="hasSoundboardSounds">Whether the incoming payload explicitly included soundboard sounds.</param>
-	private void UpdateCachedGuild(DiscordGuild newGuild, JArray? rawMembers, bool hasSoundboardSounds = false)
+	/// <param name="replaceChannels">Whether the incoming payload should replace the cached channel set authoritatively.</param>
+	private void UpdateCachedGuild(DiscordGuild newGuild, JArray? rawMembers, bool hasSoundboardSounds = false, bool replaceChannels = false)
 	{
 		ObjectDisposedException.ThrowIf(this._disposed, this);
 
 		this.GuildsInternal.TryAdd(newGuild.Id, newGuild);
 
 		var guild = this.GuildsInternal[newGuild.Id];
+
+		if (replaceChannels && !ReferenceEquals(guild, newGuild))
+			guild.ChannelsInternal.Clear();
 
 		if (newGuild.ChannelsInternal is { IsEmpty: false })
 			foreach (var channel in newGuild.ChannelsInternal.Values)

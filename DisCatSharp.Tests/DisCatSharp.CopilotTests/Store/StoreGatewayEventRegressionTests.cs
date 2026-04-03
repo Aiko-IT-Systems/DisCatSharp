@@ -360,6 +360,65 @@ public class StoreGatewayEventRegressionTests
 		Assert.Same(client, guild.SoundboardSoundsInternal[3].Discord);
 	}
 
+	[Fact]
+	public async Task GuildAvailableEvent_RefreshesChannelCacheAuthoritatively()
+	{
+		var client = CreateClient();
+		var guild = new DiscordGuild
+		{
+			Id = 804032421678153819,
+			Discord = client
+		};
+		client.GuildsInternal[guild.Id] = guild;
+		guild.ChannelsInternal[1] = new DiscordChannel
+		{
+			Id = 1,
+			Name = "old-channel",
+			GuildId = guild.Id,
+			Type = ChannelType.Text,
+			Discord = client
+		};
+
+		var incomingGuild = new DiscordGuild
+		{
+			Id = guild.Id,
+			Discord = client,
+			MemberCount = 0
+		};
+		incomingGuild.ChannelsInternal[2] = new DiscordChannel
+		{
+			Id = 2,
+			Name = "fresh-channel",
+			Type = ChannelType.Text
+		};
+		incomingGuild.ChannelsInternal[3] = new DiscordChannel
+		{
+			Id = 3,
+			Name = "another-channel",
+			Type = ChannelType.News
+		};
+
+		GuildCreateEventArgs? captured = null;
+		client.GuildAvailable += (_, args) =>
+		{
+			captured = args;
+			return Task.CompletedTask;
+		};
+
+		await client.OnGuildCreateEventAsync(incomingGuild, [], null);
+
+		Assert.NotNull(captured);
+		Assert.Same(guild, captured!.Guild);
+		Assert.Equal(2, guild.ChannelsInternal.Count);
+		Assert.False(guild.ChannelsInternal.ContainsKey(1));
+		Assert.True(guild.ChannelsInternal.ContainsKey(2));
+		Assert.True(guild.ChannelsInternal.ContainsKey(3));
+		Assert.Equal(guild.Id, guild.ChannelsInternal[2].GuildId);
+		Assert.Equal(guild.Id, guild.ChannelsInternal[3].GuildId);
+		Assert.Same(client, guild.ChannelsInternal[2].Discord);
+		Assert.Same(client, guild.ChannelsInternal[3].Discord);
+	}
+
 	private static DiscordClient CreateClient()
 		=> new(new DiscordConfiguration
 		{

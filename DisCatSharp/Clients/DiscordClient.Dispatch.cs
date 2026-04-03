@@ -1405,7 +1405,7 @@ public sealed partial class DiscordClient
 		guild.ScheduledEventsInternal ??= new();
 		guild.SoundboardSoundsInternal ??= new();
 
-		this.UpdateCachedGuild(eventGuild, rawMembers, hasSoundboardSounds);
+		this.UpdateCachedGuild(eventGuild, rawMembers, hasSoundboardSounds, replaceChannels: true);
 
 		guild.JoinedAt = eventGuild.JoinedAt;
 		guild.IsLarge = eventGuild.IsLarge;
