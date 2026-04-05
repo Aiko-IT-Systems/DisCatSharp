@@ -30,6 +30,7 @@ public sealed class RestAdvancedConfiguration
 		this.RetryTransientErrors = other.RetryTransientErrors;
 		this.CircuitBreakerThreshold = other.CircuitBreakerThreshold;
 		this.CircuitBreakerResetTimeout = other.CircuitBreakerResetTimeout;
+		this.PreemptiveRatelimitBuffer = other.PreemptiveRatelimitBuffer;
 		this.FailFastMode = other.FailFastMode;
 	}
 
@@ -161,6 +162,31 @@ public sealed class RestAdvancedConfiguration
 			field = value;
 		}
 	} = TimeSpan.FromSeconds(30);
+
+	/// <summary>
+	///     Gets or sets the safety buffer added to preemptive rate-limit timing.
+	///     This margin extends the preemptive wait slightly past the server-advertised reset boundary,
+	///     absorbing clock drift and network jitter to prevent real 429 responses at bucket edges.
+	/// </summary>
+	/// <remarks>
+	///     <para>Must be non-negative and at most 5 seconds. Defaults to 250 milliseconds.</para>
+	///     <para>Set to <see cref="TimeSpan.Zero" /> to disable the buffer (trust server timing exactly).</para>
+	///     <para>The buffer is applied to preemptive delay computation, bucket window reopening, and post-429 retry delays.</para>
+	/// </remarks>
+	public TimeSpan PreemptiveRatelimitBuffer
+	{
+		get;
+		set
+		{
+			if (value < TimeSpan.Zero)
+				throw new ArgumentOutOfRangeException(nameof(value), value, "PreemptiveRatelimitBuffer must be non-negative.");
+
+			if (value > TimeSpan.FromSeconds(5))
+				throw new ArgumentOutOfRangeException(nameof(value), value, "PreemptiveRatelimitBuffer must not exceed 5 seconds.");
+
+			field = value;
+		}
+	} = TimeSpan.FromMilliseconds(250);
 
 	/// <summary>
 	///     Enables fail-fast mode: disables all retries and circuit breaker cooldown, and sets a short queue timeout.

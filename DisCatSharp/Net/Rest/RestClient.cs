@@ -226,10 +226,13 @@ internal sealed class RestClient : IDisposable, IRestDiagnostics
 	internal bool IsGlobalGateBlocked => !this._globalRateLimitEvent.IsSet;
 
 	/// <summary>
-	///     Computes the delay for a preemptive bucket rate limit.
+	///     Computes the delay for a preemptive bucket rate limit, including the safety buffer.
 	/// </summary>
 	internal TimeSpan ComputeBucketDelay(RateLimitBucket bucket)
-		=> this._useResetAfter ? bucket.ResetAfter ?? TimeSpan.Zero : bucket.Reset - DateTimeOffset.UtcNow;
+	{
+		var raw = this._useResetAfter ? bucket.ResetAfter ?? TimeSpan.Zero : bucket.Reset - DateTimeOffset.UtcNow;
+		return raw + this._advancedConfig.PreemptiveRatelimitBuffer;
+	}
 
 	/// <summary>
 	///     Blocks the global gate, waits the specified delay, then reopens it.

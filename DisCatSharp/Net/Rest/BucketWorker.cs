@@ -381,7 +381,7 @@ internal sealed class BucketWorker : IDisposable
 				if (this._bucket.LimitValid)
 				{
 					var now = DateTimeOffset.UtcNow;
-					await this._bucket.TryResetLimitAsync(now);
+					await this._bucket.TryResetLimitAsync(now, this._config.PreemptiveRatelimitBuffer.Ticks);
 
 					if (Interlocked.Decrement(ref this._bucket.RemainingInternal) < 0)
 					{
@@ -450,8 +450,9 @@ internal sealed class BucketWorker : IDisposable
 						this._logger.LogError(LoggerEvents.RatelimitHit, "Ratelimit hit, retrying request to {Url}", request.Url.AbsoluteUri);
 						await this._client.RaiseRateLimitHitAsync(request, result.Error as RateLimitException);
 
-						if (result.RetryDelay > TimeSpan.Zero)
-							await Task.Delay(result.RetryDelay, effectiveCt);
+						var retryWait = result.RetryDelay + this._config.PreemptiveRatelimitBuffer;
+						if (retryWait > TimeSpan.Zero)
+							await Task.Delay(retryWait, effectiveCt);
 					}
 
 					continue; // Retry

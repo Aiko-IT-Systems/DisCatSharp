@@ -217,10 +217,11 @@ internal sealed class RateLimitBucket : IEquatable<RateLimitBucket>
 		=> this.BucketId?.GetHashCode() ?? -1;
 
 	/// <summary>
-	///     Sets remaining number of requests to the maximum when the ratelimit is reset
+	///     Sets remaining number of requests to the maximum when the ratelimit is reset.
 	/// </summary>
 	/// <param name="now">The datetime offset.</param>
-	internal async Task<bool> TryResetLimitAsync(DateTimeOffset now)
+	/// <param name="bufferTicks">Safety buffer ticks to delay bucket reopening past the advertised reset.</param>
+	internal async Task<bool> TryResetLimitAsync(DateTimeOffset now, long bufferTicks = 0)
 	{
 		if (this.ResetAfter.HasValue)
 			this.ResetAfter = this.ResetAfterOffset - now;
@@ -228,7 +229,7 @@ internal sealed class RateLimitBucket : IEquatable<RateLimitBucket>
 		if (this.NextReset is 0)
 			return false;
 
-		if (this.NextReset > now.UtcTicks)
+		if (this.NextReset + bufferTicks > now.UtcTicks)
 			return false;
 
 		await this._resetLock.WaitAsync().ConfigureAwait(false);
