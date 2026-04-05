@@ -35,13 +35,13 @@ DiscordConfiguration
 
 These live directly on `DiscordConfiguration` and are **not** deprecated:
 
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `Token` | `string?` | `null` | Bot or bearer token. |
-| `TokenType` | `TokenType` | `Bot` | Authentication type. |
-| `Intents` | `DiscordIntents` | `AllUnprivileged` | Gateway intents filter. |
-| `ServiceProvider` | `IServiceProvider` | Empty | Dependency injection container. |
-| `Proxy` | `IWebProxy?` | `null` | HTTP and WebSocket proxy. |
+| Property          | Type               | Default           | Description                     |
+|-------------------|--------------------|-------------------|---------------------------------|
+| `Token`           | `string?`          | `null`            | Bot or bearer token.            |
+| `TokenType`       | `TokenType`        | `Bot`             | Authentication type.            |
+| `Intents`         | `DiscordIntents`   | `AllUnprivileged` | Gateway intents filter.         |
+| `ServiceProvider` | `IServiceProvider` | Empty             | Dependency injection container. |
+| `Proxy`           | `IWebProxy?`       | `null`            | HTTP and WebSocket proxy.       |
 
 ---
 
@@ -62,13 +62,13 @@ var config = new DiscordConfiguration
 };
 ```
 
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `Version` | `string` | `"10"` | Discord API version. |
-| `Channel` | `ApiChannel` | `Stable` | API channel (Stable, Canary, PTB). |
-| `Override` | `string?` | `null` | Developer-only URL override. |
-| `Locale` | `string` | `AMERICAN_ENGLISH` | API locale for responses. |
-| `Timezone` | `string?` | `null` | User timezone preference. |
+| Property   | Type         | Default            | Description                        |
+|------------|--------------|--------------------|------------------------------------|
+| `Version`  | `string`     | `"10"`             | Discord API version.               |
+| `Channel`  | `ApiChannel` | `Stable`           | API channel (Stable, Canary, PTB). |
+| `Override` | `string?`    | `null`             | Developer-only URL override.       |
+| `Locale`   | `string`     | `AMERICAN_ENGLISH` | API locale for responses.          |
+| `Timezone` | `string?`    | `null`             | User timezone preference.          |
 
 ---
 
@@ -90,31 +90,31 @@ var config = new DiscordConfiguration
 };
 ```
 
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `AutoReconnect` | `bool` | `true` | Reconnect automatically on connection loss. |
-| `ReconnectIndefinitely` | `bool` | `false` | Retry forever (not recommended for production). |
-| `ShardId` | `int` | `0` | Current shard ID (≥ 0, < ShardCount). |
-| `ShardCount` | `int` | `1` | Total shard count (> 0). |
-| `CompressionLevel` | `GatewayCompressionLevel` | `Stream` | WebSocket compression (None, Payload, Stream). |
-| `LargeThreshold` | `int` | `250` | Guild large-member threshold (clamped 50–250). |
-| `Capabilities` | `GatewayCapabilities` | `None` | Gateway capability flags. |
-| `MobileStatus` | `bool` | `false` | Show mobile status indicator. |
-| `WebSocketClientFactory` | `WebSocketClientFactoryDelegate` | Built-in | WebSocket implementation factory. |
-| `UdpClientFactory` | `UdpClientFactoryDelegate` | Built-in | UDP implementation factory. |
-| `Advanced` | `GatewayAdvancedConfiguration` | *(defaults)* | Low-level transport tuning. |
+| Property                 | Type                             | Default      | Description                                     |
+|--------------------------|----------------------------------|--------------|-------------------------------------------------|
+| `AutoReconnect`          | `bool`                           | `true`       | Reconnect automatically on connection loss.     |
+| `ReconnectIndefinitely`  | `bool`                           | `false`      | Retry forever (not recommended for production). |
+| `ShardId`                | `int`                            | `0`          | Current shard ID (≥ 0, < ShardCount).           |
+| `ShardCount`             | `int`                            | `1`          | Total shard count (> 0).                        |
+| `CompressionLevel`       | `GatewayCompressionLevel`        | `Stream`     | WebSocket compression (None, Payload, Stream).  |
+| `LargeThreshold`         | `int`                            | `250`        | Guild large-member threshold (clamped 50–250).  |
+| `Capabilities`           | `GatewayCapabilities`            | `None`       | Gateway capability flags.                       |
+| `MobileStatus`           | `bool`                           | `false`      | Show mobile status indicator.                   |
+| `WebSocketClientFactory` | `WebSocketClientFactoryDelegate` | Built-in     | WebSocket implementation factory.               |
+| `UdpClientFactory`       | `UdpClientFactoryDelegate`       | Built-in     | UDP implementation factory.                     |
+| `Advanced`               | `GatewayAdvancedConfiguration`   | *(defaults)* | Low-level transport tuning.                     |
 
 ### Gateway.Advanced
 
 Access via `config.Gateway.Advanced`.
 
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `DispatchMode` | `GatewayDispatchMode` | `ConcurrentHandlers` | How user event handlers are scheduled. See [Gateway Dispatch](xref:topics_gateway_dispatch). |
-| `DispatchQueueCapacity` | `int` | `10,000` | Per-shard dispatch queue size (0 = unbounded). |
-| `SocketLockTimeout` | `TimeSpan` | 30 s | Max wait for IDENTIFY response. |
-| `ReconnectDelay` | `TimeSpan` | 6 s | Delay before reconnection attempt. |
-| `HeartbeatZombieThreshold` | `int` | `5` | Missed ACKs before connection is considered dead. |
+| Property                   | Type                  | Default              | Description                                                                                  |
+|----------------------------|-----------------------|----------------------|----------------------------------------------------------------------------------------------|
+| `DispatchMode`             | `GatewayDispatchMode` | `ConcurrentHandlers` | How user event handlers are scheduled. See [Gateway Dispatch](xref:topics_gateway_dispatch). |
+| `DispatchQueueCapacity`    | `int`                 | `10,000`             | Per-shard dispatch queue size (0 = unbounded).                                               |
+| `SocketLockTimeout`        | `TimeSpan`            | 30 s                 | Max wait for IDENTIFY response.                                                              |
+| `ReconnectDelay`           | `TimeSpan`            | 6 s                  | Delay before reconnection attempt.                                                           |
+| `HeartbeatZombieThreshold` | `int`                 | `5`                  | Missed ACKs before connection is considered dead.                                            |
 
 ---
 
@@ -139,25 +139,26 @@ var config = new DiscordConfiguration
 };
 ```
 
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `RequestTimeout` | `TimeSpan` | 20 s | HTTP request timeout. `Timeout.InfiniteTimeSpan` to disable. |
-| `UseRelativeRatelimit` | `bool` | `true` | Use `X-Ratelimit-Reset-After` instead of absolute timestamps. |
-| `Advanced` | `RestAdvancedConfiguration` | *(defaults)* | Queue, retry, and circuit breaker tuning. |
+| Property               | Type                        | Default      | Description                                                   |
+|------------------------|-----------------------------|--------------|---------------------------------------------------------------|
+| `RequestTimeout`       | `TimeSpan`                  | 20 s         | HTTP request timeout. `Timeout.InfiniteTimeSpan` to disable.  |
+| `UseRelativeRatelimit` | `bool`                      | `true`       | Use `X-Ratelimit-Reset-After` instead of absolute timestamps. |
+| `Advanced`             | `RestAdvancedConfiguration` | *(defaults)* | Queue, retry, and circuit breaker tuning.                     |
 
 ### Rest.Advanced
 
 Access via `config.Rest.Advanced`. For full documentation, see [REST Client Architecture](xref:topics_rest) and [Timeout Configuration](xref:topics_timeouts).
 
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `QueueTimeout` | `TimeSpan` | 5 min | Max wait in bucket queue (0 = unlimited). |
-| `QueueWarningThreshold` | `TimeSpan` | 2 min | Log warning after this wait (0 = disabled). |
-| `MaxRetries` | `int` | `5` | Retries for 429/5xx responses (0 = disabled). |
-| `MaxQueueDepthPerBucket` | `int` | `1000` | Max queued requests per bucket (0 = unbounded). |
-| `RetryTransientErrors` | `bool` | `true` | Retry DNS/socket/timeout errors with backoff. |
-| `CircuitBreakerThreshold` | `int` | `10` | Failures before circuit opens (0 = disabled). |
-| `CircuitBreakerResetTimeout` | `TimeSpan` | 30 s | Cooldown before half-open probe. |
+| Property                     | Type       | Default | Description                                          |
+|------------------------------|------------|---------|------------------------------------------------------|
+| `QueueTimeout`               | `TimeSpan` | 5 min   | Max wait in bucket queue (0 = unlimited).            |
+| `QueueWarningThreshold`      | `TimeSpan` | 2 min   | Log warning after this wait (0 = disabled).          |
+| `MaxRetries`                 | `int`      | `5`     | Retries for 429/5xx responses (0 = disabled).        |
+| `MaxQueueDepthPerBucket`     | `int`      | `1000`  | Max queued requests per bucket (0 = unbounded).      |
+| `RetryTransientErrors`       | `bool`     | `true`  | Retry DNS/socket/timeout errors with backoff.        |
+| `CircuitBreakerThreshold`    | `int`      | `10`    | Failures before circuit opens (0 = disabled).        |
+| `CircuitBreakerResetTimeout` | `TimeSpan` | 30 s    | Cooldown before half-open probe.                     |
+| `PreemptiveRatelimitBuffer`  | `TimeSpan` | 250 ms  | Safety buffer added to preemptive rate-limit timing. |
 
 ---
 
@@ -178,15 +179,15 @@ var config = new DiscordConfiguration
 };
 ```
 
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `MessageCacheSize` | `int` | `1024` | Global message cache size (0 = disabled). |
-| `PresenceCacheSize` | `int` | `0` | Max cached presences (0 = uncapped). |
-| `AlwaysCacheMembers` | `bool` | `true` | Cache members even without GuildMembers intent. |
-| `AutoRefreshChannelCache` | `bool` | `false` | Refresh full guild channel cache on startup. |
-| `AutoFetchApplicationEmojis` | `bool` | `false` | Fetch application emojis on startup. |
-| `AutoFetchSkuIds` | `bool` | `false` | Auto-fetch SKU IDs (monetized apps). |
-| `SkuId` | `ulong?` | `null` | Manual SKU ID (mutually exclusive with AutoFetchSkuIds). |
+| Property                     | Type     | Default | Description                                              |
+|------------------------------|----------|---------|----------------------------------------------------------|
+| `MessageCacheSize`           | `int`    | `1024`  | Global message cache size (0 = disabled).                |
+| `PresenceCacheSize`          | `int`    | `0`     | Max cached presences (0 = uncapped).                     |
+| `AlwaysCacheMembers`         | `bool`   | `true`  | Cache members even without GuildMembers intent.          |
+| `AutoRefreshChannelCache`    | `bool`   | `false` | Refresh full guild channel cache on startup.             |
+| `AutoFetchApplicationEmojis` | `bool`   | `false` | Fetch application emojis on startup.                     |
+| `AutoFetchSkuIds`            | `bool`   | `false` | Auto-fetch SKU IDs (monetized apps).                     |
+| `SkuId`                      | `ulong?` | `null`  | Manual SKU ID (mutually exclusive with AutoFetchSkuIds). |
 
 ---
 
@@ -206,11 +207,11 @@ var config = new DiscordConfiguration
 };
 ```
 
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `MinimumLogLevel` | `LogLevel` | `Information` | Minimum severity to log. |
-| `LogTimestampFormat` | `string` | `"yyyy-MM-dd HH:mm:ss zzz"` | Timestamp format for the built-in logger. |
-| `LoggerFactory` | `ILoggerFactory` | Built-in | Custom logger factory. See [Logging](xref:topics_logging_default). |
+| Property             | Type             | Default                     | Description                                                        |
+|----------------------|------------------|-----------------------------|--------------------------------------------------------------------|
+| `MinimumLogLevel`    | `LogLevel`       | `Information`               | Minimum severity to log.                                           |
+| `LogTimestampFormat` | `string`         | `"yyyy-MM-dd HH:mm:ss zzz"` | Timestamp format for the built-in logger.                          |
+| `LoggerFactory`      | `ILoggerFactory` | Built-in                    | Custom logger factory. See [Logging](xref:topics_logging_default). |
 
 ---
 
@@ -234,20 +235,20 @@ var config = new DiscordConfiguration
 };
 ```
 
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `EnablePayloadReceivedEvent` | `bool` | `false` | Fire `PayloadReceived` event for raw gateway packets. |
-| `UpdateChecks` | `UpdateCheckConfiguration` | *(defaults)* | Library version checking options. |
+| Property                     | Type                       | Default      | Description                                           |
+|------------------------------|----------------------------|--------------|-------------------------------------------------------|
+| `EnablePayloadReceivedEvent` | `bool`                     | `false`      | Fire `PayloadReceived` event for raw gateway packets. |
+| `UpdateChecks`               | `UpdateCheckConfiguration` | *(defaults)* | Library version checking options.                     |
 
 ### Diagnostics.UpdateChecks
 
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `Disabled` | `bool` | `false` | Disable update checks entirely. |
-| `Mode` | `VersionCheckMode` | `NuGet` | Check against NuGet or GitHub. |
-| `IncludePrerelease` | `bool` | `true` | Include pre-releases in the version check. |
-| `GitHubToken` | `string?` | `null` | GitHub token for private repos. |
-| `ShowReleaseNotes` | `bool` | `false` | Display release notes in the check result. |
+| Property            | Type               | Default | Description                                |
+|---------------------|--------------------|---------|--------------------------------------------|
+| `Disabled`          | `bool`             | `false` | Disable update checks entirely.            |
+| `Mode`              | `VersionCheckMode` | `NuGet` | Check against NuGet or GitHub.             |
+| `IncludePrerelease` | `bool`             | `true`  | Include pre-releases in the version check. |
+| `GitHubToken`       | `string?`          | `null`  | GitHub token for private repos.            |
+| `ShowReleaseNotes`  | `bool`             | `false` | Display release notes in the check result. |
 
 ---
 
@@ -268,14 +269,14 @@ var config = new DiscordConfiguration
 };
 ```
 
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `EnableSentry` | `bool` | `false` | Enable Sentry error reporting. |
-| `AttachRecentLogEntries` | `bool` | `false` | Include recent log entries in Sentry reports. |
-| `AttachUserInfo` | `bool` | `false` | Include bot username/ID in reports. |
-| `FeedbackEmail` | `string?` | `null` | Developer contact email (requires AttachUserInfo). |
-| `DeveloperUserId` | `ulong?` | `null` | Developer Discord user ID (requires AttachUserInfo). |
-| `EnableDiscordIdScrubber` | `bool` | `false` | Replace Discord IDs with `{DISCORD_ID}` in reports. |
+| Property                  | Type      | Default | Description                                          |
+|---------------------------|-----------|---------|------------------------------------------------------|
+| `EnableSentry`            | `bool`    | `false` | Enable Sentry error reporting.                       |
+| `AttachRecentLogEntries`  | `bool`    | `false` | Include recent log entries in Sentry reports.        |
+| `AttachUserInfo`          | `bool`    | `false` | Include bot username/ID in reports.                  |
+| `FeedbackEmail`           | `string?` | `null`  | Developer contact email (requires AttachUserInfo).   |
+| `DeveloperUserId`         | `ulong?`  | `null`  | Developer Discord user ID (requires AttachUserInfo). |
+| `EnableDiscordIdScrubber` | `bool`    | `false` | Replace Discord IDs with `{DISCORD_ID}` in reports.  |
 
 ---
 
@@ -383,47 +384,47 @@ var config = new DiscordConfiguration
 
 ### Mapping Reference
 
-| Old Property | New Location |
-|---|---|
-| `ApiVersion` | `Api.Version` |
-| `ApiChannel` | `Api.Channel` |
-| `Override` | `Api.Override` |
-| `Locale` | `Api.Locale` |
-| `Timezone` | `Api.Timezone` |
-| `AutoReconnect` | `Gateway.AutoReconnect` |
-| `ReconnectIndefinitely` | `Gateway.ReconnectIndefinitely` |
-| `ShardId` | `Gateway.ShardId` |
-| `ShardCount` | `Gateway.ShardCount` |
-| `GatewayCompressionLevel` | `Gateway.CompressionLevel` |
-| `LargeThreshold` | `Gateway.LargeThreshold` |
-| `Capabilities` | `Gateway.Capabilities` |
-| `MobileStatus` | `Gateway.MobileStatus` |
-| `WebSocketClientFactory` | `Gateway.WebSocketClientFactory` |
-| `UdpClientFactory` | `Gateway.UdpClientFactory` |
-| `HttpTimeout` | `Rest.RequestTimeout` |
-| `UseRelativeRatelimit` | `Rest.UseRelativeRatelimit` |
-| `MessageCacheSize` | `Cache.MessageCacheSize` |
-| `PresenceCacheSize` | `Cache.PresenceCacheSize` |
-| `AlwaysCacheMembers` | `Cache.AlwaysCacheMembers` |
-| `AutoRefreshChannelCache` | `Cache.AutoRefreshChannelCache` |
-| `AutoFetchApplicationEmojis` | `Cache.AutoFetchApplicationEmojis` |
-| `AutoFetchSkuIds` | `Cache.AutoFetchSkuIds` |
-| `SkuId` | `Cache.SkuId` |
-| `MinimumLogLevel` | `Logging.MinimumLogLevel` |
-| `LogTimestampFormat` | `Logging.LogTimestampFormat` |
-| `LoggerFactory` | `Logging.LoggerFactory` |
-| `EnablePayloadReceivedEvent` | `Diagnostics.EnablePayloadReceivedEvent` |
-| `DisableUpdateCheck` | `Diagnostics.UpdateChecks.Disabled` |
-| `UpdateCheckMode` | `Diagnostics.UpdateChecks.Mode` |
+| Old Property                     | New Location                                 |
+|----------------------------------|----------------------------------------------|
+| `ApiVersion`                     | `Api.Version`                                |
+| `ApiChannel`                     | `Api.Channel`                                |
+| `Override`                       | `Api.Override`                               |
+| `Locale`                         | `Api.Locale`                                 |
+| `Timezone`                       | `Api.Timezone`                               |
+| `AutoReconnect`                  | `Gateway.AutoReconnect`                      |
+| `ReconnectIndefinitely`          | `Gateway.ReconnectIndefinitely`              |
+| `ShardId`                        | `Gateway.ShardId`                            |
+| `ShardCount`                     | `Gateway.ShardCount`                         |
+| `GatewayCompressionLevel`        | `Gateway.CompressionLevel`                   |
+| `LargeThreshold`                 | `Gateway.LargeThreshold`                     |
+| `Capabilities`                   | `Gateway.Capabilities`                       |
+| `MobileStatus`                   | `Gateway.MobileStatus`                       |
+| `WebSocketClientFactory`         | `Gateway.WebSocketClientFactory`             |
+| `UdpClientFactory`               | `Gateway.UdpClientFactory`                   |
+| `HttpTimeout`                    | `Rest.RequestTimeout`                        |
+| `UseRelativeRatelimit`           | `Rest.UseRelativeRatelimit`                  |
+| `MessageCacheSize`               | `Cache.MessageCacheSize`                     |
+| `PresenceCacheSize`              | `Cache.PresenceCacheSize`                    |
+| `AlwaysCacheMembers`             | `Cache.AlwaysCacheMembers`                   |
+| `AutoRefreshChannelCache`        | `Cache.AutoRefreshChannelCache`              |
+| `AutoFetchApplicationEmojis`     | `Cache.AutoFetchApplicationEmojis`           |
+| `AutoFetchSkuIds`                | `Cache.AutoFetchSkuIds`                      |
+| `SkuId`                          | `Cache.SkuId`                                |
+| `MinimumLogLevel`                | `Logging.MinimumLogLevel`                    |
+| `LogTimestampFormat`             | `Logging.LogTimestampFormat`                 |
+| `LoggerFactory`                  | `Logging.LoggerFactory`                      |
+| `EnablePayloadReceivedEvent`     | `Diagnostics.EnablePayloadReceivedEvent`     |
+| `DisableUpdateCheck`             | `Diagnostics.UpdateChecks.Disabled`          |
+| `UpdateCheckMode`                | `Diagnostics.UpdateChecks.Mode`              |
 | `IncludePrereleaseInUpdateCheck` | `Diagnostics.UpdateChecks.IncludePrerelease` |
-| `UpdateCheckGitHubToken` | `Diagnostics.UpdateChecks.GitHubToken` |
-| `ShowReleaseNotesInUpdateCheck` | `Diagnostics.UpdateChecks.ShowReleaseNotes` |
-| `EnableSentry` | `Telemetry.EnableSentry` |
-| `AttachRecentLogEntries` | `Telemetry.AttachRecentLogEntries` |
-| `AttachUserInfo` | `Telemetry.AttachUserInfo` |
-| `FeedbackEmail` | `Telemetry.FeedbackEmail` |
-| `DeveloperUserId` | `Telemetry.DeveloperUserId` |
-| `EnableDiscordIdScrubber` | `Telemetry.EnableDiscordIdScrubber` |
+| `UpdateCheckGitHubToken`         | `Diagnostics.UpdateChecks.GitHubToken`       |
+| `ShowReleaseNotesInUpdateCheck`  | `Diagnostics.UpdateChecks.ShowReleaseNotes`  |
+| `EnableSentry`                   | `Telemetry.EnableSentry`                     |
+| `AttachRecentLogEntries`         | `Telemetry.AttachRecentLogEntries`           |
+| `AttachUserInfo`                 | `Telemetry.AttachUserInfo`                   |
+| `FeedbackEmail`                  | `Telemetry.FeedbackEmail`                    |
+| `DeveloperUserId`                | `Telemetry.DeveloperUserId`                  |
+| `EnableDiscordIdScrubber`        | `Telemetry.EnableDiscordIdScrubber`          |
 
 ---
 
