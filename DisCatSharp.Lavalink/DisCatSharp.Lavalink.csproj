@@ -33,6 +33,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
+		<ProjectReference Include="..\DisCatSharp.Voice\DisCatSharp.Voice.csproj" />
 		<PackageReference Include="DisCatSharp.Attributes" Version="2026.03.26" />
 	</ItemGroup>
 

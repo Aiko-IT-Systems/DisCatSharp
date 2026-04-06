@@ -2,6 +2,7 @@ using System;
 using System.Net;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Lavalink.Bridge;
 using DisCatSharp.Lavalink.Entities;
 using DisCatSharp.Net;
 
@@ -51,6 +52,7 @@ public sealed class LavalinkConfiguration
 		this.DefaultVolume = other.DefaultVolume;
 		this.EnableTrace = other.EnableTrace;
 		this.QueueEntryFactory = other.QueueEntryFactory;
+		this.Bridge = other.Bridge is not null ? new(other.Bridge) : null;
 	}
 
 	/// <summary>
@@ -154,4 +156,12 @@ public sealed class LavalinkConfiguration
 	///     <para>Min <c>0</c>, max <c>1000</c>.</para>
 	/// </summary>
 	public int DefaultVolume { internal get; set; } = 70;
+
+	/// <summary>
+	///     <para>Optional bridge configuration for external voice transport mode.</para>
+	///     <para>When set and enabled, Lavalink Opus frames are routed through DisCatSharp.Voice
+	///     for full DAVE E2EE and AEAD transport encryption support.</para>
+	///     <para>Defaults to <see langword="null" /> (bridge disabled).</para>
+	/// </summary>
+	public LavalinkBridgeConfiguration? Bridge { internal get; set; }
 }

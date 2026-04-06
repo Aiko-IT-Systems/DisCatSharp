@@ -591,7 +591,12 @@ public sealed class LavalinkGuildPlayer
 	public async Task DisconnectAsync(CancellationToken cancellationToken = default)
 	{
 		await this.Session.Rest.DestroyPlayerAsync(this.Session.Config.SessionId!, this.GuildId, cancellationToken).ConfigureAwait(false);
-		await this.DisconnectVoiceAsync().ConfigureAwait(false);
+
+		if (this.Session.IsBridgeMode)
+			await this.Session.DisconnectBridgeGuildAsync(this.GuildId).ConfigureAwait(false);
+		else
+			await this.DisconnectVoiceAsync().ConfigureAwait(false);
+
 		this.CurrentUsersInternal.Clear();
 		Volatile.Write(ref this._isDisposed, true);
 		await this.Session.GuildPlayerDestroyedEvent.InvokeAsync(this.Session, new(this)).ConfigureAwait(false);

@@ -11,6 +11,7 @@ using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
+using DisCatSharp.Lavalink.Bridge;
 using DisCatSharp.Lavalink.Entities;
 using DisCatSharp.Lavalink.Entities.Websocket;
 using DisCatSharp.Lavalink.Enums;
@@ -19,6 +20,7 @@ using DisCatSharp.Lavalink.EventArgs;
 using DisCatSharp.Net;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.WebSocket;
+using DisCatSharp.Voice;
 
 using DisCatSharp.Telemetry;
 
@@ -126,6 +128,21 @@ public sealed class LavalinkSession
 	///     Gets the internal dictionary of connected players for each guild.
 	/// </summary>
 	internal ConcurrentDictionary<ulong, LavalinkGuildPlayer> ConnectedPlayersInternal = new();
+
+	/// <summary>
+	///     The bridge client for external voice transport, if bridge mode is enabled.
+	/// </summary>
+	private LavalinkBridgeClient? _bridgeClient;
+
+	/// <summary>
+	///     Tracks active <see cref="VoiceConnection" /> instances per guild when in bridge mode.
+	/// </summary>
+	private readonly ConcurrentDictionary<ulong, VoiceConnection> _bridgeVoiceConnections = new();
+
+	/// <summary>
+	///     Whether this session uses bridge mode for voice transport.
+	/// </summary>
+	internal bool IsBridgeMode => this.Config.Bridge is { EnableExternalVoiceBridge: true };
 
 	/// <summary>
 	///     Initializes a new instance of the <see cref="LavalinkSession" /> class.
@@ -322,6 +339,13 @@ public sealed class LavalinkSession
 	{
 		await this.DestroyGuildPlayersAsync(cancellationToken).ConfigureAwait(false);
 		Volatile.Write(ref this._isDisposed, true);
+
+		if (this._bridgeClient is not null)
+		{
+			await this._bridgeClient.DisposeAsync().ConfigureAwait(false);
+			this._bridgeClient = null;
+		}
+
 		await this._webSocket.DisconnectAsync(1000, "Shutting down Lavalink Session").ConfigureAwait(false);
 	}
 
@@ -342,12 +366,16 @@ public sealed class LavalinkSession
 	/// </summary>
 	/// <param name="sender">The lavalink session.</param>
 	/// <param name="args">The guild player destroyed event args containing the destroyed <see cref="LavalinkGuildPlayer" />.</param>
-	private Task LavalinkGuildPlayerDestroyed(LavalinkSession sender, GuildPlayerDestroyedEventArgs args)
+	private async Task LavalinkGuildPlayerDestroyed(LavalinkSession sender, GuildPlayerDestroyedEventArgs args)
 	{
-		this._pendingVoiceStates.TryRemove(args.Player.GuildId, out _);
-		this.ConnectedPlayersInternal.Remove(args.Player.GuildId, out _);
+		var guildId = args.Player.GuildId;
+		this._pendingVoiceStates.TryRemove(guildId, out _);
+		this.ConnectedPlayersInternal.Remove(guildId, out _);
+
+		if (this.IsBridgeMode)
+			await this.DisconnectBridgeGuildAsync(guildId).ConfigureAwait(false);
+
 		args.Handled = false;
-		return Task.CompletedTask;
 	}
 
 	/// <summary>
@@ -365,6 +393,9 @@ public sealed class LavalinkSession
 
 		if (channel.Guild == null! || (channel.Type != ChannelType.Voice && channel.Type != ChannelType.Stage))
 			throw new ArgumentException("Invalid channel specified.", nameof(channel));
+
+		if (this.IsBridgeMode)
+			return await this.ConnectBridgeAsync(channel, deafened, cancellationToken).ConfigureAwait(false);
 
 		var vstut = new TaskCompletionSource<VoiceStateUpdateEventArgs>();
 		var vsrut = new TaskCompletionSource<VoiceServerUpdateEventArgs>();
@@ -405,6 +436,92 @@ public sealed class LavalinkSession
 		this.ConnectedPlayersInternal[channel.Guild.Id] = con;
 
 		return con;
+	}
+
+	/// <summary>
+	///     Connects to a voice channel using bridge mode.
+	///     In bridge mode, DisCatSharp.Voice handles Discord voice transport (RTP, DAVE E2EE, AEAD, UDP)
+	///     and receives Opus frames from Lavalink via the bridge WebSocket.
+	/// </summary>
+	/// <param name="channel">The channel to join.</param>
+	/// <param name="deafened">Whether to join the channel deafened.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
+	/// <returns>The created <see cref="LavalinkGuildPlayer" />.</returns>
+	private async Task<LavalinkGuildPlayer> ConnectBridgeAsync(DiscordChannel channel, bool deafened, CancellationToken cancellationToken)
+	{
+		var guildId = channel.Guild.Id;
+		var bridgeConfig = this.Config.Bridge!;
+
+		// Ensure VoiceExtension is registered on the client
+		var voiceExt = this.Discord.GetExtension<VoiceExtension>()
+			?? throw new InvalidOperationException(
+				"Bridge mode requires DisCatSharp.Voice to be registered. Call UseVoice() on your DiscordClient first.");
+
+		// Create Lavalink player via REST (audio decoding only, no voice transport)
+		await this.Rest.CreatePlayerAsync(this.Config.SessionId!, guildId, this.Config.DefaultVolume, cancellationToken).ConfigureAwait(false);
+
+		// Ensure bridge client is connected
+		await this.EnsureBridgeClientConnectedAsync(bridgeConfig, cancellationToken).ConfigureAwait(false);
+
+		// Use VoiceExtension to join the channel — this handles Discord voice gateway + UDP
+		var voiceConnection = await voiceExt.ConnectAsync(channel).ConfigureAwait(false);
+		this._bridgeVoiceConnections[guildId] = voiceConnection;
+
+		// Get the guild's Opus source from the bridge client and bind to the voice connection
+		var opusSource = this._bridgeClient!.GetGuildOpusSource(guildId);
+		_ = Task.Run(async () =>
+		{
+			try
+			{
+				await voiceConnection.BindExternalOpusSourceAsync(opusSource, cancellationToken).ConfigureAwait(false);
+			}
+			catch (OperationCanceledException)
+			{
+				// Normal teardown
+			}
+			catch (Exception ex)
+			{
+				this.Discord.Logger.LogError(ex, "[Lavalink Bridge] Error in Opus feed for guild {GuildId}", guildId);
+			}
+		}, cancellationToken);
+
+		var player = await this.Rest.GetPlayerAsync(this.Config.SessionId!, guildId, cancellationToken).ConfigureAwait(false);
+
+		var con = new LavalinkGuildPlayer(this, guildId, player)
+		{
+			ChannelId = channel.Id
+		};
+		this.ConnectedPlayersInternal[guildId] = con;
+
+		this.Discord.Logger.LogInformation("[Lavalink Bridge] Connected guild {GuildId} via voice bridge", guildId);
+		return con;
+	}
+
+	/// <summary>
+	///     Ensures the bridge client is connected, creating it if necessary.
+	/// </summary>
+	private async Task EnsureBridgeClientConnectedAsync(LavalinkBridgeConfiguration config, CancellationToken cancellationToken)
+	{
+		if (this._bridgeClient is not null)
+			return;
+
+		var client = new LavalinkBridgeClient(config, this.Discord.Logger);
+		await client.ConnectAsync(cancellationToken).ConfigureAwait(false);
+		this._bridgeClient = client;
+	}
+
+	/// <summary>
+	///     Disconnects a guild's bridge voice connection and detaches the bridge Opus source.
+	/// </summary>
+	/// <param name="guildId">The guild ID to disconnect.</param>
+	internal async Task DisconnectBridgeGuildAsync(ulong guildId)
+	{
+		this._bridgeClient?.DetachGuild(guildId);
+
+		if (this._bridgeVoiceConnections.TryRemove(guildId, out var voiceConnection))
+			voiceConnection.Disconnect();
+
+		await Task.CompletedTask.ConfigureAwait(false);
 	}
 
 	/// <summary>
