@@ -71,6 +71,8 @@ items:
                         uid: modules_audio_lavalink_v4_queue_system
                       - name: Advanced
                         uid: modules_audio_lavalink_v4_advanced
+                      - name: Voice Bridge
+                        uid: modules_audio_lavalink_v4_bridge
                 - name: Voice
                   items:
                       - name: Overview
