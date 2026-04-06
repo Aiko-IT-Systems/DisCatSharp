@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -435,7 +435,7 @@ public sealed partial class DiscordShardedClient : IDisposable, IAsyncDisposable
 	{
 		this.Logger.LogDebug(LoggerEvents.ShardRest, "Obtaining gateway information from GET {Gateway}{Bot}...", Endpoints.GATEWAY, Endpoints.BOT);
 
-		using var tempClient = new DiscordClient(CreateGatewayInfoClientConfiguration(this._configuration));
+		await using var tempClient = new DiscordClient(CreateGatewayInfoClientConfiguration(this._configuration));
 		return await tempClient.ApiClient.GetGatewayInfoAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
