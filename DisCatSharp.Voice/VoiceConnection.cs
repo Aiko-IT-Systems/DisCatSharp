@@ -26,6 +26,7 @@ using DisCatSharp.Voice.Enums;
 using DisCatSharp.Voice.Enums.Dave;
 using DisCatSharp.Voice.Enums.Interop;
 using DisCatSharp.Voice.EventArgs;
+using DisCatSharp.Voice.Interfaces;
 using DisCatSharp.Voice.Logging;
 using DisCatSharp.Voice.Payloads;
 using DisCatSharp.Telemetry;
@@ -997,6 +998,172 @@ public sealed class VoiceConnection : IDisposable
 	}
 
 	/// <summary>
+	///     Prepares a transport-ready packet from a pre-encoded Opus frame.
+	///     Skips the internal Opus encoder but applies RTP framing, DAVE E2EE, and AEAD transport encryption.
+	/// </summary>
+	/// <param name="opusPayload">The pre-encoded Opus frame bytes.</param>
+	/// <param name="duration">Frame duration in milliseconds.</param>
+	/// <param name="target">The assembled packet buffer (rented from ArrayPool).</param>
+	/// <param name="length">The total packet length.</param>
+	/// <returns><see langword="true" /> if the packet was successfully prepared.</returns>
+	internal bool PreparePacketFromOpus(ReadOnlySpan<byte> opusPayload, int duration, [NotNullWhen(true)] out byte[]? target, out int length)
+	{
+		target = null;
+		length = 0;
+
+		if (this._isDisposed)
+		{
+			this._voiceLogger.VoiceDebug(VoiceEvents.VoiceSendFailure, "[VoiceSend] PreparePacketFromOpus early exit: {Reason}", "connection disposed");
+			return false;
+		}
+
+		var packetArray = ArrayPool<byte>.Shared.Rent(Rtp.HEADER_SIZE + opusPayload.Length + 256);
+		var packet = packetArray.AsSpan();
+
+		this._rtp.EncodeHeader(this._sequence, this._timestamp, this._ssrc, packet);
+		var opus = packet.Slice(Rtp.HEADER_SIZE, opusPayload.Length);
+		opusPayload.CopyTo(opus);
+
+		// DAVE E2EE: encrypt the Opus frame when the session is active.
+		if (this._daveSession is not null && Interlocked.CompareExchange(ref this._davePrepDiagLogged, 1, 0) == 0)
+		{
+			this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake,
+				"[DAVE] PreparePacketFromOpus DAVE state: sessionNull={Null} state={State} isActive={Active}",
+				false, this._daveSession.State, this._daveSession.IsActive);
+		}
+
+		if (this._daveSession is { IsActive: false })
+		{
+			switch (this._configuration.DavePendingAudioBehavior)
+			{
+				case DavePendingAudioBehavior.Drop:
+					if (Interlocked.CompareExchange(ref this._daveInactiveDropDiagLogged, 1, 0) == 0)
+						this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake,
+							"[DAVE] Dropping outbound frame while session is pending (DavePendingAudioBehavior=Drop)");
+
+					ArrayPool<byte>.Shared.Return(packetArray);
+					return false;
+
+				case DavePendingAudioBehavior.Throw:
+					ArrayPool<byte>.Shared.Return(packetArray);
+					throw new InvalidOperationException($"DAVE is not active (state={this._daveSession.State}); outbound audio cannot be sent with DavePendingAudioBehavior.Throw.");
+			}
+		}
+
+		byte[]? daveEncrypted = null;
+		var daveEncryptSucceeded = false;
+		var daveEncryptedLen = 0;
+		try
+		{
+			if (this._daveSession is { IsActive: true }
+				&& this._daveSession.TryEncrypt(opus, this._ssrc, out daveEncrypted, out var daveLen)
+				&& daveLen <= packetArray.Length - Rtp.HEADER_SIZE)
+			{
+				daveEncryptSucceeded = true;
+				daveEncryptedLen = daveLen;
+				opus = packet.Slice(Rtp.HEADER_SIZE, daveLen);
+				daveEncrypted.AsSpan(0, daveLen).CopyTo(opus);
+			}
+		}
+		finally
+		{
+			if (daveEncrypted != null && daveEncrypted.Length > 0)
+				ArrayPool<byte>.Shared.Return(daveEncrypted);
+		}
+
+		if (this._davePrepDiagLogged == 1)
+		{
+			this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake,
+				"[DAVE] PreparePacketFromOpus encrypt result: encryptCalled={Called} encryptedLen={Len}",
+				daveEncryptSucceeded, daveEncryptedLen);
+			this._davePrepDiagLogged = 2;
+		}
+
+		this._sequence++;
+		this._timestamp += (uint)(this.AudioFormat.SampleRate / 1000 * duration);
+
+		// AEAD transport encryption (aead_aes256_gcm_rtpsize / aead_xchacha20_poly1305_rtpsize)
+		if (Sodium.IsAeadMode(this._selectedEncryptionMode))
+		{
+			var sendHeaderLength = Rtp.HEADER_SIZE;
+
+			Span<byte> nonceCounter4 = stackalloc byte[Sodium.AEAD_NONCE_SUFFIX_SIZE];
+			BinaryPrimitives.WriteUInt32LittleEndian(nonceCounter4, this._nonce++);
+
+			var ciphertextDest = packet.Slice(sendHeaderLength, opus.Length);
+
+			Span<byte> tag = stackalloc byte[Sodium.AES_GCM_TAG_SIZE];
+
+			this._sodium.EncryptAead(opus, ciphertextDest, tag, nonceCounter4, packet[..sendHeaderLength], this._selectedEncryptionMode);
+
+			var afterCipher = packet[(sendHeaderLength + opus.Length)..];
+			tag.CopyTo(afterCipher);
+			nonceCounter4.CopyTo(afterCipher[Sodium.AES_GCM_TAG_SIZE..]);
+
+			if (Interlocked.CompareExchange(ref this._sendAeadDiagLogged, 1, 0) == 0)
+			{
+				var counterVal = BinaryPrimitives.ReadUInt32LittleEndian(nonceCounter4);
+				Span<byte> diagNonce = stackalloc byte[12];
+				BinaryPrimitives.WriteUInt32LittleEndian(diagNonce, counterVal);
+
+				var diagCipher = packet.Slice(sendHeaderLength, Math.Min(8, opus.Length));
+				var totalLen = sendHeaderLength + opus.Length + Sodium.AES_GCM_TAG_SIZE + Sodium.AEAD_NONCE_SUFFIX_SIZE;
+				var diagLast20 = packet.Slice(totalLen - 20, 20);
+
+#pragma warning disable CA1872 // Prefer 'Convert.ToHexString' and 'Convert.ToHexStringLower' over call chains based on 'BitConverter.ToString'
+				this._voiceLogger.VoiceDebug(VoiceEvents.VoiceHandshake,
+					"[AEAD send diag] mode={Mode} packetLen={PktLen} aeadHdrLen={HdrLen} ciphertextLen={CLen} tagLen=16 counterValue={CVal} counter=[{CBytes}] nonce=[{NBytes}]",
+					this._selectedEncryptionMode, totalLen, sendHeaderLength, opus.Length,
+					counterVal,
+					BitConverter.ToString(nonceCounter4.ToArray()).Replace("-", ""),
+					BitConverter.ToString(diagNonce.ToArray()).Replace("-", ""));
+#pragma warning restore CA1872 // Prefer 'Convert.ToHexString' and 'Convert.ToHexStringLower' over call chains based on 'BitConverter.ToString'
+				this._voiceLogger.VoiceDebug(VoiceEvents.VoiceHandshake,
+					"[AEAD send diag] ciphertext first 8 bytes: {Bytes}",
+					BitConverter.ToString(diagCipher.ToArray()));
+				this._voiceLogger.VoiceDebug(VoiceEvents.VoiceHandshake,
+					"[AEAD send diag] packet last 20 bytes (tag+counter): {Bytes}",
+					BitConverter.ToString(diagLast20.ToArray()));
+			}
+
+			target = packetArray;
+			length = sendHeaderLength + opus.Length + Sodium.AES_GCM_TAG_SIZE + Sodium.AEAD_NONCE_SUFFIX_SIZE;
+			return true;
+		}
+
+		// Legacy XSalsa20 transport encryption
+		Span<byte> nonce = stackalloc byte[Sodium.NonceSize];
+		switch (this._selectedEncryptionMode)
+		{
+			case SodiumEncryptionMode.XSalsa20Poly1305:
+				this._sodium.GenerateNonce(packet[..Rtp.HEADER_SIZE], nonce);
+				break;
+
+			case SodiumEncryptionMode.XSalsa20Poly1305Suffix:
+				this._sodium.GenerateNonce(nonce);
+				break;
+
+			case SodiumEncryptionMode.XSalsa20Poly1305Lite:
+				this._sodium.GenerateNonce(this._nonce++, nonce);
+				break;
+
+			default:
+				ArrayPool<byte>.Shared.Return(packetArray);
+				throw new("Unsupported encryption mode.");
+		}
+
+		Span<byte> encrypted = stackalloc byte[Sodium.CalculateTargetSize(opus)];
+		this._sodium.Encrypt(opus, encrypted, nonce);
+		encrypted.CopyTo(packet[Rtp.HEADER_SIZE..]);
+		packet = packet[..this._rtp.CalculatePacketSize(encrypted.Length, this._selectedEncryptionMode)];
+		this._sodium.AppendNonce(nonce, packet, this._selectedEncryptionMode);
+
+		target = packetArray;
+		length = packet.Length;
+		return true;
+	}
+
+	/// <summary>
 	///     Runs the outbound audio sender loop.
 	/// </summary>
 	/// <returns>A Task.</returns>
@@ -1032,18 +1199,26 @@ public sealed class VoiceConnection : IDisposable
 
 				if (hasPacket)
 				{
-					var pcmLenBeforePrepare = rawPacket.Bytes.Length;
-					hasPacket = this.PreparePacket(rawPacket.Bytes.Span, out data, out length);
+					if (rawPacket.IsPreEncodedOpus)
+					{
+						hasPacket = this.PreparePacketFromOpus(rawPacket.Bytes.Span, rawPacket.Duration, out data, out length);
+					}
+					else
+					{
+						var pcmLenBeforePrepare = rawPacket.Bytes.Length;
+						hasPacket = this.PreparePacket(rawPacket.Bytes.Span, out data, out length);
+
+						if (this._sendDiagLogged == 1)
+						{
+							if (hasPacket)
+								this._voiceLogger.VoiceDebug(VoiceEvents.Misc, "[VoiceSend] PreparePacket result={Result} packetLen={PacketLen}", hasPacket, length);
+							else
+								this._voiceLogger.VoiceDebug(VoiceEvents.VoiceSendFailure, "[VoiceSend] PreparePacket returned false — mode={Mode} pcmLen={PcmLen}", this._selectedEncryptionMode, pcmLenBeforePrepare);
+						}
+					}
+
 					if (rawPacket.RentedBuffer is not null)
 						ArrayPool<byte>.Shared.Return(rawPacket.RentedBuffer);
-
-					if (this._sendDiagLogged == 1)
-					{
-						if (hasPacket)
-							this._voiceLogger.VoiceDebug(VoiceEvents.Misc, "[VoiceSend] PreparePacket result={Result} packetLen={PacketLen}", hasPacket, length);
-						else
-							this._voiceLogger.VoiceDebug(VoiceEvents.VoiceSendFailure, "[VoiceSend] PreparePacket returned false — mode={Mode} pcmLen={PcmLen}", this._selectedEncryptionMode, pcmLenBeforePrepare);
-					}
 				}
 
 				var durationModifier = hasPacket ? rawPacket.Duration / 5 : 4;
@@ -1588,6 +1763,40 @@ public sealed class VoiceConnection : IDisposable
 		this._transmitStream ??= new(this, sampleDuration);
 
 		return this._transmitStream;
+	}
+
+	/// <summary>
+	///     Binds an external Opus source to this voice connection.
+	///     Frames from the source bypass the internal Opus encoder but go through
+	///     RTP framing, DAVE E2EE, and AEAD transport encryption.
+	/// </summary>
+	/// <param name="source">The external Opus source to bind.</param>
+	/// <param name="cancellationToken">Token to cancel the binding.</param>
+	/// <returns>A task that completes when the source stops producing frames or is cancelled.</returns>
+	/// <exception cref="InvalidOperationException">
+	///     Thrown when <see cref="VoiceConfiguration.EnableExternalOpus" /> is not enabled.
+	/// </exception>
+	public async Task BindExternalOpusSourceAsync(IExternalOpusSource source, CancellationToken cancellationToken = default)
+	{
+		if (!this._configuration.EnableExternalOpus)
+			throw new InvalidOperationException("External Opus input is not enabled. Set VoiceConfiguration.EnableExternalOpus to true.");
+
+		ArgumentNullException.ThrowIfNull(source);
+
+		await foreach (var frame in source.ReadFramesAsync(cancellationToken).ConfigureAwait(false))
+		{
+			if (this._isDisposed)
+				break;
+
+			var payload = frame.Payload;
+			if (payload.IsEmpty)
+				continue;
+
+			var rented = ArrayPool<byte>.Shared.Rent(payload.Length);
+			payload.Span.CopyTo(rented);
+			var packet = new RawVoicePacket(rented.AsMemory(0, payload.Length), frame.DurationMs, rented);
+			await this.EnqueuePacketAsync(packet, cancellationToken).ConfigureAwait(false);
+		}
 	}
 
 	/// <summary>

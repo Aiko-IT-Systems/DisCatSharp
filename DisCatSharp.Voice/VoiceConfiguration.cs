@@ -29,6 +29,7 @@ public sealed class VoiceConfiguration
 		this.MaxDaveProtocolVersion = other.MaxDaveProtocolVersion;
 		this.EnableDebugLogging = other.EnableDebugLogging;
 		this.DavePendingAudioBehavior = other.DavePendingAudioBehavior;
+		this.EnableExternalOpus = other.EnableExternalOpus;
 	}
 
 	/// <summary>
@@ -69,4 +70,13 @@ public sealed class VoiceConfiguration
 	///     <para>Defaults to <see cref="DavePendingAudioBehavior.PassThrough"/>.</para>
 	/// </summary>
 	public DavePendingAudioBehavior DavePendingAudioBehavior { internal get; set; } = DavePendingAudioBehavior.PassThrough;
+
+	/// <summary>
+	///     <para>Enables accepting pre-encoded Opus frames from an external source via
+	///     <see cref="VoiceConnection.BindExternalOpusSourceAsync" />.</para>
+	///     <para>When enabled, the internal Opus encoder is bypassed for externally-supplied frames,
+	///     while RTP framing, DAVE E2EE, and AEAD transport encryption are still applied.</para>
+	///     <para>Defaults to false.</para>
+	/// </summary>
+	public bool EnableExternalOpus { internal get; set; } = false;
 }

@@ -20,6 +20,7 @@ internal readonly struct RawVoicePacket
 		this.Duration = duration;
 		this.Silence = silence;
 		this.RentedBuffer = null;
+		this.IsPreEncodedOpus = false;
 	}
 
 	/// <summary>
@@ -36,17 +37,37 @@ internal readonly struct RawVoicePacket
 	}
 
 	/// <summary>
+	///     Initializes a new instance for a pre-encoded Opus frame.
+	/// </summary>
+	/// <param name="opusBytes">The pre-encoded Opus payload.</param>
+	/// <param name="duration">Frame duration in milliseconds.</param>
+	/// <param name="rentedBuffer">Optional rented buffer backing the payload.</param>
+	public RawVoicePacket(Memory<byte> opusBytes, int duration, byte[]? rentedBuffer = null)
+		: this(opusBytes, duration, false, rentedBuffer!)
+	{
+		this.IsPreEncodedOpus = true;
+	}
+
+	/// <summary>
 	///     Packet payload bytes.
 	/// </summary>
 	public readonly Memory<byte> Bytes;
+
 	/// <summary>
 	///     Packet duration in milliseconds.
 	/// </summary>
 	public readonly int Duration;
+
 	/// <summary>
 	///     Indicates whether this packet contains generated silence.
 	/// </summary>
 	public readonly bool Silence;
+
+	/// <summary>
+	///     When <see langword="true" />, <see cref="Bytes" /> contains a pre-encoded Opus frame
+	///     that should bypass the internal Opus encoder in the send pipeline.
+	/// </summary>
+	public readonly bool IsPreEncodedOpus;
 
 	/// <summary>
 	///     Optional rented backing buffer that should be returned to the pool by the consumer when no longer needed.
