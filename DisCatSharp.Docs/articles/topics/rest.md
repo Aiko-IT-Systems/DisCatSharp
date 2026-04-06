@@ -8,7 +8,7 @@ author: DisCatSharp Team
 
 ## Overview
 
-DisCatSharp sends every HTTP request to Discord through a per-bucket FIFO queue/worker system. Each Discord rate-limit bucket gets its own [BucketWorker](xref:DisCatSharp.Net.BucketWorker) that processes requests sequentially, enforcing rate limits without blocking other buckets. Buckets that target different endpoints execute independently and concurrently.
+DisCatSharp sends every HTTP request to Discord through a per-bucket FIFO queue/worker system. Each Discord rate-limit bucket gets its own `BucketWorker` that processes requests sequentially, enforcing rate limits without blocking other buckets. Buckets that target different endpoints execute independently and concurrently.
 
 This design means you can fire requests at many different endpoints simultaneously without one slow or rate-limited endpoint stalling others.
 

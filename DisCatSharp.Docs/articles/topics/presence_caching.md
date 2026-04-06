@@ -37,7 +37,7 @@ Internally, the cache is a two-level `ConcurrentDictionary<ulong userId, Concurr
 - A user can have different presences in different guilds.
 - Guild-scoped access is always authoritative.
 
-If [CacheConfiguration.PresenceCacheSize](xref:DisCatSharp.Configuration.CacheConfiguration.PresenceCacheSize) is greater than `0`, DisCatSharp caps the centralized store and evicts the **oldest cached presence entries** when the limit is exceeded.
+If [CacheConfiguration.PresenceCacheSize](xref:DisCatSharp.CacheConfiguration.PresenceCacheSize) is greater than `0`, DisCatSharp caps the centralized store and evicts the **oldest cached presence entries** when the limit is exceeded.
 
 > [!NOTE]
 > Presence updates are processed on a dedicated fast-path channel with coalescing. If a user's presence changes rapidly, intermediate states may be merged — only the latest state is guaranteed to be cached.
@@ -257,7 +257,7 @@ client.PresenceUpdated += (sender, e) =>
 };
 ```
 
-[PresenceUpdateEventArgs](xref:DisCatSharp.EventArgs.User.PresenceUpdateEventArgs) provides:
+[PresenceUpdateEventArgs](xref:DisCatSharp.EventArgs.PresenceUpdateEventArgs) provides:
 
 | Property | Description |
 |---|---|

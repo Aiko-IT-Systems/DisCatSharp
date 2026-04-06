@@ -11,7 +11,7 @@ hasDiscordComponents: false
 
 DisCatSharp.Experimental includes a guild message search API backed by Discord's ElasticSearch-powered search endpoint. This feature is experimental, unsupported by Discord, and may change or break without notice.
 
-The entry point is [SearchMessagesAsync](xref:DisCatSharp.Experimental.Entities.DiscordGuildMethodsHook.SearchMessagesAsync(DisCatSharp.Entities.DiscordGuild,DisCatSharp.Experimental.Entities.DiscordGuildMessageSearchParams)).
+The entry point is [SearchMessagesAsync](xref:DisCatSharp.Experimental.Entities.DiscordGuildMethodsHook.SearchMessagesAsync*).
 
 ## Prerequisites
 
