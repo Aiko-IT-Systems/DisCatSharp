@@ -148,4 +148,5 @@ logs/
 temp-works/
 /payloads-and-events-and-changes
 /todo.txt
-copilot_lavalink_transport_bridge_spec.md
+copilot_*
+*.lscache

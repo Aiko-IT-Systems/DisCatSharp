@@ -87,6 +87,7 @@ connection.EnableDebugLogging = false; // disable again
 - [Voice Prerequisites](xref:modules_audio_voice_prerequisites)
 - [Transmitting Audio](xref:modules_audio_voice_transmit)
 - [Receiving Audio](xref:modules_audio_voice_receive)
+- [Audio Output](xref:modules_audio_voice_output)
 - [Voice Events](xref:modules_audio_voice_events)
 - [Voice Architecture](xref:modules_audio_voice_architecture)
 - [Migration Guide](xref:modules_audio_voice_migration)

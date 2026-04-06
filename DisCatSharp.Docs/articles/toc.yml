@@ -83,6 +83,8 @@ items:
                         uid: modules_audio_voice_transmit
                       - name: Receiving
                         uid: modules_audio_voice_receive
+                      - name: Audio Output
+                        uid: modules_audio_voice_output
                       - name: Events
                         uid: modules_audio_voice_events
                       - name: Architecture

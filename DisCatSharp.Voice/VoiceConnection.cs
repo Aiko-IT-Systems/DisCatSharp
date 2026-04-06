@@ -1792,6 +1792,22 @@ public sealed class VoiceConnection : IDisposable
 			if (payload.IsEmpty)
 				continue;
 
+			if (frame.IsSilence)
+			{
+				// Silence frame — clear speaking flag if currently speaking
+				if (this._speakingFlags is not SpeakingFlags.NotSpeaking && this._isInitialized)
+				{
+					this._speakingFlags = SpeakingFlags.NotSpeaking;
+					await this.SendSpeakingAsync(this._speakingFlags).ConfigureAwait(false);
+				}
+
+				continue;
+			}
+
+			// Real audio — ensure speaking flag is set
+			if (this._speakingFlags is SpeakingFlags.NotSpeaking && this._isInitialized)
+				await this.SendSpeakingAsync(SpeakingFlags.Microphone).ConfigureAwait(false);
+
 			var rented = ArrayPool<byte>.Shared.Rent(payload.Length);
 			payload.Span.CopyTo(rented);
 			var packet = new RawVoicePacket(rented.AsMemory(0, payload.Length), frame.DurationMs, rented);

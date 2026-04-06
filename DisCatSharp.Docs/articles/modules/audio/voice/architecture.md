@@ -172,6 +172,26 @@ flowchart TD
 - `Active`
 - `Downgrading`
 
+## Audio Output Pipeline
+
+The recommended output path uses `VoiceOutputController` for direct Opus passthrough:
+
+```mermaid
+flowchart LR
+    A[Lavalink Bridge<br/>Opus] -->|SetMusicSourceAsync| C[VoiceOutputController]
+    B[TTS / System<br/>PCM] -->|QueuePcmOverlayAsync| C
+    C -->|passthrough or encode| D[VoiceConnection]
+    D --> E[RTP + DAVE + Transport]
+    E --> F[Discord]
+```
+
+The controller operates in two modes:
+
+- **Passthrough** (steady-state): Opus frames from the music source are forwarded directly — no decode or re-encode
+- **Overlay**: PCM overlays are Opus-encoded and emitted serially; music is paused (default) or ducked
+
+See [Audio Output](xref:modules_audio_voice_output) for usage details.
+
 ## Runtime Signals
 
 Use these for application-level gating and diagnostics:

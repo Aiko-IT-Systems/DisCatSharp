@@ -21,6 +21,7 @@ using DisCatSharp.Net;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.WebSocket;
 using DisCatSharp.Voice;
+using DisCatSharp.Voice.Interfaces;
 
 using DisCatSharp.Telemetry;
 
@@ -143,6 +144,58 @@ public sealed class LavalinkSession
 	///     Whether this session uses bridge mode for voice transport.
 	/// </summary>
 	internal bool IsBridgeMode => this.Config.Bridge is { EnableExternalVoiceBridge: true };
+
+	/// <summary>
+	///     Gets the bridge-mode <see cref="VoiceConnection" /> for the specified guild, if one is active.
+	/// </summary>
+	/// <param name="guildId">The guild snowflake.</param>
+	/// <returns>The <see cref="VoiceConnection" /> when bridge mode is active and the guild is connected; otherwise <see langword="null" />.</returns>
+	public VoiceConnection? GetBridgeVoiceConnection(ulong guildId)
+		=> this.IsBridgeMode && this._bridgeVoiceConnections.TryGetValue(guildId, out var vc) ? vc : null;
+
+	/// <summary>
+	///     Gets the bridge-mode <see cref="IExternalOpusSource" /> for the specified guild, if available.
+	///     Use this to feed a <see cref="DisCatSharp.Voice.Entities.VoiceOutputController" /> via
+	///     <see cref="DisCatSharp.Voice.Entities.VoiceOutputController.SetMusicSourceAsync" />.
+	/// </summary>
+	/// <param name="guildId">The guild snowflake.</param>
+	/// <returns>The <see cref="IExternalOpusSource" /> when bridge mode is active and the guild has an attached source; otherwise <see langword="null" />.</returns>
+	public IExternalOpusSource? GetBridgeOpusSource(ulong guildId)
+		=> this.IsBridgeMode && this._bridgeClient is not null ? this._bridgeClient.GetGuildOpusSource(guildId) : null;
+
+	/// <summary>
+	///     Rebinds the voice connection for the specified guild to a new Opus source.
+	///     Typically used to insert a <see cref="DisCatSharp.Voice.Entities.VoiceOutputController" />
+	///     between the bridge source and the voice connection.
+	///     The previous binding is cancelled before the new one starts.
+	/// </summary>
+	/// <param name="guildId">The guild snowflake.</param>
+	/// <param name="newSource">The new Opus source to bind (e.g. a <see cref="DisCatSharp.Voice.Entities.VoiceOutputController" />).</param>
+	/// <param name="cancellationToken">Cancellation token.</param>
+	/// <returns><see langword="true" /> if the rebind succeeded; <see langword="false" /> if no voice connection exists for this guild.</returns>
+	public bool RebindBridgeOpusSource(ulong guildId, IExternalOpusSource newSource, CancellationToken cancellationToken = default)
+	{
+		if (!this._bridgeVoiceConnections.TryGetValue(guildId, out var voiceConnection))
+			return false;
+
+		_ = Task.Run(async () =>
+		{
+			try
+			{
+				await voiceConnection.BindExternalOpusSourceAsync(newSource, cancellationToken).ConfigureAwait(false);
+			}
+			catch (OperationCanceledException)
+			{
+				// Normal teardown
+			}
+			catch (Exception ex)
+			{
+				this.Discord.Logger.LogError(ex, "[Lavalink Bridge] Error in rebind Opus feed for guild {GuildId}", guildId);
+			}
+		}, cancellationToken);
+
+		return true;
+	}
 
 	/// <summary>
 	///     Initializes a new instance of the <see cref="LavalinkSession" /> class.
