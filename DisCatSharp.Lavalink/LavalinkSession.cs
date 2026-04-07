@@ -436,10 +436,11 @@ public sealed class LavalinkSession
 	/// </summary>
 	/// <param name="channel">The channel to join.</param>
 	/// <param name="deafened">Whether to join the channel deafened.</param>
+	/// <param name="muted">Whether to join the channel muted.</param>
 	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The created <see cref="LavalinkGuildPlayer" />.</returns>
 	/// <exception cref="ArgumentException"></exception>
-	public async Task<LavalinkGuildPlayer> ConnectAsync(DiscordChannel channel, bool deafened = true, CancellationToken cancellationToken = default)
+	public async Task<LavalinkGuildPlayer> ConnectAsync(DiscordChannel channel, bool deafened = true, bool muted = false, CancellationToken cancellationToken = default)
 	{
 		if (this.ConnectedPlayersInternal.TryGetValue(channel.Guild.Id, out var connectedGuild))
 			return connectedGuild;
@@ -448,7 +449,7 @@ public sealed class LavalinkSession
 			throw new ArgumentException("Invalid channel specified.", nameof(channel));
 
 		if (this.IsBridgeMode)
-			return await this.ConnectBridgeAsync(channel, deafened, cancellationToken).ConfigureAwait(false);
+			return await this.ConnectBridgeAsync(channel, deafened, muted, cancellationToken).ConfigureAwait(false);
 
 		var vstut = new TaskCompletionSource<VoiceStateUpdateEventArgs>();
 		var vsrut = new TaskCompletionSource<VoiceServerUpdateEventArgs>();
@@ -463,7 +464,7 @@ public sealed class LavalinkSession
 				GuildId = channel.Guild.Id,
 				ChannelId = channel.Id,
 				Deafened = deafened,
-				Muted = false
+				Muted = muted
 			}
 		};
 		await this.Rest.CreatePlayerAsync(this.Config.SessionId!, channel.Guild.Id, this.Config.DefaultVolume, cancellationToken).ConfigureAwait(false);
@@ -498,9 +499,10 @@ public sealed class LavalinkSession
 	/// </summary>
 	/// <param name="channel">The channel to join.</param>
 	/// <param name="deafened">Whether to join the channel deafened.</param>
+	/// <param name="muted">Whether to join the channel muted.</param>
 	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The created <see cref="LavalinkGuildPlayer" />.</returns>
-	private async Task<LavalinkGuildPlayer> ConnectBridgeAsync(DiscordChannel channel, bool deafened, CancellationToken cancellationToken)
+	private async Task<LavalinkGuildPlayer> ConnectBridgeAsync(DiscordChannel channel, bool deafened, bool muted, CancellationToken cancellationToken)
 	{
 		var guildId = channel.Guild.Id;
 		var bridgeConfig = this.Config.Bridge!;
@@ -517,7 +519,7 @@ public sealed class LavalinkSession
 		await this.EnsureBridgeClientConnectedAsync(bridgeConfig, cancellationToken).ConfigureAwait(false);
 
 		// Use VoiceExtension to join the channel — this handles Discord voice gateway + UDP
-		var voiceConnection = await voiceExt.ConnectAsync(channel).ConfigureAwait(false);
+		var voiceConnection = await voiceExt.ConnectAsync(channel, muted, deafened).ConfigureAwait(false);
 		this._bridgeVoiceConnections[guildId] = voiceConnection;
 
 		// Get the guild's Opus source from the bridge client and bind to the voice connection

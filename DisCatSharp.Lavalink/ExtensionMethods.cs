@@ -85,8 +85,10 @@ public static class ExtensionMethods
 	/// </summary>
 	/// <param name="channel">Channel to connect to.</param>
 	/// <param name="session">Lavalink session to connect through.</param>
+	/// <param name="deafened">Whether to join the channel deafened.</param>
+	/// <param name="muted">Whether to join the channel muted.</param>
 	/// <returns>If successful, the Lavalink client.</returns>
-	public static Task ConnectAsync(this DiscordChannel channel, LavalinkSession session)
+	public static Task ConnectAsync(this DiscordChannel channel, LavalinkSession session, bool deafened = true, bool muted = false)
 	{
 		if (channel == null!)
 			throw new NullReferenceException();
@@ -103,6 +105,6 @@ public static class ExtensionMethods
 		var lava = discord.GetLavalink();
 		return lava == null
 			? throw new InvalidOperationException("Lavalink is not initialized for this Discord client.")
-			: session.ConnectAsync(channel);
+			: session.ConnectAsync(channel, deafened, muted);
 	}
 }
