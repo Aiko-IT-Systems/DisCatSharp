@@ -322,12 +322,7 @@ public sealed class VoiceOutputController : IExternalOpusSource, IAsyncDisposabl
 			cancellationToken.ThrowIfCancellationRequested();
 
 			if (this.ShouldSuppressMusic())
-			{
-				await this.WriteOutgoingAsync(
-					new(ReadOnlyMemory<byte>.Empty, FRAME_DURATION_MS, this._sequence++, 0, IsSilence: true),
-					cancellationToken).ConfigureAwait(false);
 				continue;
-			}
 
 			var gain = this.GetMusicGain();
 
@@ -365,6 +360,13 @@ public sealed class VoiceOutputController : IExternalOpusSource, IAsyncDisposabl
 
 					if (job.CloseStreamWhenFinished)
 						await job.PcmStream.DisposeAsync().ConfigureAwait(false);
+
+					// After an overlay finishes and no music is playing, emit a
+					// silence frame so the voice connection clears the speaking flag.
+					if (!this.HasMusicSource)
+						await this.WriteOutgoingAsync(
+							new(ReadOnlyMemory<byte>.Empty, FRAME_DURATION_MS, this._sequence++, 0, IsSilence: true),
+							cancellationToken).ConfigureAwait(false);
 				}
 			}
 		}
@@ -398,6 +400,11 @@ public sealed class VoiceOutputController : IExternalOpusSource, IAsyncDisposabl
 				await this.WriteOutgoingAsync(
 					new(copy, FRAME_DURATION_MS, this._sequence++, 0),
 					cancellationToken).ConfigureAwait(false);
+
+				// Pace at 20 ms per frame — without this the overlay blasts through
+				// pre-buffered PCM (e.g. MemoryStream from TTS) faster than the voice
+				// connection can consume, causing dropped frames and choppy audio.
+				await Task.Delay(FRAME_DURATION_MS, cancellationToken).ConfigureAwait(false);
 			}
 		}
 		finally

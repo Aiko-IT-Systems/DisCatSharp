@@ -571,6 +571,44 @@ public sealed class LavalinkGuildPlayer
 	}
 
 	/// <summary>
+	///     Updates the bot's self-deafen state without switching channels.
+	/// </summary>
+	/// <param name="deafened">Whether the bot should be deafened.</param>
+	public async Task SetDeafenedAsync(bool deafened)
+	{
+		var vsd = new DiscordDispatchPayload
+		{
+			OpCode = 4,
+			Payload = new VoiceStateUpdatePayload
+			{
+				GuildId = this.GuildId,
+				ChannelId = this.ChannelId,
+				Deafened = deafened,
+			}
+		};
+		await this.Session.Discord.WsSendAsync(LavalinkJson.SerializeObject(vsd)).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Updates the bot's self-mute state without switching channels.
+	/// </summary>
+	/// <param name="muted">Whether the bot should be muted.</param>
+	public async Task SetMutedAsync(bool muted)
+	{
+		var vsd = new DiscordDispatchPayload
+		{
+			OpCode = 4,
+			Payload = new VoiceStateUpdatePayload
+			{
+				GuildId = this.GuildId,
+				ChannelId = this.ChannelId,
+				Muted = muted
+			}
+		};
+		await this.Session.Discord.WsSendAsync(LavalinkJson.SerializeObject(vsd)).ConfigureAwait(false);
+	}
+
+	/// <summary>
 	///     Updates the player state.
 	/// </summary>
 	/// <param name="state">The player state to update with.</param>

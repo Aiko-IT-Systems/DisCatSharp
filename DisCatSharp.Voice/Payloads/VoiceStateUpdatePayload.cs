@@ -34,12 +34,12 @@ internal sealed class VoiceStateUpdatePayload
 	/// <summary>
 	///     Gets or sets a value indicating whether deafened.
 	/// </summary>
-	[JsonProperty("self_deaf")]
-	public bool Deafened { get; set; }
+	[JsonProperty("self_deaf", NullValueHandling = NullValueHandling.Ignore)]
+	public bool? Deafened { get; set; }
 
 	/// <summary>
 	///     Gets or sets a value indicating whether muted.
 	/// </summary>
-	[JsonProperty("self_mute")]
-	public bool Muted { get; set; }
+	[JsonProperty("self_mute", NullValueHandling = NullValueHandling.Ignore)]
+	public bool? Muted { get; set; }
 }

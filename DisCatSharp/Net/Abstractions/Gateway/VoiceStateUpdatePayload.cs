@@ -36,12 +36,12 @@ internal sealed class VoiceStateUpdatePayload : ObservableApiObject
 	/// <summary>
 	///     Gets or sets a value indicating whether deafened.
 	/// </summary>
-	[JsonProperty("self_deaf")]
-	internal bool Deafened { get; set; }
+	[JsonProperty("self_deaf", NullValueHandling = NullValueHandling.Ignore)]
+	internal bool? Deafened { get; set; }
 
 	/// <summary>
 	///     Gets or sets a value indicating whether muted.
 	/// </summary>
-	[JsonProperty("self_mute")]
-	internal bool Muted { get; set; }
+	[JsonProperty("self_mute", NullValueHandling = NullValueHandling.Ignore)]
+	internal bool? Muted { get; set; }
 }

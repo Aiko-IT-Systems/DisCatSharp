@@ -79,8 +79,10 @@ public sealed class VoiceExtension : BaseExtension
 	///     Create a Voice connection for the specified channel.
 	/// </summary>
 	/// <param name="channel">Channel to connect to.</param>
+	/// <param name="muted">Whether to connect as muted.</param>
+	/// <param name="deafened">Whether to connect as deafened.</param>
 	/// <returns>Voice connection for this channel.</returns>
-	public async Task<VoiceConnection> ConnectAsync(DiscordChannel channel)
+	public async Task<VoiceConnection> ConnectAsync(DiscordChannel channel, bool? muted = null, bool? deafened = null)
 	{
 		if (channel.Type != ChannelType.Voice && channel.Type != ChannelType.Stage)
 			throw new ArgumentException("Invalid channel specified; needs to be voice or stage channel", nameof(channel));
@@ -107,8 +109,8 @@ public sealed class VoiceExtension : BaseExtension
 			{
 				GuildId = gld.Id,
 				ChannelId = channel.Id,
-				Deafened = false,
-				Muted = false
+				Deafened = deafened,
+				Muted = muted
 			}
 		};
 		var vsj = JsonConvert.SerializeObject(vsd, Formatting.None);

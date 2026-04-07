@@ -651,6 +651,46 @@ public sealed class VoiceConnection : IDisposable
 	}
 
 	/// <summary>
+	///     Updates the bot's self-deafen state without switching channels.
+	/// </summary>
+	/// <param name="deafened">Whether the bot should be deafened.</param>
+	public async Task SetDeafenedAsync(bool deafened)
+	{
+		var vsd = new VoiceDispatchPayload
+		{
+			OpCode = 4,
+			Payload = new VoiceStateUpdatePayload
+			{
+				GuildId = this._guild.Id,
+				ChannelId = this.TargetChannel.Id,
+				Deafened = deafened,
+			}
+		};
+		var vsj = JsonConvert.SerializeObject(vsd, Formatting.None);
+		await (this.TargetChannel.Discord as DiscordClient).WsSendAsync(vsj).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Updates the bot's self-mute state without switching channels.
+	/// </summary>
+	/// <param name="muted">Whether the bot should be muted.</param>
+	public async Task SetMutedAsync(bool muted)
+	{
+		var vsd = new VoiceDispatchPayload
+		{
+			OpCode = 4,
+			Payload = new VoiceStateUpdatePayload
+			{
+				GuildId = this._guild.Id,
+				ChannelId = this.TargetChannel.Id,
+				Muted = muted
+			}
+		};
+		var vsj = JsonConvert.SerializeObject(vsd, Formatting.None);
+		await (this.TargetChannel.Discord as DiscordClient).WsSendAsync(vsj).ConfigureAwait(false);
+	}
+
+	/// <summary>
 	///     Waits until DAVE transitions to <see cref="DaveConnectionState.Active"/> or the timeout elapses.
 	/// </summary>
 	/// <param name="timeout">Maximum time to wait.</param>
