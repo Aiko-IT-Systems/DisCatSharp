@@ -167,12 +167,12 @@ public sealed class VoiceOutputController : IExternalOpusSource, IAsyncDisposabl
 			this._musicPumpCts = null;
 			this._musicPumpTask = null;
 
-			if (source is null)
-				return;
-
-			var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(this._disposeCts.Token, cancellationToken);
-			this._musicPumpCts = linkedCts;
-			this._musicPumpTask = Task.Run(() => this.RunMusicLoopAsync(source, linkedCts.Token), linkedCts.Token);
+			if (source is not null)
+			{
+				var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(this._disposeCts.Token, cancellationToken);
+				this._musicPumpCts = linkedCts;
+				this._musicPumpTask = Task.Run(() => this.RunMusicLoopAsync(source, linkedCts.Token), linkedCts.Token);
+			}
 		}
 
 		if (oldCts is not null)

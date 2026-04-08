@@ -46,18 +46,30 @@ public sealed class VoiceOutputControllerTests
 	/// </summary>
 	private sealed class InfiniteOpusSource : IExternalOpusSource
 	{
+		private readonly TaskCompletionSource _stopped = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
 		public int FramesRead { get; private set; }
+		public bool WasCancelled { get; private set; }
+		public Task Stopped => this._stopped.Task;
 
 		public async IAsyncEnumerable<ExternalOpusFrame> ReadFramesAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
 		{
 			var seq = 0u;
-			while (!cancellationToken.IsCancellationRequested)
+			try
 			{
-				await Task.Delay(5, cancellationToken).ConfigureAwait(false);
-				var payload = new byte[80];
-				Array.Fill(payload, (byte)0xAB);
-				this.FramesRead++;
-				yield return new(payload, 20, seq++, 0);
+				while (!cancellationToken.IsCancellationRequested)
+				{
+					await Task.Delay(5, cancellationToken).ConfigureAwait(false);
+					var payload = new byte[80];
+					Array.Fill(payload, (byte)0xAB);
+					this.FramesRead++;
+					yield return new(payload, 20, seq++, 0);
+				}
+			}
+			finally
+			{
+				this.WasCancelled = cancellationToken.IsCancellationRequested;
+				this._stopped.TrySetResult();
 			}
 		}
 	}
@@ -69,8 +81,9 @@ public sealed class VoiceOutputControllerTests
 
 		using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(2));
 
-		// First reader starts fine
+		// Start the first reader so it claims the single-reader slot before the second reader attempts to read.
 		var reader1 = controller.ReadFramesAsync(cts.Token).GetAsyncEnumerator(cts.Token);
+		var firstMoveNext = reader1.MoveNextAsync().AsTask();
 
 		// Second reader should throw
 		await Assert.ThrowsAsync<InvalidOperationException>(async () =>
@@ -79,6 +92,8 @@ public sealed class VoiceOutputControllerTests
 			await reader2.MoveNextAsync();
 		});
 
+		await cts.CancelAsync();
+		await Assert.ThrowsAnyAsync<OperationCanceledException>(() => firstMoveNext);
 		await reader1.DisposeAsync();
 	}
 
@@ -114,14 +129,17 @@ public sealed class VoiceOutputControllerTests
 		var source = new InfiniteOpusSource();
 		await controller.SetMusicSourceAsync(source);
 
-		// Let some frames flow
-		await Task.Delay(50);
+		using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(2));
+		await using var reader = controller.ReadFramesAsync(cts.Token).GetAsyncEnumerator(cts.Token);
+		Assert.True(await reader.MoveNextAsync());
+		Assert.True(source.FramesRead > 0);
 
 		// Unbind music
 		await controller.SetMusicSourceAsync(null);
+		await source.Stopped.WaitAsync(TimeSpan.FromSeconds(2));
 
-		// The infinite source's pump should have been cancelled
-		Assert.True(source.FramesRead > 0);
+		Assert.False(controller.HasMusicSource);
+		Assert.True(source.WasCancelled);
 	}
 
 	[Fact]
@@ -133,13 +151,16 @@ public sealed class VoiceOutputControllerTests
 		var source2 = new FakeOpusSource(2);
 
 		await controller.SetMusicSourceAsync(source1);
-		await Task.Delay(50);
+		using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(2));
+		await using var reader = controller.ReadFramesAsync(cts.Token).GetAsyncEnumerator(cts.Token);
+		Assert.True(await reader.MoveNextAsync());
+		Assert.True(source1.FramesRead > 0);
 
 		// Rebind to a different source
 		await controller.SetMusicSourceAsync(source2);
 
-		// Source1 should have been cancelled
-		Assert.True(source1.FramesRead > 0);
+		await source1.Stopped.WaitAsync(TimeSpan.FromSeconds(2));
+		Assert.True(source1.WasCancelled);
 	}
 
 	[Fact]
@@ -188,8 +209,9 @@ public sealed class VoiceOutputControllerTests
 			break;
 		}
 
-		// Allow a moment for async disposal
-		await Task.Delay(200);
+		var deadline = DateTime.UtcNow + TimeSpan.FromSeconds(2);
+		while (controller.HasActiveOverlay && DateTime.UtcNow < deadline)
+			await Task.Delay(25);
 
 		// Stream should be disposed (CanRead returns false after disposal)
 		Assert.False(stream.CanRead);
@@ -206,13 +228,18 @@ public sealed class VoiceOutputControllerTests
 		var musicSource = new InfiniteOpusSource();
 		await controller.SetMusicSourceAsync(musicSource);
 
+		using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(2));
+		await using var reader = controller.ReadFramesAsync(cts.Token).GetAsyncEnumerator(cts.Token);
+		Assert.True(await reader.MoveNextAsync());
+
 		// Queue an overlay
 		var pcmFrameSize = 48000 / 1000 * 20 * 2 * 2;
-		var overlay = new MemoryStream(new byte[pcmFrameSize * 3]); // 3 frames
+		var overlay = new MemoryStream(new byte[pcmFrameSize * 20]); // 20 frames keeps overlay active long enough for CI
 		await controller.QueuePcmOverlayAsync(overlay, "tts");
 
-		// Give the overlay loop time to pick up the job
-		await Task.Delay(50);
+		var deadline = DateTime.UtcNow + TimeSpan.FromSeconds(2);
+		while (!controller.HasActiveOverlay && DateTime.UtcNow < deadline)
+			await Task.Delay(25);
 
 		Assert.True(controller.HasActiveOverlay);
 	}
