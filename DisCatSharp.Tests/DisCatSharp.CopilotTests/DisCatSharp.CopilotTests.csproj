@@ -21,6 +21,7 @@
 		<ProjectReference Include="..\..\DisCatSharp\DisCatSharp.csproj" />
 		<ProjectReference Include="..\..\DisCatSharp.ApplicationCommands\DisCatSharp.ApplicationCommands.csproj" />
 		<ProjectReference Include="..\..\DisCatSharp.Voice\DisCatSharp.Voice.csproj" />
+		<ProjectReference Include="..\..\DisCatSharp.Voice.Natives\DisCatSharp.Voice.Natives.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
