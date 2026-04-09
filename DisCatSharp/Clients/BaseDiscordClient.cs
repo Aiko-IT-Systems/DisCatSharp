@@ -96,7 +96,6 @@ public abstract class BaseDiscordClient : IDisposable, IAsyncDisposable
 		{
 			Timeout = this.Configuration.Rest.RequestTimeout
 		};
-		this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.USER_AGENT, Utilities.GetUserAgent());
 
 		var a = typeof(DiscordClient).GetTypeInfo().Assembly;
 
@@ -111,6 +110,7 @@ public abstract class BaseDiscordClient : IDisposable, IAsyncDisposable
 			if (v.Revision > 0)
 				this.VersionString = $"{vs}, CI build {v.Revision}";
 		}
+		this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.USER_AGENT, Utilities.GetUserAgent());
 
 		this.InitGlobalExceptionTracking();
 		_ = Task.Run(() => DisCatSharpBadDomainChecker.LoadAndInitBadDomainHashesAsync(this))
