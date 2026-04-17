@@ -126,6 +126,11 @@ public enum ChannelFlags : long
 	IsModeratorReportChannel = 1L << 19,
 
 	/// <summary>
+	/// 	Marks this channel as containing spoilers, so that plot twists, heavy topics, or other sensitive discussions are hidden until users choose to view.
+	/// </summary>
+	IsSpoiler = 1L << 21,
+
+	/// <summary>
 	///      The flags are unknown.
 	/// </summary>
 	Unknown = long.MaxValue
