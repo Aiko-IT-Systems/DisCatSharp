@@ -9157,15 +9157,13 @@ public sealed class DiscordApiClient
 
 		var formData = new Dictionary<string, string>
 		{
-			{ "client_id", this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture) },
-			{ "client_secret", this.OAuth2Client.ClientSecret },
 			{ "grant_type", "authorization_code" },
 			{ "code", code },
 			{ "redirect_uri", this.OAuth2Client.RedirectUri.AbsoluteUri }
 		};
 
 		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
-		var res = await this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData, cancellationToken: cancellationToken).ConfigureAwait(false);
+       var res = await this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData, this.BuildOAuth2BasicHeaders(), cancellationToken: cancellationToken).ConfigureAwait(false);
 
 		var accessTokenInformation = DiscordJson.DeserializeObject<DiscordAccessToken>(res.Response, null);
 		return accessTokenInformation;
@@ -9187,18 +9185,26 @@ public sealed class DiscordApiClient
 
 		var formData = new Dictionary<string, string>
 		{
-			{ "client_id", this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture) },
-			{ "client_secret", this.OAuth2Client.ClientSecret },
 			{ "grant_type", "refresh_token" },
 			{ "refresh_token", refreshToken },
 			{ "redirect_uri", this.OAuth2Client.RedirectUri.AbsoluteUri }
 		};
 
 		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
-		var res = await this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData, cancellationToken: cancellationToken).ConfigureAwait(false);
+       var res = await this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData, this.BuildOAuth2BasicHeaders(), cancellationToken: cancellationToken).ConfigureAwait(false);
 
 		var accessTokenInformation = DiscordJson.DeserializeObject<DiscordAccessToken>(res.Response, null);
 		return accessTokenInformation;
+	}
+
+	private Dictionary<string, string> BuildOAuth2BasicHeaders()
+	{
+		var authorizationString = Encoding.UTF8.GetBytes($"{this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture)}:{this.OAuth2Client.ClientSecret}");
+		var base64EncodedAuthorizationString = Convert.ToBase64String(authorizationString);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add(CommonHeaders.AUTHORIZATION_BASIC, base64EncodedAuthorizationString);
+		return headers;
 	}
 
 	/// <summary>
@@ -9216,11 +9222,7 @@ public sealed class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
 		{ }, out var path);
 
-		var authorizationString = Encoding.UTF8.GetBytes($"{this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture)}:{this.OAuth2Client.ClientSecret}");
-		var base64EncodedAuthorizationString = Convert.ToBase64String(authorizationString);
-
-		var headers = Utilities.GetBaseHeaders();
-		headers.Add("Basic", base64EncodedAuthorizationString);
+      var headers = this.BuildOAuth2BasicHeaders();
 
 		var formData = new Dictionary<string, string>
 		{
