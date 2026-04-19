@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Security;
 using System.Security.Cryptography;
@@ -135,8 +136,8 @@ public sealed class DiscordOAuth2Client : IDisposable, IAsyncDisposable
 
 		this.ApiClient = new(this, proxy!, parsedTimeout, useRelativeRateLimit, this.Logger);
 
-		this.ApiClient.Rest.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("client_id", this.ClientId.ToString());
-		this.ApiClient.Rest.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("client_secret", this.ClientSecret);
+		var authorizationBytes = Encoding.UTF8.GetBytes($"{this.ClientId.ToString(CultureInfo.InvariantCulture)}:{this.ClientSecret}");
+		this.ApiClient.Rest.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(CommonHeaders.AUTHORIZATION_BASIC, Convert.ToBase64String(authorizationBytes));
 
 		var a = typeof(DiscordOAuth2Client).GetTypeInfo().Assembly;
 		var iv = a.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
