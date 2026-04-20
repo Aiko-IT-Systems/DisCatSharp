@@ -292,6 +292,31 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
+	///     Executes a rest request directly, bypassing the bucket worker queue.
+	///     Used for latency-sensitive endpoints like interaction callbacks.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="bucket">The bucket.</param>
+	/// <param name="url">The url.</param>
+	/// <param name="method">The method.</param>
+	/// <param name="route">The route.</param>
+	/// <param name="headers">The headers.</param>
+	/// <param name="payload">The payload.</param>
+	/// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	internal Task<RestResponse> DoDirectRequestAsync(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string>? headers = null, string? payload = null, double? ratelimitWaitOverride = null, CancellationToken cancellationToken = default)
+	{
+		var req = new RestRequest(client, bucket, url, method, route, headers, payload, ratelimitWaitOverride, cancellationToken: cancellationToken);
+
+		if (this.Discord is not null)
+			this.Rest.ExecuteDirectAsync(req).LogTaskFault(this.Discord.Logger, LogLevel.Error, LoggerEvents.RestError, $"Error while executing direct request. Url: {url.AbsoluteUri}");
+		else
+			_ = this.Rest.ExecuteDirectAsync(req);
+
+		return req.WaitForCompletionAsync();
+	}
+
+	/// <summary>
 	///     Builds a CSV file for target users from the provided user ids.
 	/// </summary>
 	/// <param name="targetUserIds">The target user ids.</param>
@@ -514,6 +539,47 @@ public sealed class DiscordApiClient
 			this.Rest.ExecuteRequestAsync(req).LogTaskFault(this.Discord.Logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
 		else
 			_ = this.Rest.ExecuteRequestAsync(req);
+
+		return req.WaitForCompletionAsync();
+	}
+
+	/// <summary>
+	///     Executes a multipart request directly, bypassing the bucket worker queue.
+	///     Used for latency-sensitive endpoints like interaction callbacks with file uploads.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="bucket">The bucket.</param>
+	/// <param name="url">The url.</param>
+	/// <param name="method">The method.</param>
+	/// <param name="route">The route.</param>
+	/// <param name="headers">The headers.</param>
+	/// <param name="values">The values.</param>
+	/// <param name="files">The files.</param>
+	/// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
+	/// <param name="overwriteFileIdStart">The file id start to overwrite.</param>
+	/// <param name="fileFieldNameFactory">The factory function to generate file field names.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	private Task<RestResponse> DoDirectMultipartAsync(
+		BaseDiscordClient client,
+		RateLimitBucket bucket,
+		Uri url,
+		RestRequestMethod method,
+		string route,
+		IReadOnlyDictionary<string, string>? headers = null,
+		IReadOnlyDictionary<string, string>? values = null,
+		IEnumerable<DiscordMessageFile>? files = null,
+		double? ratelimitWaitOverride = null,
+		int? overwriteFileIdStart = null,
+		Func<int, string>? fileFieldNameFactory = null,
+		CancellationToken cancellationToken = default
+	)
+	{
+		var req = new MultipartWebRequest(client, bucket, url, method, route, headers, values, files, ratelimitWaitOverride, overwriteFileIdStart, fileFieldNameFactory, cancellationToken);
+
+		if (this.Discord is not null)
+			this.Rest.ExecuteDirectAsync(req).LogTaskFault(this.Discord.Logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing direct request");
+		else
+			_ = this.Rest.ExecuteDirectAsync(req);
 
 		return req.WaitForCompletionAsync();
 	}
@@ -8104,14 +8170,14 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "false").AddParameter("with_response", "true").Build();
 		if (builder is not null && builder.Files is not null && values.Count is not 0)
 		{
-			response = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files, cancellationToken: cancellationToken).ConfigureAwait(false);
+			response = await this.DoDirectMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 			if (builder.Files is not null)
 				foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
 					file.Stream.Position = file.ResetPositionTo!.Value;
 		}
 		else
-			response = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld), cancellationToken: cancellationToken).ConfigureAwait(false);
+			response = await this.DoDirectRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld), cancellationToken: cancellationToken).ConfigureAwait(false);
 
 		return response.ResponseCode is not HttpStatusCode.NoContent && !string.IsNullOrEmpty(response.Response)
 			? DiscordJson.DeserializeObject<DiscordInteractionCallbackResponse>(response.Response, this.Discord)
@@ -8155,7 +8221,7 @@ public sealed class DiscordApiClient
 		}, out var path);
 
 		var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "true").Build();
-		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld), cancellationToken: cancellationToken).ConfigureAwait(false);
+		await this.DoDirectRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld), cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -8193,7 +8259,7 @@ public sealed class DiscordApiClient
 		}, out var path);
 
 		var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "true").Build();
-		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld), cancellationToken: cancellationToken).ConfigureAwait(false);
+		await this.DoDirectRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld), cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>

@@ -193,6 +193,38 @@ internal sealed class RestClient : IDisposable, IRestDiagnostics
 	}
 
 	/// <summary>
+	///     Executes a request directly without going through the bucket worker queue.
+	///     Used for latency-sensitive endpoints (e.g., interaction callbacks) where
+	///     the 3-second Discord response deadline makes queueing overhead unacceptable.
+	///     On any failure (rate limit, transient, server error), the request is failed
+	///     immediately without retries.
+	/// </summary>
+	/// <param name="request">The request to execute directly.</param>
+	internal async Task ExecuteDirectAsync(BaseRestRequest request)
+	{
+		ArgumentNullException.ThrowIfNull(request);
+
+		if (this._disposed)
+		{
+			request.SetFaulted(new ObjectDisposedException(nameof(RestClient), "Cannot execute request on a disposed RestClient."));
+			request.CancellationTokenSource.Dispose();
+			return;
+		}
+
+		var result = await this.SendAndParseAsync(request, isProbe: false, request.CancellationTokenSource.Token).ConfigureAwait(false);
+
+		if (result.Error is not null)
+		{
+			request.SetFaulted(result.Error);
+			this.ReportDiagnostics(request, result.Response!, result.Error);
+		}
+		else
+		{
+			request.SetCompleted(result.Response!);
+		}
+	}
+
+	/// <summary>
 	///     Executes the form data request by enqueuing it into the appropriate bucket worker.
 	///     Form and regular requests share the same queue/worker infrastructure.
 	/// </summary>
