@@ -102,7 +102,7 @@ public enum ChannelFlags : long
 	/// <summary>
 	///     Currently unknown.
 	/// </summary>
-	[DiscordInExperiment]
+	[DiscordDeprecated]
 	IsBroadcasting = 1L << 14,
 
 	/// <summary>
@@ -123,11 +123,13 @@ public enum ChannelFlags : long
 	/// <summary>
 	///     Indicates that this channel is a moderator report channel.
 	/// </summary>
+	[DiscordUnreleased, DiscordInExperiment]
 	IsModeratorReportChannel = 1L << 19,
 
 	/// <summary>
 	/// 	Marks this channel as containing spoilers, so that plot twists, heavy topics, or other sensitive discussions are hidden until users choose to view.
 	/// </summary>
+	[DiscordUnreleased, DiscordInExperiment]
 	IsSpoiler = 1L << 21,
 
 	/// <summary>
