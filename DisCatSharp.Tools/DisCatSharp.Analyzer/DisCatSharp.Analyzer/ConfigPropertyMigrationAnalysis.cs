@@ -15,9 +15,9 @@ internal static class ConfigPropertyMigrationAnalysis
 	// Maps old property name -> (nested config property, new property name)
 	// e.g., "ApiVersion" -> ("Api", "Version")
 	// For deeper nesting: "DisableUpdateCheck" -> ("Diagnostics.UpdateChecks", "Disabled")
-	internal static readonly ImmutableDictionary<string, (string NestedPath, string NewName)> s_propertyMigrations =
-		ImmutableDictionary.CreateRange<string, (string, string)>(new[]
-		{
+	internal static readonly ImmutableDictionary<string, (string NestedPath, string NewName)> PropertyMigrations =
+		ImmutableDictionary.CreateRange(
+        [
 			// Api group
 			new KeyValuePair<string, (string, string)>("ApiVersion", ("Api", "Version")),
 			new KeyValuePair<string, (string, string)>("ApiChannel", ("Api", "Channel")),
@@ -38,7 +38,6 @@ internal static class ConfigPropertyMigrationAnalysis
 			// Rest group
 			new KeyValuePair<string, (string, string)>("HttpTimeout", ("Rest", "RequestTimeout")),
 			new KeyValuePair<string, (string, string)>("UseRelativeRatelimit", ("Rest", "UseRelativeRatelimit")),
-			new KeyValuePair<string, (string, string)>("Proxy", ("", "Proxy")),
 			// Cache group
 			new KeyValuePair<string, (string, string)>("MessageCacheSize", ("Cache", "MessageCacheSize")),
 			new KeyValuePair<string, (string, string)>("PresenceCacheSize", ("Cache", "PresenceCacheSize")),
@@ -72,7 +71,7 @@ internal static class ConfigPropertyMigrationAnalysis
 			new KeyValuePair<string, (string, string)>("SentryDebug", ("Telemetry", "SentryDebug")),
 			new KeyValuePair<string, (string, string)>("DisableExceptionFilter", ("Telemetry", "DisableExceptionFilter")),
 			new KeyValuePair<string, (string, string)>("CustomSentryDsn", ("Telemetry", "CustomSentryDsn")),
-		});
+		]);
 
 	internal static bool TryGetMigration(
 		SemanticModel semanticModel,
@@ -86,7 +85,7 @@ internal static class ConfigPropertyMigrationAnalysis
 		nestedPath = null!;
 		newName = null!;
 
-		if (!s_propertyMigrations.TryGetValue(oldName, out var migration))
+		if (!PropertyMigrations.TryGetValue(oldName, out var migration))
 			return false;
 
 		// Verify the containing type is DiscordConfiguration
@@ -116,7 +115,7 @@ internal static class ConfigPropertyMigrationAnalysis
 		nestedPath = null!;
 		newName = null!;
 
-		if (!s_propertyMigrations.TryGetValue(oldName, out var migration))
+		if (!PropertyMigrations.TryGetValue(oldName, out var migration))
 			return false;
 
 		// Verify the initializer belongs to a DiscordConfiguration creation

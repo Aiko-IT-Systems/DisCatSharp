@@ -141,7 +141,7 @@ public sealed class DisCatSharpConfigPropertyMigrationCodeFix : SingleDiagnostic
 			}
 
 			var propertyName = identifier.Identifier.Text;
-			if (!ConfigPropertyMigrationAnalysis.s_propertyMigrations.TryGetValue(propertyName, out var migration))
+			if (!ConfigPropertyMigrationAnalysis.PropertyMigrations.TryGetValue(propertyName, out var migration))
 			{
 				kept.Add(expression);
 				continue;
