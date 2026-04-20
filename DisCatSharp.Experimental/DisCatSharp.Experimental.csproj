@@ -24,7 +24,7 @@
 	<ItemGroup>
 		<PackageReference Include="Concentus" Version="2.2.2" />
 		<PackageReference Include="Concentus.Oggfile" Version="1.0.7" />
-		<PackageReference Include="DisCatSharp.Analyzer" Version="1.0.6.0">
+		<PackageReference Include="DisCatSharp.Analyzer" Version="1.0.6.1">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
