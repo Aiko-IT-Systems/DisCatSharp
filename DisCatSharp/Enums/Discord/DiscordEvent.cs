@@ -154,5 +154,6 @@ public enum DiscordEvent
 	GuildAppliedBoostsDeleted,
 	GuildPowerupEntitlementsCreated,
 	GuildPowerupEntitlementsDeleted,
+	ChannelInfo,
 	GlobalExceptionOccurred
 }
