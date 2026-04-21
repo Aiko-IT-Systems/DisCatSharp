@@ -66,7 +66,6 @@ internal static class ConfigPropertyMigrationAnalysis
 			new KeyValuePair<string, (string, string)>("DeveloperUserId", ("Telemetry", "DeveloperUserId")),
 			new KeyValuePair<string, (string, string)>("EnableDiscordIdScrubber", ("Telemetry", "EnableDiscordIdScrubber")),
 			new KeyValuePair<string, (string, string)>("TrackExceptions", ("Telemetry", "TrackExceptions")),
-			new KeyValuePair<string, (string, string)>("EnableLibraryDeveloperMode", ("", "EnableLibraryDeveloperMode")),
 			new KeyValuePair<string, (string, string)>("DisableScrubber", ("Telemetry", "DisableScrubber")),
 			new KeyValuePair<string, (string, string)>("SentryDebug", ("Telemetry", "SentryDebug")),
 			new KeyValuePair<string, (string, string)>("DisableExceptionFilter", ("Telemetry", "DisableExceptionFilter")),

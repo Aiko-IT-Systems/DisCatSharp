@@ -731,6 +731,17 @@ public sealed partial class DiscordClient
 
 	#endregion
 
+	/// <summary>
+	///     Fired in response to <see cref="DiscordClient.RequestChannelInfoAsync" />.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, ChannelInfoEventArgs> ChannelInfo
+	{
+		add => this._channelInfo.Register(value);
+		remove => this._channelInfo.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, ChannelInfoEventArgs> _channelInfo;
+
 	#region Guild Soundboard Sound
 
 	/// <summary>

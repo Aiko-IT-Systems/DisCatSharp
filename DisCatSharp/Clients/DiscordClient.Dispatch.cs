@@ -530,6 +530,12 @@ public sealed partial class DiscordClient
 
 			#endregion
 
+			case "channel_info":
+				gid = (ulong)dat["guild_id"]!;
+				var channelInfos = DiscordJson.DeserializeIEnumerableObject<List<DiscordChannelInfo>>(dat["channels"]!.ToString(), this);
+				await this.OnChannelInfoEventAsync(channelInfos, gid).ConfigureAwait(false);
+				break;
+
 			#region Guild Member Applications
 
 			// TODO: This is so fucked..
@@ -1341,6 +1347,8 @@ public sealed partial class DiscordClient
 	{
 		var guild = this.InternalGetCachedGuild(guildId);
 		var channel = this.InternalGetCachedChannel(channelId);
+		if (channel is not null)
+			channel.Status = status;
 
 		var ea = new VoiceChannelStatusUpdateEventArgs(this.ServiceProvider)
 		{
@@ -1361,6 +1369,9 @@ public sealed partial class DiscordClient
 	{
 		var guild = this.InternalGetCachedGuild(guildId);
 		var channel = this.InternalGetCachedChannel(channelId);
+		if (channel is not null)
+			channel.VoiceStartTime = voiceStartTime;
+
 		var ea = new VoiceChannelStartTimeUpdateEventArgs(this.ServiceProvider)
 		{
 			Guild = guild,
@@ -2983,22 +2994,17 @@ public sealed partial class DiscordClient
 	/// <param name="guildId">The guild id.</param>
 	internal async Task OnSoundboardSoundsEventAsync(List<DiscordSoundboardSound> sounds, ulong guildId)
 	{
-		var guild = this.Guilds.TryGetValue(guildId, out var cachedGuild)
-			? cachedGuild
-			: new()
-			{
-				Id = guildId,
-				Discord = this
-			};
+		var exists = this.GuildsInternal.TryGetValue(guildId, out var cachedGuild);
+		var guild = cachedGuild ?? new() { Id = guildId, Discord = this };
 
-		if (this.Guilds.ContainsKey(guildId))
+		if (exists && cachedGuild is not null)
 		{
-			this.Guilds[guildId].SoundboardSoundsInternal.Clear();
+			cachedGuild.SoundboardSoundsInternal.Clear();
 			foreach (var sound in sounds)
 			{
 				sound.Discord = this;
 				sound.GuildId ??= guildId;
-				this.Guilds[guildId].SoundboardSoundsInternal.TryAdd(sound.Id, sound);
+				cachedGuild.SoundboardSoundsInternal.TryAdd(sound.Id, sound);
 			}
 		}
 
@@ -3012,6 +3018,38 @@ public sealed partial class DiscordClient
 	}
 
 	#endregion
+
+	/// <summary>
+	///     Handles the channel info event.
+	/// </summary>
+	/// <param name="channelInfos">The channel infos.</param>
+	/// <param name="guildId">The guild id.</param>
+	internal async Task OnChannelInfoEventAsync(List<DiscordChannelInfo> channelInfos, ulong guildId)
+	{
+		var exists = this.GuildsInternal.TryGetValue(guildId, out var cachedGuild);
+		var guild = cachedGuild ?? new() { Id = guildId, Discord = this };
+
+		if (exists && cachedGuild is not null)
+		{
+			foreach (var channelInfo in channelInfos)
+			{
+				channelInfo.Discord = this;
+				if (cachedGuild.ChannelsInternal.TryGetValue(channelInfo.Id, out var cachedChannel))
+				{
+					cachedChannel.Status = channelInfo.Status;
+					cachedChannel.VoiceStartTime = channelInfo.VoiceStartTime;
+				}
+			}
+		}
+
+		if (this._channelInfo is not null)
+			await this.RaiseEventAsync(this._channelInfo, new(this.ServiceProvider)
+			{
+				GuildId = guildId,
+				Guild = guild,
+				Channels = channelInfos
+			}).ConfigureAwait(false);
+	}
 
 	#region Invite
 

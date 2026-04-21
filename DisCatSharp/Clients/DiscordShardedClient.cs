@@ -652,6 +652,7 @@ public sealed partial class DiscordShardedClient : IDisposable, IAsyncDisposable
 		this._guildAppliedBoostsDeleted = new("GUILD_APPLIED_BOOSTS_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildPowerupEntitlementsCreated = new("GUILD_POWERUP_ENTITLEMENTS_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildPowerupEntitlementsDeleted = new("GUILD_POWERUP_ENTITLEMENTS_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._channelInfo = new("CHANNEL_INFO", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 	}
 
 	/// <summary>
@@ -770,6 +771,7 @@ public sealed partial class DiscordShardedClient : IDisposable, IAsyncDisposable
 		client.GuildAppliedBoostsDeleted += this.Client_GuildAppliedBoostsDeleted;
 		client.GuildPowerupEntitlementsCreated += this.Client_GuildPowerupEntitlementsCreated;
 		client.GuildPowerupEntitlementsDeleted += this.Client_GuildPowerupEntitlementsDeleted;
+		client.ChannelInfo += this.Client_ChannelInfo;
 	}
 
 	/// <summary>
@@ -888,6 +890,7 @@ public sealed partial class DiscordShardedClient : IDisposable, IAsyncDisposable
 		client.GuildAppliedBoostsDeleted -= this.Client_GuildAppliedBoostsDeleted;
 		client.GuildPowerupEntitlementsCreated -= this.Client_GuildPowerupEntitlementsCreated;
 		client.GuildPowerupEntitlementsDeleted -= this.Client_GuildPowerupEntitlementsDeleted;
+		client.ChannelInfo -= this.Client_ChannelInfo;
 	}
 
 	/// <summary>

@@ -905,6 +905,17 @@ public sealed partial class DiscordShardedClient
 
 	#endregion
 
+	/// <summary>
+	///     Fired in response to <see cref="DiscordClient.RequestChannelInfoAsync" />.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, ChannelInfoEventArgs> ChannelInfo
+	{
+		add => this._channelInfo.Register(value);
+		remove => this._channelInfo.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, ChannelInfoEventArgs> _channelInfo;
+
 	#region Guild Member Application
 
 	/// <summary>
@@ -2348,6 +2359,14 @@ public sealed partial class DiscordShardedClient
 	/// <param name="e">The event args.</param>
 	private Task Client_SoundboardSounds(DiscordClient client, SoundboardSoundsEventArgs e)
 		=> this._soundboardSounds.InvokeAsync(client, e);
+
+	/// <summary>
+	///     Handles the soundboard sounds event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_ChannelInfo(DiscordClient client, ChannelInfoEventArgs e)
+		=> this._channelInfo.InvokeAsync(client, e);
 
 	/// <summary>
 	///     Handles the guild join request created event.

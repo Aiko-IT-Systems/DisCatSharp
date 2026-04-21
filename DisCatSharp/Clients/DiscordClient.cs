@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using DisCatSharp.Attributes;
 using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
+using DisCatSharp.EventArgs;
 using DisCatSharp.Entities.Core;
 using DisCatSharp.Entities.OAuth2;
 using DisCatSharp.Enums;
@@ -345,6 +346,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._guildAppliedBoostsDeleted = new("GUILD_APPLIED_BOOSTS_DELETED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildPowerupEntitlementsCreated = new("GUILD_POWERUP_ENTITLEMENTS_CREATED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildPowerupEntitlementsDeleted = new("GUILD_POWERUP_ENTITLEMENTS_DELETED", EventExecutionLimit, this.EventErrorHandler);
+		this._channelInfo = new("CHANNEL_INFO", EventExecutionLimit, this.EventErrorHandler);
 
 		// Internal extension events — always sequential, fired before public events
 		this.InternalReadyEv = new("INTERNAL_READY", EventExecutionLimit, this.EventErrorHandler);
@@ -618,21 +620,83 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public async Task<IReadOnlyDictionary<ulong, IReadOnlyList<DiscordSoundboardSound>>> RequestAndWaitForSoundboardSoundsAsync(IEnumerable<ulong> guildIds)
 	{
 		var targetGuildIds = guildIds.ToList();
+		var results = new ConcurrentDictionary<ulong, IReadOnlyList<DiscordSoundboardSound>>();
+		var tcs = new TaskCompletionSource<IReadOnlyDictionary<ulong, IReadOnlyList<DiscordSoundboardSound>>>();
 
-		Dictionary<ulong, IReadOnlyList<DiscordSoundboardSound>> guildSoundsKvp = [];
-		this.SoundboardSounds += (_, e) =>
+		Task Handler(DiscordClient _, SoundboardSoundsEventArgs e)
 		{
 			if (targetGuildIds.Contains(e.GuildId))
-				guildSoundsKvp.TryAdd(e.GuildId, e.Sounds);
+			{
+				results.TryAdd(e.GuildId, e.Sounds);
+				if (results.Count == targetGuildIds.Count)
+					tcs.TrySetResult(results);
+			}
+
 			return Task.CompletedTask;
+		}
+
+		this.SoundboardSounds += Handler;
+		try
+		{
+			await this.RequestSoundboardSoundsAsync(targetGuildIds).ConfigureAwait(false);
+			return await tcs.Task.ConfigureAwait(false);
+		}
+		finally
+		{
+			this.SoundboardSounds -= Handler;
+		}
+	}
+
+	/// <summary>
+	///     Requests channel information over the gateway.
+	/// </summary>
+	/// <param name="guildId">The guild id to request channel information from.</param>
+	/// <param name="includeStatus">Whether to include the channel's status. Defaults to <see langword="true" />.</param>
+	/// <param name="includeVoiceStartTime">Whether to include the channel's voice start time. Defaults to <see langword="true" />.</param>
+	public async Task RequestChannelInfoAsync(ulong guildId, bool includeStatus = true, bool includeVoiceStartTime = true)
+	{
+		var payload = new DiscordDispatchPayload
+		{
+			OpCode = 43,
+			Payload = new RequestChannelInfoPayload
+			{
+				GuildId = guildId,
+				IncludeStatus = includeStatus,
+				IncludeVoiceStartTime = includeVoiceStartTime
+			}
 		};
 
-		await this.RequestSoundboardSoundsAsync(targetGuildIds);
+		await this.WsSendAsync(DiscordJson.SerializeObject(payload)).ConfigureAwait(false);
+	}
 
-		while (guildSoundsKvp.Keys.Count != targetGuildIds.Count)
-			await Task.Delay(TimeSpan.FromSeconds(1), this._cancelToken);
+	/// <summary>
+	///     Requests and waits for guild channel information.
+	/// </summary>
+	/// <param name="guildId">The guild id to request channel information from.</param>
+	/// <param name="includeStatus">Whether to include the channel's status. Defaults to <see langword="true" />.</param>
+	/// <param name="includeVoiceStartTime">Whether to include the channel's voice start time. Defaults to <see langword="true" />.</param>
+	/// <returns>The requested <see cref="DiscordChannelInfo" />'s.</returns>
+	public async Task<IReadOnlyList<DiscordChannelInfo>> RequestAndWaitForChannelInfoAsync(ulong guildId, bool includeStatus = true, bool includeVoiceStartTime = true)
+	{
+		var tcs = new TaskCompletionSource<IReadOnlyList<DiscordChannelInfo>>();
 
-		return guildSoundsKvp.AsReadOnly();
+		Task Handler(DiscordClient _, ChannelInfoEventArgs e)
+		{
+			if (e.GuildId == guildId)
+				tcs.TrySetResult(e.Channels);
+			return Task.CompletedTask;
+		}
+
+		this.ChannelInfo += Handler;
+		try
+		{
+			await this.RequestChannelInfoAsync(guildId, includeStatus, includeVoiceStartTime).ConfigureAwait(false);
+			return await tcs.Task.ConfigureAwait(false);
+		}
+		finally
+		{
+			this.ChannelInfo -= Handler;
+		}
 	}
 
 	/// <summary>

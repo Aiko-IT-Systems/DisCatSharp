@@ -314,8 +314,14 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <summary>
 	/// Gets the voice channel status.
 	/// </summary>
-	[JsonProperty("status", NullValueHandling = NullValueHandling.Include)]
+	[JsonIgnore]
 	public string? Status { get; internal set; }
+
+	/// <summary>
+	///    Gets the voice channel start time.
+	/// </summary>
+	[JsonIgnore]
+	public DateTimeOffset? VoiceStartTime { get; internal set; }
 
 	/// <summary>
 	///     Checks whether this <see cref="DiscordChannel" /> is equal to another <see cref="DiscordChannel" />.
