@@ -44,6 +44,7 @@ public class DiscordVoiceState : ObservableApiObject
 
 		this.SessionId = other.SessionId;
 		this.RequestToSpeakTimestamp = other.RequestToSpeakTimestamp;
+		this.ConnectedAtRaw = other.ConnectedAtRaw;
 	}
 
 	/// <summary>
@@ -174,6 +175,18 @@ public class DiscordVoiceState : ObservableApiObject
 	/// </summary>
 	[JsonProperty("request_to_speak_timestamp", NullValueHandling = NullValueHandling.Ignore)]
 	public DateTimeOffset? RequestToSpeakTimestamp { get; set; }
+
+	/// <summary>
+	///     Raw connected at unix timestamp in seconds.
+	/// </summary>
+	[JsonProperty("connected_at", NullValueHandling = NullValueHandling.Ignore)]
+	internal long? ConnectedAtRaw { get; set; }
+
+	/// <summary>
+	///     Gets the time at which the user connected to voice (UTC).
+	/// </summary>
+	[JsonIgnore]
+	public DateTimeOffset? ConnectedAt => this.ConnectedAtRaw.HasValue ? DateTimeOffset.FromUnixTimeSeconds(this.ConnectedAtRaw.Value) : (DateTimeOffset?)null;
 
 	/// <summary>
 	///     Gets the member this voice state belongs to.
