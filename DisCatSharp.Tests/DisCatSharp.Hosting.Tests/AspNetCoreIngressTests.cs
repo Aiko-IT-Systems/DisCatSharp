@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 using DisCatSharp.Hosting.AspNetCore;
@@ -12,6 +14,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using Xunit;
@@ -181,6 +185,103 @@ public sealed class AspNetCoreIngressTests
 		using MemoryStream body = new([1, 2, 3, 4, 5]);
 
 		await Assert.ThrowsAsync<InvalidOperationException>(() => reader.ReadAsync(body).AsTask());
+	}
+
+	[Fact]
+	public void AddDisCatSharpAspNetCoreSelfHost_RegistersSelfHostInfrastructure()
+	{
+		ServiceCollection services = [];
+
+		services.AddDisCatSharpAspNetCoreSelfHost(
+			configureSelfHost: options =>
+			{
+				options.ListenAddress = "0.0.0.0";
+				options.ListenPort = 8443;
+				options.Scheme = "https";
+				options.BaseUrl = new Uri("https://bot.example.com/base");
+			},
+			configureAspNetCore: options => options.RoutePrefix = "/discord-api");
+
+		using var provider = services.BuildServiceProvider();
+		var options = provider.GetRequiredService<IOptions<DiscordAspNetCoreSelfHostOptions>>().Value;
+
+		Assert.Equal("0.0.0.0", options.ListenAddress);
+		Assert.Equal(8443, options.ListenPort);
+		Assert.Equal("https", options.Scheme);
+		Assert.Equal(new Uri("https://bot.example.com/base"), options.BaseUrl);
+		Assert.NotNull(provider.GetRequiredService<DiscordAspNetCoreSelfHostRuntime>());
+		Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IHostedService)
+			&& string.Equals(descriptor.ImplementationType?.FullName, "DisCatSharp.Hosting.AspNetCore.DiscordAspNetCoreSelfHostService", StringComparison.Ordinal));
+	}
+
+	[Fact]
+	public async Task SelfHostMode_StartsInternalIngressAppAndTracksRuntimeAddresses()
+	{
+		var builder = Host.CreateApplicationBuilder();
+		builder.Logging.ClearProviders();
+		builder.Services.AddDisCatSharpAspNetCoreSelfHost(
+			configureSelfHost: options =>
+			{
+				options.ListenAddress = "127.0.0.1";
+				options.ListenPort = 0;
+				options.BaseUrl = new Uri("https://public.example.test/bot");
+			},
+			configureAspNetCore: options =>
+			{
+				options.RoutePrefix = "/discord-api";
+				options.OAuthPath = "oauth2";
+				options.OAuthCallbackPath = "complete";
+			});
+
+		using var host = builder.Build();
+		var runtime = host.Services.GetRequiredService<DiscordAspNetCoreSelfHostRuntime>();
+
+		await host.StartAsync();
+
+		try
+		{
+			Assert.NotNull(runtime.ListenBaseUrl);
+			Assert.Equal(new Uri("https://public.example.test/bot"), runtime.PublicBaseUrl);
+
+			using HttpClient client = new();
+			using var response = await client.GetAsync(new Uri(runtime.ListenBaseUrl!, "/discord-api/oauth2/complete"));
+
+			Assert.Equal(HttpStatusCode.NotImplemented, response.StatusCode);
+		}
+		finally
+		{
+			await host.StopAsync();
+			Assert.Null(runtime.ListenBaseUrl);
+			Assert.Null(runtime.PublicBaseUrl);
+		}
+	}
+
+	[Fact]
+	public async Task SelfHostMode_UsesListenBaseUrlAsPublicBaseUrlByDefault()
+	{
+		var builder = Host.CreateApplicationBuilder();
+		builder.Logging.ClearProviders();
+		builder.Services.AddDisCatSharpAspNetCoreSelfHost(
+			configureSelfHost: options =>
+			{
+				options.ListenAddress = "127.0.0.1";
+				options.ListenPort = 0;
+			});
+
+		using var host = builder.Build();
+		var runtime = host.Services.GetRequiredService<DiscordAspNetCoreSelfHostRuntime>();
+
+		await host.StartAsync();
+
+		try
+		{
+			Assert.NotNull(runtime.ListenBaseUrl);
+			Assert.Equal(runtime.ListenBaseUrl, runtime.PublicBaseUrl);
+		}
+		finally
+		{
+			await host.StopAsync();
+		}
 	}
 
 	private static ServiceProvider BuildProvider(TimeProvider timeProvider, Action<DiscordWebIngressOptions>? configure = null)

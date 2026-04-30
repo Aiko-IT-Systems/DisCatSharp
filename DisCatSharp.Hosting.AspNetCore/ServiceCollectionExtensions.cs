@@ -4,6 +4,7 @@ using DisCatSharp.Hosting.AspNetCore.Ingress;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 
 namespace DisCatSharp.Hosting.AspNetCore;
 
@@ -58,6 +59,40 @@ public static class ServiceCollectionExtensions
 	}
 
 	/// <summary>
+	///     Registers the optional self-hosted ASP.NET Core ingress infrastructure for applications that do not already own an ASP.NET Core app.
+	/// </summary>
+	/// <param name="services">The service collection to update.</param>
+	/// <param name="configureSelfHost">Optional configuration callback for the internal ASP.NET Core host.</param>
+	/// <param name="configure">Optional configuration callback for the ingress subsystem.</param>
+	/// <param name="configureAspNetCore">Optional configuration callback for ASP.NET Core endpoint conventions.</param>
+	/// <returns>The service collection for chaining purposes.</returns>
+	public static IServiceCollection AddDisCatSharpAspNetCoreSelfHost(
+		this IServiceCollection services,
+		Action<DiscordAspNetCoreSelfHostOptions>? configureSelfHost = null,
+		Action<DiscordWebIngressOptions>? configure = null,
+		Action<DiscordAspNetCoreIngressOptions>? configureAspNetCore = null
+	)
+	{
+		ArgumentNullException.ThrowIfNull(services);
+
+		services.AddDisCatSharpAspNetCore(configure, configureAspNetCore);
+		services.AddOptions<DiscordAspNetCoreSelfHostOptions>()
+			.Validate(static options => !string.IsNullOrWhiteSpace(options.ListenAddress), $"{nameof(DiscordAspNetCoreSelfHostOptions.ListenAddress)} cannot be null or whitespace.")
+			.Validate(static options => options.ListenPort is >= 0 and <= 65535, $"{nameof(DiscordAspNetCoreSelfHostOptions.ListenPort)} must be between 0 and 65535.")
+			.Validate(static options => IsValidScheme(options.Scheme), $"{nameof(DiscordAspNetCoreSelfHostOptions.Scheme)} must contain a valid URI scheme.")
+			.Validate(static options => options.BaseUrl is null || options.BaseUrl.IsAbsoluteUri, $"{nameof(DiscordAspNetCoreSelfHostOptions.BaseUrl)} must be an absolute URI when provided.")
+			.Validate(static options => options.BaseUrl is null || (string.IsNullOrEmpty(options.BaseUrl.Query) && string.IsNullOrEmpty(options.BaseUrl.Fragment)), $"{nameof(DiscordAspNetCoreSelfHostOptions.BaseUrl)} cannot include query or fragment components.");
+
+		if (configureSelfHost is not null)
+			services.Configure(configureSelfHost);
+
+		services.TryAddSingleton<DiscordAspNetCoreSelfHostRuntime>();
+		services.TryAddEnumerable(ServiceDescriptor.Singleton<IHostedService, DiscordAspNetCoreSelfHostService>());
+
+		return services;
+	}
+
+	/// <summary>
 	///     Registers a transport-agnostic ingress signature validator.
 	/// </summary>
 	/// <typeparam name="TValidator">The validator implementation to add.</typeparam>
@@ -75,4 +110,7 @@ public static class ServiceCollectionExtensions
 
 	private static bool IsValidRouteSegment(string? segment)
 		=> !string.IsNullOrWhiteSpace(segment) && segment.AsSpan().Trim().Trim('/').Length > 0;
+
+	private static bool IsValidScheme(string? scheme)
+		=> !string.IsNullOrWhiteSpace(scheme) && Uri.CheckSchemeName(scheme.Trim());
 }
