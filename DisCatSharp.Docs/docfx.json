@@ -131,6 +131,22 @@
 		{
 			"src": [
 				{
+					"src": "../DisCatSharp.Hosting.AspNetCore/",
+					"files": ["**.csproj"],
+					"exclude": ["**/obj/**", "**/bin/**"]
+				}
+			],
+			"dest": "api/DisCatSharp.Hosting.AspNetCore",
+			"filter": "filter_config.yml",
+			"disableDefaultFilter": false,
+			"memberLayout": "separatePages",
+			"namespaceLayout": "flattened",
+			"enumSortOrder": "declaringOrder",
+			"includeExplicitInterfaceImplementations": true
+		},
+		{
+			"src": [
+				{
 					"src": "../DisCatSharp.Hosting.DependencyInjection/",
 					"files": ["**.csproj"],
 					"exclude": ["**/obj/**", "**/bin/**"]

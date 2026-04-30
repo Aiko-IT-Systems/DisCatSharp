@@ -6,10 +6,21 @@ author: DisCatSharp Team
 
 # DiscordOAuth2Client
 
-We support integrating discords OAuth2 directly into DisCatSharp bots.
-For this we've added the [DiscordOAuth2Client](xref:DisCatSharp.DiscordOAuth2Client).
+`DiscordOAuth2Client` is the protocol client for Discord OAuth2 inside DisCatSharp.
 
-Additionally, we provide a new extension called [OAuth2WebExtention](xref:DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension) in the package `DisCatSharp.Extensions.OAuth2Web`, which provides you with a web server implementation and certain events.
+Use it when you want to:
+
+- generate authorization URLs
+- generate and validate OAuth state
+- exchange authorization codes
+- refresh or revoke tokens
+- call Discord OAuth-protected APIs
+
+> [!IMPORTANT]
+> `DiscordOAuth2Client` is **not deprecated**.
+> Only the old `DisCatSharp.Extensions.OAuth2Web` package is deprecated.
+
+If you need built-in callback endpoints, signed HTTP interactions, or signed webhook events, combine the client with `DisCatSharp.Hosting.AspNetCore`.
 
 ## Example
 
@@ -56,82 +67,18 @@ var connections = await OAuth2Client.GetCurrentUserConnectionsAsync(token);
 
 ```
 
-## Example with OAuth2Web Extension
+## When to add the ingress package
 
-```cs
-// Client registration
-internal DiscordClient Client { get; private set; } // We assume you registered it somewhere
-internal OAuth2WebExtension OAuth2WebService { get; private set; }
+Add `DisCatSharp.Hosting.AspNetCore` when you want DisCatSharp to own the callback endpoint inside ASP.NET Core.
 
-// ...
-this.OAuth2WebService = this.Client.UseOAuth2Web(new OAuth2WebConfiguration()
-{
-	ClientId = 3218382190382813, // Your client id
-	ClientSecret = "thisistotallylegitsecret", // Your client secret
-	RedirectUri = "http://127.0.0.1:42069/oauth/", // The redirect url, must be public accessible. Possible proxy it.
-	ListenAll = true,
-	SecureStates = true
-});
+See:
 
-// Event registration
-var oauth2 = this.Client.GetOAuth2Web();
-oauth2.AuthorizationCodeReceived += (sender, args) =>
-{
-	Client.Logger.LogDebug("Auth code received for {State}", args.ReceivedState);
-	return Task.CompletedTask;
-};
-oauth2.AuthorizationCodeExchanged += (sender, args) =>
-{
-	Client.Logger.LogDebug("Auth code exchanged for {User} with state {State}", args.UserId, args.ReceivedState);
-	return Task.CompletedTask;
-};
-oauth2.AccessTokenRefreshed += (sender, args) =>
-{
-	Client.Logger.LogDebug("Access token refresh for {User}", args.UserId);
-	return Task.CompletedTask;
-};
-oauth2.AccessTokenRevoked += (sender, args) =>
-{
-	Client.Logger.LogDebug("Access token revoked for {User}", args.UserId);
-	return Task.CompletedTask;
-};
-oauth2.OAuth2Client.OAuth2ClientErrored += (sender, args) =>
-{
-	Client.Logger.LogError(args.Exception, "OAuth2 Client error in {Event}. Exception: {Exception}", args.EventName, args.Exception.Message);
-	return Task.CompletedTask;
-};
-
-// Client start
-await this.Client.ConnectAsync();
-this.Client.Logger.LogInformation("Starting OAuth2 Web");
-this.OAuth2WebService.StartAsync();
-
-// Some command class
-[SlashCommand("test_oauth2", "Tests OAuth2")]
-public static async Task TestOAuth2Async(InteractionContext ctx)
-{
-	await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().AsEphemeral().WithContent("Please wait.."));
-
-	var web = ctx.Client.GetOAuth2Web();
-
-	var uri = web.OAuth2Client.GenerateOAuth2Url("identify connections", web.OAuth2Client.GenerateSecureState(ctx.User.Id));
-	web.SubmitPendingOAuth2Url(uri);
-
-	await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent(uri.AbsoluteUri));
-
-	var res = await web.WaitForAccessTokenAsync(ctx.User, uri, TimeSpan.FromMinutes(1));
-	if (!res.TimedOut)
-	{
-		var testData = await web.OAuth2Client.GetCurrentUserConnectionsAsync(res.Result.DiscordAccessToken);
-		await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent($"{testData.Count} total connections. First connection username: {testData.First().Name}"));
-		await web.RevokeAccessTokenAsync(ctx.User);
-	}
-	else
-		await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent("Timed out :("));
-}
-```
+- [OAuth2 Overview](xref:modules_oauth2_overview)
+- `Web Ingress > Overview`
+- `Web Ingress > OAuth Callbacks`
+- `Web Ingress > Migrating from OAuth2Web`
 
 ## Limitations
 
-We only implemented methods and routes which all users can use.
-You can use the access token and build calls yourself if needed.
+`DiscordOAuth2Client` intentionally does **not** create or host a web server by itself.
+If you need hosted callback routing, use `DisCatSharp.Hosting.AspNetCore` or your own web stack around the client.
