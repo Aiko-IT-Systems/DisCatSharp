@@ -55,6 +55,7 @@
   <Project Path="DisCatSharp.Common/DisCatSharp.Common.csproj" />
   <Project Path="DisCatSharp.Configuration/DisCatSharp.Configuration.csproj" />
   <Project Path="DisCatSharp.Experimental/DisCatSharp.Experimental.csproj" />
+  <Project Path="DisCatSharp.Hosting.AspNetCore/DisCatSharp.Hosting.AspNetCore.csproj" />
   <Project Path="DisCatSharp.Hosting.DependencyInjection/DisCatSharp.Hosting.DependencyInjection.csproj" />
   <Project Path="DisCatSharp.Hosting/DisCatSharp.Hosting.csproj" />
   <Project Path="DisCatSharp.Interactivity/DisCatSharp.Interactivity.csproj" />

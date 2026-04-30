@@ -19,6 +19,7 @@ Welcome to the DisCatSharp Global API reference.
 
 ## Hosting packages
 - [DisCatSharp.Hosting](xref:api_discatsharp_hosting_index)
+- [DisCatSharp.Hosting.AspNetCore](xref:api_discatsharp_hosting_aspnetcore_index)
 - [DisCatSharp.DependencyInjection](xref:api_discatsharp_hosting_dependencyinjection_index)
 
 ## Experimental packages

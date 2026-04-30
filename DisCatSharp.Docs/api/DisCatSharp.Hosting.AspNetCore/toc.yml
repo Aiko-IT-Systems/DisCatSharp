@@ -1,0 +1,10 @@
+### YamlMime:TableOfContent
+items:
+- uid: DisCatSharp.Hosting.AspNetCore
+  name: DisCatSharp.Hosting.AspNetCore
+  type: Namespace
+  items:
+  - uid: DisCatSharp.Hosting.AspNetCore.ServiceCollectionExtensions
+    name: ServiceCollectionExtensions
+    type: Class
+memberLayout: SeparatePages

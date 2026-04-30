@@ -21,10 +21,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\DisCatSharp.Hosting.AspNetCore\DisCatSharp.Hosting.AspNetCore.csproj" />
 		<ProjectReference Include="..\..\DisCatSharp.Hosting\DisCatSharp.Hosting.csproj" />
 		<ProjectReference Include="..\..\DisCatSharp.Interactivity\DisCatSharp.Interactivity.csproj" />
 		<ProjectReference Include="..\..\DisCatSharp.Lavalink\DisCatSharp.Lavalink.csproj" />
 		<ProjectReference Include="..\..\DisCatSharp\DisCatSharp.csproj" />
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 
 	<ItemGroup>
