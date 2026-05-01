@@ -16,7 +16,7 @@ internal sealed class DiscordIncomingWebhookIngressService
 	{
 		ArgumentNullException.ThrowIfNull(handlers);
 
-		this._handlers = handlers.ToArray();
+		this._handlers = [.. handlers];
 	}
 
 	public async ValueTask<DiscordIngressResponse> HandleAsync(DiscordIngressRequest request, CancellationToken cancellationToken = default)

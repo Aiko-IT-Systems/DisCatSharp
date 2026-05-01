@@ -43,26 +43,23 @@ internal static class DiscordWebhookEventEnvelopeParser
 
 	private static int? TryGetInt32(JsonElement root, string propertyName)
 	{
-		if (!root.TryGetProperty(propertyName, out var property) || property.ValueKind != JsonValueKind.Number || !property.TryGetInt32(out var value))
-			return null;
-
-		return value;
+		return !root.TryGetProperty(propertyName, out var property) || property.ValueKind is not JsonValueKind.Number || !property.TryGetInt32(out var value)
+			? null
+			: value;
 	}
 
 	private static JsonElement TryGetObject(JsonElement root, string propertyName)
 	{
-		if (root.ValueKind != JsonValueKind.Object || !root.TryGetProperty(propertyName, out var property) || property.ValueKind != JsonValueKind.Object)
-			return default;
-
-		return property.Clone();
+		return root.ValueKind is not JsonValueKind.Object || !root.TryGetProperty(propertyName, out var property) || property.ValueKind is not JsonValueKind.Object
+			? default
+			: property.Clone();
 	}
 
 	private static string? TryGetString(JsonElement root, string propertyName)
 	{
-		if (root.ValueKind != JsonValueKind.Object || !root.TryGetProperty(propertyName, out var property) || property.ValueKind != JsonValueKind.String)
-			return null;
-
-		return property.GetString();
+		return root.ValueKind is not JsonValueKind.Object || !root.TryGetProperty(propertyName, out var property) || property.ValueKind is not JsonValueKind.String
+			? null
+			: property.GetString();
 	}
 }
 

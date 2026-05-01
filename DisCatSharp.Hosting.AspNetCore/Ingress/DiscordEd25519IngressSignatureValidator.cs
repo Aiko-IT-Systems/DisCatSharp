@@ -17,7 +17,7 @@ namespace DisCatSharp.Hosting.AspNetCore.Ingress;
 public sealed class DiscordEd25519IngressSignatureValidator : IDiscordIngressSignatureValidator
 {
 	private const string ValidatorName = "discord-ed25519";
-	private static readonly Encoding TimestampEncoding = Encoding.ASCII;
+	private static readonly Encoding s_timestampEncoding = Encoding.ASCII;
 	private readonly ILogger<DiscordEd25519IngressSignatureValidator> _logger;
 	private readonly Ed25519PublicKeyParameters? _publicKey;
 
@@ -58,15 +58,15 @@ public sealed class DiscordEd25519IngressSignatureValidator : IDiscordIngressSig
 		}
 
 		if (!request.TryGetSingleHeaderValue(DiscordIngressHeaderNames.SignatureTimestamp, out var timestamp) || string.IsNullOrWhiteSpace(timestamp))
-			return Reject(request, timestampHeaderCount, signatureHeaderCount, timestamp?.Length, null, "Missing Discord signature timestamp header.");
+			return this.Reject(request, timestampHeaderCount, signatureHeaderCount, timestamp?.Length, null, "Missing Discord signature timestamp header.");
 
 		if (!request.TryGetSingleHeaderValue(DiscordIngressHeaderNames.SignatureEd25519, out var signatureHex) || string.IsNullOrWhiteSpace(signatureHex))
-			return Reject(request, timestampHeaderCount, signatureHeaderCount, timestamp.Length, signatureHex?.Length, "Missing Discord signature header.");
+			return this.Reject(request, timestampHeaderCount, signatureHeaderCount, timestamp.Length, signatureHex?.Length, "Missing Discord signature header.");
 
 		if (!TryDecodeHex(signatureHex, 64, out var signature))
-			return Reject(request, timestampHeaderCount, signatureHeaderCount, timestamp.Length, signatureHex.Length, "The Discord signature header was not a 64-byte hex string.");
+			return this.Reject(request, timestampHeaderCount, signatureHeaderCount, timestamp.Length, signatureHex.Length, "The Discord signature header was not a 64-byte hex string.");
 
-		var timestampBytes = TimestampEncoding.GetBytes(timestamp);
+		var timestampBytes = s_timestampEncoding.GetBytes(timestamp);
 		var message = new byte[timestampBytes.Length + request.Body.Length];
 		timestampBytes.CopyTo(message, 0);
 		request.Body.Bytes.Span.CopyTo(message.AsSpan(timestampBytes.Length));
@@ -88,7 +88,7 @@ public sealed class DiscordEd25519IngressSignatureValidator : IDiscordIngressSig
 			return new ValueTask<DiscordIngressSignatureValidationResult>(DiscordIngressSignatureValidationResult.Valid(ValidatorName));
 		}
 
-		return Reject(request, timestampHeaderCount, signatureHeaderCount, timestamp.Length, signatureHex.Length, "Discord Ed25519 signature verification failed.");
+		return this.Reject(request, timestampHeaderCount, signatureHeaderCount, timestamp.Length, signatureHex.Length, "Discord Ed25519 signature verification failed.");
 	}
 
 	private ValueTask<DiscordIngressSignatureValidationResult> Reject(

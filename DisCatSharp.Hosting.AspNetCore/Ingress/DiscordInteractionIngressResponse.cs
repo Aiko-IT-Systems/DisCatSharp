@@ -56,10 +56,10 @@ public sealed class DiscordInteractionIngressResponse
 			throw new NotSupportedException("Inline modal and iframe interaction callbacks are not supported by the HTTP ingress helpers yet.");
 
 		if (builder is null
-			&& type is (InteractionResponseType.ChannelMessageWithSource
+			&& type is InteractionResponseType.ChannelMessageWithSource
 				or InteractionResponseType.UpdateMessage
 				or InteractionResponseType.AutoCompleteResult
-				or InteractionResponseType.SocialLayerSkuPurchaseEligibility))
+				or InteractionResponseType.SocialLayerSkuPurchaseEligibility)
 			throw new ArgumentNullException(nameof(builder), $"Interaction response type {type} requires a response builder.");
 
 		var payload = new DiscordInteractionIngressCallbackPayload
@@ -91,19 +91,15 @@ public sealed class DiscordInteractionIngressResponse
 
 	private static DiscordInteractionIngressCallbackData? CreateData(DiscordInteractionResponseBuilder? builder)
 	{
-		if (builder is null)
-			return null;
-
-		if (builder.Files is { Count: > 0 })
-			throw new NotSupportedException("Inline HTTP interaction responses do not support file uploads yet. Defer the interaction and use the outbound follow-up webhook APIs instead.");
-
-		if (builder.Attachments is { Count: > 0 })
-			throw new NotSupportedException("Inline HTTP interaction responses do not support attachment metadata yet.");
-
-		if (builder.Poll is not null)
-			throw new NotSupportedException("Inline HTTP interaction responses do not support poll payloads yet.");
-
-		return new DiscordInteractionIngressCallbackData
+		return builder is null
+			? null
+			: builder.Files is { Count: > 0 }
+			? throw new NotSupportedException("Inline HTTP interaction responses do not support file uploads yet. Defer the interaction and use the outbound follow-up webhook APIs instead.")
+			: builder.Attachments is { Count: > 0 }
+			? throw new NotSupportedException("Inline HTTP interaction responses do not support attachment metadata yet.")
+			: builder.Poll is not null
+			? throw new NotSupportedException("Inline HTTP interaction responses do not support poll payloads yet.")
+			: new DiscordInteractionIngressCallbackData
 		{
 			IsTts = builder.IsTts ? true : null,
 			Content = builder.IsComponentsV2 ? null : builder.Content,
@@ -118,7 +114,7 @@ public sealed class DiscordInteractionIngressResponse
 
 	private static MessageFlags? CreateFlags(DiscordInteractionResponseBuilder builder)
 	{
-		MessageFlags flags = MessageFlags.None;
+		var flags = MessageFlags.None;
 		if (builder.IsEphemeral)
 			flags |= MessageFlags.Ephemeral;
 		if (builder.EmbedsSuppressed && !builder.IsComponentsV2)
@@ -148,7 +144,7 @@ public sealed class DiscordInteractionIngressResponse
 		HashSet<string> parse = [];
 		HashSet<ulong> users = [];
 		HashSet<ulong> roles = [];
-		bool repliedUser = false;
+		var repliedUser = false;
 
 		foreach (var mention in mentions)
 		{

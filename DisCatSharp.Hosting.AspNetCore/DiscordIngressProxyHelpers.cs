@@ -207,7 +207,7 @@ public static class DiscordIngressProxyHelpers
 	}
 
 	private static string EnsureTrailingSlash(string value)
-		=> value.EndsWith("/", StringComparison.Ordinal) ? value : $"{value}/";
+		=> value.EndsWith('/') ? value : $"{value}/";
 
 	private static void ValidatePort(int port, string paramName)
 	{

@@ -6,22 +6,15 @@ using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp.Hosting.AspNetCore.Ingress;
 
-internal sealed class DiscordWebhookEventIngressService
-{
-	private readonly IDiscordIngressSignatureValidationService _signatureValidationService;
-	private readonly DiscordWebhookEventDispatcher _dispatcher;
-	private readonly ILogger<DiscordWebhookEventIngressService> _logger;
-
-	public DiscordWebhookEventIngressService(
-		IDiscordIngressSignatureValidationService signatureValidationService,
-		DiscordWebhookEventDispatcher dispatcher,
-		ILogger<DiscordWebhookEventIngressService> logger
+internal sealed class DiscordWebhookEventIngressService(
+	IDiscordIngressSignatureValidationService signatureValidationService,
+	DiscordWebhookEventDispatcher dispatcher,
+	ILogger<DiscordWebhookEventIngressService> logger
 	)
-	{
-		this._signatureValidationService = signatureValidationService ?? throw new ArgumentNullException(nameof(signatureValidationService));
-		this._dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
-		this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
-	}
+{
+	private readonly IDiscordIngressSignatureValidationService _signatureValidationService = signatureValidationService ?? throw new ArgumentNullException(nameof(signatureValidationService));
+	private readonly DiscordWebhookEventDispatcher _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
+	private readonly ILogger<DiscordWebhookEventIngressService> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
 	public async ValueTask<DiscordWebhookEventIngressResult> HandleAsync(DiscordIngressRequest request, CancellationToken cancellationToken = default)
 	{

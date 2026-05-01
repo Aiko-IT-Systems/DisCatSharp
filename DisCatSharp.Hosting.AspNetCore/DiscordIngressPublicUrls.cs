@@ -148,18 +148,12 @@ public sealed class DiscordIngressPublicUrls
 	}
 
 	private static string NormalizeRoutePrefix(string? routePrefix)
-	{
-		if (string.IsNullOrWhiteSpace(routePrefix) || routePrefix.Trim() == "/")
-			return string.Empty;
-
-		return routePrefix.Trim().Trim('/');
-	}
+		=> string.IsNullOrWhiteSpace(routePrefix) || routePrefix.Trim() == "/" ? string.Empty : routePrefix.Trim().Trim('/');
 
 	private static string NormalizeRouteSegment(string? segment)
 	{
-		if (string.IsNullOrWhiteSpace(segment))
-			throw new ArgumentException("Route segments must contain a non-empty value.", nameof(segment));
-
-		return segment.Trim().Trim('/');
+		return string.IsNullOrWhiteSpace(segment)
+			? throw new ArgumentException("Route segments must contain a non-empty value.", nameof(segment))
+			: segment.Trim().Trim('/');
 	}
 }

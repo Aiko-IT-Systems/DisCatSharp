@@ -11,10 +11,10 @@ namespace DisCatSharp.Hosting.AspNetCore.Ingress;
 /// </summary>
 public sealed class DiscordOAuthCallbackResult
 {
-	private static readonly IReadOnlyDictionary<string, string?> EmptyStringProperties =
+	private static readonly IReadOnlyDictionary<string, string?> s_emptyStringProperties =
 		new ReadOnlyDictionary<string, string?>(new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase));
 
-	private static readonly IReadOnlyDictionary<string, object?> EmptyObjectProperties =
+	private static readonly IReadOnlyDictionary<string, object?> s_emptyObjectProperties =
 		new ReadOnlyDictionary<string, object?>(new Dictionary<string, object?>(StringComparer.Ordinal));
 
 	private DiscordOAuthCallbackResult(
@@ -352,7 +352,7 @@ public sealed class DiscordOAuthCallbackResult
 	private static IReadOnlyDictionary<string, string?> CreateStringProperties(IReadOnlyDictionary<string, string?>? properties)
 	{
 		if (properties is null || properties.Count == 0)
-			return EmptyStringProperties;
+			return s_emptyStringProperties;
 
 		Dictionary<string, string?> normalizedProperties = new(StringComparer.OrdinalIgnoreCase);
 		foreach (var (key, value) in properties)
@@ -364,7 +364,7 @@ public sealed class DiscordOAuthCallbackResult
 	private static IReadOnlyDictionary<string, object?> CreateObjectProperties(IReadOnlyDictionary<string, object?>? properties)
 	{
 		if (properties is null || properties.Count == 0)
-			return EmptyObjectProperties;
+			return s_emptyObjectProperties;
 
 		Dictionary<string, object?> normalizedProperties = new(StringComparer.Ordinal);
 		foreach (var (key, value) in properties)

@@ -13,7 +13,7 @@ namespace DisCatSharp.Hosting.AspNetCore.Ingress;
 
 internal sealed class DiscordOAuthCallbackResponseFactory : IDiscordOAuthCallbackResponseFactory
 {
-	private static readonly IReadOnlyDictionary<string, StringValues> NoStoreHeaders =
+	private static readonly IReadOnlyDictionary<string, StringValues> s_noStoreHeaders =
 		new ReadOnlyDictionary<string, StringValues>(new Dictionary<string, StringValues>(StringComparer.OrdinalIgnoreCase)
 		{
 			["Cache-Control"] = "no-store, no-cache",
@@ -38,7 +38,7 @@ internal sealed class DiscordOAuthCallbackResponseFactory : IDiscordOAuthCallbac
 	}
 
 	private static DiscordIngressResponse CreateJsonResponse(int statusCode, object payload)
-		=> new(statusCode, DiscordIngressPayload.FromString(DiscordJson.SerializeObject(payload)), "application/json; charset=utf-8", NoStoreHeaders);
+		=> new(statusCode, DiscordIngressPayload.FromString(DiscordJson.SerializeObject(payload)), "application/json; charset=utf-8", s_noStoreHeaders);
 
 	private static IReadOnlyDictionary<string, string?> FilterCallbackParameters(IReadOnlyDictionary<string, string?> queryParameters)
 	{
@@ -57,124 +57,90 @@ internal sealed class DiscordOAuthCallbackResponseFactory : IDiscordOAuthCallbac
 		return new ReadOnlyDictionary<string, string?>(filteredParameters);
 	}
 
-	private sealed class SuccessPayload
+	private sealed class SuccessPayload(DiscordOAuthCallbackResult result)
 	{
-		public SuccessPayload(DiscordOAuthCallbackResult result)
-		{
-			this.State = result.State;
-			this.Flow = result.PendingState?.Flow;
-			this.CallbackUri = result.CallbackUri?.AbsoluteUri;
-			this.RequestUri = result.PendingState?.RequestUri?.AbsoluteUri;
-			this.RedirectUri = result.RedirectUri?.AbsoluteUri;
-			this.RequestedScope = result.RequestedScope;
-			this.GrantedScope = result.GrantedScope;
-			this.TokenType = result.AccessToken?.TokenType;
-			this.ExpiresIn = result.AccessToken?.ExpiresIn;
-			this.HasRefreshToken = !string.IsNullOrWhiteSpace(result.AccessToken?.RefreshToken);
-			this.IntegrationType = result.IntegrationType;
-			this.IncomingWebhookAvailable = result.HasIncomingWebhookPayload;
-			this.StateCreatedAt = result.PendingState?.CreatedAt;
-			this.StateExpiresAt = result.PendingState?.ExpiresAt;
-			this.AuthorizationParameters = result.AuthorizationParameters;
-			this.CallbackParameters = FilterCallbackParameters(result.CallbackParameters);
-		}
-
 		[JsonProperty("status")]
 		public string Status { get; } = "success";
 
 		[JsonProperty("state", NullValueHandling = NullValueHandling.Ignore)]
-		public string? State { get; }
+		public string? State { get; } = result.State;
 
 		[JsonProperty("flow", NullValueHandling = NullValueHandling.Ignore)]
-		public string? Flow { get; }
+		public string? Flow { get; } = result.PendingState?.Flow;
 
 		[JsonProperty("callback_uri", NullValueHandling = NullValueHandling.Ignore)]
-		public string? CallbackUri { get; }
+		public string? CallbackUri { get; } = result.CallbackUri?.AbsoluteUri;
 
 		[JsonProperty("request_uri", NullValueHandling = NullValueHandling.Ignore)]
-		public string? RequestUri { get; }
+		public string? RequestUri { get; } = result.PendingState?.RequestUri?.AbsoluteUri;
 
 		[JsonProperty("redirect_uri", NullValueHandling = NullValueHandling.Ignore)]
-		public string? RedirectUri { get; }
+		public string? RedirectUri { get; } = result.RedirectUri?.AbsoluteUri;
 
 		[JsonProperty("requested_scope", NullValueHandling = NullValueHandling.Ignore)]
-		public string? RequestedScope { get; }
+		public string? RequestedScope { get; } = result.RequestedScope;
 
 		[JsonProperty("granted_scope", NullValueHandling = NullValueHandling.Ignore)]
-		public string? GrantedScope { get; }
+		public string? GrantedScope { get; } = result.GrantedScope;
 
 		[JsonProperty("token_type", NullValueHandling = NullValueHandling.Ignore)]
-		public string? TokenType { get; }
+		public string? TokenType { get; } = result.AccessToken?.TokenType;
 
 		[JsonProperty("expires_in", NullValueHandling = NullValueHandling.Ignore)]
-		public int? ExpiresIn { get; }
+		public int? ExpiresIn { get; } = result.AccessToken?.ExpiresIn;
 
 		[JsonProperty("has_refresh_token")]
-		public bool HasRefreshToken { get; }
+		public bool HasRefreshToken { get; } = !string.IsNullOrWhiteSpace(result.AccessToken?.RefreshToken);
 
 		[JsonProperty("integration_type", NullValueHandling = NullValueHandling.Ignore)]
-		public string? IntegrationType { get; }
+		public string? IntegrationType { get; } = result.IntegrationType;
 
 		[JsonProperty("incoming_webhook_available")]
-		public bool IncomingWebhookAvailable { get; }
+		public bool IncomingWebhookAvailable { get; } = result.HasIncomingWebhookPayload;
 
 		[JsonProperty("state_created_at", NullValueHandling = NullValueHandling.Ignore)]
-		public DateTimeOffset? StateCreatedAt { get; }
+		public DateTimeOffset? StateCreatedAt { get; } = result.PendingState?.CreatedAt;
 
 		[JsonProperty("state_expires_at", NullValueHandling = NullValueHandling.Ignore)]
-		public DateTimeOffset? StateExpiresAt { get; }
+		public DateTimeOffset? StateExpiresAt { get; } = result.PendingState?.ExpiresAt;
 
 		[JsonProperty("authorization_parameters", NullValueHandling = NullValueHandling.Ignore)]
-		public IReadOnlyDictionary<string, string?> AuthorizationParameters { get; }
+		public IReadOnlyDictionary<string, string?> AuthorizationParameters { get; } = result.AuthorizationParameters;
 
 		[JsonProperty("callback_parameters", NullValueHandling = NullValueHandling.Ignore)]
-		public IReadOnlyDictionary<string, string?> CallbackParameters { get; }
+		public IReadOnlyDictionary<string, string?> CallbackParameters { get; } = FilterCallbackParameters(result.CallbackParameters);
 	}
 
-	private sealed class FailurePayload
+	private sealed class FailurePayload(string status, DiscordOAuthCallbackResult result)
 	{
-		public FailurePayload(string status, DiscordOAuthCallbackResult result)
-		{
-			this.Status = status;
-			this.State = result.State;
-			this.Detail = result.Detail;
-			this.OAuthError = result.OAuthError;
-			this.OAuthErrorDescription = result.OAuthErrorDescription;
-			this.IntegrationType = result.IntegrationType;
-			this.CallbackUri = result.CallbackUri?.AbsoluteUri;
-			this.RequestUri = result.PendingState?.RequestUri?.AbsoluteUri;
-			this.RedirectUri = result.RedirectUri?.AbsoluteUri;
-			this.CallbackParameters = FilterCallbackParameters(result.CallbackParameters);
-		}
-
 		[JsonProperty("status")]
-		public string Status { get; }
+		public string Status { get; } = status;
 
 		[JsonProperty("state", NullValueHandling = NullValueHandling.Ignore)]
-		public string? State { get; }
+		public string? State { get; } = result.State;
 
 		[JsonProperty("detail", NullValueHandling = NullValueHandling.Ignore)]
-		public string? Detail { get; }
+		public string? Detail { get; } = result.Detail;
 
 		[JsonProperty("error", NullValueHandling = NullValueHandling.Ignore)]
-		public string? OAuthError { get; }
+		public string? OAuthError { get; } = result.OAuthError;
 
 		[JsonProperty("error_description", NullValueHandling = NullValueHandling.Ignore)]
-		public string? OAuthErrorDescription { get; }
+		public string? OAuthErrorDescription { get; } = result.OAuthErrorDescription;
 
 		[JsonProperty("integration_type", NullValueHandling = NullValueHandling.Ignore)]
-		public string? IntegrationType { get; }
+		public string? IntegrationType { get; } = result.IntegrationType;
 
 		[JsonProperty("callback_uri", NullValueHandling = NullValueHandling.Ignore)]
-		public string? CallbackUri { get; }
+		public string? CallbackUri { get; } = result.CallbackUri?.AbsoluteUri;
 
 		[JsonProperty("request_uri", NullValueHandling = NullValueHandling.Ignore)]
-		public string? RequestUri { get; }
+		public string? RequestUri { get; } = result.PendingState?.RequestUri?.AbsoluteUri;
 
 		[JsonProperty("redirect_uri", NullValueHandling = NullValueHandling.Ignore)]
-		public string? RedirectUri { get; }
+		public string? RedirectUri { get; } = result.RedirectUri?.AbsoluteUri;
 
 		[JsonProperty("callback_parameters", NullValueHandling = NullValueHandling.Ignore)]
-		public IReadOnlyDictionary<string, string?> CallbackParameters { get; }
+		public IReadOnlyDictionary<string, string?> CallbackParameters { get; } = FilterCallbackParameters(result.CallbackParameters);
 	}
 }

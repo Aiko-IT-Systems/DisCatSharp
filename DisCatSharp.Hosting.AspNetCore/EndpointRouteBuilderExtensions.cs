@@ -175,10 +175,7 @@ public static class EndpointRouteBuilderExtensions
 		ArgumentNullException.ThrowIfNull(routePrefix);
 
 		var normalizedPrefix = routePrefix.Trim();
-		if (string.IsNullOrEmpty(normalizedPrefix) || normalizedPrefix == "/")
-			return string.Empty;
-
-		return $"/{normalizedPrefix.Trim('/')}";
+		return string.IsNullOrEmpty(normalizedPrefix) || normalizedPrefix == "/" ? string.Empty : $"/{normalizedPrefix.Trim('/')}";
 	}
 
 	private static string NormalizeRouteSegment(string segment)

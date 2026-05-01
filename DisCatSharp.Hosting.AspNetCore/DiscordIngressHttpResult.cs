@@ -7,12 +7,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace DisCatSharp.Hosting.AspNetCore;
 
-internal sealed class DiscordIngressHttpResult : IResult
+internal sealed class DiscordIngressHttpResult(DiscordIngressResponse response) : IResult
 {
-	private readonly DiscordIngressResponse _response;
-
-	public DiscordIngressHttpResult(DiscordIngressResponse response)
-		=> this._response = response ?? throw new ArgumentNullException(nameof(response));
+	private readonly DiscordIngressResponse _response = response ?? throw new ArgumentNullException(nameof(response));
 
 	public async Task ExecuteAsync(HttpContext httpContext)
 	{

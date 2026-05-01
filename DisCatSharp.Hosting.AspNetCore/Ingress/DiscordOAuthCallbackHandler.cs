@@ -13,28 +13,21 @@ using Microsoft.Extensions.Options;
 
 namespace DisCatSharp.Hosting.AspNetCore.Ingress;
 
-internal sealed class DiscordOAuthCallbackHandler : IDiscordOAuthCallbackHandler
+internal sealed class DiscordOAuthCallbackHandler(
+	IOptions<DiscordOAuthIngressOptions> options,
+	IDiscordIngressPendingStateStore pendingStateStore,
+	IDiscordOAuthTokenExchangeService tokenExchangeService
+	) : IDiscordOAuthCallbackHandler
 {
-	private static readonly IReadOnlyDictionary<string, string?> EmptyStringProperties =
+	private static readonly IReadOnlyDictionary<string, string?> s_emptyStringProperties =
 		new ReadOnlyDictionary<string, string?>(new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase));
 
-	private static readonly IReadOnlyDictionary<string, object?> EmptyObjectProperties =
+	private static readonly IReadOnlyDictionary<string, object?> s_emptyObjectProperties =
 		new ReadOnlyDictionary<string, object?>(new Dictionary<string, object?>(StringComparer.Ordinal));
 
-	private readonly IOptions<DiscordOAuthIngressOptions> _options;
-	private readonly IDiscordIngressPendingStateStore _pendingStateStore;
-	private readonly IDiscordOAuthTokenExchangeService _tokenExchangeService;
-
-	public DiscordOAuthCallbackHandler(
-		IOptions<DiscordOAuthIngressOptions> options,
-		IDiscordIngressPendingStateStore pendingStateStore,
-		IDiscordOAuthTokenExchangeService tokenExchangeService
-	)
-	{
-		this._options = options ?? throw new ArgumentNullException(nameof(options));
-		this._pendingStateStore = pendingStateStore ?? throw new ArgumentNullException(nameof(pendingStateStore));
-		this._tokenExchangeService = tokenExchangeService ?? throw new ArgumentNullException(nameof(tokenExchangeService));
-	}
+	private readonly IOptions<DiscordOAuthIngressOptions> _options = options ?? throw new ArgumentNullException(nameof(options));
+	private readonly IDiscordIngressPendingStateStore _pendingStateStore = pendingStateStore ?? throw new ArgumentNullException(nameof(pendingStateStore));
+	private readonly IDiscordOAuthTokenExchangeService _tokenExchangeService = tokenExchangeService ?? throw new ArgumentNullException(nameof(tokenExchangeService));
 
 	public async Task<DiscordOAuthCallbackResult> HandleAsync(DiscordOAuthCallbackRequest request, CancellationToken cancellationToken = default)
 	{
@@ -186,21 +179,21 @@ internal sealed class DiscordOAuthCallbackHandler : IDiscordOAuthCallbackHandler
 	private static IReadOnlyDictionary<string, string?> ExtractQueryParameters(Uri? requestUri)
 	{
 		if (requestUri is null || string.IsNullOrWhiteSpace(requestUri.Query))
-			return EmptyStringProperties;
+			return s_emptyStringProperties;
 
 		Dictionary<string, string?> queryParameters = new(StringComparer.OrdinalIgnoreCase);
 		foreach (var (key, value) in QueryHelpers.ParseQuery(requestUri.Query))
 			queryParameters[key] = Normalize(value.ToString());
 
 		return queryParameters.Count == 0
-			? EmptyStringProperties
+			? s_emptyStringProperties
 			: new ReadOnlyDictionary<string, string?>(queryParameters);
 	}
 
 	private static IReadOnlyDictionary<string, object?> CopyAdditionalProperties(IDictionary<string, object>? additionalProperties)
 	{
 		if (additionalProperties is null || additionalProperties.Count == 0)
-			return EmptyObjectProperties;
+			return s_emptyObjectProperties;
 
 		Dictionary<string, object?> copiedProperties = new(StringComparer.Ordinal);
 		foreach (var (key, value) in additionalProperties)
@@ -213,12 +206,7 @@ internal sealed class DiscordOAuthCallbackHandler : IDiscordOAuthCallbackHandler
 		=> Uri.TryCreate(value, UriKind.Absolute, out var uri) ? uri : null;
 
 	private static bool UriEquals(string left, string? right)
-	{
-		if (!Uri.TryCreate(left, UriKind.Absolute, out var leftUri) || !Uri.TryCreate(right, UriKind.Absolute, out var rightUri))
-			return false;
-
-		return Uri.Compare(leftUri, rightUri, UriComponents.AbsoluteUri, UriFormat.SafeUnescaped, StringComparison.Ordinal) == 0;
-	}
+		=> Uri.TryCreate(left, UriKind.Absolute, out var leftUri) && Uri.TryCreate(right, UriKind.Absolute, out var rightUri) && Uri.Compare(leftUri, rightUri, UriComponents.AbsoluteUri, UriFormat.SafeUnescaped, StringComparison.Ordinal) == 0;
 
 	private static string? Normalize(string? value) => string.IsNullOrWhiteSpace(value) ? null : value;
 }

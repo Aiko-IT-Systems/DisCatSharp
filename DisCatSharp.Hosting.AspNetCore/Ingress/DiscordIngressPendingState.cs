@@ -9,7 +9,7 @@ namespace DisCatSharp.Hosting.AspNetCore.Ingress;
 /// </summary>
 public sealed class DiscordIngressPendingState
 {
-	private static readonly IReadOnlyDictionary<string, string?> EmptyProperties =
+	private static readonly IReadOnlyDictionary<string, string?> s_emptyProperties =
 		new ReadOnlyDictionary<string, string?>(new Dictionary<string, string?>());
 
 	/// <summary>
@@ -40,5 +40,5 @@ public sealed class DiscordIngressPendingState
 	/// <summary>
 	///     Gets or sets additional flow-specific properties associated with the entry.
 	/// </summary>
-	public IReadOnlyDictionary<string, string?> Properties { get; init; } = EmptyProperties;
+	public IReadOnlyDictionary<string, string?> Properties { get; init; } = s_emptyProperties;
 }

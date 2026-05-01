@@ -16,28 +16,21 @@ namespace DisCatSharp.Hosting.AspNetCore;
 /// <summary>
 ///     Provides helper methods for linked-roles verification URLs, metadata synchronization, and OAuth role connection updates.
 /// </summary>
-public sealed class DiscordLinkedRolesService
-{
-	private readonly IOptions<DiscordAspNetCoreIngressOptions> _aspNetCoreOptions;
-	private readonly IOptions<DiscordLinkedRolesOptions> _linkedRolesOptions;
-	private readonly IServiceProvider _serviceProvider;
-
-	/// <summary>
-	///     Initializes a new instance of the <see cref="DiscordLinkedRolesService" /> class.
-	/// </summary>
-	/// <param name="aspNetCoreOptions">The ingress route options.</param>
-	/// <param name="linkedRolesOptions">The linked-roles helper options.</param>
-	/// <param name="serviceProvider">The service provider.</param>
-	public DiscordLinkedRolesService(
-		IOptions<DiscordAspNetCoreIngressOptions> aspNetCoreOptions,
-		IOptions<DiscordLinkedRolesOptions> linkedRolesOptions,
-		IServiceProvider serviceProvider
+/// <remarks>
+///     Initializes a new instance of the <see cref="DiscordLinkedRolesService" /> class.
+/// </remarks>
+/// <param name="aspNetCoreOptions">The ingress route options.</param>
+/// <param name="linkedRolesOptions">The linked-roles helper options.</param>
+/// <param name="serviceProvider">The service provider.</param>
+public sealed class DiscordLinkedRolesService(
+	IOptions<DiscordAspNetCoreIngressOptions> aspNetCoreOptions,
+	IOptions<DiscordLinkedRolesOptions> linkedRolesOptions,
+	IServiceProvider serviceProvider
 	)
-	{
-		this._aspNetCoreOptions = aspNetCoreOptions ?? throw new ArgumentNullException(nameof(aspNetCoreOptions));
-		this._linkedRolesOptions = linkedRolesOptions ?? throw new ArgumentNullException(nameof(linkedRolesOptions));
-		this._serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-	}
+{
+	private readonly IOptions<DiscordAspNetCoreIngressOptions> _aspNetCoreOptions = aspNetCoreOptions ?? throw new ArgumentNullException(nameof(aspNetCoreOptions));
+	private readonly IOptions<DiscordLinkedRolesOptions> _linkedRolesOptions = linkedRolesOptions ?? throw new ArgumentNullException(nameof(linkedRolesOptions));
+	private readonly IServiceProvider _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
 	/// <summary>
 	///     Computes the public linked-roles verification URL for the supplied application base URL.
@@ -143,12 +136,11 @@ public sealed class DiscordLinkedRolesService
 		ArgumentException.ThrowIfNullOrWhiteSpace(platformName);
 		ArgumentException.ThrowIfNullOrWhiteSpace(platformUsername);
 
-		if (!callbackResult.IsSuccess || callbackResult.AccessToken is null)
-			throw new InvalidOperationException("The linked-roles connection can only be published from a successful OAuth callback result.");
-		if (!this.HasRoleConnectionsWriteScope(callbackResult))
-			throw new InvalidOperationException("The OAuth callback result does not include the required role_connections.write scope.");
-
-		return await oauthClient.UpdateCurrentUserApplicationRoleConnectionAsync(
+		return !callbackResult.IsSuccess || callbackResult.AccessToken is null
+			? throw new InvalidOperationException("The linked-roles connection can only be published from a successful OAuth callback result.")
+			: !this.HasRoleConnectionsWriteScope(callbackResult)
+			? throw new InvalidOperationException("The OAuth callback result does not include the required role_connections.write scope.")
+			: await oauthClient.UpdateCurrentUserApplicationRoleConnectionAsync(
 			callbackResult.AccessToken,
 			platformName,
 			platformUsername,

@@ -11,7 +11,7 @@ namespace DisCatSharp.Hosting.AspNetCore.Ingress;
 /// </summary>
 public sealed class DiscordIngressResponse
 {
-	private static readonly IReadOnlyDictionary<string, StringValues> EmptyHeaders =
+	private static readonly IReadOnlyDictionary<string, StringValues> s_emptyHeaders =
 		new ReadOnlyDictionary<string, StringValues>(new Dictionary<string, StringValues>(StringComparer.OrdinalIgnoreCase));
 
 	/// <summary>
@@ -98,7 +98,7 @@ public sealed class DiscordIngressResponse
 	private static IReadOnlyDictionary<string, StringValues> CreateHeaders(IReadOnlyDictionary<string, StringValues>? headers)
 	{
 		if (headers is null || headers.Count == 0)
-			return EmptyHeaders;
+			return s_emptyHeaders;
 
 		Dictionary<string, StringValues> normalizedHeaders = new(StringComparer.OrdinalIgnoreCase);
 		foreach (var (key, value) in headers)

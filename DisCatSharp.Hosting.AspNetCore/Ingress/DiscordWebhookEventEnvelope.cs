@@ -61,13 +61,15 @@ public sealed class DiscordWebhookEventEnvelope
 	///     Gets a value indicating whether the envelope represents a Discord webhook ping.
 	/// </summary>
 	[Newtonsoft.Json.JsonIgnore]
-	public bool IsPing => this.Type == DiscordWebhookEventTypes.Ping;
+	public bool IsPing
+		=> this.Type is DiscordWebhookEventTypes.Ping;
 
 	/// <summary>
 	///     Gets a value indicating whether the envelope represents a Discord webhook event.
 	/// </summary>
 	[Newtonsoft.Json.JsonIgnore]
-	public bool IsEvent => this.Type == DiscordWebhookEventTypes.Event;
+	public bool IsEvent
+		=> this.Type is DiscordWebhookEventTypes.Event;
 
 	/// <summary>
 	///     Gets the raw request payload.
@@ -103,7 +105,8 @@ public sealed class DiscordWebhookEventEnvelope
 	///     Gets a value indicating whether the payload included a nested event object.
 	/// </summary>
 	[Newtonsoft.Json.JsonIgnore]
-	public bool HasEvent => this.Event.ValueKind != JsonValueKind.Undefined && this.Event.ValueKind != JsonValueKind.Null;
+	public bool HasEvent
+		=> this.Event.ValueKind is not JsonValueKind.Undefined && this.Event.ValueKind is not JsonValueKind.Null;
 
 	/// <summary>
 	///     Gets the raw event timestamp when present on the payload.
@@ -126,13 +129,15 @@ public sealed class DiscordWebhookEventEnvelope
 	///     Gets a value indicating whether the payload included nested event data.
 	/// </summary>
 	[Newtonsoft.Json.JsonIgnore]
-	public bool HasData => this.Data.ValueKind != JsonValueKind.Undefined && this.Data.ValueKind != JsonValueKind.Null;
+	public bool HasData
+		=> this.Data.ValueKind is not JsonValueKind.Undefined && this.Data.ValueKind is not JsonValueKind.Null;
 
 	/// <summary>
 	///     Gets the recommended CLR model for the current <see cref="EventType" />, when known.
 	/// </summary>
 	[Newtonsoft.Json.JsonIgnore]
-	public Type? SuggestedDataModelType => DiscordWebhookEventModelRegistry.GetPayloadType(this.EventType);
+	public Type? SuggestedDataModelType
+		=> DiscordWebhookEventModelRegistry.GetPayloadType(this.EventType);
 
 	/// <summary>
 	///     Attempts to resolve a top-level property from the envelope.
@@ -183,10 +188,9 @@ public sealed class DiscordWebhookEventEnvelope
 	/// <exception cref="InvalidOperationException">Thrown when the envelope does not contain nested event data.</exception>
 	public T DeserializeData<T>() where T : ObservableApiObject
 	{
-		if (!this.HasData)
-			throw new InvalidOperationException("The webhook event envelope does not contain nested event data.");
-
-		return DiscordJson.DeserializeObject<T>(this.Data.GetRawText(), null);
+		return !this.HasData
+			? throw new InvalidOperationException("The webhook event envelope does not contain nested event data.")
+			: DiscordJson.DeserializeObject<T>(this.Data.GetRawText(), null);
 	}
 
 	/// <summary>

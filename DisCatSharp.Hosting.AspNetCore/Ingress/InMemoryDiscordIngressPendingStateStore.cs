@@ -14,7 +14,7 @@ namespace DisCatSharp.Hosting.AspNetCore.Ingress;
 /// </summary>
 public sealed class InMemoryDiscordIngressPendingStateStore : IDiscordIngressPendingStateStore
 {
-	private static readonly IReadOnlyDictionary<string, string?> EmptyProperties =
+	private static readonly IReadOnlyDictionary<string, string?> s_emptyProperties =
 		new ReadOnlyDictionary<string, string?>(new Dictionary<string, string?>());
 
 	private readonly DiscordWebIngressOptions _options;
@@ -101,7 +101,7 @@ public sealed class InMemoryDiscordIngressPendingStateStore : IDiscordIngressPen
 	private static IReadOnlyDictionary<string, string?> NormalizeProperties(IReadOnlyDictionary<string, string?>? properties)
 	{
 		if (properties is null || properties.Count == 0)
-			return EmptyProperties;
+			return s_emptyProperties;
 
 		Dictionary<string, string?> normalizedProperties = new(StringComparer.Ordinal);
 		foreach (var (key, value) in properties)

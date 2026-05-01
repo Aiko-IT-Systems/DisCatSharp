@@ -9,16 +9,10 @@ using Microsoft.Extensions.Options;
 
 namespace DisCatSharp.Hosting.AspNetCore.Ingress;
 
-internal sealed class DiscordOAuthTokenExchangeService : IDiscordOAuthTokenExchangeService
+internal sealed class DiscordOAuthTokenExchangeService(IOptions<DiscordOAuthIngressOptions> options, ILoggerFactory loggerFactory) : IDiscordOAuthTokenExchangeService
 {
-	private readonly ILoggerFactory _loggerFactory;
-	private readonly IOptions<DiscordOAuthIngressOptions> _options;
-
-	public DiscordOAuthTokenExchangeService(IOptions<DiscordOAuthIngressOptions> options, ILoggerFactory loggerFactory)
-	{
-		this._options = options ?? throw new ArgumentNullException(nameof(options));
-		this._loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
-	}
+	private readonly ILoggerFactory _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
+	private readonly IOptions<DiscordOAuthIngressOptions> _options = options ?? throw new ArgumentNullException(nameof(options));
 
 	public async Task<DiscordAccessToken> ExchangeAccessTokenAsync(string code, CancellationToken cancellationToken = default)
 	{

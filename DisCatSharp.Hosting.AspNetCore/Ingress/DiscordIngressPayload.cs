@@ -6,25 +6,23 @@ namespace DisCatSharp.Hosting.AspNetCore.Ingress;
 /// <summary>
 ///     Represents a raw ingress payload that can be reused across transport implementations.
 /// </summary>
-public sealed class DiscordIngressPayload
+/// <remarks>
+///     Initializes a new instance of the <see cref="DiscordIngressPayload" /> class.
+/// </remarks>
+/// <param name="bytes">The raw payload bytes.</param>
+public sealed class DiscordIngressPayload(ReadOnlyMemory<byte> bytes)
 {
-	private static readonly byte[] EmptyBuffer = [];
+	private static readonly byte[] s_emptyBuffer = [];
 
 	/// <summary>
 	///     Gets a reusable empty payload instance.
 	/// </summary>
-	public static DiscordIngressPayload Empty { get; } = new(EmptyBuffer);
-
-	/// <summary>
-	///     Initializes a new instance of the <see cref="DiscordIngressPayload" /> class.
-	/// </summary>
-	/// <param name="bytes">The raw payload bytes.</param>
-	public DiscordIngressPayload(ReadOnlyMemory<byte> bytes) => this.Bytes = bytes;
+	public static DiscordIngressPayload Empty { get; } = new(s_emptyBuffer);
 
 	/// <summary>
 	///     Gets the raw payload bytes.
 	/// </summary>
-	public ReadOnlyMemory<byte> Bytes { get; }
+	public ReadOnlyMemory<byte> Bytes { get; } = bytes;
 
 	/// <summary>
 	///     Gets the payload length in bytes.

@@ -16,7 +16,7 @@ namespace DisCatSharp.Hosting.AspNetCore;
 /// </summary>
 public sealed class DiscordWebhookEventDispatcher
 {
-	private static readonly TimeSpan EventExecutionLimit = TimeSpan.FromSeconds(1);
+	private static readonly TimeSpan s_eventExecutionLimit = TimeSpan.FromSeconds(1);
 
 	private readonly IServiceProvider _provider;
 	private readonly ILogger<DiscordWebhookEventDispatcher> _logger;
@@ -43,18 +43,18 @@ public sealed class DiscordWebhookEventDispatcher
 		this._provider = provider ?? throw new ArgumentNullException(nameof(provider));
 		this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-		this._applicationAuthorized = new("WEBHOOK_APPLICATION_AUTHORIZED", EventExecutionLimit, this.EventErrorHandler);
-		this._applicationDeauthorized = new("WEBHOOK_APPLICATION_DEAUTHORIZED", EventExecutionLimit, this.EventErrorHandler);
-		this._entitlementCreated = new("WEBHOOK_ENTITLEMENT_CREATED", EventExecutionLimit, this.EventErrorHandler);
-		this._entitlementUpdated = new("WEBHOOK_ENTITLEMENT_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._entitlementDeleted = new("WEBHOOK_ENTITLEMENT_DELETED", EventExecutionLimit, this.EventErrorHandler);
-		this._lobbyMessageCreated = new("WEBHOOK_LOBBY_MESSAGE_CREATED", EventExecutionLimit, this.EventErrorHandler);
-		this._lobbyMessageUpdated = new("WEBHOOK_LOBBY_MESSAGE_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._lobbyMessageDeleted = new("WEBHOOK_LOBBY_MESSAGE_DELETED", EventExecutionLimit, this.EventErrorHandler);
-		this._gameDirectMessageCreated = new("WEBHOOK_GAME_DIRECT_MESSAGE_CREATED", EventExecutionLimit, this.EventErrorHandler);
-		this._gameDirectMessageUpdated = new("WEBHOOK_GAME_DIRECT_MESSAGE_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._gameDirectMessageDeleted = new("WEBHOOK_GAME_DIRECT_MESSAGE_DELETED", EventExecutionLimit, this.EventErrorHandler);
-		this._unknownWebhookEventReceived = new("WEBHOOK_UNKNOWN_EVENT_RECEIVED", EventExecutionLimit, this.EventErrorHandler);
+		this._applicationAuthorized = new("WEBHOOK_APPLICATION_AUTHORIZED", s_eventExecutionLimit, this.EventErrorHandler);
+		this._applicationDeauthorized = new("WEBHOOK_APPLICATION_DEAUTHORIZED", s_eventExecutionLimit, this.EventErrorHandler);
+		this._entitlementCreated = new("WEBHOOK_ENTITLEMENT_CREATED", s_eventExecutionLimit, this.EventErrorHandler);
+		this._entitlementUpdated = new("WEBHOOK_ENTITLEMENT_UPDATED", s_eventExecutionLimit, this.EventErrorHandler);
+		this._entitlementDeleted = new("WEBHOOK_ENTITLEMENT_DELETED", s_eventExecutionLimit, this.EventErrorHandler);
+		this._lobbyMessageCreated = new("WEBHOOK_LOBBY_MESSAGE_CREATED", s_eventExecutionLimit, this.EventErrorHandler);
+		this._lobbyMessageUpdated = new("WEBHOOK_LOBBY_MESSAGE_UPDATED", s_eventExecutionLimit, this.EventErrorHandler);
+		this._lobbyMessageDeleted = new("WEBHOOK_LOBBY_MESSAGE_DELETED", s_eventExecutionLimit, this.EventErrorHandler);
+		this._gameDirectMessageCreated = new("WEBHOOK_GAME_DIRECT_MESSAGE_CREATED", s_eventExecutionLimit, this.EventErrorHandler);
+		this._gameDirectMessageUpdated = new("WEBHOOK_GAME_DIRECT_MESSAGE_UPDATED", s_eventExecutionLimit, this.EventErrorHandler);
+		this._gameDirectMessageDeleted = new("WEBHOOK_GAME_DIRECT_MESSAGE_DELETED", s_eventExecutionLimit, this.EventErrorHandler);
+		this._unknownWebhookEventReceived = new("WEBHOOK_UNKNOWN_EVENT_RECEIVED", s_eventExecutionLimit, this.EventErrorHandler);
 	}
 
 	/// <summary>
@@ -385,10 +385,9 @@ public sealed class DiscordWebhookEventDispatcher
 
 	private Task DispatchUnknownAsync(DiscordIngressRequest request, DiscordWebhookEventEnvelope envelope)
 	{
-		if (!this._unknownWebhookEventReceived.HasHandlers)
-			return Task.CompletedTask;
-
-		return this._unknownWebhookEventReceived.InvokeAsync(this, new UnknownWebhookEventArgs(this._provider)
+		return !this._unknownWebhookEventReceived.HasHandlers
+			? Task.CompletedTask
+			: this._unknownWebhookEventReceived.InvokeAsync(this, new UnknownWebhookEventArgs(this._provider)
 		{
 			Request = request,
 			Envelope = envelope

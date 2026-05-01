@@ -18,7 +18,7 @@ internal sealed class DiscordInteractionIngressService
 		this._signatureValidationService = signatureValidationService ?? throw new ArgumentNullException(nameof(signatureValidationService));
 		ArgumentNullException.ThrowIfNull(handlers);
 
-		this._handlers = handlers.ToArray();
+		this._handlers = [.. handlers];
 	}
 
 	public async ValueTask<DiscordInteractionIngressResult> HandleAsync(DiscordIngressRequest request, CancellationToken cancellationToken = default)

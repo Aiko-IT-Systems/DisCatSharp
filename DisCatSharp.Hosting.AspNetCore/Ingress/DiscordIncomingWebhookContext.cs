@@ -8,21 +8,17 @@ namespace DisCatSharp.Hosting.AspNetCore.Ingress;
 /// <summary>
 ///     Represents an incoming webhook request received through the ASP.NET Core ingress surface.
 /// </summary>
-public sealed class DiscordIncomingWebhookContext
+/// <remarks>
+///     Initializes a new instance of the <see cref="DiscordIncomingWebhookContext" /> class.
+/// </remarks>
+/// <param name="request">The transport-neutral ingress request.</param>
+public sealed class DiscordIncomingWebhookContext(DiscordIngressRequest request)
 {
-	/// <summary>
-	///     Initializes a new instance of the <see cref="DiscordIncomingWebhookContext" /> class.
-	/// </summary>
-	/// <param name="request">The transport-neutral ingress request.</param>
-	public DiscordIncomingWebhookContext(DiscordIngressRequest request)
-	{
-		this.Request = request ?? throw new ArgumentNullException(nameof(request));
-	}
 
 	/// <summary>
 	///     Gets the transport-neutral ingress request.
 	/// </summary>
-	public DiscordIngressRequest Request { get; }
+	public DiscordIngressRequest Request { get; } = request ?? throw new ArgumentNullException(nameof(request));
 
 	/// <summary>
 	///     Gets the incoming HTTP method.

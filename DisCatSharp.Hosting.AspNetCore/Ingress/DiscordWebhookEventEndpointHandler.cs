@@ -6,19 +6,13 @@ using Microsoft.AspNetCore.Http;
 
 namespace DisCatSharp.Hosting.AspNetCore.Ingress;
 
-internal sealed class DiscordWebhookEventEndpointHandler
-{
-	private readonly IDiscordIngressBodyReader _bodyReader;
-	private readonly DiscordWebhookEventIngressService _service;
-
-	public DiscordWebhookEventEndpointHandler(
-		IDiscordIngressBodyReader bodyReader,
-		DiscordWebhookEventIngressService service
+internal sealed class DiscordWebhookEventEndpointHandler(
+	IDiscordIngressBodyReader bodyReader,
+	DiscordWebhookEventIngressService service
 	)
-	{
-		this._bodyReader = bodyReader ?? throw new ArgumentNullException(nameof(bodyReader));
-		this._service = service ?? throw new ArgumentNullException(nameof(service));
-	}
+{
+	private readonly IDiscordIngressBodyReader _bodyReader = bodyReader ?? throw new ArgumentNullException(nameof(bodyReader));
+	private readonly DiscordWebhookEventIngressService _service = service ?? throw new ArgumentNullException(nameof(service));
 
 	public async ValueTask<IResult> HandleAsync(HttpRequest request, CancellationToken cancellationToken = default)
 	{

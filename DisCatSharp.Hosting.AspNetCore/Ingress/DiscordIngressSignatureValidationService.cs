@@ -21,7 +21,7 @@ public sealed class DiscordIngressSignatureValidationService : IDiscordIngressSi
 	{
 		ArgumentNullException.ThrowIfNull(validators);
 
-		this._validators = validators.ToArray();
+		this._validators = [.. validators];
 	}
 
 	/// <inheritdoc />

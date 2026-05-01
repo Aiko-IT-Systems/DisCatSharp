@@ -16,31 +16,23 @@ using Microsoft.Extensions.Options;
 
 namespace DisCatSharp.Hosting.AspNetCore;
 
-internal sealed class DiscordAspNetCoreSelfHostService : IHostedService, IAsyncDisposable
+internal sealed class DiscordAspNetCoreSelfHostService(
+	IServiceProvider serviceProvider,
+	IOptions<DiscordAspNetCoreSelfHostOptions> selfHostOptions,
+	DiscordAspNetCoreSelfHostRuntime runtime,
+	ILogger<DiscordAspNetCoreSelfHostService> logger
+	) : IHostedService, IAsyncDisposable
 {
 	private const string StartingLogMessage = "Starting DisCatSharp self-hosted ingress on {ListenBaseUrl}.";
 	private const string StartedLogMessage = "Started DisCatSharp self-hosted ingress on {ListenBaseUrl} with public base URL {PublicBaseUrl}.";
 	private const string StoppingLogMessage = "Stopping DisCatSharp self-hosted ingress.";
 	private const string StoppedLogMessage = "Stopped DisCatSharp self-hosted ingress.";
 
-	private readonly ILogger<DiscordAspNetCoreSelfHostService> _logger;
-	private readonly DiscordAspNetCoreSelfHostRuntime _runtime;
-	private readonly IOptions<DiscordAspNetCoreSelfHostOptions> _selfHostOptions;
-	private readonly IServiceProvider _serviceProvider;
+	private readonly ILogger<DiscordAspNetCoreSelfHostService> _logger = logger;
+	private readonly DiscordAspNetCoreSelfHostRuntime _runtime = runtime;
+	private readonly IOptions<DiscordAspNetCoreSelfHostOptions> _selfHostOptions = selfHostOptions;
+	private readonly IServiceProvider _serviceProvider = serviceProvider;
 	private WebApplication? _application;
-
-	public DiscordAspNetCoreSelfHostService(
-		IServiceProvider serviceProvider,
-		IOptions<DiscordAspNetCoreSelfHostOptions> selfHostOptions,
-		DiscordAspNetCoreSelfHostRuntime runtime,
-		ILogger<DiscordAspNetCoreSelfHostService> logger
-	)
-	{
-		this._serviceProvider = serviceProvider;
-		this._selfHostOptions = selfHostOptions;
-		this._runtime = runtime;
-		this._logger = logger;
-	}
 
 	public async Task StartAsync(CancellationToken cancellationToken)
 	{
@@ -52,7 +44,7 @@ internal sealed class DiscordAspNetCoreSelfHostService : IHostedService, IAsyncD
 
 		this._logger.LogInformation(StartingLogMessage, configuredListenBaseUrl);
 
-		var builder = WebApplication.CreateBuilder(Array.Empty<string>());
+		var builder = WebApplication.CreateBuilder([]);
 		builder.Logging.ClearProviders();
 		builder.WebHost.UseUrls(configuredListenBaseUrl.ToString());
 
@@ -124,9 +116,9 @@ internal sealed class DiscordAspNetCoreSelfHostService : IHostedService, IAsyncD
 		services.AddSingleton(this._runtime);
 
 		foreach (var validator in this._serviceProvider.GetServices<IDiscordIngressSignatureValidator>())
-			services.AddSingleton(typeof(IDiscordIngressSignatureValidator), validator);
+			services.AddSingleton(validator);
 
-		services.AddTransient<IDiscordIngressSignatureValidationService>(_ => this._serviceProvider.GetRequiredService<IDiscordIngressSignatureValidationService>());
+		services.AddTransient(_ => this._serviceProvider.GetRequiredService<IDiscordIngressSignatureValidationService>());
 	}
 
 	private static Uri BuildListenBaseUrl(DiscordAspNetCoreSelfHostOptions options)
