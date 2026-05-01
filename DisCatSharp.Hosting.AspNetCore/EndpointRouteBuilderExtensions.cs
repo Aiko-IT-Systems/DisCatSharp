@@ -75,7 +75,7 @@ public static class EndpointRouteBuilderExtensions
 	}
 
 	/// <summary>
-	///     Maps the DisCatSharp interactions ingress placeholder endpoint.
+	///     Maps the DisCatSharp interactions ingress endpoint.
 	/// </summary>
 	/// <param name="endpoints">The endpoint route builder to update.</param>
 	/// <returns>The configured interactions route group.</returns>
@@ -88,11 +88,18 @@ public static class EndpointRouteBuilderExtensions
 		var group = endpoints.MapGroup(interactionsPath)
 			.WithTags(DisCatSharpTag, IngressTag, InteractionsModule);
 
-		group.MapPost(string.Empty, static () => CreatePlaceholderResult("The Discord interactions endpoint is not implemented yet."))
+		group.MapPost(
+				string.Empty,
+				static (HttpRequest request, DiscordInteractionEndpointHandler handler, CancellationToken cancellationToken)
+					=> handler.HandleAsync(request, cancellationToken).AsTask())
 			.WithName(DiscordIngressEndpointNames.Interactions)
 			.WithDisplayName("DisCatSharp interactions")
 			.WithTags(DisCatSharpTag, IngressTag, InteractionsModule)
 			.WithMetadata(new DiscordIngressEndpointMetadata(InteractionsModule, DiscordIngressEndpointNames.Interactions, interactionsPath))
+			.Produces(StatusCodes.Status200OK)
+			.Produces(StatusCodes.Status400BadRequest)
+			.Produces(StatusCodes.Status401Unauthorized)
+			.Produces(StatusCodes.Status413PayloadTooLarge)
 			.Produces(StatusCodes.Status501NotImplemented);
 
 		return group;
