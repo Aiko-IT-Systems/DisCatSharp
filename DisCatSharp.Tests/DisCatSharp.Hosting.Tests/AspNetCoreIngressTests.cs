@@ -10,11 +10,13 @@ using System.Threading.Tasks;
 using DisCatSharp.Entities.OAuth2;
 using DisCatSharp.Hosting.AspNetCore;
 using DisCatSharp.Hosting.AspNetCore.Ingress;
+using DisCatSharp.Hosting.DependencyInjection;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
@@ -98,6 +100,63 @@ public sealed class AspNetCoreIngressTests
 		Assert.NotNull(provider.GetRequiredService<IDiscordOAuthCallbackHandler>());
 		Assert.NotNull(provider.GetRequiredService<IDiscordOAuthCallbackResponseFactory>());
 		Assert.NotNull(provider.GetRequiredService<TimeProvider>());
+	}
+
+	[Fact]
+	public void HostApplicationBuilderExtensions_CanComposeHostedBotAndIngressServices()
+	{
+		var builder = Host.CreateApplicationBuilder();
+		builder.Logging.ClearProviders();
+		builder.Configuration.AddInMemoryCollection(CreateDiscordHostConfiguration());
+
+		var returnedBuilder = builder
+			.AddDiscordHostedService<Bot>()
+			.AddDisCatSharpAspNetCore(
+				configure: options => options.MaxRequestBodySize = 4096,
+				configureAspNetCore: options => options.RoutePrefix = "/discord-api",
+				configureOAuth: options =>
+				{
+					options.ClientId = 734829134102410240;
+					options.ClientSecret = "super-secret";
+					options.RedirectUri = "https://example.com/discord/oauth/callback";
+				});
+
+		using var host = builder.Build();
+		var bot = host.Services.GetRequiredService<Bot>();
+		var aspNetOptions = host.Services.GetRequiredService<IOptions<DiscordAspNetCoreIngressOptions>>().Value;
+		var oauthOptions = host.Services.GetRequiredService<IOptions<DiscordOAuthIngressOptions>>().Value;
+
+		Assert.Same(builder, returnedBuilder);
+		Assert.NotNull(bot.Client);
+		Assert.Equal("/discord-api", aspNetOptions.RoutePrefix);
+		Assert.True(oauthOptions.IsConfigured);
+		Assert.NotNull(host.Services.GetRequiredService<IDiscordIngressBodyReader>());
+		Assert.NotNull(host.Services.GetRequiredService<IDiscordIngressSignatureValidationService>());
+	}
+
+	[Fact]
+	public void HostBuilderExtensions_CanComposeHostedBotAndSelfHostedIngressServices()
+	{
+		using var host = Host.CreateDefaultBuilder()
+			.ConfigureLogging(logging => logging.ClearProviders())
+			.ConfigureHostConfiguration(builder => builder.AddInMemoryCollection(CreateDiscordHostConfiguration()))
+			.AddDiscordHostedService<Bot>()
+			.AddDisCatSharpAspNetCoreSelfHost(
+				configureSelfHost: options =>
+				{
+					options.ListenAddress = "127.0.0.1";
+					options.ListenPort = 0;
+				},
+				configureAspNetCore: options => options.RoutePrefix = "/discord-api")
+			.Build();
+
+		var bot = host.Services.GetRequiredService<Bot>();
+		var aspNetOptions = host.Services.GetRequiredService<IOptions<DiscordAspNetCoreIngressOptions>>().Value;
+
+		Assert.NotNull(bot.Client);
+		Assert.Equal("/discord-api", aspNetOptions.RoutePrefix);
+		Assert.NotNull(host.Services.GetRequiredService<DiscordAspNetCoreSelfHostRuntime>());
+		Assert.Contains(host.Services.GetServices<IHostedService>(), service => string.Equals(service.GetType().FullName, "DisCatSharp.Hosting.AspNetCore.DiscordAspNetCoreSelfHostService", StringComparison.Ordinal));
 	}
 
 	[Fact]
@@ -625,6 +684,29 @@ public sealed class AspNetCoreIngressTests
 		configureServices?.Invoke(services);
 		return services.BuildServiceProvider();
 	}
+
+	private static Dictionary<string, string?> CreateDiscordHostConfiguration() =>
+		new()
+		{
+			{ "DisCatSharp:Discord:Token", "1234567890" },
+			{ "DisCatSharp:Discord:TokenType", "Bot" },
+			{ "DisCatSharp:Discord:MinimumLogLevel", "Information" },
+			{ "DisCatSharp:Discord:UseRelativeRateLimit", "true" },
+			{ "DisCatSharp:Discord:LogTimestampFormat", "yyyy-MM-dd HH:mm:ss zzz" },
+			{ "DisCatSharp:Discord:LargeThreshold", "250" },
+			{ "DisCatSharp:Discord:AutoReconnect", "true" },
+			{ "DisCatSharp:Discord:ShardId", "123123" },
+			{ "DisCatSharp:Discord:GatewayCompressionLevel", "Stream" },
+			{ "DisCatSharp:Discord:MessageCacheSize", "1024" },
+			{ "DisCatSharp:Discord:HttpTimeout", "00:00:20" },
+			{ "DisCatSharp:Discord:ReconnectIndefinitely", "false" },
+			{ "DisCatSharp:Discord:AlwaysCacheMembers", "true" },
+			{ "DisCatSharp:Discord:DiscordIntents", "AllUnprivileged" },
+			{ "DisCatSharp:Discord:MobileStatus", "false" },
+			{ "DisCatSharp:Discord:UseCanary", "false" },
+			{ "DisCatSharp:Discord:AutoRefreshChannelCache", "false" },
+			{ "DisCatSharp:Discord:Intents", "AllUnprivileged" }
+		};
 
 	private static WebApplication BuildApp(
 		Action<DiscordAspNetCoreIngressOptions>? configureAspNetCore = null,

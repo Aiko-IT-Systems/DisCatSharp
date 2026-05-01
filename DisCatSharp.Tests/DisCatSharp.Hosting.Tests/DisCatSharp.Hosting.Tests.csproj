@@ -22,6 +22,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\DisCatSharp.Hosting.AspNetCore\DisCatSharp.Hosting.AspNetCore.csproj" />
+		<ProjectReference Include="..\..\DisCatSharp.Hosting.DependencyInjection\DisCatSharp.Hosting.DependencyInjection.csproj" />
 		<ProjectReference Include="..\..\DisCatSharp.Hosting\DisCatSharp.Hosting.csproj" />
 		<ProjectReference Include="..\..\DisCatSharp.Interactivity\DisCatSharp.Interactivity.csproj" />
 		<ProjectReference Include="..\..\DisCatSharp.Lavalink\DisCatSharp.Lavalink.csproj" />
