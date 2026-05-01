@@ -401,6 +401,12 @@ public enum Permissions : long
 	BypassSlowmode = 1L << 52,
 
 	/// <summary>
+	///    Allows members to mark messages as official in verified guilds.
+	/// </summary>
+	[PermissionString("Manage Official Messages")]
+	ManageOfficialMessages = 1L << 53,
+
+	/// <summary>
 	///      The flags are unknown.
 	/// </summary>
 	[PermissionString("The permissions are unknown")]

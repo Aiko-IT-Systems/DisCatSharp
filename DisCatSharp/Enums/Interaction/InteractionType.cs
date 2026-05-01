@@ -28,5 +28,10 @@ public enum InteractionType
 	/// <summary>
 	///     A modal component.
 	/// </summary>
-	ModalSubmit = 5
+	ModalSubmit = 5,
+
+	/// <summary>
+	///    A request to check if a user is eligible to purchase a SKU from the social layer store.
+	/// </summary>
+	SocialLayerSkuPurchaseEligibility = 6
 }

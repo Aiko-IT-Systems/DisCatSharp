@@ -41,7 +41,37 @@ public enum ProductLine
 	Collectibles = 7,
 
 	/// <summary>
+	/// 	Premium tenure reward.
+	/// </summary>
+	TenureReward = 8,
+
+	/// <summary>
+	/// 	In-game quest reward.
+	/// </summary>
+	QuestInGameReward = 9,
+
+	/// <summary>
+	/// 	Quest reward code.
+	/// </summary>
+	QuestRewardCode = 10,
+
+	/// <summary>
+	/// 	Fractional premium subscription.
+	/// </summary>
+	FractionalPremium = 11,
+
+	/// <summary>
+	/// 	Virtual currency (Orbs).
+	/// </summary>
+	VirtualCurrency = 12,
+
+	/// <summary>
 	///     Guild powerup product line.
 	/// </summary>
-	GuildPowerup = 13
+	GuildPowerup = 13,
+
+	/// <summary>
+	///    Social SDK game item.
+	/// </summary>
+	SocialLayerGameItem = 14
 }

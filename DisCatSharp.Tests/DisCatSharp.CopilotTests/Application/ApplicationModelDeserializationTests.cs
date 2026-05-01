@@ -73,7 +73,7 @@ public class ApplicationModelDeserializationTests
 		                    }
 		                    """;
 
-		var application = Deserialize<DiscordApplication>(json);
+		var application = Deserialize<TransportApplication>(json);
 
 		Assert.True(application.IsDiscoverable);
 		Assert.Null(application.MaxParticipants);

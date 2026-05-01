@@ -71,6 +71,16 @@ public enum SkuFlags : long
 	ApplicationUserSubscription = 1L << 8,
 
 	/// <summary>
+	/// 	SKU is a guild creator monetization product.
+	/// </summary>
+	CreatorMonetization = 1L << 9,
+
+	/// <summary>
+	/// 	SKU is a guild product.
+	/// </summary>
+	GuildProduct = 1L << 10,
+
+	/// <summary>
 	///     Whether the SKU is available for application gifting.
 	/// </summary>
 	AvailableForApplicationGifting = 1L << 11,

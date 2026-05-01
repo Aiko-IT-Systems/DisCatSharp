@@ -14,6 +14,18 @@ public enum InteractionResponseType
 	Pong = 1,
 
 	/// <summary>
+	///    Acknowledge a command without sending a message.
+	/// </summary>
+	[DiscordDeprecated("Use DeferredChannelMessageWithSource instead."), Deprecated]
+	Acknowledge = 2,
+
+	/// <summary>
+	/// 	Respond with a message.
+	/// </summary>
+	[DiscordDeprecated("Use ChannelMessageWithSource instead."), Deprecated]
+	ChannelMessage = 3,
+
+	/// <summary>
 	///     Responds to the interaction with a message.
 	/// </summary>
 	ChannelMessageWithSource = 4,
@@ -75,7 +87,6 @@ public enum InteractionResponseType
 	/// </summary>
 	LaunchActivity = 12,
 
-	// SOCIAL_LAYER_SKU_PURCHASE_ELIGIBILITY
 	/// <summary>
 	///    <para>Responds to the interaction with a message indicating that the user is eligible to purchase a SKU.</para>
 	///  <para>

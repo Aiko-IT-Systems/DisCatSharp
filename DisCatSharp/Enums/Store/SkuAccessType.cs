@@ -1,3 +1,5 @@
+using DisCatSharp.Attributes;
+
 namespace DisCatSharp.Enums;
 
 /// <summary>
@@ -18,5 +20,6 @@ public enum SkuAccessType
 	/// <summary>
 	///     Users has vip access.
 	/// </summary>
+	[DiscordDeprecated]
 	VipAccess = 3
 }
