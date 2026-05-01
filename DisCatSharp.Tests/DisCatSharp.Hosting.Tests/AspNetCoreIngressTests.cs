@@ -113,6 +113,8 @@ public sealed class AspNetCoreIngressTests
 		Assert.NotNull(provider.GetRequiredService<DiscordInteractionEndpointHandler>());
 		Assert.NotNull(provider.GetRequiredService<DiscordWebhookEventIngressService>());
 		Assert.NotNull(provider.GetRequiredService<DiscordWebhookEventEndpointHandler>());
+		Assert.NotNull(provider.GetRequiredService<DiscordIncomingWebhookIngressService>());
+		Assert.NotNull(provider.GetRequiredService<DiscordIncomingWebhookEndpointHandler>());
 		Assert.NotNull(provider.GetRequiredService<IDiscordOAuthTokenExchangeService>());
 		Assert.NotNull(provider.GetRequiredService<IDiscordOAuthCallbackHandler>());
 		Assert.NotNull(provider.GetRequiredService<IDiscordOAuthCallbackResponseFactory>());
@@ -197,7 +199,7 @@ public sealed class AspNetCoreIngressTests
 		AssertEndpoint(endpoints, "/discord-api/oauth2/complete", DiscordIngressEndpointNames.OAuthCallback, "OAuth", "oauth2/complete", StatusCodes.Status200OK, StatusCodes.Status400BadRequest, StatusCodes.Status403Forbidden, StatusCodes.Status500InternalServerError, StatusCodes.Status502BadGateway);
 		AssertEndpoint(endpoints, "/discord-api/gateway", DiscordIngressEndpointNames.Interactions, "Interactions", "gateway", StatusCodes.Status200OK, StatusCodes.Status400BadRequest, StatusCodes.Status401Unauthorized, StatusCodes.Status413PayloadTooLarge, StatusCodes.Status501NotImplemented);
 		AssertEndpoint(endpoints, "/discord-api/hooks/events", DiscordIngressEndpointNames.WebhookEvents, "Webhooks", "hooks/events", StatusCodes.Status204NoContent, StatusCodes.Status400BadRequest, StatusCodes.Status401Unauthorized, StatusCodes.Status413PayloadTooLarge);
-		AssertEndpoint(endpoints, "/discord-api/hooks/incoming", DiscordIngressEndpointNames.IncomingWebhooks, "IncomingWebhooks", "hooks/incoming", StatusCodes.Status501NotImplemented);
+		AssertEndpoint(endpoints, "/discord-api/hooks/incoming", DiscordIngressEndpointNames.IncomingWebhooks, "IncomingWebhooks", "hooks/incoming", StatusCodes.Status200OK, StatusCodes.Status202Accepted, StatusCodes.Status204NoContent, StatusCodes.Status400BadRequest, StatusCodes.Status413PayloadTooLarge, StatusCodes.Status501NotImplemented);
 	}
 
 	[Fact]
@@ -215,7 +217,7 @@ public sealed class AspNetCoreIngressTests
 		AssertEndpoint(endpoints, "/api/discord/oauth/callback", DiscordIngressEndpointNames.OAuthCallback, "OAuth", "oauth/callback", StatusCodes.Status200OK, StatusCodes.Status400BadRequest, StatusCodes.Status403Forbidden, StatusCodes.Status500InternalServerError, StatusCodes.Status502BadGateway);
 		AssertEndpoint(endpoints, "/api/discord/interactions", DiscordIngressEndpointNames.Interactions, "Interactions", "interactions", StatusCodes.Status200OK, StatusCodes.Status400BadRequest, StatusCodes.Status401Unauthorized, StatusCodes.Status413PayloadTooLarge, StatusCodes.Status501NotImplemented);
 		AssertEndpoint(endpoints, "/api/discord/webhooks/events", DiscordIngressEndpointNames.WebhookEvents, "Webhooks", "webhooks/events", StatusCodes.Status204NoContent, StatusCodes.Status400BadRequest, StatusCodes.Status401Unauthorized, StatusCodes.Status413PayloadTooLarge);
-		AssertEndpoint(endpoints, "/api/discord/webhooks/incoming", DiscordIngressEndpointNames.IncomingWebhooks, "IncomingWebhooks", "webhooks/incoming", StatusCodes.Status501NotImplemented);
+		AssertEndpoint(endpoints, "/api/discord/webhooks/incoming", DiscordIngressEndpointNames.IncomingWebhooks, "IncomingWebhooks", "webhooks/incoming", StatusCodes.Status200OK, StatusCodes.Status202Accepted, StatusCodes.Status204NoContent, StatusCodes.Status400BadRequest, StatusCodes.Status413PayloadTooLarge, StatusCodes.Status501NotImplemented);
 	}
 
 	[Fact]
@@ -396,6 +398,91 @@ public sealed class AspNetCoreIngressTests
 
 		var handler = provider.GetRequiredService<DiscordWebhookEventEndpointHandler>();
 		var context = CreateWebhookHttpContext(TestPingBody, TestPingTimestamp, TestPingSignature);
+		context.RequestServices = provider;
+
+		var result = await handler.HandleAsync(context.Request);
+		await result.ExecuteAsync(context);
+
+		Assert.Equal(StatusCodes.Status413PayloadTooLarge, context.Response.StatusCode);
+	}
+
+	[Fact]
+	public async Task IncomingWebhookIngressService_UsesFirstRegisteredHandlerThatReturnsAResponse()
+	{
+		using var provider = BuildProvider(
+			TimeProvider.System,
+			configureServices: services =>
+			{
+				services.AddSingleton<RecordingIncomingWebhookHandler>();
+				services.AddSingleton<IDiscordIncomingWebhookHandler>(static _ => new NullIncomingWebhookHandler());
+				services.AddSingleton<IDiscordIncomingWebhookHandler>(static provider => provider.GetRequiredService<RecordingIncomingWebhookHandler>());
+			});
+		var service = provider.GetRequiredService<DiscordIncomingWebhookIngressService>();
+		var recordingHandler = provider.GetRequiredService<RecordingIncomingWebhookHandler>();
+
+		var result = await service.HandleAsync(CreateIncomingWebhookRequest("hello-world", "provider-a"));
+
+		Assert.Equal(StatusCodes.Status202Accepted, result.StatusCode);
+		Assert.Equal("text/plain; charset=utf-8", result.ContentType);
+		Assert.Equal("POST|/discord/webhooks/incoming|provider-a|hello-world", result.Body.GetString());
+		Assert.NotNull(recordingHandler.LastContext);
+		Assert.Equal("hello-world", recordingHandler.LastContext!.Body.GetString());
+	}
+
+	[Fact]
+	public async Task IncomingWebhookIngressService_ReturnsNotImplementedWhenNoHandlerMatches()
+	{
+		using var provider = BuildProvider(
+			TimeProvider.System,
+			configureServices: services => services.AddSingleton<IDiscordIncomingWebhookHandler>(static _ => new NullIncomingWebhookHandler()));
+		var service = provider.GetRequiredService<DiscordIncomingWebhookIngressService>();
+
+		var result = await service.HandleAsync(CreateIncomingWebhookRequest("ignored"));
+
+		Assert.Equal(StatusCodes.Status501NotImplemented, result.StatusCode);
+		Assert.True(result.Body.IsEmpty);
+	}
+
+	[Fact]
+	public async Task IncomingWebhookEndpointHandler_WritesHandlerDefinedResponses()
+	{
+		using var provider = BuildProvider(
+			TimeProvider.System,
+			configureServices: services =>
+			{
+				services.AddSingleton<RecordingIncomingWebhookHandler>();
+				services.AddSingleton<IDiscordIncomingWebhookHandler>(static provider => provider.GetRequiredService<RecordingIncomingWebhookHandler>());
+			});
+
+		var handler = provider.GetRequiredService<DiscordIncomingWebhookEndpointHandler>();
+		var recordingHandler = provider.GetRequiredService<RecordingIncomingWebhookHandler>();
+		var context = CreateIncomingWebhookHttpContext("hello-http", "provider-b");
+		context.RequestServices = provider;
+
+		var result = await handler.HandleAsync(context.Request);
+		await result.ExecuteAsync(context);
+
+		Assert.Equal(StatusCodes.Status202Accepted, context.Response.StatusCode);
+		Assert.Equal("text/plain; charset=utf-8", context.Response.ContentType);
+		Assert.Equal("POST|/discord/webhooks/incoming|provider-b|hello-http", await ReadResponseBodyAsync(context.Response));
+		Assert.NotNull(recordingHandler.LastContext);
+		Assert.Equal(new Uri("https://example.com/discord/webhooks/incoming"), recordingHandler.LastContext!.RequestUri);
+	}
+
+	[Fact]
+	public async Task IncomingWebhookEndpointHandler_ReturnsPayloadTooLargeWhenBodyLimitIsExceeded()
+	{
+		using var provider = BuildProvider(
+			TimeProvider.System,
+			options => options.MaxRequestBodySize = 4,
+			configureServices: services =>
+			{
+				services.AddSingleton<RecordingIncomingWebhookHandler>();
+				services.AddSingleton<IDiscordIncomingWebhookHandler>(static provider => provider.GetRequiredService<RecordingIncomingWebhookHandler>());
+			});
+
+		var handler = provider.GetRequiredService<DiscordIncomingWebhookEndpointHandler>();
+		var context = CreateIncomingWebhookHttpContext("hello-http", "provider-b");
 		context.RequestServices = provider;
 
 		var result = await handler.HandleAsync(context.Request);
@@ -939,6 +1026,16 @@ public sealed class AspNetCoreIngressTests
 			},
 			DiscordIngressPayload.FromString(body));
 
+	private static DiscordIngressRequest CreateIncomingWebhookRequest(string body, string provider = "provider")
+		=> new(
+			HttpMethods.Post,
+			new Uri("https://example.com/discord/webhooks/incoming"),
+			new Dictionary<string, StringValues>(StringComparer.OrdinalIgnoreCase)
+			{
+				["X-Webhook-Provider"] = provider
+			},
+			DiscordIngressPayload.FromString(body));
+
 	private static DefaultHttpContext CreateWebhookHttpContext(string body, string timestamp, string signature)
 	{
 		DefaultHttpContext context = new();
@@ -968,6 +1065,22 @@ public sealed class AspNetCoreIngressTests
 		context.Request.Path = "/discord/interactions";
 		context.Request.Headers[DiscordIngressHeaderNames.SignatureTimestamp] = timestamp;
 		context.Request.Headers[DiscordIngressHeaderNames.SignatureEd25519] = signature;
+		context.Request.Body = new MemoryStream(Encoding.UTF8.GetBytes(body));
+		context.Response.Body = new MemoryStream();
+		return context;
+	}
+
+	private static DefaultHttpContext CreateIncomingWebhookHttpContext(string body, string provider)
+	{
+		DefaultHttpContext context = new();
+		context.RequestServices = new ServiceCollection()
+			.AddLogging()
+			.BuildServiceProvider();
+		context.Request.Method = HttpMethods.Post;
+		context.Request.Scheme = "https";
+		context.Request.Host = new HostString("example.com");
+		context.Request.Path = "/discord/webhooks/incoming";
+		context.Request.Headers["X-Webhook-Provider"] = provider;
 		context.Request.Body = new MemoryStream(Encoding.UTF8.GetBytes(body));
 		context.Response.Body = new MemoryStream();
 		return context;
@@ -1015,6 +1128,25 @@ public sealed class AspNetCoreIngressTests
 	{
 		public ValueTask<DiscordInteractionIngressResponse?> HandleAsync(DiscordInteractionIngressContext context, System.Threading.CancellationToken cancellationToken = default)
 			=> new(DiscordInteractionIngressResponse.DeferredChannelMessageWithSource(ephemeral: true));
+	}
+
+	private sealed class NullIncomingWebhookHandler : IDiscordIncomingWebhookHandler
+	{
+		public ValueTask<DiscordIngressResponse?> HandleAsync(DiscordIncomingWebhookContext context, System.Threading.CancellationToken cancellationToken = default)
+			=> new((DiscordIngressResponse?)null);
+	}
+
+	private sealed class RecordingIncomingWebhookHandler : IDiscordIncomingWebhookHandler
+	{
+		public DiscordIncomingWebhookContext? LastContext { get; private set; }
+
+		public ValueTask<DiscordIngressResponse?> HandleAsync(DiscordIncomingWebhookContext context, System.Threading.CancellationToken cancellationToken = default)
+		{
+			this.LastContext = context;
+			return new(DiscordIngressResponse.Text(
+				StatusCodes.Status202Accepted,
+				$"{context.Method}|{context.RequestUri?.AbsolutePath}|{context.GetHeaderValue("X-Webhook-Provider")}|{context.Body.GetString()}"));
+		}
 	}
 
 	private sealed class FakeOAuthTokenExchangeService : IDiscordOAuthTokenExchangeService

@@ -134,21 +134,23 @@ public static class EndpointRouteBuilderExtensions
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status413PayloadTooLarge);
 
-		group.MapPost(incomingWebhooksPath, static () => CreatePlaceholderResult("The DisCatSharp incoming webhook endpoint is not implemented yet."))
+		group.MapPost(
+				incomingWebhooksPath,
+				static (HttpRequest request, DiscordIncomingWebhookEndpointHandler handler, CancellationToken cancellationToken)
+					=> handler.HandleAsync(request, cancellationToken).AsTask())
 			.WithName(DiscordIngressEndpointNames.IncomingWebhooks)
 			.WithDisplayName("DisCatSharp incoming webhooks")
 			.WithTags(DisCatSharpTag, IngressTag, WebhooksModule, IncomingWebhooksModule)
 			.WithMetadata(new DiscordIngressEndpointMetadata(IncomingWebhooksModule, DiscordIngressEndpointNames.IncomingWebhooks, $"{webhooksPath}/{incomingWebhooksPath}"))
+			.Produces(StatusCodes.Status200OK)
+			.Produces(StatusCodes.Status202Accepted)
+			.Produces(StatusCodes.Status204NoContent)
+			.Produces(StatusCodes.Status400BadRequest)
+			.Produces(StatusCodes.Status413PayloadTooLarge)
 			.Produces(StatusCodes.Status501NotImplemented);
 
 		return group;
 	}
-
-	private static IResult CreatePlaceholderResult(string detail)
-		=> Results.Problem(
-			statusCode: StatusCodes.Status501NotImplemented,
-			title: "DisCatSharp ingress endpoint is not implemented.",
-			detail: detail);
 
 	private static async Task<IResult> HandleOAuthCallbackAsync(
 		HttpContext httpContext,

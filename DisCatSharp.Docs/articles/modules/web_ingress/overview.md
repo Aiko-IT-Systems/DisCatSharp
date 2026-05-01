@@ -111,12 +111,13 @@ These can also be nested under a custom `MapGroup(...)`.
 
 > [!IMPORTANT]
 > The signed **webhook events** endpoint is implemented.
-> The more generic **incoming webhooks** endpoint is still a placeholder and currently returns `501 Not Implemented`.
+> The **incoming webhooks** endpoint is also implemented, but it only becomes application-specific when you register one or more `IDiscordIncomingWebhookHandler` handlers.
 
-So today, treat the package as production-ready for:
+Treat the package as production-ready for:
 
 - OAuth callbacks
 - HTTP interactions
 - signed webhook events
+- generic incoming webhook routing with app-defined handlers
 
-but **not yet** as a finished generic incoming webhook receiver.
+If no registered incoming webhook handler returns a response, the route returns `501 Not Implemented`.

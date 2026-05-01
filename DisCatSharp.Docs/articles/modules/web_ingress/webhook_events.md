@@ -11,7 +11,7 @@ The package currently exposes **two webhook-related routes**:
 | Route | Purpose | Current state |
 | --- | --- | --- |
 | `/discord/webhooks/events` | signed Discord webhook event ingress | implemented |
-| `/discord/webhooks/incoming` | generic incoming webhook surface | placeholder (`501`) |
+| `/discord/webhooks/incoming` | generic incoming webhook surface | implemented with app-defined handlers |
 
 ## Webhook events
 
@@ -37,32 +37,21 @@ The public webhook-event model types include:
 
 These are useful if you build custom ingress or transport layers around the same concepts.
 
-## Current limitation
-
-> [!IMPORTANT]
-> The webhook-events endpoint is implemented, but there is not yet a full public customization surface for application-level webhook event handling comparable to `IDiscordInteractionIngressHandler`.
-
-So right now this article should be read as:
-
-- what routes exist
-- what security behavior the package provides
-- what payload model types exist
-- what the current limitation is
-
 ## Incoming webhooks
 
-The `incoming webhooks` route is currently reserved for a future, more complete inbound webhook surface.
+The `incoming webhooks` route is now a real inbound webhook surface built around transport-neutral request and response primitives.
 
-Today it returns `501 Not Implemented`.
+Register one or more [IDiscordIncomingWebhookHandler](xref:DisCatSharp.Hosting.AspNetCore.Ingress.IDiscordIncomingWebhookHandler) implementations:
 
-That means:
+```csharp
+using DisCatSharp.Hosting.AspNetCore;
+using DisCatSharp.Hosting.AspNetCore.Ingress;
 
-- do **not** build production incoming webhook receivers on that route yet
-- do use the package today for signed webhook events, interactions, and OAuth callbacks
+builder.Services
+    .AddDisCatSharpAspNetCore()
+    .AddDiscordIncomingWebhookHandler<MyWebhookHandler>();
+```
 
-The remaining work for that route is to add:
+Handlers receive a [DiscordIncomingWebhookContext](xref:DisCatSharp.Hosting.AspNetCore.Ingress.DiscordIncomingWebhookContext) with the buffered body, headers, method, and request URI, and return a [DiscordIngressResponse](xref:DisCatSharp.Hosting.AspNetCore.Ingress.DiscordIngressResponse) when they want to claim the request.
 
-- a request model
-- a public handler abstraction
-- response shaping
-- examples for real application usage
+If no registered handler returns a response, the route returns `501 Not Implemented`. Oversized bodies still produce `413 Payload Too Large`.

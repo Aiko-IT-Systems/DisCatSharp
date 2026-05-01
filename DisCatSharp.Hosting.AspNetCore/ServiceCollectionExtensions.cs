@@ -69,6 +69,8 @@ public static class ServiceCollectionExtensions
 		services.TryAddTransient<DiscordInteractionEndpointHandler>();
 		services.TryAddTransient<DiscordWebhookEventIngressService>();
 		services.TryAddTransient<DiscordWebhookEventEndpointHandler>();
+		services.TryAddTransient<DiscordIncomingWebhookIngressService>();
+		services.TryAddTransient<DiscordIncomingWebhookEndpointHandler>();
 		services.TryAddTransient<IDiscordOAuthTokenExchangeService, DiscordOAuthTokenExchangeService>();
 		services.TryAddTransient<IDiscordOAuthCallbackHandler, DiscordOAuthCallbackHandler>();
 		services.TryAddSingleton<IDiscordOAuthCallbackResponseFactory, DiscordOAuthCallbackResponseFactory>();
@@ -138,6 +140,22 @@ public static class ServiceCollectionExtensions
 		ArgumentNullException.ThrowIfNull(services);
 
 		services.AddTransient<IDiscordInteractionIngressHandler, THandler>();
+
+		return services;
+	}
+
+	/// <summary>
+	///     Registers a generic incoming webhook ingress handler.
+	/// </summary>
+	/// <typeparam name="THandler">The handler implementation to add.</typeparam>
+	/// <param name="services">The service collection to update.</param>
+	/// <returns>The service collection for chaining purposes.</returns>
+	public static IServiceCollection AddDiscordIncomingWebhookHandler<THandler>(this IServiceCollection services)
+		where THandler : class, IDiscordIncomingWebhookHandler
+	{
+		ArgumentNullException.ThrowIfNull(services);
+
+		services.AddTransient<IDiscordIncomingWebhookHandler, THandler>();
 
 		return services;
 	}
