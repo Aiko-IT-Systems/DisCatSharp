@@ -24,9 +24,19 @@ internal static class DiscordAspNetCoreIngressRequestExtensions
 		if (!request.Body.CanSeek)
 			request.EnableBuffering();
 
-		var payload = await bodyReader.ReadAsync(request.Body, cancellationToken);
-		if (request.Body.CanSeek)
-			request.Body.Position = originalPosition;
+		DiscordIngressPayload payload;
+		try
+		{
+			if (request.Body.CanSeek)
+				request.Body.Position = 0;
+
+			payload = await bodyReader.ReadAsync(request.Body, cancellationToken);
+		}
+		finally
+		{
+			if (request.Body.CanSeek)
+				request.Body.Position = originalPosition;
+		}
 
 		Dictionary<string, StringValues> headers = new(request.Headers.Count, StringComparer.OrdinalIgnoreCase);
 		foreach (var (key, value) in request.Headers)

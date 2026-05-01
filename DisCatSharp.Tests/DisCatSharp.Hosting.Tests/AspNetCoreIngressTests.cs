@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities.OAuth2;
@@ -313,6 +314,18 @@ public sealed class AspNetCoreIngressTests
 	}
 
 	[Fact]
+	public async Task BodyReader_ReadsSeekableBodiesEvenWhenStreamLengthReportsZero()
+	{
+		using var provider = BuildProvider(TimeProvider.System);
+		var reader = provider.GetRequiredService<IDiscordIngressBodyReader>();
+		using ZeroLengthSeekableReadStream body = new(Encoding.UTF8.GetBytes(TestPingBody));
+
+		var payload = await reader.ReadAsync(body);
+
+		Assert.Equal(TestPingBody, payload.GetString());
+	}
+
+	[Fact]
 	public async Task AspNetCoreIngressRequestExtensions_CaptureRawBodyAndHeaders()
 	{
 		using var provider = BuildProvider(TimeProvider.System);
@@ -327,6 +340,20 @@ public sealed class AspNetCoreIngressTests
 		Assert.Equal(TestPingTimestamp, timestamp);
 		Assert.Equal(new Uri("https://example.com/discord/webhooks/events?delivery=1"), request.RequestUri);
 		Assert.Equal(0, context.Request.Body.Position);
+	}
+
+	[Fact]
+	public async Task AspNetCoreIngressRequestExtensions_ReadsFromStartAndRestoresOriginalPosition()
+	{
+		using var provider = BuildProvider(TimeProvider.System);
+		var bodyReader = provider.GetRequiredService<IDiscordIngressBodyReader>();
+		var context = CreateWebhookHttpContext(TestPingBody, TestPingTimestamp, TestPingSignature);
+		context.Request.Body.Position = context.Request.Body.Length;
+
+		var request = await context.Request.ToDiscordIngressRequestAsync(bodyReader);
+
+		Assert.Equal(TestPingBody, request.Body.GetString());
+		Assert.Equal(context.Request.Body.Length, context.Request.Body.Position);
 	}
 
 	[Fact]
@@ -1180,6 +1207,53 @@ public sealed class AspNetCoreIngressTests
 			return new(DiscordIngressResponse.Text(
 				StatusCodes.Status202Accepted,
 				$"{context.Method}|{context.RequestUri?.AbsolutePath}|{context.GetHeaderValue("X-Webhook-Provider")}|{context.Body.GetString()}"));
+		}
+	}
+
+	private sealed class ZeroLengthSeekableReadStream : Stream
+	{
+		private readonly MemoryStream _innerStream;
+
+		public ZeroLengthSeekableReadStream(byte[] data) => this._innerStream = new MemoryStream(data, writable: false);
+
+		public override bool CanRead => this._innerStream.CanRead;
+
+		public override bool CanSeek => this._innerStream.CanSeek;
+
+		public override bool CanWrite => false;
+
+		public override long Length => 0;
+
+		public override long Position
+		{
+			get => this._innerStream.Position;
+			set => this._innerStream.Position = value;
+		}
+
+		public override void Flush() => this._innerStream.Flush();
+
+		public override int Read(byte[] buffer, int offset, int count) => this._innerStream.Read(buffer, offset, count);
+
+		public override int Read(Span<byte> buffer) => this._innerStream.Read(buffer);
+
+		public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+			=> this._innerStream.ReadAsync(buffer, offset, count, cancellationToken);
+
+		public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)
+			=> this._innerStream.ReadAsync(buffer, cancellationToken);
+
+		public override long Seek(long offset, SeekOrigin origin) => this._innerStream.Seek(offset, origin);
+
+		public override void SetLength(long value) => throw new NotSupportedException();
+
+		public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+				this._innerStream.Dispose();
+
+			base.Dispose(disposing);
 		}
 	}
 

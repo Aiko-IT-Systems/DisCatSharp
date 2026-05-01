@@ -36,9 +36,6 @@ public sealed class DiscordIngressBodyReader : IDiscordIngressBodyReader
 
 		if (body.CanSeek)
 		{
-			if (body.Length == 0)
-				return DiscordIngressPayload.Empty;
-
 			if (body.Length > this._options.MaxRequestBodySize)
 				throw new DiscordIngressBodyTooLargeException(this._options.MaxRequestBodySize);
 		}
