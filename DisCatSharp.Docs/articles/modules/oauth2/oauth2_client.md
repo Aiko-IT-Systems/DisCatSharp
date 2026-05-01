@@ -6,14 +6,21 @@ author: DisCatSharp Team
 
 # DiscordOAuth2Client
 
-We support integrating discords OAuth2 directly into DisCatSharp bots.
-For this we've added the [DiscordOAuth2Client](xref:DisCatSharp.DiscordOAuth2Client).
+`DiscordOAuth2Client` is the protocol client for Discord OAuth2 inside DisCatSharp.
 
-For ASP.NET Core and self-hosted HTTP ingress, the recommended first-party package is `DisCatSharp.Hosting.AspNetCore`.
+Use it when you want to:
+
+- generate authorization URLs
+- generate and validate OAuth state
+- exchange authorization codes
+- refresh or revoke tokens
+- call Discord OAuth-protected APIs
 
 > [!IMPORTANT]
-> `DisCatSharp.Extensions.OAuth2Web` is deprecated in favor of `DisCatSharp.Hosting.AspNetCore`.
-> New applications should use the first-party ASP.NET Core ingress package for OAuth callbacks, signed interaction ingress, webhook events, proxy helpers, and validation helpers.
+> `DiscordOAuth2Client` is **not deprecated**.
+> Only the old `DisCatSharp.Extensions.OAuth2Web` package is deprecated.
+
+If you need built-in callback endpoints, signed HTTP interactions, or signed webhook events, combine the client with `DisCatSharp.Hosting.AspNetCore`.
 
 ## Example
 
@@ -60,60 +67,18 @@ var connections = await OAuth2Client.GetCurrentUserConnectionsAsync(token);
 
 ```
 
-## Example with DisCatSharp.Hosting.AspNetCore
+## When to add the ingress package
 
-```cs
-using DisCatSharp.Hosting.AspNetCore;
-using DisCatSharp.Hosting.AspNetCore.Ingress;
-using Microsoft.AspNetCore.Builder;
+Add `DisCatSharp.Hosting.AspNetCore` when you want DisCatSharp to own the callback endpoint inside ASP.NET Core.
 
-var builder = WebApplication.CreateBuilder(args);
+See:
 
-builder.Services.AddDisCatSharpAspNetCore(
-    configureOAuth: options =>
-    {
-        options.ClientId = 3218382190382813;
-        options.ClientSecret = "thisistotallylegitsecret";
-        options.RedirectUri = "https://example.com/discord/oauth/callback";
-    });
-
-var app = builder.Build();
-
-app.MapDisCatSharpIngress();
-app.Run();
-```
-
-For bots that do not already own an ASP.NET Core app, the same package also exposes a self-hosted mode:
-
-```cs
-using DisCatSharp.Hosting.AspNetCore;
-
-var builder = Host.CreateApplicationBuilder(args);
-
-builder.AddDisCatSharpAspNetCoreSelfHost(options =>
-{
-    options.ListenPort = 42069;
-    options.BaseUrl = new Uri("https://example.com");
-});
-```
-
-## Migration from OAuth2Web
-
-If you currently use `DisCatSharp.Extensions.OAuth2Web`, migrate as follows:
-
-1. Replace `UseOAuth2Web(...)` / `UseOAuth2WebAsync(...)` with service registration via `AddDisCatSharpAspNetCore(...)` or `AddDisCatSharpAspNetCoreSelfHost(...)`.
-2. Replace manual `Start()` / `StopAsync()` calls with:
-   - `app.MapDisCatSharpIngress()` in an existing ASP.NET Core app, or
-   - host-managed self-hosted ingress via `AddDisCatSharpAspNetCoreSelfHost(...)`.
-3. Replace Apache-only proxy generation with the new helper APIs in `DisCatSharp.Hosting.AspNetCore`, which cover:
-   - NGINX
-   - Apache
-   - common Docker-oriented reverse proxies
-4. Replace old redirect/proxy checks with the new validation helpers in `DisCatSharp.Hosting.AspNetCore.Validation`.
-
-The old extension remains a useful reference for historical behavior, but it is no longer the recommended path.
+- [OAuth2 Overview](xref:modules_oauth2_overview)
+- `Web Ingress > Overview`
+- `Web Ingress > OAuth Callbacks`
+- `Web Ingress > Migrating from OAuth2Web`
 
 ## Limitations
 
-`DiscordOAuth2Client` remains the protocol client.
-The ASP.NET Core ingress package provides the HTTP-facing integration and first-party ingress helpers, but you can still use the access token and build additional calls yourself if needed.
+`DiscordOAuth2Client` intentionally does **not** create or host a web server by itself.
+If you need hosted callback routing, use `DisCatSharp.Hosting.AspNetCore` or your own web stack around the client.
