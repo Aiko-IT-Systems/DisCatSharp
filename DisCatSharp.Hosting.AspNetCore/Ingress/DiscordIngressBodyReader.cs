@@ -34,11 +34,8 @@ public sealed class DiscordIngressBodyReader : IDiscordIngressBodyReader
 		if (!body.CanRead)
 			throw new InvalidOperationException("The ingress request body stream must be readable.");
 
-		if (body.CanSeek)
-		{
-			if (body.Length > this._options.MaxRequestBodySize)
-				throw new DiscordIngressBodyTooLargeException(this._options.MaxRequestBodySize);
-		}
+		if (body.CanSeek && body.Length > this._options.MaxRequestBodySize)
+			throw new DiscordIngressBodyTooLargeException(this._options.MaxRequestBodySize);
 
 		using MemoryStream buffer = new();
 		var chunkSize = Math.Max(1, Math.Min(this._options.MaxRequestBodySize, 81920));
