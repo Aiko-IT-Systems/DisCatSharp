@@ -65,6 +65,8 @@ public static class ServiceCollectionExtensions
 		services.TryAddSingleton<IDiscordIngressPendingStateStore, InMemoryDiscordIngressPendingStateStore>();
 		services.TryAddEnumerable(ServiceDescriptor.Transient<IDiscordIngressSignatureValidator, DiscordEd25519IngressSignatureValidator>());
 		services.TryAddTransient<IDiscordIngressSignatureValidationService, DiscordIngressSignatureValidationService>();
+		services.TryAddTransient<DiscordInteractionIngressService>();
+		services.TryAddTransient<DiscordInteractionEndpointHandler>();
 		services.TryAddTransient<DiscordWebhookEventIngressService>();
 		services.TryAddTransient<DiscordWebhookEventEndpointHandler>();
 		services.TryAddTransient<IDiscordOAuthTokenExchangeService, DiscordOAuthTokenExchangeService>();
@@ -120,6 +122,22 @@ public static class ServiceCollectionExtensions
 		ArgumentNullException.ThrowIfNull(services);
 
 		services.TryAddEnumerable(ServiceDescriptor.Transient<IDiscordIngressSignatureValidator, TValidator>());
+
+		return services;
+	}
+
+	/// <summary>
+	///     Registers a Discord HTTP interactions ingress handler.
+	/// </summary>
+	/// <typeparam name="THandler">The handler implementation to add.</typeparam>
+	/// <param name="services">The service collection to update.</param>
+	/// <returns>The service collection for chaining purposes.</returns>
+	public static IServiceCollection AddDiscordInteractionIngressHandler<THandler>(this IServiceCollection services)
+		where THandler : class, IDiscordInteractionIngressHandler
+	{
+		ArgumentNullException.ThrowIfNull(services);
+
+		services.AddTransient<IDiscordInteractionIngressHandler, THandler>();
 
 		return services;
 	}

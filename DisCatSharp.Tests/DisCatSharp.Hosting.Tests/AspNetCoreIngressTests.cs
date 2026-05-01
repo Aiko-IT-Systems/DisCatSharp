@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities.OAuth2;
+using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 using DisCatSharp.Hosting.AspNetCore;
 using DisCatSharp.Hosting.AspNetCore.Ingress;
 using DisCatSharp.Hosting.DependencyInjection;
@@ -42,6 +44,19 @@ public sealed class AspNetCoreIngressTests
 	private const string TestMalformedTimestamp = "1710000002";
 	private const string TestMalformedBody = "{";
 	private const string TestMalformedSignature = "434d91d1796bb1f88db74d3dbaa5373535fec991a51888abf946eaf24bc9e2290dfc00f17f4f7dbb87b3e94c423327ffdfe5db2bc70e6206dd1d2e1d31eab60a";
+	private const string TestInteractionVerifyKey = "3ccd241cffc9b3618044b97d036d8614593d8b017c340f1dee8773385517654b";
+	private const string TestInteractionPingTimestamp = "1711000000";
+	private const string TestInteractionPingBody = "{\"type\":1,\"application_id\":\"1234567890\",\"id\":\"111111111111111111\",\"version\":1}";
+	private const string TestInteractionPingSignature = "83e5c215a8e4baa95f041505b49ad3d17a60bfcd2c5178803cdcd1fc00c88556a08a358237a37fdf493df1034130bc76fba4dce0177cc4be0ba9725cbab5dc08";
+	private const string TestInteractionCommandTimestamp = "1711000001";
+	private const string TestInteractionCommandBody = "{\"type\":2,\"application_id\":\"1234567890\",\"id\":\"222222222222222222\",\"token\":\"interaction-token\",\"version\":1,\"data\":{\"id\":\"333333333333333333\",\"name\":\"hello\",\"type\":1}}";
+	private const string TestInteractionCommandSignature = "f46d480608306ec48e18b8f8605acc15109151456e6d92cc81f10809a7c4654455cc7bb8b2d259f92a6cd6fec9c204181ffdbca2366cd6ea3241099624465b09";
+	private const string TestInteractionDeferredTimestamp = "1711000002";
+	private const string TestInteractionDeferredBody = "{\"type\":2,\"application_id\":\"1234567890\",\"id\":\"444444444444444444\",\"token\":\"interaction-token\",\"version\":1,\"data\":{\"id\":\"555555555555555555\",\"name\":\"defer\",\"type\":1}}";
+	private const string TestInteractionDeferredSignature = "a74c3de4bc79e44c20ca00ff233add49742fae75701ff9eb33cc1e62b7d793c93ea1510b9ccdd9b9d3c1be626d0241417802db768b1c9f970b2303dfb650e709";
+	private const string TestInteractionMalformedTimestamp = "1711000003";
+	private const string TestInteractionMalformedBody = "{";
+	private const string TestInteractionMalformedSignature = "9c6a94e1499190d1bc723e55782792b4abb29bf6edab6b5fbf266a7375b51c60bf3827ab9aab2167547c31818800261eba391cf75f44ccbd61cb0d7cb148e407";
 
 	[Fact]
 	public void AddDisCatSharpAspNetCore_RegistersIngressCoreServices()
@@ -94,6 +109,8 @@ public sealed class AspNetCoreIngressTests
 		Assert.NotNull(provider.GetRequiredService<IDiscordIngressPendingStateStore>());
 		Assert.NotNull(provider.GetRequiredService<IDiscordIngressSignatureValidationService>());
 		Assert.Contains(provider.GetServices<IDiscordIngressSignatureValidator>(), static validator => validator is DiscordEd25519IngressSignatureValidator);
+		Assert.NotNull(provider.GetRequiredService<DiscordInteractionIngressService>());
+		Assert.NotNull(provider.GetRequiredService<DiscordInteractionEndpointHandler>());
 		Assert.NotNull(provider.GetRequiredService<DiscordWebhookEventIngressService>());
 		Assert.NotNull(provider.GetRequiredService<DiscordWebhookEventEndpointHandler>());
 		Assert.NotNull(provider.GetRequiredService<IDiscordOAuthTokenExchangeService>());
@@ -178,7 +195,7 @@ public sealed class AspNetCoreIngressTests
 
 		Assert.NotNull(group);
 		AssertEndpoint(endpoints, "/discord-api/oauth2/complete", DiscordIngressEndpointNames.OAuthCallback, "OAuth", "oauth2/complete", StatusCodes.Status200OK, StatusCodes.Status400BadRequest, StatusCodes.Status403Forbidden, StatusCodes.Status500InternalServerError, StatusCodes.Status502BadGateway);
-		AssertEndpoint(endpoints, "/discord-api/gateway", DiscordIngressEndpointNames.Interactions, "Interactions", "gateway", StatusCodes.Status501NotImplemented);
+		AssertEndpoint(endpoints, "/discord-api/gateway", DiscordIngressEndpointNames.Interactions, "Interactions", "gateway", StatusCodes.Status200OK, StatusCodes.Status400BadRequest, StatusCodes.Status401Unauthorized, StatusCodes.Status413PayloadTooLarge, StatusCodes.Status501NotImplemented);
 		AssertEndpoint(endpoints, "/discord-api/hooks/events", DiscordIngressEndpointNames.WebhookEvents, "Webhooks", "hooks/events", StatusCodes.Status204NoContent, StatusCodes.Status400BadRequest, StatusCodes.Status401Unauthorized, StatusCodes.Status413PayloadTooLarge);
 		AssertEndpoint(endpoints, "/discord-api/hooks/incoming", DiscordIngressEndpointNames.IncomingWebhooks, "IncomingWebhooks", "hooks/incoming", StatusCodes.Status501NotImplemented);
 	}
@@ -196,7 +213,7 @@ public sealed class AspNetCoreIngressTests
 		var endpoints = GetRouteEndpoints(app);
 
 		AssertEndpoint(endpoints, "/api/discord/oauth/callback", DiscordIngressEndpointNames.OAuthCallback, "OAuth", "oauth/callback", StatusCodes.Status200OK, StatusCodes.Status400BadRequest, StatusCodes.Status403Forbidden, StatusCodes.Status500InternalServerError, StatusCodes.Status502BadGateway);
-		AssertEndpoint(endpoints, "/api/discord/interactions", DiscordIngressEndpointNames.Interactions, "Interactions", "interactions", StatusCodes.Status501NotImplemented);
+		AssertEndpoint(endpoints, "/api/discord/interactions", DiscordIngressEndpointNames.Interactions, "Interactions", "interactions", StatusCodes.Status200OK, StatusCodes.Status400BadRequest, StatusCodes.Status401Unauthorized, StatusCodes.Status413PayloadTooLarge, StatusCodes.Status501NotImplemented);
 		AssertEndpoint(endpoints, "/api/discord/webhooks/events", DiscordIngressEndpointNames.WebhookEvents, "Webhooks", "webhooks/events", StatusCodes.Status204NoContent, StatusCodes.Status400BadRequest, StatusCodes.Status401Unauthorized, StatusCodes.Status413PayloadTooLarge);
 		AssertEndpoint(endpoints, "/api/discord/webhooks/incoming", DiscordIngressEndpointNames.IncomingWebhooks, "IncomingWebhooks", "webhooks/incoming", StatusCodes.Status501NotImplemented);
 	}
@@ -379,6 +396,106 @@ public sealed class AspNetCoreIngressTests
 
 		var handler = provider.GetRequiredService<DiscordWebhookEventEndpointHandler>();
 		var context = CreateWebhookHttpContext(TestPingBody, TestPingTimestamp, TestPingSignature);
+		context.RequestServices = provider;
+
+		var result = await handler.HandleAsync(context.Request);
+		await result.ExecuteAsync(context);
+
+		Assert.Equal(StatusCodes.Status413PayloadTooLarge, context.Response.StatusCode);
+	}
+
+	[Fact]
+	public async Task InteractionIngressService_ReturnsPongForSignedInteractionPingPayloads()
+	{
+		using var provider = BuildProvider(TimeProvider.System, options => options.ApplicationVerifyKey = TestInteractionVerifyKey);
+		var service = provider.GetRequiredService<DiscordInteractionIngressService>();
+
+		var result = await service.HandleAsync(CreateSignedInteractionRequest(TestInteractionPingBody, TestInteractionPingTimestamp, TestInteractionPingSignature));
+
+		Assert.Equal(StatusCodes.Status200OK, result.Response.StatusCode);
+		Assert.Equal(DiscordIngressSignatureValidationStatus.Valid, result.SignatureValidation.Status);
+		Assert.NotNull(result.Envelope);
+		Assert.True(result.Envelope.IsPing);
+		Assert.Equal(TestInteractionPingBody, result.Envelope.Payload.ToString(Newtonsoft.Json.Formatting.None));
+		Assert.Equal("{\"type\":1}", result.Response.Body.GetString());
+	}
+
+	[Fact]
+	public async Task InteractionIngressService_RejectsInvalidSignatures()
+	{
+		using var provider = BuildProvider(TimeProvider.System, options => options.ApplicationVerifyKey = TestInteractionVerifyKey);
+		var service = provider.GetRequiredService<DiscordInteractionIngressService>();
+
+		var result = await service.HandleAsync(CreateSignedInteractionRequest(TestInteractionCommandBody, TestInteractionCommandTimestamp, MutateHex(TestInteractionCommandSignature)));
+
+		Assert.Equal(StatusCodes.Status401Unauthorized, result.Response.StatusCode);
+		Assert.Equal(DiscordIngressSignatureValidationStatus.Invalid, result.SignatureValidation.Status);
+		Assert.Null(result.Envelope);
+	}
+
+	[Fact]
+	public async Task InteractionIngressService_RejectsMalformedJsonAfterSuccessfulSignatureValidation()
+	{
+		using var provider = BuildProvider(TimeProvider.System, options => options.ApplicationVerifyKey = TestInteractionVerifyKey);
+		var service = provider.GetRequiredService<DiscordInteractionIngressService>();
+
+		var result = await service.HandleAsync(CreateSignedInteractionRequest(TestInteractionMalformedBody, TestInteractionMalformedTimestamp, TestInteractionMalformedSignature));
+
+		Assert.Equal(StatusCodes.Status400BadRequest, result.Response.StatusCode);
+		Assert.Equal(DiscordIngressSignatureValidationStatus.Valid, result.SignatureValidation.Status);
+		Assert.NotNull(result.FailureReason);
+		Assert.Contains("Error reading JObject", result.FailureReason, StringComparison.OrdinalIgnoreCase);
+	}
+
+	[Fact]
+	public async Task InteractionIngressService_UsesRegisteredHandlerForInlineInitialResponses()
+	{
+		using var provider = BuildProvider(
+			TimeProvider.System,
+			options => options.ApplicationVerifyKey = TestInteractionVerifyKey,
+			configureServices: services => services.AddDiscordInteractionIngressHandler<InlineInteractionHandler>());
+		var service = provider.GetRequiredService<DiscordInteractionIngressService>();
+
+		var result = await service.HandleAsync(CreateSignedInteractionRequest(TestInteractionCommandBody, TestInteractionCommandTimestamp, TestInteractionCommandSignature));
+		var document = JObject.Parse(result.Response.Body.GetString());
+
+		Assert.Equal(StatusCodes.Status200OK, result.Response.StatusCode);
+		Assert.NotNull(result.Envelope);
+		Assert.Equal(InteractionType.ApplicationCommand, result.Envelope.Type);
+		Assert.Equal((int)InteractionResponseType.ChannelMessageWithSource, document["type"]?.Value<int>());
+		Assert.Equal("Hello from HTTP ingress", document["data"]?["content"]?.Value<string>());
+	}
+
+	[Fact]
+	public async Task InteractionIngressService_UsesDeferredResponseHelpersForAsyncWorkflows()
+	{
+		using var provider = BuildProvider(
+			TimeProvider.System,
+			options => options.ApplicationVerifyKey = TestInteractionVerifyKey,
+			configureServices: services => services.AddDiscordInteractionIngressHandler<DeferredInteractionHandler>());
+		var service = provider.GetRequiredService<DiscordInteractionIngressService>();
+
+		var result = await service.HandleAsync(CreateSignedInteractionRequest(TestInteractionDeferredBody, TestInteractionDeferredTimestamp, TestInteractionDeferredSignature));
+		var document = JObject.Parse(result.Response.Body.GetString());
+
+		Assert.Equal(StatusCodes.Status200OK, result.Response.StatusCode);
+		Assert.Equal((int)InteractionResponseType.DeferredChannelMessageWithSource, document["type"]?.Value<int>());
+		Assert.Equal((int)MessageFlags.Ephemeral, document["data"]?["flags"]?.Value<int>());
+	}
+
+	[Fact]
+	public async Task InteractionEndpointHandler_ReturnsPayloadTooLargeWhenBodyLimitIsExceeded()
+	{
+		using var provider = BuildProvider(
+			TimeProvider.System,
+			options =>
+			{
+				options.ApplicationVerifyKey = TestInteractionVerifyKey;
+				options.MaxRequestBodySize = 8;
+			});
+
+		var handler = provider.GetRequiredService<DiscordInteractionEndpointHandler>();
+		var context = CreateInteractionHttpContext(TestInteractionPingBody, TestInteractionPingTimestamp, TestInteractionPingSignature);
 		context.RequestServices = provider;
 
 		var result = await handler.HandleAsync(context.Request);
@@ -811,6 +928,17 @@ public sealed class AspNetCoreIngressTests
 			},
 			DiscordIngressPayload.FromString(body));
 
+	private static DiscordIngressRequest CreateSignedInteractionRequest(string body, string timestamp, string signature)
+		=> new(
+			HttpMethods.Post,
+			new Uri("https://example.com/discord/interactions"),
+			new Dictionary<string, StringValues>(StringComparer.OrdinalIgnoreCase)
+			{
+				[DiscordIngressHeaderNames.SignatureTimestamp] = timestamp,
+				[DiscordIngressHeaderNames.SignatureEd25519] = signature
+			},
+			DiscordIngressPayload.FromString(body));
+
 	private static DefaultHttpContext CreateWebhookHttpContext(string body, string timestamp, string signature)
 	{
 		DefaultHttpContext context = new();
@@ -821,6 +949,23 @@ public sealed class AspNetCoreIngressTests
 		context.Request.Scheme = "https";
 		context.Request.Host = new HostString("example.com");
 		context.Request.Path = "/discord/webhooks/events";
+		context.Request.Headers[DiscordIngressHeaderNames.SignatureTimestamp] = timestamp;
+		context.Request.Headers[DiscordIngressHeaderNames.SignatureEd25519] = signature;
+		context.Request.Body = new MemoryStream(Encoding.UTF8.GetBytes(body));
+		context.Response.Body = new MemoryStream();
+		return context;
+	}
+
+	private static DefaultHttpContext CreateInteractionHttpContext(string body, string timestamp, string signature)
+	{
+		DefaultHttpContext context = new();
+		context.RequestServices = new ServiceCollection()
+			.AddLogging()
+			.BuildServiceProvider();
+		context.Request.Method = HttpMethods.Post;
+		context.Request.Scheme = "https";
+		context.Request.Host = new HostString("example.com");
+		context.Request.Path = "/discord/interactions";
 		context.Request.Headers[DiscordIngressHeaderNames.SignatureTimestamp] = timestamp;
 		context.Request.Headers[DiscordIngressHeaderNames.SignatureEd25519] = signature;
 		context.Request.Body = new MemoryStream(Encoding.UTF8.GetBytes(body));
@@ -858,6 +1003,18 @@ public sealed class AspNetCoreIngressTests
 	{
 		public ValueTask<DiscordIngressSignatureValidationResult> ValidateAsync(DiscordIngressRequest request, System.Threading.CancellationToken cancellationToken = default)
 			=> new(DiscordIngressSignatureValidationResult.Valid("valid-test"));
+	}
+
+	private sealed class InlineInteractionHandler : IDiscordInteractionIngressHandler
+	{
+		public ValueTask<DiscordInteractionIngressResponse?> HandleAsync(DiscordInteractionIngressContext context, System.Threading.CancellationToken cancellationToken = default)
+			=> new(DiscordInteractionIngressResponse.ChannelMessageWithSource(new DiscordInteractionResponseBuilder().WithContent("Hello from HTTP ingress")));
+	}
+
+	private sealed class DeferredInteractionHandler : IDiscordInteractionIngressHandler
+	{
+		public ValueTask<DiscordInteractionIngressResponse?> HandleAsync(DiscordInteractionIngressContext context, System.Threading.CancellationToken cancellationToken = default)
+			=> new(DiscordInteractionIngressResponse.DeferredChannelMessageWithSource(ephemeral: true));
 	}
 
 	private sealed class FakeOAuthTokenExchangeService : IDiscordOAuthTokenExchangeService
