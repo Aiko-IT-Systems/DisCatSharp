@@ -13,6 +13,11 @@ public sealed class DiscordWebIngressOptions
 	public const int DefaultMaxRequestBodySize = 256 * 1024;
 
 	/// <summary>
+	///     Gets or sets the hex-encoded Discord application verify key used for signed ingress validation.
+	/// </summary>
+	public string? ApplicationVerifyKey { get; set; }
+
+	/// <summary>
 	///     Gets or sets the maximum allowed size of a raw ingress request body in bytes.
 	/// </summary>
 	public int MaxRequestBodySize { get; set; } = DefaultMaxRequestBodySize;

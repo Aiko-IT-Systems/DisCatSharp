@@ -65,6 +65,18 @@ public sealed class DiscordIngressResponse
 	public static DiscordIngressResponse Empty(int statusCode = 204) => new(statusCode);
 
 	/// <summary>
+	///     Creates a <c>204 No Content</c> response.
+	/// </summary>
+	/// <returns>A response without a body.</returns>
+	public static DiscordIngressResponse NoContent() => Empty(204);
+
+	/// <summary>
+	///     Creates the standard Discord acknowledgment response.
+	/// </summary>
+	/// <returns>A response without a body.</returns>
+	public static DiscordIngressResponse Acknowledge() => NoContent();
+
+	/// <summary>
 	///     Creates a text response.
 	/// </summary>
 	/// <param name="statusCode">The HTTP status code to return.</param>

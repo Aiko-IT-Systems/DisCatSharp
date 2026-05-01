@@ -110,9 +110,15 @@ internal sealed class DiscordAspNetCoreSelfHostService : IHostedService, IAsyncD
 		services.AddRouting();
 		services.AddSingleton(this._serviceProvider.GetRequiredService<IOptions<DiscordWebIngressOptions>>());
 		services.AddSingleton(this._serviceProvider.GetRequiredService<IOptions<DiscordAspNetCoreIngressOptions>>());
+		services.AddSingleton(this._serviceProvider.GetRequiredService<IOptions<DiscordOAuthIngressOptions>>());
 		services.AddSingleton(this._serviceProvider.GetRequiredService<TimeProvider>());
 		services.AddSingleton(this._serviceProvider.GetRequiredService<IDiscordIngressBodyReader>());
 		services.AddSingleton(this._serviceProvider.GetRequiredService<IDiscordIngressPendingStateStore>());
+		services.AddTransient<DiscordWebhookEventIngressService>(_ => this._serviceProvider.GetRequiredService<DiscordWebhookEventIngressService>());
+		services.AddTransient<DiscordWebhookEventEndpointHandler>(_ => this._serviceProvider.GetRequiredService<DiscordWebhookEventEndpointHandler>());
+		services.AddTransient<IDiscordOAuthTokenExchangeService>(_ => this._serviceProvider.GetRequiredService<IDiscordOAuthTokenExchangeService>());
+		services.AddTransient<IDiscordOAuthCallbackHandler>(_ => this._serviceProvider.GetRequiredService<IDiscordOAuthCallbackHandler>());
+		services.AddSingleton<IDiscordOAuthCallbackResponseFactory>(_ => this._serviceProvider.GetRequiredService<IDiscordOAuthCallbackResponseFactory>());
 		services.AddSingleton(this._runtime);
 
 		foreach (var validator in this._serviceProvider.GetServices<IDiscordIngressSignatureValidator>())
