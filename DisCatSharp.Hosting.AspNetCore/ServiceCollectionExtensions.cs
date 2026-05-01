@@ -22,17 +22,21 @@ public static class ServiceCollectionExtensions
 	/// <param name="services">The service collection to update.</param>
 	/// <param name="configure">Optional configuration callback for the ingress subsystem.</param>
 	/// <param name="configureAspNetCore">Optional configuration callback for ASP.NET Core endpoint conventions.</param>
+	/// <param name="configureOAuth">Optional configuration callback for the OAuth callback flow.</param>
 	/// <returns>The service collection for chaining purposes.</returns>
 	public static IServiceCollection AddDisCatSharpAspNetCore(
 		this IServiceCollection services,
 		Action<DiscordWebIngressOptions>? configure = null,
-		Action<DiscordAspNetCoreIngressOptions>? configureAspNetCore = null
+		Action<DiscordAspNetCoreIngressOptions>? configureAspNetCore = null,
+		Action<DiscordOAuthIngressOptions>? configureOAuth = null
 	)
 	{
 		ArgumentNullException.ThrowIfNull(services);
 
 		services.AddRouting();
+		services.AddLogging();
 		services.AddOptions<DiscordWebIngressOptions>()
+			.Validate(static options => IsValidVerifyKey(options.ApplicationVerifyKey), $"{nameof(DiscordWebIngressOptions.ApplicationVerifyKey)} must be a 64-character hex encoded Ed25519 public key.")
 			.Validate(static options => options.MaxRequestBodySize > 0, $"{nameof(DiscordWebIngressOptions.MaxRequestBodySize)} must be greater than zero.")
 			.Validate(static options => options.PendingStateLifetime > TimeSpan.Zero, $"{nameof(DiscordWebIngressOptions.PendingStateLifetime)} must be greater than zero.")
 			.Validate(static options => options.PendingStateCleanupInterval > TimeSpan.Zero, $"{nameof(DiscordWebIngressOptions.PendingStateCleanupInterval)} must be greater than zero.");
@@ -44,16 +48,28 @@ public static class ServiceCollectionExtensions
 			.Validate(static options => IsValidRouteSegment(options.WebhooksPath), $"{nameof(DiscordAspNetCoreIngressOptions.WebhooksPath)} must contain a route segment.")
 			.Validate(static options => IsValidRouteSegment(options.WebhookEventsPath), $"{nameof(DiscordAspNetCoreIngressOptions.WebhookEventsPath)} must contain a route segment.")
 			.Validate(static options => IsValidRouteSegment(options.IncomingWebhooksPath), $"{nameof(DiscordAspNetCoreIngressOptions.IncomingWebhooksPath)} must contain a route segment.");
+		services.AddOptions<DiscordOAuthIngressOptions>()
+			.Validate(static options => !string.IsNullOrWhiteSpace(options.PendingStateFlow), $"{nameof(DiscordOAuthIngressOptions.PendingStateFlow)} must contain a flow name.")
+			.Validate(static options => AreOAuthOptionsConsistent(options), "Discord OAuth ingress options must configure ClientId, ClientSecret, and RedirectUri together.")
+			.Validate(static options => IsValidRedirectUri(options.RedirectUri), $"{nameof(DiscordOAuthIngressOptions.RedirectUri)} must be an absolute URI when configured.");
 
 		if (configure is not null)
 			services.Configure<DiscordWebIngressOptions>(configure);
 		if (configureAspNetCore is not null)
 			services.Configure<DiscordAspNetCoreIngressOptions>(configureAspNetCore);
+		if (configureOAuth is not null)
+			services.Configure<DiscordOAuthIngressOptions>(configureOAuth);
 
 		services.TryAddSingleton<TimeProvider>(TimeProvider.System);
 		services.TryAddSingleton<IDiscordIngressBodyReader, DiscordIngressBodyReader>();
 		services.TryAddSingleton<IDiscordIngressPendingStateStore, InMemoryDiscordIngressPendingStateStore>();
+		services.TryAddEnumerable(ServiceDescriptor.Transient<IDiscordIngressSignatureValidator, DiscordEd25519IngressSignatureValidator>());
 		services.TryAddTransient<IDiscordIngressSignatureValidationService, DiscordIngressSignatureValidationService>();
+		services.TryAddTransient<DiscordWebhookEventIngressService>();
+		services.TryAddTransient<DiscordWebhookEventEndpointHandler>();
+		services.TryAddTransient<IDiscordOAuthTokenExchangeService, DiscordOAuthTokenExchangeService>();
+		services.TryAddTransient<IDiscordOAuthCallbackHandler, DiscordOAuthCallbackHandler>();
+		services.TryAddSingleton<IDiscordOAuthCallbackResponseFactory, DiscordOAuthCallbackResponseFactory>();
 
 		return services;
 	}
@@ -110,6 +126,34 @@ public static class ServiceCollectionExtensions
 
 	private static bool IsValidRouteSegment(string? segment)
 		=> !string.IsNullOrWhiteSpace(segment) && segment.AsSpan().Trim().Trim('/').Length > 0;
+
+	private static bool IsValidVerifyKey(string? verifyKey)
+	{
+		if (string.IsNullOrWhiteSpace(verifyKey))
+			return true;
+
+		var normalizedVerifyKey = verifyKey.Trim();
+		if (normalizedVerifyKey.Length != 64)
+			return false;
+
+		try
+		{
+			return Convert.FromHexString(normalizedVerifyKey).Length == 32;
+		}
+		catch (FormatException)
+		{
+			return false;
+		}
+	}
+
+	private static bool AreOAuthOptionsConsistent(DiscordOAuthIngressOptions options)
+	{
+		var hasAnyConfiguration = options.ClientId != 0 || !string.IsNullOrWhiteSpace(options.ClientSecret) || !string.IsNullOrWhiteSpace(options.RedirectUri);
+		return !hasAnyConfiguration || options.IsConfigured;
+	}
+
+	private static bool IsValidRedirectUri(string? redirectUri)
+		=> string.IsNullOrWhiteSpace(redirectUri) || Uri.TryCreate(redirectUri, UriKind.Absolute, out _);
 
 	private static bool IsValidScheme(string? scheme)
 		=> !string.IsNullOrWhiteSpace(scheme) && Uri.CheckSchemeName(scheme.Trim());

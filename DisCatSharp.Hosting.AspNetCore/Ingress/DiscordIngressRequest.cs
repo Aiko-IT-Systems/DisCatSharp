@@ -76,6 +76,24 @@ public sealed class DiscordIngressRequest
 	/// <returns>The first header value, or <see langword="null" /> when the header does not exist.</returns>
 	public string? GetHeaderValue(string name) => this.TryGetHeader(name, out var value) ? value.ToString() : null;
 
+	/// <summary>
+	///     Attempts to resolve a single header value by name.
+	/// </summary>
+	/// <param name="name">The header name to resolve.</param>
+	/// <param name="value">The single header value when one is present.</param>
+	/// <returns><see langword="true" /> when exactly one header value exists.</returns>
+	public bool TryGetSingleHeaderValue(string name, out string? value)
+	{
+		ArgumentException.ThrowIfNullOrWhiteSpace(name);
+
+		value = null;
+		if (!this.TryGetHeader(name, out var values) || values.Count != 1)
+			return false;
+
+		value = values[0];
+		return value is not null;
+	}
+
 	private static IReadOnlyDictionary<string, StringValues> CreateHeaders(IReadOnlyDictionary<string, StringValues>? headers)
 	{
 		if (headers is null || headers.Count == 0)

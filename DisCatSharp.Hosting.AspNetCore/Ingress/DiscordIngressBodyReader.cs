@@ -40,7 +40,7 @@ public sealed class DiscordIngressBodyReader : IDiscordIngressBodyReader
 				return DiscordIngressPayload.Empty;
 
 			if (body.Length > this._options.MaxRequestBodySize)
-				throw new InvalidOperationException($"The ingress request body exceeded the configured limit of {this._options.MaxRequestBodySize} bytes.");
+				throw new DiscordIngressBodyTooLargeException(this._options.MaxRequestBodySize);
 		}
 
 		using MemoryStream buffer = new();
@@ -58,7 +58,7 @@ public sealed class DiscordIngressBodyReader : IDiscordIngressBodyReader
 
 				totalRead += read;
 				if (totalRead > this._options.MaxRequestBodySize)
-					throw new InvalidOperationException($"The ingress request body exceeded the configured limit of {this._options.MaxRequestBodySize} bytes.");
+					throw new DiscordIngressBodyTooLargeException(this._options.MaxRequestBodySize);
 
 				await buffer.WriteAsync(rentedBuffer.AsMemory(0, read), cancellationToken);
 			}
