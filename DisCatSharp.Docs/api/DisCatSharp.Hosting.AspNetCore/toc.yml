@@ -4,7 +4,143 @@ items:
   name: DisCatSharp.Hosting.AspNetCore
   type: Namespace
   items:
+  - uid: DisCatSharp.Hosting.AspNetCore.DiscordAspNetCoreIngressOptions
+    name: DiscordAspNetCoreIngressOptions
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.DiscordAspNetCoreSelfHostOptions
+    name: DiscordAspNetCoreSelfHostOptions
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.DiscordAspNetCoreSelfHostRuntime
+    name: DiscordAspNetCoreSelfHostRuntime
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.DiscordIngressConfigurationValidator
+    name: DiscordIngressConfigurationValidator
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.DiscordIngressEndpointMetadata
+    name: DiscordIngressEndpointMetadata
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.DiscordIngressEndpointNames
+    name: DiscordIngressEndpointNames
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.DiscordIngressProxyHelpers
+    name: DiscordIngressProxyHelpers
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.DiscordIngressPublicUrls
+    name: DiscordIngressPublicUrls
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.DiscordIngressValidationContext
+    name: DiscordIngressValidationContext
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.DiscordIngressValidationIssue
+    name: DiscordIngressValidationIssue
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.DiscordIngressValidationReport
+    name: DiscordIngressValidationReport
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.DiscordIngressValidationSeverity
+    name: DiscordIngressValidationSeverity
+    type: Enum
+  - uid: DisCatSharp.Hosting.AspNetCore.EndpointRouteBuilderExtensions
+    name: EndpointRouteBuilderExtensions
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.HostBuilderExtensions
+    name: HostBuilderExtensions
+    type: Class
   - uid: DisCatSharp.Hosting.AspNetCore.ServiceCollectionExtensions
     name: ServiceCollectionExtensions
+    type: Class
+- uid: DisCatSharp.Hosting.AspNetCore.Ingress
+  name: DisCatSharp.Hosting.AspNetCore.Ingress
+  type: Namespace
+  items:
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.DiscordEd25519IngressSignatureValidator
+    name: DiscordEd25519IngressSignatureValidator
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.DiscordIngressBodyReader
+    name: DiscordIngressBodyReader
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.DiscordIngressBodyTooLargeException
+    name: DiscordIngressBodyTooLargeException
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.DiscordIngressHeaderNames
+    name: DiscordIngressHeaderNames
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.DiscordIngressPayload
+    name: DiscordIngressPayload
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.DiscordIngressPendingState
+    name: DiscordIngressPendingState
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.DiscordIngressRequest
+    name: DiscordIngressRequest
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.DiscordIngressResponse
+    name: DiscordIngressResponse
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.DiscordIngressSignatureValidationResult
+    name: DiscordIngressSignatureValidationResult
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.DiscordIngressSignatureValidationService
+    name: DiscordIngressSignatureValidationService
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.DiscordIngressSignatureValidationStatus
+    name: DiscordIngressSignatureValidationStatus
+    type: Enum
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.DiscordInteractionIngressContext
+    name: DiscordInteractionIngressContext
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.DiscordInteractionIngressEnvelope
+    name: DiscordInteractionIngressEnvelope
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.DiscordInteractionIngressResponse
+    name: DiscordInteractionIngressResponse
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.DiscordOAuthCallbackRequest
+    name: DiscordOAuthCallbackRequest
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.DiscordOAuthCallbackResult
+    name: DiscordOAuthCallbackResult
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.DiscordOAuthCallbackStatus
+    name: DiscordOAuthCallbackStatus
+    type: Enum
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.DiscordOAuthIngressOptions
+    name: DiscordOAuthIngressOptions
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.DiscordWebIngressOptions
+    name: DiscordWebIngressOptions
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.DiscordWebhookEventEnvelope
+    name: DiscordWebhookEventEnvelope
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.DiscordWebhookEventTypes
+    name: DiscordWebhookEventTypes
+    type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.IDiscordIngressBodyReader
+    name: IDiscordIngressBodyReader
+    type: Interface
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.IDiscordIngressPendingStateStore
+    name: IDiscordIngressPendingStateStore
+    type: Interface
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.IDiscordIngressSignatureValidationService
+    name: IDiscordIngressSignatureValidationService
+    type: Interface
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.IDiscordIngressSignatureValidator
+    name: IDiscordIngressSignatureValidator
+    type: Interface
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.IDiscordInteractionIngressHandler
+    name: IDiscordInteractionIngressHandler
+    type: Interface
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.IDiscordOAuthCallbackHandler
+    name: IDiscordOAuthCallbackHandler
+    type: Interface
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.IDiscordOAuthCallbackResponseFactory
+    name: IDiscordOAuthCallbackResponseFactory
+    type: Interface
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.IDiscordOAuthTokenExchangeService
+    name: IDiscordOAuthTokenExchangeService
+    type: Interface
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.InMemoryDiscordIngressPendingStateStore
+    name: InMemoryDiscordIngressPendingStateStore
     type: Class
 memberLayout: SeparatePages

@@ -36,6 +36,12 @@ items:
   - uid: DisCatSharp.Voice.Entities.AudioFormat
     name: AudioFormat
     type: Struct
+  - uid: DisCatSharp.Voice.Entities.ExternalOpusFrame
+    name: ExternalOpusFrame
+    type: Class
+  - uid: DisCatSharp.Voice.Entities.VoiceOutputController
+    name: VoiceOutputController
+    type: Class
   - uid: DisCatSharp.Voice.Entities.VoiceTransmitSink
     name: VoiceTransmitSink
     type: Class
@@ -91,6 +97,9 @@ items:
   name: DisCatSharp.Voice.Interfaces
   type: Namespace
   items:
+  - uid: DisCatSharp.Voice.Interfaces.IExternalOpusSource
+    name: IExternalOpusSource
+    type: Interface
   - uid: DisCatSharp.Voice.Interfaces.IVoiceFilter
     name: IVoiceFilter
     type: Interface
