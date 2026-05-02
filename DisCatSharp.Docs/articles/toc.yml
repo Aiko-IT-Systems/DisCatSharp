@@ -93,8 +93,26 @@ items:
                         uid: modules_audio_voice_migration
           - name: OAuth2
             items:
+                - name: Overview
+                  uid: modules_oauth2_overview
                 - name: DiscordOAuth2Client
                   uid: modules_oauth2_oauth2_client
+          - name: Web Ingress
+            items:
+                - name: Overview
+                  uid: modules_web_ingress_overview
+                - name: OAuth Callbacks
+                  uid: modules_web_ingress_oauth_callbacks
+                - name: HTTP Interactions
+                  uid: modules_web_ingress_interactions_http
+                - name: Linked Roles
+                  uid: modules_web_ingress_linked_roles
+                - name: Webhook Events and Incoming Webhooks
+                  uid: modules_web_ingress_webhook_events
+                - name: Proxy and Validation Helpers
+                  uid: modules_web_ingress_proxy_validation
+                - name: Migrating from OAuth2Web
+                  uid: modules_web_ingress_migration_oauth2web
           - name: Interactivity
             items:
                 - name: Interactivity Introduction

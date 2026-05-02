@@ -25,6 +25,9 @@ items:
   - name: DisCatSharp.Hosting
     uid: api_discatsharp_hosting_index
     tocHref: DisCatSharp.Hosting/toc.yml
+  - name: DisCatSharp.Hosting.AspNetCore
+    uid: api_discatsharp_hosting_aspnetcore_index
+    tocHref: DisCatSharp.Hosting.AspNetCore/toc.yml
   - name: DisCatSharp.Hosting.DependencyInjection
     uid: api_discatsharp_hosting_dependencyinjection_index
     tocHref: DisCatSharp.Hosting.DependencyInjection/toc.yml

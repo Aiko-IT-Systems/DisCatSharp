@@ -68,6 +68,12 @@ internal sealed class TransportApplication : ObservableApiObject
 	public ApplicationFlags Flags { get; set; }
 
 	/// <summary>
+	///     Gets or sets the flags exceeding <c>53</c>.
+	/// </summary>
+	[JsonProperty("flags_new", NullValueHandling = NullValueHandling.Include)]
+	public ApplicationFlags? FlagsNew { get; set; }
+
+	/// <summary>
 	///     Gets or sets the terms of service url.
 	/// </summary>
 	[JsonProperty("terms_of_service_url", NullValueHandling = NullValueHandling.Include)]
@@ -342,4 +348,10 @@ internal sealed class TransportApplication : ObservableApiObject
 	/// </summary>
 	[JsonProperty("pricing_localization_strategy", NullValueHandling = NullValueHandling.Ignore)]
 	public string? PricingLocalizationStrategy { get; set; }
+
+	/// <summary>
+	///    Gets or sets the parent application id.
+	/// </summary>
+	[JsonProperty("parent_id", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<ulong?> ParentId { get; set; }
 }

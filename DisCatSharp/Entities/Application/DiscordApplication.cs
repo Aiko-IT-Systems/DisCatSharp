@@ -110,6 +110,8 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 		this.RedirectUris = tapp.RedirectUris.HasValue ? tapp.RedirectUris.Value : [];
 		this.InteractionsEndpointUrl = tapp.InteractionsEndpointUrl.ValueOrDefault();
 		this.Flags = tapp.Flags;
+		this.FlagsNew = tapp.FlagsNew;
+		this.ParentId = tapp.ParentId.ValueOrDefault();
 		this.RpcOrigins = tapp.RpcOrigins.AsReadOnly();
 		this.IsHook = tapp.IsHook;
 		this.Type = tapp.Type;
@@ -166,6 +168,11 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	///     Gets the application's flags.
 	/// </summary>
 	public ApplicationFlags Flags { get; internal set; }
+
+	/// <summary>
+	///     Gets or sets the flags exceeding <c>53</c>.
+	/// </summary>
+	public ApplicationFlags? FlagsNew { get; internal set; }
 
 	/// <summary>
 	///     Gets the application's team members.
@@ -292,13 +299,11 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// <summary>
 	///     Gets the approximate user authorization count.
 	/// </summary>
-	[JsonProperty("approximate_user_authorization_count", NullValueHandling = NullValueHandling.Ignore)]
 	public int? ApproximateUserAuthorizationCount { get; internal set; }
 
 	/// <summary>
 	///     Gets the approximate guild count for the application's bot.
 	/// </summary>
-	[JsonProperty("bot_approximate_guild_count", NullValueHandling = NullValueHandling.Ignore)]
 	public int? BotApproximateGuildCount { get; internal set; }
 
 	/// <summary>
@@ -329,7 +334,6 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// <summary>
 	///     Gets whether the application is discoverable.
 	/// </summary>
-	[JsonProperty("is_discoverable", NullValueHandling = NullValueHandling.Ignore)]
 	public bool IsDiscoverable { get; internal set; }
 
 	/// <summary>
@@ -410,20 +414,22 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// <summary>
 	///     Gets the maximum participants for the application's embedded activity.
 	/// </summary>
-	[JsonProperty("max_participants", NullValueHandling = NullValueHandling.Ignore)]
 	public int? MaxParticipants { get; internal set; }
 
 	/// <summary>
 	///     Gets the approved console types for the application's social SDK builds.
 	/// </summary>
-	[JsonProperty("approved_consoles", NullValueHandling = NullValueHandling.Ignore)]
 	public IReadOnlyList<ApprovableConsoleType> ApprovedConsoles { get; internal set; } = [];
 
 	/// <summary>
 	///     Gets the pricing localization strategy used for the application's store presence.
 	/// </summary>
-	[JsonProperty("pricing_localization_strategy", NullValueHandling = NullValueHandling.Ignore)]
 	public string? PricingLocalizationStrategy { get; internal set; }
+
+	/// <summary>
+	///    Gets or sets the parent application id.
+	/// </summary>
+	public ulong? ParentId { get; internal set; }
 
 	/// <summary>
 	///     Checks whether this <see cref="DiscordApplication" /> is equal to another <see cref="DiscordApplication" />.

@@ -18,6 +18,7 @@ public static class ExtensionMethods
 {
 	/// <summary>
 	///     Enables application commands on this <see cref="DiscordClient" />.
+	///     Registration is started from the gateway ready lifecycle and is not triggered by HTTP ingress alone.
 	/// </summary>
 	/// <param name="client">Client to enable application commands for.</param>
 	/// <param name="config">Configuration to use.</param>

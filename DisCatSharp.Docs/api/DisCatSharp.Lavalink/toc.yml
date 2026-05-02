@@ -22,6 +22,13 @@ items:
   - uid: DisCatSharp.Lavalink.LavalinkSession
     name: LavalinkSession
     type: Class
+- uid: DisCatSharp.Lavalink.Bridge
+  name: DisCatSharp.Lavalink.Bridge
+  type: Namespace
+  items:
+  - uid: DisCatSharp.Lavalink.Bridge.LavalinkBridgeConfiguration
+    name: LavalinkBridgeConfiguration
+    type: Class
 - uid: DisCatSharp.Lavalink.Entities
   name: DisCatSharp.Lavalink.Entities
   type: Namespace

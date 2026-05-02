@@ -1,5 +1,7 @@
 using System;
 
+using DisCatSharp.Attributes;
+
 namespace DisCatSharp.Enums;
 
 /// <summary>
@@ -107,6 +109,22 @@ public enum MessageFlags : long
 	///     The message was send by a social layer integration.
 	/// </summary>
 	SendBySocialLayerIntegration = 1L << 16,
+
+	/// <summary>
+	/// 	The message is hidden because the author is suspended.
+	/// </summary>
+	HiddenSuspendedUser = 1L << 17,
+
+	/// <summary>
+	/// 	Marks guild boosted message as the first person to boost the guild.
+	/// </summary>
+	IsFirstBooster = 1L << 18,
+
+	/// <summary>
+	///    The message is marked as official for the verified guild.
+	/// </summary>
+	[DiscordInExperiment]
+	IsGuildOfficial = 1L << 19,
 
 	/// <summary>
 	///      The flags are unknown.

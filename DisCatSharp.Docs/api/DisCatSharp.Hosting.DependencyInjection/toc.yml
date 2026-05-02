@@ -4,6 +4,9 @@ items:
   name: DisCatSharp.Hosting.DependencyInjection
   type: Namespace
   items:
+  - uid: DisCatSharp.Hosting.DependencyInjection.HostBuilderExtensions
+    name: HostBuilderExtensions
+    type: Class
   - uid: DisCatSharp.Hosting.DependencyInjection.ServiceCollectionExtensions
     name: ServiceCollectionExtensions
     type: Class

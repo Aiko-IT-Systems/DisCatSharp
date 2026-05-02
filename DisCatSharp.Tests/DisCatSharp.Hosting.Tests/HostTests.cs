@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using DisCatSharp.Enums;
+using DisCatSharp.Hosting.DependencyInjection;
 using DisCatSharp.Interactivity;
 using DisCatSharp.Lavalink;
 
@@ -117,6 +118,36 @@ public class HostTests
 			})
 			.ConfigureServices(services => services.AddSingleton<TInterface, TBot>())
 			.ConfigureHostConfiguration(builder => builder.AddJsonFile(filename));
+
+	[Fact]
+	public void HostApplicationBuilderExtension_RegistersDiscordHostedService()
+	{
+		var builder = Host.CreateApplicationBuilder();
+		builder.Logging.ClearProviders();
+		builder.Configuration.AddInMemoryCollection(this.DefaultDiscord());
+
+		var returnedBuilder = builder.AddDiscordHostedService<Bot>();
+
+		using var host = builder.Build();
+		var hostedService = host.Services.GetRequiredService<Bot>();
+
+		Assert.Same(builder, returnedBuilder);
+		Assert.Contains(host.Services.GetServices<IHostedService>(), service => ReferenceEquals(service, hostedService));
+	}
+
+	[Fact]
+	public void HostBuilderExtension_RegistersDiscordHostedService()
+	{
+		using var host = Host.CreateDefaultBuilder()
+			.ConfigureLogging(logging => logging.ClearProviders())
+			.ConfigureHostConfiguration(builder => builder.AddInMemoryCollection(this.DefaultDiscord()))
+			.AddDiscordHostedService<Bot>()
+			.Build();
+
+		var hostedService = host.Services.GetRequiredService<Bot>();
+
+		Assert.Contains(host.Services.GetServices<IHostedService>(), service => ReferenceEquals(service, hostedService));
+	}
 
 	[Fact]
 	public void TestBotCustomInterface()
