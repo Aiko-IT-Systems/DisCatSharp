@@ -109,8 +109,15 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 		this.IsPublic = tapp.IsPublicBot.ValueOrDefault();
 		this.RedirectUris = tapp.RedirectUris.HasValue ? tapp.RedirectUris.Value : [];
 		this.InteractionsEndpointUrl = tapp.InteractionsEndpointUrl.ValueOrDefault();
-		this.Flags = tapp.Flags;
-		this.FlagsNew = tapp.FlagsNew;
+		this.FlagsInternal = tapp.Flags;
+		this.FlagsNewInternal = tapp.FlagsNew;
+		if (this.FlagsNewInternal is not null) {
+			this.Flags = this.FlagsNewInternal.Value;
+			this.UsesNewFlags = true;
+		} else {
+			this.Flags = this.FlagsInternal;
+			this.UsesNewFlags = false;
+		}
 		this.ParentId = tapp.ParentId.ValueOrDefault();
 		this.RpcOrigins = tapp.RpcOrigins.AsReadOnly();
 		this.IsHook = tapp.IsHook;
@@ -170,9 +177,19 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	public ApplicationFlags Flags { get; internal set; }
 
 	/// <summary>
-	///     Gets or sets the flags exceeding <c>53</c>.
+	/// 	Gets the application's flags.
 	/// </summary>
-	public ApplicationFlags? FlagsNew { get; internal set; }
+	internal ApplicationFlags FlagsInternal { get; set; }
+
+	/// <summary>
+	/// 	Gets the application's flags, including the new flags if they exceed 53.
+	/// </summary>
+	internal ApplicationFlags? FlagsNewInternal { get; set; }
+
+	/// <summary>
+	///     Gets or sets whether flags exceed <c>53</c> and the new flags are used.
+	/// </summary>
+	public bool UsesNewFlags { get; internal set; } = false;
 
 	/// <summary>
 	///     Gets the application's team members.

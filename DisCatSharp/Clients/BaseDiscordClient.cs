@@ -345,7 +345,9 @@ public abstract class BaseDiscordClient : IDisposable, IAsyncDisposable
 			if (tags.Value.Any(x => x.Length > 20))
 				throw new InvalidOperationException("Tags can not exceed 20 chars.");
 
-		DiscordApplication app = new(await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl, customInstallUrl, tags, iconb64, coverImageb64, flags, installParams, Optional.None, cancellationToken: cancellationToken).ConfigureAwait(false));
+		var usesNewFlags = flags.HasValue && flags.Value is not 0 && (flags.Value > (ApplicationFlags)(1UL << 53) || flags.Value < 0);
+
+		DiscordApplication app = new(await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl, customInstallUrl, tags, iconb64, coverImageb64, flags, installParams, Optional.None, usesNewFlags, cancellationToken: cancellationToken).ConfigureAwait(false));
 		this.CurrentApplication = app;
 		return app;
 	}
@@ -353,25 +355,17 @@ public abstract class BaseDiscordClient : IDisposable, IAsyncDisposable
 	/// <summary>
 	///     Enables user app functionality.
 	/// </summary>
+	/// <param name="scopes">The scopes to request for user access. Defaults to <c>applications.commands</c> if not specified.</param>
 	/// <returns>The updated application.</returns>
-	public async Task<DiscordApplication> EnableUserAppsAsync()
+	public async Task<DiscordApplication> EnableUserAppsAsync(List<string>? scopes = null)
 	{
 		var currentApplication = await this.GetCurrentApplicationAsync().ConfigureAwait(false);
-		var installParams = currentApplication.InstallParams;
+		scopes ??= ["applications.commands"];
 
 		DiscordIntegrationTypesConfig integrationTypesConfig = new()
 		{
-			UserInstall = new(),
-			GuildInstall = new()
-			{
-				OAuth2InstallParams = installParams is { Scopes: not null, Permissions: not null }
-					? new()
-					{
-						Scopes = installParams?.Scopes,
-						Permissions = installParams?.Permissions
-					}
-					: null
-			}
+			UserInstall = new(new() { Scopes = scopes }),
+			GuildInstall = currentApplication.IntegrationTypesConfig.GuildInstall is not null ? new(currentApplication.IntegrationTypesConfig.GuildInstall.OAuth2InstallParams): null
 		};
 
 		var app = await this.UpdateCurrentApplicationInfoAsync(Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, integrationTypesConfig).ConfigureAwait(false);
@@ -401,8 +395,8 @@ public abstract class BaseDiscordClient : IDisposable, IAsyncDisposable
 		Optional<Stream?> icon,
 		Optional<Stream?> coverImage,
 		Optional<ApplicationFlags> flags,
-		Optional<DiscordIntegrationTypesConfig?> integrationTypesConfig
-	, CancellationToken cancellationToken = default)
+		Optional<DiscordIntegrationTypesConfig?> integrationTypesConfig,
+		CancellationToken cancellationToken = default)
 	{
 		var iconb64 = MediaTool.Base64FromStream(icon);
 		var coverImageb64 = MediaTool.Base64FromStream(coverImage);
@@ -410,7 +404,9 @@ public abstract class BaseDiscordClient : IDisposable, IAsyncDisposable
 			if (tags.Value.Any(x => x.Length > 20))
 				throw new InvalidOperationException("Tags can not exceed 20 chars.");
 
-		DiscordApplication app = new(await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl, customInstallUrl, tags, iconb64, coverImageb64, flags, Optional.None, integrationTypesConfig, cancellationToken: cancellationToken).ConfigureAwait(false));
+		var usesNewFlags = flags.HasValue && flags.Value is not 0 && (flags.Value > (ApplicationFlags)(1UL << 53) || flags.Value < 0);
+
+		DiscordApplication app = new(await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl, customInstallUrl, tags, iconb64, coverImageb64, flags, Optional.None, integrationTypesConfig, usesNewFlags, cancellationToken: cancellationToken).ConfigureAwait(false));
 		this.CurrentApplication = app;
 		return app;
 	}

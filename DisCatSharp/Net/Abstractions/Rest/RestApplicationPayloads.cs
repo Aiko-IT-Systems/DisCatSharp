@@ -58,6 +58,12 @@ internal sealed class RestApplicationModifyPayload : ObservableApiObject
 	public Optional<ApplicationFlags> Flags { get; set; }
 
 	/// <summary>
+	///     Gets or sets the new application flags.
+	/// </summary>
+	[JsonProperty("flags_new", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<ApplicationFlags> FlagsNew { get; set; }
+
+	/// <summary>
 	///     Gets or sets the install params.
 	/// </summary>
 	[JsonProperty("install_params", NullValueHandling = NullValueHandling.Include)]

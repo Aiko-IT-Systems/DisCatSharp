@@ -8798,8 +8798,9 @@ public sealed class DiscordApiClient
 		Optional<string?> coverImageb64,
 		Optional<ApplicationFlags> flags,
 		Optional<DiscordApplicationInstallParams?> installParams,
-		Optional<DiscordIntegrationTypesConfig?> integrationTypesConfig
-	, CancellationToken cancellationToken = default)
+		Optional<DiscordIntegrationTypesConfig?> integrationTypesConfig,
+		bool usesNewFlags = false,
+		CancellationToken cancellationToken = default)
 	{
 		var pld = new RestApplicationModifyPayload
 		{
@@ -8810,10 +8811,13 @@ public sealed class DiscordApiClient
 			Tags = tags,
 			IconBase64 = iconb64,
 			ConverImageBase64 = coverImageb64,
-			Flags = flags,
 			InstallParams = installParams,
 			IntegrationTypesConfig = integrationTypesConfig
 		};
+		if (usesNewFlags)
+			pld.FlagsNew = flags;
+		else
+			pld.Flags = flags;
 
 		var route = $"{Endpoints.APPLICATIONS}{Endpoints.ME}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
