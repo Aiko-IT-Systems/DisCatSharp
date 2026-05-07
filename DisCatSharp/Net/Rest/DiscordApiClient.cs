@@ -8786,6 +8786,7 @@ public sealed class DiscordApiClient
 	/// <param name="flags">The application flags.</param>
 	/// <param name="installParams">The install parameters.</param>
 	/// <param name="integrationTypesConfig">The integration types configuration.</param>
+	/// <param name="usesNewFlags">Whether the flags exceed <c>53</c> and needs to use the <c>new_flags</c> property.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>The modified application info.</returns>
 	internal async Task<TransportApplication> ModifyCurrentApplicationInfoAsync(
