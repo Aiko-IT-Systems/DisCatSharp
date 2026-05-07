@@ -58,13 +58,13 @@ public static class ServiceCollectionExtensions
 			.Validate(static options => IsValidRouteSegment(options.VerificationPath), $"{nameof(DiscordLinkedRolesOptions.VerificationPath)} must contain a route segment.");
 
 		if (configure is not null)
-			services.Configure<DiscordWebIngressOptions>(configure);
+			services.Configure(configure);
 		if (configureAspNetCore is not null)
-			services.Configure<DiscordAspNetCoreIngressOptions>(configureAspNetCore);
+			services.Configure(configureAspNetCore);
 		if (configureOAuth is not null)
-			services.Configure<DiscordOAuthIngressOptions>(configureOAuth);
+			services.Configure(configureOAuth);
 
-		services.TryAddSingleton<TimeProvider>(TimeProvider.System);
+		services.TryAddSingleton(TimeProvider.System);
 		services.TryAddSingleton<IDiscordIngressBodyReader, DiscordIngressBodyReader>();
 		services.TryAddSingleton<IDiscordIngressPendingStateStore, InMemoryDiscordIngressPendingStateStore>();
 		services.TryAddEnumerable(ServiceDescriptor.Transient<IDiscordIngressSignatureValidator, DiscordEd25519IngressSignatureValidator>());
