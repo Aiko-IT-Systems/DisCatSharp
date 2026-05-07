@@ -1,4 +1,4 @@
-namespace DisCatSharp.Hosting.AspNetCore;
+namespace DisCatSharp.Hosting.AspNetCore.Validation;
 
 /// <summary>
 ///     Represents the severity of an ingress configuration validation issue.

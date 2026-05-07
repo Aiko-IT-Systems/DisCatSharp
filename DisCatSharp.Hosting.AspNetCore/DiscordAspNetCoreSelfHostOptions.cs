@@ -5,6 +5,10 @@ namespace DisCatSharp.Hosting.AspNetCore;
 /// <summary>
 ///     Configures the optional self-hosted ASP.NET Core ingress mode for DisCatSharp.
 /// </summary>
+/// <remarks>
+///     These settings are used only when <see cref="ServiceCollectionExtensions.AddDisCatSharpAspNetCoreSelfHost" />
+///     or the corresponding host builder extensions are used.
+/// </remarks>
 public sealed class DiscordAspNetCoreSelfHostOptions
 {
 	/// <summary>
@@ -42,5 +46,8 @@ public sealed class DiscordAspNetCoreSelfHostOptions
 	///     Gets or sets the externally visible base URL advertised by the self-hosted ingress surface.
 	///     When not set, the runtime falls back to the bound listen address.
 	/// </summary>
+	/// <remarks>
+	///     Set this when the self-hosted app runs behind a reverse proxy or tunnel that exposes a different public origin.
+	/// </remarks>
 	public Uri? BaseUrl { get; set; }
 }

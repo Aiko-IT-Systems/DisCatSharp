@@ -6,15 +6,15 @@ using DisCatSharp;
 using DisCatSharp.Entities;
 using DisCatSharp.Hosting.AspNetCore.Ingress;
 
-namespace DisCatSharp.Hosting.AspNetCore;
+namespace DisCatSharp.Hosting.AspNetCore.Validation;
 
 /// <summary>
-///     Validates local ingress options against computed public URLs and Discord application metadata.
+///     Validates local ingress options against computed public URLs and optional Discord application metadata.
 /// </summary>
 public static class DiscordIngressConfigurationValidator
 {
 	/// <summary>
-	///     Validates a local ASP.NET Core ingress configuration snapshot.
+	///     Validates a local ASP.NET Core ingress configuration snapshot without performing network I/O.
 	/// </summary>
 	/// <param name="context">The configuration snapshot to validate.</param>
 	/// <returns>A report containing computed public URLs and any discovered issues.</returns>

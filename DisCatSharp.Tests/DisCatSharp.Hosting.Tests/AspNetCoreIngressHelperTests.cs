@@ -4,7 +4,9 @@ using System.Linq;
 using DisCatSharp;
 using DisCatSharp.Entities;
 using DisCatSharp.Hosting.AspNetCore;
+using DisCatSharp.Hosting.AspNetCore.Deployment;
 using DisCatSharp.Hosting.AspNetCore.Ingress;
+using DisCatSharp.Hosting.AspNetCore.Routing;
 
 using Xunit;
 

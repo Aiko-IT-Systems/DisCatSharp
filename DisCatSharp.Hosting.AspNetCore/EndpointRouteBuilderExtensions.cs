@@ -4,6 +4,11 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Hosting.AspNetCore.Ingress;
+using DisCatSharp.Hosting.AspNetCore.Ingress.IncomingWebhooks;
+using DisCatSharp.Hosting.AspNetCore.Ingress.Interactions;
+using DisCatSharp.Hosting.AspNetCore.Ingress.OAuth;
+using DisCatSharp.Hosting.AspNetCore.Ingress.WebhookEvents;
+using DisCatSharp.Hosting.AspNetCore.Routing;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -28,6 +33,10 @@ public static class EndpointRouteBuilderExtensions
 	/// <summary>
 	///     Maps the default DisCatSharp ingress surface under the configured route prefix.
 	/// </summary>
+	/// <remarks>
+	///     This convenience method preserves the package's default route composition by mapping the OAuth,
+	///     interactions, and webhook surfaces beneath <see cref="DiscordAspNetCoreIngressOptions.RoutePrefix" />.
+	/// </remarks>
 	/// <param name="endpoints">The endpoint route builder to update.</param>
 	/// <returns>The configured ingress route group.</returns>
 	public static RouteGroupBuilder MapDisCatSharpIngress(this IEndpointRouteBuilder endpoints)
@@ -48,6 +57,10 @@ public static class EndpointRouteBuilderExtensions
 	/// <summary>
 	///     Maps the DisCatSharp OAuth ingress callback endpoint.
 	/// </summary>
+	/// <remarks>
+	///     The callback route remains relative to the current route group so callers can nest the ingress
+	///     surface under their own prefixes without changing the default OAuth path semantics.
+	/// </remarks>
 	/// <param name="endpoints">The endpoint route builder to update.</param>
 	/// <returns>The configured OAuth route group.</returns>
 	public static RouteGroupBuilder MapDiscordOAuthIngress(this IEndpointRouteBuilder endpoints)
@@ -77,6 +90,9 @@ public static class EndpointRouteBuilderExtensions
 	/// <summary>
 	///     Maps the DisCatSharp interactions ingress endpoint.
 	/// </summary>
+	/// <remarks>
+	///     The mapped endpoint keeps its stable name and metadata even when composed under a custom route group.
+	/// </remarks>
 	/// <param name="endpoints">The endpoint route builder to update.</param>
 	/// <returns>The configured interactions route group.</returns>
 	public static RouteGroupBuilder MapDiscordInteractionIngress(this IEndpointRouteBuilder endpoints)
@@ -108,6 +124,9 @@ public static class EndpointRouteBuilderExtensions
 	/// <summary>
 	///     Maps the DisCatSharp webhook ingress endpoints.
 	/// </summary>
+	/// <remarks>
+	///     This maps both webhook event delivery and incoming webhook callbacks under the configured webhook root.
+	/// </remarks>
 	/// <param name="endpoints">The endpoint route builder to update.</param>
 	/// <returns>The configured webhooks route group.</returns>
 	public static RouteGroupBuilder MapDiscordWebhookIngress(this IEndpointRouteBuilder endpoints)

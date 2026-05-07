@@ -3,6 +3,10 @@ namespace DisCatSharp.Hosting.AspNetCore;
 /// <summary>
 ///     Configures the public ASP.NET Core route surface for DisCatSharp web ingress.
 /// </summary>
+/// <remarks>
+///     These options control only the ASP.NET Core-facing route layout. The default shape is
+///     <c>/discord/oauth/callback</c>, <c>/discord/interactions</c>, and <c>/discord/webhooks/*</c>.
+/// </remarks>
 public sealed class DiscordAspNetCoreIngressOptions
 {
 	/// <summary>
@@ -43,6 +47,9 @@ public sealed class DiscordAspNetCoreIngressOptions
 	/// <summary>
 	///     Gets or sets the root route prefix used by <see cref="EndpointRouteBuilderExtensions.MapDisCatSharpIngress(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)" />.
 	/// </summary>
+	/// <remarks>
+	///     Specify <c>/</c> or an empty value to map the ingress surface at the application root.
+	/// </remarks>
 	public string RoutePrefix { get; set; } = DefaultRoutePrefix;
 
 	/// <summary>

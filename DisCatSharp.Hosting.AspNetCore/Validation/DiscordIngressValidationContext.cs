@@ -3,10 +3,10 @@ using System;
 using DisCatSharp;
 using DisCatSharp.Entities;
 
-namespace DisCatSharp.Hosting.AspNetCore;
+namespace DisCatSharp.Hosting.AspNetCore.Validation;
 
 /// <summary>
-///     Describes the local ingress configuration and optional Discord application state to validate.
+///     Describes the local ingress configuration snapshot and optional Discord state used during validation.
 /// </summary>
 public sealed class DiscordIngressValidationContext
 {
@@ -28,12 +28,12 @@ public sealed class DiscordIngressValidationContext
 	/// <summary>
 	///     Gets or sets the local transport-agnostic ingress options.
 	/// </summary>
-	public Ingress.DiscordWebIngressOptions? WebOptions { get; set; }
+	public DiscordWebIngressOptions? WebOptions { get; set; }
 
 	/// <summary>
 	///     Gets or sets the local OAuth callback flow options.
 	/// </summary>
-	public Ingress.DiscordOAuthIngressOptions? OAuthOptions { get; set; }
+	public DiscordOAuthIngressOptions? OAuthOptions { get; set; }
 
 	/// <summary>
 	///     Gets or sets the local linked-roles helper options.

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
 
-namespace DisCatSharp.Hosting.AspNetCore;
+namespace DisCatSharp.Hosting.AspNetCore.LinkedRoles;
 
 /// <summary>
 ///     Supplies linked-roles metadata records for synchronization with the Discord application.

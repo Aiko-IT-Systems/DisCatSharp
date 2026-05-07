@@ -1,6 +1,6 @@
 using System;
 
-namespace DisCatSharp.Hosting.AspNetCore;
+namespace DisCatSharp.Hosting.AspNetCore.Validation;
 
 /// <summary>
 ///     Represents a single ingress configuration validation finding.

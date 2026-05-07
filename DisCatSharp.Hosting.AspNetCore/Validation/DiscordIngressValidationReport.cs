@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DisCatSharp.Hosting.AspNetCore;
+namespace DisCatSharp.Hosting.AspNetCore.Validation;
 
 /// <summary>
 ///     Contains the computed ingress URLs and validation findings for a configuration snapshot.

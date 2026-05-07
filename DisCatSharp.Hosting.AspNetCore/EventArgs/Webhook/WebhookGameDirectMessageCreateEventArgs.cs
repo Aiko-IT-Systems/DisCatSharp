@@ -1,8 +1,8 @@
 using System;
 
-using DisCatSharp.Hosting.AspNetCore.Ingress;
+using DisCatSharp.Hosting.AspNetCore.Ingress.WebhookEvents;
 
-namespace DisCatSharp.Hosting.AspNetCore.EventArgs;
+namespace DisCatSharp.Hosting.AspNetCore.EventArgs.Webhook;
 
 /// <summary>
 ///     Represents arguments for <see cref="DiscordWebhookEventDispatcher.GameDirectMessageCreated" />.

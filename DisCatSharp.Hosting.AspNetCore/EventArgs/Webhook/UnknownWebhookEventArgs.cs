@@ -1,6 +1,6 @@
 using System;
 
-namespace DisCatSharp.Hosting.AspNetCore.EventArgs;
+namespace DisCatSharp.Hosting.AspNetCore.EventArgs.Webhook;
 
 /// <summary>
 ///     Represents arguments for <see cref="DiscordWebhookEventDispatcher.UnknownWebhookEventReceived" />.

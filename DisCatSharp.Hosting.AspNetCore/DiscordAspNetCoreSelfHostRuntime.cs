@@ -5,6 +5,9 @@ namespace DisCatSharp.Hosting.AspNetCore;
 /// <summary>
 ///     Exposes the active runtime addresses for the optional self-hosted ASP.NET Core ingress mode.
 /// </summary>
+/// <remarks>
+///     The runtime remains empty until the self-hosted ASP.NET Core app starts and is reset when it stops.
+/// </remarks>
 public sealed class DiscordAspNetCoreSelfHostRuntime
 {
 	/// <summary>

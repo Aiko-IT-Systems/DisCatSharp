@@ -2,7 +2,7 @@ using System;
 
 using DisCatSharp.Entities;
 
-namespace DisCatSharp.Hosting.AspNetCore.EventArgs;
+namespace DisCatSharp.Hosting.AspNetCore.EventArgs.Webhook;
 
 /// <summary>
 ///     Represents arguments for <see cref="DiscordWebhookEventDispatcher.EntitlementCreated" />.

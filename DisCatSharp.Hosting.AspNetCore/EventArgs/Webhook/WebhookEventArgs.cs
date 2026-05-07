@@ -1,14 +1,17 @@
 using System;
 
-using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Hosting.AspNetCore.Ingress;
+using DisCatSharp.Hosting.AspNetCore.Ingress.WebhookEvents;
 
-namespace DisCatSharp.Hosting.AspNetCore.EventArgs;
+namespace DisCatSharp.Hosting.AspNetCore.EventArgs.Webhook;
 
 /// <summary>
 ///     Common base for all Discord webhook events raised by <see cref="DiscordWebhookEventDispatcher" />.
 /// </summary>
+/// <remarks>
+///     Derived event arguments expose both the original transport-neutral ingress request and the parsed webhook event envelope alongside the typed Discord payload.
+/// </remarks>
 public abstract class DiscordWebhookEventArgs : DiscordEventArgs
 {
 	/// <summary>

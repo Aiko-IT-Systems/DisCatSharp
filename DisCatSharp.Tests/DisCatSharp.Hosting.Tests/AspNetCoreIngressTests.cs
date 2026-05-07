@@ -13,6 +13,7 @@ using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.Hosting.AspNetCore;
 using DisCatSharp.Hosting.AspNetCore.Ingress;
+using DisCatSharp.Hosting.AspNetCore.Routing;
 using DisCatSharp.Hosting.DependencyInjection;
 
 using Microsoft.AspNetCore.Builder;

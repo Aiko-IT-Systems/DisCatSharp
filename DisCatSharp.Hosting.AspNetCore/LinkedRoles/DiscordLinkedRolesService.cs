@@ -6,18 +6,17 @@ using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
 using DisCatSharp.Entities.OAuth2;
-using DisCatSharp.Hosting.AspNetCore.Ingress;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace DisCatSharp.Hosting.AspNetCore;
+namespace DisCatSharp.Hosting.AspNetCore.LinkedRoles;
 
 /// <summary>
-///     Provides helper methods for linked-roles verification URLs, metadata synchronization, and OAuth role connection updates.
+///     Provides helper methods for linked-roles verification URLs, metadata synchronization, and OAuth role-connection updates.
 /// </summary>
 /// <remarks>
-///     Initializes a new instance of the <see cref="DiscordLinkedRolesService" /> class.
+///     This helper keeps the ASP.NET Core ingress route configuration, Discord application metadata, and OAuth callback results aligned for linked-roles flows.
 /// </remarks>
 /// <param name="aspNetCoreOptions">The ingress route options.</param>
 /// <param name="linkedRolesOptions">The linked-roles helper options.</param>
@@ -95,7 +94,7 @@ public sealed class DiscordLinkedRolesService(
 	}
 
 	/// <summary>
-	///     Synchronizes the registered linked-roles metadata with Discord when the local schema differs from the portal state.
+	///     Synchronizes the registered linked-roles metadata with Discord when the local schema differs from the remote application state.
 	/// </summary>
 	/// <param name="client">The Discord client used to manage application metadata.</param>
 	/// <param name="cancellationToken">A token to cancel the operation.</param>
