@@ -18,6 +18,10 @@ public sealed class DiscordAspNetCoreSelfHostRuntime
 	/// <summary>
 	///     Gets the externally visible base URL for the self-hosted ingress surface when it is running.
 	/// </summary>
+	/// <remarks>
+	///     This reflects <see cref="DiscordAspNetCoreSelfHostOptions.BaseUrl" /> when configured; otherwise it mirrors
+	///     <see cref="ListenBaseUrl" />.
+	/// </remarks>
 	public Uri? PublicBaseUrl { get; private set; }
 
 	internal void SetRunning(Uri listenBaseUrl, Uri publicBaseUrl)

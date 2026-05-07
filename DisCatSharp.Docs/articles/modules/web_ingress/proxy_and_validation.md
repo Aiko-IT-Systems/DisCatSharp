@@ -8,12 +8,19 @@ author: DisCatSharp Team
 
 The ingress package includes helpers for computing public URLs, generating reverse-proxy snippets, and checking whether your local configuration matches your Discord application.
 
+These helpers are split by concern:
+
+- `DisCatSharp.Hosting.AspNetCore.Routing` for computed public URLs
+- `DisCatSharp.Hosting.AspNetCore.Deployment` for proxy snippets
+- `DisCatSharp.Hosting.AspNetCore.Validation` for offline configuration checks
+
 ## Compute the public URLs
 
-Use [DiscordIngressPublicUrls](xref:DisCatSharp.Hosting.AspNetCore.DiscordIngressPublicUrls) when you want to see the exact public surface produced by your configured route layout.
+Use [DiscordIngressPublicUrls](xref:DisCatSharp.Hosting.AspNetCore.Routing.DiscordIngressPublicUrls) when you want to see the exact public surface produced by your configured route layout.
 
 ```cs
 using DisCatSharp.Hosting.AspNetCore;
+using DisCatSharp.Hosting.AspNetCore.Routing;
 
 var urls = DiscordIngressPublicUrls.Create(
     new Uri("https://bot.example.com/base"),
@@ -34,9 +41,11 @@ Console.WriteLine(urls.WebhookEventsUrl);
 Console.WriteLine(urls.IncomingWebhooksUrl);
 ```
 
+This is the same path composition logic used by the validator and proxy helpers, so it is the safest way to explain "what URL does this config actually publish?"
+
 ## Generate proxy snippets
 
-Use [DiscordIngressProxyHelpers](xref:DisCatSharp.Hosting.AspNetCore.DiscordIngressProxyHelpers) to generate starter reverse-proxy configs.
+Use [DiscordIngressProxyHelpers](xref:DisCatSharp.Hosting.AspNetCore.Deployment.DiscordIngressProxyHelpers) to generate starter reverse-proxy configs.
 
 Supported helpers include:
 
@@ -49,6 +58,9 @@ Supported helpers include:
 Example:
 
 ```cs
+using DisCatSharp.Hosting.AspNetCore;
+using DisCatSharp.Hosting.AspNetCore.Deployment;
+
 var nginx = DiscordIngressProxyHelpers.CreateNginxConfig(
     new Uri("https://bot.example.com/base"),
     new Uri("http://127.0.0.1:5005/internal"),
@@ -63,12 +75,13 @@ Console.WriteLine(nginx);
 These helpers are intended to give you a correct starting point for:
 
 - forwarded headers
+- `X-Forwarded-Prefix`
 - path-prefix forwarding
 - mapping the public ingress root to the internal ASP.NET Core listener
 
 ## Validate portal and local configuration
 
-Use [DiscordIngressConfigurationValidator](xref:DisCatSharp.Hosting.AspNetCore.DiscordIngressConfigurationValidator) to compare:
+Use [DiscordIngressConfigurationValidator](xref:DisCatSharp.Hosting.AspNetCore.Validation.DiscordIngressConfigurationValidator) to compare:
 
 - your public base URL
 - your ingress route layout
@@ -80,6 +93,8 @@ Use [DiscordIngressConfigurationValidator](xref:DisCatSharp.Hosting.AspNetCore.D
 ```cs
 using DisCatSharp.Hosting.AspNetCore;
 using DisCatSharp.Hosting.AspNetCore.Ingress;
+using DisCatSharp.Hosting.AspNetCore.Ingress.OAuth;
+using DisCatSharp.Hosting.AspNetCore.Validation;
 
 var report = DiscordIngressConfigurationValidator.Validate(new DiscordIngressValidationContext
 {
@@ -123,3 +138,5 @@ Use them when you are:
 - moving behind a reverse proxy
 - switching route prefixes
 - checking production config against the Discord developer portal
+
+For the overall package map, see [Web Ingress Overview](overview.md). For linked-roles verification URLs specifically, see [Linked Roles](linked_roles.md).

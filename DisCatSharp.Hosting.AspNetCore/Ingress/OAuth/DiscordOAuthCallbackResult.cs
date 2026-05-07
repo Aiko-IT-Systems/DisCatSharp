@@ -9,6 +9,10 @@ namespace DisCatSharp.Hosting.AspNetCore.Ingress.OAuth;
 /// <summary>
 ///     Represents the outcome of processing a Discord OAuth authorization-code callback.
 /// </summary>
+/// <remarks>
+///     Instances preserve normalized callback metadata that higher-level features such as linked roles and incoming webhooks can use
+///     without re-parsing the original authorization or callback URLs.
+/// </remarks>
 public sealed class DiscordOAuthCallbackResult
 {
 	private static readonly IReadOnlyDictionary<string, string?> s_emptyStringProperties =
@@ -93,6 +97,10 @@ public sealed class DiscordOAuthCallbackResult
 	/// <summary>
 	///     Gets the exchanged access token when the callback completed successfully.
 	/// </summary>
+	/// <remarks>
+	///     This property is available only in-process. The default callback response factory does not serialize raw token values back to
+	///     the browser.
+	/// </remarks>
 	public DiscordAccessToken? AccessToken { get; }
 
 	/// <summary>
@@ -153,6 +161,9 @@ public sealed class DiscordOAuthCallbackResult
 	/// <summary>
 	///     Creates a successful callback result.
 	/// </summary>
+	/// <remarks>
+	///     Use this when the state, redirect validation, and token exchange all completed successfully.
+	/// </remarks>
 	public static DiscordOAuthCallbackResult Success(
 		string state,
 		string code,
@@ -190,6 +201,9 @@ public sealed class DiscordOAuthCallbackResult
 	/// <summary>
 	///     Creates an invalid-request callback result.
 	/// </summary>
+	/// <remarks>
+	///     This status is typically used when the callback is malformed or Discord returned an OAuth error query string.
+	/// </remarks>
 	public static DiscordOAuthCallbackResult InvalidRequest(
 		string? state,
 		string? code,
@@ -222,6 +236,9 @@ public sealed class DiscordOAuthCallbackResult
 	/// <summary>
 	///     Creates an invalid-state callback result.
 	/// </summary>
+	/// <remarks>
+	///     This status indicates the callback could not be matched to a pending state entry.
+	/// </remarks>
 	public static DiscordOAuthCallbackResult InvalidState(
 		string? state,
 		string? code,
@@ -252,6 +269,10 @@ public sealed class DiscordOAuthCallbackResult
 	/// <summary>
 	///     Creates a security-failure callback result.
 	/// </summary>
+	/// <remarks>
+	///     This status is used when the callback was received but failed additional security checks such as flow or redirect URI
+	///     validation.
+	/// </remarks>
 	public static DiscordOAuthCallbackResult SecurityFailure(
 		string? state,
 		string? code,
@@ -288,6 +309,9 @@ public sealed class DiscordOAuthCallbackResult
 	/// <summary>
 	///     Creates a configuration-failure callback result.
 	/// </summary>
+	/// <remarks>
+	///     This status is used when the callback endpoint is reachable but the OAuth client credentials or redirect URI are incomplete.
+	/// </remarks>
 	public static DiscordOAuthCallbackResult ConfigurationFailure(
 		string? state,
 		string? code,
@@ -318,6 +342,9 @@ public sealed class DiscordOAuthCallbackResult
 	/// <summary>
 	///     Creates a code-exchange failure callback result.
 	/// </summary>
+	/// <remarks>
+	///     This status indicates the callback passed validation but the downstream call to Discord's token endpoint failed.
+	/// </remarks>
 	public static DiscordOAuthCallbackResult ExchangeFailure(
 		string? state,
 		string? code,

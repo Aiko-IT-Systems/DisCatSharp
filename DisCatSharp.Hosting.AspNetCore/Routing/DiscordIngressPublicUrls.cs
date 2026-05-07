@@ -56,6 +56,10 @@ public sealed class DiscordIngressPublicUrls
 	/// <summary>
 	///     Gets the normalized public ingress root path.
 	/// </summary>
+	/// <remarks>
+	///     The computed path preserves the path component from <see cref="BaseUrl" /> and then appends the normalized
+	///     <see cref="DiscordAspNetCoreIngressOptions.RoutePrefix" />.
+	/// </remarks>
 	public string IngressRootPath { get; }
 
 	/// <summary>
@@ -86,15 +90,34 @@ public sealed class DiscordIngressPublicUrls
 	/// <summary>
 	///     Gets the public linked-roles verification URL when linked-roles support is configured.
 	/// </summary>
+	/// <remarks>
+	///     Unlike the ingress endpoints, the linked-roles verification URL is composed directly from the application's public base URL
+	///     and <see cref="DiscordLinkedRolesOptions.VerificationPath" /> without adding the ingress route prefix.
+	/// </remarks>
 	public Uri? RoleConnectionsVerificationUrl { get; }
 
 	/// <summary>
 	///     Creates a public URL snapshot from the supplied base URL and ingress options.
 	/// </summary>
+	/// <remarks>
+	///     <para>
+	///         The supplied <paramref name="baseUrl" /> may already contain a path base such as <c>https://example.com/base</c>; the
+	///         ingress route prefix and endpoint segments are appended beneath that existing path.
+	///     </para>
+	///     <para>
+	///         Linked-roles verification URLs deliberately remain outside the ingress route prefix so they can be published independently
+	///         from the signed interactions and webhook endpoints.
+	///     </para>
+	/// </remarks>
 	/// <param name="baseUrl">The externally visible base URL for the ASP.NET Core app.</param>
 	/// <param name="options">The ingress route options. Defaults to the package defaults when omitted.</param>
 	/// <param name="linkedRolesOptions">The optional linked-roles route options.</param>
 	/// <returns>The resolved public ingress URLs.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="baseUrl" /> is <see langword="null" />.</exception>
+	/// <exception cref="ArgumentException">
+	///     <paramref name="baseUrl" /> is not absolute, contains a query or fragment component, or one of the configured route segments
+	///     is empty after normalization.
+	/// </exception>
 	public static DiscordIngressPublicUrls Create(Uri baseUrl, DiscordAspNetCoreIngressOptions? options = null, DiscordLinkedRolesOptions? linkedRolesOptions = null)
 	{
 		ArgumentNullException.ThrowIfNull(baseUrl);

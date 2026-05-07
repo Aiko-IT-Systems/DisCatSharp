@@ -8,19 +8,23 @@ author: DisCatSharp Team
 
 The ingress package gives you the **callback endpoint** for Discord's authorization-code flow.
 
-The typical flow is:
+Use the root namespace to register the route and the `DisCatSharp.Hosting.AspNetCore.Ingress.OAuth` namespace when you need the callback contracts and result types.
+
+The package owns the **callback handling** step. Your application still owns the part that starts the OAuth flow.
+
+## Flow summary
 
 1. generate a secure `state`
-2. create an OAuth URL with [DiscordOAuth2Client](xref:DisCatSharp.DiscordOAuth2Client)
-3. store that pending request in [IDiscordIngressPendingStateStore](xref:DisCatSharp.Hosting.AspNetCore.Ingress.IDiscordIngressPendingStateStore)
+2. create an authorize URL with [DiscordOAuth2Client](xref:DisCatSharp.DiscordOAuth2Client)
+3. store the pending request in [IDiscordIngressPendingStateStore](xref:DisCatSharp.Hosting.AspNetCore.Ingress.IDiscordIngressPendingStateStore)
 4. redirect the user to Discord
-5. let `MapDisCatSharpIngress()` process the callback and exchange the code
+5. let the ingress callback handler validate the query and exchange the code
 
 ## Register the services
 
 ```cs
+using DisCatSharp;
 using DisCatSharp.Hosting.AspNetCore;
-using DisCatSharp.Hosting.AspNetCore.Ingress;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,9 +46,13 @@ var app = builder.Build();
 
 ## Start the flow
 
-Your app is responsible for starting the OAuth flow.
+Your app is responsible for issuing the redirect and storing the pending state:
 
 ```cs
+using DisCatSharp;
+using DisCatSharp.Hosting.AspNetCore.Ingress;
+using DisCatSharp.Hosting.AspNetCore.Ingress.OAuth;
+
 app.MapGet(
     "/login/discord",
     async (DiscordOAuth2Client oauthClient, IDiscordIngressPendingStateStore pendingStates, TimeProvider timeProvider) =>
@@ -66,11 +74,7 @@ app.MapGet(
     });
 ```
 
-The stored `RequestUri` is important because the callback handler uses it to preserve useful metadata such as:
-
-- requested scope
-- `integration_type`
-- redirect URI consistency
+Persist the original `RequestUri`. The callback flow uses it to preserve the originally requested scope, the `integration_type`, and redirect URI consistency checks.
 
 ## Map the callback endpoint
 
@@ -78,43 +82,53 @@ The stored `RequestUri` is important because the callback handler uses it to pre
 app.MapDisCatSharpIngress();
 ```
 
-That maps the callback endpoint and lets the package:
+Or, if you only want the OAuth surface:
 
-- validate the callback query
-- consume the pending state
-- verify the configured redirect URI
-- exchange the code through Discord
-- return a structured JSON response
+```cs
+app.MapDiscordOAuthIngress();
+```
 
-## Default callback response
+The callback endpoint then:
 
-The built-in callback endpoint returns JSON describing the result.
+- validates the callback query
+- consumes the pending state
+- verifies the configured redirect URI
+- exchanges the authorization code with Discord
+- returns a structured ingress response
 
-Successful responses include data such as:
+## Built-in callback response
+
+The default callback endpoint emits JSON.
+
+Successful payloads include fields such as:
 
 - `status`
 - `requested_scope`
 - `granted_scope`
 - `integration_type`
 - `incoming_webhook_available`
-- callback and request URI metadata
+- callback and redirect URI metadata
 
-Failures return structured JSON with the error classification and detail.
+Failures keep the same structured shape and include the failure classification and detail.
+
+If you need the full in-memory model instead of the HTTP payload, use [DiscordOAuthCallbackResult](xref:DisCatSharp.Hosting.AspNetCore.Ingress.OAuth.DiscordOAuthCallbackResult).
 
 ## Custom callback behavior
 
-If you need a custom success page, redirect behavior, session creation, or persistence flow, you have two main options:
+If you need a custom success page, redirect, session sign-in, or persistence flow, choose one of these extension points:
 
-1. **replace** [IDiscordOAuthCallbackResponseFactory](xref:DisCatSharp.Hosting.AspNetCore.Ingress.IDiscordOAuthCallbackResponseFactory) to change the HTTP response emitted by the built-in endpoint
-2. call [IDiscordOAuthCallbackHandler](xref:DisCatSharp.Hosting.AspNetCore.Ingress.IDiscordOAuthCallbackHandler) yourself from a custom ASP.NET Core route and use the returned [DiscordOAuthCallbackResult](xref:DisCatSharp.Hosting.AspNetCore.Ingress.DiscordOAuthCallbackResult)
+1. replace [IDiscordOAuthCallbackResponseFactory](xref:DisCatSharp.Hosting.AspNetCore.Ingress.OAuth.IDiscordOAuthCallbackResponseFactory) to keep the built-in route but change the emitted HTTP response
+2. call [IDiscordOAuthCallbackHandler](xref:DisCatSharp.Hosting.AspNetCore.Ingress.OAuth.IDiscordOAuthCallbackHandler) yourself from a custom route and use the returned [DiscordOAuthCallbackResult](xref:DisCatSharp.Hosting.AspNetCore.Ingress.OAuth.DiscordOAuthCallbackResult)
 
-That keeps the exchange/validation logic reusable while letting your application own the final user experience.
+That keeps the validation and token-exchange logic reusable while letting your app own the final user experience.
 
 ## Existing app vs self-host
 
-The callback flow is the same in both hosting modes.
+The callback logic is shared across both hosting modes.
 
-- existing ASP.NET Core app: register services and call `app.MapDisCatSharpIngress()`
-- self-host mode: use `AddDisCatSharpAspNetCoreSelfHost(...)`
+- existing ASP.NET Core app: register the services, then map `MapDisCatSharpIngress()` or `MapDiscordOAuthIngress()`
+- self-host mode: call `AddDisCatSharpAspNetCoreSelfHost(...)`, then configure [DiscordOAuthIngressOptions](xref:DisCatSharp.Hosting.AspNetCore.Ingress.OAuth.DiscordOAuthIngressOptions) through DI before the host starts
 
-The shared ingress services back both approaches.
+The self-host wrapper only provides the internal ASP.NET Core app. The OAuth contracts, pending-state store, and callback handler are the same services either way.
+
+For the full package map, see [Web Ingress Overview](overview.md).

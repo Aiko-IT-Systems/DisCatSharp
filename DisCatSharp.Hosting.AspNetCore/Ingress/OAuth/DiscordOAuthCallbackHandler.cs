@@ -13,6 +13,13 @@ using Microsoft.Extensions.Options;
 
 namespace DisCatSharp.Hosting.AspNetCore.Ingress.OAuth;
 
+/// <summary>
+///     Default <see cref="IDiscordOAuthCallbackHandler" /> implementation for the ASP.NET Core ingress package.
+/// </summary>
+/// <remarks>
+///     The handler consumes the pending state entry exactly once, validates that the callback still matches the original authorization
+///     request, and only then performs the Discord token exchange.
+/// </remarks>
 internal sealed class DiscordOAuthCallbackHandler(
 	IOptions<DiscordOAuthIngressOptions> options,
 	IDiscordIngressPendingStateStore pendingStateStore,
@@ -29,6 +36,13 @@ internal sealed class DiscordOAuthCallbackHandler(
 	private readonly IDiscordIngressPendingStateStore _pendingStateStore = pendingStateStore ?? throw new ArgumentNullException(nameof(pendingStateStore));
 	private readonly IDiscordOAuthTokenExchangeService _tokenExchangeService = tokenExchangeService ?? throw new ArgumentNullException(nameof(tokenExchangeService));
 
+	/// <summary>
+	///     Validates and processes an incoming OAuth callback request.
+	/// </summary>
+	/// <param name="request">The callback request to process.</param>
+	/// <param name="cancellationToken">A token used to cancel the operation.</param>
+	/// <returns>The callback processing result.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="request" /> is <see langword="null" />.</exception>
 	public async Task<DiscordOAuthCallbackResult> HandleAsync(DiscordOAuthCallbackRequest request, CancellationToken cancellationToken = default)
 	{
 		ArgumentNullException.ThrowIfNull(request);

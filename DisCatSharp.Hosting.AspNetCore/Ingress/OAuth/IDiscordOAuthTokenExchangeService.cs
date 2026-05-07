@@ -8,6 +8,10 @@ namespace DisCatSharp.Hosting.AspNetCore.Ingress.OAuth;
 /// <summary>
 ///     Exchanges Discord OAuth authorization codes for access tokens.
 /// </summary>
+/// <remarks>
+///     Implementations should assume the callback has already passed state and redirect validation and focus exclusively on the token
+///     exchange with Discord.
+/// </remarks>
 public interface IDiscordOAuthTokenExchangeService
 {
 	/// <summary>

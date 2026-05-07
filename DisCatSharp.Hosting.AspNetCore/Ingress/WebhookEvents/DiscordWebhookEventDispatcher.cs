@@ -15,7 +15,15 @@ namespace DisCatSharp.Hosting.AspNetCore.Ingress.WebhookEvents;
 ///     Dispatches typed Discord webhook events raised by the ASP.NET Core ingress pipeline.
 /// </summary>
 /// <remarks>
-///     The dispatcher stays alongside the webhook envelope, registry, and typed DTOs so the signed webhook feature surface can be discovered from one feature area.
+///     <para>
+///         The dispatcher stays alongside the webhook envelope, registry, and typed DTOs so the signed webhook feature surface can be
+///         discovered from one feature area.
+///     </para>
+///     <para>
+///         Event dispatch is intentionally fire-and-forget. The HTTP webhook endpoint acknowledges the signed request before async event
+///         handlers complete, and each registered handler is subject to a one-second timeout enforced by the underlying
+///         <see cref="AsyncEvent{TSender,TArgs}" /> infrastructure.
+///     </para>
 /// </remarks>
 public sealed class DiscordWebhookEventDispatcher
 {
@@ -162,6 +170,9 @@ public sealed class DiscordWebhookEventDispatcher
 	/// <summary>
 	///     Fired when Discord delivers a signed webhook event that does not yet have a typed event surface.
 	/// </summary>
+	/// <remarks>
+	///     Subscribe to this event to handle newer webhook event types before the package ships a typed payload model for them.
+	/// </remarks>
 	public event AsyncEventHandler<DiscordWebhookEventDispatcher, UnknownWebhookEventArgs> UnknownWebhookEventReceived
 	{
 		add => this._unknownWebhookEventReceived.Register(value);

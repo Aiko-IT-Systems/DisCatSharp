@@ -12,6 +12,10 @@ namespace DisCatSharp.Hosting.AspNetCore.Ingress;
 /// <summary>
 ///     Default in-memory implementation for pending ingress state.
 /// </summary>
+/// <remarks>
+///     This implementation is process-local and is best suited to single-node hosting scenarios. Replace it with a distributed store
+///     when callback state must survive app restarts or be shared across multiple instances.
+/// </remarks>
 public sealed class InMemoryDiscordIngressPendingStateStore : IDiscordIngressPendingStateStore
 {
 	private static readonly IReadOnlyDictionary<string, string?> s_emptyProperties =
@@ -27,6 +31,7 @@ public sealed class InMemoryDiscordIngressPendingStateStore : IDiscordIngressPen
 	/// </summary>
 	/// <param name="options">The ingress options.</param>
 	/// <param name="timeProvider">The time provider used for expiration checks.</param>
+	/// <exception cref="ArgumentNullException"><paramref name="options" /> or <paramref name="timeProvider" /> is <see langword="null" />.</exception>
 	public InMemoryDiscordIngressPendingStateStore(IOptions<DiscordWebIngressOptions> options, TimeProvider timeProvider)
 	{
 		ArgumentNullException.ThrowIfNull(options);

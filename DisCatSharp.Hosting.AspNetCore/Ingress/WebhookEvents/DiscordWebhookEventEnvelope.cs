@@ -135,6 +135,10 @@ public sealed class DiscordWebhookEventEnvelope
 	/// <summary>
 	///     Gets the recommended CLR model for the current <see cref="EventType" />, when known.
 	/// </summary>
+	/// <remarks>
+	///     This value comes from <see cref="DiscordWebhookEventModelRegistry" /> and is intended for tooling and diagnostics; unknown
+	///     event types may still carry valid payloads.
+	/// </remarks>
 	[Newtonsoft.Json.JsonIgnore]
 	public Type? SuggestedDataModelType
 		=> DiscordWebhookEventModelRegistry.GetPayloadType(this.EventType);
@@ -199,6 +203,10 @@ public sealed class DiscordWebhookEventEnvelope
 	/// <typeparam name="T">The payload model type.</typeparam>
 	/// <param name="data">The deserialized payload model when successful.</param>
 	/// <returns><see langword="true" /> when the payload was deserialized successfully.</returns>
+	/// <remarks>
+	///     This method swallows JSON deserialization failures so callers can fall back to
+	///     <see cref="DiscordWebhookEventDispatcher.UnknownWebhookEventReceived" /> or other raw-payload handling paths.
+	/// </remarks>
 	public bool TryDeserializeData<T>([NotNullWhen(true)] out T? data) where T : ObservableApiObject
 	{
 		try

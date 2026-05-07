@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace DisCatSharp.Hosting.AspNetCore.Ingress.Interactions;
 
+/// <summary>
+///     Runs the transport-neutral interaction ingress pipeline.
+/// </summary>
+/// <remarks>
+///     The pipeline validates the request signature, parses the interaction envelope, short-circuits ping requests, and then invokes
+///     registered <see cref="IDiscordInteractionIngressHandler" /> instances in registration order until one handles the interaction.
+/// </remarks>
 internal sealed class DiscordInteractionIngressService
 {
 	private readonly IReadOnlyCollection<IDiscordInteractionIngressHandler> _handlers;
@@ -21,6 +28,12 @@ internal sealed class DiscordInteractionIngressService
 		this._handlers = [.. handlers];
 	}
 
+	/// <summary>
+	///     Processes an interaction ingress request.
+	/// </summary>
+	/// <param name="request">The ingress request to process.</param>
+	/// <param name="cancellationToken">A token used to cancel the operation.</param>
+	/// <returns>The interaction ingress result.</returns>
 	public async ValueTask<DiscordInteractionIngressResult> HandleAsync(DiscordIngressRequest request, CancellationToken cancellationToken = default)
 	{
 		ArgumentNullException.ThrowIfNull(request);

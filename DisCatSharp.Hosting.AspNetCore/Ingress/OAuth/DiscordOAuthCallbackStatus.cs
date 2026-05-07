@@ -23,6 +23,10 @@ public enum DiscordOAuthCallbackStatus
 	/// <summary>
 	///     The callback failed an additional security validation step.
 	/// </summary>
+	/// <remarks>
+	///     Examples include mismatched flow names, mismatched stored state, or a redirect URI that no longer matches the configured
+	///     callback URI.
+	/// </remarks>
 	SecurityFailure = 3,
 
 	/// <summary>

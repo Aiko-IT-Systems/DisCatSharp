@@ -9,8 +9,22 @@ using Microsoft.Extensions.Primitives;
 
 namespace DisCatSharp.Hosting.AspNetCore.Ingress;
 
+/// <summary>
+///     Adapts ASP.NET Core <see cref="HttpRequest" /> instances into transport-neutral ingress requests.
+/// </summary>
+/// <remarks>
+///     The adapter rewinds buffered request bodies before reading them and restores the original stream position afterwards so other
+///     ASP.NET Core components can still inspect the body later in the pipeline.
+/// </remarks>
 internal static class DiscordAspNetCoreIngressRequestExtensions
 {
+	/// <summary>
+	///     Converts an ASP.NET Core request into a transport-neutral ingress request.
+	/// </summary>
+	/// <param name="request">The ASP.NET Core request to adapt.</param>
+	/// <param name="bodyReader">The body reader responsible for enforcing ingress size limits.</param>
+	/// <param name="cancellationToken">A token used to cancel the operation.</param>
+	/// <returns>The adapted ingress request.</returns>
 	public static async ValueTask<DiscordIngressRequest> ToDiscordIngressRequestAsync(
 		this HttpRequest request,
 		IDiscordIngressBodyReader bodyReader,

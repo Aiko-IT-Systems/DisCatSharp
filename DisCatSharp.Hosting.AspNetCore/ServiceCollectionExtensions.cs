@@ -23,15 +23,32 @@ public static class ServiceCollectionExtensions
 	///     Registers the baseline ASP.NET Core service dependencies used by the DisCatSharp web ingress scaffold.
 	/// </summary>
 	/// <remarks>
-	///     This scaffold wires the transport-agnostic ingress core services that future HTTP transports can build on.
-	///     It does not register application commands or bridge incoming HTTP interactions into the
-	///     <c>ApplicationCommandsExtension</c> module.
+	///     <para>
+	///         This scaffold wires the transport-neutral ingress pipeline, including request body reading, pending-state storage,
+	///         signature validation aggregation, webhook dispatch, OAuth callback processing, and the ASP.NET Core endpoint handlers
+	///         consumed by <see cref="EndpointRouteBuilderExtensions" />.
+	///     </para>
+	///     <para>
+	///         It does not register application-command execution on its own. Register one or more
+	///         <see cref="IDiscordInteractionIngressHandler" /> implementations to bridge incoming interactions into your bot's
+	///         command pipeline.
+	///     </para>
 	/// </remarks>
 	/// <param name="services">The service collection to update.</param>
 	/// <param name="configure">Optional configuration callback for the ingress subsystem.</param>
 	/// <param name="configureAspNetCore">Optional configuration callback for ASP.NET Core endpoint conventions.</param>
 	/// <param name="configureOAuth">Optional configuration callback for the OAuth callback flow.</param>
 	/// <returns>The service collection for chaining purposes.</returns>
+	/// <example>
+	///     <code language="csharp"><![CDATA[
+	/// builder.Services
+	///     .AddDisCatSharpAspNetCore(
+	///         configure: options => options.ApplicationVerifyKey = "<discord-verify-key>",
+	///         configureOAuth: options => options.RedirectUri = "https://bot.example.com/discord/oauth/callback")
+	///     .AddDiscordInteractionIngressHandler<MyInteractionHandler>();
+	/// ]]></code>
+	/// </example>
+	/// <exception cref="ArgumentNullException"><paramref name="services" /> is <see langword="null" />.</exception>
 	public static IServiceCollection AddDisCatSharpAspNetCore(
 		this IServiceCollection services,
 		Action<DiscordWebIngressOptions>? configure = null,
@@ -93,11 +110,17 @@ public static class ServiceCollectionExtensions
 	/// <summary>
 	///     Registers the optional self-hosted ASP.NET Core ingress infrastructure for applications that do not already own an ASP.NET Core app.
 	/// </summary>
+	/// <remarks>
+	///     This mode spins up a private <see cref="Microsoft.AspNetCore.Builder.WebApplication" /> behind the hosting abstraction and
+	///     bridges the ingress services from the primary dependency injection container into that internal app. Use it when you need the
+	///     HTTP ingress surface but do not otherwise host ASP.NET Core yourself.
+	/// </remarks>
 	/// <param name="services">The service collection to update.</param>
 	/// <param name="configureSelfHost">Optional configuration callback for the internal ASP.NET Core host.</param>
 	/// <param name="configure">Optional configuration callback for the ingress subsystem.</param>
 	/// <param name="configureAspNetCore">Optional configuration callback for ASP.NET Core endpoint conventions.</param>
 	/// <returns>The service collection for chaining purposes.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="services" /> is <see langword="null" />.</exception>
 	public static IServiceCollection AddDisCatSharpAspNetCoreSelfHost(
 		this IServiceCollection services,
 		Action<DiscordAspNetCoreSelfHostOptions>? configureSelfHost = null,
@@ -127,9 +150,15 @@ public static class ServiceCollectionExtensions
 	/// <summary>
 	///     Registers a transport-agnostic ingress signature validator.
 	/// </summary>
+	/// <remarks>
+	///     Validators are aggregated by <see cref="IDiscordIngressSignatureValidationService" /> in registration order. Return
+	///     <see cref="DiscordIngressSignatureValidationResult.NotValidated(string?)" /> when a validator does not apply to the current
+	///     request so later validators can still participate.
+	/// </remarks>
 	/// <typeparam name="TValidator">The validator implementation to add.</typeparam>
 	/// <param name="services">The service collection to update.</param>
 	/// <returns>The service collection for chaining purposes.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="services" /> is <see langword="null" />.</exception>
 	public static IServiceCollection AddDiscordIngressSignatureValidator<TValidator>(this IServiceCollection services)
 		where TValidator : class, IDiscordIngressSignatureValidator
 	{
@@ -143,9 +172,14 @@ public static class ServiceCollectionExtensions
 	/// <summary>
 	///     Registers a Discord HTTP interactions ingress handler.
 	/// </summary>
+	/// <remarks>
+	///     Handlers run in registration order until one returns a non-<see langword="null" /> response. This enables layered pipelines
+	///     where specialized handlers can opt out and allow later handlers to try.
+	/// </remarks>
 	/// <typeparam name="THandler">The handler implementation to add.</typeparam>
 	/// <param name="services">The service collection to update.</param>
 	/// <returns>The service collection for chaining purposes.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="services" /> is <see langword="null" />.</exception>
 	public static IServiceCollection AddDiscordInteractionIngressHandler<THandler>(this IServiceCollection services)
 		where THandler : class, IDiscordInteractionIngressHandler
 	{
@@ -159,9 +193,13 @@ public static class ServiceCollectionExtensions
 	/// <summary>
 	///     Registers a generic incoming webhook ingress handler.
 	/// </summary>
+	/// <remarks>
+	///     Handlers run in registration order until one returns a non-<see langword="null" /> response.
+	/// </remarks>
 	/// <typeparam name="THandler">The handler implementation to add.</typeparam>
 	/// <param name="services">The service collection to update.</param>
 	/// <returns>The service collection for chaining purposes.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="services" /> is <see langword="null" />.</exception>
 	public static IServiceCollection AddDiscordIncomingWebhookHandler<THandler>(this IServiceCollection services)
 		where THandler : class, IDiscordIncomingWebhookHandler
 	{
@@ -175,9 +213,14 @@ public static class ServiceCollectionExtensions
 	/// <summary>
 	///     Registers linked-roles helpers for verification URL generation, metadata synchronization, and OAuth role connection updates.
 	/// </summary>
+	/// <remarks>
+	///     Register a metadata provider with <see cref="AddDiscordLinkedRolesMetadataProvider{TProvider}(IServiceCollection)" /> when
+	///     you want to synchronize linked-role metadata definitions with Discord.
+	/// </remarks>
 	/// <param name="services">The service collection to update.</param>
 	/// <param name="configure">Optional configuration callback for linked-roles support.</param>
 	/// <returns>The service collection for chaining purposes.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="services" /> is <see langword="null" />.</exception>
 	public static IServiceCollection AddDiscordLinkedRolesSupport(this IServiceCollection services, Action<DiscordLinkedRolesOptions>? configure = null)
 	{
 		ArgumentNullException.ThrowIfNull(services);
@@ -192,9 +235,13 @@ public static class ServiceCollectionExtensions
 	/// <summary>
 	///     Registers the metadata provider used by <see cref="DiscordLinkedRolesService" /> when synchronizing linked-roles metadata.
 	/// </summary>
+	/// <remarks>
+	///     Only a single provider is consumed at runtime. Register a composite implementation if metadata comes from multiple sources.
+	/// </remarks>
 	/// <typeparam name="TProvider">The metadata provider implementation to add.</typeparam>
 	/// <param name="services">The service collection to update.</param>
 	/// <returns>The service collection for chaining purposes.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="services" /> is <see langword="null" />.</exception>
 	public static IServiceCollection AddDiscordLinkedRolesMetadataProvider<TProvider>(this IServiceCollection services)
 		where TProvider : class, IDiscordLinkedRolesMetadataProvider
 	{

@@ -6,6 +6,13 @@ using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp.Hosting.AspNetCore.Ingress.WebhookEvents;
 
+/// <summary>
+///     Runs the signed webhook event ingress pipeline.
+/// </summary>
+/// <remarks>
+///     The pipeline validates request signatures, parses the webhook envelope, returns the HTTP acknowledgment immediately, and then
+///     schedules async dispatch through <see cref="DiscordWebhookEventDispatcher" />.
+/// </remarks>
 internal sealed class DiscordWebhookEventIngressService(
 	IDiscordIngressSignatureValidationService signatureValidationService,
 	DiscordWebhookEventDispatcher dispatcher,
@@ -16,6 +23,12 @@ internal sealed class DiscordWebhookEventIngressService(
 	private readonly DiscordWebhookEventDispatcher _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
 	private readonly ILogger<DiscordWebhookEventIngressService> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
+	/// <summary>
+	///     Processes a signed webhook event request.
+	/// </summary>
+	/// <param name="request">The ingress request to process.</param>
+	/// <param name="cancellationToken">A token used to cancel the operation.</param>
+	/// <returns>The webhook ingress result.</returns>
 	public async ValueTask<DiscordWebhookEventIngressResult> HandleAsync(DiscordIngressRequest request, CancellationToken cancellationToken = default)
 	{
 		ArgumentNullException.ThrowIfNull(request);

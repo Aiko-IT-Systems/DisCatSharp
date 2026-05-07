@@ -6,6 +6,11 @@ namespace DisCatSharp.Hosting.AspNetCore.Ingress.Security;
 /// <summary>
 ///     Validates an ingress request signature for a specific provider or scheme.
 /// </summary>
+/// <remarks>
+///     Return <see cref="DiscordIngressSignatureValidationResult.NotValidated(string?)" /> when the validator does not apply to the
+///     current request. Reserve <see cref="DiscordIngressSignatureValidationResult.Invalid(string,string?)" /> for requests that should
+///     have matched but failed validation.
+/// </remarks>
 public interface IDiscordIngressSignatureValidator
 {
 	/// <summary>

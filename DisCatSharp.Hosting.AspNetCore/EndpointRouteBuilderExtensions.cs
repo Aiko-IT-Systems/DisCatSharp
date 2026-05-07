@@ -34,11 +34,28 @@ public static class EndpointRouteBuilderExtensions
 	///     Maps the default DisCatSharp ingress surface under the configured route prefix.
 	/// </summary>
 	/// <remarks>
-	///     This convenience method preserves the package's default route composition by mapping the OAuth,
-	///     interactions, and webhook surfaces beneath <see cref="DiscordAspNetCoreIngressOptions.RoutePrefix" />.
+	///     <para>
+	///         This convenience method preserves the package's default route composition by mapping the OAuth, interactions, and
+	///         webhook surfaces beneath <see cref="DiscordAspNetCoreIngressOptions.RoutePrefix" />.
+	///     </para>
+	///     <para>
+	///         The resulting endpoints retain stable names from <see cref="DiscordIngressEndpointNames" /> and attach
+	///         <see cref="DiscordIngressEndpointMetadata" /> so deployment tooling can inspect the logical ingress surface after route
+	///         groups have been composed.
+	///     </para>
 	/// </remarks>
 	/// <param name="endpoints">The endpoint route builder to update.</param>
 	/// <returns>The configured ingress route group.</returns>
+	/// <example>
+	///     <code language="csharp"><![CDATA[
+	/// var app = builder.Build();
+	/// app.MapDisCatSharpIngress();
+	/// ]]></code>
+	/// </example>
+	/// <exception cref="ArgumentNullException"><paramref name="endpoints" /> is <see langword="null" />.</exception>
+	/// <exception cref="InvalidOperationException">
+	///     DisCatSharp ASP.NET Core ingress services have not been registered on the application's service provider.
+	/// </exception>
 	public static RouteGroupBuilder MapDisCatSharpIngress(this IEndpointRouteBuilder endpoints)
 	{
 		ArgumentNullException.ThrowIfNull(endpoints);
@@ -59,10 +76,15 @@ public static class EndpointRouteBuilderExtensions
 	/// </summary>
 	/// <remarks>
 	///     The callback route remains relative to the current route group so callers can nest the ingress
-	///     surface under their own prefixes without changing the default OAuth path semantics.
+	///     surface under their own prefixes without changing the default OAuth path semantics. The callback request is normalized into
+	///     <see cref="DiscordOAuthCallbackRequest" /> before it is handed to <see cref="IDiscordOAuthCallbackHandler" />.
 	/// </remarks>
 	/// <param name="endpoints">The endpoint route builder to update.</param>
 	/// <returns>The configured OAuth route group.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="endpoints" /> is <see langword="null" />.</exception>
+	/// <exception cref="InvalidOperationException">
+	///     DisCatSharp ASP.NET Core ingress services have not been registered on the application's service provider.
+	/// </exception>
 	public static RouteGroupBuilder MapDiscordOAuthIngress(this IEndpointRouteBuilder endpoints)
 	{
 		ArgumentNullException.ThrowIfNull(endpoints);
@@ -91,10 +113,16 @@ public static class EndpointRouteBuilderExtensions
 	///     Maps the DisCatSharp interactions ingress endpoint.
 	/// </summary>
 	/// <remarks>
-	///     The mapped endpoint keeps its stable name and metadata even when composed under a custom route group.
+	///     The mapped endpoint keeps its stable name and metadata even when composed under a custom route group. Request signatures are
+	///     validated before the JSON payload is parsed and the registered <see cref="IDiscordInteractionIngressHandler" /> instances are
+	///     invoked.
 	/// </remarks>
 	/// <param name="endpoints">The endpoint route builder to update.</param>
 	/// <returns>The configured interactions route group.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="endpoints" /> is <see langword="null" />.</exception>
+	/// <exception cref="InvalidOperationException">
+	///     DisCatSharp ASP.NET Core ingress services have not been registered on the application's service provider.
+	/// </exception>
 	public static RouteGroupBuilder MapDiscordInteractionIngress(this IEndpointRouteBuilder endpoints)
 	{
 		ArgumentNullException.ThrowIfNull(endpoints);
@@ -125,10 +153,16 @@ public static class EndpointRouteBuilderExtensions
 	///     Maps the DisCatSharp webhook ingress endpoints.
 	/// </summary>
 	/// <remarks>
-	///     This maps both webhook event delivery and incoming webhook callbacks under the configured webhook root.
+	///     This maps both webhook event delivery and incoming webhook callbacks under the configured webhook root. Signed webhook events
+	///     are acknowledged before their async event handlers complete, while generic incoming webhook handlers run inline and return the
+	///     first response produced by the registered pipeline.
 	/// </remarks>
 	/// <param name="endpoints">The endpoint route builder to update.</param>
 	/// <returns>The configured webhooks route group.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="endpoints" /> is <see langword="null" />.</exception>
+	/// <exception cref="InvalidOperationException">
+	///     DisCatSharp ASP.NET Core ingress services have not been registered on the application's service provider.
+	/// </exception>
 	public static RouteGroupBuilder MapDiscordWebhookIngress(this IEndpointRouteBuilder endpoints)
 	{
 		ArgumentNullException.ThrowIfNull(endpoints);

@@ -8,12 +8,14 @@ author: DisCatSharp Team
 
 `DisCatSharp.Hosting.AspNetCore` can receive Discord interactions over incoming HTTP.
 
+Use the root namespace to register and map the feature. Use `DisCatSharp.Hosting.AspNetCore.Ingress.Interactions` when you implement custom handlers or work with inline interaction responses.
+
 The package:
 
 - preserves the raw body for signature verification
 - validates `X-Signature-Ed25519` and `X-Signature-Timestamp`
 - answers `PING` automatically
-- dispatches application interactions through registered [IDiscordInteractionIngressHandler](xref:DisCatSharp.Hosting.AspNetCore.Ingress.IDiscordInteractionIngressHandler) implementations
+- dispatches application interactions through registered [IDiscordInteractionIngressHandler](xref:DisCatSharp.Hosting.AspNetCore.Ingress.Interactions.IDiscordInteractionIngressHandler) implementations
 
 ## Configure the verify key
 
@@ -31,7 +33,7 @@ Your Discord application verify key comes from the developer portal or the curre
 ```cs
 using DisCatSharp.Entities;
 using DisCatSharp.Hosting.AspNetCore;
-using DisCatSharp.Hosting.AspNetCore.Ingress;
+using DisCatSharp.Hosting.AspNetCore.Ingress.Interactions;
 
 builder.Services.AddDiscordInteractionIngressHandler<HelloInteractionHandler>();
 
@@ -51,10 +53,14 @@ public sealed class HelloInteractionHandler : IDiscordInteractionIngressHandler
 }
 ```
 
+Handlers receive a [DiscordInteractionIngressContext](xref:DisCatSharp.Hosting.AspNetCore.Ingress.Interactions.DiscordInteractionIngressContext) that carries both the preserved ingress request and the parsed interaction envelope.
+
 Handlers can return:
 
 - a response to stop processing
 - `null` to let another registered handler try
+
+If no handler claims the interaction, the endpoint returns `501 Not Implemented`.
 
 ## Deferred responses
 
@@ -73,6 +79,12 @@ Then finish the interaction through Discord's normal follow-up webhook APIs befo
 
 ```cs
 app.MapDisCatSharpIngress();
+```
+
+If you only want this surface, map it directly:
+
+```cs
+app.MapDiscordInteractionIngress();
 ```
 
 By default the interactions endpoint is:
@@ -98,5 +110,13 @@ If you need those, defer the initial response and complete the interaction throu
 
 This feature is specifically for **incoming HTTP** interaction delivery.
 
-It does not replace the existing gateway interaction model automatically.
+It does not replace the existing gateway interaction model automatically, and `AddDisCatSharpAspNetCore(...)` does **not** bridge HTTP interactions into `ApplicationCommandsExtension` for you.
+
 Use it when your Discord application is configured to deliver interactions to an HTTP endpoint instead of relying only on the gateway path.
+
+## Existing app vs self-host
+
+- existing ASP.NET Core app: register the services, then map `MapDisCatSharpIngress()` or `MapDiscordInteractionIngress()`
+- self-host mode: call `AddDisCatSharpAspNetCoreSelfHost(...)`; the internal app maps the default ingress routes automatically
+
+For routing and deployment helpers around the public interactions URL, see [Proxy and Validation Helpers](proxy_and_validation.md).

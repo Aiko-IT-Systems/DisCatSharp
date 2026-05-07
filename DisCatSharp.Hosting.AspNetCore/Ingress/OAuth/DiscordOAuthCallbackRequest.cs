@@ -8,7 +8,8 @@ namespace DisCatSharp.Hosting.AspNetCore.Ingress.OAuth;
 ///     Represents a Discord OAuth authorization-code callback request.
 /// </summary>
 /// <remarks>
-///     Initializes a new instance of the <see cref="DiscordOAuthCallbackRequest" /> class.
+///     Query parameter names are stored with case-insensitive lookup semantics so ASP.NET Core and synthetic test requests behave the
+///     same way.
 /// </remarks>
 /// <param name="code">The authorization code received from Discord.</param>
 /// <param name="state">The callback state received from Discord.</param>
@@ -64,6 +65,7 @@ public sealed class DiscordOAuthCallbackRequest(
 	/// <param name="name">The query parameter name.</param>
 	/// <param name="value">The resolved value.</param>
 	/// <returns><see langword="true" /> when the parameter exists.</returns>
+	/// <exception cref="ArgumentException"><paramref name="name" /> is empty.</exception>
 	public bool TryGetQueryValue(string name, out string? value)
 	{
 		ArgumentException.ThrowIfNullOrWhiteSpace(name);

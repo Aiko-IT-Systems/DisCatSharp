@@ -11,7 +11,7 @@ The package exposes **two different webhook-related routes**. They are not inter
 | Route | Use this when | How it works |
 | --- | --- | --- |
 | `/discord/webhooks/events` | Discord sends a signed webhook event defined by Discord | DisCatSharp validates the Discord signature and accepts Discord webhook event envelopes |
-| `/discord/webhooks/incoming` | your app needs a generic webhook endpoint | DisCatSharp passes the request to registered `IDiscordIncomingWebhookHandler` implementations |
+| `/discord/webhooks/incoming` | your app needs a generic webhook endpoint | DisCatSharp passes the request to registered [IDiscordIncomingWebhookHandler](xref:DisCatSharp.Hosting.AspNetCore.Ingress.IncomingWebhooks.IDiscordIncomingWebhookHandler) implementations |
 
 ## Webhook events
 
@@ -32,7 +32,12 @@ For invalid or malformed requests:
 
 ## Typed webhook events
 
-The package exposes a singleton `DiscordWebhookEventDispatcher` that raises typed async events after signature validation and envelope parsing succeed.
+The package exposes a singleton [DiscordWebhookEventDispatcher](xref:DisCatSharp.Hosting.AspNetCore.Ingress.WebhookEvents.DiscordWebhookEventDispatcher) that raises typed async events after signature validation and envelope parsing succeed.
+
+The split is:
+
+- `DisCatSharp.Hosting.AspNetCore.Ingress.WebhookEvents` for the envelope models and dispatcher
+- `DisCatSharp.Hosting.AspNetCore.EventArgs.Webhook` for the event-args types you subscribe to
 
 Resolve it from DI and subscribe during application startup:
 
@@ -52,41 +57,62 @@ The dispatcher keeps the HTTP acknowledgement path fast by dispatching the webho
 
 The public webhook-event model types include:
 
-- [DiscordWebhookEventEnvelope](xref:DisCatSharp.Hosting.AspNetCore.Ingress.DiscordWebhookEventEnvelope)
-- [DiscordWebhookEventTypes](xref:DisCatSharp.Hosting.AspNetCore.Ingress.DiscordWebhookEventTypes)
-- `DiscordWebhookEventNames`
-- `DiscordWebhookEventModelRegistry`
+- [DiscordWebhookEventEnvelope](xref:DisCatSharp.Hosting.AspNetCore.Ingress.WebhookEvents.DiscordWebhookEventEnvelope)
+- [DiscordWebhookEventTypes](xref:DisCatSharp.Hosting.AspNetCore.Ingress.WebhookEvents.DiscordWebhookEventTypes)
+- [DiscordWebhookEventNames](xref:DisCatSharp.Hosting.AspNetCore.Ingress.WebhookEvents.DiscordWebhookEventNames)
+- [DiscordWebhookEventModelRegistry](xref:DisCatSharp.Hosting.AspNetCore.Ingress.WebhookEvents.DiscordWebhookEventModelRegistry)
 
 These are useful if you build custom ingress or transport layers around the same concepts, or if you need to inspect the raw envelope from event handlers.
 
 ## Core-style async event surface
 
-Webhook event args live under the `DisCatSharp.Hosting.AspNetCore.EventArgs` namespace and inherit from a shared `DiscordWebhookEventArgs : DiscordEventArgs` base.
+Webhook event args live under the `DisCatSharp.Hosting.AspNetCore.EventArgs.Webhook` namespace and inherit from a shared [DiscordWebhookEventArgs](xref:DisCatSharp.Hosting.AspNetCore.EventArgs.Webhook.DiscordWebhookEventArgs) base.
 
 Each event args instance carries:
 
 - the transport-neutral ingress request
-- the parsed [DiscordWebhookEventEnvelope](xref:DisCatSharp.Hosting.AspNetCore.Ingress.DiscordWebhookEventEnvelope)
+- the parsed [DiscordWebhookEventEnvelope](xref:DisCatSharp.Hosting.AspNetCore.Ingress.WebhookEvents.DiscordWebhookEventEnvelope)
 - the typed payload for that event family
 
-### Exposed events
+### Payload property map
 
-| Event | Event args | Primary typed payload |
+The event args types expose the typed payload through these C# properties:
+
+| Event | Event args | Read the payload from |
 | --- | --- | --- |
 | `ApplicationAuthorized` | `WebhookApplicationAuthorizedEventArgs` | `Authorization` |
-| `ApplicationDeauthorized` | `WebhookApplicationDeauthorizedEventArgs` | `Authorization` |
+| `ApplicationDeauthorized` | `WebhookApplicationDeauthorizedEventArgs` | `Deauthorization` |
 | `EntitlementCreated` | `WebhookEntitlementCreateEventArgs` | `Entitlement` |
 | `EntitlementUpdated` | `WebhookEntitlementUpdateEventArgs` | `Entitlement` |
 | `EntitlementDeleted` | `WebhookEntitlementDeleteEventArgs` | `Entitlement` |
-| `LobbyMessageCreated` | `WebhookLobbyMessageCreateEventArgs` | `LobbyMessage` |
-| `LobbyMessageUpdated` | `WebhookLobbyMessageUpdateEventArgs` | `LobbyMessage` |
-| `LobbyMessageDeleted` | `WebhookLobbyMessageDeleteEventArgs` | `LobbyMessage` |
-| `GameDirectMessageCreated` | `WebhookGameDirectMessageCreateEventArgs` | `GameDirectMessage` |
-| `GameDirectMessageUpdated` | `WebhookGameDirectMessageUpdateEventArgs` | `GameDirectMessage` |
-| `GameDirectMessageDeleted` | `WebhookGameDirectMessageDeleteEventArgs` | `GameDirectMessage` |
-| `UnknownWebhookEventReceived` | `UnknownWebhookEventArgs` | raw event metadata + envelope |
+| `LobbyMessageCreated` | `WebhookLobbyMessageCreateEventArgs` | `Message` |
+| `LobbyMessageUpdated` | `WebhookLobbyMessageUpdateEventArgs` | `Message` |
+| `LobbyMessageDeleted` | `WebhookLobbyMessageDeleteEventArgs` | `Message` |
+| `GameDirectMessageCreated` | `WebhookGameDirectMessageCreateEventArgs` | `Message` |
+| `GameDirectMessageUpdated` | `WebhookGameDirectMessageUpdateEventArgs` | `Message` |
+| `GameDirectMessageDeleted` | `WebhookGameDirectMessageDeleteEventArgs` | `Message` |
+| `UnknownWebhookEventReceived` | `UnknownWebhookEventArgs` | `Envelope` and `Request` on the base type |
 
 Prefixing the event-args names with `Webhook` keeps them visually grouped with the ingress package and avoids collisions with existing core event args such as `EntitlementCreateEventArgs`.
+
+Example:
+
+```csharp
+dispatcher.ApplicationDeauthorized += async (_, eventArgs) =>
+{
+    Console.WriteLine(eventArgs.Deauthorization.User?.Id);
+};
+
+dispatcher.LobbyMessageCreated += async (_, eventArgs) =>
+{
+    Console.WriteLine($"{eventArgs.Message.LobbyId}: {eventArgs.Message.Content}");
+};
+
+dispatcher.GameDirectMessageCreated += async (_, eventArgs) =>
+{
+    Console.WriteLine(eventArgs.Message.RecipientId);
+};
+```
 
 ### Unknown/raw fallback behavior
 
@@ -102,17 +128,19 @@ Prefixing the event-args names with `Webhook` keeps them visually grouped with t
 
 It is a generic inbound webhook surface built around transport-neutral request and response primitives. Your application decides what the webhook means by registering one or more handlers.
 
-Register one or more [IDiscordIncomingWebhookHandler](xref:DisCatSharp.Hosting.AspNetCore.Ingress.IDiscordIncomingWebhookHandler) implementations:
+Register one or more [IDiscordIncomingWebhookHandler](xref:DisCatSharp.Hosting.AspNetCore.Ingress.IncomingWebhooks.IDiscordIncomingWebhookHandler) implementations:
 
 ```csharp
 using DisCatSharp.Hosting.AspNetCore;
-using DisCatSharp.Hosting.AspNetCore.Ingress;
+using DisCatSharp.Hosting.AspNetCore.Ingress.IncomingWebhooks;
 
 builder.Services
     .AddDisCatSharpAspNetCore()
     .AddDiscordIncomingWebhookHandler<MyWebhookHandler>();
 ```
 
-Handlers receive a [DiscordIncomingWebhookContext](xref:DisCatSharp.Hosting.AspNetCore.Ingress.DiscordIncomingWebhookContext) with the buffered body, headers, method, and request URI, and return a [DiscordIngressResponse](xref:DisCatSharp.Hosting.AspNetCore.Ingress.DiscordIngressResponse) when they want to claim the request.
+Handlers receive a [DiscordIncomingWebhookContext](xref:DisCatSharp.Hosting.AspNetCore.Ingress.IncomingWebhooks.DiscordIncomingWebhookContext) with the buffered body, headers, method, and request URI, and return a [DiscordIngressResponse](xref:DisCatSharp.Hosting.AspNetCore.Ingress.DiscordIngressResponse) when they want to claim the request.
 
 If no registered handler returns a response, the route returns `501 Not Implemented`. Oversized bodies still produce `413 Payload Too Large`.
+
+For the package-level architecture, see [Web Ingress Overview](overview.md).

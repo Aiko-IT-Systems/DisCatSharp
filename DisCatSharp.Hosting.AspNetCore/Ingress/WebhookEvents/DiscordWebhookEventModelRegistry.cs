@@ -7,6 +7,10 @@ namespace DisCatSharp.Hosting.AspNetCore.Ingress.WebhookEvents;
 /// <summary>
 ///     Resolves the typed payload model associated with a documented Discord webhook event type.
 /// </summary>
+/// <remarks>
+///     This registry is used by contributor-facing tooling and by <see cref="DiscordWebhookEventEnvelope.SuggestedDataModelType" /> to
+///     connect raw event names to the package's typed webhook DTOs.
+/// </remarks>
 public static class DiscordWebhookEventModelRegistry
 {
 	/// <summary>

@@ -55,30 +55,48 @@ public sealed class DiscordAspNetCoreIngressOptions
 	/// <summary>
 	///     Gets or sets the route segment used for OAuth-related endpoints.
 	/// </summary>
+	/// <remarks>
+	///     The value is treated as a relative segment beneath <see cref="RoutePrefix" /> and is trimmed of surrounding slashes.
+	/// </remarks>
 	public string OAuthPath { get; set; } = DefaultOAuthPath;
 
 	/// <summary>
 	///     Gets or sets the route segment used for the OAuth callback endpoint.
 	/// </summary>
+	/// <remarks>
+	///     This segment is appended beneath <see cref="OAuthPath" />.
+	/// </remarks>
 	public string OAuthCallbackPath { get; set; } = DefaultOAuthCallbackPath;
 
 	/// <summary>
 	///     Gets or sets the route segment used for the Discord interactions endpoint.
 	/// </summary>
+	/// <remarks>
+	///     This segment is appended directly beneath <see cref="RoutePrefix" />.
+	/// </remarks>
 	public string InteractionsPath { get; set; } = DefaultInteractionsPath;
 
 	/// <summary>
 	///     Gets or sets the route segment used for webhook-related endpoints.
 	/// </summary>
+	/// <remarks>
+	///     This segment is the shared parent for both <see cref="WebhookEventsPath" /> and <see cref="IncomingWebhooksPath" />.
+	/// </remarks>
 	public string WebhooksPath { get; set; } = DefaultWebhooksPath;
 
 	/// <summary>
 	///     Gets or sets the route segment used for webhook event endpoints.
 	/// </summary>
+	/// <remarks>
+	///     This segment is appended beneath <see cref="WebhooksPath" />.
+	/// </remarks>
 	public string WebhookEventsPath { get; set; } = DefaultWebhookEventsPath;
 
 	/// <summary>
 	///     Gets or sets the route segment used for incoming webhook endpoints.
 	/// </summary>
+	/// <remarks>
+	///     This segment is appended beneath <see cref="WebhooksPath" />.
+	/// </remarks>
 	public string IncomingWebhooksPath { get; set; } = DefaultIncomingWebhooksPath;
 }

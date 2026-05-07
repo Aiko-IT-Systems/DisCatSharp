@@ -5,6 +5,11 @@ namespace DisCatSharp.Hosting.AspNetCore.Ingress.Security;
 /// <summary>
 ///     Represents the outcome of an ingress signature validation attempt.
 /// </summary>
+/// <remarks>
+///     <see cref="DiscordIngressSignatureValidationStatus.NotValidated" /> indicates that no registered validator claimed the request.
+///     This is distinct from <see cref="DiscordIngressSignatureValidationStatus.Invalid" />, which indicates a validator did claim the
+///     request and rejected it.
+/// </remarks>
 public sealed class DiscordIngressSignatureValidationResult
 {
 	private DiscordIngressSignatureValidationResult(

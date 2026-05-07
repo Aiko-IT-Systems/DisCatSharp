@@ -14,7 +14,9 @@ public sealed class DiscordLinkedRolesOptions
 	///     Gets or sets the application-relative verification path exposed to Discord in the developer portal.
 	/// </summary>
 	/// <remarks>
-	///     The path is combined with the configured ingress route prefix and public base URL when computing the verification URL.
+	///     The path is combined directly with the application's public base URL. It does not inherit
+	///     <see cref="DiscordAspNetCoreIngressOptions.RoutePrefix" />, which lets linked-role verification live outside the signed ingress
+	///     surface when desired.
 	/// </remarks>
 	public string VerificationPath { get; set; } = DefaultVerificationPath;
 }

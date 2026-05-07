@@ -20,6 +20,13 @@ using Microsoft.Extensions.Options;
 
 namespace DisCatSharp.Hosting.AspNetCore;
 
+/// <summary>
+///     Hosts the optional private ASP.NET Core application used by self-host mode.
+/// </summary>
+/// <remarks>
+///     The service creates a lightweight internal <see cref="WebApplication" />, copies the ingress registrations from the primary
+///     dependency injection container, and maps the standard DisCatSharp ingress endpoints into that isolated app.
+/// </remarks>
 internal sealed class DiscordAspNetCoreSelfHostService(
 	IServiceProvider serviceProvider,
 	IOptions<DiscordAspNetCoreSelfHostOptions> selfHostOptions,
@@ -38,6 +45,11 @@ internal sealed class DiscordAspNetCoreSelfHostService(
 	private readonly IServiceProvider _serviceProvider = serviceProvider;
 	private WebApplication? _application;
 
+	/// <summary>
+	///     Starts the internal ASP.NET Core application when it is not already running.
+	/// </summary>
+	/// <param name="cancellationToken">A token used to cancel startup.</param>
+	/// <returns>A task that completes when startup has finished.</returns>
 	public async Task StartAsync(CancellationToken cancellationToken)
 	{
 		if (this._application is not null)
@@ -68,6 +80,11 @@ internal sealed class DiscordAspNetCoreSelfHostService(
 		this._logger.LogInformation(StartedLogMessage, listenBaseUrl, publicBaseUrl);
 	}
 
+	/// <summary>
+	///     Stops the internal ASP.NET Core application when it is running.
+	/// </summary>
+	/// <param name="cancellationToken">A token used to cancel shutdown.</param>
+	/// <returns>A task that completes when shutdown has finished.</returns>
 	public async Task StopAsync(CancellationToken cancellationToken)
 	{
 		if (this._application is null)
@@ -93,6 +110,10 @@ internal sealed class DiscordAspNetCoreSelfHostService(
 		this._logger.LogInformation(StoppedLogMessage);
 	}
 
+	/// <summary>
+	///     Disposes the internal ASP.NET Core application when self-host mode created one.
+	/// </summary>
+	/// <returns>A task that completes when disposal has finished.</returns>
 	public async ValueTask DisposeAsync()
 	{
 		if (this._application is null)
@@ -101,6 +122,13 @@ internal sealed class DiscordAspNetCoreSelfHostService(
 		await this.StopAsync(CancellationToken.None);
 	}
 
+	/// <summary>
+	///     Copies the ingress dependencies from the parent container into the private self-host container.
+	/// </summary>
+	/// <remarks>
+	///     This bridge keeps the self-hosted HTTP surface aligned with the application's existing handlers, validators, options, and
+	///     runtime singletons instead of constructing a second independent ingress graph.
+	/// </remarks>
 	private void RegisterBridgedServices(IServiceCollection services)
 	{
 		services.AddRouting();

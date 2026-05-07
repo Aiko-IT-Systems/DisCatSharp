@@ -9,6 +9,10 @@ namespace DisCatSharp.Hosting.AspNetCore.LinkedRoles;
 /// <summary>
 ///     Supplies linked-roles metadata records for synchronization with the Discord application.
 /// </summary>
+/// <remarks>
+///     Return records in the exact order you want them published. Discord currently supports at most five records and each key must be
+///     unique.
+/// </remarks>
 public interface IDiscordLinkedRolesMetadataProvider
 {
 	/// <summary>

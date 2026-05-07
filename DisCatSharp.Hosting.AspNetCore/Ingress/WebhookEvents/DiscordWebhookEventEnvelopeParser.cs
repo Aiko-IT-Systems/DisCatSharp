@@ -3,8 +3,20 @@ using System.Text.Json;
 
 namespace DisCatSharp.Hosting.AspNetCore.Ingress.WebhookEvents;
 
+/// <summary>
+///     Parses signed Discord webhook JSON payloads into transport-neutral webhook envelopes.
+/// </summary>
+/// <remarks>
+///     The parser preserves raw JSON elements for later typed deserialization while validating the minimal envelope contract required
+///     by the dispatcher.
+/// </remarks>
 internal static class DiscordWebhookEventEnvelopeParser
 {
+	/// <summary>
+	///     Parses a signed webhook payload.
+	/// </summary>
+	/// <param name="payload">The raw ingress payload.</param>
+	/// <returns>The parse result.</returns>
 	public static DiscordWebhookEventEnvelopeParseResult Parse(DiscordIngressPayload payload)
 	{
 		ArgumentNullException.ThrowIfNull(payload);

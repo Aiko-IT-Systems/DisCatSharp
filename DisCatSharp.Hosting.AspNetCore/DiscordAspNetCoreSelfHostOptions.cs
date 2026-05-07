@@ -29,6 +29,10 @@ public sealed class DiscordAspNetCoreSelfHostOptions
 	/// <summary>
 	///     Gets or sets the address or host name that the internal ASP.NET Core app should bind to.
 	/// </summary>
+	/// <remarks>
+	///     This value controls only the private listener. Publish a different public origin with <see cref="BaseUrl" /> when running
+	///     behind a reverse proxy or tunnel.
+	/// </remarks>
 	public string ListenAddress { get; set; } = DefaultListenAddress;
 
 	/// <summary>
@@ -40,6 +44,10 @@ public sealed class DiscordAspNetCoreSelfHostOptions
 	/// <summary>
 	///     Gets or sets the URI scheme used to build the internal listen address.
 	/// </summary>
+	/// <remarks>
+	///     This affects the private listener URL only. HTTPS termination can still happen upstream when <see cref="BaseUrl" /> points to
+	///     an external TLS endpoint.
+	/// </remarks>
 	public string Scheme { get; set; } = DefaultScheme;
 
 	/// <summary>

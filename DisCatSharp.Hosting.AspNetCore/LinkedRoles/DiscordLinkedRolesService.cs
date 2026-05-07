@@ -34,8 +34,14 @@ public sealed class DiscordLinkedRolesService(
 	/// <summary>
 	///     Computes the public linked-roles verification URL for the supplied application base URL.
 	/// </summary>
+	/// <remarks>
+	///     The returned URL follows <see cref="DiscordLinkedRolesOptions.VerificationPath" /> semantics and therefore remains independent
+	///     from the signed ingress route prefix.
+	/// </remarks>
 	/// <param name="publicBaseUrl">The externally visible application base URL.</param>
 	/// <returns>The public linked-roles verification URL.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="publicBaseUrl" /> is <see langword="null" />.</exception>
+	/// <exception cref="InvalidOperationException">Linked-roles support did not produce a verification URL.</exception>
 	public Uri GetVerificationUrl(Uri publicBaseUrl)
 		=> DiscordIngressPublicUrls.Create(publicBaseUrl, this._aspNetCoreOptions.Value, this._linkedRolesOptions.Value).RoleConnectionsVerificationUrl
 		   ?? throw new InvalidOperationException("Linked-roles support did not produce a verification URL.");
@@ -43,10 +49,17 @@ public sealed class DiscordLinkedRolesService(
 	/// <summary>
 	///     Updates the current Discord application's linked-roles verification URL to the computed public URL.
 	/// </summary>
+	/// <remarks>
+	///     Use this after deployment changes so the developer portal stays aligned with the URL published by
+	///     <see cref="GetVerificationUrl(Uri)" />.
+	/// </remarks>
 	/// <param name="client">The Discord client used to update the application.</param>
 	/// <param name="publicBaseUrl">The externally visible application base URL.</param>
 	/// <param name="cancellationToken">A token to cancel the operation.</param>
 	/// <returns>The updated Discord application.</returns>
+	/// <exception cref="ArgumentNullException">
+	///     <paramref name="client" /> or <paramref name="publicBaseUrl" /> is <see langword="null" />.
+	/// </exception>
 	public Task<DiscordApplication> UpdateVerificationUrlAsync(BaseDiscordClient client, Uri publicBaseUrl, CancellationToken cancellationToken = default)
 	{
 		ArgumentNullException.ThrowIfNull(client);
@@ -68,8 +81,12 @@ public sealed class DiscordLinkedRolesService(
 	/// <summary>
 	///     Gets a value indicating whether a callback result contains the required <c>role_connections.write</c> scope.
 	/// </summary>
+	/// <remarks>
+	///     Linked-role connection updates require a successful OAuth callback that granted <c>role_connections.write</c>.
+	/// </remarks>
 	/// <param name="callbackResult">The callback result to inspect.</param>
 	/// <returns><see langword="true" /> when the granted scope contains <c>role_connections.write</c>.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="callbackResult" /> is <see langword="null" />.</exception>
 	public bool HasRoleConnectionsWriteScope(DiscordOAuthCallbackResult callbackResult)
 	{
 		ArgumentNullException.ThrowIfNull(callbackResult);
@@ -81,8 +98,15 @@ public sealed class DiscordLinkedRolesService(
 	/// <summary>
 	///     Resolves the linked-roles metadata records from the registered provider.
 	/// </summary>
+	/// <remarks>
+	///     Discord currently supports at most five metadata records, each with a unique key. These constraints are validated before the
+	///     records are returned.
+	/// </remarks>
 	/// <param name="cancellationToken">A token to cancel the operation.</param>
 	/// <returns>The resolved metadata records.</returns>
+	/// <exception cref="InvalidOperationException">
+	///     No provider is registered, more than five records were returned, or duplicate metadata keys were produced.
+	/// </exception>
 	public async Task<IReadOnlyList<DiscordApplicationRoleConnectionMetadata>> GetMetadataAsync(CancellationToken cancellationToken = default)
 	{
 		var metadataProvider = this._serviceProvider.GetService<IDiscordLinkedRolesMetadataProvider>()
@@ -96,9 +120,17 @@ public sealed class DiscordLinkedRolesService(
 	/// <summary>
 	///     Synchronizes the registered linked-roles metadata with Discord when the local schema differs from the remote application state.
 	/// </summary>
+	/// <remarks>
+	///     The synchronization check is order-sensitive because Discord preserves the metadata array order exposed in the developer
+	///     portal.
+	/// </remarks>
 	/// <param name="client">The Discord client used to manage application metadata.</param>
 	/// <param name="cancellationToken">A token to cancel the operation.</param>
 	/// <returns>The active metadata records after synchronization.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="client" /> is <see langword="null" />.</exception>
+	/// <exception cref="InvalidOperationException">
+	///     The registered metadata provider is missing or returned invalid metadata.
+	/// </exception>
 	public async Task<IReadOnlyList<DiscordApplicationRoleConnectionMetadata>> SynchronizeMetadataAsync(DiscordClient client, CancellationToken cancellationToken = default)
 	{
 		ArgumentNullException.ThrowIfNull(client);
@@ -113,6 +145,10 @@ public sealed class DiscordLinkedRolesService(
 	/// <summary>
 	///     Publishes a linked-roles connection update using the access token captured by a successful OAuth callback.
 	/// </summary>
+	/// <remarks>
+	///     This helper is intended for the final step of the OAuth callback flow after the callback result has been validated and the
+	///     access token has been confirmed to include <c>role_connections.write</c>.
+	/// </remarks>
 	/// <param name="oauthClient">The OAuth2 client used to publish the role connection.</param>
 	/// <param name="callbackResult">The completed OAuth callback result.</param>
 	/// <param name="platformName">The external platform name to show in Discord.</param>
@@ -120,6 +156,15 @@ public sealed class DiscordLinkedRolesService(
 	/// <param name="metadata">The role-connection metadata to publish.</param>
 	/// <param name="cancellationToken">A token to cancel the operation.</param>
 	/// <returns>The updated application role connection.</returns>
+	/// <exception cref="ArgumentNullException">
+	///     <paramref name="oauthClient" />, <paramref name="callbackResult" />, or <paramref name="metadata" /> is <see langword="null" />.
+	/// </exception>
+	/// <exception cref="ArgumentException">
+	///     <paramref name="platformName" /> or <paramref name="platformUsername" /> is empty.
+	/// </exception>
+	/// <exception cref="InvalidOperationException">
+	///     The callback did not succeed or the granted token does not include <c>role_connections.write</c>.
+	/// </exception>
 	public async Task<DiscordApplicationRoleConnection> PublishRoleConnectionAsync(
 		DiscordOAuth2Client oauthClient,
 		DiscordOAuthCallbackResult callbackResult,
