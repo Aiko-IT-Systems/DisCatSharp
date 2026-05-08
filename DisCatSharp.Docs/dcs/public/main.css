@@ -292,6 +292,10 @@ body[data-uid="404"] .catpunk-main {
 	display: block;
 }
 
+body[data-search] .catpunk-main {
+	display: none;
+}
+
 body[data-uid="home"] .catpunk-toc,
 body[data-uid="home"] .catpunk-affix,
 body[data-uid="404"] .catpunk-toc,
