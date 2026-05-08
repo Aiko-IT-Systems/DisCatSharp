@@ -3,6 +3,7 @@
 {{>partials/class.header}}
 
 {{#children}}
+<section class="catpunk-api-member">
 
 {{^_splitReference}}
 <h2 class="section" id="{{id}}">{{>partials/classSubtitle}}</h2>
@@ -128,6 +129,7 @@
 {{/seealso.0}}
 
 {{/children}}
+</section>
 {{/children}}
 
 {{#seealso.0}}

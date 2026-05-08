@@ -1,17 +1,20 @@
 {{!Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license.}}
 
-<h1 id="{{id}}" data-uid="{{uid}}" class="text-break">
-  {{>partials/title}}
-  {{#sourceurl}}<a class="header-action link-secondary" title="View source" href="{{sourceurl}}"><i class="bi bi-code-slash"></i></a>{{/sourceurl}}
-</h1>
+<section class="catpunk-api-header">
+  <div class="catpunk-eyebrow">API reference</div>
+  <h1 id="{{id}}" data-uid="{{uid}}" class="text-break">
+    {{>partials/title}}
+    {{#sourceurl}}<a class="header-action link-secondary" title="View source" href="{{sourceurl}}"><i class="bi bi-code-slash"></i></a>{{/sourceurl}}
+  </h1>
 
-<div class="facts text-secondary">
-  <dl><dt>{{__global.namespace}}</dt><dd>{{{namespace.specName.0.value}}}</dd></dl>
-  {{#assemblies.0}}<dl><dt>{{__global.assembly}}</dt><dd>{{assemblies.0}}.dll</dd></dl>{{/assemblies.0}}
-</div>
+  <div class="facts text-secondary">
+    <dl><dt>{{__global.namespace}}</dt><dd>{{{namespace.specName.0.value}}}</dd></dl>
+    {{#assemblies.0}}<dl><dt>{{__global.assembly}}</dt><dd>{{assemblies.0}}.dll</dd></dl>{{/assemblies.0}}
+  </div>
 
-<div class="markdown summary">{{{summary}}}</div>
-<div class="markdown conceptual">{{{conceptual}}}</div>
+  <div class="markdown summary">{{{summary}}}</div>
+  <div class="markdown conceptual">{{{conceptual}}}</div>
+</section>
 
 {{#syntax.content.0.value}}
 <div class="codewrapper">
