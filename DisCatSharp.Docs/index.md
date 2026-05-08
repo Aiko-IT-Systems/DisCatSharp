@@ -10,7 +10,7 @@ _disableNextArticle: true
 
 <section class="catpunk-hero">
 	<div>
-		<div class="catpunk-eyebrow">catpunk discord engineering</div>
+		<div class="catpunk-eyebrow">DisCatSharp</div>
 		<h1 class="catpunk-hero-title"><span class="catpunk-gradient-text">Build bots that keep up.</span></h1>
 		<p class="catpunk-hero-copy">
 			DisCatSharp is a modern .NET wrapper for the Discord API, focused on fast access to new Discord features,
@@ -19,7 +19,7 @@ _disableNextArticle: true
 	</div>
 	<div class="catpunk-discord-preview">
 		<discord-messages>
-			<discord-header guild="DisCatSharp" channel="general" icon="https://i.imgur.com/sHdXUPx.png">catpunk docs preview</discord-header>
+			<discord-header guild="DisCatSharp" channel="general" icon="https://i.imgur.com/sHdXUPx.png"></discord-header>
 			<discord-message profile="user">I need a C# Discord library that is not stuck in the past.</discord-message>
 			<discord-message profile="dcs" highlight>
 				<discord-reply slot="reply" profile="user" mentions>I need a C# Discord library...</discord-reply>
@@ -61,15 +61,15 @@ _disableNextArticle: true
 </section>
 
 <section class="catpunk-link-grid" aria-label="Quick links">
-	<a class="catpunk-link-card" href="~/articles/getting_started/first_bot.md">
+	<a class="catpunk-link-card" href="/articles/getting_started/first_bot">
 		<strong>Getting Started</strong>
 		<span>Create your first bot and connect it to Discord.</span>
 	</a>
-	<a class="catpunk-link-card" href="~/articles/toc.yml">
+	<a class="catpunk-link-card" href="/articles">
 		<strong>Articles</strong>
 		<span>Guides for modules, hosting, topics, and workflows.</span>
 	</a>
-	<a class="catpunk-link-card" href="~/api/index.md">
+	<a class="catpunk-link-card" href="/api">
 		<strong>API Reference</strong>
 		<span>Generated types, members, overloads, and XML docs.</span>
 	</a>
@@ -80,34 +80,66 @@ _disableNextArticle: true
 </section>
 
 <section class="catpunk-card-grid" aria-label="Fresh paths">
-	<div class="catpunk-card">
-		<h3>Interactivity</h3>
-		<p>Messages, reactions, polls, buttons, selects, modals, and modern pagination helpers.</p>
-		<p><a href="~/articles/modules/interactivity/interactivity.md">Read the interactivity guides</a></p>
-	</div>
-	<div class="catpunk-card">
-		<h3>Web Ingress</h3>
-		<p>Handle Discord interactions, webhooks, OAuth callbacks, and linked roles from ASP.NET Core.</p>
-		<p><a href="~/articles/modules/web_ingress/overview.md">Open Web Ingress</a></p>
-	</div>
-	<div class="catpunk-card">
-		<h3>Changelogs</h3>
-		<p>Track what changed and decide when to update your bot.</p>
-		<p><a href="~/changelogs/toc.yml">View changelogs</a></p>
-	</div>
+	<a class="catpunk-link-card" href="/articles/modules/commands/overview">
+		<strong>Interactivity</strong>
+		<span>Messages, reactions, polls, buttons, selects, modals, and modern pagination helpers.</span>
+	</a>
+	<a class="catpunk-link-card" href="/articles/modules/web_ingress/overview">
+		<strong>Web Ingress</strong>
+		<span>Handle Discord interactions, webhooks, OAuth callbacks, and linked roles from ASP.NET Core.</span>
+	</a>
+	<a class="catpunk-link-card" href="/articles/changelogs/overview">
+		<strong>Changelogs</strong>
+		<span>Track what changed and decide when to update your bot.</span>
+	</a>
 </section>
+
 
 <div class="catpunk-sponsor catpunk-panel">
 	<div class="catpunk-sponsor-grid">
 		<div class="catpunk-sponsor-copy">
-			<h2>Thanks &amp; sponsors</h2>
-			<p>
-				Thank you to every sponsor, contributor, tester, and doc gremlin keeping DisCatSharp sharp and sparkly.
-				Your support gives this little catpunk library more paws on deck.
-			</p>
-			<p>
-				DisCatSharp is community-built, and sponsor support keeps the project nightly-fresh for everyone chasing new Discord features.
-			</p>
+			<h1>Thanks &amp; sponsors</h1>
+			<div>
+				<p>
+					Thank you to every sponsor, contributor, tester, and doc gremlin keeping DisCatSharp sharp and sparkly.<br/>
+					Your support gives this little library more paws on deck.<br/>
+					DisCatSharp is community-built, and sponsor support keeps the project nightly-fresh for everyone chasing new Discord features.
+				</p>
+				<br/>
+				<h2>Special Callouts</h2>
+				<p>
+					The first special thanks goes to Nagisa. Make sure to check out her <a href="https://www.instagram.com/nagisaarts_/">Instagram</a> ♥️♥️<br/>
+					The second special thanks goes to <a href="https://sentry.io">Sentry</a> (<a href="https://github.com/getsentry/">GitHub</a>) for sponsoring us with a business account on Sentry for error tracking.<br/>
+					<br/>
+					You guys are the best 💕⭐
+				</p>
+				<br/>
+				<h2>Sponsors</h2>
+				<p>
+					<span>These wonderful humans and organizations have supported DisCatSharp financially, helping to keep the project up-to-date and sustainable.</span><br/>
+					<ul>
+						<li><a href="https://github.com/DeividasKaza">Dei</a></li>
+						<li><a href="https://github.com/villChurch">Will</a></li>
+						<li><a href="https://github.com/SavageVictor">SavageVictor</a></li>
+						<li><a href="https://github.com/Schattenclown">Schattenclown</a></li>
+						<li><a href="https://github.com/FabiChan99">FabiChan99</a></li>
+					</ul>
+				</p>
+				<br/>
+				<h2>Thanks</h2>
+				<p>
+					<span>These fine folks have contributed code, ideas, testing, docs, and more to DisCatSharp.</span><br/>
+					<ul>
+						<li><a href="https://github.com/Auros">Auros</a></li>
+						<li><a href="https://github.com/OoLunar">Lunar</a></li>
+						<li><a href="https://github.com/geferon">Geferon</a></li>
+						<li><a href="https://github.com/QuantuChi">Alice</a></li>
+						<li><a href="https://github.com/villChurch">Will</a></li>
+						<li><a href="https://github.com/InFTord">InFTord</a></li>
+						<li>And also everyone active in the library ecosystem in Discord. Working together is always a blast, and we appreciate all the support and collaboration</li>
+					</ul>
+				</p>
+			</div>
 		</div>
 		<div class="catpunk-sponsor-image">
 			<img src="/sponsor_thanks.png" alt="DisCatSharp sponsor thanks artwork" width="1024" height="1024" loading="lazy" />

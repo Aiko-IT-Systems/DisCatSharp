@@ -13,3 +13,5 @@ items:
       uid: vs
     - name: Discord API
       href: https://discord.dev
+    - name: Discord Builders
+      href: https://discord.builders

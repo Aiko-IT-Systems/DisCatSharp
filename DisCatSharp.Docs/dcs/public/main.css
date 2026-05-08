@@ -142,7 +142,7 @@ hr {
 }
 
 table {
-	display: block;
+	/* display: block; */
 	width: 100%;
 	margin: 1.25rem 0;
 	overflow-x: auto;
@@ -163,6 +163,10 @@ td {
 
 .catpunk-shell {
 	min-height: 100vh;
+}
+
+.featherlight .featherlight-content {
+	background-color: #0B0910 !important;
 }
 
 .catpunk-header {
@@ -272,16 +276,14 @@ td {
 .catpunk-main {
 	display: grid;
 	grid-template-columns: 17rem minmax(0,1fr) 18rem;
-	gap: 0;
+	column-gap: clamp(1rem, 2.5vw, 2.5rem);
+	row-gap: 0;
 	max-width: 100%;
 	padding: 0;
 }
 
-body[data-yaml-mime="ManagedReference"] .catpunk-main {
-	grid-template-columns: 17rem minmax(0,1fr);
-}
-
-body[data-yaml-mime="ManagedReference"] .catpunk-affix {
+body[data-yaml-mime="ManagedReference"] .catpunk-affix:not(:has(li)),
+body[data-yaml-mime="ManagedReference"] .catpunk-affix.is-empty {
 	display: none;
 }
 
@@ -305,7 +307,7 @@ body[data-uid="404"] .catpunk-affix {
 	height: calc(100dvh - var(--cp-header-h, 4rem));
 	padding: 1.25rem 1rem 1.25rem 1.5rem;
 	overflow: auto;
-	border-right: 1px solid var(--cp-border);
+	/*border-right: 1px solid var(--cp-border);*/
 	scrollbar-color: var(--cp-pink) transparent;
 	scrollbar-gutter: stable;
 	scrollbar-width: thin;
@@ -324,10 +326,11 @@ body[data-uid="404"] .catpunk-affix {
 	height: calc(100dvh - var(--cp-header-h, 4rem));
 	padding: 1.25rem 1.5rem 1.25rem 1rem;
 	overflow: auto;
-	border-left: 1px solid var(--cp-border);
+	/*border-left: 1px solid var(--cp-border);*/
 	scrollbar-color: var(--cp-pink) transparent;
 	scrollbar-gutter: stable;
 	scrollbar-width: thin;
+	width: unset !important;
 }
 
 .catpunk-toc::-webkit-scrollbar,
@@ -395,7 +398,7 @@ body[data-uid="404"] .catpunk-affix {
 .affix a:focus {
 	color: var(--cp-pink-soft);
 	background: transparent;
-	border-left-color: rgba(230, 74, 166, 0.45);
+	/*border-left-color: rgba(230, 74, 166, 0.45);*/
 }
 
 /* Parent path indicator — pink text only, no background, no border */
@@ -453,7 +456,7 @@ body[data-uid="404"] .catpunk-affix {
 
 body[data-uid="home"] .catpunk-content,
 body[data-uid="404"] .catpunk-content {
-	padding-inline: clamp(1rem, 4vw, 3rem);
+	padding-inline: clamp(1.5rem, 6vw, 5rem);
 }
 
 body[data-uid="home"] .catpunk-article,
@@ -617,7 +620,6 @@ body[data-uid="404"] .catpunk-article {
 }
 
 .catpunk-hero-title {
-	max-width: 12ch;
 	margin: 0;
 	font-size: clamp(2.8rem, 8.5vw, 6.5rem);
 	line-height: 0.88;
@@ -678,6 +680,11 @@ body[data-uid="404"] .catpunk-article {
 	background: transparent;
 	border: 1px solid rgba(245,191,220,0.45);
 	box-shadow: none;
+}
+
+.discord-messages {
+	border: unset !important;
+	background-color: rgba(28,22,36,0.92) !important;
 }
 
 .catpunk-button.secondary:hover,
@@ -750,7 +757,7 @@ body[data-uid="404"] .catpunk-article {
 
 .catpunk-sponsor-grid {
 	display: grid;
-	grid-template-columns: 1fr 1fr;
+	grid-template-columns: 1.5fr .5fr;
 	gap: clamp(1rem, 3vw, 2rem);
 	align-items: center;
 }
@@ -776,10 +783,7 @@ body[data-uid="404"] .catpunk-article {
 	max-width: min(22rem, 100%);
 	height: auto;
 	aspect-ratio: 1 / 1;
-	border-radius: 1rem;
 	object-fit: cover;
-	border: 1px solid var(--cp-border);
-	box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
 }
 
 @media (max-width: 720px) {
@@ -1079,13 +1083,13 @@ code:not(pre code) {
 }
 
 @media (max-width: 1279.98px) {
-	.catpunk-main,
-	body[data-yaml-mime="ManagedReference"] .catpunk-main {
+	.catpunk-main {
 		display: block;
 	}
 
 	.catpunk-content {
 		padding: 1.25rem clamp(1rem, 4vw, 2rem);
+		width: unset !important;
 	}
 
 	.catpunk-affix {
@@ -1112,7 +1116,7 @@ code:not(pre code) {
 		max-width: 100%;
 		visibility: hidden;
 		background: var(--cp-bg);
-		border-right: 1px solid var(--cp-border-strong);
+		/*border-right: 1px solid var(--cp-border-strong);*/
 		transform: translateX(-100%);
 		transition: transform var(--cp-transition), visibility var(--cp-transition);
 	}
@@ -1248,4 +1252,8 @@ a.bi-moon-stars-fill,
 		animation: none !important;
 		transition: none !important;
 	}
+}
+
+[data-bs-theme="dark"] .hljs {
+	background: #09060C !important;
 }
