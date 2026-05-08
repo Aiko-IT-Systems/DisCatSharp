@@ -48,11 +48,11 @@ _disableNextArticle: true
 </section>
 
 <section class="catpunk-panel">
-	<h2>Install the stable package</h2>
-	<p>Start from the core package, then add modules as your bot grows.</p>
+	<h2>Install the package</h2>
+	<p>Start from the core package, then add modules as your bot grows.<br/>We recommend using the prerelease version to stay up-to-date with the latest features.</p>
 	<div class="catpunk-terminal">
 		<div class="catpunk-terminal-bar"><span class="catpunk-dot" aria-hidden="true"></span></div>
-		<pre><code class="lang-powershell">dotnet add package DisCatSharp</code></pre>
+		<pre><code class="lang-powershell">dotnet add package DisCatSharp --prerelease</code></pre>
 	</div>
 	<div class="catpunk-actions">
 		<img alt="Stable NuGet version" src="https://img.shields.io/nuget/v/DisCatSharp?color=1F8B4C&label=Stable&style=flat-square&logo=Nuget">
@@ -80,7 +80,7 @@ _disableNextArticle: true
 </section>
 
 <section class="catpunk-card-grid" aria-label="Fresh paths">
-	<a class="catpunk-link-card" href="/articles/modules/commands/overview">
+	<a class="catpunk-link-card" href="/articles/modules/interactivity/overview">
 		<strong>Interactivity</strong>
 		<span>Messages, reactions, polls, buttons, selects, modals, and modern pagination helpers.</span>
 	</a>
@@ -88,12 +88,11 @@ _disableNextArticle: true
 		<strong>Web Ingress</strong>
 		<span>Handle Discord interactions, webhooks, OAuth callbacks, and linked roles from ASP.NET Core.</span>
 	</a>
-	<a class="catpunk-link-card" href="/articles/changelogs/overview">
+	<a class="catpunk-link-card" href="/changelogs/">
 		<strong>Changelogs</strong>
 		<span>Track what changed and decide when to update your bot.</span>
 	</a>
 </section>
-
 
 <div class="catpunk-sponsor catpunk-panel">
 	<div class="catpunk-sponsor-grid">
