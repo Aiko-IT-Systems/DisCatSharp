@@ -748,6 +748,50 @@ body[data-uid="404"] .catpunk-article {
 	margin-bottom: 0;
 }
 
+.catpunk-sponsor-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: clamp(1rem, 3vw, 2rem);
+	align-items: center;
+}
+
+.catpunk-sponsor-copy {
+	min-width: 0;
+}
+
+.catpunk-sponsor-copy p + p {
+	margin-top: 0.75rem;
+}
+
+.catpunk-sponsor-image {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-width: 0;
+}
+
+.catpunk-sponsor-image img {
+	display: block;
+	width: 100%;
+	max-width: min(22rem, 100%);
+	height: auto;
+	aspect-ratio: 1 / 1;
+	border-radius: 1rem;
+	object-fit: cover;
+	border: 1px solid var(--cp-border);
+	box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+}
+
+@media (max-width: 720px) {
+	.catpunk-sponsor-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.catpunk-sponsor-image {
+		order: 2;
+	}
+}
+
 .catpunk-link-card {
 	display: block;
 	padding: 1.1rem 1.15rem;
