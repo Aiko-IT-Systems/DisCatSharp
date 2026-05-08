@@ -30,7 +30,7 @@ jobs:
                       9.x
             - name: Restore dependencies
               run: |
-                  dotnet restore --no-cache -f -v minimal DisCatSharp.slnx
+                  dotnet restore --no-cache -f -v minimal DisCatSharp.Release.slnx
                   dotnet restore --no-cache -f -v minimal DisCatSharp.Tools/DisCatSharp.Tools.slnx
             - name: Set outputs
               id: vars

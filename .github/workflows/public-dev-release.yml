@@ -43,7 +43,7 @@ jobs:
                       10.x
                       9.x
             - name: Restore dependencies
-              run: dotnet restore --no-cache -f -v minimal DisCatSharp.slnx
+              run: dotnet restore --no-cache -f -v minimal DisCatSharp.Release.slnx
             - name: Set outputs
               id: vars
               run: echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT

@@ -30,6 +30,8 @@ param
     [int] $BuildNumber = -1
 )
 
+$releaseSolution = "DisCatSharp.Release.slnx"
+
 # Check if configuration is valid
 if ($Configuration -ne "Debug" -and $Configuration -ne "Release")
 {
@@ -72,7 +74,7 @@ function Build-All([string] $target_dir_path, [string] $version_suffix, [string]
 
     # Clean previous build results
     Write-Host "Cleaning previous build"
-    & dotnet clean -v minimal -c "$bcfg" DisCatSharp.slnx | Out-Host
+    & dotnet clean -v minimal -c "$bcfg" $releaseSolution | Out-Host
     if ($LastExitCode -ne 0)
     {
         Write-Host "Cleanup failed"
@@ -81,7 +83,7 @@ function Build-All([string] $target_dir_path, [string] $version_suffix, [string]
 
     # Restore nuget packages
     Write-Host "Restoring NuGet packages"
-    & dotnet restore --no-cache -f -v minimal DisCatSharp.slnx | Out-Host
+    & dotnet restore --no-cache -f -v minimal $releaseSolution | Out-Host
     if ($LastExitCode -ne 0)
     {
         Write-Host "Restoring packages failed"
@@ -102,15 +104,15 @@ function Build-All([string] $target_dir_path, [string] $version_suffix, [string]
     Write-Host "Building everything"
     if (-not $version_suffix)
     {
-        & dotnet build --no-restore -v minimal -c "$bcfg" DisCatSharp.slnx | Out-Host
+        & dotnet build --no-restore -v minimal -c "$bcfg" $releaseSolution | Out-Host
     }
 	elseif (-not $build_number_string)
 	{
-		& dotnet build --no-restore -v minimal -c "$bcfg" --version-suffix "$version_suffix" DisCatSharp.slnx | Out-Host
+		& dotnet build --no-restore -v minimal -c "$bcfg" --version-suffix "$version_suffix" $releaseSolution | Out-Host
 	}
     else
     {
-        & dotnet build --no-restore -v minimal -c "$bcfg" --version-suffix "$version_suffix" -p:BuildNumber="$build_number_string" DisCatSharp.slnx | Out-Host
+        & dotnet build --no-restore -v minimal -c "$bcfg" --version-suffix "$version_suffix" -p:BuildNumber="$build_number_string" $releaseSolution | Out-Host
     }
     if ($LastExitCode -ne 0)
     {
@@ -122,15 +124,15 @@ function Build-All([string] $target_dir_path, [string] $version_suffix, [string]
     Write-Host "Creating NuGet packages"
     if (-not $version_suffix)
     {
-        & dotnet pack -v minimal -c "$bcfg" --no-restore --no-build -o "$target_dir" --include-symbols DisCatSharp.slnx | Out-Host
+        & dotnet pack -v minimal -c "$bcfg" --no-restore --no-build -o "$target_dir" --include-symbols $releaseSolution | Out-Host
     }
 	elseif (-not $build_number_string)
 	{
-        & dotnet pack -v minimal -c "$bcfg" --no-restore --version-suffix "$version_suffix" --no-build -o "$target_dir" --include-symbols DisCatSharp.slnx | Out-Host
+        & dotnet pack -v minimal -c "$bcfg" --no-restore --version-suffix "$version_suffix" --no-build -o "$target_dir" --include-symbols $releaseSolution | Out-Host
     }
     else
     {
-        & dotnet pack -v minimal -c "$bcfg" --no-restore --version-suffix "$version_suffix" -p:BuildNumber="$build_number_string" --no-build -o "$target_dir" --include-symbols DisCatSharp.slnx | Out-Host
+        & dotnet pack -v minimal -c "$bcfg" --no-restore --version-suffix "$version_suffix" -p:BuildNumber="$build_number_string" --no-build -o "$target_dir" --include-symbols $releaseSolution | Out-Host
     }
     if ($LastExitCode -ne 0)
     {
