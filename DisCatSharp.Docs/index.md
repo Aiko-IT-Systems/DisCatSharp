@@ -16,11 +16,6 @@ _disableNextArticle: true
 			DisCatSharp is a modern .NET wrapper for the Discord API, focused on fast access to new Discord features,
 			practical bot ergonomics, and docs that do not make you want to bite your keyboard.
 		</p>
-		<div class="catpunk-actions">
-			<a class="catpunk-button" href="~/articles/getting_started/first_bot.md">Start building</a>
-			<a class="catpunk-button secondary" href="~/api/index.md">Browse API</a>
-			<a class="catpunk-button secondary" href="https://discord.gg/RXA6u3jxdU">Join Discord</a>
-		</div>
 	</div>
 	<div class="catpunk-discord-preview">
 		<discord-messages>
@@ -102,13 +97,20 @@ _disableNextArticle: true
 	</div>
 </section>
 
-<section class="catpunk-panel">
-	<h2>Thanks and sponsors</h2>
-	<p>
-		DisCatSharp is MIT licensed and community-supported. Thanks to everyone filing issues, writing docs,
-		testing new Discord features, and helping other developers in the server.
-	</p>
-	<p>
-		Special thanks to Nagisa for artwork and to <a href="https://sentry.io">Sentry</a> for sponsoring error tracking.
-	</p>
-</section>
+<div class="catpunk-sponsor catpunk-panel">
+	<div class="catpunk-sponsor-grid">
+		<div class="catpunk-sponsor-copy">
+			<h2>Thanks &amp; sponsors</h2>
+			<p>
+				Thank you to every sponsor, contributor, tester, and doc gremlin keeping DisCatSharp sharp and sparkly.
+				Your support gives this little catpunk library more paws on deck.
+			</p>
+			<p>
+				DisCatSharp is community-built, and sponsor support keeps the project nightly-fresh for everyone chasing new Discord features.
+			</p>
+		</div>
+		<div class="catpunk-sponsor-image">
+			<img src="/sponsor_thanks.png" alt="DisCatSharp sponsor thanks artwork" width="1024" height="1024" loading="lazy" />
+		</div>
+	</div>
+</div>
