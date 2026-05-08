@@ -13,6 +13,8 @@ This is a great way to create a more interactive user experience.
 
 The code below shows an example application command on how this could look.
 
+For waiting on submissions and building interactivity-driven modal flows, also read the [interactivity modal guide](xref:modules_interactivity_modals).
+
 ```cs
 using System;
 using System.Collections.Generic;

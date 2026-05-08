@@ -12,6 +12,8 @@ You simply construct all your modals, call `DiscordInteraction.CreatePaginatedMo
 
 The code below shows an example application command on how this could look.
 
+For the interactivity side of waiting for submissions and handling paginated modal results, also read the [interactivity modal guide](xref:modules_interactivity_modals).
+
 ```cs
 using DisCatSharp.Interactivity;
 using DisCatSharp.Interactivity.Enums;

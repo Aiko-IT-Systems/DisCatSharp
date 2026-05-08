@@ -115,8 +115,18 @@ items:
                   uid: modules_web_ingress_migration_oauth2web
           - name: Interactivity
             items:
-                - name: Interactivity Introduction
+                - name: Overview
                   uid: modules_interactivity_introduction
+                - name: Setup and Configuration
+                  uid: modules_interactivity_setup
+                - name: Messages, Reactions, and Polls
+                  uid: modules_interactivity_messages
+                - name: Components
+                  uid: modules_interactivity_components
+                - name: Modals
+                  uid: modules_interactivity_modals
+                - name: Pagination
+                  uid: modules_interactivity_pagination
     - name: Topics
       items:
           - name: Configuration Layout

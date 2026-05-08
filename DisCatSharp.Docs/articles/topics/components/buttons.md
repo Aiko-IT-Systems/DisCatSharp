@@ -195,7 +195,7 @@ This will update the message, and without the infamous <sub>(edited)</sub> next 
 
 Along with the typical `WaitForMessageAsync` and `WaitForReactionAsync` methods provided by interactivity, there are also button implementations as well.
 
-More information about how interactivity works can be found in [the interactivity article](xref:modules_interactivity_introduction)
+More information about waiting for button interactions can be found in [the interactivity components guide](xref:modules_interactivity_components).
 
 Since buttons create interactions, there are also two additional properties in the configuration:
 
