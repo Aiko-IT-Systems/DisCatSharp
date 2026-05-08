@@ -83,7 +83,7 @@
 	<meta name="apple-mobile-web-app-title" content="{{#_appTitle}}{{_appTitle}}{{/_appTitle}}">
 	<meta name="application-name" content="{{#_appTitle}}{{_appTitle}}{{/_appTitle}}">
 	<meta name="mobile-web-app-capable" content="yes">
-	<meta name="theme-color" content="#fc0fc0">
+	<meta name="theme-color" content="#ec4ca5">
 
 	<!-- Facebook OpenGraph -->
 	{{#_fbPageId}}
@@ -226,8 +226,8 @@
 
 	{{#hasDiscordComponents}}
 	<!-- Discord Components -->
-	<script>
-		window.$discordMessage = {
+		<script>
+		globalThis.$discordMessage = {
 			profiles: {
 				dcs: {
 					author: "DisCatSharp",
@@ -272,7 +272,7 @@
 			defaultBackground: "discord"
 		};
 	</script>
-	<script type="module" src="https://unpkg.com/@aitsys/discord-components-core" async crossorigin="anonymous"></script>
+	<script type="module" src="https://unpkg.com/@skyra/discord-components-core@4.0.2/dist/index.js" async crossorigin="anonymous"></script>
 	{{/hasDiscordComponents}}
 
 	{{^_disableThemeSwitcher}}
@@ -308,39 +308,34 @@
 </script>
 {{/_googleAnalyticsTagId}}
 
-<body class="tex2jax_ignore" data-layout="{{_layout}}{{layout}}" data-yaml-mime="{{yamlmime}}">
-	<header class="bg-body border-bottom">
-		<nav id="autocollapse" class="navbar navbar-expand-md">
+<body class="tex2jax_ignore catpunk-shell" data-layout="{{_layout}}{{layout}}" data-yaml-mime="{{yamlmime}}" data-uid="{{uid}}">
+	<header class="catpunk-header">
+		<nav id="autocollapse" class="navbar navbar-expand-lg">
 			<div class="container-xxl flex-nowrap">
-				<a class="navbar-brand" href="{{_appLogoUrl}}{{^_appLogoUrl}}{{_rel}}index.html{{/_appLogoUrl}}">
+				<a class="navbar-brand catpunk-brand" href="{{_appLogoUrl}}{{^_appLogoUrl}}{{_rel}}index.html{{/_appLogoUrl}}">
 					<img id="logo" class="svg"
 						src="{{{_appLogoPath}}}{{^_appLogoPath}}{{_rel}}logo.svg{{/_appLogoPath}}" alt="{{_appName}}">
-					&nbsp;&nbsp;{{_appName}}
+					<span class="catpunk-brand-text">
+						<span class="catpunk-brand-name">{{_appName}}</span>
+						<span class="catpunk-brand-kicker">catpunk docs</span>
+					</span>
 				</a>
-				<button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse"
+				<button class="btn btn-lg d-lg-none catpunk-nav-toggle" type="button" data-bs-toggle="collapse"
 					data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false"
 					aria-label="Toggle navigation">
 					<i class="bi bi-three-dots"></i>
 				</button>
 				<div class="collapse navbar-collapse" id="navpanel">
-					<div id="navbar">
-						{{#_enableSearch}}
-						<form class="search" role="search" id="search">
-							<i class="bi bi-search"></i>
-							<input class="form-control" id="search-query" type="search" disabled
-								placeholder="{{__global.search}}" autocomplete="off" aria-label="Search">
-						</form>
-						{{/_enableSearch}}
-					</div>
+					<div id="navbar"></div>
 				</div>
 			</div>
 		</nav>
 	</header>
 
-	<main class="container-xxl">
+	<main class="catpunk-main">
 		{{^_disableToc}}
-		<div class="toc-offcanvas">
-			<div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas"
+		<div class="toc-offcanvas catpunk-toc">
+			<div class="offcanvas-xl offcanvas-start" tabindex="-1" id="tocOffcanvas"
 				aria-labelledby="tocOffcanvasLabel">
 				<div class="offcanvas-header">
 					<h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
@@ -354,10 +349,10 @@
 		</div>
 		{{/_disableToc}}
 
-		<div class="content">
-			<div class="actionbar">
+		<div class="content catpunk-content">
+			<div class="actionbar catpunk-actionbar">
 				{{^_disableToc}}
-				<button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas"
+				<button class="btn btn-lg d-xl-none catpunk-nav-toggle" type="button" data-bs-toggle="offcanvas"
 					data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false"
 					aria-label="Show table of contents">
 					<i class="bi bi-list"></i>
@@ -367,7 +362,7 @@
 				{{^_disableBreadcrumb}}<nav id="breadcrumb"></nav>{{/_disableBreadcrumb}}
 			</div>
 
-			<article data-uid="{{uid}}">
+			<article class="catpunk-article" data-uid="{{uid}}">
 				{{!body}}
 			</article>
 
@@ -389,21 +384,26 @@
 		</div>
 
 		{{^_disableAffix}}
-		<div class="affix">
+		<div class="affix catpunk-affix">
 			<nav id="affix"></nav>
 		</div>
 		{{/_disableAffix}}
 	</main>
 
 	{{#_enableSearch}}
-	<div class="container-xxl search-results" id="search-results"></div>
+	<div class="container-xxl search-results d-none" id="search-results"></div>
 	{{/_enableSearch}}
 
-	<footer class="border-top text-secondary">
-		<div class="container-xxl">
+	<footer class="catpunk-footer">
+		<div class="catpunk-footer-inner">
 			<div class="flex-fill">
 				<strong>{{_appFooter}}</strong>{{^_appFooter}}<span>Made with <a
 						href="https://dotnet.github.io/docfx">docfx</a></span>{{/_appFooter}}
+			</div>
+			<div class="catpunk-footer-links">
+				<a href="https://github.com/Aiko-IT-Systems/DisCatSharp">GitHub</a>
+				<span aria-hidden="true"> / </span>
+				<a href="https://discord.gg/RXA6u3jxdU">Discord</a>
 			</div>
 		</div>
 	</footer>
