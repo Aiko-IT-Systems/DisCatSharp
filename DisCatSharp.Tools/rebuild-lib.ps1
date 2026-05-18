@@ -30,7 +30,7 @@ param
     [int] $BuildNumber = -1
 )
 
-$releaseSolution = "DisCatSharp.Release.slnx"
+$releaseSolution = "DisCatSharp.Release.slnx.bak"
 
 # Check if configuration is valid
 if ($Configuration -ne "Debug" -and $Configuration -ne "Release")
