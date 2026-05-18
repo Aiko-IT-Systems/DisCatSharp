@@ -450,6 +450,14 @@ public sealed class DiscordOAuth2Client : IDisposable, IAsyncDisposable
 		=> accessToken.Scope.Split(' ').Any(x => x == "role_connections.write") ? await this.ApiClient.ModifyCurrentUserApplicationRoleConnectionAsync(accessToken.AccessToken, platformName, platformUsername, metadata, cancellationToken: cancellationToken) : throw new AccessViolationException("Access token does not include role_connections.write scope");
 
 	/// <summary>
+	///     Deletes the current user's application role connection.
+	/// </summary>
+	/// <param name="accessToken">The discord access token.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	public Task DeleteCurrentUserApplicationRoleConnectionAsync(DiscordAccessToken accessToken, CancellationToken cancellationToken = default)
+		=> accessToken.Scope.Split(' ').Any(x => x == "role_connections.write") ? this.ApiClient.DeleteCurrentUserApplicationRoleConnectionAsync(accessToken.AccessToken, cancellationToken: cancellationToken) : throw new AccessViolationException("Access token does not include role_connections.write scope");
+
+	/// <summary>
 	///     Creates a custom activity quick link for the current application.
 	/// </summary>
 	/// <param name="accessToken">The discord access token.</param>

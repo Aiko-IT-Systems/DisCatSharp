@@ -9088,6 +9088,29 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
+	///     Deletes the current user's role connection.
+	/// </summary>
+	/// <param name="accessToken">The access token.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	internal async Task DeleteCurrentUserApplicationRoleConnectionAsync(string accessToken, CancellationToken cancellationToken = default)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.APPLICATIONS}/:application_id{Endpoints.ROLE_CONNECTION}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
+		{
+			application_id = this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture)
+		}, out var path);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add("Bearer", accessToken);
+
+		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
+		await this.DoRequestAsync(null, bucket, url, RestRequestMethod.DELETE, route, headers, cancellationToken: cancellationToken).ConfigureAwait(false);
+	}
+
+	/// <summary>
 	///     Creates an activity quick link for the current application.
 	/// </summary>
 	/// <param name="accessToken">The access token.</param>
