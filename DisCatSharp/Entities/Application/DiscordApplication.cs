@@ -145,7 +145,25 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 		this.MaxParticipants = tapp.MaxParticipants;
 		this.ApprovedConsoles = [.. tapp.ApprovedConsoles];
 		this.PricingLocalizationStrategy = tapp.PricingLocalizationStrategy;
+		this.EventWebhooksUrl = tapp.EventWebhooksUrl;
+		this.EventWebhooksStatus = tapp.EventWebhooksStatus;
+		this.EventWebhooksTypes = tapp.EventWebhooksTypes?.AsReadOnly() ?? (IReadOnlyList<string>)Array.Empty<string>();
 	}
+
+	/// <summary>
+	///     Gets the url that event webhooks are sent to.
+	/// </summary>
+	public string? EventWebhooksUrl { get; internal set; }
+
+	/// <summary>
+	///     Gets the status of whether event webhooks are enabled for the application.
+	/// </summary>
+	public ApplicationEventWebhooksStatus? EventWebhooksStatus { get; internal set; }
+
+	/// <summary>
+	///     Gets the list of event webhook types the application subscribes to.
+	/// </summary>
+	public IReadOnlyList<string> EventWebhooksTypes { get; internal set; } = Array.Empty<string>();
 
 	/// <summary>
 	///     Gets the application's summary.
