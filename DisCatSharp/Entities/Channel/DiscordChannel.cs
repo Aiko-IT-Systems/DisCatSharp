@@ -314,7 +314,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <summary>
 	/// Gets the voice channel status.
 	/// </summary>
-	[JsonIgnore]
+	[JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
 	public string? Status { get; internal set; }
 
 	/// <summary>
