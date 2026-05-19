@@ -23,6 +23,7 @@ public sealed class DiscordApplicationRoleConnectionMetadata : ObservableApiObje
 		DiscordApplicationCommandLocalization nameLocalizations = null,
 		DiscordApplicationCommandLocalization descriptionLocalizations = null
 	)
+		: base(["name_localizations", "description_localizations"])
 	{
 		this.Type = type;
 		this.Key = key;
