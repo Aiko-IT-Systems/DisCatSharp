@@ -110,7 +110,9 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 		this.RedirectUris = tapp.RedirectUris.HasValue ? tapp.RedirectUris.Value : [];
 		this.InteractionsEndpointUrl = tapp.InteractionsEndpointUrl.ValueOrDefault();
 		this.FlagsInternal = tapp.Flags;
-		this.FlagsNewInternal = tapp.FlagsNew;
+		this.FlagsNewInternal = !string.IsNullOrWhiteSpace(tapp.FlagsNew) && long.TryParse(tapp.FlagsNew, NumberStyles.Integer, CultureInfo.InvariantCulture, out var flagsNewRaw)
+			? (ApplicationFlags)flagsNewRaw
+			: null;
 		if (this.FlagsNewInternal is not null) {
 			this.Flags = this.FlagsNewInternal.Value;
 			this.UsesNewFlags = true;
@@ -118,6 +120,11 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 			this.Flags = this.FlagsInternal;
 			this.UsesNewFlags = false;
 		}
+		this.EventWebhooksUrl = tapp.EventWebhooksUrl;
+		this.EventWebhooksStatus = tapp.EventWebhooksStatus;
+		this.EventWebhooksTypes = tapp.EventWebhooksTypes is { } ewt
+			? ewt.AsReadOnly()
+			: new List<string>().AsReadOnly();
 		this.ParentId = tapp.ParentId.ValueOrDefault();
 		this.RpcOrigins = tapp.RpcOrigins.AsReadOnly();
 		this.IsHook = tapp.IsHook;
@@ -291,6 +298,21 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	///     Not used atm.
 	/// </summary>
 	public IReadOnlyList<string> Tags { get; internal set; }
+
+	/// <summary>
+	///     The configured webhook url events are dispatched to, if any.
+	/// </summary>
+	public string? EventWebhooksUrl { get; internal set; }
+
+	/// <summary>
+	///     The status of the application's event webhooks subscription.
+	/// </summary>
+	public ApplicationEventWebhookStatus? EventWebhooksStatus { get; internal set; }
+
+	/// <summary>
+	///     The list of event types this application is subscribed to via webhooks.
+	/// </summary>
+	public IReadOnlyList<string> EventWebhooksTypes { get; internal set; } = [];
 
 	/// <summary>
 	///     Whether the application is hooked.

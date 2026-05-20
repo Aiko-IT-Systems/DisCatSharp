@@ -69,9 +69,10 @@ internal sealed class TransportApplication : ObservableApiObject
 
 	/// <summary>
 	///     Gets or sets the flags exceeding <c>53</c>.
+	///     Discord sends this as a JSON string because the bitfield can exceed the JavaScript safe integer range.
 	/// </summary>
 	[JsonProperty("flags_new", NullValueHandling = NullValueHandling.Include)]
-	public ApplicationFlags? FlagsNew { get; set; }
+	public string? FlagsNew { get; set; }
 
 	/// <summary>
 	///     Gets or sets the terms of service url.
@@ -353,5 +354,23 @@ internal sealed class TransportApplication : ObservableApiObject
 	///    Gets or sets the parent application id.
 	/// </summary>
 	[JsonProperty("parent_id", NullValueHandling = NullValueHandling.Ignore)]
+
+	/// <summary>
+	///     Gets or sets the configured event webhooks url.
+	/// </summary>
+	[JsonProperty("event_webhooks_url", NullValueHandling = NullValueHandling.Ignore)]
+	public string? EventWebhooksUrl { get; set; }
+
+	/// <summary>
+	///     Gets or sets the status of the application's event webhooks subscription.
+	/// </summary>
+	[JsonProperty("event_webhooks_status", NullValueHandling = NullValueHandling.Ignore)]
+	public ApplicationEventWebhookStatus? EventWebhooksStatus { get; set; }
+
+	/// <summary>
+	///     Gets or sets the event types the application is subscribed to via webhooks.
+	/// </summary>
+	[JsonProperty("event_webhooks_types", NullValueHandling = NullValueHandling.Ignore)]
+	public List<string>? EventWebhooksTypes { get; set; }
 	public Optional<ulong?> ParentId { get; set; }
 }
