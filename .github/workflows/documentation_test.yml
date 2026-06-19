@@ -15,12 +15,12 @@ jobs:
         name: Build documentation
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v6
+              uses: actions/checkout@v7
               with:
                   token: ${{ secrets.NYUW_TOKEN_GH }}
                   path: GitHub/DisCatSharp
             - name: Checkout docs repository
-              uses: actions/checkout@v6
+              uses: actions/checkout@v7
               with:
                   repository: Aiko-IT-Systems/DisCatSharp.Docs
                   token: ${{ secrets.NYUW_TOKEN_GH }}
