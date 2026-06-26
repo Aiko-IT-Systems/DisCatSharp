@@ -19,7 +19,7 @@ jobs:
           token: ${{ secrets.NYUW_TOKEN_GH }}
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5.3.0
+        uses: actions/setup-dotnet@v5.4.0
         with:
           dotnet-version: 11.x
 
