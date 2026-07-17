@@ -354,6 +354,7 @@ internal sealed class TransportApplication : ObservableApiObject
 	///    Gets or sets the parent application id.
 	/// </summary>
 	[JsonProperty("parent_id", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<ulong?> ParentId { get; set; }
 
 	/// <summary>
 	///     Gets or sets the configured event webhooks url.
@@ -372,5 +373,4 @@ internal sealed class TransportApplication : ObservableApiObject
 	/// </summary>
 	[JsonProperty("event_webhooks_types", NullValueHandling = NullValueHandling.Ignore)]
 	public List<string>? EventWebhooksTypes { get; set; }
-	public Optional<ulong?> ParentId { get; set; }
 }
