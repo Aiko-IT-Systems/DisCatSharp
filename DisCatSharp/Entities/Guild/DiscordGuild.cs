@@ -717,6 +717,12 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	[JsonProperty("inventory_settings", NullValueHandling = NullValueHandling.Ignore), DiscordDeprecated]
 	public DiscordGuildInventorySettings? InventorySettings { get; internal set; }
 
+	/// <summary>
+	///     Gets the guild theme.
+	/// </summary>
+	[JsonProperty("theme", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
+	public string? Theme { get; internal set; }
+
 	[JsonProperty("embed_enabled", NullValueHandling = NullValueHandling.Ignore)]
 	public bool? EmbedEnabled { get; internal set; }
 
