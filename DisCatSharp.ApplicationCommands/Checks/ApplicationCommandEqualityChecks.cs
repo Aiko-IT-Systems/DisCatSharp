@@ -339,6 +339,17 @@ internal static class ApplicationCommandEqualityChecks
 				reasons.Add($"{optName}: channel types mismatch");
 			}
 
+			if (sourceOption.FileTypes is null != targetOption.FileTypes is null)
+			{
+				reasons.Add($"{optName}: file types null mismatch");
+			}
+			else if (sourceOption.FileTypes is not null && targetOption.FileTypes is not null &&
+					 (sourceOption.FileTypes.Count != targetOption.FileTypes.Count ||
+					  !sourceOption.FileTypes.OrderBy(x => x).SequenceEqual(targetOption.FileTypes.OrderBy(x => x))))
+			{
+				reasons.Add($"{optName}: file types mismatch");
+			}
+
 			var (equal, reason) = DeepEqualOptions(sourceOption.Options, targetOption.Options, localizationEnabled);
 			if (!equal)
 				reasons.Add($"{optName} -> {reason}");

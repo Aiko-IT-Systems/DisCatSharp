@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using DisCatSharp.Enums;
 
@@ -26,13 +28,19 @@ public sealed class DiscordFileUploadComponent : DiscordComponent, ILabelCompone
 	/// <param name="minOptions">Minimum count of files allowed to upload.</param>
 	/// <param name="maxOptions">Maximum count of files allowed to upload.</param>
 	/// <param name="required">Whether the file upload is required.</param>
-	public DiscordFileUploadComponent(string customId = null, int minOptions = 1, int maxOptions = 1, bool required = true)
+	/// <param name="fileTypes">The file types to filter for; dot-prefixed, `image`, `audio` and `video`. (Max 10)</param>
+	public DiscordFileUploadComponent(string customId = null, int minOptions = 1, int maxOptions = 1, bool required = true, string[]? fileTypes = null)
 		: this()
 	{
 		this.CustomId = customId ?? Guid.NewGuid().ToString();
 		this.MinimumValues = minOptions;
 		this.MaximumValues = maxOptions;
 		this.Required = required;
+		if (fileTypes is not null && fileTypes.Length > 10)
+			throw new ArgumentOutOfRangeException(nameof(fileTypes), "You can only define up to 10 file types to filter for.");
+		if (fileTypes is not null && !fileTypes.All(Utilities.IsValidFileTypeFilter))
+			throw new ArgumentException("Only 'image', 'video', 'audio' and dot-prefixed extensions are supported.", nameof(fileTypes));
+		this.FileTypes = fileTypes is not null && fileTypes.Length > 0 ? [.. fileTypes] : null;
 	}
 
 	/// <summary>
@@ -66,6 +74,12 @@ public sealed class DiscordFileUploadComponent : DiscordComponent, ILabelCompone
 	/// </summary>
 	[JsonProperty("disabled", NullValueHandling = NullValueHandling.Ignore)]
 	public bool Disabled { get; internal set; }
+
+	/// <summary>
+	/// 	The file types that can be uploaded.
+	/// </summary>
+	[JsonProperty("file_types", NullValueHandling = NullValueHandling.Ignore)]
+	public List<string>? FileTypes { get; internal set; }
 
 	/// <summary>
 	///     Enables this component if it was disabled before.

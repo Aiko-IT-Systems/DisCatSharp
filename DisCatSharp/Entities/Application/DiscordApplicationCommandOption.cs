@@ -36,6 +36,7 @@ public class DiscordApplicationCommandOption
 	/// <param name="descriptionLocalizations">The localizations of the parameter description.</param>
 	/// <param name="minimumLength">The minimum allowed length of the string. (Min 0)</param>
 	/// <param name="maximumLength">The maximum allowed length of the string. (Min 1)</param>
+	/// <param name="fileTypes">The file types to filter for; dot-prefixed, `image`, `audio` and `video`. (Max 10)</param>
 	public DiscordApplicationCommandOption(
 		string name,
 		string description,
@@ -50,7 +51,8 @@ public class DiscordApplicationCommandOption
 		DiscordApplicationCommandLocalization? nameLocalizations = null,
 		DiscordApplicationCommandLocalization? descriptionLocalizations = null,
 		int? minimumLength = null,
-		int? maximumLength = null
+		int? maximumLength = null,
+		string[]? fileTypes = null
 	)
 	{
 		if (!Utilities.IsValidSlashCommandName(name))
@@ -65,6 +67,15 @@ public class DiscordApplicationCommandOption
 		if (type is ApplicationCommandOptionType.SubCommand or ApplicationCommandOptionType.SubCommandGroup)
 			if (string.IsNullOrWhiteSpace(description))
 				throw new ArgumentException("Slash commands need a description.", nameof(description));
+		if (fileTypes is not null)
+		{
+			if (type is not ApplicationCommandOptionType.Attachment)
+				throw new ArgumentException("File types can only be specified for Attachment options", nameof(fileTypes));
+			if (fileTypes.Length > 10)
+				throw new ArgumentOutOfRangeException(nameof(fileTypes), "You can only define up to 10 file types to filter for.");
+			if (fileTypes.Any(x => !Utilities.IsValidFileTypeFilter(x)))
+				throw new ArgumentException("Only 'image', 'video', 'audio' and dot-prefixed extensions are supported.", nameof(fileTypes));
+		}
 
 		this.Name = name;
 		this.Description = description;
@@ -80,6 +91,7 @@ public class DiscordApplicationCommandOption
 		this.MaximumLength = maximumLength;
 		this.RawNameLocalizations = nameLocalizations?.GetKeyValuePairs();
 		this.RawDescriptionLocalizations = descriptionLocalizations?.GetKeyValuePairs();
+		this.FileTypes = fileTypes is not null && fileTypes.Length > 0 ? [.. fileTypes] : null;
 	}
 
 	/// <summary>
@@ -186,4 +198,10 @@ public class DiscordApplicationCommandOption
 	/// </summary>
 	[JsonProperty("max_length", NullValueHandling = NullValueHandling.Ignore)]
 	public int? MaximumLength { get; internal set; }
+
+	/// <summary>
+	/// 	Gets the file types for this slash command parameter.
+	/// </summary>
+	[JsonProperty("file_types", NullValueHandling = NullValueHandling.Ignore)]
+	public List<string>? FileTypes { get; internal set; }
 }

@@ -2168,6 +2168,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			var minimumLength = parameter.GetCustomAttribute<MinimumLengthAttribute>()?.Value ?? null;
 			var maximumLength = parameter.GetCustomAttribute<MaximumLengthAttribute>()?.Value ?? null;
 			var channelTypes = parameter.GetCustomAttribute<ChannelTypesAttribute>()?.ChannelTypes ?? null;
+			var fileTypes = parameter.GetCustomAttribute<FileTypesAttribute>()?.FileTypes ?? null;
 
 			var autocompleteAttribute = parameter.GetCustomAttribute<AutocompleteAttribute>();
 			switch (optionAttribute.Autocomplete)
@@ -2192,21 +2193,23 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					numericTargetType = Enum.GetUnderlyingType(nullableUnderlying);
 			}
 
-			switch (parameterType)
+			if (parameterType is not ApplicationCommandOptionType.Integer and not ApplicationCommandOptionType.Number)
 			{
-				case ApplicationCommandOptionType.String:
-					minimumValue = null;
-					maximumValue = null;
-					break;
-				case ApplicationCommandOptionType.Integer:
-				case ApplicationCommandOptionType.Number:
-					minimumLength = null;
-					maximumLength = null;
-					break;
-				case not ApplicationCommandOptionType.Channel:
-					channelTypes = null;
-					break;
+				minimumValue = null;
+				maximumValue = null;
 			}
+
+			if (parameterType is not ApplicationCommandOptionType.String)
+			{
+				minimumLength = null;
+				maximumLength = null;
+			}
+
+			if (parameterType is not ApplicationCommandOptionType.Channel)
+				channelTypes = null;
+
+			if (parameterType is not ApplicationCommandOptionType.Attachment)
+				fileTypes = null;
 
 			//Handles choices
 			//From attributes
@@ -2219,7 +2222,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			if (choiceProviders.Count is not 0)
 				choices = await GetChoiceAttributesFromProvider(choiceProviders, guildId, parameterType, numericTargetType).ConfigureAwait(false);
 
-			options.Add(new(optionAttribute.Name, optionAttribute.Description, parameterType, !parameter.IsOptional, choices, null, channelTypes, optionAttribute.Autocomplete, minimumValue, maximumValue, minimumLength: minimumLength, maximumLength: maximumLength));
+			options.Add(new(optionAttribute.Name, optionAttribute.Description, parameterType, !parameter.IsOptional, choices, null, channelTypes, optionAttribute.Autocomplete, minimumValue, maximumValue, minimumLength: minimumLength, maximumLength: maximumLength, fileTypes: fileTypes));
 		}
 
 		return options;

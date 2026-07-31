@@ -410,6 +410,9 @@ public static class Utilities
 	internal static bool IsValidSlashCommandName(string name)
 		=> DiscordRegEx.ApplicationCommandNameRegex().IsMatch(name);
 
+	internal static bool IsValidFileTypeFilter(string? type)
+		=> type is "image" or "video" or "audio" || (type is not null && type.Length > 1 && type.StartsWith(".", StringComparison.Ordinal));
+
 	/// <summary>
 	///     Have the message intents.
 	/// </summary>
