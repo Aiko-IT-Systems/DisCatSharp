@@ -31,6 +31,7 @@ public sealed class GatewayConfiguration
 		this.LargeThreshold = other.LargeThreshold;
 		this.Capabilities = other.Capabilities;
 		this.MobileStatus = other.MobileStatus;
+		this.VrStatus = other.VrStatus;
 		this.WebSocketClientFactory = other.WebSocketClientFactory;
 		this.UdpClientFactory = other.UdpClientFactory;
 		this.Advanced = new(other.Advanced);
