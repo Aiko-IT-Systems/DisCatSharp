@@ -58,6 +58,8 @@ internal sealed class ClientProperties : ObservableApiObject
 		{
 			if (this.Discord.Configuration.Gateway.MobileStatus)
 				return "Discord Android";
+			else if (this.Discord.Configuration.Gateway.VrStatus)
+				return "Discord VR";
 
 			var a = typeof(DiscordClient).GetTypeInfo().Assembly;
 			var an = a.GetName();

@@ -21,7 +21,12 @@ public enum MessageActivityType
 	Listen = 3,
 
 	/// <summary>
-	///     Allows the user to request to join.
+	///     Invites the user to request to join.
 	/// </summary>
-	JoinRequest = 4
+	JoinRequest = 4,
+
+	/// <summary>
+	///     Invites the user to request to stream.
+	/// </summary>
+	StreamRequest = 5
 }

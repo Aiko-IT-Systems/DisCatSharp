@@ -128,6 +128,12 @@ public sealed class GatewayConfiguration
 	public bool MobileStatus { internal get; set; } = false;
 
 	/// <summary>
+	///     <para>Sets if the bot's status should show the VR icon.</para>
+	///     <para>Defaults to <see langword="false" />.</para>
+	/// </summary>
+	public bool VrStatus { internal get; set; } = false;
+
+	/// <summary>
 	///     <para>Sets the factory method used to create instances of WebSocket clients.</para>
 	///     <para>
 	///         Use <see cref="WebSocketClient.CreateNew" /> and equivalents on other implementations to switch out client
