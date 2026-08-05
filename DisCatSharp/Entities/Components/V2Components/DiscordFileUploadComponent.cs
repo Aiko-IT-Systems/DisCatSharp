@@ -40,7 +40,7 @@ public sealed class DiscordFileUploadComponent : DiscordComponent, ILabelCompone
 			throw new ArgumentOutOfRangeException(nameof(fileTypes), "You can only define up to 10 file types to filter for.");
 		if (fileTypes is not null && !fileTypes.All(Utilities.IsValidFileTypeFilter))
 			throw new ArgumentException("Only 'image', 'video', 'audio' and dot-prefixed extensions are supported.", nameof(fileTypes));
-		this.FileTypes = fileTypes is not null && fileTypes.Length > 0 ? [.. fileTypes] : null;
+		this.FileTypes = fileTypes is not null && fileTypes.Length > 0 ? fileTypes : null;
 	}
 
 	/// <summary>
@@ -79,7 +79,7 @@ public sealed class DiscordFileUploadComponent : DiscordComponent, ILabelCompone
 	/// 	The file types that can be uploaded.
 	/// </summary>
 	[JsonProperty("file_types", NullValueHandling = NullValueHandling.Ignore)]
-	public List<string>? FileTypes { get; internal set; }
+	public string[]? FileTypes { get; internal set; }
 
 	/// <summary>
 	///     Enables this component if it was disabled before.

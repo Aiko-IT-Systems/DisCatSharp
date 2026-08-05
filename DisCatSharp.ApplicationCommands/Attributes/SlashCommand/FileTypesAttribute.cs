@@ -24,7 +24,7 @@ public class FileTypesAttribute : Attribute
 		if (!fileTypes.All(Utilities.IsValidFileTypeFilter))
 			throw new ArgumentException("Only 'image', 'video', 'audio' and dot-prefixed extensions are supported.", nameof(fileTypes));
 
-		this.FileTypes = [.. fileTypes];
+		this.FileTypes = fileTypes;
 	}
 
 	/// <summary>

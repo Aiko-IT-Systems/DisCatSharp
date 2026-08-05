@@ -134,7 +134,7 @@ internal class CommandWorker
 							localizedOptions.Add(new(option.Name, option.Description, option.Type, option.Required,
 								choices, option.Options, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
 								commandTranslation.Options.SingleOrDefault(o => o.Name == option.Name)?.NameTranslations, commandTranslation.Options.SingleOrDefault(o => o.Name == option.Name)?.DescriptionTranslations,
-								option.MinimumLength, option.MaximumLength, option.FileTypes?.ToArray()
+								option.MinimumLength, option.MaximumLength, option.FileTypes
 							));
 						}
 						catch (Exception ex)
@@ -247,7 +247,7 @@ internal class NestedCommandWorker
 							localizedOptions.Add(new(option.Name, option.Description, option.Type, option.Required,
 								choices, option.Options, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
 								subCommandTranslation.Options.SingleOrDefault(o => o.Name == option.Name)?.NameTranslations, subCommandTranslation.Options.SingleOrDefault(o => o.Name == option.Name)?.DescriptionTranslations,
-								option.MinimumLength, option.MaximumLength, option.FileTypes?.ToArray()
+								option.MinimumLength, option.MaximumLength, option.FileTypes
 							));
 						}
 					}
@@ -333,7 +333,7 @@ internal class NestedCommandWorker
 							localizedOptions.Add(new(option.Name, option.Description, option.Type, option.Required,
 								choices, option.Options, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
 								subSubCommandTranslation.Options.SingleOrDefault(o => o.Name == option.Name)?.NameTranslations, subSubCommandTranslation.Options.SingleOrDefault(o => o.Name == option.Name)?.DescriptionTranslations,
-								option.MinimumLength, option.MaximumLength, option.FileTypes?.ToArray()
+								option.MinimumLength, option.MaximumLength, option.FileTypes
 							));
 						}
 

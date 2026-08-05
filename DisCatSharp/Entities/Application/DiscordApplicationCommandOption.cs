@@ -52,7 +52,7 @@ public class DiscordApplicationCommandOption
 		DiscordApplicationCommandLocalization? descriptionLocalizations = null,
 		int? minimumLength = null,
 		int? maximumLength = null,
-		string[]? fileTypes = null
+		IEnumerable<string>? fileTypes = null
 	)
 	{
 		if (!Utilities.IsValidSlashCommandName(name))
@@ -71,7 +71,7 @@ public class DiscordApplicationCommandOption
 		{
 			if (type is not ApplicationCommandOptionType.Attachment)
 				throw new ArgumentException("File types can only be specified for Attachment options", nameof(fileTypes));
-			if (fileTypes.Length > 10)
+			if (fileTypes.Count() > 10)
 				throw new ArgumentOutOfRangeException(nameof(fileTypes), "You can only define up to 10 file types to filter for.");
 			if (fileTypes.Any(x => !Utilities.IsValidFileTypeFilter(x)))
 				throw new ArgumentException("Only 'image', 'video', 'audio' and dot-prefixed extensions are supported.", nameof(fileTypes));
@@ -91,7 +91,7 @@ public class DiscordApplicationCommandOption
 		this.MaximumLength = maximumLength;
 		this.RawNameLocalizations = nameLocalizations?.GetKeyValuePairs();
 		this.RawDescriptionLocalizations = descriptionLocalizations?.GetKeyValuePairs();
-		this.FileTypes = fileTypes is not null && fileTypes.Length > 0 ? [.. fileTypes] : null;
+		this.FileTypes = fileTypes is not null && fileTypes.Any() ? [.. fileTypes] : null;
 	}
 
 	/// <summary>
