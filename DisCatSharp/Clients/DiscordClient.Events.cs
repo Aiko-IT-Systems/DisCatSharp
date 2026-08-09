@@ -813,7 +813,7 @@ public sealed partial class DiscordClient
 
 	/// <summary>
 	///     Fired when a guild join request is created.
-	///     For this Event you need the <see cref="DiscordIntents.GuildExpressions" /> intent specified in
+	///     For this Event you need the <see cref="DiscordIntents.GuildModeration" /> intent specified in
 	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildJoinRequestCreateEventArgs> GuildJoinRequestCreated
@@ -826,7 +826,7 @@ public sealed partial class DiscordClient
 
 	/// <summary>
 	///     Fired when a guild join request is updated.
-	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     For this Event you need the <see cref="DiscordIntents.GuildModeration" /> intent specified in
 	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildJoinRequestUpdateEventArgs> GuildJoinRequestUpdated
@@ -839,7 +839,7 @@ public sealed partial class DiscordClient
 
 	/// <summary>
 	///     Fired when a guild join request is deleted.
-	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     For this Event you need the <see cref="DiscordIntents.GuildModeration" /> intent specified in
 	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildJoinRequestDeleteEventArgs> GuildJoinRequestDeleted

@@ -10,12 +10,6 @@ namespace DisCatSharp.Entities;
 public sealed class DiscordGuildJoinRequestSearchResult : ObservableApiObject
 {
 	/// <summary>
-	///     Gets the limit for results.
-	/// </summary>
-	[JsonProperty("limit", NullValueHandling = NullValueHandling.Ignore)]
-	public int Limit { get; internal set; }
-
-	/// <summary>
 	///     Gets the total count of results.
 	/// </summary>
 	[JsonProperty("total", NullValueHandling = NullValueHandling.Ignore)]

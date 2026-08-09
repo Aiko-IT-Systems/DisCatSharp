@@ -14,15 +14,15 @@ public class DiscordGuildMembershipScreeningField : ObservableApiObject
 	/// <summary>
 	///     Initializes a new instance of the <see cref="DiscordGuildMembershipScreeningField" /> class.
 	/// </summary>
-	/// <param name="type">The type.</param>
+	/// <param name="fieldType">The field type.</param>
 	/// <param name="label">The label.</param>
 	/// <param name="values">The values.</param>
 	/// <param name="required">If true, required.</param>
 	/// <param name="description">The description.</param>
 	/// <param name="placeholder">The placeholder.</param>
-	public DiscordGuildMembershipScreeningField(MembershipScreeningFieldType type, string label, List<string>? values = null, bool required = true, string? description = null, string? placeholder = null)
+	public DiscordGuildMembershipScreeningField(MembershipScreeningFieldType fieldType, string label, List<string>? values = null, bool required = true, string? description = null, string? placeholder = null)
 	{
-		this.Type = type;
+		this.FieldType = fieldType;
 		this.Label = label;
 		this.Values = values;
 		this.IsRequired = required;
@@ -40,7 +40,7 @@ public class DiscordGuildMembershipScreeningField : ObservableApiObject
 	///     Gets the type of the field.
 	/// </summary>
 	[JsonProperty("field_type", NullValueHandling = NullValueHandling.Ignore)]
-	public MembershipScreeningFieldType Type { get; internal set; }
+	public MembershipScreeningFieldType FieldType { get; internal set; }
 
 	/// <summary>
 	///     Gets the title of the field.
@@ -49,10 +49,17 @@ public class DiscordGuildMembershipScreeningField : ObservableApiObject
 	public string Label { get; internal set; }
 
 	/// <summary>
-	///     Gets the list of rules
+	///     Gets the list of rules. Only present if the field type is <see cref="MembershipScreeningFieldType.Terms" />.
 	/// </summary>
 	[JsonProperty("values", NullValueHandling = NullValueHandling.Ignore)]
 	public IReadOnlyList<string>? Values { get; internal set; }
+
+	/// <summary>
+	///     Gets the list of choices. Only present if the field type is <see cref="MembershipScreeningFieldType.MultipleChoice" />.
+	/// </summary>
+	[JsonProperty("choices", NullValueHandling = NullValueHandling.Ignore)]
+	public IReadOnlyList<string>? Choices { get; internal set; }
+
 
 	/// <summary>
 	///     .
@@ -62,7 +69,7 @@ public class DiscordGuildMembershipScreeningField : ObservableApiObject
 	public bool IsRequired { get; internal set; }
 
 	/// <summary>
-	///     Gets the placeholder.
+	///     Gets the placeholder. Only present if the field type is <see cref="MembershipScreeningFieldType.TextInput" /> or <see cref="MembershipScreeningFieldType.Paragraph" />.
 	/// </summary>
 	[JsonProperty("placeholder", NullValueHandling = NullValueHandling.Ignore)]
 	public string? Placeholder { get; internal set; }

@@ -3141,7 +3141,6 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="after">Retrieve join requests after this ID.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="ArgumentOutOfRangeException">Thrown when the status type is not supported.</exception>
-	[DiscordUnreleased("This feature is not available for bots at the current time"), Obsolete("This feature is not available for bots at the current time", true)]
 	public async Task<DiscordGuildJoinRequestSearchResult> GetJoinRequestsAsync(int limit = 100, JoinRequestStatusType? statusType = null, ulong? before = null, ulong? after = null, CancellationToken cancellationToken = default)
 		=> await this.Discord.ApiClient.GetGuildJoinRequestsAsync(this.Id, limit, statusType, before, after, cancellationToken: cancellationToken);
 
@@ -3150,7 +3149,6 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// </summary>
 	/// <param name="joinRequestId">The ID of the join request.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
-	[DiscordUnreleased("This feature is not available for bots at the current time"), Obsolete("This feature is not available for bots at the current time", true)]
 	public async Task<DiscordGuildJoinRequest> GetJoinRequestAsync(ulong joinRequestId, CancellationToken cancellationToken = default)
 		=> await this.Discord.ApiClient.GetGuildJoinRequestAsync(this.Id, joinRequestId, cancellationToken: cancellationToken);
 
@@ -3161,9 +3159,8 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="approve">Whether to approve or deny the request.</param>
 	/// <param name="rejectionReason">The optional rejection reason.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
-	[DiscordUnreleased("This feature is not available for bots at the current time"), Obsolete("This feature is not available for bots at the current time", true)]
-	public async Task<DiscordGuildJoinRequest> ModifyJoinRequestsAsync(ulong joinRequestId, bool approve, string? rejectionReason, CancellationToken cancellationToken = default)
-		=> await this.Discord.ApiClient.ModifyGuildJoinRequestsAsync(this.Id, joinRequestId, approve ? JoinRequestStatusType.Approved : JoinRequestStatusType.Rejected, rejectionReason, cancellationToken: cancellationToken);
+	public async Task<DiscordGuildJoinRequest> ModifyJoinRequestAsync(ulong joinRequestId, bool approve, string? rejectionReason, CancellationToken cancellationToken = default)
+		=> await this.Discord.ApiClient.ModifyGuildJoinRequestAsync(this.Id, joinRequestId, approve ? JoinRequestStatusType.Approved : JoinRequestStatusType.Rejected, rejectionReason, cancellationToken: cancellationToken);
 
 	#endregion
 }

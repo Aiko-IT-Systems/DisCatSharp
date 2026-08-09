@@ -5254,7 +5254,7 @@ public sealed class DiscordApiClient
 	/// <param name="rejectionReason">The optional rejection reason.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <exception cref="InvalidOperationException">Thrown when the status type is not Approved or Rejected.</exception>
-	internal async Task<DiscordGuildJoinRequest> ModifyGuildJoinRequestsAsync(ulong guildId, ulong joinRequestId, JoinRequestStatusType statusType, string? rejectionReason, CancellationToken cancellationToken = default)
+	internal async Task<DiscordGuildJoinRequest> ModifyGuildJoinRequestAsync(ulong guildId, ulong joinRequestId, JoinRequestStatusType statusType, string? rejectionReason, CancellationToken cancellationToken = default)
 	{
 		var pld = new RestGuildJoinRequestUpdatePayload
 		{

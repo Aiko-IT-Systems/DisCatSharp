@@ -1,3 +1,5 @@
+using DisCatSharp.Enums;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;
@@ -12,10 +14,23 @@ public sealed class DiscordGuildMembershipScreeningFieldResponse : DiscordGuildM
 	/// </summary>
 	internal DiscordGuildMembershipScreeningFieldResponse()
 	{ }
-
 	/// <summary>
-	///     Gets the response. Might also be a boolean.
+	///     Gets the response. Type varies depending on <see cref="DiscordGuildMembershipScreeningField.FieldType"/>
+	/// 	<list type="bullet">
+	/// 		<item>
+	/// 			<see cref="MembershipScreeningFieldType.TextInput" />: <see langword="string"/> (applicant's text response).
+	/// 		</item>
+	/// 		<item>
+	/// 			<see cref="MembershipScreeningFieldType.Paragraph" />: <see langword="string"/> (applicant's text response).
+	/// 		</item>
+	/// 		<item>
+	/// 			<see cref="MembershipScreeningFieldType.MultipleChoice" />: <see langword="int"/> (index of the choice selected by the applicant).
+	/// 		</item>
+	/// 		<item>
+	/// 			<see cref="MembershipScreeningFieldType.Terms" />: <see langword="bool"/> (whether the applicant accepted the terms).
+	/// 		</item>
+	/// 	</list>
 	/// </summary>
 	[JsonProperty("response", NullValueHandling = NullValueHandling.Ignore)]
-	public string? Response { get; internal set; }
+	public object? Response { get; internal set; }
 }

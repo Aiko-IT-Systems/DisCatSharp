@@ -17,12 +17,6 @@ namespace DisCatSharp.Entities;
 public sealed class DiscordGuildJoinRequest : SnowflakeObject
 {
 	/// <summary>
-	///     Gets the id of the join request.
-	/// </summary>
-	[JsonProperty("join_request_id", NullValueHandling = NullValueHandling.Ignore)]
-	public ulong RequestId { get; internal set; }
-
-	/// <summary>
 	///     <para>Gets the id of the interview channel.</para>
 	///     <para>This will be a group dm channel.</para>
 	///     <para>Bots cannot access this, so it's pretty much useless.</para>
@@ -98,21 +92,14 @@ public sealed class DiscordGuildJoinRequest : SnowflakeObject
 	/// <summary>
 	///     Gets the datetime of when the join request was actioned.
 	/// </summary>
-	[JsonProperty("actioned_at", NullValueHandling = NullValueHandling.Ignore)]
-	public ulong? ActionedAt { get; internal set; }
+	[JsonProperty("reviewed_at", NullValueHandling = NullValueHandling.Ignore)]
+	public DateTimeOffset? ReviewedAt { get; internal set; }
 
 	/// <summary>
 	///     Gets the datetime of when the join request was created.
 	/// </summary>
 	[JsonProperty("created_at", NullValueHandling = NullValueHandling.Ignore)]
 	public DateTimeOffset CreatedAt { get; internal set; }
-
-	/// <summary>
-	///     <para>Gets the datetime of when the user was last seen.</para>
-	///     <para>Seems to always be see <see langword="null" /> tho.</para>
-	/// </summary>
-	[JsonProperty("last_seen", NullValueHandling = NullValueHandling.Ignore)]
-	public DateTimeOffset? LastSeen { get; internal set; }
 
 	/// <summary>
 	///     Gets the rejection reason of the join request.
@@ -126,7 +113,6 @@ public sealed class DiscordGuildJoinRequest : SnowflakeObject
 	/// <param name="approve">Whether to approve or deny this request.</param>
 	/// <param name="rejectionReason">The optional rejection reason.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
-	[DiscordUnreleased("This feature is not available for bots at the current time"), Obsolete("This feature is not available for bots at the current time", true)]
 	public async Task<DiscordGuildJoinRequest> ModifyAsync(bool approve, string? rejectionReason, CancellationToken cancellationToken = default)
-		=> await this.Discord.ApiClient.ModifyGuildJoinRequestsAsync(this.GuildId, this.RequestId, approve ? JoinRequestStatusType.Approved : JoinRequestStatusType.Rejected, rejectionReason, cancellationToken: cancellationToken);
+		=> await this.Discord.ApiClient.ModifyGuildJoinRequestAsync(this.GuildId, this.Id, approve ? JoinRequestStatusType.Approved : JoinRequestStatusType.Rejected, rejectionReason, cancellationToken: cancellationToken);
 }
