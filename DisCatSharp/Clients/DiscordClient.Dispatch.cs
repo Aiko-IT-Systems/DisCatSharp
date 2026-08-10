@@ -4688,25 +4688,15 @@ public sealed partial class DiscordClient
 	///     Handles the application command permissions update event.
 	/// </summary>
 	/// <param name="perms">The new permissions.</param>
-	/// <param name="channelId">The command id.</param>
+	/// <param name="targetId">The command or application id whose permissions were updated.</param>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="applicationId">The application id.</param>
-	internal async Task OnApplicationCommandPermissionsUpdateAsync(IEnumerable<DiscordApplicationCommandPermission> perms, ulong channelId, ulong guildId, ulong applicationId)
+	internal async Task OnApplicationCommandPermissionsUpdateAsync(IEnumerable<DiscordApplicationCommandPermission> perms, ulong targetId, ulong guildId, ulong applicationId)
 	{
 		if (applicationId != this.CurrentApplication.Id)
 			return;
 
 		var guild = this.InternalGetCachedGuild(guildId);
-
-		DiscordApplicationCommand cmd;
-		try
-		{
-			cmd = await this.GetGuildApplicationCommandAsync(guildId, channelId).ConfigureAwait(false);
-		}
-		catch (NotFoundException)
-		{
-			cmd = await this.GetGlobalApplicationCommandAsync(channelId).ConfigureAwait(false);
-		}
 
 		if (guild == null)
 			guild = new()
@@ -4718,7 +4708,7 @@ public sealed partial class DiscordClient
 		var ea = new ApplicationCommandPermissionsUpdateEventArgs(this.ServiceProvider)
 		{
 			Permissions = [.. perms],
-			Command = cmd,
+			Id = targetId,
 			ApplicationId = applicationId,
 			Guild = guild
 		};
