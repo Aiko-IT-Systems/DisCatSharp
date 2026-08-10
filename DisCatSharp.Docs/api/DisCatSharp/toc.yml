@@ -974,6 +974,9 @@ items:
   - uid: DisCatSharp.Enums.ApplicationDiscoveryEligibilityFlags
     name: ApplicationDiscoveryEligibilityFlags
     type: Enum
+  - uid: DisCatSharp.Enums.ApplicationEventWebhookStatus
+    name: ApplicationEventWebhookStatus
+    type: Enum
   - uid: DisCatSharp.Enums.ApplicationExplicitContentFilter
     name: ApplicationExplicitContentFilter
     type: Enum

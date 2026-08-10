@@ -95,6 +95,9 @@ items:
   - uid: DisCatSharp.ApplicationCommands.Attributes.DontInjectAttribute
     name: DontInjectAttribute
     type: Class
+  - uid: DisCatSharp.ApplicationCommands.Attributes.FileTypesAttribute
+    name: FileTypesAttribute
+    type: Class
   - uid: DisCatSharp.ApplicationCommands.Attributes.IAutocompleteProvider
     name: IAutocompleteProvider
     type: Interface

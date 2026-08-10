@@ -24,14 +24,23 @@ public sealed class ApplicationCommandPermissionsUpdateEventArgs : DiscordEventA
 	public List<DiscordApplicationCommandPermission> Permissions { get; internal set; }
 
 	/// <summary>
-	///     Gets the application command.
+	///     Gets the identifier of the command or application whose permissions were updated.
 	/// </summary>
-	public DiscordApplicationCommand Command { get; internal set; }
+	/// <remarks>
+	///     Discord uses the application id for application-wide permissions.
+	/// </remarks>
+	public ulong Id { get; internal set; }
 
 	/// <summary>
 	///     Gets the application id.
 	/// </summary>
 	public ulong ApplicationId { get; internal set; }
+
+	/// <summary>
+	///     Gets whether this update contains application-wide permissions rather than command-specific permissions.
+	/// </summary>
+	public bool IsApplicationWide
+		=> this.Id == this.ApplicationId;
 
 	/// <summary>
 	///     Gets the guild.
