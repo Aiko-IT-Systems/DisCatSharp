@@ -365,6 +365,7 @@ jobs:
             - name: Publish immutable GitHub Release
               if: steps.state.outputs.release_state != 'verify'
               env:
+                  GH_TOKEN: ${{ secrets.NYUW_TOKEN_GH }}
                   RELEASE_TAG: ${{ steps.release.outputs.tag }}
                   PACKAGE_FAMILY: ${{ inputs.packages_to_release }}
                   IS_PRERELEASE: ${{ inputs.release_as_prerelease }}
