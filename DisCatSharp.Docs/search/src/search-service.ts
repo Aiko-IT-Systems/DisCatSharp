@@ -108,10 +108,12 @@ export class SearchService {
     let symbolExactIndex = -1;
     let documentExactIndex = -1;
 
+	const session = this.db.withSession();
+
     if (includeSymbols) {
       const kindsJson = JSON.stringify(symbolKinds);
       symbolExactIndex = exactStatements.length;
-      exactStatements.push(this.db.prepare(SYMBOL_EXACT_SQL).bind(
+      exactStatements.push(session.prepare(SYMBOL_EXACT_SQL).bind(
         query, query, query,
         corpus ?? null, corpus ?? null, module, module, kindsJson, kindsJson,
         query, query, query, query, expandedLimit,
@@ -121,13 +123,13 @@ export class SearchService {
       const kindsJson = JSON.stringify(documentKinds);
       const allConceptual = conceptual ? 1 : 0;
       documentExactIndex = exactStatements.length;
-      exactStatements.push(this.db.prepare(DOCUMENT_EXACT_SQL).bind(
+      exactStatements.push(session.prepare(DOCUMENT_EXACT_SQL).bind(
         query, query, corpus ?? null, corpus ?? null, module, module, allConceptual, kindsJson, kindsJson,
         query, query, expandedLimit,
       ));
     }
 
-    const exactBatches = exactStatements.length === 0 ? [] : await this.db.batch<SearchRow>(exactStatements);
+    const exactBatches = exactStatements.length === 0 ? [] : await session.batch<SearchRow>(exactStatements);
     for (const batch of exactBatches) this.captureMeta(batch.meta);
     const symbolExactRows = symbolExactIndex < 0 ? [] : exactBatches[symbolExactIndex]?.results ?? [];
     const documentExactRows = documentExactIndex < 0 ? [] : exactBatches[documentExactIndex]?.results ?? [];
@@ -147,15 +149,15 @@ export class SearchService {
     const fuzzyStatements: D1PreparedStatement[] = [];
     if (includeSymbols && merged.size < limit && symbolExactRows.length < limit && !symbolExactRows.some((row) => Number(row.score) >= 700)) {
       const kindsJson = JSON.stringify(symbolKinds);
-      fuzzyStatements.push(this.db.prepare(SYMBOL_FTS_SQL).bind(fts, corpus ?? null, corpus ?? null, module, module, kindsJson, kindsJson, expandedLimit));
+      fuzzyStatements.push(session.prepare(SYMBOL_FTS_SQL).bind(fts, corpus ?? null, corpus ?? null, module, module, kindsJson, kindsJson, expandedLimit));
     }
     if (includeDocuments && merged.size < limit && documentExactRows.length < limit) {
       const kindsJson = JSON.stringify(documentKinds);
       const allConceptual = conceptual ? 1 : 0;
-      fuzzyStatements.push(this.db.prepare(DOCUMENT_FTS_SQL).bind(fts, corpus ?? null, corpus ?? null, module, module, allConceptual, kindsJson, kindsJson, expandedLimit));
+      fuzzyStatements.push(session.prepare(DOCUMENT_FTS_SQL).bind(fts, corpus ?? null, corpus ?? null, module, module, allConceptual, kindsJson, kindsJson, expandedLimit));
     }
     if (fuzzyStatements.length > 0) {
-      const fuzzyBatches = await this.db.batch<SearchRow>(fuzzyStatements);
+      const fuzzyBatches = await session.batch<SearchRow>(fuzzyStatements);
       for (const batch of fuzzyBatches) {
         this.captureMeta(batch.meta);
         mergeRows(batch.results);
@@ -180,9 +182,10 @@ export class SearchService {
     if (!symbolId && !documentId) {
       throw new SearchError("invalid_id", "Documentation IDs must begin with 'symbol:' or 'document:'.");
     }
+	const session = this.db.withSession();
     const states = await this.getReadyStates();
     if (symbolId) {
-      const symbolResponse = await this.db.prepare(`SELECT record_id AS id, canonical_uid AS uid, name, display_name AS displayName, qualified_name AS qualifiedName,
+      const symbolResponse = await session.prepare(`SELECT record_id AS id, canonical_uid AS uid, name, display_name AS displayName, qualified_name AS qualifiedName,
         full_name AS fullName, kind AS type, namespace, module, parent_uid AS parentUid, summary, signature, content, url,
         source_path AS sourcePath, source_start_line AS sourceStartLine, source_end_line AS sourceEndLine, related_json AS relatedJson,
         corpus, repository
@@ -198,7 +201,7 @@ export class SearchService {
       delete symbol.relatedJson;
       let related: unknown[] = [];
       if (relatedUids.length > 0) {
-        const relatedResponse = await this.db.prepare(`SELECT record_id AS id, canonical_uid AS uid, qualified_name AS title, kind AS type, url
+        const relatedResponse = await session.prepare(`SELECT record_id AS id, canonical_uid AS uid, qualified_name AS title, kind AS type, url
           FROM symbols WHERE corpus = ? AND canonical_uid IN (SELECT value FROM json_each(?)) ORDER BY qualified_name COLLATE NOCASE LIMIT 50`)
           .bind(symbol.corpus, JSON.stringify(relatedUids)).all();
         this.captureMeta(relatedResponse.meta);
@@ -208,7 +211,7 @@ export class SearchService {
       return { build, ...symbol, family: "symbol", related };
     }
 
-    const documentResponse = await this.db.prepare(`SELECT record_id AS id, document_key AS documentKey, family, kind AS type, title,
+    const documentResponse = await session.prepare(`SELECT record_id AS id, document_key AS documentKey, family, kind AS type, title,
       description, content, url, module, source_path AS sourcePath, corpus, repository FROM documents WHERE record_id = ?`).bind(id).all<Record<string, unknown>>();
     this.captureMeta(documentResponse.meta);
     const document = documentResponse.results[0];
@@ -224,7 +227,8 @@ export class SearchService {
   public async getSource(input: SourceRequest): Promise<Record<string, unknown>> {
     const states = await this.getReadyStates();
     const request = validateSourceRequest(input);
-    const result = await this.db.prepare(`SELECT start_line, end_line, content, corpus, repository FROM source_chunks
+	const session = this.db.withSession();
+    const result = await session.prepare(`SELECT start_line, end_line, content, corpus, repository FROM source_chunks
       WHERE path = ? AND start_line <= ? AND end_line >= ? ORDER BY start_line`).bind(request.path, request.endLine, request.startLine).all<{
         start_line: number; end_line: number; content: string; corpus: string; repository: string;
       }>();
@@ -273,7 +277,8 @@ export class SearchService {
   }
 
   private async getReadyStates(): Promise<SyncStateRow[]> {
-    const response = await this.db.prepare(`SELECT corpus, repository, site_base_url, ready, source_commit, generated_at, modules_json, types_json
+	const session = this.db.withSession();
+    const response = await session.prepare(`SELECT corpus, repository, site_base_url, ready, source_commit, generated_at, modules_json, types_json
       FROM corpus_sync_state WHERE ready = 1 ORDER BY corpus`).all<SyncStateRow>();
     this.captureMeta(response.meta);
     if (response.results.length === 0) {
