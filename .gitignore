@@ -157,3 +157,4 @@ temp-works/
 /todo.txt
 copilot_*
 *.lscache
+/.playwright-cli

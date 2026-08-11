@@ -1,65 +1,110 @@
 [![Build](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/build.yml/badge.svg)](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/build.yml) [![Documentation](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/documentation.yml/badge.svg)](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/documentation.yml) [![CodeQL](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/codeql-analysis.yml)
 
 [![GitHub last commit](https://img.shields.io/github/last-commit/Aiko-IT-Systems/DisCatSharp?label=Last%20Commit&style=flat-square&logo=github)](https://aitsys.dev/source/DisCatSharp/history/) [![GitHub commit activity](https://img.shields.io/github/commit-activity/w/Aiko-IT-Systems/DisCatSharp?label=Commit%20Activity&style=flat-square&logo=github)](https://github.com/Aiko-IT-Systems/DisCatSharp/commits/main)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/Aiko-IT-Systems/DisCatSharp?label=PRs&style=flat-square&logo=github&logo=gitub)](https://github.com/Aiko-IT-Systems/DisCatSharp/pulls) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Aiko-IT-Systems/DisCatSharp?label=Size&style=flat-square&logo=github)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/Aiko-IT-Systems/DisCatSharp?label=PRs&style=flat-square&logo=github)](https://github.com/Aiko-IT-Systems/DisCatSharp/pulls) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Aiko-IT-Systems/DisCatSharp?label=Size&style=flat-square&logo=github)
 
 ![LTS](https://img.shields.io/nuget/v/DisCatSharp?color=1F8B4C&label=LTS&style=flat-square&logo=Nuget) ![Latest](https://img.shields.io/nuget/vpre/DisCatSharp?color=AD1457&label=Latest&style=flat-square&logo=Nuget)
 
 ----
 
 # DisCatSharp
-## A Discord App Library written in C# for .NET
+
+## A Discord app library written in C# for .NET
 
 ----
-
-# About
 
 ## Why DisCatSharp?
 
 If you:
+
 - want a library where you get kind and efficient help
 - would like to have and use the most recent features of the Discord API
 - are ready to build great things
 
 Then this is the right place for you!
 
-## What Happened With The History
+## History
 
-We've squashed the history of DisCatSharp due to it's clone size and cluttered history.
-The original history can be seen in the releases / tags and at https://github.com/Aiko-IT-Systems/DisCatSharp.Backup (Archived version *before* the squash).
+We squashed DisCatSharp's Git history because of its clone size and accumulated clutter.
+The original history remains available through the releases, tags, and the [archived pre-squash repository](https://github.com/Aiko-IT-Systems/DisCatSharp.Backup).
 
-## Installing
+## Install
 
-You can install the library from the following sources:
-- [NuGet](https://www.nuget.org/profiles/DisCatSharp)
-- [GitHub](https://github.com/orgs/Aiko-IT-Systems/packages?tab=packages&q=DisCatSharp)
+Install the latest stable release from [NuGet](https://www.nuget.org/packages/DisCatSharp):
+
+```shell
+dotnet add package DisCatSharp
+```
+
+To use the latest nightly release instead:
+
+```shell
+dotnet add package DisCatSharp --prerelease
+```
+
+Packages are also available from [GitHub Packages](https://github.com/orgs/Aiko-IT-Systems/packages?tab=packages&q=DisCatSharp).
+
+## Quick start
+
+Create a [Discord bot account](https://docs.dcs.aitsys.dev/articles/getting_started/bot_account), store its token in the `DISCORD_TOKEN` environment variable, and connect the client:
+
+```csharp
+using DisCatSharp;
+using DisCatSharp.Enums;
+
+string token = Environment.GetEnvironmentVariable("DISCORD_TOKEN")
+    ?? throw new InvalidOperationException("Set the DISCORD_TOKEN environment variable.");
+
+var discord = new DiscordClient(new DiscordConfiguration
+{
+    Token = token,
+    TokenType = TokenType.Bot,
+    Intents = DiscordIntents.AllUnprivileged
+});
+
+await discord.ConnectAsync();
+await Task.Delay(Timeout.InfiniteTimeSpan);
+```
+
+Continue with the complete [first bot guide](https://docs.dcs.aitsys.dev/articles/getting_started/first_bot).
 
 ## Documentation
 
 The documentation is available at [docs.dcs.aitsys.dev](https://docs.dcs.aitsys.dev).
+A backup is available at [backup-docs.dcs.aitsys.dev](https://backup-docs.dcs.aitsys.dev).
 
-AI coding assistants can install the repository's [DisCatSharp Agent Skills](skills/README.md) and connect to the public documentation MCP at `https://docs.dcs.aitsys.dev/mcp` for version-aware API, conceptual documentation, and indexed source lookup.
+## AI coding assistants
 
-Alternative hosts for our docs are:
-- Backup Host [backup-docs.dcs.aitsys.dev](https://backup-docs.dcs.aitsys.dev)
+Install the consumer skill globally for Codex:
 
+```shell
+gh skill install Aiko-IT-Systems/DisCatSharp use-discatsharp --agent codex --scope user --pin main
+```
 
-## Bugs or Feature requests?
+Then add the public, stateless documentation MCP as a Streamable HTTP server named `discatsharp`:
 
-Either join our official support guild at https://discord.gg/RXA6u3jxdU, open an [issue](https://github.com/Aiko-IT-Systems/DisCatSharp/issues/new/choose) or write us an email at [bugs@aitsys.dev](mailto:bugs@aitsys.dev).
+```toml
+[mcp_servers.discatsharp]
+url = "https://docs.dcs.aitsys.dev/mcp"
+```
 
-<!-- All requests are tracked at [aitsys.dev](https://aitsys.dev/proje<ct/view/1/). We currently don't do that for reasons -->
+The MCP provides live documentation search, symbol lookup, full-page retrieval, and indexed source access. See the [Agent Skills and MCP setup guide](skills/README.md) for GitHub Copilot, Claude Code, Gemini CLI, other Agent Skills clients, version pinning, and maintainer guidance.
 
-## Tutorials / Examples
+## Bugs and feature requests
 
-* [Howto](https://docs.dcs.aitsys.dev/articles/getting_started/bot_account.html)
-* [Examples](https://github.com/Aiko-IT-Systems/DisCatSharp.Examples)
-* [Template App(:warning:Outdated)](https://github.com/Aiko-IT-Systems/DisCatSharp.TemplateApp)
-* [Public Support App for DisCatSharp Server](https://github.com/Aiko-IT-Systems/DisCatSharp.Support)
+Join our [official support guild](https://discord.gg/RXA6u3jxdU), open an [issue](https://github.com/Aiko-IT-Systems/DisCatSharp/issues/new/choose), or email [bugs@aitsys.dev](mailto:bugs@aitsys.dev).
 
-## Visual Studio Tools
-* [DisCatSharp Analyzer Docs](https://docs.dcs.aitsys.dev/vs/index)
-* [Snippets for Visual Studio](https://github.com/Aiko-IT-Systems/DisCatSharp.Snippets)
+## Tutorials and examples
+
+- [Getting started](https://docs.dcs.aitsys.dev/articles/getting_started/bot_account)
+- [Examples](https://github.com/Aiko-IT-Systems/DisCatSharp.Examples)
+- [Template app (outdated)](https://github.com/Aiko-IT-Systems/DisCatSharp.TemplateApp)
+- [Public support app for the DisCatSharp server](https://github.com/Aiko-IT-Systems/DisCatSharp.Support)
+
+## Visual Studio tools
+
+- [DisCatSharp Analyzer documentation](https://docs.dcs.aitsys.dev/vs/index)
+- [Snippets for Visual Studio](https://github.com/Aiko-IT-Systems/DisCatSharp.Snippets)
 
 ----
 
@@ -67,51 +112,52 @@ Either join our official support guild at https://discord.gg/RXA6u3jxdU, open an
 
 ### Main
 
-| Package                         | LTS                                                                                                             | Latest                                                                                                                                |
-| ------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| DisCatSharp                     | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.svg?label=&logo=nuget&style=flat-square)                     | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)                     |
-| DisCatSharp.ApplicationCommands | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.ApplicationCommands.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.ApplicationCommands.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
-| DisCatSharp.CommandsNext        | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.CommandsNext.svg?label=&logo=nuget&style=flat-square)        | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.CommandsNext.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)        |
-| DisCatSharp.Interactivity       | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Interactivity.svg?label=&logo=nuget&style=flat-square)       | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Interactivity.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)       |
+| Package | Purpose | LTS | Latest |
+| --- | --- | --- | --- |
+| [DisCatSharp](https://www.nuget.org/packages/DisCatSharp) | Core Discord API client with Gateway, REST, entities, and events. | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
+| [DisCatSharp.ApplicationCommands](https://www.nuget.org/packages/DisCatSharp.ApplicationCommands) | Slash commands, context menus, autocomplete, and command groups. | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.ApplicationCommands.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.ApplicationCommands.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
+| [DisCatSharp.CommandsNext](https://www.nuget.org/packages/DisCatSharp.CommandsNext) | Prefix and text command framework. | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.CommandsNext.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.CommandsNext.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
+| [DisCatSharp.Interactivity](https://www.nuget.org/packages/DisCatSharp.Interactivity) | Interactive waits, pagination, components, modals, and response helpers. | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Interactivity.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Interactivity.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
 
 ### Voice
 
-| Package                       | LTS                                                                                                         | Latest                                                                                                                           |
-| ----------------------------- | -------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| DisCatSharp.Lavalink          | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Lavalink.svg?label=&logo=nuget&style=flat-square)          | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Lavalink.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)          |
-| DisCatSharp.Voice             | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Voice.svg?label=&logo=nuget&style=flat-square)             | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Voice.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)             |
-| DisCatSharp.Voice.Natives     | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Voice.Natives.svg?label=&logo=nuget&style=flat-square)     | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Voice.Natives.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)     |
+| Package | Purpose | LTS | Latest |
+| --- | --- | --- | --- |
+| [DisCatSharp.Lavalink](https://www.nuget.org/packages/DisCatSharp.Lavalink) | Lavalink v4 client for remote audio playback. | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Lavalink.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Lavalink.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
+| [DisCatSharp.Voice](https://www.nuget.org/packages/DisCatSharp.Voice) | Direct Discord voice connections with audio send, receive, and DAVE support. | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Voice.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Voice.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
+| [DisCatSharp.Voice.Natives](https://www.nuget.org/packages/DisCatSharp.Voice.Natives) | Native runtime libraries used by DisCatSharp.Voice. | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Voice.Natives.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Voice.Natives.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
 
 ### Hosting
 
-| Package                                 | LTS                                                                                                                   | Latest                                                                                                                                     |
-| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| DisCatSharp.Configuration               | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Configuration.svg?label=&logo=nuget&style=flat-square)               | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Configuration.svg?label=&logo=nuget&color=%23ff1493&style=flat-square)               |
-| DisCatSharp.Hosting                     | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Hosting.svg?label=&logo=nuget&style=flat-square)                     | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Hosting.svg?label=&logo=nuget&color=%23ff1493&style=flat-square)                     |
-| DisCatSharp.Hosting.AspNetCore          | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Hosting.AspNetCore.svg?label=&logo=nuget&style=flat-square)          | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Hosting.AspNetCore.svg?label=&logo=nuget&color=%23ff1493&style=flat-square)          |
-| DisCatSharp.Hosting.DependencyInjection | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Hosting.DependencyInjection.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Hosting.DependencyInjection.svg?label=&logo=nuget&color=%23ff1493&style=flat-square) |
+| Package | Purpose | LTS | Latest |
+| --- | --- | --- | --- |
+| [DisCatSharp.Configuration](https://www.nuget.org/packages/DisCatSharp.Configuration) | Configuration models and binding for hosted bots. | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Configuration.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Configuration.svg?label=&logo=nuget&color=%23ff1493&style=flat-square) |
+| [DisCatSharp.Hosting](https://www.nuget.org/packages/DisCatSharp.Hosting) | .NET Generic Host integration and bot lifetime management. | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Hosting.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Hosting.svg?label=&logo=nuget&color=%23ff1493&style=flat-square) |
+| [DisCatSharp.Hosting.AspNetCore](https://www.nuget.org/packages/DisCatSharp.Hosting.AspNetCore) | ASP.NET Core ingress for interactions, webhooks, OAuth callbacks, and linked roles. | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Hosting.AspNetCore.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Hosting.AspNetCore.svg?label=&logo=nuget&color=%23ff1493&style=flat-square) |
+| [DisCatSharp.Hosting.DependencyInjection](https://www.nuget.org/packages/DisCatSharp.Hosting.DependencyInjection) | Dependency-injection helpers for clients and hosted bots. | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Hosting.DependencyInjection.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Hosting.DependencyInjection.svg?label=&logo=nuget&color=%23ff1493&style=flat-square) |
 
 ### Templates
 
-| Package                                                                                         | LTS                                                                                                        | Latest                                                                                                                          |
-| ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| [DisCatSharp.ProjectTemplates](https://github.com/Aiko-IT-Systems/DisCatSharp.ProjectTemplates) | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.ProjectTemplates.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.ProjectTemplates.svg?label=&logo=nuget&color=%23ff1493&style=flat-square) |
+| Package | Purpose | LTS | Latest |
+| --- | --- | --- | --- |
+| [DisCatSharp.ProjectTemplates](https://www.nuget.org/packages/DisCatSharp.ProjectTemplates) | Project templates for creating hosted DisCatSharp bots. | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.ProjectTemplates.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.ProjectTemplates.svg?label=&logo=nuget&color=%23ff1493&style=flat-square) |
 
 ### Development / Commons
 
-| Package                | LTS                                                                                                  | Latest                                                                                                                    |
-| ---------------------- | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| DisCatSharp.Attributes | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Attributes.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Attributes.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
-| DisCatSharp.Common     | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Common.svg?label=&logo=nuget&style=flat-square)     | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Common.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)     |
-| DisCatSharp.Analyzer   | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Analyzer.svg?label=&logo=nuget&style=flat-square)   | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Analyzer.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)   |
+| Package | Purpose | LTS | Latest |
+| --- | --- | --- | --- |
+| [DisCatSharp.Attributes](https://www.nuget.org/packages/DisCatSharp.Attributes) | Shared annotations used by DisCatSharp packages and tooling. | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Attributes.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Attributes.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
+| [DisCatSharp.Common](https://www.nuget.org/packages/DisCatSharp.Common) | Shared utilities, regular expressions, and converters. | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Common.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Common.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
+| [DisCatSharp.Experimental](https://www.nuget.org/packages/DisCatSharp.Experimental) | Experimental and unsupported Discord features that may change without notice. | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Experimental.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Experimental.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
+| [DisCatSharp.Analyzer](https://www.nuget.org/packages/DisCatSharp.Analyzer) | Recommended analyzers and code fixes for DisCatSharp applications. | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Analyzer.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Analyzer.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
 
 ### [Extensions](https://github.com/Aiko-IT-Systems/DisCatSharp.Extensions)
 
-| Package                                    | LTS                                                                                                                      | Latest                                                                                                                                        |
-| ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| DisCatSharp.Extensions.TwoFactorCommands   | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Extensions.TwoFactorCommands.svg?label=&logo=nuget&style=flat-square)   | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Extensions.TwoFactorCommands.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)   |
-| DisCatSharp.Extensions.OAuth2Web           | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Extensions.OAuth2Web.svg?label=&logo=nuget&style=flat-square)           | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Extensions.OAuth2Web.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)           |
-| DisCatSharp.Extensions.SimpleMusicCommands | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Extensions.SimpleMusicCommands.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Extensions.SimpleMusicCommands.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
+| Package | Purpose | LTS | Latest |
+| --- | --- | --- | --- |
+| [DisCatSharp.Extensions.TwoFactorCommands](https://www.nuget.org/packages/DisCatSharp.Extensions.TwoFactorCommands) | Require two-factor authentication for selected commands. | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Extensions.TwoFactorCommands.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Extensions.TwoFactorCommands.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
+| [DisCatSharp.Extensions.OAuth2Web](https://www.nuget.org/packages/DisCatSharp.Extensions.OAuth2Web) | **Deprecated.** Legacy OAuth web server; [migrate to DisCatSharp.Hosting.AspNetCore](https://docs.dcs.aitsys.dev/articles/modules/web_ingress/migration_from_oauth2web). | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Extensions.OAuth2Web.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Extensions.OAuth2Web.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
+| [DisCatSharp.Extensions.SimpleMusicCommands](https://www.nuget.org/packages/DisCatSharp.Extensions.SimpleMusicCommands) | Ready-to-use commands for building a simple music bot. | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Extensions.SimpleMusicCommands.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Extensions.SimpleMusicCommands.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
 
 
 ----

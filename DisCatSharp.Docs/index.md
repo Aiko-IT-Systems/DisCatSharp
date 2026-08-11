@@ -60,6 +60,39 @@ _disableNextArticle: true
 	</div>
 </section>
 
+<section class="catpunk-panel">
+	<div class="catpunk-eyebrow">AI-ready docs</div>
+	<h2>Give your coding agent sharper claws.</h2>
+	<p>
+		Install the version-aware DisCatSharp skill for library guidance, then connect the public documentation MCP for live
+		API search, conceptual articles, overload-safe symbols, and indexed source lookup.
+	</p>
+	<div class="catpunk-card-grid" aria-label="AI coding assistant setup">
+		<div class="catpunk-card">
+			<h3>Install the skill</h3>
+			<p>Install <code>use-discatsharp</code> globally so Codex can use it in every project.</p>
+			<br/>
+			<div class="catpunk-terminal">
+				<div class="catpunk-terminal-bar"><span class="catpunk-dot" aria-hidden="true"></span></div>
+				<pre><code class="lang-powershell">gh skill install Aiko-IT-Systems/DisCatSharp use-discatsharp --agent codex --scope user --pin main</code></pre>
+			</div>
+		</div>
+		<div class="catpunk-card">
+			<h3>Connect the live docs</h3>
+			<p>Add this URL as a Streamable HTTP MCP server named <code>discatsharp</code>.</p>
+			<br/>
+			<div class="catpunk-terminal">
+				<div class="catpunk-terminal-bar"><span class="catpunk-dot" aria-hidden="true"></span></div>
+				<pre><code>https://docs.dcs.aitsys.dev/mcp</code></pre>
+			</div>
+		</div>
+	</div>
+	<div class="catpunk-actions">
+		<a class="catpunk-button" href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/skills/README.md#install">Install guide</a>
+		<a class="catpunk-button secondary" href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/skills/README.md#connect-the-documentation-mcp">MCP setup</a>
+	</div>
+</section>
+
 <section class="catpunk-link-grid" aria-label="Quick links">
 	<a class="catpunk-link-card" href="/articles/getting_started/first_bot">
 		<strong>Getting Started</strong>

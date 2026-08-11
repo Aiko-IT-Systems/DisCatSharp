@@ -31,6 +31,9 @@ items:
   - uid: DisCatSharp.DiscordOAuth2Client
     name: DiscordOAuth2Client
     type: Class
+  - uid: DisCatSharp.DiscordOAuth2ClientConfiguration
+    name: DiscordOAuth2ClientConfiguration
+    type: Class
   - uid: DisCatSharp.DiscordShardedClient
     name: DiscordShardedClient
     type: Class

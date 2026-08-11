@@ -748,6 +748,11 @@ body[data-uid="404"] .catpunk-article {
 	rgba(28, 22, 36, 0.88);
 }
 
+.catpunk-panel + .catpunk-panel,
+.catpunk-panel + .catpunk-link-grid {
+	margin-top: clamp(1.25rem, 3vw, 2rem);
+}
+
 .catpunk-card h3,
 .catpunk-panel h2,
 .catpunk-panel h3 {

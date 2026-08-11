@@ -2,15 +2,16 @@ importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox
 
 if (workbox) {
 	console.log("Workbox is loaded, senpai!");
+	self.skipWaiting();
 
-	workbox.precaching.precacheAndRoute([{ url: '/index.html', revision: null }]);
-
+	// Keep first-party images available offline without intercepting CDN requests.
 	workbox.routing.registerRoute(
-		({ url }) =>
-			url.pathname.startsWith('/images/') || url.pathname.startsWith('/public/'),
+		({ request, url }) =>
+			url.origin === self.location.origin && request.destination === 'image',
 		new workbox.strategies.CacheFirst({
-			cacheName: 'static-assets',
+			cacheName: 'dcs-images-v2',
 			plugins: [
+				new workbox.cacheableResponse.CacheableResponsePlugin({ statuses: [200] }),
 				new workbox.expiration.ExpirationPlugin({
 					maxEntries: 100,
 					maxAgeSeconds: 7 * 24 * 60 * 60, // 1 week
@@ -19,14 +20,18 @@ if (workbox) {
 		})
 	);
 
+	// CDN resources already have their own caching. Only cache successful same-origin styles and scripts.
 	workbox.routing.registerRoute(
-		({ request }) =>
-			request.destination === 'image' ||
+		({ request, url }) =>
+			url.origin === self.location.origin && (
 			request.destination === 'style' ||
-			request.destination === 'script',
+			request.destination === 'script' ||
+			request.destination === 'worker'
+			),
 		new workbox.strategies.StaleWhileRevalidate({
-			cacheName: 'asset-cache',
+			cacheName: 'dcs-assets-v2',
 			plugins: [
+				new workbox.cacheableResponse.CacheableResponsePlugin({ statuses: [200] }),
 				new workbox.expiration.ExpirationPlugin({
 					maxEntries: 200,
 					maxAgeSeconds: 30 * 24 * 60 * 60,
@@ -36,10 +41,12 @@ if (workbox) {
 	);
 
 	workbox.routing.registerRoute(
-		({ request }) => request.mode === 'navigate',
+		({ request, url }) =>
+			url.origin === self.location.origin && request.mode === 'navigate',
 		new workbox.strategies.NetworkFirst({
-			cacheName: 'pages-cache',
+			cacheName: 'dcs-pages-v2',
 			plugins: [
+				new workbox.cacheableResponse.CacheableResponsePlugin({ statuses: [200] }),
 				new workbox.expiration.ExpirationPlugin({
 					maxEntries: 50,
 					maxAgeSeconds: 7 * 24 * 60 * 60,
@@ -47,6 +54,19 @@ if (workbox) {
 			],
 		})
 	);
+
+	self.addEventListener("activate", (event) => {
+		const retiredCaches = new Set(['static-assets', 'asset-cache', 'pages-cache']);
+		event.waitUntil(
+			caches.keys()
+				.then((cacheNames) => Promise.all(
+					cacheNames
+						.filter((cacheName) => retiredCaches.has(cacheName))
+						.map((cacheName) => caches.delete(cacheName))
+				))
+				.then(() => self.clients.claim())
+		);
+	});
 
 	self.addEventListener("message", (event) => {
 		if (event.data && event.data.type === "SKIP_WAITING") {
