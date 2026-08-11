@@ -4,7 +4,7 @@
 
 1. The user's checked-out source, project files, restored assets, and installed package version.
 2. DisCatSharp MCP results from `https://docs.dcs.aitsys.dev/mcp`.
-3. Public HTTP search at `https://docs.dcs.aitsys.dev/_search?q=<query>` and the linked documentation pages.
+3. Public HTTP search at `https://docs.dcs.aitsys.dev/_search?q=<query>` and the linked documentation pages. Add `corpus=main` or `corpus=extensions` to select one repository, or omit `corpus` to search both. The optional `module` parameter accepts exact package names from [modules.md](modules.md).
 4. Repository source at `https://github.com/Aiko-IT-Systems/DisCatSharp`.
 
 `discatsharp-ai.xml` is a generated Repomix snapshot for offline context and evaluation. It may be stale. Never prefer it over live files, an installed package, or the current MCP corpus.

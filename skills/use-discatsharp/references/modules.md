@@ -18,4 +18,14 @@ Use the consuming project and current documentation to confirm package names and
 | Experimental | `DisCatSharp.Experimental` | Explicitly experimental Discord or library surfaces |
 | Analyzers | `DisCatSharp.Analyzer` | Compile-time migration and usage diagnostics |
 
+## Official Extensions
+
+These packages live in `Aiko-IT-Systems/DisCatSharp.Extensions` and use the `extensions` documentation corpus.
+
+| Area | Primary package | Use it for |
+| --- | --- | --- |
+| Two-factor commands | `DisCatSharp.Extensions.TwoFactorCommands` | TOTP enrollment, verification, and command-flow helpers |
+| Simple music commands | `DisCatSharp.Extensions.SimpleMusicCommands` | Prebuilt Lavalink-backed music commands and controls |
+| Legacy OAuth web server | `DisCatSharp.Extensions.OAuth2Web` | Maintaining existing embedded OAuth2 web-server integrations; deprecated in favor of `DisCatSharp.Hosting.AspNetCore` |
+
 Do not add every package by default. Choose the smallest module set required by the feature and preserve the application's existing hosting model.

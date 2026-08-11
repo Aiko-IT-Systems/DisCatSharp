@@ -30,6 +30,8 @@ When the DisCatSharp documentation MCP is connected, use the smallest useful seq
 
 Preserve overload-specific IDs and URLs. A search result is a candidate, not complete documentation. Do not fabricate a UID, document ID, source path, signature, or overload.
 
+When MCP is unavailable but HTTP access is possible, query `https://docs.dcs.aitsys.dev/_search?q=<query>`. Add `corpus=main` or `corpus=extensions` when the owning repository is known; omit it to search both. Use an exact module name from [references/modules.md](references/modules.md) with `module=<package>` only when narrowing further is useful.
+
 For Discord platform behavior—payloads, permissions, intents, Gateway events, rate limits, REST semantics, or application-command rules—consult the official Discord Documentation MCP at `https://docs.discord.com/mcp` when it is available. Clearly separate Discord's contract from DisCatSharp's representation of it.
 
 Read [references/evidence-and-fallbacks.md](references/evidence-and-fallbacks.md) when MCP is unavailable, results conflict with the installed version, or a lookup returns no match.
