@@ -26,11 +26,20 @@ describe("documentation release workflow", () => {
     expect(waitForDocs).toBeLessThan(activate);
     expect(activate).toBeLessThan(expectedBuildSmoke);
     expect(source).toContain("DCS_DOCS_BASE_URL: https://discatsharp-docs.pages.dev");
+    expect(source.match(/DCS_SEARCH_BASE_URL: https:\/\/discatsharp-docs-search\.aitsys\.workers\.dev/gu)).toHaveLength(2);
   });
 
   it("writes the release marker in both production and preview builds", async () => {
     for (const name of ["documentation.yml", "documentation_test.yml"]) {
       expect(await workflow(name)).toContain("npm run marker -- ../obj/search/search-index.json ../_site/search-build.json");
     }
+  });
+
+  it("uses Workers.dev for CI smoke tests so zone bot challenges cannot block deployments", async () => {
+    const preview = await workflow("documentation_test.yml");
+    expect(preview).toContain("DCS_SEARCH_BASE_URL: https://discatsharp-docs-search.aitsys.workers.dev");
+
+    const wrangler = await readFile(resolve("wrangler.jsonc"), "utf8");
+    expect(JSON.parse(wrangler)).toMatchObject({ workers_dev: true, preview_urls: false });
   });
 });

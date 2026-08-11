@@ -119,8 +119,9 @@ jobs:
                   CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
               run: npm run deploy
               working-directory: DisCatSharp.Docs/search
-            - name: Smoke test existing production search and MCP
-              if: env.DCS_SEARCH_FIRST_DEPLOYMENT == 'false'
+            - name: Smoke test deployed Worker on Workers.dev
+              env:
+                  DCS_SEARCH_BASE_URL: https://discatsharp-docs-search.aitsys.workers.dev
               run: npm run smoke:production
               working-directory: DisCatSharp.Docs/search
             - name: Pack Docs
@@ -231,8 +232,9 @@ jobs:
                   CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
               run: npm run sync:activate -- ../obj/search/search-index.json
               working-directory: DisCatSharp.Docs/search
-            - name: Smoke test search and MCP
+            - name: Smoke test active search and MCP on Workers.dev
               env:
+                  DCS_SEARCH_BASE_URL: https://discatsharp-docs-search.aitsys.workers.dev
                   EXPECTED_BUILD_SHA: ${{ github.sha }}
               run: npm run smoke:production
               working-directory: DisCatSharp.Docs/search

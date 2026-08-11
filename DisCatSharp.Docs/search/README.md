@@ -114,10 +114,12 @@ npm run sync -- ../obj/search/search-index.json
 # Only on the first deployment, while the route-free bootstrap is available:
 npm run smoke:workers-dev
 npm run deploy
+npm run smoke:workers-dev
 # Publish DisCatSharp.Docs/_site, then wait for its matching marker before activation:
 npm run wait:docs -- ../obj/search/search-index.json
 npm run sync:activate -- ../obj/search/search-index.json
 $env:EXPECTED_BUILD_SHA = (git rev-parse HEAD)
+$env:DCS_SEARCH_BASE_URL = "https://discatsharp-docs-search.aitsys.workers.dev"
 npm run smoke:production
 ```
 
