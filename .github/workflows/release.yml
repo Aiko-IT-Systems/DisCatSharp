@@ -271,7 +271,7 @@ jobs:
                   NUGET_API_KEY: ${{ steps.nuget_login.outputs.NUGET_API_KEY }}
               run: |
                   Get-ChildItem -Path . -File |
-                      Where-Object Extension -In ".nupkg", ".snupkg" |
+                      Where-Object Extension -EQ ".nupkg" |
                       ForEach-Object {
                           dotnet nuget push $_.FullName `
                               --source https://api.nuget.org/v3/index.json `
