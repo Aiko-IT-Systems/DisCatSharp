@@ -15,6 +15,12 @@ labels:
     - label: "documentation"
       files:
           - "DisCatSharp.Docs/.*"
+    - label: "agent skills"
+      files:
+          - "skills/.*"
+          - "AGENTS.md"
+          - "CLAUDE.md"
+          - "GEMINI.md"
     - label: "experimental"
       title: ^[Exp]:.*
     - label: "dependencies"

@@ -134,6 +134,7 @@ DisCatSharp.Docs/obj/search/
 DisCatSharp.Docs/search/dist*/
 DisCatSharp.Docs/search/wrangler.production.json
 DisCatSharp.Docs/search/wrangler.bootstrap.production.json
+.release/
 
 # Ignore Copilot catgirl instructions
 .github/instructions/lala.instructions.md

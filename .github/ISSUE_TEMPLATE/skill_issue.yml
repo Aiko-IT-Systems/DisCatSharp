@@ -1,0 +1,100 @@
+name: Skill Issue
+description: Report incorrect guidance, installation trouble, or MCP integration problems with the DisCatSharp Agent Skills
+labels: ["agent skills"]
+body:
+  - type: markdown
+    attributes:
+      value: >
+        Thanks for helping improve the DisCatSharp Agent Skills. Use the normal bug
+        report for a problem in the library itself. Never include bot tokens, API
+        keys, authorization headers, private source, or other secrets.
+  - type: dropdown
+    id: category
+    attributes:
+      label: Issue category
+      options:
+        - Incorrect or outdated guidance
+        - Skill did not trigger
+        - Installation or update
+        - Documentation MCP integration
+        - Agent compatibility
+        - Other skill behavior
+    validations:
+      required: true
+  - type: dropdown
+    id: skill
+    attributes:
+      label: Skill
+      options:
+        - use-discatsharp
+        - maintain-discatsharp
+        - Both
+    validations:
+      required: true
+  - type: input
+    id: platform
+    attributes:
+      label: Agent platform and version
+      description: For example, Codex app 26.x or GitHub Copilot CLI 1.x.
+    validations:
+      required: true
+  - type: input
+    id: skill_version
+    attributes:
+      label: Installed skill tag or commit
+      description: For example, v10.7.1, a nightly tag, main, or a commit SHA.
+    validations:
+      required: true
+  - type: input
+    id: discatsharp_version
+    attributes:
+      label: DisCatSharp version
+      description: The package version used by the affected project, if applicable.
+  - type: dropdown
+    id: mcp
+    attributes:
+      label: Documentation MCP state
+      options:
+        - Connected and tools available
+        - Configured but not connected
+        - Not configured
+        - Unsure
+    validations:
+      required: true
+  - type: textarea
+    id: prompt
+    attributes:
+      label: Original prompt
+      description: Include the smallest prompt that reproduces the problem.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include relevant sanitized output or tool errors.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add installation commands, links, or a minimal public reproduction if useful.
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues for duplicates.
+          required: true
+        - label: I removed bot tokens, API keys, authorization headers, and private source.
+          required: true
+        - label: I verified whether this is a skill problem rather than a DisCatSharp library bug.
+          required: true

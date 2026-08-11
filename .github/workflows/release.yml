@@ -27,6 +27,15 @@ on:
                     - "DisCatSharp.Attributes"
                     - "DisCatSharp.Analyzer"
 
+permissions:
+    contents: write
+    id-token: write
+    attestations: write
+
+concurrency:
+    group: release-${{ inputs.packages_to_release }}
+    cancel-in-progress: false
+
 env:
     DOTNET_NOLOGO: true
     DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
@@ -35,24 +44,51 @@ env:
     SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
     SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
     SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+    GH_TOKEN: ${{ github.token }}
 
 jobs:
     release:
-        timeout-minutes: 30
+        timeout-minutes: 45
         runs-on: ubuntu-latest
-        name: Build library and release
+        name: Build, attest, and release
         steps:
             - name: Checkout repository
               uses: actions/checkout@v7
               with:
                   fetch-depth: 0
-            - name: Check Intention
-              if: ${{!inputs.release_as_prerelease}}
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: 24
+
+            - name: Validate release inputs
+              env:
+                  PACKAGE_FAMILY: ${{ inputs.packages_to_release }}
+                  IS_PRERELEASE: ${{ inputs.release_as_prerelease }}
+                  CONFIRM_FULL_RELEASE: ${{ inputs.confirm_full_release }}
+                  VERSION_SUFFIX: ${{ inputs.version_suffix }}
+              run: >-
+                  node .github/scripts/release-tools.mjs validate-inputs
+                  --family "$PACKAGE_FAMILY"
+                  --prerelease "$IS_PRERELEASE"
+                  --confirm "$CONFIRM_FULL_RELEASE"
+                  --suffix "$VERSION_SUFFIX"
+
+            - name: Require immutable releases
+              env:
+                  GH_TOKEN: ${{ secrets.NYUW_TOKEN_GH }}
               run: |
-                  if [ "${{ inputs.confirm_full_release }}" = "false" ]; then
-                    echo "Full release not confirmed, exiting."
+                  enabled=$(gh api \
+                    -H "Accept: application/vnd.github+json" \
+                    -H "X-GitHub-Api-Version: 2026-03-10" \
+                    "repos/${GITHUB_REPOSITORY}/immutable-releases" \
+                    --jq '.enabled')
+                  test "$enabled" = "true" || {
+                    echo "Immutable releases must be enabled before publishing." >&2
                     exit 1
-                  fi
+                  }
+
             - name: Setup .NET
               uses: actions/setup-dotnet@v6.0.0
               with:
@@ -60,87 +96,227 @@ jobs:
                       11.x
                       10.x
                       9.x
-            - name: Restore dependencies (DisCatSharp)
-              if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp' }}
-              run: dotnet restore --no-cache -f -v minimal DisCatSharp.Release.slnx
-            - name: Restore dependencies (DisCatSharp.Attributes)
-              if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp.Attributes' }}
-              run: dotnet restore --no-cache -f -v minimal DisCatSharp.Attributes/DisCatSharp.Attributes.csproj
-            - name: Restore dependencies (DisCatSharp.Analyzer)
-              if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp.Analyzer' }}
-              run: dotnet restore --no-cache -f -v minimal DisCatSharp.Tools/DisCatSharp.Analyzer/DisCatSharp.Analyzer.Package/DisCatSharp.Analyzer.Package.csproj
-            - name: Build DisCatSharp as full release
-              if: ${{!inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp'}}
+
+            - name: Build selected package family
               shell: pwsh
-              run: ./DisCatSharp.Tools/rebuild-lib.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release
               env:
-                  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-                  SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-                  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-            - name: Build DisCatSharp as pre-release
-              if: ${{inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp'}}
-              shell: pwsh
-              run: ./DisCatSharp.Tools/rebuild-lib.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release -VersionSuffix ${{github.event.inputs.version_suffix}}
-              env:
-                  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-                  SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-                  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-            - name: Build DisCatSharp.Attributes as full release
-              if: ${{!inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp.Attributes'}}
-              shell: pwsh
-              run: ./DisCatSharp.Tools/rebuild-attributes.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release
-            - name: Build DisCatSharp.Attributes as pre-release
-              if: ${{inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp.Attributes'}}
-              shell: pwsh
-              run: ./DisCatSharp.Tools/rebuild-attributes.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release -VersionSuffix ${{github.event.inputs.version_suffix}}
-            - name: Build DisCatSharp.Analyzer as full release
-              if: ${{!inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp.Analyzer'}}
-              shell: pwsh
-              run: ./DisCatSharp.Tools/rebuild-tools.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release
-            - name: Build DisCatSharp.Analyzer as pre-release
-              if: ${{inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp.Analyzer'}}
-              shell: pwsh
-              run: ./DisCatSharp.Tools/rebuild-tools.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release -VersionSuffix ${{github.event.inputs.version_suffix}}
-            - name: Remove invalid packages
-              if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp' }}
-              shell: pwsh
-              run: rm *.symbols.*
-              working-directory: ./dcs-artifacts
-            - name: Publish to NuGet
+                  PACKAGE_FAMILY: ${{ inputs.packages_to_release }}
+                  IS_PRERELEASE: ${{ inputs.release_as_prerelease }}
+                  VERSION_SUFFIX: ${{ inputs.version_suffix }}
+              run: |
+                  $script = switch ($env:PACKAGE_FAMILY) {
+                      "DisCatSharp" { "./DisCatSharp.Tools/rebuild-lib.ps1" }
+                      "DisCatSharp.Attributes" { "./DisCatSharp.Tools/rebuild-attributes.ps1" }
+                      "DisCatSharp.Analyzer" { "./DisCatSharp.Tools/rebuild-tools.ps1" }
+                      default { throw "Unsupported package family: $env:PACKAGE_FAMILY" }
+                  }
+
+                  $arguments = @(
+                      "-ArtifactLocation", "./dcs-artifacts",
+                      "-Configuration", "Release"
+                  )
+                  if ($env:IS_PRERELEASE -eq "true") {
+                      $arguments += @("-VersionSuffix", $env:VERSION_SUFFIX)
+                  }
+
+                  & $script @arguments
+                  if ($LASTEXITCODE -ne 0) {
+                      exit $LASTEXITCODE
+                  }
+
+            - name: Prepare release artifacts
               shell: pwsh
               run: |
-                  if (Test-Path *.nupkg) {
-                    dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}} --skip-duplicate
-                  }
-              working-directory: ./dcs-artifacts
-            - name: Publish Sources to NuGet
-              shell: pwsh
+                  Get-ChildItem -Path ./dcs-artifacts -Filter *.symbols.nupkg -File |
+                      Remove-Item -Force
+                  Copy-Item -LiteralPath ./RELEASENOTES.md -Destination ./dcs-artifacts/RELEASENOTES.md
+
+            - name: Resolve built release metadata
+              id: release
+              env:
+                  PACKAGE_FAMILY: ${{ inputs.packages_to_release }}
+                  IS_PRERELEASE: ${{ inputs.release_as_prerelease }}
+                  VERSION_SUFFIX: ${{ inputs.version_suffix }}
+              run: >-
+                  node .github/scripts/release-tools.mjs metadata
+                  --artifacts dcs-artifacts
+                  --family "$PACKAGE_FAMILY"
+                  --prerelease "$IS_PRERELEASE"
+                  --suffix "$VERSION_SUFFIX"
+
+            - name: Resolve generated-notes baseline
+              id: notes
+              env:
+                  PACKAGE_FAMILY: ${{ inputs.packages_to_release }}
+                  IS_PRERELEASE: ${{ inputs.release_as_prerelease }}
+                  RELEASE_TAG: ${{ steps.release.outputs.tag }}
               run: |
-                  if (Test-Path *.snupkg) {
-                    dotnet nuget push *.snupkg --source https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}} --skip-duplicate
+                  mkdir -p .release
+                  gh release list --limit 1000 \
+                    --json tagName,isPrerelease,isDraft,publishedAt \
+                    > .release/releases.json
+                  node .github/scripts/release-tools.mjs previous-tag \
+                    --releases .release/releases.json \
+                    --family "$PACKAGE_FAMILY" \
+                    --prerelease "$IS_PRERELEASE" \
+                    --tag "$RELEASE_TAG"
+
+            - name: Inspect existing release
+              id: state
+              env:
+                  RELEASE_TAG: ${{ steps.release.outputs.tag }}
+              run: |
+                  if ! gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${RELEASE_TAG}" \
+                    > .release/existing-release.json \
+                    2> .release/release-error.txt; then
+                    if grep -q "HTTP 404" .release/release-error.txt; then
+                      echo 'null' > .release/existing-release.json
+                    else
+                      cat .release/release-error.txt >&2
+                      exit 1
+                    fi
+                  fi
+                  node .github/scripts/release-tools.mjs release-state \
+                    --release .release/existing-release.json \
+                    --tag "$RELEASE_TAG" \
+                    --commit "$GITHUB_SHA"
+
+            - name: Generate build provenance
+              if: steps.state.outputs.release_state != 'verify'
+              uses: actions/attest@v4
+              with:
+                  subject-path: "dcs-artifacts/*"
+
+            - name: Verify build provenance
+              run: |
+                  retry() {
+                    for attempt in {1..6}; do
+                      "$@" && return 0
+                      if [ "$attempt" -lt 6 ]; then sleep 5; fi
+                    done
+                    return 1
                   }
+
+                  for artifact in dcs-artifacts/*; do
+                    retry gh attestation verify "$artifact" \
+                      --repo "$GITHUB_REPOSITORY"
+                  done
+
+            - name: Create or resume draft release
+              if: steps.state.outputs.release_state != 'verify'
+              env:
+                  RELEASE_STATE: ${{ steps.state.outputs.release_state }}
+                  RELEASE_TAG: ${{ steps.release.outputs.tag }}
+                  RELEASE_TITLE: ${{ steps.release.outputs.title }}
+                  PREVIOUS_TAG: ${{ steps.notes.outputs.previous_tag }}
+                  IS_PRERELEASE: ${{ inputs.release_as_prerelease }}
+              run: |
+                  if [ "$RELEASE_STATE" = "create" ]; then
+                    arguments=(
+                      "$RELEASE_TAG"
+                      --draft
+                      --target "$GITHUB_SHA"
+                      --title "$RELEASE_TITLE"
+                      --generate-notes
+                    )
+                    if [ -n "$PREVIOUS_TAG" ]; then
+                      arguments+=(--notes-start-tag "$PREVIOUS_TAG")
+                    fi
+                    if [ "$IS_PRERELEASE" = "true" ]; then
+                      arguments+=(--prerelease --latest=false)
+                    elif [[ "$RELEASE_TAG" = v* ]]; then
+                      arguments+=(--latest)
+                    else
+                      arguments+=(--latest=false)
+                    fi
+                    gh release create "${arguments[@]}"
+                  fi
+
+                  gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${RELEASE_TAG}" \
+                    > .release/draft-release.json
+
+                  declare -A expected_assets
+                  for artifact in dcs-artifacts/*; do
+                    expected_assets["$(basename "$artifact")"]=1
+                  done
+
+                  while IFS=$'\t' read -r asset_id asset_name; do
+                    if [ -z "${expected_assets[$asset_name]+present}" ]; then
+                      gh api --method DELETE \
+                        "repos/${GITHUB_REPOSITORY}/releases/assets/${asset_id}"
+                    fi
+                  done < <(jq -r '.assets[] | [.id, .name] | @tsv' .release/draft-release.json)
+
+                  gh release upload "$RELEASE_TAG" dcs-artifacts/* --clobber
+
+            - name: Publish packages to NuGet
+              if: steps.state.outputs.release_state != 'verify'
+              shell: pwsh
+              env:
+                  NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+              run: |
+                  Get-ChildItem -Path . -File |
+                      Where-Object Extension -EQ ".nupkg" |
+                      ForEach-Object {
+                          dotnet nuget push $_.FullName `
+                              --source https://api.nuget.org/v3/index.json `
+                              --api-key $env:NUGET_API_KEY `
+                              --skip-duplicate
+                          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+                      }
               working-directory: ./dcs-artifacts
+
+            - name: Publish symbols to NuGet
+              if: steps.state.outputs.release_state != 'verify'
+              shell: pwsh
+              env:
+                  NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+              run: |
+                  Get-ChildItem -Path . -File |
+                      Where-Object Extension -EQ ".snupkg" |
+                      ForEach-Object {
+                          dotnet nuget push $_.FullName `
+                              --source https://api.nuget.org/v3/index.json `
+                              --api-key $env:NUGET_API_KEY `
+                              --skip-duplicate
+                          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+                      }
+              working-directory: ./dcs-artifacts
+
             - name: Publish to GitHub Packages
+              if: steps.state.outputs.release_state != 'verify'
               shell: pwsh
-              run: dotnet nuget push --source https://nuget.pkg.github.com/Aiko-IT-Systems/index.json -k ${{secrets.NYUW_TOKEN_GH}} *
+              env:
+                  GITHUB_PACKAGES_TOKEN: ${{ secrets.NYUW_TOKEN_GH }}
+              run: |
+                  Get-ChildItem -Path . -File |
+                      Where-Object Extension -In ".nupkg", ".snupkg" |
+                      ForEach-Object {
+                          dotnet nuget push $_.FullName `
+                              --source https://nuget.pkg.github.com/Aiko-IT-Systems/index.json `
+                              --api-key $env:GITHUB_PACKAGES_TOKEN `
+                              --skip-duplicate
+                          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+                      }
               working-directory: ./dcs-artifacts
+
             - name: Extract version for Sentry
+              if: inputs.packages_to_release == 'DisCatSharp' && steps.state.outputs.release_state != 'verify'
               id: sentry_vars
               shell: bash
+              env:
+                  RELEASE_VERSION: ${{ steps.release.outputs.version }}
+                  IS_PRERELEASE: ${{ inputs.release_as_prerelease }}
               run: |
-                  VERSION=$(grep -oP '(?<=<VersionPrefix>)[^<]+' DisCatSharp.Targets/Version.targets)
-                  SUFFIX="${{ github.event.inputs.version_suffix }}"
-                  if [ -n "$SUFFIX" ]; then
-                    SENTRY_VERSION="DisCatSharp@${VERSION}-${SUFFIX}"
-                    SENTRY_ENV="dev"
+                  echo "version=DisCatSharp@${RELEASE_VERSION}" >> "$GITHUB_OUTPUT"
+                  if [ "$IS_PRERELEASE" = "true" ]; then
+                    echo "environment=dev" >> "$GITHUB_OUTPUT"
                   else
-                    SENTRY_VERSION="DisCatSharp@${VERSION}"
-                    SENTRY_ENV="production"
+                    echo "environment=production" >> "$GITHUB_OUTPUT"
                   fi
-                  echo "version=$SENTRY_VERSION" >> $GITHUB_OUTPUT
-                  echo "environment=$SENTRY_ENV" >> $GITHUB_OUTPUT
+
             - name: Create Sentry release
-              if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp' }}
+              if: inputs.packages_to_release == 'DisCatSharp' && steps.state.outputs.release_state != 'verify'
               uses: getsentry/action-release@v3.7.0
               env:
                   SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
@@ -150,8 +326,9 @@ jobs:
                   environment: ${{ steps.sentry_vars.outputs.environment }}
                   release: ${{ steps.sentry_vars.outputs.version }}
                   ignore_missing: true
+
             - name: Upload PDBs to Sentry
-              if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp' }}
+              if: inputs.packages_to_release == 'DisCatSharp' && steps.state.outputs.release_state != 'verify'
               shell: bash
               env:
                   SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
@@ -159,7 +336,51 @@ jobs:
                   SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
               run: |
                   mkdir -p ./pdb-upload
-                  for f in ./dcs-artifacts/*.snupkg; do
-                    unzip -o "$f" "*.pdb" -d ./pdb-upload/ || true
+                  for package in ./dcs-artifacts/*.snupkg; do
+                    unzip -o "$package" "*.pdb" -d ./pdb-upload/ || true
                   done
                   npx @sentry/cli debug-files upload --include-sources ./pdb-upload/
+
+            - name: Publish immutable GitHub Release
+              if: steps.state.outputs.release_state != 'verify'
+              env:
+                  RELEASE_TAG: ${{ steps.release.outputs.tag }}
+                  PACKAGE_FAMILY: ${{ inputs.packages_to_release }}
+                  IS_PRERELEASE: ${{ inputs.release_as_prerelease }}
+              run: |
+                  latest=false
+                  if [ "$PACKAGE_FAMILY" = "DisCatSharp" ] && [ "$IS_PRERELEASE" = "false" ]; then
+                    latest=true
+                  fi
+                  gh release edit "$RELEASE_TAG" --draft=false --latest="$latest"
+
+            - name: Verify immutable release and assets
+              env:
+                  RELEASE_TAG: ${{ steps.release.outputs.tag }}
+              run: |
+                  retry() {
+                    for attempt in {1..12}; do
+                      "$@" && return 0
+                      if [ "$attempt" -lt 12 ]; then sleep 5; fi
+                    done
+                    return 1
+                  }
+
+                  retry gh release verify "$RELEASE_TAG"
+
+                  mapfile -t local_assets < <(
+                    find dcs-artifacts -maxdepth 1 -type f -printf '%f\n' | sort
+                  )
+                  mapfile -t remote_assets < <(
+                    gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${RELEASE_TAG}" \
+                      --jq '.assets[].name' | sort
+                  )
+                  diff -u \
+                    <(printf '%s\n' "${local_assets[@]}") \
+                    <(printf '%s\n' "${remote_assets[@]}")
+
+                  for artifact in dcs-artifacts/*; do
+                    retry gh release verify-asset "$RELEASE_TAG" "$artifact"
+                    retry gh attestation verify "$artifact" \
+                      --repo "$GITHUB_REPOSITORY"
+                  done

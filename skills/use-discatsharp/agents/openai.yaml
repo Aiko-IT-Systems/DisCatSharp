@@ -1,0 +1,13 @@
+interface:
+  display_name: "Use DisCatSharp"
+  short_description: "Build and debug DisCatSharp Discord apps"
+  default_prompt: "Use $use-discatsharp to help me build this DisCatSharp feature."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "discatsharp"
+      description: "Current DisCatSharp API, conceptual documentation, and indexed source"
+      transport: "streamable_http"
+      url: "https://docs.dcs.aitsys.dev/mcp"
+policy:
+  allow_implicit_invocation: true

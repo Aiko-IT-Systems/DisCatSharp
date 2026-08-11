@@ -1,0 +1,13 @@
+interface:
+  display_name: "Maintain DisCatSharp"
+  short_description: "Safely contribute changes to DisCatSharp"
+  default_prompt: "Use $maintain-discatsharp to help me make this DisCatSharp change safely."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "discatsharp"
+      description: "Current DisCatSharp API, conceptual documentation, and indexed source"
+      transport: "streamable_http"
+      url: "https://docs.dcs.aitsys.dev/mcp"
+policy:
+  allow_implicit_invocation: true
