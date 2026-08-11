@@ -1,0 +1,30 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "discatsharp-docs-search",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-08",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [
+    {
+      "pattern": "docs.dcs.aitsys.dev/_search*",
+      "zone_name": "aitsys.dev"
+    },
+    {
+      "pattern": "docs.dcs.aitsys.dev/mcp*",
+      "zone_name": "aitsys.dev"
+    }
+  ],
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "discatsharp-docs-search",
+      "migrations_dir": "migrations"
+    }
+  ]
+}

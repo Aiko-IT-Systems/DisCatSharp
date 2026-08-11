@@ -102,6 +102,8 @@ appveyor-test.ps1
 .vscode/
 .vs/
 package-lock.json
+!DisCatSharp.Docs/search/package-lock.json
+.wrangler/
 git-filter-repo
 .manifest
 
@@ -128,6 +130,10 @@ Thumbs.db
 # Docs build cache (Temporary Disabled)
 DisCatSharp.Docs/obj/.cache/build/
 **/obj/.cache/build/
+DisCatSharp.Docs/obj/search/
+DisCatSharp.Docs/search/dist*/
+DisCatSharp.Docs/search/wrangler.production.json
+DisCatSharp.Docs/search/wrangler.bootstrap.production.json
 
 # Ignore Copilot catgirl instructions
 .github/instructions/lala.instructions.md

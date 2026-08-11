@@ -10,7 +10,7 @@ env:
 
 jobs:
     build:
-        timeout-minutes: 25
+        timeout-minutes: 45
         runs-on: ubuntu-latest
         name: Build documentation
         steps:
@@ -25,18 +25,98 @@ jobs:
                       11.x
                       10.x
                       9.x
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: 24
+                  cache: npm
+                  cache-dependency-path: DisCatSharp.Docs/search/package-lock.json
             - name: Git fetch unshallow
               run: git fetch --unshallow
             - name: Install DocFX
               run: dotnet tool update -g docfx
             - name: Restore packages
               run: dotnet restore --no-cache -f -v minimal DisCatSharp.slnx
+            - name: Install search dependencies
+              run: npm ci
+              working-directory: DisCatSharp.Docs/search
+            - name: Test search indexer
+              run: dotnet test DisCatSharp.Tools/DisCatSharp.Docs.SearchIndexer.Tests/DisCatSharp.Docs.SearchIndexer.Tests.csproj -c Release --no-restore -v minimal
             - name: Build library
               run: dotnet build -c Release --no-restore -v minimal -f net10.0 DisCatSharp.slnx
               timeout-minutes: 7
-              continue-on-error: true
             - name: Build Docs
               run: docfx DisCatSharp.Docs/docfx.json
+            - name: Remove stock browser search assets
+              shell: pwsh
+              run: |
+                  Remove-Item DisCatSharp.Docs/_site/index.json -ErrorAction SilentlyContinue
+                  Remove-Item DisCatSharp.Docs/_site/public/search-worker.min.js -ErrorAction SilentlyContinue
+            - name: Assert stock browser search assets are absent
+              shell: bash
+              run: |
+                  test ! -e DisCatSharp.Docs/_site/index.json
+                  test ! -e DisCatSharp.Docs/_site/public/search-worker.min.js
+            - name: Generate documentation search index
+              run: >-
+                  dotnet run --project DisCatSharp.Tools/DisCatSharp.Docs.SearchIndexer/DisCatSharp.Docs.SearchIndexer.csproj
+                  -c Release --no-restore --
+                  --repo .
+                  --docs DisCatSharp.Docs
+                  --site DisCatSharp.Docs/_site
+                  --output DisCatSharp.Docs/obj/search/search-index.json
+                  --commit ${{ github.sha }}
+            - name: Validate search Worker
+              run: |
+                  npm run types:check
+                  npm run build
+                  npm test
+                  npm run migrate:local
+                  npm run deploy:dry
+              working-directory: DisCatSharp.Docs/search
+            - name: Discover or provision search infrastructure
+              shell: bash
+              env:
+                  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                  CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+              run: |
+                  if ! npx wrangler d1 info discatsharp-docs-search >/dev/null 2>&1; then
+                    npx wrangler d1 create discatsharp-docs-search
+                  fi
+                  npm run prepare:production
+                  if ! npx wrangler deployments list --config wrangler.production.json --json >/dev/null 2>&1; then
+                    echo "DCS_SEARCH_FIRST_DEPLOYMENT=true" >> "$GITHUB_ENV"
+                    npx wrangler deploy --config wrangler.bootstrap.production.json --minify
+                  else
+                    echo "DCS_SEARCH_FIRST_DEPLOYMENT=false" >> "$GITHUB_ENV"
+                  fi
+              working-directory: DisCatSharp.Docs/search
+            - name: Migrate and synchronize search database
+              env:
+                  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                  CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+              run: |
+                  npm run migrate:remote
+                  npm run sync -- ../obj/search/search-index.json
+              working-directory: DisCatSharp.Docs/search
+            - name: Smoke test first deployment on Workers.dev
+              if: env.DCS_SEARCH_FIRST_DEPLOYMENT == 'true'
+              env:
+                  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                  CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+              run: npm run smoke:workers-dev
+              working-directory: DisCatSharp.Docs/search
+            - name: Deploy search Worker
+              env:
+                  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                  CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+              run: npm run deploy
+              working-directory: DisCatSharp.Docs/search
+            - name: Smoke test search and MCP
+              env:
+                  EXPECTED_BUILD_SHA: ${{ github.sha }}
+              run: npm run smoke:production
+              working-directory: DisCatSharp.Docs/search
             - name: Pack Docs
               shell: pwsh
               run: ./DisCatSharp.Tools/pack-docs.ps1 -DocsPath "./DisCatSharp.Docs" -OutputPath "./" -PackageName "dcs-docs"

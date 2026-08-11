@@ -111,9 +111,10 @@
 	{{#_noindex}}
 	<meta name="searchOption" content="noindex">
 	{{/_noindex}}
-	{{#_enableSearch}}
+	{{#_enableDcsSearch}}
 	<meta name="docfx:rel" content="{{_rel}}">
-	{{/_enableSearch}}
+	<meta name="dcs-search-endpoint" content="{{_dcsSearchEndpoint}}">
+	{{/_enableDcsSearch}}
 	{{#_disableNewTab}}
 	<meta name="docfx:disablenewtab" content="true">
 	{{/_disableNewTab}}
@@ -183,6 +184,9 @@
 	<link rel="preload" href="{{_rel}}public/docfx.min.css" as="style" crossorigin="anonymous">
 	<link rel="preload" href="{{_rel}}public/main.css" as="style" crossorigin="anonymous">
 	<link rel="preload" href="{{_rel}}public/main.js" as="script" crossorigin="anonymous">
+	{{#_enableDcsSearch}}
+	<link rel="preload" href="{{_rel}}public/search.js" as="script" crossorigin="anonymous">
+	{{/_enableDcsSearch}}
 	<link rel="preload" href="{{_rel}}public/docfx.min.js" as="script" crossorigin="anonymous">
 	<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="anonymous">
 	<link rel="dns-prefetch" href="https://fonts.googleapis.com" crossorigin="anonymous">
@@ -215,6 +219,9 @@
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"
 		integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous" defer></script>
 	<script type="module" src="{{_rel}}public/main.js" crossorigin="anonymous"></script>
+	{{#_enableDcsSearch}}
+	<script type="module" src="{{_rel}}public/search.js" crossorigin="anonymous"></script>
+	{{/_enableDcsSearch}}
 	<script type="module" src="{{_rel}}public/docfx.min.js" crossorigin="anonymous"></script>
 	{{^_disableFeatherlight}}
 	<script src="https://cdn.jsdelivr.net/npm/featherlight@1.7.14/release/featherlight.min.js"
@@ -327,13 +334,14 @@
 				</button>
 				<div class="collapse navbar-collapse" id="navpanel">
 					<div id="navbar">
-						{{#_enableSearch}}
-						<form class="search" role="search" id="search">
+						{{#_enableDcsSearch}}
+						<form class="search" role="search" id="dcs-search">
 							<i class="bi bi-search"></i>
-							<input class="form-control" id="search-query" type="search" disabled placeholder="{{__global.search}}"
-								autocomplete="off" aria-label="Search">
+							<input class="form-control" id="dcs-search-query" type="search" disabled placeholder="{{__global.search}}"
+								autocomplete="off" aria-label="Search documentation" aria-controls="dcs-search-list"
+								aria-autocomplete="list" aria-expanded="false">
 						</form>
-						{{/_enableSearch}}
+						{{/_enableDcsSearch}}
 					</div>
 				</div>
 			</div>
@@ -398,9 +406,20 @@
 		{{/_disableAffix}}
 	</main>
 
-	{{#_enableSearch}}
-	<div class="container-xxl search-results" id="search-results"></div>
-	{{/_enableSearch}}
+	{{#_enableDcsSearch}}
+	<section class="container-xxl search-results dcs-search-results" id="dcs-search-results" aria-label="Documentation search results" hidden>
+		<div class="dcs-search-toolbar" aria-label="Search result filters">
+			<button type="button" class="dcs-search-filter active" data-search-type="" aria-pressed="true">All</button>
+			<button type="button" class="dcs-search-filter" data-search-type="class" aria-pressed="false">Classes</button>
+			<button type="button" class="dcs-search-filter" data-search-type="method" aria-pressed="false">Methods</button>
+			<button type="button" class="dcs-search-filter" data-search-type="property" aria-pressed="false">Properties</button>
+			<button type="button" class="dcs-search-filter" data-search-type="conceptual" aria-pressed="false">Articles</button>
+			<button type="button" class="dcs-search-filter" data-search-type="changelog" aria-pressed="false">Changelogs</button>
+		</div>
+		<p class="dcs-search-status" id="dcs-search-status" role="status" aria-live="polite"></p>
+		<div class="dcs-search-list" id="dcs-search-list" role="listbox" aria-label="Search results"></div>
+	</section>
+	{{/_enableDcsSearch}}
 
 	<footer class="catpunk-footer">
 		<div class="catpunk-footer-inner">

@@ -10,7 +10,7 @@ env:
 
 jobs:
     test_documentation:
-        timeout-minutes: 20
+        timeout-minutes: 35
         runs-on: ubuntu-latest
         name: Build documentation
         steps:
@@ -33,20 +33,64 @@ jobs:
                       11.x
                       10.x
                       9.x
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: 24
+                  cache: npm
+                  cache-dependency-path: GitHub/DisCatSharp/DisCatSharp.Docs/search/package-lock.json
             - name: Install DocFX
               run: dotnet tool update -g docfx
               continue-on-error: true
             - name: Restore packages
               run: dotnet restore --no-cache -f -v minimal DisCatSharp.slnx
               working-directory: GitHub/DisCatSharp
+            - name: Install search dependencies
+              run: npm ci
+              working-directory: GitHub/DisCatSharp/DisCatSharp.Docs/search
+            - name: Test search indexer
+              run: dotnet test DisCatSharp.Tools/DisCatSharp.Docs.SearchIndexer.Tests/DisCatSharp.Docs.SearchIndexer.Tests.csproj -c Release --no-restore -v minimal
+              working-directory: GitHub/DisCatSharp
             - name: Build library
               run: dotnet build -c Release -v minimal -f net10.0 --no-restore DisCatSharp.slnx
               timeout-minutes: 7
-              continue-on-error: true
               working-directory: GitHub/DisCatSharp
             - name: Build Docs
-              run: docfx DisCatSharp.Docs/docfx.json
+              run: docfx DisCatSharp.Docs/docfx.json --metadata _dcsSearchEndpoint=https://docs.dcs.aitsys.dev/_search
               working-directory: GitHub/DisCatSharp
+            - name: Remove stock browser search assets
+              shell: pwsh
+              run: |
+                  Remove-Item DisCatSharp.Docs/_site/index.json -ErrorAction SilentlyContinue
+                  Remove-Item DisCatSharp.Docs/_site/public/search-worker.min.js -ErrorAction SilentlyContinue
+              working-directory: GitHub/DisCatSharp
+            - name: Assert stock browser search assets are absent
+              shell: bash
+              run: |
+                  test ! -e DisCatSharp.Docs/_site/index.json
+                  test ! -e DisCatSharp.Docs/_site/public/search-worker.min.js
+              working-directory: GitHub/DisCatSharp
+            - name: Generate documentation search index
+              run: >-
+                  dotnet run --project DisCatSharp.Tools/DisCatSharp.Docs.SearchIndexer/DisCatSharp.Docs.SearchIndexer.csproj
+                  -c Release --no-restore --
+                  --repo .
+                  --docs DisCatSharp.Docs
+                  --site DisCatSharp.Docs/_site
+                  --output DisCatSharp.Docs/obj/search/search-index.json
+                  --commit ${{ github.sha }}
+              working-directory: GitHub/DisCatSharp
+            - name: Validate search Worker and UI
+              run: |
+                  npm run types:check
+                  npm run build
+                  npm test
+                  npm run migrate:local
+                  npm run deploy:dry
+              working-directory: GitHub/DisCatSharp/DisCatSharp.Docs/search
+            - name: Smoke test production search and MCP
+              run: npm run smoke:production
+              working-directory: GitHub/DisCatSharp/DisCatSharp.Docs/search
             - name: Pack Docs
               shell: pwsh
               run: ./DisCatSharp.Tools/pack-docs.ps1 -DocsPath "./DisCatSharp.Docs" -OutputPath "./" -PackageName "dcs-docs-preview"
