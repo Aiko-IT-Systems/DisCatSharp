@@ -1,5 +1,6 @@
 DisCatSharp Release Notes
 
+    - Added an embedded NuGet package README across the main DisCatSharp, Attributes, and Analyzer package families.
     - Added `DiscordOAuth2ClientConfiguration` with a configurable shared RSA key-file path and atomic key publication so concurrent OAuth clients reliably load the same key without racing during creation.
     - Stopped exposing OAuth client secrets through public getters on `DiscordOAuth2Client`, `DiscordOAuth2ClientConfiguration`, and ASP.NET Core OAuth ingress options.
     - Fixed `RingBuffer<T>.CopyTo` to respect the `index` parameter and validate that enough free slots exist before copying, preventing silent data corruption.
