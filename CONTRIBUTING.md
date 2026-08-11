@@ -110,6 +110,12 @@ PRs that do not build will not be accepted.
 
 Furthermore we require that methods you implement on Discord entities have a reflection in the Discord API.
 
+# Documentation
+
+We aim to document 100% of the C# codebase. Every declaration is in scope regardless of visibility, including internal and private types, methods, properties, events, and fields. New and materially changed code must not add undocumented declarations. Documentation should explain purpose, ownership, lifecycle, invariants, side effects, and non-obvious values instead of only repeating the member name; improve adjacent documentation gaps when practical.
+
+Public API documentation remains required for consumers, while internal and private documentation is equally important for maintaining DisCatSharp safely over time.
+
 # Developer Certificate of Origin (DCO)
 ```
 Version 1.1

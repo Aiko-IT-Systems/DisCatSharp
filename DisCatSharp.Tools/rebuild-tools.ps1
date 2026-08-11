@@ -122,15 +122,15 @@ function Build-All([string] $target_dir_path, [string] $version_suffix, [string]
     Write-Host "Creating NuGet packages"
     if (-not $version_suffix)
     {
-        & dotnet pack -v minimal -c "$bcfg" --no-restore --no-build -o "$target_dir" --include-symbols DisCatSharp.Tools/DisCatSharp.Analyzer/DisCatSharp.Analyzer.Package/DisCatSharp.Analyzer.Package.csproj | Out-Host
+        & dotnet pack -v minimal -c "$bcfg" --no-restore --no-build -o "$target_dir" DisCatSharp.Tools/DisCatSharp.Analyzer/DisCatSharp.Analyzer.Package/DisCatSharp.Analyzer.Package.csproj | Out-Host
     }
 	elseif (-not $build_number_string)
 	{
-        & dotnet pack -v minimal -c "$bcfg" --no-restore --version-suffix "$version_suffix" --no-build -o "$target_dir" --include-symbols DisCatSharp.Tools/DisCatSharp.Analyzer/DisCatSharp.Analyzer.Package/DisCatSharp.Analyzer.Package.csproj | Out-Host
+        & dotnet pack -v minimal -c "$bcfg" --no-restore --version-suffix "$version_suffix" --no-build -o "$target_dir" DisCatSharp.Tools/DisCatSharp.Analyzer/DisCatSharp.Analyzer.Package/DisCatSharp.Analyzer.Package.csproj | Out-Host
     }
     else
     {
-        & dotnet pack -v minimal -c "$bcfg" --no-restore --version-suffix "$version_suffix" -p:BuildNumber="$build_number_string" --no-build -o "$target_dir" --include-symbols DisCatSharp.Tools/DisCatSharp.Analyzer/DisCatSharp.Analyzer.Package/DisCatSharp.Analyzer.Package.csproj | Out-Host
+        & dotnet pack -v minimal -c "$bcfg" --no-restore --version-suffix "$version_suffix" -p:BuildNumber="$build_number_string" --no-build -o "$target_dir" DisCatSharp.Tools/DisCatSharp.Analyzer/DisCatSharp.Analyzer.Package/DisCatSharp.Analyzer.Package.csproj | Out-Host
     }
     if ($LastExitCode -ne 0)
     {

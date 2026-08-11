@@ -3,7 +3,8 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 		<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
 	</PropertyGroup>
@@ -11,7 +12,7 @@
 	<PropertyGroup>
 		<Title>DisCatSharp Analyzer</Title>
 		<PackageId>DisCatSharp.Analyzer</PackageId>
-		<PackageVersion>1.0.6.1</PackageVersion>
+		<VersionPrefix>1.0.6.1</VersionPrefix>
 		<Authors>AITSYS</Authors>
 		<PackageIcon>logo-pride.png</PackageIcon>
 		<RepositoryUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</RepositoryUrl>
@@ -37,8 +38,7 @@ Please install it to ensure we can do our changes, and you can receive our updat
 		<TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);AddNuGetDlls</TargetsForTfmSpecificContentInPackage>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryType>git</RepositoryType>
-		<IncludeSymbols>True</IncludeSymbols>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<IncludeSymbols>false</IncludeSymbols>
 		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
 	</PropertyGroup>
 

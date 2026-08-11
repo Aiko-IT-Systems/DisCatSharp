@@ -1,0 +1,100 @@
+name: "Agent Skills and Release Tooling"
+
+on:
+    pull_request:
+        paths:
+            - "skills/**"
+            - "AGENTS.md"
+            - "CLAUDE.md"
+            - "GEMINI.md"
+            - ".github/copilot-instructions.md"
+            - ".github/ISSUE_TEMPLATE/skill_issue.yml"
+            - ".github/labeler.yml"
+            - ".github/release.yml"
+            - ".github/scripts/release-tools.*"
+            - ".github/workflows/agent-skills.yml"
+            - ".github/workflows/release.yml"
+            - "DisCatSharp.Attributes/DisCatSharp.Attributes.csproj"
+            - "DisCatSharp.Tools/DisCatSharp.Analyzer/DisCatSharp.Analyzer.Package/DisCatSharp.Analyzer.Package.csproj"
+            - "DisCatSharp.Tools/rebuild-tools.ps1"
+    push:
+        branches:
+            - main
+        paths:
+            - "skills/**"
+            - "AGENTS.md"
+            - "CLAUDE.md"
+            - "GEMINI.md"
+            - ".github/copilot-instructions.md"
+            - ".github/ISSUE_TEMPLATE/skill_issue.yml"
+            - ".github/labeler.yml"
+            - ".github/release.yml"
+            - ".github/scripts/release-tools.*"
+            - ".github/workflows/agent-skills.yml"
+            - ".github/workflows/release.yml"
+            - "DisCatSharp.Attributes/DisCatSharp.Attributes.csproj"
+            - "DisCatSharp.Tools/DisCatSharp.Analyzer/DisCatSharp.Analyzer.Package/DisCatSharp.Analyzer.Package.csproj"
+            - "DisCatSharp.Tools/rebuild-tools.ps1"
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+jobs:
+    validate:
+        runs-on: ubuntu-latest
+        name: Validate portable skills and release tooling
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v7
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: 24
+
+            - name: Setup Go for actionlint
+              uses: actions/setup-go@v6
+              with:
+                  go-version: "1.25"
+                  cache: false
+
+            - name: Test release helpers
+              run: node --test .github/scripts/release-tools.test.mjs
+
+            - name: Validate workflows
+              run: >-
+                  go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.12
+                  .github/workflows/agent-skills.yml
+                  .github/workflows/release.yml
+
+            - name: Validate Agent Skills specification
+              env:
+                  GH_TOKEN: ${{ github.token }}
+              run: gh skill publish --dry-run
+
+            - name: Verify local installation matrix
+              shell: bash
+              run: |
+                  agents=(
+                    codex
+                    github-copilot
+                    claude-code
+                    gemini-cli
+                    cursor
+                    opencode
+                    windsurf
+                  )
+                  for agent in "${agents[@]}"; do
+                    destination="$RUNNER_TEMP/$agent"
+                    mkdir -p "$destination"
+                    git -C "$destination" init --quiet
+                    (
+                      cd "$destination"
+                      gh skill install "$GITHUB_WORKSPACE" use-discatsharp \
+                        --from-local --agent "$agent" --scope project --force
+                      gh skill install "$GITHUB_WORKSPACE" maintain-discatsharp \
+                        --from-local --agent "$agent" --scope project --force
+                    )
+                    test "$(find "$destination" -name SKILL.md -type f | wc -l)" -eq 2
+                  done

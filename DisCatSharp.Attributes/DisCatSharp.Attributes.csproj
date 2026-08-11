@@ -7,19 +7,19 @@
 		<Version>$(VersionPrefix)-$(VersionSuffix)-$(BuildNumber)</Version>
 		<AssemblyVersion>$(VersionPrefix).$(BuildNumber)</AssemblyVersion>
 		<FileVersion>$(VersionPrefix).$(BuildNumber)</FileVersion>
-		<PackageVersion>$(VersionPrefix).$(BuildNumber)</PackageVersion>
+		<PackageVersion>$(Version)</PackageVersion>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(VersionSuffix)' != '' And '$(BuildNumber)' == ''">
 		<Version>$(VersionPrefix)-$(VersionSuffix)</Version>
 		<AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
 		<FileVersion>$(VersionPrefix).0</FileVersion>
-		<PackageVersion>$(VersionPrefix).0</PackageVersion>
+		<PackageVersion>$(Version)</PackageVersion>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(VersionSuffix)' == ''">
 		<Version>$(VersionPrefix)</Version>
 		<AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
 		<FileVersion>$(VersionPrefix).0</FileVersion>
-		<PackageVersion>$(VersionPrefix).0</PackageVersion>
+		<PackageVersion>$(Version)</PackageVersion>
 	</PropertyGroup>
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0</TargetFrameworks>

@@ -38,6 +38,8 @@ You can install the library from the following sources:
 
 The documentation is available at [docs.dcs.aitsys.dev](https://docs.dcs.aitsys.dev).
 
+AI coding assistants can install the repository's [DisCatSharp Agent Skills](skills/README.md) and connect to the public documentation MCP at `https://docs.dcs.aitsys.dev/mcp` for version-aware API, conceptual documentation, and indexed source lookup.
+
 Alternative hosts for our docs are:
 - Backup Host [backup-docs.dcs.aitsys.dev](https://backup-docs.dcs.aitsys.dev)
 

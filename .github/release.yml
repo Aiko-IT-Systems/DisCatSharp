@@ -1,0 +1,21 @@
+changelog:
+  categories:
+    - title: Features
+      labels:
+        - enhancement
+    - title: Fixes
+      labels:
+        - bug
+    - title: Documentation and Agent Skills
+      labels:
+        - documentation
+        - agent skills
+    - title: Dependencies
+      labels:
+        - dependencies
+    - title: CI and Build
+      labels:
+        - ci/cd
+    - title: Other Changes
+      labels:
+        - "*"
