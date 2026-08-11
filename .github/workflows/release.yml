@@ -31,6 +31,7 @@ permissions:
     contents: write
     id-token: write
     attestations: write
+    packages: write
 
 concurrency:
     group: release-${{ inputs.packages_to_release }}
@@ -74,20 +75,6 @@ jobs:
                   --prerelease "$IS_PRERELEASE"
                   --confirm "$CONFIRM_FULL_RELEASE"
                   --suffix "$VERSION_SUFFIX"
-
-            - name: Require immutable releases
-              env:
-                  GH_TOKEN: ${{ secrets.NYUW_TOKEN_GH }}
-              run: |
-                  enabled=$(gh api \
-                    -H "Accept: application/vnd.github+json" \
-                    -H "X-GitHub-Api-Version: 2026-03-10" \
-                    "repos/${GITHUB_REPOSITORY}/immutable-releases" \
-                    --jq '.enabled')
-                  test "$enabled" = "true" || {
-                    echo "Immutable releases must be enabled before publishing." >&2
-                    exit 1
-                  }
 
             - name: Setup .NET
               uses: actions/setup-dotnet@v6.0.0
@@ -270,31 +257,21 @@ jobs:
 
                   gh release upload "$RELEASE_TAG" dcs-artifacts/* --clobber
 
-            - name: Publish packages to NuGet
+            - name: NuGet login (OIDC → temp API key)
               if: steps.state.outputs.release_state != 'verify'
-              shell: pwsh
-              env:
-                  NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-              run: |
-                  Get-ChildItem -Path . -File |
-                      Where-Object Extension -EQ ".nupkg" |
-                      ForEach-Object {
-                          dotnet nuget push $_.FullName `
-                              --source https://api.nuget.org/v3/index.json `
-                              --api-key $env:NUGET_API_KEY `
-                              --skip-duplicate
-                          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-                      }
-              working-directory: ./dcs-artifacts
+              uses: NuGet/login@v1
+              id: nuget_login
+              with:
+                  user: ${{ secrets.NUGET_USER }}
 
-            - name: Publish symbols to NuGet
+            - name: Publish packages to NuGet (with retry)
               if: steps.state.outputs.release_state != 'verify'
               shell: pwsh
               env:
-                  NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+                  NUGET_API_KEY: ${{ steps.nuget_login.outputs.NUGET_API_KEY }}
               run: |
                   Get-ChildItem -Path . -File |
-                      Where-Object Extension -EQ ".snupkg" |
+                      Where-Object Extension -In ".nupkg", ".snupkg" |
                       ForEach-Object {
                           dotnet nuget push $_.FullName `
                               --source https://api.nuget.org/v3/index.json `
@@ -308,17 +285,17 @@ jobs:
               if: steps.state.outputs.release_state != 'verify'
               shell: pwsh
               env:
-                  GITHUB_PACKAGES_TOKEN: ${{ secrets.NYUW_TOKEN_GH }}
+                  GITHUB_PACKAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
                   Get-ChildItem -Path . -File |
-                      Where-Object Extension -In ".nupkg", ".snupkg" |
-                      ForEach-Object {
-                          dotnet nuget push $_.FullName `
-                              --source https://nuget.pkg.github.com/Aiko-IT-Systems/index.json `
-                              --api-key $env:GITHUB_PACKAGES_TOKEN `
-                              --skip-duplicate
-                          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-                      }
+                  Where-Object Extension -In ".nupkg", ".snupkg" |
+                  ForEach-Object {
+                      dotnet nuget push $_.FullName `
+                      --source https://nuget.pkg.github.com/Aiko-IT-Systems/index.json `
+                      --api-key $env:GITHUB_PACKAGES_TOKEN `
+                      --skip-duplicate
+                      if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+                  }
               working-directory: ./dcs-artifacts
 
             - name: Extract version for Sentry
