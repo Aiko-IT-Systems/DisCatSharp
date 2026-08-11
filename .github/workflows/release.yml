@@ -111,12 +111,12 @@ jobs:
                       default { throw "Unsupported package family: $env:PACKAGE_FAMILY" }
                   }
 
-                  $arguments = @(
-                      "-ArtifactLocation", "./dcs-artifacts",
-                      "-Configuration", "Release"
-                  )
+                  $arguments = @{
+                      ArtifactLocation = "./dcs-artifacts"
+                      Configuration = "Release"
+                  }
                   if ($env:IS_PRERELEASE -eq "true") {
-                      $arguments += @("-VersionSuffix", $env:VERSION_SUFFIX)
+                      $arguments.VersionSuffix = $env:VERSION_SUFFIX
                   }
 
                   & $script @arguments
