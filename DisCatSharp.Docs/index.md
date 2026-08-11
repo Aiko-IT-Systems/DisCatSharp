@@ -74,7 +74,7 @@ _disableNextArticle: true
 			<br/>
 			<div class="catpunk-terminal">
 				<div class="catpunk-terminal-bar"><span class="catpunk-dot" aria-hidden="true"></span></div>
-				<pre><code class="lang-powershell">gh skill install Aiko-IT-Systems/DisCatSharp use-discatsharp --agent codex --scope user --pin main</code></pre>
+				<pre><code class="lang-powershell">gh skill install Aiko-IT-Systems/DisCatSharp use-discatsharp --agent codex --scope user --pin skills@v1.0.1</code></pre>
 			</div>
 		</div>
 		<div class="catpunk-card">

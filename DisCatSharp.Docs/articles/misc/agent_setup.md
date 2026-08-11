@@ -1,10 +1,10 @@
 ---
 uid: misc_agent_setup
-title: AI Coding Assistants
-description: Install the DisCatSharp Agent Skill and connect the live documentation MCP for the core library and official Extensions.
+title: Agent Skills & MCP
+description: Install the versioned DisCatSharp Agent Skills and connect the live documentation MCP for the core library and official Extensions.
 ---
 
-# AI coding assistants
+# Agent Skills and MCP
 
 DisCatSharp provides a version-aware Agent Skill for building and troubleshooting bots with the core library and its official Extensions. The skill gives compatible coding agents focused guidance while the public documentation MCP supplies live API, article, and approved source evidence.
 
@@ -13,10 +13,10 @@ DisCatSharp provides a version-aware Agent Skill for building and troubleshootin
 Install `use-discatsharp` globally for Codex:
 
 ```shell
-gh skill install Aiko-IT-Systems/DisCatSharp use-discatsharp --agent codex --scope user --pin main
+gh skill install Aiko-IT-Systems/DisCatSharp use-discatsharp --agent codex --scope user --pin skills@v1.0.1
 ```
 
-Omit `--pin main` to follow the latest stable DisCatSharp release after the skills ship in a stable version. You can also pin the same tag as the DisCatSharp version used by your application.
+`skills@v1.0.1` is the latest immutable skill release. `skills@v1.0.0` remains available for projects that need it, and future skill releases use the same `skills@v<version>` tag format. Pin `main` only when you intentionally want the newest unreleased skill changes.
 
 For Copilot, Claude Code, Gemini CLI, generic Agent Skills clients, and alternative installation methods, see the [complete skill installation reference](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/skills/README.md#install).
 

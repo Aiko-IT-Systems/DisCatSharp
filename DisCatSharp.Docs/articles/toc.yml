@@ -179,7 +179,7 @@ items:
             uid: experimental_gcp_attachments
     - name: Miscellaneous
       items:
-          - name: AI Coding Assistants
+          - name: Agent Skills & MCP
             uid: misc_agent_setup
           - name: Nightly Builds
             uid: misc_nightly_builds
