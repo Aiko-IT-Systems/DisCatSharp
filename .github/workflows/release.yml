@@ -166,15 +166,26 @@ jobs:
               env:
                   RELEASE_TAG: ${{ steps.release.outputs.tag }}
               run: |
-                  if ! gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${RELEASE_TAG}" \
-                    > .release/existing-release.json \
-                    2> .release/release-error.txt; then
-                    if grep -q "HTTP 404" .release/release-error.txt; then
-                      echo 'null' > .release/existing-release.json
-                    else
+                  release_id=""
+                  for attempt in {1..3}; do
+                    if release_id=$(gh release view "$RELEASE_TAG" \
+                      --json databaseId \
+                      --jq '.databaseId' \
+                      2> .release/release-error.txt); then
+                      break
+                    fi
+                    if ! grep -q "release not found" .release/release-error.txt; then
                       cat .release/release-error.txt >&2
                       exit 1
                     fi
+                    if [ "$attempt" -lt 3 ]; then sleep 2; fi
+                  done
+
+                  if [ -n "$release_id" ]; then
+                    gh api "repos/${GITHUB_REPOSITORY}/releases/${release_id}" \
+                      > .release/existing-release.json
+                  else
+                    echo 'null' > .release/existing-release.json
                   fi
                   node .github/scripts/release-tools.mjs release-state \
                     --release .release/existing-release.json \
@@ -232,7 +243,17 @@ jobs:
                     gh release create "${arguments[@]}"
                   fi
 
-                  gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${RELEASE_TAG}" \
+                  release_id=""
+                  for attempt in {1..6}; do
+                    if release_id=$(gh release view "$RELEASE_TAG" \
+                      --json databaseId \
+                      --jq '.databaseId'); then
+                      break
+                    fi
+                    if [ "$attempt" -lt 6 ]; then sleep 5; fi
+                  done
+                  test -n "$release_id"
+                  gh api "repos/${GITHUB_REPOSITORY}/releases/${release_id}" \
                     > .release/draft-release.json
 
                   declare -A expected_assets
