@@ -221,6 +221,8 @@ jobs:
               run: npm run prepare:production
               working-directory: DisCatSharp.Docs/search
             - name: Wait for matching documentation deployment
+              env:
+                  DCS_DOCS_BASE_URL: https://discatsharp-docs.pages.dev
               run: npm run wait:docs -- ../obj/search/search-index.json
               working-directory: DisCatSharp.Docs/search
             - name: Activate staged search index

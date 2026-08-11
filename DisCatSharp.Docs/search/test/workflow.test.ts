@@ -25,6 +25,7 @@ describe("documentation release workflow", () => {
     expect(activationJob).toBeLessThan(waitForDocs);
     expect(waitForDocs).toBeLessThan(activate);
     expect(activate).toBeLessThan(expectedBuildSmoke);
+    expect(source).toContain("DCS_DOCS_BASE_URL: https://discatsharp-docs.pages.dev");
   });
 
   it("writes the release marker in both production and preview builds", async () => {
