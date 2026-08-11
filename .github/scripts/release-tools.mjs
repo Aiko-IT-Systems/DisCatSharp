@@ -2,7 +2,7 @@
 
 import { createHash } from "node:crypto";
 import { appendFileSync, readFileSync, readdirSync, realpathSync, statSync, writeFileSync } from "node:fs";
-import { basename, join } from "node:path";
+import { join } from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 
