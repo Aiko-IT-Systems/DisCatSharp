@@ -1,4 +1,5 @@
 import { setTimeout as delay } from "node:timers/promises";
+import { validateMcpResponse, validateSearchResponse } from "../src/smoke-validation";
 
 const baseUrl = (process.env.DCS_SEARCH_BASE_URL ?? "https://docs.dcs.aitsys.dev").replace(/\/$/u, "");
 const expectedCommit = process.env.EXPECTED_BUILD_SHA?.trim().toLowerCase().slice(0, 12);
@@ -14,7 +15,7 @@ while (Date.now() < deadline) {
 
   if (!searchReady) {
     lastSearchResponse = await request(`${baseUrl}/_search?q=DiscordGuild&limit=1`);
-    searchReady = validateSearch(lastSearchResponse, expectedCommit);
+    searchReady = validateSearchResponse(lastSearchResponse, expectedCommit);
   }
 
   if (!mcpReady) {
@@ -35,7 +36,7 @@ while (Date.now() < deadline) {
         },
       }),
     });
-    mcpReady = validateMcp(lastMcpResponse);
+    mcpReady = validateMcpResponse(lastMcpResponse);
   }
 
   if (searchReady && mcpReady) {
@@ -58,27 +59,5 @@ async function request(url: string, init?: RequestInit): Promise<string> {
     return await response.text();
   } catch (error) {
     return error instanceof Error ? `${error.name}: ${error.message}` : "Unknown request failure.";
-  }
-}
-
-function validateSearch(body: string, expectedSha?: string): boolean {
-  try {
-    const value = JSON.parse(body) as { build?: unknown; results?: unknown[] };
-    if (!Array.isArray(value.results) || value.results.length === 0 || typeof value.build !== "string") return false;
-    if (!/^\d{10,}-[0-9a-f]{12}$/u.test(value.build)) return false;
-    return expectedSha === undefined || value.build.endsWith(`-${expectedSha}`);
-  } catch {
-    return false;
-  }
-}
-
-function validateMcp(body: string): boolean {
-  try {
-    const value = JSON.parse(body) as { result?: { protocolVersion?: unknown; instructions?: unknown } };
-    return value.result?.protocolVersion === "2025-06-18"
-      && typeof value.result.instructions === "string"
-      && value.result.instructions.includes("https://docs.discord.com/mcp");
-  } catch {
-    return false;
   }
 }
