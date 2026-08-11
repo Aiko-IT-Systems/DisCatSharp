@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Reflection;
 
 using DisCatSharp;
 using DisCatSharp.Entities;
@@ -14,6 +15,16 @@ namespace DisCatSharp.Hosting.Tests;
 
 public sealed class AspNetCoreIngressHelperTests
 {
+	[Fact]
+	public void OAuthIngressOptions_DoNotExposeClientSecretGetter()
+	{
+		var clientSecret = typeof(DiscordOAuthIngressOptions).GetProperty(nameof(DiscordOAuthIngressOptions.ClientSecret));
+
+		Assert.NotNull(clientSecret);
+		Assert.False(clientSecret.GetMethod?.IsPublic);
+		Assert.True(clientSecret.SetMethod?.IsPublic);
+	}
+
 	[Fact]
 	public void PublicUrls_Create_ComposesExpectedIngressEndpoints()
 	{
@@ -193,7 +204,6 @@ public sealed class AspNetCoreIngressHelperTests
 		Assert.Contains(report.Issues, static issue => issue.Code == "verify-key-mismatch" && issue.Severity is DiscordIngressValidationSeverity.Error);
 		Assert.Contains(report.Issues, static issue => issue.Code == "interactions-endpoint-mismatch" && issue.Severity is DiscordIngressValidationSeverity.Error);
 		Assert.Contains(report.Issues, static issue => issue.Code == "role-connections-url-mismatch" && issue.Severity is DiscordIngressValidationSeverity.Error);
-		Assert.Contains(report.Issues, static issue => issue.Code == "oauth-client-secret-mismatch" && issue.Severity is DiscordIngressValidationSeverity.Error);
 		Assert.Contains(report.Issues, static issue => issue.Code == "oauth-client-redirect-mismatch" && issue.Severity is DiscordIngressValidationSeverity.Error);
 		Assert.Contains(report.Issues, static issue => issue.Severity is DiscordIngressValidationSeverity.Error);
 	}

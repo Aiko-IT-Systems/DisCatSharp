@@ -23,13 +23,13 @@ public sealed class DiscordOAuthIngressOptions
 	public ulong ClientId { get; set; }
 
 	/// <summary>
-	///     Gets or sets the Discord application client secret used for token exchange.
+	///     Sets the Discord application client secret used for token exchange.
 	/// </summary>
 	/// <remarks>
 	///     This value is consumed only by <see cref="IDiscordOAuthTokenExchangeService" /> implementations and should be sourced from a
 	///     secure configuration provider.
 	/// </remarks>
-	public string? ClientSecret { get; set; }
+	public string? ClientSecret { internal get; set; }
 
 	/// <summary>
 	///     Gets or sets the redirect URI that Discord should use for the authorization-code callback.

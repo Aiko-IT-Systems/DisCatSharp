@@ -75,9 +75,6 @@ public static class DiscordIngressConfigurationValidator
 		if (oauthOptions.ClientId != 0 && oauthOptions.ClientId != oauthClient.ClientId)
 			issues.Add(new("oauth-client-id-mismatch", DiscordIngressValidationSeverity.Error, "The configured OAuth client ID does not match the active DiscordOAuth2Client instance."));
 
-		if (!string.IsNullOrWhiteSpace(oauthOptions.ClientSecret) && !string.Equals(oauthOptions.ClientSecret, oauthClient.ClientSecret, StringComparison.Ordinal))
-			issues.Add(new("oauth-client-secret-mismatch", DiscordIngressValidationSeverity.Error, "The configured OAuth client secret does not match the active DiscordOAuth2Client instance."));
-
 		if (!string.IsNullOrWhiteSpace(oauthOptions.RedirectUri)
 			&& Uri.TryCreate(oauthOptions.RedirectUri, UriKind.Absolute, out var redirectUri)
 			&& !UriEquals(redirectUri, oauthClient.RedirectUri))

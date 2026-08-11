@@ -36,11 +36,6 @@ public sealed class DiscordOAuth2Client : IDisposable, IAsyncDisposable
 	private bool _disposed;
 
 	/// <summary>
-	///     Gets the file name for the rsa public/private key.
-	/// </summary>
-	private const string RSA_KEY_FILE_NAME = "dcs_oauth_rsa.sdcs";
-
-	/// <summary>
 	///    Gets the discord configuration.
 	/// </summary>
 	internal DiscordConfiguration? DiscordConfiguration { get; set; }
@@ -56,9 +51,9 @@ public sealed class DiscordOAuth2Client : IDisposable, IAsyncDisposable
 	public readonly ulong ClientId;
 
 	/// <summary>
-	///     Gets the client secret.
+	///     Stores the client secret used for OAuth2 authentication.
 	/// </summary>
-	public readonly string ClientSecret;
+	private readonly string _clientSecret;
 
 	/// <summary>
 	///     Gets the log timestamp format.
@@ -116,27 +111,63 @@ public sealed class DiscordOAuth2Client : IDisposable, IAsyncDisposable
 		LogLevel minimumLogLevel = LogLevel.Information,
 		string logTimestampFormat = "yyyy-MM-dd HH:mm:ss zzz"
 	)
-	{
-		this.MinimumLogLevel = minimumLogLevel;
-		this.LogTimestampFormat = logTimestampFormat;
+		: this(new DiscordOAuth2ClientConfiguration
+		{
+			ClientId = clientId,
+			ClientSecret = clientSecret,
+			RedirectUri = redirectUri,
+			ServiceProvider = provider,
+			Proxy = proxy,
+			Timeout = timeout,
+			UseRelativeRateLimit = useRelativeRateLimit,
+			LoggerFactory = loggerFactory,
+			MinimumLogLevel = minimumLogLevel,
+			LogTimestampFormat = logTimestampFormat
+		})
+	{ }
 
-		if (loggerFactory == null!)
+	/// <summary>
+	///     Creates a new OAuth2 client from the supplied configuration.
+	/// </summary>
+	/// <param name="configuration">The OAuth2 client configuration.</param>
+	public DiscordOAuth2Client(DiscordOAuth2ClientConfiguration configuration)
+	{
+		ArgumentNullException.ThrowIfNull(configuration);
+
+		this.MinimumLogLevel = configuration.MinimumLogLevel;
+		this.LogTimestampFormat = configuration.LogTimestampFormat;
+
+		var loggerFactory = configuration.LoggerFactory;
+		if (loggerFactory is null)
 		{
 			loggerFactory = new DefaultLoggerFactory();
 			loggerFactory.AddProvider(new DefaultLoggerProvider(this));
 		}
 
 		this.Logger = loggerFactory.CreateLogger<DiscordOAuth2Client>();
-		this.ServiceProvider = provider ?? new ServiceCollection().BuildServiceProvider(true);
-		this.ClientId = clientId;
-		this.ClientSecret = clientSecret;
-		this.RedirectUri = new(redirectUri);
+		this.ClientId = configuration.ClientId;
+		this._clientSecret = configuration.ClientSecret;
+		this.RedirectUri = new(configuration.RedirectUri);
+		if (string.IsNullOrWhiteSpace(configuration.RsaKeyFilePath))
+			throw new ArgumentException("The RSA key file path cannot be null, empty, or whitespace.", nameof(configuration.RsaKeyFilePath));
 
-		var parsedTimeout = timeout ?? TimeSpan.FromSeconds(10);
+		this.RsaKeyFilePath = Path.GetFullPath(configuration.RsaKeyFilePath);
+		try
+		{
+			this.RSA_KEY = LoadOrCreateRsaKey(this.RsaKeyFilePath);
+		}
+		catch (Exception ex)
+		{
+			this.Logger.LogCritical(ex, "Exception while initializing the shared OAuth2 RSA key: {Message}", ex.Message);
+			throw;
+		}
 
-		this.ApiClient = new(this, proxy!, parsedTimeout, useRelativeRateLimit, this.Logger);
+		this.ServiceProvider = configuration.ServiceProvider ?? new ServiceCollection().BuildServiceProvider(true);
+		var parsedTimeout = configuration.Timeout ?? TimeSpan.FromSeconds(10);
 
-		var authorizationBytes = Encoding.UTF8.GetBytes($"{this.ClientId.ToString(CultureInfo.InvariantCulture)}:{this.ClientSecret}");
+		this.ApiClient = new(this, configuration.Proxy!, parsedTimeout, configuration.UseRelativeRateLimit, this.Logger);
+
+		var authorizationBytes = Encoding.UTF8.GetBytes($"{this.ClientId.ToString(CultureInfo.InvariantCulture)}:{this._clientSecret}");
 		this.ApiClient.Rest.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(CommonHeaders.AUTHORIZATION_BASIC, Convert.ToBase64String(authorizationBytes));
 
 		var a = typeof(DiscordOAuth2Client).GetTypeInfo().Assembly;
@@ -155,37 +186,18 @@ public sealed class DiscordOAuth2Client : IDisposable, IAsyncDisposable
 		this.ApiClient.Rest.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.USER_AGENT, this.VersionHeader);
 
 		this.OAuth2ClientErroredInternal = new("CLIENT_ERRORED", EventExecutionLimit, this.Goof);
-
-		if (File.Exists(RSA_KEY_FILE_NAME))
-			try
-			{
-				var privatePublicKeyPemBytes = File.ReadAllText(RSA_KEY_FILE_NAME);
-				this.RSA_KEY = new RSACryptoServiceProvider(2048);
-				this.RSA_KEY.ImportFromPem(privatePublicKeyPemBytes.ToCharArray());
-			}
-			catch (Exception ex)
-			{
-				this.Logger.LogCritical(ex, "Exception in RSA Import: {msg}", ex.Message);
-				throw;
-			}
-		else
-			try
-			{
-				this.RSA_KEY = new RSACryptoServiceProvider(2048);
-				var privatePublicKeyPem = this.RSA_KEY.ExportRSAPrivateKeyPem();
-				File.WriteAllText(RSA_KEY_FILE_NAME, privatePublicKeyPem);
-			}
-			catch (Exception ex)
-			{
-				this.Logger.LogCritical(ex, "Exception in RSA Export: {msg}", ex.Message);
-				throw;
-			}
 	}
 
 	/// <summary>
 	///     Gets the logger for this client.
 	/// </summary>
 	public ILogger<DiscordOAuth2Client> Logger { get; }
+
+	/// <summary>
+	///     Gets the absolute path of the shared RSA private-key file used to encrypt and decrypt secure OAuth2 states.
+	/// </summary>
+	/// <remarks>The file contains an unencrypted private key and must be accessible only to the application identity.</remarks>
+	public string RsaKeyFilePath { get; }
 
 	/// <summary>
 	///     Gets the bot library name.
@@ -207,6 +219,74 @@ public sealed class DiscordOAuth2Client : IDisposable, IAsyncDisposable
 	///     Gets the RSA instance.
 	/// </summary>
 	private RSA RSA_KEY { get; }
+
+	/// <summary>
+	///     Loads the shared RSA key or atomically publishes a newly generated key when the file does not exist.
+	/// </summary>
+	/// <param name="keyFilePath">The absolute key file path.</param>
+	/// <returns>An independently owned RSA instance containing the shared key.</returns>
+	private static RSA LoadOrCreateRsaKey(string keyFilePath)
+	{
+		if (File.Exists(keyFilePath))
+			return LoadRsaKey(keyFilePath);
+
+		var directory = Path.GetDirectoryName(keyFilePath);
+		if (!string.IsNullOrEmpty(directory))
+			Directory.CreateDirectory(directory);
+
+		var rsa = RSA.Create(2048);
+		var temporaryPath = $"{keyFilePath}.{Guid.NewGuid():N}.tmp";
+		try
+		{
+			var keyBytes = Encoding.UTF8.GetBytes(rsa.ExportRSAPrivateKeyPem());
+			using (var stream = new FileStream(temporaryPath, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+			{
+				stream.Write(keyBytes);
+				stream.Flush(true);
+			}
+
+			try
+			{
+				File.Move(temporaryPath, keyFilePath);
+				return rsa;
+			}
+			catch (IOException) when (File.Exists(keyFilePath))
+			{
+				rsa.Dispose();
+				return LoadRsaKey(keyFilePath);
+			}
+		}
+		catch
+		{
+			rsa.Dispose();
+			throw;
+		}
+		finally
+		{
+			if (File.Exists(temporaryPath))
+				File.Delete(temporaryPath);
+		}
+	}
+
+	/// <summary>
+	///     Loads an RSA private key from a completely published key file.
+	/// </summary>
+	/// <param name="keyFilePath">The key file path.</param>
+	/// <returns>An RSA instance owned by the caller.</returns>
+	private static RSA LoadRsaKey(string keyFilePath)
+	{
+		var rsa = RSA.Create();
+		try
+		{
+			rsa.ImportFromPem(File.ReadAllText(keyFilePath));
+			return rsa;
+		}
+		catch
+		{
+			rsa.Dispose();
+			throw;
+		}
+	}
 
 	/// <inheritdoc />
 	public void Dispose()
@@ -255,7 +335,7 @@ public sealed class DiscordOAuth2Client : IDisposable, IAsyncDisposable
 
 	/// <summary>
 	///     Generates a secured state bound to the user id.
-	///     <para>If the bot is completely restarted, such a state can't be decrypted anymore.</para>
+	///     <para>The state remains decryptable while the RSA key at <see cref="RsaKeyFilePath" /> is preserved.</para>
 	///     <para>To decrypt this state, use <see cref="ReadSecureState" /></para>
 	/// </summary>
 	/// <param name="userId">The user id to bind the state on.</param>
@@ -264,7 +344,7 @@ public sealed class DiscordOAuth2Client : IDisposable, IAsyncDisposable
 
 	/// <summary>
 	///     Reads a secured state generated from <see cref="GenerateSecureState" />.
-	///     <para>If the bot is completely restarted, such a state can't be decrypted anymore.</para>
+	///     <para>The state can be read by clients that use the same RSA key file.</para>
 	/// </summary>
 	/// <param name="state">The state to read.</param>
 	public string ReadSecureState(string state)

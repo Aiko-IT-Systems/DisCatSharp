@@ -1,5 +1,7 @@
 DisCatSharp Release Notes
 
+    - Added `DiscordOAuth2ClientConfiguration` with a configurable shared RSA key-file path and atomic key publication so concurrent OAuth clients reliably load the same key without racing during creation.
+    - Stopped exposing OAuth client secrets through public getters on `DiscordOAuth2Client`, `DiscordOAuth2ClientConfiguration`, and ASP.NET Core OAuth ingress options.
     - Fixed `RingBuffer<T>.CopyTo` to respect the `index` parameter and validate that enough free slots exist before copying, preventing silent data corruption.
     - Hardened gateway dispatch: all `GuildsInternal` indexer accesses now use `TryGetValue` guards to prevent `KeyNotFoundException` on late-arriving or missing guild payloads.
     - Synchronized session state during reconnect under `_sessionStateLock` to close a TOCTOU race where `OnHelloAsync` could read a partially-cleared session ID and produce a malformed RESUME payload.
