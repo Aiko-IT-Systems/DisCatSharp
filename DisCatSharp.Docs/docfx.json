@@ -278,7 +278,9 @@
 			"_appTitle": "DisCatSharp Docs",
 			"_appName": "DisCatSharp",
 			"_appFooter": "Made with ❤️ by AITSYS",
-			"_enableSearch": true,
+			"_enableSearch": false,
+			"_enableDcsSearch": true,
+			"_dcsSearchEndpoint": "/_search",
 			"_disableNextArticle": false,
 			"_disableSideFilter": false,
 			"_disableTocFilter": false,
@@ -320,7 +322,7 @@
 			}
 		},
 		"template": ["default", "modern", "dcs"],
-		"postProcessors": ["ExtractSearchIndex"],
+		"postProcessors": [],
 		"noLangKeyword": false,
 		"keepFileLink": false,
 		"sitemap": {

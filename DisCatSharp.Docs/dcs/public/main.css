@@ -292,7 +292,8 @@ body[data-uid="404"] .catpunk-main {
 	display: block;
 }
 
-body[data-search] .catpunk-main {
+body[data-search] .catpunk-main,
+body[data-dcs-search] .catpunk-main {
 	display: none;
 }
 
@@ -1084,6 +1085,121 @@ code:not(pre code) {
 
 .search-results {
 	padding-block: 1.5rem;
+}
+
+.dcs-search-results {
+	min-height: 22rem;
+	padding-inline: clamp(1rem, 4vw, 3rem);
+}
+
+body[data-dcs-search] > .dcs-search-results {
+	display: block;
+	flex: 1;
+	width: 100%;
+}
+
+.dcs-search-toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.55rem;
+	margin-bottom: 1rem;
+}
+
+.dcs-search-filter,
+.dcs-search-retry {
+	padding: 0.45rem 0.85rem;
+	color: var(--cp-text-muted);
+	font: inherit;
+	font-size: 0.86rem;
+	font-weight: 700;
+	background: rgba(28, 22, 36, 0.72);
+	border: 1px solid var(--cp-border);
+	border-radius: 999px;
+}
+
+.dcs-search-filter:hover,
+.dcs-search-filter:focus,
+.dcs-search-filter.active,
+.dcs-search-retry:hover,
+.dcs-search-retry:focus {
+	color: var(--cp-text);
+	background: rgba(230, 74, 166, 0.18);
+	border-color: var(--cp-pink);
+}
+
+.dcs-search-status {
+	min-height: 1.5rem;
+	color: var(--cp-text-muted);
+}
+
+.dcs-search-list {
+	display: grid;
+	gap: 0.75rem;
+}
+
+.dcs-search-result {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	gap: 0.35rem 0.75rem;
+	padding: 1rem 1.1rem;
+	color: var(--cp-text);
+	text-decoration: none;
+	background: rgba(28, 22, 36, 0.76);
+	border: 1px solid var(--cp-border);
+	border-radius: 0.9rem;
+	transition: background var(--cp-transition), border-color var(--cp-transition), transform var(--cp-transition);
+}
+
+.dcs-search-result:hover,
+.dcs-search-result:focus,
+.dcs-search-result[aria-selected="true"] {
+	color: var(--cp-text);
+	background: rgba(230, 74, 166, 0.13);
+	border-color: var(--cp-pink);
+	transform: translateY(-1px);
+}
+
+.dcs-search-result-title {
+	min-width: 0;
+	color: var(--cp-pink-soft);
+	font-weight: 800;
+	overflow-wrap: anywhere;
+}
+
+.dcs-search-result-badge {
+	align-self: start;
+	padding: 0.18rem 0.5rem;
+	color: var(--cp-pink-hot);
+	font-size: 0.72rem;
+	font-weight: 800;
+	text-transform: uppercase;
+	background: rgba(230, 74, 166, 0.12);
+	border-radius: 999px;
+}
+
+.dcs-search-result-summary {
+	grid-column: 1 / -1;
+	color: var(--cp-text-muted);
+	font-size: 0.9rem;
+	line-height: 1.5;
+}
+
+@media (max-width: 575.98px) {
+	.dcs-search-result {
+		grid-template-columns: 1fr;
+	}
+
+	.dcs-search-result-badge,
+	.dcs-search-filter {
+		width: fit-content;
+	}
+}
+
+@media (max-width: 991.98px) {
+	body[data-dcs-search] #navbar > .navbar-nav,
+	body[data-dcs-search] #navbar > form.icons {
+		display: none;
+	}
 }
 
 @media (max-width: 1279.98px) {

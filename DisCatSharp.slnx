@@ -32,6 +32,7 @@
     <File Path="DisCatSharp.Tools/DisCatSharp.ruleset" />
     <File Path="DisCatSharp.Tools/pack-docs.ps1" />
     <File Path="DisCatSharp.Tools/rebuild-lib.ps1" />
+    <Project Path="DisCatSharp.Tools/DisCatSharp.Docs.SearchIndexer/DisCatSharp.Docs.SearchIndexer.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
@@ -43,6 +44,7 @@
     <File Path="README.md" />
   </Folder>
   <Folder Name="/Tests/">
+    <Project Path="DisCatSharp.Tools/DisCatSharp.Docs.SearchIndexer.Tests/DisCatSharp.Docs.SearchIndexer.Tests.csproj" />
     <Project Path="DisCatSharp.Tests/DisCatSharp.ApplicationCommands.Tests/DisCatSharp.ApplicationCommands.Tests.csproj" />
     <Project Path="DisCatSharp.Tests/DisCatSharp.Configuration.Tests/DisCatSharp.Configuration.Tests.csproj" />
     <Project Path="DisCatSharp.Tests/DisCatSharp.EventHandlers.Tests/DisCatSharp.EventHandlers.Tests.csproj" />
