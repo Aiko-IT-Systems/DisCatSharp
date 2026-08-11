@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import { Miniflare } from "miniflare";
 import { afterEach, describe, expect, it } from "vitest";
 import { unstable_splitSqlQuery } from "wrangler";
+import { createActivationStatements } from "../src/release-sync";
 import { toD1JsonScalar } from "../src/sync-plan";
 
 const runtimes: Miniflare[] = [];
@@ -18,9 +19,11 @@ async function migratedDatabase(): Promise<D1Database> {
   });
   runtimes.push(runtime);
   const database = await runtime.getD1Database("DB");
-  const migration = await readFile(new URL("../migrations/0001_initial.sql", import.meta.url), "utf8");
-  for (const statement of unstable_splitSqlQuery(migration)) {
-    await database.prepare(statement).run();
+  for (const migrationName of ["0001_initial.sql", "0002_staged_releases.sql"]) {
+    const migration = await readFile(new URL(`../migrations/${migrationName}`, import.meta.url), "utf8");
+    for (const statement of unstable_splitSqlQuery(migration)) {
+      await database.prepare(statement).run();
+    }
   }
   return database;
 }
@@ -114,5 +117,65 @@ describe("D1 migration", () => {
     await database.prepare("DELETE FROM documents WHERE record_id = ?").bind("article:guide").run();
     const documents = await database.prepare("SELECT record_id, kind, module, content_hash FROM documents").all();
     expect(documents.results).toEqual([{ record_id: "document:guide", kind: "changelog", module: null, content_hash: "hash-2" }]);
+  });
+
+  it("keeps the active corpus unchanged until a staged release is atomically activated", async () => {
+    const database = await migratedDatabase();
+    await database.prepare(`INSERT INTO sync_state
+      (id, schema_version, source_commit, generated_at, completed_at, ready, symbol_count, document_count, source_chunk_count, modules_json, types_json)
+      VALUES (1, 1, 'oldcommit', '2026-08-10T00:00:00Z', '2026-08-10T00:01:00Z', 1, 1, 1, 0, '[]', '[]')`).run();
+    await database.prepare(`INSERT INTO symbols
+      (record_id, uid, name, display_name, qualified_name, full_name, kind, summary, signature, content, url, related_json, content_hash)
+      VALUES ('symbol:Alpha', 'Library.Alpha', 'Alpha', 'Alpha', 'Library.Alpha', 'Library.Alpha', 'class', 'old token', '', 'old body', '/old.html', '[]', 'old-hash')`).run();
+    await database.prepare(`INSERT INTO documents
+      (record_id, document_key, family, kind, title, description, content, url, source_path, content_hash)
+      VALUES ('document:old', 'old', 'conceptual', 'article', 'Old', 'old document', 'old body', '/old-document.html', 'old.md', 'old-hash')`).run();
+    await database.prepare(`INSERT INTO staged_sync_state
+      (id, schema_version, source_commit, generated_at, completed_at, complete, symbol_count, document_count, source_chunk_count, modules_json, types_json)
+      VALUES (1, 1, 'newcommit', '2026-08-11T00:00:00Z', '2026-08-11T00:01:00Z', 1, 1, 1, 0, '["Library"]', '["article","class"]')`).run();
+    await database.prepare(`INSERT INTO staged_symbols
+      (record_id, uid, name, display_name, qualified_name, full_name, kind, summary, signature, content, url, related_json, content_hash)
+      VALUES ('symbol:Alpha', 'Library.Alpha', 'Alpha', 'Alpha', 'Library.Alpha', 'Library.Alpha', 'class', 'new token', '', 'new body', '/new.html', '[]', 'new-hash')`).run();
+    await database.prepare(`INSERT INTO staged_documents
+      (record_id, document_key, family, kind, title, description, content, url, source_path, content_hash)
+      VALUES ('document:new', 'new', 'conceptual', 'article', 'New', 'new document', 'new body', '/new-document.html', 'new.md', 'new-hash')`).run();
+    await database.prepare("INSERT INTO staged_deletions (table_name, record_id) VALUES ('documents', 'document:old')").run();
+
+    expect(await database.prepare("SELECT summary FROM symbols WHERE record_id = 'symbol:Alpha'").first()).toEqual({ summary: "old token" });
+    expect(await database.prepare("SELECT source_commit FROM sync_state WHERE id = 1").first()).toEqual({ source_commit: "oldcommit" });
+
+    await database.batch(createActivationStatements().map((statement) => database.prepare(statement.sql)));
+
+    expect(await database.prepare("SELECT summary, url FROM symbols WHERE record_id = 'symbol:Alpha'").first()).toEqual({ summary: "new token", url: "/new.html" });
+    expect(await database.prepare("SELECT record_id FROM documents ORDER BY record_id").all()).toMatchObject({ results: [{ record_id: "document:new" }] });
+    expect(await database.prepare("SELECT ready, source_commit FROM sync_state WHERE id = 1").first()).toEqual({ ready: 1, source_commit: "newcommit" });
+    expect(await countMatches(database, "symbols_fts", "old")).toBe(0);
+    expect(await countMatches(database, "symbols_fts", "new")).toBe(1);
+    expect(await database.prepare("SELECT count(*) AS count FROM staged_sync_state").first()).toEqual({ count: 0 });
+  });
+
+  it("rolls back activation and preserves the previous release when a staged row is invalid", async () => {
+    const database = await migratedDatabase();
+    await database.prepare(`INSERT INTO sync_state
+      (id, schema_version, source_commit, generated_at, completed_at, ready, modules_json, types_json)
+      VALUES (1, 1, 'oldcommit', '2026-08-10T00:00:00Z', '2026-08-10T00:01:00Z', 1, '[]', '[]')`).run();
+    await database.prepare(`INSERT INTO symbols
+      (record_id, uid, name, display_name, qualified_name, full_name, kind, summary, signature, content, url, related_json, content_hash)
+      VALUES ('symbol:Alpha', 'Library.Alpha', 'Alpha', 'Alpha', 'Library.Alpha', 'Library.Alpha', 'class', 'old token', '', 'old body', '/old.html', '[]', 'old-hash')`).run();
+    await database.prepare(`INSERT INTO staged_sync_state
+      (id, schema_version, source_commit, generated_at, completed_at, complete, symbol_count, document_count, source_chunk_count, modules_json, types_json)
+      VALUES (1, 1, 'newcommit', '2026-08-11T00:00:00Z', '2026-08-11T00:01:00Z', 1, 1, 1, 0, '[]', '[]')`).run();
+    await database.prepare(`INSERT INTO staged_symbols
+      (record_id, uid, name, display_name, qualified_name, full_name, kind, summary, signature, content, url, related_json, content_hash)
+      VALUES ('symbol:Alpha', 'Library.Alpha', 'Alpha', 'Alpha', 'Library.Alpha', 'Library.Alpha', 'class', 'new token', '', 'new body', '/new.html', '[]', 'new-hash')`).run();
+    await database.prepare(`INSERT INTO staged_documents
+      (record_id, document_key, family, kind, title, description, content, url, source_path, content_hash)
+      VALUES ('document:invalid', 'invalid', 'invalid', 'article', 'Invalid', '', '', '/invalid.html', 'invalid.md', 'bad-hash')`).run();
+
+    await expect(database.batch(createActivationStatements().map((statement) => database.prepare(statement.sql)))).rejects.toThrow();
+
+    expect(await database.prepare("SELECT summary FROM symbols WHERE record_id = 'symbol:Alpha'").first()).toEqual({ summary: "old token" });
+    expect(await database.prepare("SELECT ready, source_commit FROM sync_state WHERE id = 1").first()).toEqual({ ready: 1, source_commit: "oldcommit" });
+    expect(await database.prepare("SELECT count(*) AS count FROM staged_sync_state").first()).toEqual({ count: 1 });
   });
 });

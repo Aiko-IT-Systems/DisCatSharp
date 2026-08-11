@@ -8,6 +8,10 @@ env:
     DOTNET_CLI_TELEMETRY_OPTOUT: true
     DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: true
 
+concurrency:
+    group: documentation-production
+    cancel-in-progress: false
+
 jobs:
     build:
         timeout-minutes: 45
@@ -66,6 +70,9 @@ jobs:
                   --site DisCatSharp.Docs/_site
                   --output DisCatSharp.Docs/obj/search/search-index.json
                   --commit ${{ github.sha }}
+            - name: Write documentation build marker
+              run: npm run marker -- ../obj/search/search-index.json ../_site/search-build.json
+              working-directory: DisCatSharp.Docs/search
             - name: Validate search Worker
               run: |
                   npm run types:check
@@ -91,7 +98,7 @@ jobs:
                     echo "DCS_SEARCH_FIRST_DEPLOYMENT=false" >> "$GITHUB_ENV"
                   fi
               working-directory: DisCatSharp.Docs/search
-            - name: Migrate and synchronize search database
+            - name: Migrate and stage search database
               env:
                   CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
                   CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
@@ -112,9 +119,8 @@ jobs:
                   CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
               run: npm run deploy
               working-directory: DisCatSharp.Docs/search
-            - name: Smoke test search and MCP
-              env:
-                  EXPECTED_BUILD_SHA: ${{ github.sha }}
+            - name: Smoke test existing production search and MCP
+              if: env.DCS_SEARCH_FIRST_DEPLOYMENT == 'false'
               run: npm run smoke:production
               working-directory: DisCatSharp.Docs/search
             - name: Pack Docs
@@ -125,6 +131,12 @@ jobs:
               with:
                   name: dcs-docs.zip
                   path: dcs-docs.zip
+                  retention-days: 5
+            - name: Upload staged search index
+              uses: actions/upload-artifact@v7
+              with:
+                  name: dcs-search-index
+                  path: DisCatSharp.Docs/obj/search/search-index.json
                   retention-days: 5
     #    - name: Force add build files
     #      run: git add DisCatSharp.Docs/obj/.cache/build/* -f
@@ -180,6 +192,48 @@ jobs:
                   committer_email: nyuw@aitsys.dev
                   commit: --signoff
                   message: "Docs update (https://github.com/${{github.repository}}/commit/${{github.sha}})"
+    activate-search:
+        runs-on: ubuntu-latest
+        name: Activate documentation search
+        needs: documentation
+        timeout-minutes: 10
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v7
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: 24
+                  cache: npm
+                  cache-dependency-path: DisCatSharp.Docs/search/package-lock.json
+            - name: Install search dependencies
+              run: npm ci
+              working-directory: DisCatSharp.Docs/search
+            - name: Download staged search index
+              uses: actions/download-artifact@v8
+              with:
+                  name: dcs-search-index
+                  path: DisCatSharp.Docs/obj/search
+            - name: Prepare production search configuration
+              env:
+                  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                  CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+              run: npm run prepare:production
+              working-directory: DisCatSharp.Docs/search
+            - name: Wait for matching documentation deployment
+              run: npm run wait:docs -- ../obj/search/search-index.json
+              working-directory: DisCatSharp.Docs/search
+            - name: Activate staged search index
+              env:
+                  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                  CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+              run: npm run sync:activate -- ../obj/search/search-index.json
+              working-directory: DisCatSharp.Docs/search
+            - name: Smoke test search and MCP
+              env:
+                  EXPECTED_BUILD_SHA: ${{ github.sha }}
+              run: npm run smoke:production
+              working-directory: DisCatSharp.Docs/search
 #    publish-backup:
 #        runs-on: ubuntu-latest
 #        name: Publish documentation on backup server

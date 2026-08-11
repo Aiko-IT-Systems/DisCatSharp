@@ -80,6 +80,9 @@ jobs:
                   --output DisCatSharp.Docs/obj/search/search-index.json
                   --commit ${{ github.sha }}
               working-directory: GitHub/DisCatSharp
+            - name: Write documentation build marker
+              run: npm run marker -- ../obj/search/search-index.json ../_site/search-build.json
+              working-directory: GitHub/DisCatSharp/DisCatSharp.Docs/search
             - name: Validate search Worker and UI
               run: |
                   npm run types:check

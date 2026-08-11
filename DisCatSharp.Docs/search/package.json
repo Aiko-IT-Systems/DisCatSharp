@@ -14,12 +14,15 @@
     "smoke:local": "tsx scripts/smoke-local.ts",
     "smoke:production": "tsx scripts/smoke-production.ts",
     "smoke:workers-dev": "tsx scripts/smoke-workers-dev.ts",
+    "marker": "tsx scripts/write-build-marker.ts",
+    "wait:docs": "tsx scripts/wait-for-docs.ts",
     "prepare:production": "tsx scripts/prepare-production-config.ts",
     "deploy": "wrangler deploy --config wrangler.production.json --minify",
     "deploy:dry": "wrangler deploy --dry-run --outdir dist",
     "migrate:local": "wrangler d1 migrations apply discatsharp-docs-search --local",
     "migrate:remote": "wrangler d1 migrations apply discatsharp-docs-search --remote --config wrangler.production.json",
-    "sync": "tsx scripts/sync-index.ts"
+    "sync": "tsx scripts/sync-index.ts stage",
+    "sync:activate": "tsx scripts/sync-index.ts activate"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "2.0.0",

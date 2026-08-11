@@ -14,9 +14,10 @@ if (!response.ok || !envelope.success || !envelope.result?.subdomain) {
 }
 
 const baseUrl = `https://${workerName}.${envelope.result.subdomain}.workers.dev`;
-const search = await retry(() => fetch(`${baseUrl}/_search?q=DiscordGuild&limit=1`, { headers: { Accept: "application/json" } }));
+const search = await retry(() => fetch(`${baseUrl}/_search?q=DiscordGuild&limit=1`, { headers: { Accept: "application/json" } }), [200, 503]);
 const searchBody = await search.text();
-if (!search.ok || !(JSON.parse(searchBody) as { results?: unknown[] }).results?.length) {
+const searchValue = JSON.parse(searchBody) as { results?: unknown[]; error?: { code?: string } };
+if (search.ok ? !searchValue.results?.length : searchValue.error?.code !== "index_not_ready") {
   throw new Error(`Workers.dev search smoke failed (${search.status}): ${searchBody}`);
 }
 
@@ -37,12 +38,12 @@ if (!mcp.ok || !mcpBody.includes("2025-06-18")) {
 
 console.log(`Workers.dev search and MCP smoke passed at ${baseUrl}.`);
 
-async function retry(operation: () => Promise<Response>): Promise<Response> {
+async function retry(operation: () => Promise<Response>, acceptedStatuses: number[] = [200]): Promise<Response> {
   let lastError: unknown;
   for (let attempt = 0; attempt < 6; attempt++) {
     try {
       const response = await operation();
-      if (response.ok) return response;
+      if (acceptedStatuses.includes(response.status)) return response;
       lastError = new Error(`Workers.dev returned HTTP ${response.status}.`);
       await response.body?.cancel();
     } catch (error) {

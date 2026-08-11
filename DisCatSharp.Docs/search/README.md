@@ -13,6 +13,7 @@ D1 stores:
 - `documents`: one row per manifest `Conceptual` output, always with `family = conceptual` and a more specific `kind`.
 - `source_chunks`: the only source paths and ranges exposed by `get_source`.
 - External-content `symbols_fts` and `documents_fts` tables maintained by insert, update, and delete triggers.
+- `staged_*`: a resumable, non-searchable release delta plus stale-record markers. These rows never affect the active corpus until activation.
 
 HTTP and MCP use the same `SearchService`. Search first batches indexed exact lookups, then only issues FTS queries for result families that still need fuzzy candidates. Exact UID, full-name, qualified-name, and short-name tiers score above document exact matches and BM25 results. Final ties use title and typed ID for deterministic ordering.
 
@@ -87,15 +88,16 @@ No account ID, database UUID, token, or route credential is committed. The workf
 
 ## Production rollout and recovery
 
-The production workflow performs this order and does not publish new HTML if any stage fails:
+Production documentation runs are serialized so their singleton staging areas cannot replace one another. The workflow performs this order:
 
 1. Build DocFX, remove/assert absence of stock browser search assets, generate the manifest-driven artifact, and run all .NET/Worker validation.
 2. Discover or create D1 by name, inject its UUID into ignored runtime configs, and, when the Worker does not exist yet, deploy the route-free bootstrap so a Workers.dev endpoint exists.
-3. Apply additive D1 migrations and hash-synchronize changed records. `sync_state.ready` remains false during an initial seed and is set last.
-4. On the first deployment, discover the account Workers.dev subdomain through the Cloudflare API and smoke-test search plus MCP before attaching custom-domain routes.
-5. Deploy the narrow `docs.dcs.aitsys.dev/_search*` and `docs.dcs.aitsys.dev/mcp*` routes, smoke-test both, then package and publish `_site`.
+3. Apply additive D1 migrations and stage only new, changed, and stale records. The existing active corpus and its `sync_state` remain untouched; on a first seed, the API remains `503 index_not_ready`.
+4. Smoke-test the bootstrap or existing active service, deploy the narrow `docs.dcs.aitsys.dev/_search*` and `docs.dcs.aitsys.dev/mcp*` routes, then package and publish `_site`.
+5. Poll the published site's cache-busted `search-build.json` until both its commit and build ID match the staged artifact.
+6. Atomically apply the staged delta, stale deletions, `sync_state`, and staging cleanup in one D1 transaction, then smoke-test the newly active build.
 
-An interrupted initial seed is resumed by rerunning the workflow: existing IDs/content hashes are read, completed rows are skipped, missing or changed rows are upserted, stale rows are removed only after upserts, and `sync_state` is updated last. The document-key conflict target also safely migrates any pre-V1 classification-prefixed local rows to `document:` before their stale IDs are deleted. Subsequent builds use the same delta process. Review the sync summary and `rowsWritten` log before retrying a very large seed; if the D1 Free daily write allowance is near exhaustion, wait for its daily reset and rerun rather than deleting the database.
+An interrupted stage is resumed by rerunning the workflow: completed staging rows and deletion markers are skipped. If staging, documentation publication, marker propagation, or activation fails, the previous active corpus stays searchable; a failed activation transaction rolls back completely and retains its staged data for retry. The document-key conflict target also safely migrates any pre-V1 classification-prefixed rows to `document:` before their stale IDs are deleted. Review the sync summary and `rowsWritten` log before retrying a very large first seed; if the D1 Free daily write allowance is near exhaustion, wait for its daily reset and rerun rather than deleting the database.
 
 For an intentional manual rollout from `DisCatSharp.Docs/search`:
 
@@ -109,8 +111,14 @@ npm run prepare:production
 npx wrangler deploy --config wrangler.bootstrap.production.json --minify
 npm run migrate:remote
 npm run sync -- ../obj/search/search-index.json
+# Only on the first deployment, while the route-free bootstrap is available:
 npm run smoke:workers-dev
 npm run deploy
+# Publish DisCatSharp.Docs/_site, then wait for its matching marker before activation:
+npm run wait:docs -- ../obj/search/search-index.json
+npm run sync:activate -- ../obj/search/search-index.json
+$env:EXPECTED_BUILD_SHA = (git rev-parse HEAD)
+npm run smoke:production
 ```
 
-Only run those commands with the required Cloudflare environment values and explicit approval to mutate production. PR documentation workflows never run them; previews build and validate their own artifact but query the production `/_search` endpoint.
+Do not activate before the matching marker is live. Only run these commands with the required Cloudflare environment values and explicit approval to mutate production. PR documentation workflows never run them; previews build and validate their own artifact but query the production `/_search` endpoint.
