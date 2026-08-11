@@ -2,6 +2,7 @@ export interface SearchInput {
   query: string;
   types?: readonly string[];
   module?: string;
+  corpus?: string;
   limit?: number;
   symbolsOnly?: boolean;
 }
@@ -14,11 +15,14 @@ export interface SearchResult {
   summary: string;
   url: string;
   module: string | null;
+  corpus: string;
+  repository: string;
   score: number;
 }
 
 export interface SearchResponse {
   build: string;
+  builds: Record<string, string>;
   query: string;
   results: SearchResult[];
 }
@@ -41,6 +45,9 @@ export class SearchError extends Error {
 }
 
 export interface SyncStateRow {
+  corpus: string;
+  repository: string;
+  site_base_url: string | null;
   ready: number;
   source_commit: string;
   generated_at: string;
@@ -56,5 +63,7 @@ export interface SearchRow {
   summary: string;
   url: string;
   module: string | null;
+  corpus: string;
+  repository: string;
   score: number;
 }

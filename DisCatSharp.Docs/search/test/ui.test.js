@@ -2,14 +2,14 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { JSDOM } from "jsdom";
 import { initializeDocumentationSearch } from "../../dcs/public/search.js";
 
-function mount() {
+function mount(endpoint = "/_search") {
 	const dom = new JSDOM("<!doctype html><html><head></head><body></body></html>", { url: "https://docs.dcs.aitsys.dev/" });
 	globalThis.window = dom.window;
 	globalThis.document = dom.window.document;
 	globalThis.Element = dom.window.Element;
 	globalThis.Event = dom.window.Event;
 	globalThis.KeyboardEvent = dom.window.KeyboardEvent;
-	document.head.innerHTML = '<meta name="dcs-search-endpoint" content="/_search">';
+	document.head.innerHTML = `<meta name="dcs-search-endpoint" content="${endpoint}">`;
 	document.body.innerHTML = `
 		<form id="dcs-search"><input id="dcs-search-query" disabled></form>
 		<section id="dcs-search-results" hidden>
@@ -53,6 +53,18 @@ describe("documentation search UI", () => {
 		const url = new URL(fetchMock.mock.calls[0][0]);
 		expect(url.searchParams.get("type")).toBe("changelog");
 		expect(search.activeType).toBe("changelog");
+	});
+
+	it("preserves a corpus fixed by the documentation site endpoint", async () => {
+		const fetchMock = vi.spyOn(globalThis, "fetch").mockImplementation(() => ok());
+		const search = mount("https://docs.dcs.aitsys.dev/_search?corpus=extensions");
+		document.querySelector("#dcs-search-query").value = "TwoFactor";
+		await search.runSearch();
+
+		const url = new URL(fetchMock.mock.calls[0][0]);
+		expect(url.origin).toBe("https://docs.dcs.aitsys.dev");
+		expect(url.searchParams.get("corpus")).toBe("extensions");
+		expect(url.searchParams.get("q")).toBe("TwoFactor");
 	});
 
 	it("renders a stable document ID using kind only as display metadata", async () => {

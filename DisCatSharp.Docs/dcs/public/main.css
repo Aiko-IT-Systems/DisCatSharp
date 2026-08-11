@@ -282,6 +282,18 @@ td {
 	padding: 0;
 }
 
+.catpunk-toc {
+	grid-column: 1;
+}
+
+.catpunk-content {
+	grid-column: 2;
+}
+
+.catpunk-affix {
+	grid-column: 3;
+}
+
 body[data-yaml-mime="ManagedReference"] .catpunk-affix:not(:has(li)),
 body[data-yaml-mime="ManagedReference"] .catpunk-affix.is-empty {
 	display: none;
@@ -320,6 +332,7 @@ body[data-uid="404"] .catpunk-affix {
 
 .catpunk-content {
 	min-width: 0;
+	width: 100% !important;
 	padding: 1.5rem clamp(1.5rem, 3vw, 3rem);
 }
 

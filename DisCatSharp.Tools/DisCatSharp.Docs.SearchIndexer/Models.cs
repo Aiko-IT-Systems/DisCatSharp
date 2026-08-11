@@ -5,6 +5,9 @@ namespace DisCatSharp.Docs.SearchIndexer;
 
 public sealed record SearchIndexArtifact(
 	int SchemaVersion,
+	string Corpus,
+	string Repository,
+	string? SiteBaseUrl,
 	string SourceCommit,
 	DateTimeOffset GeneratedAt,
 	SearchIndexCounts Counts,
@@ -14,6 +17,11 @@ public sealed record SearchIndexArtifact(
 	IReadOnlyList<SearchDocument> Documents,
 	IReadOnlyList<SourceChunk> SourceChunks
 );
+
+public sealed record SearchCorpusOptions(string Name, string Repository, string? SiteBaseUrl = null, string? SourcePathPrefix = null)
+{
+	public static SearchCorpusOptions Main { get; } = new("main", "Aiko-IT-Systems/DisCatSharp");
+}
 
 public sealed record SearchIndexCounts(int Symbols, int Documents, int ConceptualManifestItems, int SourceChunks);
 

@@ -19,7 +19,7 @@ async function migratedDatabase(): Promise<D1Database> {
   });
   runtimes.push(runtime);
   const database = await runtime.getD1Database("DB");
-  for (const migrationName of ["0001_initial.sql", "0002_staged_releases.sql"]) {
+  for (const migrationName of ["0001_initial.sql", "0002_staged_releases.sql", "0003_documentation_corpora.sql"]) {
     const migration = await readFile(new URL(`../migrations/${migrationName}`, import.meta.url), "utf8");
     for (const statement of unstable_splitSqlQuery(migration)) {
       await database.prepare(statement).run();
@@ -44,6 +44,7 @@ describe("D1 migration", () => {
       "symbols_name_nocase",
       "symbols_qualified_name_nocase",
       "symbols_full_name_nocase",
+      "symbols_corpus_canonical_uid_nocase",
       "documents_title_nocase",
       "documents_key_nocase",
       "source_chunks_path_range",
@@ -130,9 +131,9 @@ describe("D1 migration", () => {
     await database.prepare(`INSERT INTO documents
       (record_id, document_key, family, kind, title, description, content, url, source_path, content_hash)
       VALUES ('document:old', 'old', 'conceptual', 'article', 'Old', 'old document', 'old body', '/old-document.html', 'old.md', 'old-hash')`).run();
-    await database.prepare(`INSERT INTO staged_sync_state
-      (id, schema_version, source_commit, generated_at, completed_at, complete, symbol_count, document_count, source_chunk_count, modules_json, types_json)
-      VALUES (1, 1, 'newcommit', '2026-08-11T00:00:00Z', '2026-08-11T00:01:00Z', 1, 1, 1, 0, '["Library"]', '["article","class"]')`).run();
+    await database.prepare(`INSERT INTO staged_corpus_sync_state
+      (corpus, repository, schema_version, source_commit, generated_at, completed_at, complete, symbol_count, document_count, source_chunk_count, modules_json, types_json)
+      VALUES ('main', 'Aiko-IT-Systems/DisCatSharp', 1, 'newcommit', '2026-08-11T00:00:00Z', '2026-08-11T00:01:00Z', 1, 1, 1, 0, '["Library"]', '["article","class"]')`).run();
     await database.prepare(`INSERT INTO staged_symbols
       (record_id, uid, name, display_name, qualified_name, full_name, kind, summary, signature, content, url, related_json, content_hash)
       VALUES ('symbol:Alpha', 'Library.Alpha', 'Alpha', 'Alpha', 'Library.Alpha', 'Library.Alpha', 'class', 'new token', '', 'new body', '/new.html', '[]', 'new-hash')`).run();
@@ -144,14 +145,14 @@ describe("D1 migration", () => {
     expect(await database.prepare("SELECT summary FROM symbols WHERE record_id = 'symbol:Alpha'").first()).toEqual({ summary: "old token" });
     expect(await database.prepare("SELECT source_commit FROM sync_state WHERE id = 1").first()).toEqual({ source_commit: "oldcommit" });
 
-    await database.batch(createActivationStatements().map((statement) => database.prepare(statement.sql)));
+    await database.batch(createActivationStatements("main").map((statement) => database.prepare(statement.sql).bind(...(statement.params ?? []))));
 
     expect(await database.prepare("SELECT summary, url FROM symbols WHERE record_id = 'symbol:Alpha'").first()).toEqual({ summary: "new token", url: "/new.html" });
     expect(await database.prepare("SELECT record_id FROM documents ORDER BY record_id").all()).toMatchObject({ results: [{ record_id: "document:new" }] });
     expect(await database.prepare("SELECT ready, source_commit FROM sync_state WHERE id = 1").first()).toEqual({ ready: 1, source_commit: "newcommit" });
     expect(await countMatches(database, "symbols_fts", "old")).toBe(0);
     expect(await countMatches(database, "symbols_fts", "new")).toBe(1);
-    expect(await database.prepare("SELECT count(*) AS count FROM staged_sync_state").first()).toEqual({ count: 0 });
+    expect(await database.prepare("SELECT count(*) AS count FROM staged_corpus_sync_state").first()).toEqual({ count: 0 });
   });
 
   it("rolls back activation and preserves the previous release when a staged row is invalid", async () => {
@@ -162,9 +163,9 @@ describe("D1 migration", () => {
     await database.prepare(`INSERT INTO symbols
       (record_id, uid, name, display_name, qualified_name, full_name, kind, summary, signature, content, url, related_json, content_hash)
       VALUES ('symbol:Alpha', 'Library.Alpha', 'Alpha', 'Alpha', 'Library.Alpha', 'Library.Alpha', 'class', 'old token', '', 'old body', '/old.html', '[]', 'old-hash')`).run();
-    await database.prepare(`INSERT INTO staged_sync_state
-      (id, schema_version, source_commit, generated_at, completed_at, complete, symbol_count, document_count, source_chunk_count, modules_json, types_json)
-      VALUES (1, 1, 'newcommit', '2026-08-11T00:00:00Z', '2026-08-11T00:01:00Z', 1, 1, 1, 0, '[]', '[]')`).run();
+    await database.prepare(`INSERT INTO staged_corpus_sync_state
+      (corpus, repository, schema_version, source_commit, generated_at, completed_at, complete, symbol_count, document_count, source_chunk_count, modules_json, types_json)
+      VALUES ('main', 'Aiko-IT-Systems/DisCatSharp', 1, 'newcommit', '2026-08-11T00:00:00Z', '2026-08-11T00:01:00Z', 1, 1, 1, 0, '[]', '[]')`).run();
     await database.prepare(`INSERT INTO staged_symbols
       (record_id, uid, name, display_name, qualified_name, full_name, kind, summary, signature, content, url, related_json, content_hash)
       VALUES ('symbol:Alpha', 'Library.Alpha', 'Alpha', 'Alpha', 'Library.Alpha', 'Library.Alpha', 'class', 'new token', '', 'new body', '/new.html', '[]', 'new-hash')`).run();
@@ -172,10 +173,56 @@ describe("D1 migration", () => {
       (record_id, document_key, family, kind, title, description, content, url, source_path, content_hash)
       VALUES ('document:invalid', 'invalid', 'invalid', 'article', 'Invalid', '', '', '/invalid.html', 'invalid.md', 'bad-hash')`).run();
 
-    await expect(database.batch(createActivationStatements().map((statement) => database.prepare(statement.sql)))).rejects.toThrow();
+    await expect(database.batch(createActivationStatements("main").map((statement) => database.prepare(statement.sql).bind(...(statement.params ?? []))))).rejects.toThrow();
 
     expect(await database.prepare("SELECT summary FROM symbols WHERE record_id = 'symbol:Alpha'").first()).toEqual({ summary: "old token" });
     expect(await database.prepare("SELECT ready, source_commit FROM sync_state WHERE id = 1").first()).toEqual({ ready: 1, source_commit: "oldcommit" });
-    expect(await database.prepare("SELECT count(*) AS count FROM staged_sync_state").first()).toEqual({ count: 1 });
+    expect(await database.prepare("SELECT count(*) AS count FROM staged_corpus_sync_state").first()).toEqual({ count: 1 });
+  });
+
+  it("activates Extensions without replacing or deleting the main documentation corpus", async () => {
+    const database = await migratedDatabase();
+    await database.prepare(`INSERT INTO sync_state
+      (id, schema_version, source_commit, generated_at, ready, modules_json, types_json)
+      VALUES (1, 1, 'maincommit', '2026-08-10T00:00:00Z', 1, '[]', '[]')`).run();
+    await database.prepare(`INSERT INTO corpus_sync_state
+      (corpus, repository, schema_version, source_commit, generated_at, ready, modules_json, types_json)
+      VALUES ('main', 'Aiko-IT-Systems/DisCatSharp', 1, 'maincommit', '2026-08-10T00:00:00Z', 1, '[]', '[]')`).run();
+    await database.prepare(`INSERT INTO documents
+      (record_id, document_key, family, kind, title, description, content, url, source_path, content_hash, corpus, repository)
+      VALUES ('document:home', 'home', 'conceptual', 'article', 'Main', '', 'main body', '/index.html', 'index.md', 'main-hash', 'main', 'Aiko-IT-Systems/DisCatSharp')`).run();
+    await database.prepare(`INSERT INTO symbols
+      (record_id, uid, canonical_uid, name, display_name, qualified_name, full_name, kind, summary, signature, content, url,
+       related_json, content_hash, corpus, repository)
+      VALUES ('symbol:Shared.Namespace', 'Shared.Namespace', 'Shared.Namespace', 'Namespace', 'Shared.Namespace', 'Shared.Namespace',
+       'Shared.Namespace', 'namespace', '', '', '', '/api/shared.html', '[]', 'main-symbol-hash', 'main', 'Aiko-IT-Systems/DisCatSharp')`).run();
+    await database.prepare(`INSERT INTO staged_corpus_sync_state
+      (corpus, repository, site_base_url, schema_version, source_commit, generated_at, completed_at, complete,
+       symbol_count, document_count, source_chunk_count, modules_json, types_json)
+      VALUES ('extensions', 'Aiko-IT-Systems/DisCatSharp.Extensions', 'https://ext-docs.dcs.aitsys.dev', 1, 'extcommit',
+       '2026-08-11T00:00:00Z', '2026-08-11T00:01:00Z', 1, 1, 1, 0, '[]', '["article","conceptual","namespace"]')`).run();
+    await database.prepare(`INSERT INTO staged_symbols
+      (record_id, uid, canonical_uid, name, display_name, qualified_name, full_name, kind, summary, signature, content, url,
+       related_json, content_hash, corpus, repository)
+      VALUES ('symbol:extensions:Shared.Namespace', 'extensions:Shared.Namespace', 'Shared.Namespace', 'Namespace', 'Shared.Namespace',
+       'Shared.Namespace', 'Shared.Namespace', 'namespace', '', '', '', 'https://ext-docs.dcs.aitsys.dev/api/shared.html', '[]',
+       'ext-symbol-hash', 'extensions', 'Aiko-IT-Systems/DisCatSharp.Extensions')`).run();
+    await database.prepare(`INSERT INTO staged_documents
+      (record_id, document_key, family, kind, title, description, content, url, source_path, content_hash, corpus, repository)
+      VALUES ('document:extensions:home', 'extensions:home', 'conceptual', 'article', 'Extensions', '', 'extensions body',
+       'https://ext-docs.dcs.aitsys.dev/index.html', 'DisCatSharp.Extensions/index.md', 'ext-hash', 'extensions', 'Aiko-IT-Systems/DisCatSharp.Extensions')`).run();
+
+    await database.batch(createActivationStatements("extensions").map((statement) => database.prepare(statement.sql).bind(...(statement.params ?? []))));
+
+    expect(await database.prepare("SELECT record_id, corpus FROM documents ORDER BY record_id").all()).toMatchObject({ results: [
+      { record_id: "document:extensions:home", corpus: "extensions" },
+      { record_id: "document:home", corpus: "main" },
+    ] });
+    expect(await database.prepare("SELECT record_id, uid, canonical_uid, corpus FROM symbols ORDER BY record_id").all()).toMatchObject({ results: [
+      { record_id: "symbol:Shared.Namespace", uid: "Shared.Namespace", canonical_uid: "Shared.Namespace", corpus: "main" },
+      { record_id: "symbol:extensions:Shared.Namespace", uid: "extensions:Shared.Namespace", canonical_uid: "Shared.Namespace", corpus: "extensions" },
+    ] });
+    expect(await database.prepare("SELECT source_commit FROM sync_state WHERE id = 1").first()).toEqual({ source_commit: "maincommit" });
+    expect(await database.prepare("SELECT source_commit FROM corpus_sync_state WHERE corpus = 'extensions'").first()).toEqual({ source_commit: "extcommit" });
   });
 });

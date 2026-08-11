@@ -3,7 +3,7 @@ import { createDisCatSharpMcpServer } from "./mcp";
 import { SearchService, type SearchMetrics } from "./search-service";
 import { SearchError } from "./types";
 
-const SEARCH_PARAMETERS = new Set(["q", "type", "module", "limit"]);
+const SEARCH_PARAMETERS = new Set(["q", "type", "module", "corpus", "limit"]);
 const MCP_HOSTNAMES = ["docs.dcs.aitsys.dev", "localhost", "127.0.0.1"];
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -100,6 +100,7 @@ async function handleSearchRequest(request: Request, db: D1Database, symbolsOnly
   const query = url.searchParams.get("q") ?? "";
   const typeValue = url.searchParams.get("type");
   const module = url.searchParams.get("module") ?? undefined;
+  const corpus = url.searchParams.get("corpus") ?? undefined;
   const rawLimit = url.searchParams.get("limit");
   const limit = rawLimit === null || rawLimit === "" ? undefined : Number(rawLimit);
   const service = new SearchService(db);
@@ -108,6 +109,7 @@ async function handleSearchRequest(request: Request, db: D1Database, symbolsOnly
       query,
       types: typeValue === null ? undefined : typeValue.split(","),
       module,
+      corpus,
       limit,
       symbolsOnly,
     });

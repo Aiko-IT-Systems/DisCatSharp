@@ -10,7 +10,7 @@ using YamlDotNet.Serialization;
 
 namespace DisCatSharp.Docs.SearchIndexer;
 
-public sealed partial class SearchIndexBuilder(string repositoryRoot, string docsRoot, string siteRoot)
+public sealed partial class SearchIndexBuilder(string repositoryRoot, string docsRoot, string siteRoot, SearchCorpusOptions? corpusOptions = null)
 {
 	private const int SchemaVersion = 1;
 	private const int MaxChunkLines = 200;
@@ -19,6 +19,7 @@ public sealed partial class SearchIndexBuilder(string repositoryRoot, string doc
 	private readonly string _repositoryRoot = Path.GetFullPath(repositoryRoot);
 	private readonly string _docsRoot = Path.GetFullPath(docsRoot);
 	private readonly string _siteRoot = Path.GetFullPath(siteRoot);
+	private readonly SearchCorpusOptions _corpus = ValidateCorpus(corpusOptions ?? SearchCorpusOptions.Main);
 	private readonly IDeserializer _yaml = new DeserializerBuilder().IgnoreUnmatchedProperties().Build();
 
 	public async Task<SearchIndexArtifact> BuildAsync(string? sourceCommit = null, CancellationToken cancellationToken = default)
@@ -51,6 +52,9 @@ public sealed partial class SearchIndexBuilder(string repositoryRoot, string doc
 
 		return new SearchIndexArtifact(
 			SchemaVersion,
+			this._corpus.Name,
+			this._corpus.Repository,
+			this._corpus.SiteBaseUrl,
 			sourceCommit ?? ResolveCommit(this._repositoryRoot),
 			DateTimeOffset.UtcNow,
 			new SearchIndexCounts(symbols.Count, documents.Count, conceptualCount, sourceChunks.Count),
@@ -86,9 +90,12 @@ public sealed partial class SearchIndexBuilder(string repositoryRoot, string doc
 
 		var spans = await this.ResolveSourceSpansAsync(pending.Select(entry => entry.Source).OfType<SourceLocation>(), cancellationToken);
 		var symbols = new List<SearchSymbol>(pending.Count);
-		foreach (var (item, url, initialSource) in pending)
+		foreach (var (item, canonicalUrl, initialSource) in pending)
 		{
 			var source = initialSource is null ? null : initialSource with { EndLine = spans.GetValueOrDefault((initialSource.Path, initialSource.StartLine), initialSource.StartLine) };
+			if (source is not null)
+				source = source with { Path = this.CreatePublicSourcePath(source.Path) };
+			var url = this.CreatePublicUrl(canonicalUrl);
 			var displayName = item.Name ?? item.MemberId ?? item.Uid!;
 			var simpleName = GetSimpleName(item);
 			var qualifiedName = StripArguments(item.NameWithType ?? displayName);
@@ -101,7 +108,7 @@ public sealed partial class SearchIndexBuilder(string repositoryRoot, string doc
 			var related = item.Children.Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).Take(MaxRelatedMembers).ToArray();
 			var hash = Hash(string.Join('\n', item.Uid, displayName, simpleName, qualifiedName, fullName, kind, item.Namespace, module, item.Parent, summary, signature, content, url, source?.Path, source?.StartLine, source?.EndLine, string.Join('\n', related)));
 
-			symbols.Add(new SearchSymbol($"symbol:{item.Uid}", item.Uid!, simpleName, displayName, qualifiedName, fullName, kind, item.Namespace, module, item.Parent, summary, signature, content, url, source, related, hash));
+			symbols.Add(new SearchSymbol(this.CreateRecordId("symbol", item.Uid!), item.Uid!, simpleName, displayName, qualifiedName, fullName, kind, item.Namespace, module, item.Parent, summary, signature, content, url, source, related, hash));
 		}
 
 		return symbols.OrderBy(symbol => symbol.Uid, StringComparer.Ordinal).ToList();
@@ -119,17 +126,20 @@ public sealed partial class SearchIndexBuilder(string repositoryRoot, string doc
 			if (!string.Equals(Path.GetExtension(sourcePath), ".md", StringComparison.OrdinalIgnoreCase))
 				throw new InvalidDataException($"Conceptual source '{sourcePath}' is not a Markdown file.");
 
-			var url = GetOutputUrl(file);
+			var outputUrl = GetOutputUrl(file);
+			var url = this.CreatePublicUrl(outputUrl);
 			if (!seenUrls.Add(url))
 				throw new InvalidDataException($"Multiple conceptual manifest items produce '{url}'.");
 
 			var markdown = await File.ReadAllTextAsync(ResolveWithin(this._docsRoot, sourcePath), cancellationToken);
 			var parsed = MarkdownParser.Parse(markdown, Path.GetFileNameWithoutExtension(sourcePath));
 			var kind = ConceptualClassifier.Classify(sourcePath);
-			var key = CreateDocumentKey(url);
+			var canonicalKey = CreateDocumentKey(outputUrl);
+			var key = this._corpus.Name == "main" ? canonicalKey : $"{this._corpus.Name}:{canonicalKey}";
 			var module = GetConceptualModule(sourcePath);
-			var hash = Hash(string.Join('\n', key, kind, parsed.Title, parsed.Description, parsed.Content, url, module, sourcePath));
-			documents.Add(new SearchDocument($"document:{key}", key, "conceptual", kind, parsed.Title, parsed.Description, parsed.Content, url, module, sourcePath, hash));
+			var publicSourcePath = this.CreatePublicSourcePath(sourcePath);
+			var hash = Hash(string.Join('\n', key, kind, parsed.Title, parsed.Description, parsed.Content, url, module, publicSourcePath));
+			documents.Add(new SearchDocument(this.CreateRecordId("document", canonicalKey), key, "conceptual", kind, parsed.Title, parsed.Description, parsed.Content, url, module, publicSourcePath, hash));
 		}
 
 		var documentUrls = documents.Select(document => document.Url).ToHashSet(StringComparer.OrdinalIgnoreCase);
@@ -144,7 +154,7 @@ public sealed partial class SearchIndexBuilder(string repositoryRoot, string doc
 		var chunks = new List<SourceChunk>();
 		foreach (var sourcePath in symbols.Select(symbol => symbol.Source?.Path).Where(path => path is not null).Select(path => path!).Distinct(StringComparer.OrdinalIgnoreCase).Order(StringComparer.OrdinalIgnoreCase))
 		{
-			var content = await File.ReadAllTextAsync(ResolveWithin(this._repositoryRoot, sourcePath), cancellationToken);
+			var content = await File.ReadAllTextAsync(ResolveWithin(this._repositoryRoot, this.GetRepositorySourcePath(sourcePath)), cancellationToken);
 			var lines = content.Replace("\r\n", "\n", StringComparison.Ordinal).Replace('\r', '\n').Split('\n');
 			var tree = CSharpSyntaxTree.ParseText(content, cancellationToken: cancellationToken);
 			var root = await tree.GetRootAsync(cancellationToken);
@@ -188,7 +198,7 @@ public sealed partial class SearchIndexBuilder(string repositoryRoot, string doc
 				var chunkContent = string.Join('\n', lines[start..end]);
 				var startLine = start + 1;
 				var endLine = end;
-				var id = $"source:{sourcePath}#L{startLine}-L{endLine}";
+				var id = this.CreateRecordId("source", $"{sourcePath}#L{startLine}-L{endLine}");
 				chunks.Add(new SourceChunk(id, sourcePath, "csharp", startLine, endLine, chunkContent, Hash(string.Join('\n', sourcePath, startLine, endLine, chunkContent))));
 				start = end;
 			}
@@ -323,6 +333,46 @@ public sealed partial class SearchIndexBuilder(string repositoryRoot, string doc
 	{
 		var segments = sourcePath.Split('/');
 		return segments.Length > 2 && string.Equals(segments[0], "api", StringComparison.OrdinalIgnoreCase) ? segments[1] : null;
+	}
+
+	private string CreateRecordId(string family, string key) => this._corpus.Name == "main"
+		? $"{family}:{key}"
+		: $"{family}:{this._corpus.Name}:{key}";
+
+	private string CreatePublicUrl(string relativeUrl) => this._corpus.SiteBaseUrl is null
+		? relativeUrl
+		: $"{this._corpus.SiteBaseUrl}{relativeUrl}";
+
+	private string CreatePublicSourcePath(string sourcePath) => this._corpus.SourcePathPrefix is null
+		? sourcePath
+		: $"{this._corpus.SourcePathPrefix}/{sourcePath}";
+
+	private string GetRepositorySourcePath(string sourcePath)
+	{
+		if (this._corpus.SourcePathPrefix is null)
+			return sourcePath;
+		var prefix = this._corpus.SourcePathPrefix + "/";
+		if (!sourcePath.StartsWith(prefix, StringComparison.Ordinal))
+			throw new InvalidDataException($"Indexed source '{sourcePath}' does not use the configured corpus prefix.");
+		return sourcePath[prefix.Length..];
+	}
+
+	private static SearchCorpusOptions ValidateCorpus(SearchCorpusOptions options)
+	{
+		if (string.IsNullOrWhiteSpace(options.Name) || !options.Name.All(character => char.IsAsciiLetterOrDigit(character) || character == '-'))
+			throw new ArgumentException("Corpus names may only contain ASCII letters, digits, and hyphens.", nameof(options));
+		var name = options.Name.ToLowerInvariant();
+		if (string.IsNullOrWhiteSpace(options.Repository) || !options.Repository.Contains('/', StringComparison.Ordinal))
+			throw new ArgumentException("Repository metadata must use the owner/name form.", nameof(options));
+		string? siteBaseUrl = null;
+		if (!string.IsNullOrWhiteSpace(options.SiteBaseUrl))
+		{
+			if (!Uri.TryCreate(options.SiteBaseUrl, UriKind.Absolute, out var uri) || uri.Scheme != Uri.UriSchemeHttps || uri.PathAndQuery != "/" || !string.IsNullOrEmpty(uri.Fragment))
+				throw new ArgumentException("The site base URL must be an HTTPS origin without a path, query, or fragment.", nameof(options));
+			siteBaseUrl = uri.GetLeftPart(UriPartial.Authority);
+		}
+		var sourcePrefix = string.IsNullOrWhiteSpace(options.SourcePathPrefix) ? null : NormalizeRelativePath(options.SourcePathPrefix);
+		return new SearchCorpusOptions(name, options.Repository.Trim(), siteBaseUrl, sourcePrefix);
 	}
 
 	internal static string NormalizeRelativePath(string path)

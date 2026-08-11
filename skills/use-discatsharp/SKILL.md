@@ -6,7 +6,7 @@ license: MIT
 
 # Use DisCatSharp
 
-Answer from the consuming project's DisCatSharp version and verified DisCatSharp evidence. Prefer the public documentation MCP when it is available; do not infer APIs from DSharpPlus, Discord.Net, Pycord, or another Discord library.
+Answer from the consuming project's DisCatSharp version and verified DisCatSharp evidence. The public documentation MCP covers the main library and official DisCatSharp.Extensions; prefer it when available. Do not infer APIs from DSharpPlus, Discord.Net, Pycord, or another Discord library.
 
 ## Establish the project context
 
@@ -23,8 +23,8 @@ Read [references/modules.md](references/modules.md) when choosing packages or ex
 
 When the DisCatSharp documentation MCP is connected, use the smallest useful sequence:
 
-1. Call `search` for a broad feature, workflow, or conceptual question.
-2. Call `find_symbol` for exact types, members, qualified names, and overloads.
+1. Call `search` for a broad feature, workflow, or conceptual question. Search both corpora unless the project or question clearly concerns only `main` or `extensions`.
+2. Call `find_symbol` for exact types, members, qualified names, and overloads. Use the corpus filter to disambiguate types that exist in both repositories.
 3. Call `fetch` with the returned `symbol:` or `document:` ID before relying on a result's full documentation.
 4. Call `get_source` only for a repository-relative path and bounded range returned by indexed symbol metadata, and only when documented behavior is insufficient.
 

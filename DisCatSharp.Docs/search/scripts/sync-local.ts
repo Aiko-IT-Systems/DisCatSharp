@@ -16,43 +16,53 @@ interface ArtifactChunk {
   id: string; path: string; language: string; startLine: number; endLine: number; content: string; contentHash: string;
 }
 interface SearchArtifact {
-  schemaVersion: number; sourceCommit: string; generatedAt: string; modules: string[]; types: string[];
+  schemaVersion: number; corpus?: string; repository?: string; siteBaseUrl?: string | null; sourceCommit: string; generatedAt: string; modules: string[]; types: string[];
   symbols: ArtifactSymbol[]; documents: ArtifactDocument[]; sourceChunks: ArtifactChunk[];
 }
 
 const artifactPath = resolve(process.argv[2] ?? "../obj/search/search-index.json");
 const artifact = JSON.parse(await readFile(artifactPath, "utf8")) as SearchArtifact;
 if (artifact.schemaVersion !== 1) throw new Error(`Unsupported search artifact schema version ${artifact.schemaVersion}; expected 1.`);
+const corpus = artifact.corpus ?? "main";
+const repository = artifact.repository ?? "Aiko-IT-Systems/DisCatSharp";
 const sqlPath = resolve("dist-local/search-seed.sql");
 await mkdir(dirname(sqlPath), { recursive: true });
 
 const statements: string[] = [
-  `INSERT INTO sync_state (id, schema_version, source_commit, generated_at, completed_at, ready, symbol_count, document_count, source_chunk_count, modules_json, types_json)
-   VALUES (1, ${sql(artifact.schemaVersion)}, ${sql(artifact.sourceCommit)}, ${sql(artifact.generatedAt)}, NULL, 0, 0, 0, 0, ${sql(JSON.stringify(artifact.modules))}, ${sql(JSON.stringify(artifact.types))})
-   ON CONFLICT(id) DO UPDATE SET schema_version=excluded.schema_version, source_commit=excluded.source_commit, generated_at=excluded.generated_at,
+  `INSERT INTO corpus_sync_state (corpus, repository, site_base_url, schema_version, source_commit, generated_at, completed_at, ready, symbol_count, document_count, source_chunk_count, modules_json, types_json)
+   VALUES (${sql(corpus)}, ${sql(repository)}, ${sql(artifact.siteBaseUrl ?? null)}, ${sql(artifact.schemaVersion)}, ${sql(artifact.sourceCommit)}, ${sql(artifact.generatedAt)}, NULL, 0, 0, 0, 0, ${sql(JSON.stringify(artifact.modules))}, ${sql(JSON.stringify(artifact.types))})
+   ON CONFLICT(corpus) DO UPDATE SET repository=excluded.repository, site_base_url=excluded.site_base_url, schema_version=excluded.schema_version, source_commit=excluded.source_commit, generated_at=excluded.generated_at,
    completed_at=NULL, ready=0, symbol_count=0, document_count=0, source_chunk_count=0, modules_json=excluded.modules_json, types_json=excluded.types_json;`,
-  "DELETE FROM source_chunks;",
-  "DELETE FROM documents;",
-  "DELETE FROM symbols;",
+  `DELETE FROM source_chunks WHERE corpus=${sql(corpus)};`,
+  `DELETE FROM documents WHERE corpus=${sql(corpus)};`,
+  `DELETE FROM symbols WHERE corpus=${sql(corpus)};`,
 ];
 
 for (const record of artifact.symbols) {
-  statements.push(`INSERT INTO symbols (record_id, uid, name, display_name, qualified_name, full_name, kind, namespace, module, parent_uid, summary, signature, content, url, source_path, source_start_line, source_end_line, related_json, content_hash)
-    VALUES (${values([record.id, record.uid, record.name, record.displayName, record.qualifiedName, record.fullName, record.kind, record.namespace,
+  statements.push(`INSERT INTO symbols (record_id, uid, canonical_uid, name, display_name, qualified_name, full_name, kind, namespace, module, parent_uid, summary, signature, content, url, source_path, source_start_line, source_end_line, related_json, content_hash, corpus, repository)
+    VALUES (${values([record.id, storageUid(record.uid), record.uid, record.name, record.displayName, record.qualifiedName, record.fullName, record.kind, record.namespace,
       record.module, record.parentUid, record.summary, record.signature, record.content, record.url, record.source?.path ?? null,
-      record.source?.startLine ?? null, record.source?.endLine ?? null, JSON.stringify(record.relatedUids), record.contentHash])});`);
+      record.source?.startLine ?? null, record.source?.endLine ?? null, JSON.stringify(record.relatedUids), record.contentHash, corpus, repository])});`);
 }
 for (const record of artifact.documents) {
-  statements.push(`INSERT INTO documents (record_id, document_key, family, kind, title, description, content, url, module, source_path, content_hash)
+  statements.push(`INSERT INTO documents (record_id, document_key, family, kind, title, description, content, url, module, source_path, content_hash, corpus, repository)
     VALUES (${values([record.id, record.documentKey, record.family, record.kind, record.title, record.description, record.content, record.url,
-      record.module, record.sourcePath, record.contentHash])});`);
+      record.module, record.sourcePath, record.contentHash, corpus, repository])});`);
 }
 for (const record of artifact.sourceChunks) {
-  statements.push(`INSERT INTO source_chunks (record_id, path, language, start_line, end_line, content, content_hash)
-    VALUES (${values([record.id, record.path, record.language, record.startLine, record.endLine, record.content, record.contentHash])});`);
+  statements.push(`INSERT INTO source_chunks (record_id, path, language, start_line, end_line, content, content_hash, corpus, repository)
+    VALUES (${values([record.id, record.path, record.language, record.startLine, record.endLine, record.content, record.contentHash, corpus, repository])});`);
 }
-statements.push(`UPDATE sync_state SET completed_at=${sql(new Date().toISOString())}, ready=1, symbol_count=${artifact.symbols.length},
-  document_count=${artifact.documents.length}, source_chunk_count=${artifact.sourceChunks.length} WHERE id=1;`);
+statements.push(`UPDATE corpus_sync_state SET completed_at=${sql(new Date().toISOString())}, ready=1, symbol_count=${artifact.symbols.length},
+  document_count=${artifact.documents.length}, source_chunk_count=${artifact.sourceChunks.length} WHERE corpus=${sql(corpus)};`);
+if (corpus === "main") {
+  statements.push(`INSERT INTO sync_state (id, schema_version, source_commit, generated_at, completed_at, ready, symbol_count, document_count, source_chunk_count, modules_json, types_json)
+    VALUES (1, ${sql(artifact.schemaVersion)}, ${sql(artifact.sourceCommit)}, ${sql(artifact.generatedAt)}, ${sql(new Date().toISOString())}, 1,
+      ${artifact.symbols.length}, ${artifact.documents.length}, ${artifact.sourceChunks.length}, ${sql(JSON.stringify(artifact.modules))}, ${sql(JSON.stringify(artifact.types))})
+    ON CONFLICT(id) DO UPDATE SET schema_version=excluded.schema_version, source_commit=excluded.source_commit, generated_at=excluded.generated_at,
+      completed_at=excluded.completed_at, ready=1, symbol_count=excluded.symbol_count, document_count=excluded.document_count,
+      source_chunk_count=excluded.source_chunk_count, modules_json=excluded.modules_json, types_json=excluded.types_json;`);
+}
 
 // Keep comfortably below the 4 MiB synchronization request target while
 // avoiding dozens of Wrangler process startups for a first local seed.
@@ -65,7 +75,7 @@ try {
     console.log(`Applied local D1 batch ${index + 1}/${batches.length}.`);
   }
   runWrangler(["d1", "execute", "discatsharp-docs-search", "--local", "--command",
-    "SELECT ready, symbol_count, document_count, source_chunk_count FROM sync_state WHERE id = 1;"]);
+    `SELECT corpus, ready, symbol_count, document_count, source_chunk_count FROM corpus_sync_state WHERE corpus = '${corpus.replaceAll("'", "''")}';`]);
   console.log(`Seeded local D1 from ${artifactPath}.`);
 } finally {
   await rm(sqlPath, { force: true });
@@ -73,6 +83,10 @@ try {
 
 function values(items: Array<string | number | null>): string {
   return items.map(sql).join(", ");
+}
+
+function storageUid(uid: string): string {
+  return corpus === "main" ? uid : `${corpus}:${uid}`;
 }
 
 function sql(value: string | number | null): string {

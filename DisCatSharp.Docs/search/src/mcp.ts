@@ -5,7 +5,7 @@ import { SearchError } from "./types";
 
 export const DISCORD_DOCS_MCP_URL = "https://docs.discord.com/mcp";
 
-export const MCP_SERVER_INSTRUCTIONS = `This server is authoritative for DisCatSharp APIs, source, and conceptual documentation. Use search for broad questions, find_symbol for API lookup, fetch for complete indexed records, and get_source only for source paths returned by indexed symbols. For questions about Discord platform behavior, payloads, permissions, Gateway events, rate limits, or REST semantics that are not answered by the DisCatSharp corpus, use the official Discord Documentation MCP server at ${DISCORD_DOCS_MCP_URL} when it is already available to the client, or suggest that the user add it. Do not claim that another MCP server is connected unless the client exposes it.`;
+export const MCP_SERVER_INSTRUCTIONS = `This server is authoritative for DisCatSharp and its official Extensions APIs, source, and conceptual documentation. Use search for broad questions, find_symbol for API lookup, fetch for complete indexed records, and get_source only for source paths returned by indexed symbols. Omit corpus to search everything, or use main or extensions when the question is repository-specific. For questions about Discord platform behavior, payloads, permissions, Gateway events, rate limits, or REST semantics that are not answered by the DisCatSharp corpus, use the official Discord Documentation MCP server at ${DISCORD_DOCS_MCP_URL} when it is already available to the client, or suggest that the user add it. Do not claim that another MCP server is connected unless the client exposes it.`;
 
 const discordDocsServer = {
   name: "Official Discord Documentation",
@@ -25,6 +25,8 @@ const resultFields = {
   summary: z.string(),
   url: z.string(),
   module: z.string().nullable(),
+  corpus: z.string(),
+  repository: z.string(),
   score: z.number(),
 };
 const resultSchema = z.discriminatedUnion("family", [
@@ -35,6 +37,7 @@ const errorSchema = z.object({ error: z.object({ code: z.string(), message: z.st
 const searchOutputSchema = z.union([
   z.object({
     build: z.string(),
+    builds: z.record(z.string(), z.string()),
     query: z.string(),
     results: z.array(resultSchema),
     relatedServers: z.array(relatedServerSchema).optional(),
@@ -54,6 +57,8 @@ const sourceOutputSchema = z.union([
     startLine: z.number().int(),
     endLine: z.number().int(),
     content: z.string(),
+    corpus: z.string(),
+    repository: z.string(),
   }),
   errorSchema,
 ]);
@@ -62,6 +67,7 @@ const searchInputSchema = z.object({
   query: z.string().min(2).max(200),
   types: z.array(z.string()).max(8).optional(),
   module: z.string().min(1).max(100).optional(),
+  corpus: z.string().min(1).max(50).optional(),
   limit: z.number().int().min(1).max(50).optional(),
 });
 
@@ -76,7 +82,7 @@ export function createDisCatSharpMcpServer(db: D1Database, onMetrics?: (metrics:
     "search",
     {
       title: "Search DisCatSharp documentation",
-      description: "Search API symbols and every conceptual page emitted by the DisCatSharp DocFX build.",
+      description: "Search API symbols and every conceptual page emitted by the DisCatSharp and official Extensions DocFX builds.",
       inputSchema: searchInputSchema,
       outputSchema: searchOutputSchema,
       annotations: { readOnlyHint: true, openWorldHint: false },
@@ -91,7 +97,7 @@ export function createDisCatSharpMcpServer(db: D1Database, onMetrics?: (metrics:
     "find_symbol",
     {
       title: "Find a DisCatSharp API symbol",
-      description: "Find overload-safe classes, methods, properties, fields, events, and other generated API symbols.",
+      description: "Find overload-safe classes, methods, properties, fields, events, and other generated API symbols across DisCatSharp and official Extensions.",
       inputSchema: searchInputSchema,
       outputSchema: searchOutputSchema,
       annotations: { readOnlyHint: true, openWorldHint: false },

@@ -122,6 +122,7 @@ jobs:
             - name: Smoke test deployed Worker on Workers.dev
               env:
                   DCS_SEARCH_BASE_URL: https://discatsharp-docs-search.aitsys.workers.dev
+                  DCS_SEARCH_CORPUS: main
               run: npm run smoke:production
               working-directory: DisCatSharp.Docs/search
             - name: Pack Docs
@@ -235,6 +236,7 @@ jobs:
             - name: Smoke test active search and MCP on Workers.dev
               env:
                   DCS_SEARCH_BASE_URL: https://discatsharp-docs-search.aitsys.workers.dev
+                  DCS_SEARCH_CORPUS: main
                   EXPECTED_BUILD_SHA: ${{ github.sha }}
               run: npm run smoke:production
               working-directory: DisCatSharp.Docs/search

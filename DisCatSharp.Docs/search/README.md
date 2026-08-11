@@ -4,12 +4,12 @@ This package contains the Cloudflare D1 search Worker, public stateless MCP endp
 
 ## Architecture
 
-The .NET indexer runs after DocFX. It uses `_site/manifest.json` as the authoritative page inventory, generated managed-reference YAML and `_site/xrefmap.yml` for overload-safe API metadata, Markdown sources for conceptual content, and Roslyn for declaration ranges and source-friendly chunk boundaries. The generated `DisCatSharp.Docs/obj/search/search-index.json` artifact is build output and is not committed.
+The .NET indexer runs after each DocFX build. It uses `_site/manifest.json` as the authoritative page inventory, generated managed-reference YAML and `_site/xrefmap.yml` for overload-safe API metadata, Markdown sources for conceptual content, and Roslyn for declaration ranges and source-friendly chunk boundaries. Every artifact identifies its corpus, repository, and canonical site. Generated `obj/search/search-index.json` artifacts are build output and are not committed.
 
 D1 stores:
 
-- `sync_state`: readiness, schema/build metadata, counts, modules, and available filter types.
-- `symbols`: one row per overload-safe DocFX UID.
+- `corpus_sync_state`: independent readiness, schema/build metadata, counts, modules, and available filter types for each documentation corpus. The legacy `sync_state` mirrors `main` for compatibility.
+- `symbols`: one row per overload-safe DocFX UID and corpus, retaining the canonical UID separately from its collision-safe storage UID.
 - `documents`: one row per manifest `Conceptual` output, always with `family = conceptual` and a more specific `kind`.
 - `source_chunks`: the only source paths and ranges exposed by `get_source`.
 - External-content `symbols_fts` and `documents_fts` tables maintained by insert, update, and delete triggers.
@@ -17,11 +17,13 @@ D1 stores:
 
 HTTP and MCP use the same `SearchService`. Search first batches indexed exact lookups, then only issues FTS queries for result families that still need fuzzy candidates. Exact UID, full-name, qualified-name, and short-name tiers score above document exact matches and BM25 results. Final ties use title and typed ID for deterministic ordering.
 
-Successful search, fetch, and source responses include `build` as `<generated-at Unix timestamp>-<12-character source commit>`, derived from the ready D1 `sync_state`. HTTP and MCP therefore expose the same deterministic corpus identity, and production deployment smoke tests require it to match the workflow commit.
+Successful search, fetch, and source responses include `build` as `<generated-at Unix timestamp>-<12-character source commit>`. Combined searches also include a `builds` map with the identity of every selected corpus. HTTP and MCP therefore expose the same deterministic corpus identities, and production deployment smoke tests require the deployed corpus to match its workflow commit.
 
 The MCP initialization instructions identify this server as authoritative for DisCatSharp and direct agents to the official Discord Documentation MCP at `https://docs.discord.com/mcp` for underlying Discord platform semantics when that server is available. A zero-result MCP `search` or `find_symbol` response also includes the same endpoint under `relatedServers`; successful DisCatSharp results remain uncluttered.
 
-Conceptual identity is classification-independent: every conceptual result uses `document:<document-key>`, where the key comes only from its normalized canonical output URL. `family = conceptual` and `kind` (`article`, `changelog`, `native`, `vs`, `api`, or a future label) are metadata. Reclassifying or moving a source page without changing its canonical output URL therefore preserves its external ID; changing the canonical URL intentionally creates a new identity.
+Conceptual identity is classification-independent: main results use `document:<document-key>` and additional corpora use `document:<corpus>:<document-key>`, where the document key comes only from its normalized canonical output URL. `family = conceptual` and `kind` (`article`, `changelog`, `native`, `vs`, `api`, or a future label) are metadata. Reclassifying a page without changing its canonical output URL therefore preserves its external ID; changing the canonical URL intentionally creates a new identity.
+
+Searches cover all ready corpora by default. HTTP accepts `corpus=main` or `corpus=extensions`; MCP tools accept the equivalent `corpus` argument. Corpus activation is isolated: publishing Extensions cannot delete, replace, or temporarily hide active main-library rows, even when both repositories expose the same canonical DocFX UID.
 
 ## Full local test plan
 
@@ -92,12 +94,12 @@ Production documentation runs are serialized so their singleton staging areas ca
 
 1. Build DocFX, remove/assert absence of stock browser search assets, generate the manifest-driven artifact, and run all .NET/Worker validation.
 2. Discover or create D1 by name, inject its UUID into ignored runtime configs, and, when the Worker does not exist yet, deploy the route-free bootstrap so a Workers.dev endpoint exists.
-3. Apply additive D1 migrations and stage only new, changed, and stale records. The existing active corpus and its `sync_state` remain untouched; on a first seed, the API remains `503 index_not_ready`.
+3. Apply additive D1 migrations and stage only new, changed, and stale records for the publishing corpus. Existing active corpora remain untouched; on a first seed with no ready corpus, the API remains `503 index_not_ready`.
 4. Smoke-test the bootstrap or existing active service, deploy the narrow `docs.dcs.aitsys.dev/_search*` and `docs.dcs.aitsys.dev/mcp*` routes, then package and publish `_site`.
 5. Poll the direct Pages deployment domain's cache-busted `search-build.json` until both its commit and build ID match the staged artifact, avoiding custom-domain bot challenges during CI activation.
-6. Atomically apply the staged delta, stale deletions, `sync_state`, and staging cleanup in one D1 transaction, then smoke-test the newly active build.
+6. Atomically apply the staged delta, stale deletions, corpus state, and staging cleanup in one D1 transaction, then smoke-test the newly active build.
 
-An interrupted stage is resumed by rerunning the workflow: completed staging rows and deletion markers are skipped. If staging, documentation publication, marker propagation, or activation fails, the previous active corpus stays searchable; a failed activation transaction rolls back completely and retains its staged data for retry. The document-key conflict target also safely migrates any pre-V1 classification-prefixed rows to `document:` before their stale IDs are deleted. Review the sync summary and `rowsWritten` log before retrying a very large first seed; if the D1 Free daily write allowance is near exhaustion, wait for its daily reset and rerun rather than deleting the database.
+An interrupted stage is resumed by rerunning the owning workflow: completed staging rows and deletion markers are skipped. If staging, documentation publication, marker propagation, or activation fails, the previous active corpus stays searchable; a failed activation transaction rolls back completely and retains its staged data for retry. The document-key conflict target also safely migrates any pre-V1 classification-prefixed rows to `document:` before their stale IDs are deleted. Review the sync summary and `rowsWritten` log before retrying a very large seed, and keep normal Worker/D1 usage within the configured Cloudflare plan rather than deleting the database to recover from a partial run.
 
 For an intentional manual rollout from `DisCatSharp.Docs/search`:
 

@@ -19,7 +19,7 @@ interface ArtifactChunk {
   id: string; path: string; language: string; startLine: number; endLine: number; content: string; contentHash: string;
 }
 interface SearchArtifact {
-  schemaVersion: number; sourceCommit: string; generatedAt: string; modules: string[]; types: string[];
+  schemaVersion: number; corpus?: string; repository?: string; siteBaseUrl?: string | null; sourceCommit: string; generatedAt: string; modules: string[]; types: string[];
   symbols: ArtifactSymbol[]; documents: ArtifactDocument[]; sourceChunks: ArtifactChunk[];
 }
 interface ApiEnvelope<T> { success: boolean; result: T; errors: Array<{ message: string }> }
@@ -36,6 +36,10 @@ const artifactArgument = requestedMode === "stage" || requestedMode === "activat
 const artifactPath = resolve(artifactArgument ?? "../obj/search/search-index.json");
 const artifact = JSON.parse(await readFile(artifactPath, "utf8")) as SearchArtifact;
 if (artifact.schemaVersion !== 1) throw new Error(`Unsupported search artifact schema version ${artifact.schemaVersion}; expected 1.`);
+const corpus = artifact.corpus ?? "main";
+const repository = artifact.repository ?? "Aiko-IT-Systems/DisCatSharp";
+if (!/^[a-z0-9-]{1,50}$/u.test(corpus)) throw new Error(`Invalid search corpus '${corpus}'.`);
+if (!/^[^/\s]+\/[^/\s]+$/u.test(repository)) throw new Error(`Invalid repository metadata '${repository}'.`);
 const databaseId = await findDatabaseId(databaseName);
 let rowsWritten = 0;
 let rowsRead = 0;
@@ -47,28 +51,29 @@ if (mode === "activate") {
 }
 
 async function stageRelease(): Promise<void> {
-  const existingState = await query("SELECT ready FROM sync_state WHERE id = 1");
+  const existingState = await query(undefined, [{ sql: "SELECT ready FROM corpus_sync_state WHERE corpus = ?", params: [corpus] }]);
   if ((existingState[0]?.results?.length ?? 0) === 0) {
     await executeBatch([{
-      sql: `INSERT INTO sync_state (id, schema_version, source_commit, generated_at, ready, modules_json, types_json)
-            VALUES (1, ?, ?, ?, 0, ?, ?)`,
-      params: [toD1Scalar(artifact.schemaVersion), artifact.sourceCommit, artifact.generatedAt, JSON.stringify(artifact.modules), JSON.stringify(artifact.types)],
+      sql: `INSERT INTO corpus_sync_state (corpus, repository, site_base_url, schema_version, source_commit, generated_at, ready, modules_json, types_json)
+            VALUES (?, ?, json_extract(?, '$'), ?, ?, ?, 0, ?, ?)`,
+      params: [corpus, repository, toD1JsonScalar(artifact.siteBaseUrl ?? null), toD1Scalar(artifact.schemaVersion), artifact.sourceCommit,
+        artifact.generatedAt, JSON.stringify(artifact.modules), JSON.stringify(artifact.types)],
     }]);
   }
 
-  const stagedResult = await query("SELECT complete, source_commit, generated_at FROM staged_sync_state WHERE id = 1");
+  const stagedResult = await query(undefined, [{ sql: "SELECT complete, source_commit, generated_at FROM staged_corpus_sync_state WHERE corpus = ?", params: [corpus] }]);
   const stagedState = stagedResult[0]?.results?.[0] as unknown as StagedReleaseState | undefined;
   if (!isSameRelease(stagedState, artifact.sourceCommit, artifact.generatedAt)) {
     await executeBatch([
-      { sql: "DELETE FROM staged_symbols" },
-      { sql: "DELETE FROM staged_documents" },
-      { sql: "DELETE FROM staged_source_chunks" },
-      { sql: "DELETE FROM staged_deletions" },
-      { sql: "DELETE FROM staged_sync_state" },
+      { sql: "DELETE FROM staged_symbols WHERE corpus = ?", params: [corpus] },
+      { sql: "DELETE FROM staged_documents WHERE corpus = ?", params: [corpus] },
+      { sql: "DELETE FROM staged_source_chunks WHERE corpus = ?", params: [corpus] },
+      { sql: "DELETE FROM staged_deletions WHERE corpus = ?", params: [corpus] },
+      { sql: "DELETE FROM staged_corpus_sync_state WHERE corpus = ?", params: [corpus] },
       {
-        sql: `INSERT INTO staged_sync_state (id, schema_version, source_commit, generated_at, complete, symbol_count, document_count,
-              source_chunk_count, modules_json, types_json) VALUES (1, ?, ?, ?, 0, ?, ?, ?, ?, ?)`,
-        params: [toD1Scalar(artifact.schemaVersion), artifact.sourceCommit, artifact.generatedAt, toD1Scalar(artifact.symbols.length),
+        sql: `INSERT INTO staged_corpus_sync_state (corpus, repository, site_base_url, schema_version, source_commit, generated_at, complete,
+              symbol_count, document_count, source_chunk_count, modules_json, types_json) VALUES (?, ?, json_extract(?, '$'), ?, ?, ?, 0, ?, ?, ?, ?, ?)`,
+        params: [corpus, repository, toD1JsonScalar(artifact.siteBaseUrl ?? null), toD1Scalar(artifact.schemaVersion), artifact.sourceCommit, artifact.generatedAt, toD1Scalar(artifact.symbols.length),
           toD1Scalar(artifact.documents.length), toD1Scalar(artifact.sourceChunks.length), JSON.stringify(artifact.modules), JSON.stringify(artifact.types)],
       },
     ]);
@@ -85,8 +90,8 @@ async function stageRelease(): Promise<void> {
   await executeBatches(deltas.flatMap((delta) => delta.upserts));
   await executeBatches(deltas.flatMap((delta) => delta.deletionMarkers));
   await executeBatch([{
-    sql: "UPDATE staged_sync_state SET completed_at = ?, complete = 1 WHERE id = 1 AND source_commit = ? AND generated_at = ?",
-    params: [new Date().toISOString(), artifact.sourceCommit, artifact.generatedAt],
+    sql: "UPDATE staged_corpus_sync_state SET completed_at = ?, complete = 1 WHERE corpus = ? AND source_commit = ? AND generated_at = ?",
+    params: [new Date().toISOString(), corpus, artifact.sourceCommit, artifact.generatedAt],
   }]);
 
   for (const delta of deltas) {
@@ -97,14 +102,14 @@ async function stageRelease(): Promise<void> {
 }
 
 async function activateRelease(): Promise<void> {
-  const stagedResult = await query("SELECT complete, source_commit, generated_at FROM staged_sync_state WHERE id = 1");
+  const stagedResult = await query(undefined, [{ sql: "SELECT complete, source_commit, generated_at FROM staged_corpus_sync_state WHERE corpus = ?", params: [corpus] }]);
   const stagedState = stagedResult[0]?.results?.[0] as unknown as StagedReleaseState | undefined;
   if (!isSameRelease(stagedState, artifact.sourceCommit, artifact.generatedAt) || stagedState?.complete !== 1) {
     throw new Error(`The complete staged index does not match '${artifact.sourceCommit}' generated at '${artifact.generatedAt}'.`);
   }
 
-  await executeBatch(createActivationStatements());
-  const activeResult = await query("SELECT ready, source_commit, generated_at FROM sync_state WHERE id = 1");
+  await executeBatch(createActivationStatements(corpus));
+  const activeResult = await query(undefined, [{ sql: "SELECT ready, source_commit, generated_at FROM corpus_sync_state WHERE corpus = ?", params: [corpus] }]);
   const active = activeResult[0]?.results?.[0] as { ready?: number; source_commit?: string; generated_at?: string } | undefined;
   if (active?.ready !== 1 || active.source_commit !== artifact.sourceCommit || active.generated_at !== artifact.generatedAt) {
     throw new Error("D1 activation completed without publishing the expected index metadata.");
@@ -114,15 +119,15 @@ async function activateRelease(): Promise<void> {
 }
 
 async function createTableDelta<T extends { id: string; contentHash: string }>(table: string, records: T[], createStatement: (record: T) => Statement): Promise<TableDelta> {
-  const current = await query(`SELECT record_id, content_hash FROM ${table}`);
+  const current = await query(undefined, [{ sql: `SELECT record_id, content_hash FROM ${table} WHERE corpus = ?`, params: [corpus] }]);
   const delta = diffHashes((current[0]?.results ?? []) as unknown as ExistingHashRow[], records);
-  const staged = await query(`SELECT record_id, content_hash FROM staged_${table}`);
+  const staged = await query(undefined, [{ sql: `SELECT record_id, content_hash FROM staged_${table} WHERE corpus = ?`, params: [corpus] }]);
   const pending = diffHashes((staged[0]?.results ?? []) as unknown as ExistingHashRow[], delta.changedRecords);
-  const markedResult = await query(`SELECT record_id FROM staged_deletions WHERE table_name = '${table}'`);
+  const markedResult = await query(undefined, [{ sql: "SELECT record_id FROM staged_deletions WHERE corpus = ? AND table_name = ?", params: [corpus, table] }]);
   const marked = new Set((markedResult[0]?.results ?? []).map((row) => String(row.record_id)));
   const deletionMarkers = delta.staleIds.filter((recordId) => !marked.has(recordId)).map((recordId) => ({
-    sql: "INSERT INTO staged_deletions (table_name, record_id) VALUES (?, ?) ON CONFLICT(table_name, record_id) DO NOTHING",
-    params: [table, recordId],
+    sql: "INSERT INTO staged_deletions (table_name, record_id, corpus) VALUES (?, ?, ?) ON CONFLICT(table_name, record_id) DO NOTHING",
+    params: [table, recordId, corpus],
   }));
   return { table, upserts: pending.changedRecords.map(createStatement), deletionMarkers, changed: delta.changedRecords.length,
     deleted: delta.staleIds.length, unchanged: delta.unchanged, resumed: pending.unchanged + marked.size };
@@ -130,39 +135,43 @@ async function createTableDelta<T extends { id: string; contentHash: string }>(t
 
 function symbolStatement(record: ArtifactSymbol): Statement {
   return {
-    sql: `INSERT INTO staged_symbols (record_id, uid, name, display_name, qualified_name, full_name, kind, namespace, module, parent_uid, summary, signature, content, url,
-          source_path, source_start_line, source_end_line, related_json, content_hash)
-          VALUES (?, ?, ?, ?, ?, ?, ?, json_extract(?, '$'), json_extract(?, '$'), json_extract(?, '$'), ?, ?, ?, ?,
-            json_extract(?, '$'), json_extract(?, '$'), json_extract(?, '$'), ?, ?)
-          ON CONFLICT(record_id) DO UPDATE SET uid=excluded.uid, name=excluded.name, display_name=excluded.display_name,
+    sql: `INSERT INTO staged_symbols (record_id, uid, canonical_uid, name, display_name, qualified_name, full_name, kind, namespace, module, parent_uid, summary, signature, content, url,
+          source_path, source_start_line, source_end_line, related_json, content_hash, corpus, repository)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, json_extract(?, '$'), json_extract(?, '$'), json_extract(?, '$'), ?, ?, ?, ?,
+            json_extract(?, '$'), json_extract(?, '$'), json_extract(?, '$'), ?, ?, ?, ?)
+          ON CONFLICT(record_id) DO UPDATE SET uid=excluded.uid, canonical_uid=excluded.canonical_uid, name=excluded.name, display_name=excluded.display_name,
           qualified_name=excluded.qualified_name, full_name=excluded.full_name, kind=excluded.kind, namespace=excluded.namespace,
           module=excluded.module, parent_uid=excluded.parent_uid, summary=excluded.summary, signature=excluded.signature, content=excluded.content,
           url=excluded.url, source_path=excluded.source_path, source_start_line=excluded.source_start_line, source_end_line=excluded.source_end_line,
-          related_json=excluded.related_json, content_hash=excluded.content_hash`,
-    params: [record.id, record.uid, record.name, record.displayName, record.qualifiedName, record.fullName, record.kind, toD1JsonScalar(record.namespace),
+          related_json=excluded.related_json, content_hash=excluded.content_hash, corpus=excluded.corpus, repository=excluded.repository`,
+    params: [record.id, storageUid(record.uid), record.uid, record.name, record.displayName, record.qualifiedName, record.fullName, record.kind, toD1JsonScalar(record.namespace),
       toD1JsonScalar(record.module), toD1JsonScalar(record.parentUid), record.summary, record.signature, record.content, record.url, toD1JsonScalar(record.source?.path ?? null),
-      toD1JsonScalar(record.source?.startLine ?? null), toD1JsonScalar(record.source?.endLine ?? null), JSON.stringify(record.relatedUids), record.contentHash],
+      toD1JsonScalar(record.source?.startLine ?? null), toD1JsonScalar(record.source?.endLine ?? null), JSON.stringify(record.relatedUids), record.contentHash, corpus, repository],
   };
+}
+
+function storageUid(uid: string): string {
+  return corpus === "main" ? uid : `${corpus}:${uid}`;
 }
 
 function documentStatement(record: ArtifactDocument): Statement {
   return {
-    sql: `INSERT INTO staged_documents (record_id, document_key, family, kind, title, description, content, url, module, source_path, content_hash)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, json_extract(?, '$'), ?, ?)
+    sql: `INSERT INTO staged_documents (record_id, document_key, family, kind, title, description, content, url, module, source_path, content_hash, corpus, repository)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, json_extract(?, '$'), ?, ?, ?, ?)
           ON CONFLICT(record_id) DO UPDATE SET document_key=excluded.document_key, family=excluded.family, kind=excluded.kind,
           title=excluded.title, description=excluded.description, content=excluded.content, url=excluded.url, module=excluded.module,
-          source_path=excluded.source_path, content_hash=excluded.content_hash`,
-    params: [record.id, record.documentKey, record.family, record.kind, record.title, record.description, record.content, record.url, toD1JsonScalar(record.module), record.sourcePath, record.contentHash],
+          source_path=excluded.source_path, content_hash=excluded.content_hash, corpus=excluded.corpus, repository=excluded.repository`,
+    params: [record.id, record.documentKey, record.family, record.kind, record.title, record.description, record.content, record.url, toD1JsonScalar(record.module), record.sourcePath, record.contentHash, corpus, repository],
   };
 }
 
 function sourceChunkStatement(record: ArtifactChunk): Statement {
   return {
-    sql: `INSERT INTO staged_source_chunks (record_id, path, language, start_line, end_line, content, content_hash)
-          VALUES (?, ?, ?, ?, ?, ?, ?)
+    sql: `INSERT INTO staged_source_chunks (record_id, path, language, start_line, end_line, content, content_hash, corpus, repository)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
           ON CONFLICT(record_id) DO UPDATE SET path=excluded.path, language=excluded.language, start_line=excluded.start_line,
-          end_line=excluded.end_line, content=excluded.content, content_hash=excluded.content_hash`,
-    params: [record.id, record.path, record.language, toD1Scalar(record.startLine), toD1Scalar(record.endLine), record.content, record.contentHash],
+          end_line=excluded.end_line, content=excluded.content, content_hash=excluded.content_hash, corpus=excluded.corpus, repository=excluded.repository`,
+    params: [record.id, record.path, record.language, toD1Scalar(record.startLine), toD1Scalar(record.endLine), record.content, record.contentHash, corpus, repository],
   };
 }
 

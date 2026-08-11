@@ -5,7 +5,7 @@ These are the canonical repository-wide instructions for coding agents. Platform
 ## Sources of truth
 
 - Work from the live checkout and current supplied upstream documentation.
-- The public MCP at `https://docs.dcs.aitsys.dev/mcp` is authoritative for the current generated DisCatSharp documentation corpus.
+- The public MCP at `https://docs.dcs.aitsys.dev/mcp` is authoritative for the current generated DisCatSharp and official DisCatSharp.Extensions documentation corpora.
 - `discatsharp-ai.xml` is a generated Repomix snapshot for offline context and evaluation. It may be stale and must never override live files, installed packages, or current documentation.
 - Use Discord's official documentation for underlying Discord payload, permission, Gateway, REST, and rate-limit contracts.
 

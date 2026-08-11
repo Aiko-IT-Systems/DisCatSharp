@@ -94,6 +94,7 @@ jobs:
             - name: Smoke test production search and MCP
               env:
                   DCS_SEARCH_BASE_URL: https://discatsharp-docs-search.aitsys.workers.dev
+                  DCS_SEARCH_CORPUS: main
               run: npm run smoke:production
               working-directory: GitHub/DisCatSharp/DisCatSharp.Docs/search
             - name: Pack Docs

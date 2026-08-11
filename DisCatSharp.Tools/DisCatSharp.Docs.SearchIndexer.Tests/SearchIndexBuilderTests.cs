@@ -92,6 +92,36 @@ public sealed class SearchIndexBuilderTests : IDisposable
 	}
 
 	[Fact]
+	public async Task ExtensionCorpusUsesStableNamespacedIdentityAndCanonicalSiteUrls()
+	{
+		var docs = Path.Combine(this._root, "docs");
+		var site = Path.Combine(docs, "_site");
+		Directory.CreateDirectory(site);
+		await File.WriteAllTextAsync(Path.Combine(docs, "index.md"), "# Extensions");
+		await File.WriteAllTextAsync(Path.Combine(site, "xrefmap.yml"), "references: []\n");
+		await File.WriteAllTextAsync(Path.Combine(site, "manifest.json"), JsonSerializer.Serialize(new
+		{
+			files = new[] { Conceptual("index.md", "index.html") }
+		}));
+
+		var options = new SearchCorpusOptions(
+			"extensions",
+			"Aiko-IT-Systems/DisCatSharp.Extensions",
+			"https://ext-docs.dcs.aitsys.dev/",
+			"DisCatSharp.Extensions");
+		var artifact = await new SearchIndexBuilder(this._root, docs, site, options).BuildAsync("test");
+		var document = Assert.Single(artifact.Documents);
+
+		Assert.Equal("extensions", artifact.Corpus);
+		Assert.Equal("Aiko-IT-Systems/DisCatSharp.Extensions", artifact.Repository);
+		Assert.Equal("https://ext-docs.dcs.aitsys.dev", artifact.SiteBaseUrl);
+		Assert.Equal("document:extensions:home", document.Id);
+		Assert.Equal("extensions:home", document.DocumentKey);
+		Assert.Equal("https://ext-docs.dcs.aitsys.dev/index.html", document.Url);
+		Assert.Equal("DisCatSharp.Extensions/index.md", document.SourcePath);
+	}
+
+	[Fact]
 	public async Task ManagedReferencesPreserveKindsOverloadsAndCanonicalXrefUrls()
 	{
 		var docs = Path.Combine(this._root, "docs");

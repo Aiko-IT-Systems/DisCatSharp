@@ -12,6 +12,7 @@
     "local": "tsx scripts/local-preview.ts",
     "sync:local": "tsx scripts/sync-local.ts",
     "smoke:local": "tsx scripts/smoke-local.ts",
+    "smoke:corpus-local": "tsx scripts/smoke-corpus-local.ts",
     "smoke:production": "tsx scripts/smoke-production.ts",
     "smoke:workers-dev": "tsx scripts/smoke-workers-dev.ts",
     "marker": "tsx scripts/write-build-marker.ts",

@@ -38,6 +38,15 @@ export function normalizeTypes(values: readonly string[] | undefined): string[] 
   return [...new Set(normalized)];
 }
 
+export function normalizeCorpus(value: string | undefined): string | undefined {
+  if (value === undefined) return undefined;
+  const normalized = value.trim().toLowerCase();
+  if (!/^[a-z0-9-]{1,50}$/u.test(normalized)) {
+    throw new SearchError("invalid_corpus", "Corpus names may only contain letters, digits, and hyphens.");
+  }
+  return normalized;
+}
+
 export function toFtsQuery(query: string): string {
   const tokens = query.match(/[\p{L}\p{N}_]+/gu) ?? [];
   if (tokens.length === 0) {

@@ -64,7 +64,7 @@ gemini mcp add --transport http --scope user discatsharp https://docs.dcs.aitsys
 
 Other clients should add the same URL as a Streamable HTTP MCP server named `discatsharp`.
 
-The server exposes `search`, `find_symbol`, `fetch`, and `get_source`. It is authoritative for the current DisCatSharp documentation corpus. For the Discord platform contract itself, also consider Discord's official MCP at `https://docs.discord.com/mcp`.
+The server exposes `search`, `find_symbol`, `fetch`, and `get_source`. It is authoritative for the current DisCatSharp and official DisCatSharp.Extensions documentation corpora. Searches cover both by default; MCP callers can pass `corpus: "main"` or `corpus: "extensions"` when they need to restrict a lookup. For the Discord platform contract itself, also consider Discord's official MCP at `https://docs.discord.com/mcp`.
 
 ## Support status
 

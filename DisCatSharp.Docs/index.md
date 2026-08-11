@@ -88,8 +88,8 @@ _disableNextArticle: true
 		</div>
 	</div>
 	<div class="catpunk-actions">
-		<a class="catpunk-button" href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/skills/README.md#install">Install guide</a>
-		<a class="catpunk-button secondary" href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/skills/README.md#connect-the-documentation-mcp">MCP setup</a>
+		<a class="catpunk-button" href="/articles/misc/agent_setup.html">Install guide</a>
+		<a class="catpunk-button secondary" href="/articles/misc/agent_setup.html#connect-the-documentation-mcp">MCP setup</a>
 	</div>
 </section>
 

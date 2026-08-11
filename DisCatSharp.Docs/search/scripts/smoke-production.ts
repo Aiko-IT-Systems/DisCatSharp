@@ -3,6 +3,8 @@ import { validateMcpResponse, validateSearchResponse } from "../src/smoke-valida
 
 const baseUrl = (process.env.DCS_SEARCH_BASE_URL ?? "https://docs.dcs.aitsys.dev").replace(/\/$/u, "");
 const expectedCommit = process.env.EXPECTED_BUILD_SHA?.trim().toLowerCase().slice(0, 12);
+const searchQuery = process.env.DCS_SEARCH_QUERY ?? "DiscordGuild";
+const searchCorpus = process.env.DCS_SEARCH_CORPUS;
 const deadline = Date.now() + 120_000;
 let attempt = 0;
 let searchReady = false;
@@ -14,7 +16,9 @@ while (Date.now() < deadline) {
   attempt++;
 
   if (!searchReady) {
-    lastSearchResponse = await request(`${baseUrl}/_search?q=DiscordGuild&limit=1`);
+    const parameters = new URLSearchParams({ q: searchQuery, limit: "1" });
+    if (searchCorpus !== undefined) parameters.set("corpus", searchCorpus);
+    lastSearchResponse = await request(`${baseUrl}/_search?${parameters}`);
     searchReady = validateSearchResponse(lastSearchResponse, expectedCommit);
   }
 
