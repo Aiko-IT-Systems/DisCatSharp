@@ -56,7 +56,7 @@ jobs:
             - name: Setup Go for actionlint
               uses: actions/setup-go@v6
               with:
-                  go-version: "1.25"
+                  go-version: "1.26"
                   cache: false
 
             - name: Test release helpers
