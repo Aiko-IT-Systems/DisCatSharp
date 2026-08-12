@@ -32,6 +32,7 @@ permissions:
     id-token: write
     attestations: write
     packages: write
+    artifact-metadata: write
 
 concurrency:
     group: release-${{ inputs.packages_to_release }}

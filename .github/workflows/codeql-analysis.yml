@@ -32,6 +32,8 @@ jobs:
             fail-fast: false
             matrix:
                 language: ["csharp"]
+        env:
+          NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
         steps:
             - name: Checkout repository
               uses: actions/checkout@v7
@@ -46,6 +48,7 @@ jobs:
                       11.x
                       10.x
                       9.x
+                  cache: true
             - name: Restore dependencies
               run: dotnet restore --no-cache -f -v minimal DisCatSharp.slnx
             - name: Build

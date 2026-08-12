@@ -23,9 +23,13 @@ env:
     LIBSODIUM_VERSION: ${{ github.event.inputs.libsodium_version || '1.0.21' }}
     OPUS_VERSION: ${{ github.event.inputs.opus_version || '1.6.1' }}
     LIBDAVE_RELEASE: ${{ github.event.inputs.libdave_release || 'latest' }}
+    GH_TOKEN: ${{ github.token }}
 
 permissions:
     contents: read
+    id-token: write
+    attestations: write
+    artifact-metadata: write
 
 jobs:
     build-linux:
@@ -410,6 +414,29 @@ jobs:
                   pushd bundle
                   zip -r ../DisCatSharp.Voice.Natives-runtime-bundle.zip DisCatSharp.Voice.Natives
                   popd
+
+            - name: Generate build provenance
+              id: attest
+              uses: actions/attest@v4
+              with:
+                  subject-path: |
+                    bundle/DisCatSharp.Voice.Natives
+                    DisCatSharp.Voice.Natives-runtime-bundle.zip
+
+            - name: Generate Report Provenance Failure
+              if: always()
+              run: |
+                    echo "Generating provenance report..."
+                    failure=${{ steps.attest.outcome == 'failure' }}
+                    if [[ "$failure" == "true" ]]; then
+                        echo "Provenance generation failed" > "$GITHUB_STEP_SUMMARY"
+                    else
+                        echo "Provenance generation successful" > "$GITHUB_STEP_SUMMARY"
+                    fi
+
+            - name: Verify build provenance
+              if: success()
+              run: gh attestation verify ./DisCatSharp.Voice.Natives-runtime-bundle.zip --repo "$GITHUB_REPOSITORY"
 
             - uses: actions/upload-artifact@v7
               with:

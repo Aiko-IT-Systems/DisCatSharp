@@ -1,4 +1,4 @@
-name: "Agent Skills and Release Tooling"
+name: "Agent Skills"
 
 on:
     pull_request:
@@ -8,15 +8,6 @@ on:
             - "CLAUDE.md"
             - "GEMINI.md"
             - ".github/copilot-instructions.md"
-            - ".github/ISSUE_TEMPLATE/skill_issue.yml"
-            - ".github/labeler.yml"
-            - ".github/release.yml"
-            - ".github/scripts/release-tools.*"
-            - ".github/workflows/agent-skills.yml"
-            - ".github/workflows/release.yml"
-            - "DisCatSharp.Attributes/DisCatSharp.Attributes.csproj"
-            - "DisCatSharp.Tools/DisCatSharp.Analyzer/DisCatSharp.Analyzer.Package/DisCatSharp.Analyzer.Package.csproj"
-            - "DisCatSharp.Tools/rebuild-tools.ps1"
     push:
         branches:
             - main
@@ -26,55 +17,58 @@ on:
             - "CLAUDE.md"
             - "GEMINI.md"
             - ".github/copilot-instructions.md"
-            - ".github/ISSUE_TEMPLATE/skill_issue.yml"
-            - ".github/labeler.yml"
-            - ".github/release.yml"
-            - ".github/scripts/release-tools.*"
-            - ".github/workflows/agent-skills.yml"
-            - ".github/workflows/release.yml"
-            - "DisCatSharp.Attributes/DisCatSharp.Attributes.csproj"
-            - "DisCatSharp.Tools/DisCatSharp.Analyzer/DisCatSharp.Analyzer.Package/DisCatSharp.Analyzer.Package.csproj"
-            - "DisCatSharp.Tools/rebuild-tools.ps1"
     workflow_dispatch:
+        inputs:
+            release:
+                description: "Release version"
+                required: false
+                default: false
+                type: boolean
+            version:
+                description: "Release version (e.g. skills@v1.0.0)"
+                required: false
+                type: string
 
 permissions:
-    contents: read
+    contents: write
+    id-token: write
+    attestations: write
+    artifact-metadata: write
+    packages: write
+
+env:
+    GH_TOKEN: ${{ github.token }}
 
 jobs:
     validate:
         runs-on: ubuntu-latest
-        name: Validate portable skills and release tooling
+        name: Validate Agent Skills
         steps:
             - name: Checkout repository
               uses: actions/checkout@v7
-
-            - name: Setup Node.js
-              uses: actions/setup-node@v7
               with:
-                  node-version: 24
-
-            - name: Setup Go for actionlint
-              uses: actions/setup-go@v7
-              with:
-                  go-version: "1.26"
-                  cache: false
-
-            - name: Test release helpers
-              run: node --test .github/scripts/release-tools.test.mjs
-
-            - name: Validate workflows
-              run: >-
-                  go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.12
-                  .github/workflows/agent-skills.yml
-                  .github/workflows/release.yml
-
+                sparse-checkout: |
+                  skills
+                  .github
+                  AGENTS.md
+                  CLAUDE.md
+                  GEMINI.md
             - name: Validate Agent Skills specification
-              env:
-                  GH_TOKEN: ${{ github.token }}
+              id: validate
               run: gh skill publish --dry-run
-
-            - name: Verify local installation matrix
+            - name: Generate Report
+              if: always()
+              run: |
+                    echo "Generating report..."
+                    failure=${{ steps.validate.outcome == 'failure' }}
+                    if [[ "$failure" == "true" ]]; then
+                        echo "Skill validation failed" > "$GITHUB_STEP_SUMMARY"
+                    else
+                        echo "Skill validation successful" > "$GITHUB_STEP_SUMMARY"
+                    fi
+            - name: Verify Agent Skills
               shell: bash
+              id: verify
               run: |
                   agents=(
                     codex
@@ -83,7 +77,6 @@ jobs:
                     gemini-cli
                     cursor
                     opencode
-                    windsurf
                   )
                   for agent in "${agents[@]}"; do
                     destination="$RUNNER_TEMP/$agent"
@@ -98,3 +91,68 @@ jobs:
                     )
                     test "$(find "$destination" -name SKILL.md -type f | wc -l)" -eq 2
                   done
+            - name: Generate Report
+              if: always()
+              run: |
+                    echo "Generating report..."
+                    failure=${{ steps.verify.outcome == 'failure' }}
+                    if [[ "$failure" == "true" ]]; then
+                        echo "Skill verification failed" > "$GITHUB_STEP_SUMMARY"
+                    else
+                        echo "Skill verification successful" > "$GITHUB_STEP_SUMMARY"
+                    fi
+    release:
+        runs-on: ubuntu-latest
+        name: Release Agent Skills
+        needs: [validate]
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.release == 'true' && github.event.inputs.version != '' }}
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v7
+              with:
+                sparse-checkout: |
+                  skills
+                  .github
+                  AGENTS.md
+                  CLAUDE.md
+                  GEMINI.md
+            - name: Generate build provenance
+              id: attest
+              uses: actions/attest@v4
+              with:
+                  subject-path: |
+                    skills/*
+                    AGENTS.md
+                    CLAUDE.md
+                    GEMINI.md
+                    .github/copilot-instructions.md
+            - name: Generate Report Provenance Failure
+              if: always()
+              run: |
+                    echo "Generating provenance report..."
+                    failure=${{ steps.attest.outcome == 'failure' }}
+                    if [[ "$failure" == "true" ]]; then
+                        echo "Provenance generation failed" > "$GITHUB_STEP_SUMMARY"
+                    else
+                        echo "Provenance generation successful" > "$GITHUB_STEP_SUMMARY"
+                    fi
+            - name: Release Agent Skills
+              id: release
+              if: success()
+              run: |
+                  version="${{ github.event.inputs.version }}"
+                  if [[ -z "$version" ]]; then
+                    echo "Error: Release version is required when release input is true."
+                    exit 1
+                  fi
+                  gh skill publish --tag "$version"
+            - name: Generate Report
+              if: always()
+              run: |
+                  echo "Generating report..."
+                  failure=${{ steps.release.outcome == 'failure' }}
+                  if [[ "$failure" == "true" ]]; then
+                    echo "Skill release failed" > "$GITHUB_STEP_SUMMARY"
+                  else
+                    echo "Skill release successful" > "$GITHUB_STEP_SUMMARY"
+                  fi

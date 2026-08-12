@@ -11,6 +11,8 @@ jobs:
   emoji-autogen:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+        NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -22,13 +24,12 @@ jobs:
         uses: actions/setup-dotnet@v6.0.0
         with:
           dotnet-version: 11.x
-
+          cache: true
       - name: Run emoji mapping generator
         shell: pwsh
         run: |
           cd DisCatSharp.Tools
           ./gen-emoji-mappings.ps1
-
       - name: Commit and push if changed
         env:
           GITHUB_TOKEN: ${{ secrets.NYUW_TOKEN_GH }}

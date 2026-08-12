@@ -74,7 +74,7 @@ const searchInputSchema = z.object({
 export function createDisCatSharpMcpServer(db: D1Database, onMetrics?: (metrics: SearchMetrics, errorCode?: string, queryLength?: number) => void): McpServer {
   const service = new SearchService(db);
   const server = new McpServer(
-    { name: "DisCatSharp Documentation", version: "1.0.0" },
+    { name: "DisCatSharp Documentation", version: "1.0.0", websiteUrl: "https://docs.dcs.aitsys.dev", description: "Search DisCatSharp and its official Extensions APIs, source, and conceptual documentation.", icons: [{ src: "https://docs.dcs.aitsys.dev/logo.svg", mimeType: "image/svg+xml" }] },
     { instructions: MCP_SERVER_INSTRUCTIONS },
   );
 

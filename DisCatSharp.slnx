@@ -5,12 +5,11 @@
     <File Path=".github/pull_request_template.md" />
     <File Path=".github/SECURITY.md" />
   </Folder>
-  <Folder Name="/.github/workflows/" Id="e7a3c856-6834-d657-f2f0-05592df2dde9">
+  <Folder Name="/.github/workflows/">
     <File Path=".github/workflows/build.yml" />
     <File Path=".github/workflows/codeql-analysis.yml" />
     <File Path=".github/workflows/create_diagram.yml" />
     <File Path=".github/workflows/documentation.yml" />
-    <File Path=".github/workflows/documentation_test.yml" />
     <File Path=".github/workflows/internal-release.yml" />
     <File Path=".github/workflows/labeler.yml" />
     <File Path=".github/workflows/public-dev-release.yml" />
@@ -19,7 +18,7 @@
     <File Path=".github/workflows/tweet.yml" />
   </Folder>
   <Folder Name="/Build Items/" />
-  <Folder Name="/Build Items/Targets/" Id="907a4610-bc9a-5508-808f-fa4105980a5f">
+  <Folder Name="/Build Items/Targets/">
     <File Path="DisCatSharp.Targets/DisCatSharp.targets" />
     <File Path="DisCatSharp.Targets/InternalsVisibleTo.targets" />
     <File Path="DisCatSharp.Targets/Library.targets" />
@@ -28,7 +27,7 @@
     <File Path="DisCatSharp.Targets/TestProject.targets" />
     <File Path="DisCatSharp.Targets/Version.targets" />
   </Folder>
-  <Folder Name="/Build Items/Tools/" Id="e012d126-a562-2860-43ed-9b91994c4d92">
+  <Folder Name="/Build Items/Tools/">
     <File Path="DisCatSharp.Tools/DisCatSharp.ruleset" />
     <File Path="DisCatSharp.Tools/pack-docs.ps1" />
     <File Path="DisCatSharp.Tools/rebuild-lib.ps1" />

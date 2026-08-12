@@ -30,6 +30,8 @@ jobs:
                 os: [ubuntu-latest, windows-latest]
         runs-on: ${{ matrix.os }}
         name: Build library
+        env:
+          NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
         steps:
             - name: Checkout repository
               uses: actions/checkout@v7
@@ -40,7 +42,7 @@ jobs:
                       11.x
                       10.x
                       9.x
-
+                  cache: true
             - name: Restore dependencies
               run: |
                   dotnet restore --no-cache -f -v minimal DisCatSharp.slnx
@@ -56,6 +58,8 @@ jobs:
         runs-on: ubuntu-latest
         name: "Pack and Artifact"
         needs: build
+        env:
+          NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
         steps:
             - name: Checkout repository
               uses: actions/checkout@v7
@@ -66,6 +70,7 @@ jobs:
                       11.x
                       10.x
                       9.x
+                  cache: true
             - name: Restore Packages
               run: dotnet restore --no-cache -f -v minimal DisCatSharp.slnx
             - name: Build library
