@@ -38,4 +38,4 @@ jobs:
               with:
                   environment: ${{ steps.vars.outputs.environment }}
                   ignore_missing: true
-                  version: DisCatSharp@${{ steps.vars.outputs.version }}+${{ steps.vars.outputs.sha }}
+                  release: DisCatSharp@${{ steps.vars.outputs.version }}+${{ steps.vars.outputs.sha }}
