@@ -43,7 +43,12 @@ public sealed class DaveStateChangedEventArgs : DiscordEventArgs
 	public int ProtocolVersion { get; internal set; }
 
 	/// <summary>
-	///     Gets whether the new state is <see cref="DaveConnectionState.Active"/>.
+	///     Gets whether the executing sender transform is currently applying DAVE encryption.
 	/// </summary>
-	public bool IsActive => this.NewState == DaveConnectionState.Active;
+	/// <remarks>
+	///     This can remain <see langword="true"/> while <see cref="NewState"/> is
+	///     <see cref="DaveConnectionState.ReadyForTransition"/> because the old epoch continues
+	///     carrying media until OP 22 executes the prepared transition.
+	/// </remarks>
+	public bool IsActive { get; internal set; }
 }

@@ -21,8 +21,8 @@ internal enum DaveSessionState
 	AwaitingResponse,
 
 	/// <summary>
-	///     OP 21 (<c>dave_mls_prepare_transition</c>) has been received and recorded.
-	///     The session is waiting for OP 22 (<c>dave_mls_execute_transition</c>) before resetting MLS state.
+	///     Receiver transforms and ratchets are prepared and OP 23 may be sent. The existing sender
+	///     transform remains unchanged until OP 22 executes the transition.
 	/// </summary>
 	ReadyForTransition,
 
@@ -32,7 +32,8 @@ internal enum DaveSessionState
 	Active,
 
 	/// <summary>
-	///     DAVE is being downgraded; transitioning back to a lower or no-op protocol version.
+	///     Receiver transforms are prepared for a lower or no-op protocol version while the existing
+	///     sender continues using its executing version until OP 22.
 	/// </summary>
 	Downgrading,
 }

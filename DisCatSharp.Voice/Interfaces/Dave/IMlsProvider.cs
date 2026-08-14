@@ -24,6 +24,11 @@ internal interface IMlsProvider
 	bool IsGroupReady { get; }
 
 	/// <summary>
+	///     Gets the DAVE protocol version represented by the provider's current MLS state.
+	/// </summary>
+	ushort ProtocolVersion { get; }
+
+	/// <summary>
 	///     Initialises a new MLS group for this session.
 	/// </summary>
 	/// <param name="selfUserId">The Discord user ID of the local participant.</param>
@@ -61,18 +66,15 @@ internal interface IMlsProvider
 	/// <param name="welcomeBytes">The serialised MLS welcome message.</param>
 	/// <param name="ratchetKey">The ratchet key to bootstrap media encryption after joining.</param>
 	/// <param name="recognizedUserIds">The set of user IDs currently recognised by the server (from OP 11).</param>
-	void ProcessWelcome(byte[] welcomeBytes, byte[] ratchetKey, IReadOnlySet<ulong> recognizedUserIds);
+	/// <returns><see langword="true"/> when the Welcome was accepted and the group is ready.</returns>
+	bool ProcessWelcome(byte[] welcomeBytes, byte[] ratchetKey, IReadOnlySet<ulong> recognizedUserIds);
 
 	/// <summary>
-	///     Returns the updated per-user ratchet secrets after a commit has been applied.
-	///     Each tuple contains the Discord user ID and its new 32-byte ratchet secret.
+	///     Returns the current epoch ratchet installer for one media sender.
 	/// </summary>
-	IReadOnlyList<(ulong UserId, DaveRatchetInstaller Installer)> GetUpdatedRatchets();
-
-	/// <summary>
-	///     Returns a <see cref="DaveRatchetInstaller"/> for the local participant's own outbound ratchet for this epoch.
-	/// </summary>
-	DaveRatchetInstaller GetOwnRatchetInstaller();
+	/// <param name="userId">The Discord user ID whose sender ratchet should be exported.</param>
+	/// <returns>The ratchet installer, or <see langword="null"/> when no ratchet is available.</returns>
+	DaveRatchetInstaller? GetRatchetInstaller(ulong userId);
 
 	/// <summary>
 	///     Resets all MLS state. Called on reconnect, session downgrade, or invalid commit.

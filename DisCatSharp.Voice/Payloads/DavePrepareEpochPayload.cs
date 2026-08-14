@@ -9,12 +9,6 @@ namespace DisCatSharp.Voice.Payloads;
 internal sealed class DavePrepareEpochPayload
 {
 	/// <summary>
-	///     Gets or sets the transition identifier for this epoch change.
-	/// </summary>
-	[JsonProperty("transition_id")]
-	public ushort TransitionId { get; set; }
-
-	/// <summary>
 	///     Gets or sets the new MLS epoch number.
 	/// </summary>
 	[JsonProperty("epoch")]

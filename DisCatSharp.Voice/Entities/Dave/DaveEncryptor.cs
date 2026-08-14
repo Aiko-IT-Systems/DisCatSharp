@@ -83,6 +83,25 @@ internal sealed class DaveEncryptor : IDaveEncryptor
 			this._passthrough = passthrough;
 	}
 
+	/// <inheritdoc/>
+	public void TransitionTo(DaveRatchetInstaller? installer, bool passthrough)
+	{
+		if (installer is { ManagedSecret: null })
+			throw new ArgumentException("Managed path requires ManagedSecret.", nameof(installer));
+
+		lock (this._sync)
+		{
+			this._cryptorManager?.Dispose();
+			this._cryptorManager = null;
+
+			if (installer is { } value)
+				this._cryptorManager = new(new(value.ManagedSecret), this._cipherFactory);
+
+			this._passthrough = passthrough;
+			this._truncatedNonce = 0;
+		}
+	}
+
 	/// <summary>
 	///     Gets whether a ratchet has been installed and encryption is active.
 	/// </summary>
@@ -94,15 +113,6 @@ internal sealed class DaveEncryptor : IDaveEncryptor
 	///     enforced by the lock inside <see cref="TryEncrypt"/>.
 	/// </remarks>
 	public bool IsActive => !this._passthrough && this._cryptorManager is not null;
-
-	/// <inheritdoc/>
-	public void InstallRatchet(DaveRatchetInstaller installer)
-	{
-		if (installer.ManagedSecret is null)
-			throw new ArgumentException("Managed path requires ManagedSecret.", nameof(installer));
-		// SetKeyRatchet internally uses _sync lock, so no additional lock needed here
-		this.SetKeyRatchet(new HashRatchet(installer.ManagedSecret));
-	}
 
 	/// <summary>
 	///     Encrypts an Opus frame for the DAVE protocol.

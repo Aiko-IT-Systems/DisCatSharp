@@ -9,7 +9,7 @@ namespace DisCatSharp.Voice.Payloads;
 internal sealed class DavePrepareTransitionPayload
 {
 	/// <summary>
-	///     Gets or sets the transition identifier used to correlate this prepare with the subsequent execute and ack.
+	///     Gets or sets the transition identifier used to correlate OP 23 readiness with subsequent OP 22 execution.
 	/// </summary>
 	[JsonProperty("transition_id")]
 	public ushort TransitionId { get; set; }

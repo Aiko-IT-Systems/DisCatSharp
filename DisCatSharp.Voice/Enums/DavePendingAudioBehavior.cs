@@ -3,22 +3,22 @@ using System;
 namespace DisCatSharp.Voice.Enums;
 
 /// <summary>
-///     Controls outbound audio behavior while DAVE is negotiated but not active.
+///     Controls outbound audio behavior when no currently executing DAVE media mode is usable.
 /// </summary>
 public enum DavePendingAudioBehavior
 {
 	/// <summary>
-	///     Send plain Opus frames over transport encryption until DAVE becomes active.
+	///     Sends plain Opus frames using Discord transport encryption while DAVE media is not ready.
 	/// </summary>
 	PassThrough = 0,
 
 	/// <summary>
-	///     Drop outbound audio frames until DAVE is active.
+	///     Drops outbound audio frames while DAVE media is not ready.
 	/// </summary>
 	Drop = 1,
 
 	/// <summary>
-	///     Throw <see cref="InvalidOperationException"/> when an outbound frame is prepared while DAVE is not active.
+	///     Throws <see cref="InvalidOperationException"/> when an outbound frame is prepared while DAVE media is not ready.
 	/// </summary>
 	Throw = 2
 }

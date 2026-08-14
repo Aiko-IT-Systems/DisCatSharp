@@ -39,13 +39,12 @@ internal interface IDaveEncryptor : IDisposable
 	bool TryEncrypt(ReadOnlySpan<byte> frame, uint ssrc, out byte[] result, out int resultLength);
 
 	/// <summary>
-	///     Controls passthrough mode.
+	///     Atomically changes the executing sender ratchet and passthrough mode.
 	/// </summary>
-	void SetPassthrough(bool passthrough);
-
-	/// <summary>
-	///     Installs a ratchet. For managed implementations, reads <see cref="DaveRatchetInstaller.ManagedSecret"/>.
-	///     For native implementations, passes <see cref="DaveRatchetInstaller.NativeHandle"/> to libdave.
-	/// </summary>
-	void InstallRatchet(DaveRatchetInstaller installer);
+	/// <param name="installer">
+	///     The ratchet to install for an encrypted protocol version, or <see langword="null"/> to clear
+	///     sender key material when transitioning to protocol version 0.
+	/// </param>
+	/// <param name="passthrough">Whether outbound frames should be forwarded without DAVE encryption.</param>
+	void TransitionTo(DaveRatchetInstaller? installer, bool passthrough);
 }

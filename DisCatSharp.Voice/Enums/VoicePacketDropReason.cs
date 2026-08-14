@@ -21,7 +21,7 @@ public enum VoicePacketDropReason
 	MalformedExtension = 2,
 
 	/// <summary>
-	///     DAVE is negotiated but not active yet.
+	///     A DAVE coordinator exists, but no executing receive mode is ready to process media.
 	/// </summary>
 	DavePending = 3,
 

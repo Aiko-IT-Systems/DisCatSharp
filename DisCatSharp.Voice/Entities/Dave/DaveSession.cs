@@ -25,7 +25,7 @@ namespace DisCatSharp.Voice.Entities.Dave;
 ///         <b>Thread safety of <c>_decryptors</c>:</b> the field is declared <see langword="volatile"/>
 ///         and updated exclusively via <see cref="System.Threading.Interlocked.Exchange{T}"/>.
 ///         The gateway thread builds a new <see cref="System.Collections.Generic.Dictionary{TKey,TValue}"/>
-///         snapshot in <see cref="InstallRatchets"/> and atomically publishes it; the audio
+///         snapshot when users are added or removed and atomically publishes it; the audio
 ///         receive thread always reads a consistent, immutable snapshot via a single volatile read.
 ///         No lock is needed on the hot decrypt path.
 ///     </para>
@@ -43,14 +43,14 @@ internal sealed class DaveSession : IDisposable
 {
 	private readonly ulong _selfUserId;
 	private readonly IMlsProvider _mlsProvider;
-	private readonly Func<IDaveEncryptor> _encryptorFactory;
 	private readonly Func<IDaveDecryptor> _decryptorFactory;
-	private readonly Action<int, DaveSessionState, DaveSessionState, string, string>? _stateChanged;
+	private readonly Action<int, bool, DaveSessionState, DaveSessionState, string, string>? _stateChanged;
 	private readonly ILogger _logger;
 	private readonly IDaveEncryptor _encryptor;
 	private volatile Dictionary<ulong, IDaveDecryptor> _decryptors = [];
 	private readonly HashSet<ulong> _recognizedUserIds = [];
 	private readonly DaveTransitionTracker _transitionTracker = new();
+	private ushort _latestPreparedProtocolVersion;
 	private bool _disposed;
 
 	/// <summary>
@@ -59,12 +59,21 @@ internal sealed class DaveSession : IDisposable
 	public DaveSessionState State { get; private set; } = DaveSessionState.Inactive;
 
 	/// <summary>
-	///     Gets whether this session is fully established and encrypting audio.
+	///     Gets whether the currently executing sender transform is encrypting audio.
 	/// </summary>
-	public bool IsActive => this.State == DaveSessionState.Active;
+	/// <remarks>
+	///     Control-plane state and media activity are independent during a transition. An established
+	///     member remains active while the next epoch is <see cref="DaveSessionState.ReadyForTransition"/>.
+	/// </remarks>
+	public bool IsActive => this.ProtocolVersion > 0 && this._encryptor.IsActive;
 
 	/// <summary>
-	///     Gets the negotiated DAVE protocol version.
+	///     Gets whether media may flow using either the executing DAVE sender ratchet or protocol-0 passthrough.
+	/// </summary>
+	public bool IsMediaReady => this.ProtocolVersion == 0 || this._encryptor.IsActive;
+
+	/// <summary>
+	///     Gets the DAVE protocol version used by the currently executing sender transform.
 	/// </summary>
 	public int ProtocolVersion { get; private set; }
 
@@ -85,16 +94,17 @@ internal sealed class DaveSession : IDisposable
 		Func<IDaveEncryptor> encryptorFactory,
 		Func<IDaveDecryptor> decryptorFactory,
 		ILogger logger,
-		Action<int, DaveSessionState, DaveSessionState, string, string>? stateChanged = null)
+		Action<int, bool, DaveSessionState, DaveSessionState, string, string>? stateChanged = null)
 	{
 		this._selfUserId = selfUserId;
 		this._mlsProvider = mlsProvider ?? throw new ArgumentNullException(nameof(mlsProvider));
-		this._encryptorFactory = encryptorFactory ?? throw new ArgumentNullException(nameof(encryptorFactory));
+		ArgumentNullException.ThrowIfNull(encryptorFactory);
 		this._decryptorFactory = decryptorFactory ?? throw new ArgumentNullException(nameof(decryptorFactory));
 		this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		this._stateChanged = stateChanged;
 		this._encryptor = encryptorFactory();
 		this.ProtocolVersion = protocolVersion;
+		this._latestPreparedProtocolVersion = checked((ushort)protocolVersion);
 
 		if (protocolVersion > 0)
 			this.TransitionTo(DaveSessionState.Pending, nameof(DaveSession), "constructed with protocolVersion > 0");
@@ -111,6 +121,7 @@ internal sealed class DaveSession : IDisposable
 	public void HandleClientsConnect(VoiceClientsConnectPayload payload)
 	{
 		var incoming = new HashSet<ulong>(payload.UserIds);
+		var added = new List<ulong>();
 
 		foreach (var userId in this._recognizedUserIds)
 		{
@@ -118,82 +129,60 @@ internal sealed class DaveSession : IDisposable
 				this.DisposeDecryptor(userId);
 		}
 
+		foreach (var userId in incoming)
+		{
+			if (!this._recognizedUserIds.Contains(userId))
+				added.Add(userId);
+		}
+
 		this._recognizedUserIds.Clear();
 		foreach (var id in incoming)
 			this._recognizedUserIds.Add(id);
+
+		foreach (var userId in added)
+			this.PrepareReceiver(userId, this._latestPreparedProtocolVersion);
 
 		this._logger.VoiceDebug("[DAVE] ClientsConnect: recognized {Count} user(s)", this._recognizedUserIds.Count);
 	}
 
 	/// <summary>
-	///     Handles OP 21 <c>dave_mls_prepare_transition</c>. Records the pending transition and enters <see cref="DaveSessionState.ReadyForTransition"/>.
+	///     Handles OP 21 <c>dave_mls_prepare_transition</c> by preparing receiver transforms before
+	///     reporting readiness to the voice gateway.
 	/// </summary>
-	public void HandlePrepareTransition(DavePrepareTransitionPayload payload)
+	/// <returns>The action and authoritative transition ID for the caller.</returns>
+	public DaveTransitionResult HandlePrepareTransition(DavePrepareTransitionPayload payload)
 	{
-		this._transitionTracker.Record(payload.TransitionId, payload.ProtocolVersion);
-		this.TransitionTo(DaveSessionState.ReadyForTransition, nameof(HandlePrepareTransition), $"prepare transitionId={payload.TransitionId} version={payload.ProtocolVersion}");
 		this._logger.VoiceDebug("[DAVE] PrepareTransition: id={TransitionId} version={Version}", payload.TransitionId, payload.ProtocolVersion);
+		return this.PrepareTransition(payload.TransitionId, payload.ProtocolVersion, nameof(HandlePrepareTransition));
 	}
 
 	/// <summary>
-	///     Handles OP 22 <c>dave_mls_execute_transition</c>.
+	///     Handles OP 22 <c>dave_mls_execute_transition</c> by switching only the local sender transform.
 	/// </summary>
-	/// <returns>
-	///     A <see cref="DaveReadyForTransitionPayload"/> for the caller to send as OP 23, or
-	///     <see langword="null"/> when no acknowledgement should be sent (transitionId 0 or transition unknown).
-	/// </returns>
-	public DaveReadyForTransitionPayload? HandleExecuteTransition(DaveExecuteTransitionPayload payload)
+	/// <returns><see langword="true"/> when a staged transition was consumed and executed.</returns>
+	public bool HandleExecuteTransition(DaveExecuteTransitionPayload payload)
 	{
 		if (!this._transitionTracker.TryConsume(payload.TransitionId, out var targetVersion))
 		{
 			this._logger.LogWarning("[DAVE] ExecuteTransition: unknown transitionId={TransitionId}", payload.TransitionId);
-			return null;
+			return false;
 		}
 
-		if (targetVersion == 0)
-		{
-			this.ResetMls();
-			this.TransitionTo(DaveSessionState.Inactive, nameof(HandleExecuteTransition), "targetVersion=0");
-			return null;
-		}
-
-		if (targetVersion < this.ProtocolVersion)
-		{
-			this.ResetMls();
-			this.TransitionTo(DaveSessionState.Downgrading, nameof(HandleExecuteTransition), $"downgrade from {this.ProtocolVersion} to {targetVersion}");
-			return null;
-		}
-
-		this.ProtocolVersion = targetVersion;
-		this.ResetMls();
-		this.TransitionTo(DaveSessionState.Pending, nameof(HandleExecuteTransition), $"transition to version {targetVersion}");
-
-		return payload.TransitionId != 0
-			? new DaveReadyForTransitionPayload { TransitionId = payload.TransitionId }
-			: null;
+		return this.ExecuteSenderTransition(payload.TransitionId, targetVersion, nameof(HandleExecuteTransition));
 	}
 
 	/// <summary>
-	///     Handles OP 24 <c>dave_mls_prepare_epoch</c>. Stores transition info for the upcoming epoch.
+	///     Handles OP 24 <c>dave_mls_prepare_epoch</c> and prepares a replacement key package for epoch 1.
 	/// </summary>
-	public void HandlePrepareEpoch(DavePrepareEpochPayload payload)
+	/// <returns>The OP 26 key-package payload for epoch 1, or an empty array for other epochs.</returns>
+	public byte[] HandlePrepareEpoch(DavePrepareEpochPayload payload)
 	{
-		this._transitionTracker.Record(payload.TransitionId, payload.ProtocolVersion);
-		this._logger.VoiceDebug("[DAVE] PrepareEpoch: transitionId={TransitionId} epoch={Epoch} version={Version}",
-			payload.TransitionId, payload.Epoch, payload.ProtocolVersion);
-	}
+		this._latestPreparedProtocolVersion = payload.ProtocolVersion;
+		this._logger.VoiceDebug("[DAVE] PrepareEpoch: epoch={Epoch} version={Version}", payload.Epoch, payload.ProtocolVersion);
 
-	/// <summary>
-	///     Handles OP 31 <c>dave_mls_invalid_commit_welcome</c>.
-	///     Resets MLS state and returns to <see cref="DaveSessionState.Pending"/>.
-	/// </summary>
-	public void HandleInvalidCommit(DaveMlsInvalidCommitWelcomePayload? payload)
-	{
-		this._logger.LogWarning("[DAVE] InvalidCommit: {Description}", payload?.Description ?? "(no description)");
-		this._mlsProvider.Reset();
-
-		if (this.ProtocolVersion > 0)
-			this.TransitionTo(DaveSessionState.Pending, nameof(HandleInvalidCommit), "invalid commit");
+		return payload.Epoch == 1
+			? this.PrepareKeyPackage(payload.ProtocolVersion)
+			: [];
 	}
 
 	/// <summary>
@@ -212,13 +201,33 @@ internal sealed class DaveSession : IDisposable
 	///     The serialised MLS key package bytes to transmit as OP 26, or an empty array if the provider
 	///     produced nothing (e.g. <see cref="NullMlsProvider"/> in non-DAVE builds).
 	/// </returns>
-	public byte[] PrepareKeyPackage()
+	public byte[] PrepareKeyPackage(int? protocolVersion = null)
 	{
-		this._mlsProvider.InitGroup(this._selfUserId, this.ProtocolVersion, []);
+		var targetProtocolVersion = checked((ushort)(protocolVersion ?? this._latestPreparedProtocolVersion));
+		this._latestPreparedProtocolVersion = targetProtocolVersion;
+		this._mlsProvider.InitGroup(this._selfUserId, targetProtocolVersion, []);
 		var keyPackage = this._mlsProvider.GetKeyPackage();
-		this._logger.VoiceDebug("[DAVE] PrepareKeyPackage: {Len} bytes, protocolVersion={Version}", keyPackage.Length, this.ProtocolVersion);
+		this._logger.VoiceDebug("[DAVE] PrepareKeyPackage: {Len} bytes, protocolVersion={Version}", keyPackage.Length, targetProtocolVersion);
 		this.TransitionTo(DaveSessionState.AwaitingResponse, nameof(PrepareKeyPackage), "key package prepared");
 		return keyPackage;
+	}
+
+	/// <summary>
+	///     Resets only MLS preparation state after an invalid OP 29 or OP 30 and creates a replacement key package.
+	/// </summary>
+	/// <remarks>
+	///     Currently executing media ratchets are retained so audio can continue until the voice gateway
+	///     removes and re-adds this member with a later valid transition.
+	/// </remarks>
+	/// <param name="transitionId">The invalid transition ID reported to the voice gateway through OP 31.</param>
+	/// <returns>The replacement OP 26 key-package payload.</returns>
+	public byte[] RecoverFromInvalidTransition(ushort transitionId)
+	{
+		this._logger.LogWarning("[DAVE] Recovering from invalid commit or Welcome (transitionId={TransitionId})", transitionId);
+		this._mlsProvider.Reset();
+		this._transitionTracker.Clear();
+		this.TransitionTo(DaveSessionState.Pending, nameof(RecoverFromInvalidTransition), $"invalid transitionId={transitionId}");
+		return this.PrepareKeyPackage(this._latestPreparedProtocolVersion);
 	}
 
 	/// <summary>
@@ -241,7 +250,7 @@ internal sealed class DaveSession : IDisposable
 		var lazyInitialized = false;
 		if (!this._mlsProvider.IsSessionInitialized)
 		{
-			this._mlsProvider.InitGroup(this._selfUserId, this.ProtocolVersion, []);
+			this._mlsProvider.InitGroup(this._selfUserId, this._latestPreparedProtocolVersion, []);
 			lazyInitialized = true;
 			this._logger.VoiceDebug("[DAVE] HandleExternalSender: lazily initialized MLS session for OP25");
 		}
@@ -296,73 +305,59 @@ internal sealed class DaveSession : IDisposable
 	///     and the caller must send OP 23 to the server.
 	/// </param>
 	/// <returns>
-	///     A <see cref="DaveAnnounceAction"/> the caller must act on:
+	///     A <see cref="DaveTransitionResult"/> whose action the caller must perform:
 	///     <list type="bullet">
-	///       <item><description><see cref="DaveAnnounceAction.None"/> — nothing to send.</description></item>
-	///       <item><description><see cref="DaveAnnounceAction.SendReadyForTransition"/> — send OP 23 with the same <paramref name="transitionId"/>.</description></item>
-	///       <item><description><see cref="DaveAnnounceAction.Restart"/> — commit failed; send OP 31, then call <see cref="PrepareKeyPackage"/> and send OP 26.</description></item>
+	///       <item><description><see cref="DaveTransitionAction.None"/> — nothing to send.</description></item>
+	///       <item><description><see cref="DaveTransitionAction.Ready"/> — send OP 23 for the result's transition ID.</description></item>
+	///       <item><description><see cref="DaveTransitionAction.RecoverInvalid"/> — send OP 31, recover MLS, and send OP 26.</description></item>
 	///     </list>
 	/// </returns>
-	public DaveAnnounceAction HandleAnnounceCommit(byte[] commitBytes, ushort transitionId)
+	public DaveTransitionResult HandleAnnounceCommit(byte[] commitBytes, ushort transitionId)
 	{
 		var outcome = this._mlsProvider.ProcessCommit(commitBytes);
 
 		if (outcome.IsIgnored)
 		{
 			this._logger.VoiceDebug("[DAVE] AnnounceCommit: commit ignored (transitionId={TransId})", transitionId);
-			return DaveAnnounceAction.None;
+			return DaveTransitionResult.None(transitionId);
 		}
 
 		if (outcome.IsFailed)
 		{
 			this._logger.LogWarning("[DAVE] AnnounceCommit: commit FAILED (transitionId={TransId}), requesting restart", transitionId);
-			this.TransitionTo(DaveSessionState.Pending, nameof(HandleAnnounceCommit), "commit failed");
-			return DaveAnnounceAction.Restart;
+			return DaveTransitionResult.RecoverInvalid(transitionId);
 		}
 
 		this._logger.VoiceDebug("[DAVE] AnnounceCommit: commit applied (transitionId={TransId}), groupReady={Ready}", transitionId, this._mlsProvider.IsGroupReady);
 
-		if (this._mlsProvider.IsGroupReady)
-		{
-			if (transitionId == 0)
-			{
-				this.InstallRatchets();
-				this.TransitionTo(DaveSessionState.Active, nameof(HandleAnnounceCommit), "initial commit applied");
-				return DaveAnnounceAction.None;
-			}
-
-			this.InstallRatchets(installOwnRatchet: false);
-			this.TransitionTo(DaveSessionState.ReadyForTransition, nameof(HandleAnnounceCommit), $"commit staged (transitionId={transitionId})");
-			return DaveAnnounceAction.SendReadyForTransition;
-		}
-		else
+		if (!this._mlsProvider.IsGroupReady)
 		{
 			this._logger.VoiceDebug("[DAVE] AnnounceCommit: group not ready after commit");
-			return DaveAnnounceAction.None;
+			return DaveTransitionResult.None(transitionId);
 		}
+
+		return this.PrepareTransition(transitionId, this._mlsProvider.ProtocolVersion, nameof(HandleAnnounceCommit));
 	}
 
 	/// <summary>
 	///     Handles binary OP 30 (MLS welcome).
-	///     Joins the group; if the group becomes ready, installs ratchets and transitions to
-	///     <see cref="DaveSessionState.Active"/>.
+	///     Joins the group and prepares receiver ratchets for the Welcome's transition ID.
 	/// </summary>
-	public void HandleWelcome(byte[] welcomeBytes)
+	/// <param name="welcomeBytes">The MLS Welcome bytes after the transition-ID prefix.</param>
+	/// <param name="transitionId">The authoritative transition ID prefixed to OP 30.</param>
+	/// <returns>The action and transition ID the caller must use for OP 23 or OP 31.</returns>
+	public DaveTransitionResult HandleWelcome(byte[] welcomeBytes, ushort transitionId)
 	{
 		// Include self so libdave can match our leaf node when processing the welcome.
 		var allRecognized = new HashSet<ulong>(this._recognizedUserIds) { this._selfUserId };
-		this._mlsProvider.ProcessWelcome(welcomeBytes, [], allRecognized);
+		if (!this._mlsProvider.ProcessWelcome(welcomeBytes, [], allRecognized))
+		{
+			this._logger.LogWarning("[DAVE] Welcome: processing failed (transitionId={TransitionId})", transitionId);
+			return DaveTransitionResult.RecoverInvalid(transitionId);
+		}
 
-		if (this._mlsProvider.IsGroupReady)
-		{
-			this._logger.VoiceDebug("[DAVE] Welcome: group ready, installing ratchets");
-			this.InstallRatchets();
-			this.TransitionTo(DaveSessionState.Active, nameof(HandleWelcome), "welcome applied and group ready");
-		}
-		else
-		{
-			this._logger.VoiceDebug("[DAVE] Welcome: group not ready after welcome");
-		}
+		this._logger.VoiceDebug("[DAVE] Welcome: group ready, preparing transitionId={TransitionId}", transitionId);
+		return this.PrepareTransition(transitionId, this._mlsProvider.ProtocolVersion, nameof(HandleWelcome));
 	}
 
 	// -------------------------------------------------------------------------
@@ -429,15 +424,18 @@ internal sealed class DaveSession : IDisposable
 	/// <param name="userIds">User IDs of channel members known from guild voice-state cache.</param>
 	public void PreSeedRecognizedUsers(IEnumerable<ulong> userIds)
 	{
-		var added = 0;
+		var addedUserIds = new List<ulong>();
 		foreach (var id in userIds)
 		{
 			if (this._recognizedUserIds.Add(id))
-				added++;
+				addedUserIds.Add(id);
 		}
 
-		if (added > 0)
-			this._logger.VoiceDebug("[DAVE] PreSeedRecognizedUsers: added {Count} user(s) from guild voice states", added);
+		foreach (var userId in addedUserIds)
+			this.PrepareReceiver(userId, this._latestPreparedProtocolVersion);
+
+		if (addedUserIds.Count > 0)
+			this._logger.VoiceDebug("[DAVE] PreSeedRecognizedUsers: added {Count} user(s) from guild voice states", addedUserIds.Count);
 	}
 
 	/// <summary>
@@ -456,7 +454,7 @@ internal sealed class DaveSession : IDisposable
 	/// </summary>
 	public void Reset()
 	{
-		this.ResetMls();
+		this.ResetAllState();
 
 		if (this.ProtocolVersion > 0)
 			this.TransitionTo(DaveSessionState.Pending, nameof(Reset), "reset");
@@ -470,7 +468,7 @@ internal sealed class DaveSession : IDisposable
 		if (this._disposed)
 			return;
 		this._disposed = true;
-		this.ResetMls();
+		this.ResetAllState();
 		this._encryptor.Dispose();
 		this.TransitionTo(DaveSessionState.Inactive, nameof(Dispose), "disposed");
 	}
@@ -490,74 +488,135 @@ internal sealed class DaveSession : IDisposable
 
 		this.State = newState;
 		this._logger.VoiceDebug("[DAVE FSM] {OldState} -> {NewState} via {Handler} ({Reason})", oldState, newState, handler, reason);
-		this._stateChanged?.Invoke(this.ProtocolVersion, oldState, newState, handler, reason);
+		this._stateChanged?.Invoke(this.ProtocolVersion, this.IsActive, oldState, newState, handler, reason);
 	}
 
 	/// <summary>
-	///     Resets the MLS provider, transition tracker, decryptors, and encryptor passthrough.
+	///     Prepares all receiver transforms and either stages or immediately executes a transition.
 	/// </summary>
-	private void ResetMls()
+	/// <param name="transitionId">The authoritative transition ID.</param>
+	/// <param name="targetVersion">The protocol version receivers must be prepared to accept.</param>
+	/// <param name="handler">The gateway handler that initiated preparation.</param>
+	/// <returns>The voice-gateway action produced by preparation.</returns>
+	private DaveTransitionResult PrepareTransition(ushort transitionId, ushort targetVersion, string handler)
+	{
+		this._latestPreparedProtocolVersion = targetVersion;
+		foreach (var userId in this._recognizedUserIds)
+			this.PrepareReceiver(userId, targetVersion);
+
+		if (transitionId == 0)
+		{
+			this.ExecuteSenderTransition(transitionId, targetVersion, handler);
+			return DaveTransitionResult.None(transitionId);
+		}
+
+		this._transitionTracker.Record(transitionId, targetVersion);
+		var preparedState = targetVersion < this.ProtocolVersion
+			? DaveSessionState.Downgrading
+			: DaveSessionState.ReadyForTransition;
+		this.TransitionTo(preparedState, handler, $"prepared transitionId={transitionId} version={targetVersion}");
+		return DaveTransitionResult.Ready(transitionId);
+	}
+
+	/// <summary>
+	///     Switches the local sender transform for one prepared transition.
+	/// </summary>
+	/// <param name="transitionId">The transition ID being executed.</param>
+	/// <param name="targetVersion">The protocol version to begin sending.</param>
+	/// <param name="handler">The handler responsible for execution.</param>
+	/// <returns><see langword="true"/> when the sender transform was switched.</returns>
+	private bool ExecuteSenderTransition(ushort transitionId, ushort targetVersion, string handler)
+	{
+		DaveRatchetInstaller? installer = null;
+		if (targetVersion > 0)
+		{
+			installer = this._mlsProvider.GetRatchetInstaller(this._selfUserId);
+			if (!IsUsableInstaller(installer))
+			{
+				installer?.NativeHandle?.Dispose();
+				this._logger.LogError("[DAVE] ExecuteTransition: own ratchet unavailable for transitionId={TransitionId} version={Version}", transitionId, targetVersion);
+				this.TransitionTo(DaveSessionState.Pending, handler, $"own ratchet unavailable for transitionId={transitionId}");
+				return false;
+			}
+		}
+
+		this._encryptor.TransitionTo(installer, targetVersion == 0);
+		this.ProtocolVersion = targetVersion;
+		this._latestPreparedProtocolVersion = targetVersion;
+
+		if (targetVersion == 0)
+		{
+			this._mlsProvider.Reset();
+			this._transitionTracker.Clear();
+			this.TransitionTo(DaveSessionState.Inactive, handler, $"executed transitionId={transitionId} to protocol 0");
+		}
+		else
+		{
+			this.TransitionTo(DaveSessionState.Active, handler, $"executed transitionId={transitionId} version={targetVersion}");
+		}
+
+		return true;
+	}
+
+	/// <summary>
+	///     Prepares one remote user's existing or newly created receiver transform.
+	/// </summary>
+	/// <param name="userId">The remote media sender.</param>
+	/// <param name="targetVersion">The protocol version the receiver must accept.</param>
+	private void PrepareReceiver(ulong userId, ushort targetVersion)
+	{
+		if (userId == this._selfUserId)
+			return;
+
+		DaveRatchetInstaller? installer = null;
+		if (targetVersion > 0)
+		{
+			installer = this._mlsProvider.GetRatchetInstaller(userId);
+			if (!IsUsableInstaller(installer))
+			{
+				installer?.NativeHandle?.Dispose();
+				this._logger.VoiceDebug("[DAVE] Receiver ratchet unavailable for user {UserId} at protocol version {Version}", userId, targetVersion);
+				return;
+			}
+		}
+
+		var current = this._decryptors;
+		if (current.TryGetValue(userId, out var decryptor))
+		{
+			decryptor.TransitionTo(installer, targetVersion == 0);
+		}
+		else
+		{
+			decryptor = this._decryptorFactory();
+			decryptor.TransitionTo(installer, targetVersion == 0);
+			var updated = new Dictionary<ulong, IDaveDecryptor>(current)
+			{
+				[userId] = decryptor
+			};
+			Interlocked.Exchange(ref this._decryptors, updated);
+		}
+
+		this._logger.VoiceDebug("[DAVE] Prepared receiver for user {UserId} at protocol version {Version}", userId, targetVersion);
+	}
+
+	/// <summary>
+	///     Determines whether a provider-produced ratchet installer can be passed to a transform.
+	/// </summary>
+	/// <param name="installer">The optional ratchet installer.</param>
+	/// <returns><see langword="true"/> for a native handle or a managed secret of at least 32 bytes.</returns>
+	private static bool IsUsableInstaller(DaveRatchetInstaller? installer)
+		=> installer is { } value
+			&& (value.IsNative || (value.ManagedSecret?.Length ?? 0) >= 32);
+
+	/// <summary>
+	///     Resets the MLS provider, transition tracker, receiver transforms, and sender transform.
+	/// </summary>
+	private void ResetAllState()
 	{
 		this._mlsProvider.Reset();
 		this._transitionTracker.Clear();
 		this.ClearDecryptors();
-		this._encryptor.SetPassthrough(true);
-	}
-
-	/// <summary>
-	///     Installs per-user and own ratchet secrets returned by the MLS provider after a commit or welcome.
-	///     Only called when <see cref="IMlsProvider.IsGroupReady"/> is <see langword="true"/>.
-	/// </summary>
-	/// <remarks>
-	///     Threading: runs on the gateway WebSocket thread.  Builds a new dictionary snapshot,
-	///     atomically publishes it via <see cref="Interlocked.Exchange{T}"/>, then disposes any
-	///     replaced decryptor instances.  The audio-receive thread always reads a consistent snapshot
-	///     via the volatile field, so no lock is needed on the hot decrypt path.
-	/// </remarks>
-	private void InstallRatchets(bool installOwnRatchet = true)
-	{
-		var current = this._decryptors;
-		var updated = new Dictionary<ulong, IDaveDecryptor>(current);
-		var toDispose = new List<IDaveDecryptor>();
-
-		foreach (var (userId, installer) in this._mlsProvider.GetUpdatedRatchets())
-		{
-			if (!installer.IsNative && (installer.ManagedSecret?.Length ?? 0) < 32)
-			{
-				this._logger.LogWarning("[DAVE] InstallRatchets: ratchet for user {UserId} is too short, skipping", userId);
-				installer.NativeHandle?.Dispose();
-				continue;
-			}
-
-			// Always create a fresh decryptor for each ratchet rotation so the old instance can
-			// be cleanly disposed after the atomic swap — no audio thread can reach it afterward.
-			var dec = this._decryptorFactory();
-			dec.InstallRatchet(installer);
-
-			if (updated.TryGetValue(userId, out var old))
-				toDispose.Add(old);
-
-			updated[userId] = dec;
-			this._logger.VoiceDebug("[DAVE] Installed ratchet for user {UserId}", userId);
-		}
-
-		// Atomically publish the new map.  After this point the audio thread will only see
-		// decryptors from `updated`; any instance collected in toDispose is no longer reachable
-		// through _decryptors.  Each decryptor's internal lock(_sync) serialises any in-flight
-		// TryDecrypt call, so disposal is safe immediately after the exchange.
-		Interlocked.Exchange(ref this._decryptors, updated);
-
-		foreach (var dec in toDispose)
-			dec.Dispose();
-
-		if (!installOwnRatchet)
-			return;
-
-		var ownInstaller = this._mlsProvider.GetOwnRatchetInstaller();
-		if (ownInstaller.IsNative || (ownInstaller.ManagedSecret?.Length ?? 0) >= 32)
-			this._encryptor.InstallRatchet(ownInstaller);
-		else
-			ownInstaller.NativeHandle?.Dispose();
+		this._encryptor.TransitionTo(null, passthrough: true);
 	}
 
 	/// <summary>

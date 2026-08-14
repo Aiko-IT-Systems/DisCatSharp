@@ -18,8 +18,8 @@ namespace DisCatSharp.Voice.Entities.Dave;
 ///         that in-flight frames encrypted under the previous epoch can still be authenticated.
 ///     </para>
 ///     <para>
-///         Passthrough mode is entered via <see cref="TransitionToPassthrough"/>.  While active,
-///         frames that carry no DAVE footer are forwarded without modification.
+///         Passthrough mode is controlled by <see cref="TransitionTo"/>. While active, frames that
+///         carry no DAVE footer are forwarded without modification.
 ///     </para>
 /// </remarks>
 internal sealed class DaveDecryptor : IDaveDecryptor
@@ -37,7 +37,7 @@ internal sealed class DaveDecryptor : IDaveDecryptor
 	// fields change together, and because List<T> is not thread-safe, an atomic-swap strategy
 	// (e.g., Interlocked.Exchange on _currentManager alone) is not feasible.
 	// lock(_sync) serialises all reads and writes to _currentManager, _retainedManagers,
-	// _passthroughUntil, and _disposed across the encrypt/decrypt and ratchet-install paths.
+	// _passthroughUntil, and _disposed across the encrypt/decrypt and ratchet-transition paths.
 	// IMPORTANT: Dispose() also acquires _sync so that a concurrent TryDecrypt() on the audio
 	// thread cannot use _currentManager after it has been freed.
 	private readonly Lock _sync = new();
@@ -68,33 +68,35 @@ internal sealed class DaveDecryptor : IDaveDecryptor
 	{
 		lock (this._sync)
 		{
-			if (this._currentManager is not null)
-			{
-				this._currentManager.ExpiresAt = DateTime.UtcNow + s_cryptorExpiry;
-				this._retainedManagers.Add(this._currentManager);
-			}
-
-			this._currentManager = new CryptorManager(ratchet, this._cipherFactory);
+			this.SetPassthroughMode(false);
+			this.TransitionToKeyRatchetCore(ratchet);
 		}
 	}
 
 	/// <summary>
-	///     Enters passthrough mode for <paramref name="window"/>.
-	///     Non-DAVE frames received within this window are forwarded as-is.
+	///     Enters persistent passthrough mode while retaining the current encrypted epoch for
+	///     <see cref="s_cryptorExpiry"/>.
 	/// </summary>
-	public void TransitionToPassthrough(TimeSpan window)
+	public void TransitionToPassthrough()
 	{
 		lock (this._sync)
-			this._passthroughUntil = DateTime.UtcNow + window;
+		{
+			this.SetPassthroughMode(true);
+			this.TransitionToKeyRatchetCore(null);
+		}
 	}
 
 	/// <inheritdoc/>
-	public void InstallRatchet(DaveRatchetInstaller installer)
+	public void TransitionTo(DaveRatchetInstaller? installer, bool passthrough)
 	{
-		if (installer.ManagedSecret is null)
+		if (installer is { ManagedSecret: null })
 			throw new ArgumentException("Managed path requires ManagedSecret.", nameof(installer));
-		// TransitionToKeyRatchet internally uses _sync lock, so no additional lock needed here
-		this.TransitionToKeyRatchet(new HashRatchet(installer.ManagedSecret));
+
+		lock (this._sync)
+		{
+			this.SetPassthroughMode(passthrough);
+			this.TransitionToKeyRatchetCore(installer is { } value ? new(value.ManagedSecret!) : null);
+		}
 	}
 
 	/// <summary>
@@ -233,5 +235,47 @@ internal sealed class DaveDecryptor : IDaveDecryptor
 			this._retainedManagers[i].Dispose();
 			this._retainedManagers.RemoveAt(i);
 		}
+	}
+
+	/// <summary>
+	///     Updates plaintext passthrough timing to mirror libdave's transition behavior.
+	/// </summary>
+	/// <param name="passthrough">
+	///     <see langword="true"/> to accept plaintext indefinitely; <see langword="false"/> to retain
+	///     plaintext acceptance for at most the transition grace period.
+	/// </param>
+	private void SetPassthroughMode(bool passthrough)
+	{
+		if (passthrough)
+		{
+			this._passthroughUntil = DateTime.MaxValue;
+			return;
+		}
+
+		if (!this._passthroughUntil.HasValue)
+			return;
+
+		var graceExpiry = DateTime.UtcNow + s_cryptorExpiry;
+		if (this._passthroughUntil.Value > graceExpiry)
+			this._passthroughUntil = graceExpiry;
+	}
+
+	/// <summary>
+	///     Moves the current epoch into the retention list and optionally installs its replacement.
+	/// </summary>
+	/// <param name="ratchet">The replacement ratchet, or <see langword="null"/> for protocol version 0.</param>
+	private void TransitionToKeyRatchetCore(HashRatchet? ratchet)
+	{
+		var expiry = DateTime.UtcNow + s_cryptorExpiry;
+		foreach (var manager in this._retainedManagers)
+			manager.ExpiresAt = expiry;
+
+		if (this._currentManager is not null)
+		{
+			this._currentManager.ExpiresAt = expiry;
+			this._retainedManagers.Add(this._currentManager);
+		}
+
+		this._currentManager = ratchet is null ? null : new(ratchet, this._cipherFactory);
 	}
 }
