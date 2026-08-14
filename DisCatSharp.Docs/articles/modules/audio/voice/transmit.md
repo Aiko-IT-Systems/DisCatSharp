@@ -61,23 +61,41 @@ public static async Task PlayFileAsync(VoiceConnection connection, string filePa
 }
 ```
 
-## 4. DAVE Behavior During Handshake
+## 4. DAVE Media Readiness
 
-When DAVE is negotiated but not active yet, outbound handling is controlled by `VoiceConfiguration.DavePendingAudioBehavior`:
+`DaveState` is a control-plane state. Outbound audio is gated by whether a current sender mode remains usable:
 
-- `PassThrough` (default): send without DAVE layer until active
-- `Drop`: drop outbound frames until active
+- During initial positive-version negotiation, media is not ready until the local sender ratchet is installed.
+- During `ReadyForTransition` or `Downgrading`, an established sender continues using the old epoch until matching OP22 executes the prepared transition.
+- After a transition to protocol `0`, media remains usable through plaintext passthrough even though `IsDaveActive` is `false` and `DaveState` is `Inactive`.
+
+Only when no current media mode is usable does `VoiceConfiguration.DavePendingAudioBehavior` apply:
+
+- `PassThrough` (default): send without the DAVE layer
+- `Drop`: drop the outbound frame
 - `Throw`: throw `InvalidOperationException`
 
-If you want to gate playback on DAVE becoming active:
+Check `IsE2eeUsableForSend` before starting policy-sensitive playback:
 
 ```csharp
-bool daveReady = await connection.WaitForDaveActiveAsync(TimeSpan.FromSeconds(5));
-if (!daveReady)
+if (!connection.IsE2eeUsableForSend)
 {
-    // Decide your fallback policy here.
+    _ = await connection.WaitForDaveActiveAsync(TimeSpan.FromSeconds(5));
+
+    if (!connection.IsE2eeUsableForSend)
+        throw new TimeoutException("Voice media did not become ready.");
 }
 ```
+
+If the application requires DAVE encryption rather than merely usable voice media, require the explicit activation result:
+
+```csharp
+bool encrypted = await connection.WaitForDaveActiveAsync(TimeSpan.FromSeconds(5));
+if (!encrypted)
+    throw new InvalidOperationException("DAVE encryption is required for this playback.");
+```
+
+Protocol-0 passthrough is media-ready but never makes `WaitForDaveActiveAsync` return `true`.
 
 ## 5. Send Filters
 
@@ -165,6 +183,7 @@ public static Task LeaveAsync(CommandContext ctx)
 ## See Also
 
 - [Voice Overview](xref:modules_audio_voice)
+- [Complete Voice Example](xref:modules_audio_voice)
 - [Voice Prerequisites](xref:modules_audio_voice_prerequisites)
 - [Voice Events](xref:modules_audio_voice_events)
 - [Audio Output](xref:modules_audio_voice_output)
