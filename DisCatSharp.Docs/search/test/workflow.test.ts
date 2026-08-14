@@ -29,15 +29,14 @@ describe("documentation release workflow", () => {
     expect(source.match(/DCS_SEARCH_BASE_URL: https:\/\/discatsharp-docs-search\.aitsys\.workers\.dev/gu)).toHaveLength(2);
   });
 
-  it("writes the release marker in both production and preview builds", async () => {
-    for (const name of ["documentation.yml", "documentation_test.yml"]) {
-      expect(await workflow(name)).toContain("npm run marker -- ../obj/search/search-index.json ../_site/search-build.json");
-    }
+  it("writes the release marker in the production build", async () => {
+    expect(await workflow("documentation.yml")).toContain("npm run marker -- ../obj/search/search-index.json ../_site/search-build.json");
   });
 
-  it("uses Workers.dev for CI smoke tests so zone bot challenges cannot block deployments", async () => {
-    const preview = await workflow("documentation_test.yml");
-    expect(preview).toContain("DCS_SEARCH_BASE_URL: https://discatsharp-docs-search.aitsys.workers.dev");
+  it("uses Workers.dev for deployment smoke tests so zone bot challenges cannot block deployments", async () => {
+    const production = await workflow("documentation.yml");
+    expect(production).toContain("npm run smoke:workers-dev");
+    expect(production).toContain("DCS_SEARCH_BASE_URL: https://discatsharp-docs-search.aitsys.workers.dev");
 
     const wrangler = await readFile(resolve("wrangler.jsonc"), "utf8");
     expect(JSON.parse(wrangler)).toMatchObject({ workers_dev: true, preview_urls: false });

@@ -38,6 +38,10 @@ class FakeDatabase {
     return statement as unknown as D1PreparedStatement;
   }
 
+  public withSession(): FakeDatabase {
+    return this;
+  }
+
   public async batch<T>(statements: D1PreparedStatement[]): Promise<D1Result<T>[]> {
     const offset = this.batchOffset;
     this.batchOffset += statements.length;
