@@ -5,7 +5,10 @@
   "compatibility_date": "2026-08-08",
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": true,
-  "preview_urls": false,
+  "preview_urls": true,
+  "placement": {
+    "mode": "smart"
+  },
   "routes": [
     {
       "pattern": "docs.dcs.aitsys.dev/_search*",
@@ -18,7 +21,11 @@
   ],
   "observability": {
     "enabled": true,
-    "head_sampling_rate": 1
+    "head_sampling_rate": 1,
+    "traces": {
+      "enabled": true,
+      "head_sampling_rate": 1
+    }
   },
   "d1_databases": [
     {

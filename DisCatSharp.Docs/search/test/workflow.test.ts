@@ -39,6 +39,15 @@ describe("documentation release workflow", () => {
     expect(production).toContain("DCS_SEARCH_BASE_URL: https://discatsharp-docs-search.aitsys.workers.dev");
 
     const wrangler = await readFile(resolve("wrangler.jsonc"), "utf8");
-    expect(JSON.parse(wrangler)).toMatchObject({ workers_dev: true, preview_urls: false });
+    expect(JSON.parse(wrangler)).toMatchObject({
+      workers_dev: true,
+      preview_urls: true,
+      placement: { mode: "smart" },
+      observability: {
+        enabled: true,
+        head_sampling_rate: 1,
+        traces: { enabled: true, head_sampling_rate: 1 },
+      },
+    });
   });
 });
