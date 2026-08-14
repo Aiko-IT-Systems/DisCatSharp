@@ -65,8 +65,9 @@ public sealed class VoiceConfiguration
 	public bool EnableDebugLogging { internal get; set; } = false;
 
 	/// <summary>
-	///     <para>Controls outbound audio behavior while DAVE is negotiated but not active.</para>
-	///     <para>Use <see cref="DavePendingAudioBehavior.Throw"/> to fail fast when a producer attempts to send before DAVE is active.</para>
+	///     <para>Controls outbound audio behavior when a DAVE coordinator exists but no executing media mode is usable.</para>
+	///     <para>Use <see cref="DavePendingAudioBehavior.Throw"/> to fail fast when a producer attempts to send before media becomes ready.</para>
+	///     <para>Prepared transitions with a usable old sender epoch and protocol-0 passthrough do not invoke this policy.</para>
 	///     <para>Defaults to <see cref="DavePendingAudioBehavior.PassThrough"/>.</para>
 	/// </summary>
 	public DavePendingAudioBehavior DavePendingAudioBehavior { internal get; set; } = DavePendingAudioBehavior.PassThrough;

@@ -17,7 +17,7 @@ author: DisCatSharp Team
 | `UserLeft` | `VoiceUserLeaveEventArgs` | User SSRC/user binding left |
 | `VoiceReceived` | `VoiceReceiveEventArgs` | Decoded PCM (and source Opus when available) |
 | `VoicePacketDropped` | `VoicePacketDroppedEventArgs` | Inbound packet drop classification |
-| `DaveStateChanged` | `DaveStateChangedEventArgs` | Public DAVE FSM state transitions |
+| `DaveStateChanged` | `DaveStateChangedEventArgs` | DAVE control-plane transitions with executing sender status |
 | `DaveOpcodeObserved` | `DaveOpcodeEventArgs` | DAVE opcode send/receive diagnostics |
 | `VoiceSocketErrored` | `SocketErrorEventArgs` | Voice WebSocket exception path |
 
@@ -84,7 +84,9 @@ private static Task OnVoicePacketDropped(VoiceConnection _, VoicePacketDroppedEv
 
 private static Task OnDaveStateChanged(VoiceConnection _, DaveStateChangedEventArgs e)
 {
-    Console.WriteLine($"[DAVE FSM] {e.OldState} -> {e.NewState} via {e.Handler} ({e.Reason})");
+    Console.WriteLine(
+        $"[DAVE FSM] {e.OldState} -> {e.NewState} via {e.Handler}; " +
+        $"protocol={e.ProtocolVersion}; senderEncrypted={e.IsActive}; reason={e.Reason}");
     return Task.CompletedTask;
 }
 
@@ -103,15 +105,34 @@ private static Task OnVoiceSocketErrored(VoiceConnection _, SocketErrorEventArgs
 
 ## DAVE Readiness
 
-For DAVE-gated use cases, combine event monitoring with an explicit wait:
+`DaveStateChangedEventArgs.NewState` describes the control plane. `DaveStateChangedEventArgs.IsActive` describes whether the currently executing sender transform is encrypting. They intentionally differ during transitions:
+
+- An established sender can report `ReadyForTransition` or `Downgrading` with `IsActive == true` while it keeps using the old epoch.
+- After OP22 executes a protocol-0 downgrade, the event reports `Inactive` with `IsActive == false`, but protocol-0 media remains usable.
+- `ProtocolVersion` is the currently executing sender version. A merely prepared next version does not replace it.
+
+Use the connection readiness properties when deciding whether media can flow:
+
+```csharp
+if (!connection.IsE2eeUsableForSend)
+    Console.WriteLine("Outbound media is currently gated by the configured pending-audio policy.");
+
+if (!connection.IsE2eeUsableForReceive)
+    Console.WriteLine("Inbound media cannot currently be processed.");
+```
+
+Use an explicit wait when the application requires an encrypting DAVE sender:
 
 ```csharp
 bool daveReady = await connection.WaitForDaveActiveAsync(TimeSpan.FromSeconds(5));
 if (!daveReady)
 {
-    // Decide whether to skip playback, pass through, or fail based on your policy.
+    // This can still be usable protocol-0 passthrough. Inspect the readiness
+    // properties and apply the application's encryption policy.
 }
 ```
+
+`DaveOpcodeObserved` reports both server-to-client and client-to-server traffic. In the corrected transition sequence, OP23 is observed after successful receiver preparation and before OP22; OP22 has no acknowledgement. Invalid OP29 or OP30 processing produces client-to-server OP31 with the same transition ID, followed by a fresh OP26.
 
 Related configuration:
 

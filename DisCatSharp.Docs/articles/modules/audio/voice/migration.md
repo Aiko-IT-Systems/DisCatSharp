@@ -26,8 +26,8 @@ Update your `.csproj`:
 <PackageReference Include="DisCatSharp.VoiceNext.Natives" Version="..." />
 
 <!-- Add -->
-<PackageReference Include="DisCatSharp.Voice" Version="10.7.0" />
-<PackageReference Include="DisCatSharp.Voice.Natives" Version="10.7.0" />
+<PackageReference Include="DisCatSharp.Voice" Version="10.7.1" />
+<PackageReference Include="DisCatSharp.Voice.Natives" Version="10.7.1" />
 ```
 
 ---
@@ -67,7 +67,7 @@ using DisCatSharp.Voice.Logging;
 
 ## API Changes
 
-All public types are renamed. The behavior is identical.
+The core connection, transmit, and receive workflow remains familiar, but behavior is not identical: `DisCatSharp.Voice` adds DAVE negotiation, current Discord transport modes, packet diagnostics, external Opus input, and explicit media-readiness surfaces.
 
 | Old | New |
 |---|---|
@@ -136,14 +136,38 @@ When a voice channel uses DAVE:
 - Incoming audio is decrypted by `libdave` before reaching your `VoiceReceived` handler
 - Key rotation happens automatically on user join/leave
 
+The DAVE control and media planes are intentionally separate:
+
+- OP21, OP29, and OP30 prepare receive transforms first.
+- Nonzero transition IDs produce OP23 readiness; matching OP22 later switches only the local sender.
+- Transition ID `0` executes immediately without OP23.
+- `ReadyForTransition` and `Downgrading` can retain an active old sender epoch.
+- Protocol `0` uses media-ready passthrough even though `IsDaveActive` is `false`.
+
+Consumer code normally needs no special handshake implementation. If old code gated audio with an enum comparison, migrate it to the media properties:
+
+```csharp
+// Media policy: can audio flow right now?
+if (!connection.IsE2eeUsableForSend)
+    return;
+
+// Encryption policy: is the executing sender actually DAVE-encrypted?
+if (!connection.IsDaveActive)
+    Console.WriteLine("Current media mode is not DAVE-encrypted.");
+```
+
+`WaitForDaveActiveAsync` waits for DAVE encryption, not generic media readiness. It can return `false` for usable protocol-0 passthrough.
+
 ### libdave Native Dependency
 
-`DisCatSharp.Voice.Natives` now ships `libdave` in addition to opus and libsodium. If libdave is missing, voice continues to work but DAVE encryption is disabled for that session.
+`DisCatSharp.Voice.Natives` now ships `libdave` in addition to Opus and libsodium. Keep the managed and native package versions aligned. If libdave is missing, the transport may initialize but the connection cannot participate correctly in a DAVE-required media session.
 
 ### Improved Safety
 
 - Ratchet transitions are protected against partial state races
 - Decryptor map updates are atomic from the perspective of packet processing
+- Existing per-user decryptors survive epoch changes so old encrypted ratchets and plaintext overlap remain available for ten seconds
+- Invalid commits and Welcomes preserve their transition ID for OP31 recovery while retaining currently executing media transforms
 - All native buffers are properly freed
 - `ArrayPool<byte>` is used throughout to minimize per-frame allocations
 

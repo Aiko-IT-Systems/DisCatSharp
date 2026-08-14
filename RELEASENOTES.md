@@ -122,6 +122,11 @@ DisCatSharp.Lavalink Release Notes
 
 DisCatSharp.Voice Release Notes
 
+    - Fixed the complete DAVE transition lifecycle: OP21, OP29, and OP30 now prepare receiver transforms and preserve their authoritative transition IDs; nonzero transitions send OP23 before OP22, while transition ID `0` executes immediately without OP23.
+    - Corrected OP22 to consume one staged transition and switch only the local sender, without sending OP23 or resetting a successfully prepared MLS group; unknown and duplicate transition IDs are harmless.
+    - Corrected DAVE recovery and wire payloads: OP24 now carries only `epoch` and `protocol_version`, failed commits or Welcomes send client-to-server OP31 with the original transition ID, and recovery sends a fresh OP26 while retaining the currently executing media transforms.
+    - Preserved media across prepared upgrades, epoch changes, downgrades, and recovery by reusing per-user decryptors with ten-second ratchet/passthrough overlap and by separating DAVE control state from actual sender activity and media readiness.
+    - Updated the voice documentation with the corrected prepare → ready → execute sequence, transition and recovery diagrams, media-readiness guidance, and a complete connection/playback example.
     - Fixed voice/lavalink integration regressions around channel switching.
     - Voice native packaging/build settings were refreshed with the wider framework alignment changes.
     - Added diagnostics-sink reporting across voice sender, receiver, keepalive, disconnect, and native-loading failure paths.

@@ -47,6 +47,12 @@ internal static unsafe class DaveNative
 		[MarshalAs(UnmanagedType.LPUTF8Str)] string selfUserId);
 
 	/// <summary>
+	///     Gets the protocol version represented by the native MLS session's current state.
+	/// </summary>
+	[DllImport(LibName, EntryPoint = "daveSessionGetProtocolVersion", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+	internal static extern ushort SessionGetProtocolVersion(DaveSessionSafeHandle session);
+
+	/// <summary>
 	///     Resets the MLS session state without destroying the session handle. Used on reconnect or invalid commit.
 	/// </summary>
 	[DllImport(LibName, EntryPoint = "daveSessionReset", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
@@ -185,6 +191,14 @@ internal static unsafe class DaveNative
 		DaveKeyRatchetSafeHandle ratchet);
 
 	/// <summary>
+	///     Clears the encryptor's current key ratchet by passing a null ratchet to libdave.
+	/// </summary>
+	[DllImport(LibName, EntryPoint = "daveEncryptorSetKeyRatchet", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+	internal static extern void EncryptorClearKeyRatchet(
+		DaveEncryptorSafeHandle encryptor,
+		IntPtr ratchet);
+
+	/// <summary>
 	///     Associates an SSRC with a codec type so the encryptor applies correct frame partitioning. Must be called before the first <see cref="EncryptorEncrypt"/> for the given SSRC.
 	/// </summary>
 	[DllImport(LibName, EntryPoint = "daveEncryptorAssignSsrcToCodec", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
@@ -239,6 +253,15 @@ internal static unsafe class DaveNative
 	internal static extern void DecryptorTransitionToKeyRatchet(
 		DaveDecryptorSafeHandle decryptor,
 		DaveKeyRatchetSafeHandle ratchet);
+
+	/// <summary>
+	///     Transitions the decryptor away from its current ratchet without installing a replacement,
+	///     causing libdave to retain the previous epoch only for its grace period.
+	/// </summary>
+	[DllImport(LibName, EntryPoint = "daveDecryptorTransitionToKeyRatchet", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+	internal static extern void DecryptorTransitionToNoKeyRatchet(
+		DaveDecryptorSafeHandle decryptor,
+		IntPtr ratchet);
 
 	/// <summary>
 	///     Enables or disables passthrough mode on the decryptor. In passthrough mode frames that lack a DAVE footer are forwarded as-is.

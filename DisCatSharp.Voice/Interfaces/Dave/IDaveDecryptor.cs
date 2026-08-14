@@ -27,7 +27,12 @@ internal interface IDaveDecryptor : IDisposable
 	bool TryDecrypt(ReadOnlySpan<byte> frame, out byte[] result, out int resultLength);
 
 	/// <summary>
-	///     Installs a ratchet for the current epoch.
+	///     Transitions the receiver to a new epoch and passthrough mode while retaining prior
+	///     media keys for libdave's transition grace period.
 	/// </summary>
-	void InstallRatchet(DaveRatchetInstaller installer);
+	/// <param name="installer">
+	///     The new epoch ratchet, or <see langword="null"/> when transitioning to protocol version 0.
+	/// </param>
+	/// <param name="passthrough">Whether frames without a DAVE footer may pass through.</param>
+	void TransitionTo(DaveRatchetInstaller? installer, bool passthrough);
 }

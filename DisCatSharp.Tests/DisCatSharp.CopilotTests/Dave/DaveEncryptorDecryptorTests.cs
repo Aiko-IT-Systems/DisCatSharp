@@ -123,14 +123,14 @@ public class DaveEncryptorDecryptorTests
 	}
 
 	// -------------------------------------------------------------------------
-	// Decryptor passthrough window
+	// Decryptor passthrough transition
 	// -------------------------------------------------------------------------
 
 	[Fact]
-	public void Decrypt_UnencryptedFrameInsidePassthroughWindow_ReturnsTrue()
+	public void Decrypt_UnencryptedFrameInPassthroughMode_ReturnsTrue()
 	{
 		using var dec = new DaveDecryptor(key => new TestAeadCipher(key));
-		dec.TransitionToPassthrough(TimeSpan.FromSeconds(30));
+		dec.TransitionTo(null, passthrough: true);
 
 		ReadOnlySpan<byte> plainFrame = [0x78, 0x01, 0x02, 0x03];
 		Assert.True(dec.TryDecrypt(plainFrame, out var result, out var len));
@@ -142,13 +142,42 @@ public class DaveEncryptorDecryptorTests
 	}
 
 	[Fact]
-	public void Decrypt_UnencryptedFrameOutsidePassthroughWindow_ReturnsFalse()
+	public void Decrypt_UnencryptedFrameWithoutPassthrough_ReturnsFalse()
 	{
 		using var dec = new DaveDecryptor(key => new TestAeadCipher(key)); // no ratchet, no passthrough window
 		ReadOnlySpan<byte> plainFrame = [0x78, 0x01, 0x02];
 
 		var ok = dec.TryDecrypt(plainFrame, out _, out _);
 		Assert.False(ok);
+	}
+
+	[Fact]
+	public void Decrypt_DowngradeToPassthrough_RetainsOldEncryptedEpoch()
+	{
+		using var enc = CreateEncryptor();
+		using var dec = CreateDecryptor();
+		ReadOnlySpan<byte> encryptedFrame = [0x78, 0x11, 0x22, 0x33];
+		Assert.True(enc.TryEncrypt(encryptedFrame, ssrc: 0, out var encrypted, out var encryptedLength));
+
+		dec.TransitionTo(null, passthrough: true);
+		try
+		{
+			Assert.True(dec.TryDecrypt(encrypted.AsSpan(0, encryptedLength), out var decrypted, out var decryptedLength));
+			try
+			{
+				Assert.Equal(encryptedFrame.ToArray(), decrypted.AsSpan(0, decryptedLength).ToArray());
+			}
+			finally { ArrayPool<byte>.Shared.Return(decrypted); }
+
+			ReadOnlySpan<byte> plainFrame = [0x78, 0x44, 0x55];
+			Assert.True(dec.TryDecrypt(plainFrame, out var plain, out var plainLength));
+			try
+			{
+				Assert.Equal(plainFrame.ToArray(), plain.AsSpan(0, plainLength).ToArray());
+			}
+			finally { ArrayPool<byte>.Shared.Return(plain); }
+		}
+		finally { ArrayPool<byte>.Shared.Return(encrypted); }
 	}
 
 	// -------------------------------------------------------------------------

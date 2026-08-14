@@ -18,9 +18,9 @@ namespace DisCatSharp.Voice.Entities.Dave;
 /// with either the old or new ratchet, never a partially-transitioned state.
 /// </para>
 /// <para>
-/// Late packet handling: libdave tracks ratchet generations internally. Packets encrypted
-/// with a superseded ratchet generation will fail authentication and be discarded.
-/// The caller should not rely on cross-epoch packet recovery at this layer.
+/// Late packet handling: libdave retains superseded encrypted ratchets for its transition
+/// grace period and temporarily accepts plaintext while transitioning back to E2EE.
+/// Reusing this decryptor across epochs preserves those overlap windows.
 /// </para>
 /// <para>
 /// On success, <see cref="TryDecrypt"/> returns a rented <see cref="System.Buffers.ArrayPool{T}"/> buffer.
@@ -64,15 +64,27 @@ internal sealed class LibDaveDecryptor : IDaveDecryptor
 	}
 
 	/// <inheritdoc/>
-	public void InstallRatchet(DaveRatchetInstaller installer)
+	public void TransitionTo(DaveRatchetInstaller? installer, bool passthrough)
 	{
-		if (!installer.IsNative || installer.NativeHandle is null || installer.NativeHandle.IsInvalid)
+		if (installer is { } candidate
+			&& (!candidate.IsNative || candidate.NativeHandle is null || candidate.NativeHandle.IsInvalid))
+		{
 			throw new ArgumentException("LibDaveDecryptor requires a valid native ratchet handle.", nameof(installer));
+		}
 
 		lock (this._sync)
 		{
-			DaveNative.DecryptorTransitionToKeyRatchet(this._handle, installer.NativeHandle);
-			installer.NativeHandle!.Dispose(); // libdave copied the ratchet; release our reference
+			DaveNative.DecryptorTransitionToPassthroughMode(this._handle, passthrough);
+
+			if (installer is { } value)
+			{
+				DaveNative.DecryptorTransitionToKeyRatchet(this._handle, value.NativeHandle);
+				value.NativeHandle.Dispose();
+			}
+			else
+			{
+				DaveNative.DecryptorTransitionToNoKeyRatchet(this._handle, IntPtr.Zero);
+			}
 		}
 	}
 

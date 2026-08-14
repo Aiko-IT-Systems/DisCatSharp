@@ -55,27 +55,25 @@ internal sealed class LibDaveEncryptor : IDaveEncryptor
 	public bool IsActive { get; private set; }
 
 	/// <inheritdoc/>
-	public void InstallRatchet(DaveRatchetInstaller installer)
-	{
-		if (!installer.IsNative || installer.NativeHandle is null || installer.NativeHandle.IsInvalid)
-			throw new ArgumentException("LibDaveEncryptor requires a valid native ratchet handle.", nameof(installer));
-
-		lock (this._sync)
-		{
-			DaveNative.EncryptorSetKeyRatchet(this._handle, installer.NativeHandle);
-			installer.NativeHandle!.Dispose(); // libdave copied the ratchet; release our reference
-			this.IsActive = true;
-		}
-	}
-
-	/// <inheritdoc/>
-	public void SetPassthrough(bool passthrough)
+	public void TransitionTo(DaveRatchetInstaller? installer, bool passthrough)
 	{
 		lock (this._sync)
 		{
+			if (installer is { } value)
+			{
+				if (!value.IsNative || value.NativeHandle is null || value.NativeHandle.IsInvalid)
+					throw new ArgumentException("LibDaveEncryptor requires a valid native ratchet handle.", nameof(installer));
+
+				DaveNative.EncryptorSetKeyRatchet(this._handle, value.NativeHandle);
+				value.NativeHandle.Dispose();
+			}
+			else
+			{
+				DaveNative.EncryptorClearKeyRatchet(this._handle, IntPtr.Zero);
+			}
+
 			DaveNative.EncryptorSetPassthroughMode(this._handle, passthrough);
-			if (passthrough)
-				this.IsActive = false;
+			this.IsActive = !passthrough && installer.HasValue;
 		}
 	}
 

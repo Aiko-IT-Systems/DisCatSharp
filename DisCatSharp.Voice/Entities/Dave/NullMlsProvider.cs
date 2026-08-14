@@ -18,7 +18,11 @@ internal sealed class NullMlsProvider : IMlsProvider
 	public bool IsGroupReady => false;
 
 	/// <inheritdoc/>
-	public void InitGroup(ulong selfUserId, int protocolVersion, byte[] groupId) { }
+	public ushort ProtocolVersion { get; private set; }
+
+	/// <inheritdoc/>
+	public void InitGroup(ulong selfUserId, int protocolVersion, byte[] groupId)
+		=> this.ProtocolVersion = checked((ushort)protocolVersion);
 
 	/// <inheritdoc/>
 	public void SetExternalSender(byte[] externalSenderBytes) { }
@@ -34,15 +38,12 @@ internal sealed class NullMlsProvider : IMlsProvider
 	public MlsCommitOutcome ProcessCommit(byte[] commitBytes) => default;
 
 	/// <inheritdoc/>
-	public void ProcessWelcome(byte[] welcomeBytes, byte[] ratchetKey, IReadOnlySet<ulong> recognizedUserIds) { }
+	public bool ProcessWelcome(byte[] welcomeBytes, byte[] ratchetKey, IReadOnlySet<ulong> recognizedUserIds)
+		=> false;
 
 	/// <inheritdoc/>
-	public IReadOnlyList<(ulong UserId, DaveRatchetInstaller Installer)> GetUpdatedRatchets()
-		=> [];
-
-	/// <inheritdoc/>
-	public DaveRatchetInstaller GetOwnRatchetInstaller()
-		=> DaveRatchetInstaller.FromManaged([]);
+	public DaveRatchetInstaller? GetRatchetInstaller(ulong userId)
+		=> null;
 
 	/// <inheritdoc/>
 	public void Reset() { }

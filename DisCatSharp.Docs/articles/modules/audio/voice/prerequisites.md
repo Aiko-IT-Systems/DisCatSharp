@@ -11,7 +11,7 @@ This page covers what you need before using `DisCatSharp.Voice`.
 ## 1. Install the Voice Package
 
 ```xml
-<PackageReference Include="DisCatSharp.Voice" Version="10.7.0" />
+<PackageReference Include="DisCatSharp.Voice" Version="10.7.1" />
 ```
 
 For normal NuGet usage, `DisCatSharp.Voice.Natives` is included automatically.
@@ -19,7 +19,7 @@ For normal NuGet usage, `DisCatSharp.Voice.Natives` is included automatically.
 If you run from source or manually manage runtime assets, add:
 
 ```xml
-<PackageReference Include="DisCatSharp.Voice.Natives" Version="10.7.0">
+<PackageReference Include="DisCatSharp.Voice.Natives" Version="10.7.1">
   <IncludeAssets>runtime; native; contentfiles</IncludeAssets>
 </PackageReference>
 ```
@@ -76,7 +76,7 @@ Prebuilt `libdave` binaries in `DisCatSharp.Voice.Natives` are available for:
 | Linux | x64, arm64 |
 | macOS | x64, arm64 |
 
-If `libdave` is unavailable at runtime, voice transport still works, but DAVE features for that session will not activate.
+Keep `DisCatSharp.Voice` and `DisCatSharp.Voice.Natives` on matching versions. If `libdave` is unavailable at runtime, DisCatSharp logs the native-loading failure and cannot participate in DAVE for that connection. The UDP transport can still initialize, but media in a DAVE-required session should not be expected to interoperate correctly.
 
 ## 5. Voice Configuration Defaults
 
@@ -87,11 +87,20 @@ using DisCatSharp.Voice.Enums;
 client.UseVoice(new VoiceConfiguration
 {
     EnableIncoming = false,
+    EnableExternalOpus = false,
     EnableDebugLogging = false,
     MaxDaveProtocolVersion = 1,
     DavePendingAudioBehavior = DavePendingAudioBehavior.PassThrough
 });
 ```
+
+Relevant behavior:
+
+- `MaxDaveProtocolVersion = 1` advertises DAVE support. Version negotiation and later transitions are handled automatically.
+- `MaxDaveProtocolVersion = 0` advertises protocol-0-only operation.
+- `DavePendingAudioBehavior` is consulted only when no current sender mode is usable. It does not interrupt an established old epoch while the next transition is being prepared, and it does not block protocol-0 passthrough.
+- `EnableExternalOpus` must be `true` before using `BindExternalOpusSourceAsync` or `VoiceOutputController`.
+- `EnableIncoming` must be `true` before subscribing for decoded incoming media.
 
 ## See Also
 

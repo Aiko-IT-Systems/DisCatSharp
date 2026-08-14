@@ -72,7 +72,7 @@ private static Task OnVoicePacketDropped(VoiceConnection _, VoicePacketDroppedEv
 }
 ```
 
-Drop reasons include malformed RTP, DAVE pending/missing ratchet, out-of-order, and decode failures.
+Drop reasons include malformed RTP or extensions, out-of-order packets, DAVE media not ready, missing sender mappings or decryptors, queue overflow, and Opus decode failures.
 
 ## 5. Record to MP3 (ffmpeg)
 
@@ -143,11 +143,17 @@ The same pattern works for WAV by changing ffmpeg output arguments.
 
 ## 6. DAVE Decryption Notes
 
-When DAVE is active for the channel, decryption happens before your handler runs.
+When DAVE is active for the channel, transport decryption and then per-user DAVE decryption happen before your handler runs.
 
 - You always receive plain PCM in `VoiceReceiveEventArgs.PcmData`.
-- If DAVE is negotiated but not active yet, frames can be dropped depending on session readiness.
+- `IsE2eeUsableForReceive` reports whether the executing receive mode can currently process media.
+- `ReadyForTransition` and `Downgrading` do not make an established receiver unusable. Remote-user decryptors are transitioned in place and retain previous encrypted-epoch ratchets for ten seconds.
+- A downgrade enables plaintext passthrough before OP23 while retaining old encrypted ratchets for ten seconds.
+- An upgrade allows plaintext for a ten-second overlap while the new encrypted mode begins.
+- A newly welcomed member can receive with the new-epoch ratchets prepared by OP30, but its local sender remains inactive until matching OP22.
 - `DaveStateChanged` and `DaveOpcodeObserved` help diagnose handshake timing.
+
+Do not infer receive usability from `DaveState == Active`. For example, an established member can receive normally while the control plane is `ReadyForTransition`, and protocol-0 passthrough is usable while the control plane is `Inactive`.
 
 ## 7. Unsubscribe / Disconnect
 

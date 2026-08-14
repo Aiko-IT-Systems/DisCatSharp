@@ -479,12 +479,13 @@ public sealed class VoiceConnection : IDisposable
 	public DiscordChannel TargetChannel { get; internal set; }
 
 	/// <summary>
-	///     Gets whether DAVE is negotiated for this voice connection.
+	///     Gets whether DAVE protocol coordination is available for this voice connection, including
+	///     negotiated protocol version 0 passthrough sessions that may later upgrade.
 	/// </summary>
 	public bool IsDaveNegotiated => this._daveSession is not null;
 
 	/// <summary>
-	///     Gets whether DAVE is currently active.
+	///     Gets whether the currently executing sender transform is applying DAVE encryption.
 	/// </summary>
 	public bool IsDaveActive => this._daveSession is { IsActive: true };
 
@@ -492,13 +493,13 @@ public sealed class VoiceConnection : IDisposable
 	///     Gets whether outbound audio can currently be sent without DAVE gating.
 	/// </summary>
 	public bool IsE2eeUsableForSend
-		=> this._daveSession is null || this._daveSession.IsActive || this._configuration.DavePendingAudioBehavior == DavePendingAudioBehavior.PassThrough;
+		=> this._daveSession is null || this._daveSession.IsMediaReady || this._configuration.DavePendingAudioBehavior == DavePendingAudioBehavior.PassThrough;
 
 	/// <summary>
 	///     Gets whether inbound audio can currently be decrypted and decoded.
 	/// </summary>
 	public bool IsE2eeUsableForReceive
-		=> this._daveSession is null || this._daveSession.IsActive;
+		=> this._daveSession is null || this._daveSession.IsMediaReady;
 
 	/// <summary>
 	///     Gets the last published public DAVE state for this connection.
@@ -507,7 +508,7 @@ public sealed class VoiceConnection : IDisposable
 		=> (DaveConnectionState)Volatile.Read(ref this._davePublicState);
 
 	/// <summary>
-	///     Gets the currently negotiated DAVE protocol version, or 0 when DAVE is not negotiated.
+	///     Gets the DAVE protocol version used by the currently executing sender transform, or 0 for passthrough or an unavailable coordinator.
 	/// </summary>
 	public int DaveProtocolVersion => this._daveSession?.ProtocolVersion ?? 0;
 
@@ -893,7 +894,7 @@ public sealed class VoiceConnection : IDisposable
 				false, this._daveSession.State, this._daveSession.IsActive);
 		}
 
-		if (this._daveSession is { IsActive: false })
+		if (this._daveSession is not null && !this._daveSession.IsMediaReady)
 		{
 			switch (this._configuration.DavePendingAudioBehavior)
 			{
@@ -907,7 +908,7 @@ public sealed class VoiceConnection : IDisposable
 
 				case DavePendingAudioBehavior.Throw:
 					ArrayPool<byte>.Shared.Return(packetArray);
-					throw new InvalidOperationException($"DAVE is not active (state={this._daveSession.State}); outbound audio cannot be sent with DavePendingAudioBehavior.Throw.");
+					throw new InvalidOperationException($"DAVE media is not ready (state={this._daveSession.State}); outbound audio cannot be sent with DavePendingAudioBehavior.Throw.");
 			}
 		}
 
@@ -1072,7 +1073,7 @@ public sealed class VoiceConnection : IDisposable
 				false, this._daveSession.State, this._daveSession.IsActive);
 		}
 
-		if (this._daveSession is { IsActive: false })
+		if (this._daveSession is not null && !this._daveSession.IsMediaReady)
 		{
 			switch (this._configuration.DavePendingAudioBehavior)
 			{
@@ -1086,7 +1087,7 @@ public sealed class VoiceConnection : IDisposable
 
 				case DavePendingAudioBehavior.Throw:
 					ArrayPool<byte>.Shared.Return(packetArray);
-					throw new InvalidOperationException($"DAVE is not active (state={this._daveSession.State}); outbound audio cannot be sent with DavePendingAudioBehavior.Throw.");
+					throw new InvalidOperationException($"DAVE media is not ready (state={this._daveSession.State}); outbound audio cannot be sent with DavePendingAudioBehavior.Throw.");
 			}
 		}
 
@@ -1489,13 +1490,13 @@ public sealed class VoiceConnection : IDisposable
 			// can destabilize receive.
 			if (this._daveSession is not null)
 			{
-				if (!this._daveSession.IsActive)
+				if (!this._daveSession.IsMediaReady)
 				{
 					if (Interlocked.CompareExchange(ref this._daveRecvPendingDropDiagLogged, 1, 0) == 0)
 						this._voiceLogger.VoiceDebug(VoiceEvents.VoiceReceiveFailure,
 							"[DAVE] Dropping inbound packet while session is pending");
 
-					this.PublishVoicePacketDropped(VoicePacketDropReason.DavePending, ssrc, sequence, vtx, "dave session is not active");
+					this.PublishVoicePacketDropped(VoicePacketDropReason.DavePending, ssrc, sequence, vtx, "dave media is not ready");
 					return false;
 				}
 
@@ -2110,70 +2111,63 @@ public sealed class VoiceConnection : IDisposable
 				var vsd = opp.ToObject<VoiceSessionDescriptionPayload>()!;
 				this._key = vsd.SecretKey;
 				this._sodium = new(this._key.AsMemory(), this._voiceLogger);
-				// Create a DAVE session if the server has activated DAVE for this channel.
-				if (vsd.DaveProtocolVersion > 0)
+				// Keep a DAVE coordinator for protocol version 0 as well so this connection can later
+				// upgrade through OP24/OP21 without requiring another session description.
+				this._daveSession?.Dispose();
+				this._daveSession = null;
+				this.PublishDaveStateChanged(DaveConnectionState.NotNegotiated, nameof(HandleDispatch), "session description re-initialization", 0);
+				try
 				{
-					this._daveSession?.Dispose();
-					this._daveSession = null;
-					this.PublishDaveStateChanged(DaveConnectionState.NotNegotiated, nameof(HandleDispatch), "session description re-initialization", 0);
-					try
-					{
-						// MLS group ID must be the voice CHANNEL ID, not the guild ID.
-						// Discord derives the MLS group_id from the channel ID; using the guild ID
-						// causes "PublicMessage not for this group" when processing OP27 proposals.
-						var voiceChannelId = this.TargetChannel.Id;
-						this._daveSession = new DaveSession(
-							selfUserId: this.StateData.UserId ?? 0UL,
+					// MLS group ID must be the voice CHANNEL ID, not the guild ID.
+					var voiceChannelId = this.TargetChannel.Id;
+					this._daveSession = new DaveSession(
+						selfUserId: this.StateData.UserId ?? 0UL,
+						protocolVersion: vsd.DaveProtocolVersion,
+						mlsProvider: new LibDaveMlsProvider(
+							authSessionId: this._discord.SessionId ?? string.Empty,
+							channelId: voiceChannelId,
 							protocolVersion: vsd.DaveProtocolVersion,
-							mlsProvider: new LibDaveMlsProvider(
-								authSessionId: this._discord.SessionId ?? string.Empty,
-								channelId: voiceChannelId,
-								protocolVersion: vsd.DaveProtocolVersion,
-								logger: this._voiceLogger),
-								encryptorFactory: () => new LibDaveEncryptor(),
-								decryptorFactory: () => new LibDaveDecryptor(),
-								logger: this._voiceLogger,
-								stateChanged: this.OnDaveSessionStateChanged);
-						this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] Session created for channel {ChannelId}, protocol version {Version}", voiceChannelId, vsd.DaveProtocolVersion);
-						// Pre-seed recognised users from the guild voice-state cache so ADD proposals for
-						// already-present channel members are not rejected when OP 27 arrives before OP 11.
-						var preSeedIds = this._guild.VoiceStates
-							.Where(kv => kv.Value.ChannelId == voiceChannelId && kv.Value.UserId != (this.StateData.UserId ?? 0UL))
-							.Select(kv => kv.Value.UserId);
-						this._daveSession.PreSeedRecognizedUsers(preSeedIds);
-						this._daveProposalRestartSent = false;
-						this._daveInactiveDropDiagLogged = 0;
-						this._daveRecvPendingDropDiagLogged = 0;
-						this._daveRecvMissingSenderDropDiagLogged = 0;
-						this._daveRecvMissingRatchetDropDiagLogged = 0;
-					}
-					catch (Exception ex) when (ex is DllNotFoundException or EntryPointNotFoundException)
+							logger: this._voiceLogger),
+							encryptorFactory: () => new LibDaveEncryptor(),
+							decryptorFactory: () => new LibDaveDecryptor(),
+							logger: this._voiceLogger,
+							stateChanged: this.OnDaveSessionStateChanged);
+					this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] Session created for channel {ChannelId}, protocol version {Version}", voiceChannelId, vsd.DaveProtocolVersion);
+
+					var preSeedIds = this._guild.VoiceStates
+						.Where(kv => kv.Value.ChannelId == voiceChannelId && kv.Value.UserId != (this.StateData.UserId ?? 0UL))
+						.Select(kv => kv.Value.UserId);
+					this._daveSession.PreSeedRecognizedUsers(preSeedIds);
+
+					if (vsd.DaveProtocolVersion == 0)
 					{
-						this._discord.DiagnosticsSink.CaptureException("DisCatSharp.Voice", ex);
-						// libdave is not available on this platform/RID.  Disable DAVE gracefully
-						// rather than crashing the voice connection.  Audio will continue unencrypted.
-						this._daveSession = null;
-						this._daveInactiveDropDiagLogged = 0;
-						this._daveRecvPendingDropDiagLogged = 0;
-						this._daveRecvMissingSenderDropDiagLogged = 0;
-						this._daveRecvMissingRatchetDropDiagLogged = 0;
-						this.PublishDaveStateChanged(DaveConnectionState.NotNegotiated, nameof(HandleDispatch), "libdave unavailable", 0);
-						this._discord.Logger.LogError(VoiceEvents.DaveHandshake,
-							"[DAVE] Native libdave library not found or entry point missing — DAVE disabled for this connection. ({ExType}: {Message})",
-							ex.GetType().Name, ex.Message);
+						this.PublishDaveStateChanged(DaveConnectionState.Inactive, nameof(HandleDispatch), "protocol version 0 passthrough", 0);
+					}
+					else
+					{
+						var initialKeyPackage = this._daveSession.PrepareKeyPackage(vsd.DaveProtocolVersion);
+						if (initialKeyPackage.Length > 0)
+						{
+							this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP26 sent");
+							await this.SendDaveBinaryOpcodeAsync(26, initialKeyPackage).ConfigureAwait(false);
+						}
 					}
 				}
-				else
+				catch (Exception ex) when (ex is DllNotFoundException or EntryPointNotFoundException)
 				{
-					// Non-DAVE channel — dispose any stale session
-					this._daveSession?.Dispose();
+					this._discord.DiagnosticsSink.CaptureException("DisCatSharp.Voice", ex);
 					this._daveSession = null;
-					this._daveInactiveDropDiagLogged = 0;
-					this._daveRecvPendingDropDiagLogged = 0;
-					this._daveRecvMissingSenderDropDiagLogged = 0;
-					this._daveRecvMissingRatchetDropDiagLogged = 0;
-					this.PublishDaveStateChanged(DaveConnectionState.NotNegotiated, nameof(HandleDispatch), "session description without dave protocol", 0);
+					this.PublishDaveStateChanged(DaveConnectionState.NotNegotiated, nameof(HandleDispatch), "libdave unavailable", 0);
+					this._discord.Logger.LogError(VoiceEvents.DaveHandshake,
+						"[DAVE] Native libdave library not found or entry point missing — DAVE disabled for this connection. ({ExType}: {Message})",
+						ex.GetType().Name, ex.Message);
 				}
+
+				this._daveProposalRestartSent = false;
+				this._daveInactiveDropDiagLogged = 0;
+				this._daveRecvPendingDropDiagLogged = 0;
+				this._daveRecvMissingSenderDropDiagLogged = 0;
+				this._daveRecvMissingRatchetDropDiagLogged = 0;
 
 				await this.Stage2(vsd).ConfigureAwait(false);
 				break;
@@ -2302,7 +2296,7 @@ public sealed class VoiceConnection : IDisposable
 				{
 					var ptp = opp.ToObject<DavePrepareTransitionPayload>();
 					if (ptp is not null)
-						this._daveSession.HandlePrepareTransition(ptp);
+						await this.HandleDaveTransitionResultAsync(this._daveSession.HandlePrepareTransition(ptp)).ConfigureAwait(false);
 				}
 
 				break;
@@ -2315,14 +2309,7 @@ public sealed class VoiceConnection : IDisposable
 				{
 					var etp = opp.ToObject<DaveExecuteTransitionPayload>();
 					if (etp is not null)
-					{
-						var ack = this._daveSession.HandleExecuteTransition(etp);
-						if (ack is not null)
-						{
-							this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP23 sent");
-							await this.SendDaveJsonOpcodeAsync(23, ack).ConfigureAwait(false);
-						}
-					}
+						this._daveSession.HandleExecuteTransition(etp);
 				}
 
 				break;
@@ -2336,34 +2323,14 @@ public sealed class VoiceConnection : IDisposable
 					var pep = opp.ToObject<DavePrepareEpochPayload>();
 					if (pep is not null)
 					{
-						this._daveSession.HandlePrepareEpoch(pep);
-						// When epoch == 1 (MLS_NEW_GROUP_EXPECTED_EPOCH), the server is starting a fresh
-						// group. We must re-init and re-send our key package (OP26), mirroring the
-						// canonical onDaveProtocolPrepareEpoch(epoch=1) → Init + sendMLSKeyPackage flow.
-						if (pep.Epoch == 1)
+						var kp24 = this._daveSession.HandlePrepareEpoch(pep);
+						if (kp24.Length > 0)
 						{
-							this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] OP24 epoch=1 (new group expected), re-initialising and re-sending OP26");
-							var kp24 = this._daveSession.PrepareKeyPackage();
-							if (kp24.Length > 0)
-							{
-								this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] Sending key package OP26 ({Len} bytes) from OP24 handler", kp24.Length);
-								this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP26 sent");
-								await this.SendDaveBinaryOpcodeAsync(26, kp24).ConfigureAwait(false);
-							}
+							this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] Sending key package OP26 ({Len} bytes) from OP24 handler", kp24.Length);
+							this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP26 sent");
+							await this.SendDaveBinaryOpcodeAsync(26, kp24).ConfigureAwait(false);
 						}
 					}
-				}
-
-				break;
-
-			case 31: // DAVE MLS_INVALID_COMMIT_WELCOME
-				this._voiceLogger.VoiceTrace(VoiceEvents.DaveHandshake, "Received DAVE MLS_INVALID_COMMIT_WELCOME (OP31)");
-				this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP31 received");
-				this.PublishDaveOpcodeObserved(31, DaveOpcodeDirection.Received, dispatchPayloadLength, sequence: null, isBinary: false);
-				if (this._daveSession is not null)
-				{
-					var icp = opp?.ToObject<DaveMlsInvalidCommitWelcomePayload>();
-					this._daveSession.HandleInvalidCommit(icp);
 				}
 
 				break;
@@ -2497,6 +2464,52 @@ public sealed class VoiceConnection : IDisposable
 	}
 
 	/// <summary>
+	///     Performs the voice-gateway response associated with one prepared DAVE transition.
+	/// </summary>
+	/// <param name="result">The action and transition ID returned by <see cref="DaveSession"/>.</param>
+	/// <returns>A task representing any OP 23, OP 31, and OP 26 messages sent for the result.</returns>
+	private async Task HandleDaveTransitionResultAsync(DaveTransitionResult result)
+	{
+		switch (result.Action)
+		{
+			case DaveTransitionAction.None:
+				return;
+
+			case DaveTransitionAction.Ready:
+				this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] Sending OP23 ReadyForTransition (transId={TransId})", result.TransitionId);
+				this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP23 sent");
+				await this.SendDaveJsonOpcodeAsync(23, new DaveReadyForTransitionPayload { TransitionId = result.TransitionId }).ConfigureAwait(false);
+				return;
+
+			case DaveTransitionAction.RecoverInvalid:
+				if (this._daveSession is null)
+					return;
+
+				this._discord.Logger.LogWarning(VoiceEvents.DaveHandshake,
+					"[DAVE] Commit or Welcome failed for transition {TransitionId} — sending OP31 and a replacement OP26",
+					result.TransitionId);
+				this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP31 sent");
+				await this.SendDaveJsonOpcodeAsync(31, new DaveMlsInvalidCommitWelcomePayload
+				{
+					TransitionId = result.TransitionId
+				}).ConfigureAwait(false);
+
+				this._daveProposalRestartSent = false;
+				var keyPackage = this._daveSession.RecoverFromInvalidTransition(result.TransitionId);
+				if (keyPackage.Length > 0)
+				{
+					this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP26 sent");
+					await this.SendDaveBinaryOpcodeAsync(26, keyPackage).ConfigureAwait(false);
+				}
+
+				return;
+
+			default:
+				throw new ArgumentOutOfRangeException(nameof(result), result.Action, "Unknown DAVE transition action.");
+		}
+	}
+
+	/// <summary>
 	///     Sends a JSON DAVE voice opcode and emits <see cref="DaveOpcodeObserved"/>.
 	/// </summary>
 	private async Task SendDaveJsonOpcodeAsync(int opcode, object payload)
@@ -2509,26 +2522,26 @@ public sealed class VoiceConnection : IDisposable
 	/// <summary>
 	///     Callback invoked by <see cref="DaveSession"/> whenever its internal state changes.
 	/// </summary>
-	private void OnDaveSessionStateChanged(int protocolVersion, DaveSessionState oldState, DaveSessionState newState, string handler, string reason)
+	private void OnDaveSessionStateChanged(int protocolVersion, bool isActive, DaveSessionState oldState, DaveSessionState newState, string handler, string reason)
 	{
 		var publicOld = MapDaveState(oldState);
 		var publicNew = MapDaveState(newState);
-		this.PublishDaveStateChanged(publicOld, publicNew, handler, reason, protocolVersion);
+		this.PublishDaveStateChanged(publicOld, publicNew, handler, reason, protocolVersion, isActive);
 	}
 
 	/// <summary>
 	///     Publishes a DAVE state transition when the state actually changed.
 	/// </summary>
-	private void PublishDaveStateChanged(DaveConnectionState newState, string handler, string reason, int protocolVersion)
+	private void PublishDaveStateChanged(DaveConnectionState newState, string handler, string reason, int protocolVersion, bool isActive = false)
 	{
 		var oldState = (DaveConnectionState)Volatile.Read(ref this._davePublicState);
-		this.PublishDaveStateChanged(oldState, newState, handler, reason, protocolVersion);
+		this.PublishDaveStateChanged(oldState, newState, handler, reason, protocolVersion, isActive);
 	}
 
 	/// <summary>
 	///     Publishes a DAVE state transition when the state actually changed.
 	/// </summary>
-	private void PublishDaveStateChanged(DaveConnectionState oldState, DaveConnectionState newState, string handler, string reason, int protocolVersion)
+	private void PublishDaveStateChanged(DaveConnectionState oldState, DaveConnectionState newState, string handler, string reason, int protocolVersion, bool isActive = false)
 	{
 		if (oldState == newState)
 			return;
@@ -2540,7 +2553,8 @@ public sealed class VoiceConnection : IDisposable
 			NewState = newState,
 			Handler = handler,
 			Reason = reason,
-			ProtocolVersion = protocolVersion
+			ProtocolVersion = protocolVersion,
+			IsActive = isActive
 		});
 	}
 
@@ -2711,29 +2725,8 @@ public sealed class VoiceConnection : IDisposable
 					var commitPayload29 = payload[2..].ToArray();
 					this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP29 received");
 					this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] OP29 announce_commit received, transId={TransId} {Len} bytes", transId29, commitPayload29.Length);
-					var action29 = this._daveSession.HandleAnnounceCommit(commitPayload29, transId29);
-					switch (action29)
-					{
-						case DaveAnnounceAction.SendReadyForTransition:
-							this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] OP29 → sending OP23 ReadyForTransition (transId={TransId})", transId29);
-							this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP23 sent");
-							await this.SendDaveJsonOpcodeAsync(23, new DaveReadyForTransitionPayload { TransitionId = transId29 }).ConfigureAwait(false);
-							break;
-						case DaveAnnounceAction.Restart:
-							this._discord.Logger.LogWarning(VoiceEvents.DaveHandshake, "[DAVE] OP29 commit failed — sending OP31 and re-initialising");
-							this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP31 sent");
-							await this.SendDaveJsonOpcodeAsync(31, new DaveMlsInvalidCommitWelcomePayload()).ConfigureAwait(false);
-							this._daveProposalRestartSent = false; // allow proposal restart again after OP29-triggered reset
-							var kp29 = this._daveSession.PrepareKeyPackage();
-							if (kp29.Length > 0)
-							{
-								this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP26 sent");
-								this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] Sending key package OP26 ({Len} bytes) after OP29 restart", kp29.Length);
-								await this.SendDaveBinaryOpcodeAsync(26, kp29).ConfigureAwait(false);
-							}
-
-							break;
-					}
+					await this.HandleDaveTransitionResultAsync(
+						this._daveSession.HandleAnnounceCommit(commitPayload29, transId29)).ConfigureAwait(false);
 				}
 
 				break;
@@ -2744,7 +2737,8 @@ public sealed class VoiceConnection : IDisposable
 					var welcomePayload = payload[2..].ToArray();
 					this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE FLOW] OP30 received");
 					this._voiceLogger.VoiceDebug(VoiceEvents.DaveHandshake, "[DAVE] OP30 welcome received, transId={TransId} {Len} bytes", transId30, welcomePayload.Length);
-					this._daveSession.HandleWelcome(welcomePayload);
+					await this.HandleDaveTransitionResultAsync(
+						this._daveSession.HandleWelcome(welcomePayload, transId30)).ConfigureAwait(false);
 				}
 
 				break;

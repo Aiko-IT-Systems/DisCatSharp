@@ -26,7 +26,8 @@ public enum DaveConnectionState
 	AwaitingResponse = 3,
 
 	/// <summary>
-	///     DAVE is ready for transition execution.
+	///     DAVE receiver transforms are ready for transition execution. Existing encrypted media may
+	///     remain active until the voice gateway sends OP 22.
 	/// </summary>
 	ReadyForTransition = 4,
 
@@ -36,7 +37,7 @@ public enum DaveConnectionState
 	Active = 5,
 
 	/// <summary>
-	///     DAVE is downgrading to a lower protocol version.
+	///     DAVE receivers are prepared for a lower protocol version while the existing sender remains active.
 	/// </summary>
 	Downgrading = 6
 }

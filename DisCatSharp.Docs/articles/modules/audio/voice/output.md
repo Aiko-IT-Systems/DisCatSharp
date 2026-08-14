@@ -17,15 +17,14 @@ Common use cases:
 
 ## How It Works
 
-```
-┌──────────────┐                                              ┌──────────────────┐
-│ Lavalink      │──Opus──▶ SetMusicSourceAsync()               │                  │
-│ Bridge        │         (direct passthrough — no decode)     │ VoiceOutput-     │   Opus   ┌──────────────────┐
-└──────────────┘                                        ──────▶│ Controller       │────────▶│ VoiceConnection  │──▶ Discord
-┌──────────────┐                                               │                  │         └──────────────────┘
-│ TTS / System │──PCM──▶ QueuePcmOverlayAsync()                │ (serial overlay  │
-│ Audio        │         (serialized, pauses music)            │  + music slot)   │
-└──────────────┘                                              └──────────────────┘
+```mermaid
+flowchart LR
+    Music["Lavalink bridge: Opus"] -->|"SetMusicSourceAsync"| Controller["VoiceOutputController"]
+    Overlay["TTS/system audio: PCM"] -->|"QueuePcmOverlayAsync"| Controller
+    Controller -->|"Opus frames"| Connection["VoiceConnection"]
+    Connection --> Ready["DAVE media-readiness gate"]
+    Ready --> Packet["RTP + DAVE mode + transport encryption"]
+    Packet --> Discord
 ```
 
 The controller operates in three states:
@@ -39,6 +38,12 @@ The controller operates in three states:
 ```csharp
 using DisCatSharp.Voice;
 using DisCatSharp.Voice.Entities;
+
+client.UseVoice(new VoiceConfiguration
+{
+    // Required by BindExternalOpusSourceAsync.
+    EnableExternalOpus = true
+});
 
 // Create the controller (defaults to 48kHz stereo)
 await using var controller = new VoiceOutputController();
@@ -57,6 +62,9 @@ await controller.QueuePcmOverlayAsync(ttsStream, "tts-greeting");
 await controller.QueueOwnedPcmOverlayAsync(systemSoundStream, "join-chime");
 ```
 
+> [!IMPORTANT]
+> `BindExternalOpusSourceAsync` throws `InvalidOperationException` unless `VoiceConfiguration.EnableExternalOpus` was enabled before the voice connection was created.
+
 ## Music Source
 
 Bind or swap the music source at any time with `SetMusicSourceAsync`:
@@ -73,6 +81,8 @@ await controller.SetMusicSourceAsync(null);
 ```
 
 The music pump reads `IExternalOpusSource.ReadFramesAsync` on a background task. Frames flow at the source's cadence — no PeriodicTimer master clock is needed.
+
+The controller does not bypass connection security. Pre-encoded frames skip only the internal Opus encoder; `VoiceConnection` still applies media-readiness gating, RTP framing, the currently executing DAVE mode, and Discord transport encryption.
 
 ## Overlay Queue
 
@@ -145,11 +155,22 @@ await using var controller = new VoiceOutputController();
 await controller.SetMusicSourceAsync(bridgeSource);
 
 // Rebind the voice connection to use the controller
-lavalinkSession.RebindBridgeOpusSource(guildId, controller);
+if (!lavalinkSession.RebindBridgeOpusSource(guildId, controller))
+    throw new InvalidOperationException("No bridge voice connection is active for this guild.");
 
 // Now you can overlay TTS while music plays
 await controller.QueuePcmOverlayAsync(ttsStream, "tts");
 ```
+
+## DAVE Transitions
+
+The controller does not need to be rebound during a DAVE epoch change. Both direct Opus music frames and encoded PCM overlays use the same connection-level behavior:
+
+- An established sender continues using its old epoch while the next transition is `ReadyForTransition` or `Downgrading`.
+- A matching OP22 switches the local sender to the prepared ratchet or protocol-0 passthrough.
+- `DavePendingAudioBehavior` applies only when no executing media mode is usable.
+
+Use `VoiceConnection.IsE2eeUsableForSend` when deciding whether to start or continue output. Use `WaitForDaveActiveAsync` only when the application specifically requires an encrypting DAVE sender; protocol-0 passthrough is usable but never DAVE-active.
 
 ## Configuration Reference
 

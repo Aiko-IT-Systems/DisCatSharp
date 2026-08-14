@@ -5,7 +5,7 @@ namespace DisCatSharp.Voice.Payloads;
 /// <summary>
 ///     Payload for voice gateway OP 22 <c>dave_mls_execute_transition</c>.
 ///     Instructs the client to execute the previously prepared DAVE protocol version transition.
-///     When <see cref="TransitionId"/> is 0, the client should skip sending OP 23 (ready_for_transition) acknowledgement.
+///     OP 23 readiness is sent during preparation, before this opcode arrives; OP 22 never receives an acknowledgement.
 /// </summary>
 internal sealed class DaveExecuteTransitionPayload
 {

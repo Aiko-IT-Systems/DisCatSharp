@@ -17,8 +17,7 @@ namespace DisCatSharp.Voice.Entities.Dave;
 /// <remarks>
 ///     <para>
 ///         <b>Thread model:</b> all methods in this class are called exclusively on the voice gateway
-///         WebSocket thread. <c>_knownUserIds</c> is a plain <see cref="System.Collections.Generic.List{T}"/>
-///         and is not thread-safe by design — concurrent access from any other thread is not permitted.
+///         WebSocket thread. Native MLS session state is mutable and is not accessed concurrently.
 ///     </para>
 ///     <para>
 ///         <b><c>_session</c> lifecycle:</b> the <see cref="DaveSessionSafeHandle"/> is created
@@ -33,12 +32,9 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 {
 	private readonly string _authSessionId;
 	private readonly ulong _channelId;
-	private readonly int _protocolVersion;
 	private readonly ILogger _logger;
 	private DaveSessionSafeHandle? _session;
 	private bool _disposed;
-	private ulong _selfUserId;
-	private readonly List<ulong> _knownUserIds = [];
 
 	/// <summary>
 	///     Initialises a new <see cref="LibDaveMlsProvider"/> for the specified session and channel.
@@ -51,7 +47,7 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 	{
 		this._authSessionId = authSessionId ?? string.Empty;
 		this._channelId = channelId;
-		this._protocolVersion = protocolVersion;
+		this.ProtocolVersion = checked((ushort)protocolVersion);
 		this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
 	}
 
@@ -62,11 +58,13 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 	public bool IsGroupReady { get; private set; }
 
 	/// <inheritdoc/>
+	public ushort ProtocolVersion { get; private set; }
+
+	/// <inheritdoc/>
 	public void InitGroup(ulong selfUserId, int protocolVersion, byte[] groupId)
 	{
 		// Discord uses the voice channel ID as the MLS group ID.
 		// The groupId parameter from IMlsProvider is ignored intentionally.
-		this._selfUserId = selfUserId;
 		this.IsGroupReady = false;
 
 		// Create the native session ONCE per provider lifetime.
@@ -95,13 +93,13 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 
 		try
 		{
-			// Use the negotiated protocol version captured during construction
-			// rather than the InitGroup parameter (consistent with the OP4→OP24 version negotiation).
+			var requestedProtocolVersion = checked((ushort)protocolVersion);
 			DaveNative.SessionInit(
 				this._session,
-				(ushort)this._protocolVersion,
+				requestedProtocolVersion,
 				this._channelId,
 				selfUserId.ToString());
+			this.ProtocolVersion = DaveNative.SessionGetProtocolVersion(this._session);
 			this.IsSessionInitialized = true;
 		}
 		catch
@@ -113,7 +111,7 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 		}
 
 		this._logger.VoiceDebug("[DAVE] MLS session initialized (channelId={ChannelId}, version={Version})",
-			this._channelId, this._protocolVersion);
+			this._channelId, this.ProtocolVersion);
 	}
 
 	/// <inheritdoc/>
@@ -150,15 +148,15 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 	{
 		this.EnsureSession();
 
-		this._knownUserIds.Clear();
+		var knownUserIds = new List<ulong>(recognizedUserIds.Count);
 		foreach (var id in recognizedUserIds)
-			this._knownUserIds.Add(id);
+			knownUserIds.Add(id);
 
-		var userIdStrings = new byte[this._knownUserIds.Count][];
-		for (var i = 0; i < this._knownUserIds.Count; i++)
-			userIdStrings[i] = Encoding.UTF8.GetBytes(this._knownUserIds[i].ToString() + '\0');
+		var userIdStrings = new byte[knownUserIds.Count][];
+		for (var i = 0; i < knownUserIds.Count; i++)
+			userIdStrings[i] = Encoding.UTF8.GetBytes(knownUserIds[i].ToString() + '\0');
 
-		var userCount = (nuint)this._knownUserIds.Count;
+		var userCount = (nuint)knownUserIds.Count;
 		byte* commitWelcomePtr = null;
 		nuint commitWelcomeLength = 0;
 
@@ -249,6 +247,7 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 
 		if (!failed && !ignored)
 		{
+			this.ProtocolVersion = DaveNative.SessionGetProtocolVersion(this._session!);
 			this.IsGroupReady = true;
 			this._logger.VoiceDebug("[DAVE] MLS commit processed — group ready");
 		}
@@ -261,19 +260,20 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 	}
 
 	/// <inheritdoc/>
-	public unsafe void ProcessWelcome(byte[] welcomeBytes, byte[] ratchetKey, IReadOnlySet<ulong> recognizedUserIds)
+	public unsafe bool ProcessWelcome(byte[] welcomeBytes, byte[] ratchetKey, IReadOnlySet<ulong> recognizedUserIds)
 	{
 		this.EnsureSession();
+		this.IsGroupReady = false;
 
-		this._knownUserIds.Clear();
+		var knownUserIds = new List<ulong>(recognizedUserIds.Count);
 		foreach (var id in recognizedUserIds)
-			this._knownUserIds.Add(id);
+			knownUserIds.Add(id);
 
-		var userIdStrings = new byte[this._knownUserIds.Count][];
-		for (var i = 0; i < this._knownUserIds.Count; i++)
-			userIdStrings[i] = Encoding.UTF8.GetBytes(this._knownUserIds[i].ToString() + '\0');
+		var userIdStrings = new byte[knownUserIds.Count][];
+		for (var i = 0; i < knownUserIds.Count; i++)
+			userIdStrings[i] = Encoding.UTF8.GetBytes(knownUserIds[i].ToString() + '\0');
 
-		var userCount = (nuint)this._knownUserIds.Count;
+		var userCount = (nuint)knownUserIds.Count;
 		var resultHandle = IntPtr.Zero;
 
 		if (userCount == 0)
@@ -330,55 +330,26 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 		if (resultHandle == IntPtr.Zero)
 		{
 			this._logger.LogWarning("[DAVE] ProcessWelcome: libdave returned a null result handle; group NOT marked ready");
-			return;
+			return false;
 		}
 
+		this.ProtocolVersion = DaveNative.SessionGetProtocolVersion(this._session!);
 		this.IsGroupReady = true;
 		this._logger.VoiceDebug("[DAVE] MLS welcome processed — group ready");
+		return true;
 	}
 
 	/// <inheritdoc/>
-	public IReadOnlyList<(ulong UserId, DaveRatchetInstaller Installer)> GetUpdatedRatchets()
+	public DaveRatchetInstaller? GetRatchetInstaller(ulong userId)
 	{
 		if (this._session is null || this._session.IsInvalid)
-			return [];
+			return null;
 
-		var result = new List<(ulong, DaveRatchetInstaller)>(this._knownUserIds.Count);
-		foreach (var userId in this._knownUserIds)
-		{
-			// Skip self — the own ratchet is installed via GetOwnRatchetInstaller() into the encryptor,
-			// not into a decryptor.  Mirrors libdave-jvm's setupKeyRatchetForUser() which routes self
-			// to setSelfKeyRatchet() rather than to a Decryptor.
-			if (userId == this._selfUserId)
-				continue;
-
-			var ratchetHandle = DaveNative.SessionGetKeyRatchet(this._session, userId.ToString());
-			if (ratchetHandle.IsInvalid)
-			{
-				ratchetHandle.Dispose();
-				continue;
-			}
-
-			// Ownership passes to the encryptor/decryptor via InstallRatchet().
-			// The caller disposes the handle after passing it to the native library.
-			result.Add((userId, DaveRatchetInstaller.FromNative(ratchetHandle)));
-		}
-
-		return result;
-	}
-
-	/// <inheritdoc/>
-	public DaveRatchetInstaller GetOwnRatchetInstaller()
-	{
-		if (this._session is null || this._session.IsInvalid || this._selfUserId == 0)
-			return DaveRatchetInstaller.FromManaged([]);
-
-		var ratchetHandle = DaveNative.SessionGetKeyRatchet(this._session, this._selfUserId.ToString());
+		var ratchetHandle = DaveNative.SessionGetKeyRatchet(this._session, userId.ToString());
 		if (ratchetHandle.IsInvalid)
 		{
 			ratchetHandle.Dispose();
-			this._logger.LogWarning("[DAVE] Own ratchet unavailable; falling back to managed empty installer.");
-			return DaveRatchetInstaller.FromManaged([]);
+			return null;
 		}
 
 		return DaveRatchetInstaller.FromNative(ratchetHandle);
@@ -393,7 +364,6 @@ internal sealed class LibDaveMlsProvider : IMlsProvider, IDisposable
 			DaveNative.SessionReset(this._session);
 		this.IsSessionInitialized = false;
 		this.IsGroupReady = false;
-		this._knownUserIds.Clear();
 	}
 
 	/// <inheritdoc/>
