@@ -27,3 +27,5 @@ labels:
       files:
           - ".*.csproj"
           - ".*.sln"
+          - "*.targets"
+          - "*.slnx"
