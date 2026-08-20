@@ -33,6 +33,7 @@ permissions:
     attestations: write
     packages: write
     artifact-metadata: write
+    actions: write
 
 concurrency:
     group: release-${{ inputs.packages_to_release }}
@@ -383,3 +384,8 @@ jobs:
                     retry gh attestation verify "$artifact" \
                       --repo "$GITHUB_REPOSITORY"
                   done
+            - name: Trigger DisCatSharp.ProjectTemplates update workflow
+              if: inputs.packages_to_release == 'DisCatSharp' && steps.state.outputs.release_state != 'verify'
+              run: |
+                  gh workflow run update-version.yml --ref main --repo Aiko-IT-Systems/DisCatSharp.ProjectTemplates --field wait_minutes=5
+                  echo "Triggered update-version.yml"
