@@ -387,5 +387,5 @@ jobs:
             - name: Trigger DisCatSharp.ProjectTemplates update workflow
               if: inputs.packages_to_release == 'DisCatSharp' && steps.state.outputs.release_state != 'verify'
               run: |
-                  gh workflow run update-version.yml --ref main --repo Aiko-IT-Systems/DisCatSharp.ProjectTemplates --field wait_minutes=5
+                  gh workflow run update-version.yml --ref main --repo Aiko-IT-Systems/DisCatSharp.ProjectTemplates --field wait_minutes=10
                   echo "Triggered update-version.yml"
