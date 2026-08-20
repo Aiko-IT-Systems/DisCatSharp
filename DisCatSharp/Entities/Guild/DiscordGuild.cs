@@ -219,6 +219,12 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	public VerificationLevel? VerificationLevel { get; internal set; }
 
 	/// <summary>
+	///     Gets the id of the role required to bypass verification, if configured.
+	/// </summary>
+	[JsonProperty("verification_role_id", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
+	public ulong? VerificationRoleId { get; internal set; }
+
+	/// <summary>
 	///     Gets the guild's default notification settings.
 	/// </summary>
 	[JsonProperty("default_message_notifications", NullValueHandling = NullValueHandling.Ignore)]
@@ -229,6 +235,12 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// </summary>
 	[JsonProperty("explicit_content_filter", NullValueHandling = NullValueHandling.Ignore)]
 	public ExplicitContentFilter? ExplicitContentFilter { get; internal set; }
+
+	/// <summary>
+	///     Gets the content level configured by the guild owner, if any.
+	/// </summary>
+	[JsonProperty("owner_configured_content_level", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
+	public long? OwnerConfiguredContentLevel { get; internal set; }
 
 	/// <summary>
 	///     Gets the guild's nsfw level.
@@ -686,6 +698,18 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// </summary>
 	[JsonProperty("premium_progress_bar_enabled", NullValueHandling = NullValueHandling.Ignore)]
 	public bool? PremiumProgressBarEnabled { get; internal set; }
+
+	/// <summary>
+	///     Gets the timestamp when the premium progress bar's enabled state was last updated by a user.
+	/// </summary>
+	[JsonProperty("premium_progress_bar_enabled_user_updated_at", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
+	public DateTimeOffset? PremiumProgressBarEnabledUserUpdatedAt { get; internal set; }
+
+	/// <summary>
+	///     Gets the official message color used for branded messages in this guild, if configured.
+	/// </summary>
+	[JsonProperty("official_message_color", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
+	public int? OfficialMessageColor { get; internal set; }
 
 	/// <summary>
 	///     Gets whether this guild is designated as NSFW.
