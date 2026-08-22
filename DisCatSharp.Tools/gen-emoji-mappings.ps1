@@ -3,10 +3,7 @@
 # This script parses emojis.json and generates C# code for emoji mappings used in DiscordEmoji.EmojiUtils.cs.
 #
 # To get the data from the discord client:
-# delete window.$;
-# let wpRequire = webpackChunkdiscord_app.push([[Symbol()], {}, r => r]);
-# webpackChunkdiscord_app.pop();
-# Object.values(wpRequire.c).find(x => x?.exports?.surrogateToEmoji).exports;
+# delete window.$; let wpRequire = webpackChunkdiscord_app.push([[Symbol()], {}, r => r]); webpackChunkdiscord_app.pop(); Object.values(wpRequire.c).find(x => x?.exports?.surrogateToEmoji).exports;
 #
 # Usage: Run this script in the DisCatSharp.Tools directory. It will read emojis.json and output EmojiUtils.Generated.cs.
 
