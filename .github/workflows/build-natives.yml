@@ -141,6 +141,7 @@ jobs:
               with:
                   name: natives-${{ matrix.rid }}
                   path: DisCatSharp.Voice.Natives/runtimes/${{ matrix.rid }}
+                  retention-days: 1
                   if-no-files-found: error
 
     build-macos:
@@ -251,6 +252,7 @@ jobs:
               with:
                   name: natives-${{ matrix.rid }}
                   path: DisCatSharp.Voice.Natives/runtimes/${{ matrix.rid }}
+                  retention-days: 1
                   if-no-files-found: error
 
     build-windows:
@@ -347,6 +349,7 @@ jobs:
               with:
                   name: natives-${{ matrix.rid }}
                   path: DisCatSharp.Voice.Natives/runtimes/${{ matrix.rid }}
+                  retention-days: 1
                   if-no-files-found: error
 
     bundle-natives:
@@ -444,4 +447,5 @@ jobs:
                   path: |
                       DisCatSharp.Voice.Natives-runtime-bundle.zip
                       bundle/DisCatSharp.Voice.Natives/runtimes
+                  retention-days: 1
                   if-no-files-found: error
