@@ -5,8 +5,15 @@
 			"path": "."
 		},
 		{
-			"name": "DisCatSharp.Extensions",
+			"name": "Extensions",
 			"path": "../DisCatSharp.Extensions"
+		},		{
+			"name": "Project Templates",
+			"path": "../DisCatSharp.ProjectTemplates"
+		},
+		{
+			"name": "Examples",
+			"path": "../DisCatSharp.Examples"
 		},
 		{
 			"name": "Planning (Private)",

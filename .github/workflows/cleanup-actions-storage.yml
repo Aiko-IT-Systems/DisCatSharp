@@ -1,0 +1,65 @@
+name: "Clean Actions Storage"
+
+on:
+    schedule:
+        - cron: "17 3 * * *"
+    workflow_dispatch:
+
+permissions: {}
+
+jobs:
+    cleanup:
+        timeout-minutes: 30
+        runs-on: ubuntu-latest
+        name: Remove old workflow runs and attached artifacts
+        env:
+            GH_TOKEN: ${{ secrets.NYUW_TOKEN_GH }}
+        steps:
+            - name: Remove completed workflow runs older than seven days
+              shell: bash
+              run: |
+                  set -euo pipefail
+                  run_cutoff="$(date --utc --date='7 days ago' '+%Y-%m-%dT%H:%M:%SZ')"
+                  deleted_runs=0
+                  rate_warning_emitted=false
+
+                  echo "::notice title=Actions cleanup started::Removing completed workflow runs created before ${run_cutoff}."
+
+                  while IFS=$'\t' read -r created_at run_id; do
+                      if [[ "$created_at" < "$run_cutoff" ]]; then
+                          for attempt in 1 2 3 4 5; do
+                              if gh run delete "$run_id" --repo "$GITHUB_REPOSITORY"; then
+                                  break
+                              fi
+
+                              if [[ "$attempt" == "5" ]]; then
+                                  echo "::error title=Actions cleanup failed::Could not delete workflow run ${run_id} after ${attempt} attempts."
+                                  exit 1
+                              fi
+
+                              retry_delay=$((attempt * 30))
+                              echo "::warning title=Actions cleanup retrying::Deletion of workflow run ${run_id} failed; retrying in ${retry_delay} seconds (attempt ${attempt}/5)."
+                              sleep "$retry_delay"
+                          done
+
+                          ((deleted_runs += 1))
+                          if (( deleted_runs % 10 == 0 )); then
+                              echo "::notice title=Actions cleanup progress::Deleted ${deleted_runs} old workflow runs so far."
+                          fi
+
+                          if (( deleted_runs % 25 == 0 )); then
+                              if remaining_requests="$(gh api rate_limit --jq '.resources.core.remaining')"; then
+                                  if [[ "$remaining_requests" -lt 1000 && "$rate_warning_emitted" == false ]]; then
+                                      echo "::warning title=GitHub API quota running low::${remaining_requests} core API requests remain; cleanup will continue at one deletion per second."
+                                      rate_warning_emitted=true
+                                  fi
+                              else
+                                  echo "::warning title=GitHub API quota unavailable::Could not read the remaining core API quota; continuing at the conservative pace."
+                              fi
+                          fi
+
+                          sleep 1
+                      fi
+                  done < <(gh run list --all --limit 10000 --repo "$GITHUB_REPOSITORY" --json createdAt,databaseId,status --jq '.[] | select(.status == "completed") | [.createdAt, .databaseId] | @tsv')
+
+                  echo "::notice title=Actions cleanup complete::Deleted ${deleted_runs} completed workflow runs older than seven days."
