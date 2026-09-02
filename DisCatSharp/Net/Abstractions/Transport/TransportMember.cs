@@ -145,4 +145,10 @@ internal class TransportMember : ObservableApiObject
 	/// </summary>
 	[JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
 	public ulong GuildId { get; internal set; }
+
+	/// <summary>
+	///     Gets the VAD colors for this member.
+	/// </summary>
+	[JsonProperty("vad_colors", NullValueHandling = NullValueHandling.Ignore)]
+	public object? VadColors { get; internal set; }
 }
