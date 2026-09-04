@@ -72,7 +72,19 @@ internal sealed class ClientProperties : ObservableApiObject
 	/// </summary>
 	[JsonProperty("device")]
 	public string Device
-		=> this.Browser;
+	{
+		get
+		{
+			if (this.Discord.Configuration.Gateway.MobileStatus)
+				return "Discord Android";
+			else if (this.Discord.Configuration.Gateway.VrStatus)
+				return "oculus";
+
+			var a = typeof(DiscordClient).GetTypeInfo().Assembly;
+			var an = a.GetName();
+			return $"DisCatSharp {an.Version.ToString(4)}";
+		}
+	}
 
 	/// <summary>
 	///     Gets the client's referrer.
