@@ -43,6 +43,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		this.BannerHash = transport.BannerHash;
 		this.BannerColorInternal = transport.BannerColor;
 		this.ThemeColorsInternal = [.. transport.ThemeColors ?? []];
+		this.VadColorsInternal = [.. transport.VadColors ?? []];
 		this.IsBot = transport.IsBot;
 		this.IsSystem = transport.IsSystem;
 		this.MfaEnabled = transport.MfaEnabled;
@@ -70,6 +71,12 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// </summary>
 	[JsonProperty("theme_colors", NullValueHandling = NullValueHandling.Ignore)]
 	internal List<int>? ThemeColorsInternal { get; set; }
+
+	/// <summary>
+	///     Gets the user's vad color integers.
+	/// </summary>
+	[JsonProperty("vad_colors", NullValueHandling = NullValueHandling.Ignore)]
+	internal List<int>? VadColorsInternal { get; set; }
 
 	/// <summary>
 	///     Gets this user's username.
@@ -133,6 +140,12 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// </summary>
 	[JsonIgnore]
 	public virtual IReadOnlyList<DiscordColor>? ThemeColors => !(this.ThemeColorsInternal is not null && this.ThemeColorsInternal.Count != 0) ? null : this.ThemeColorsInternal.Select(x => new DiscordColor(x)).ToList();
+
+	/// <summary>
+	///     Gets the user's vad colors, if set.
+	/// </summary>
+	[JsonIgnore]
+	public virtual IReadOnlyList<DiscordColor>? VadColors => !(this.VadColorsInternal is not null && this.VadColorsInternal.Count != 0) ? null : this.VadColorsInternal.Select(x => new DiscordColor(x)).ToList();
 
 	/// <summary>
 	///     Gets the user's banner url

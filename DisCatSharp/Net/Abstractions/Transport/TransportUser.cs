@@ -43,6 +43,7 @@ internal class TransportUser : ObservableApiObject
 		this.Pronouns = other.Pronouns;
 		this.GlobalName = other.GlobalName;
 		this.ThemeColors = other.ThemeColors;
+		this.VadColors = other.VadColors;
 		this.AvatarDecorationData = other.AvatarDecorationData;
 		this.Collectibles = other.Collectibles;
 		this.DisplayNameStyles = other.DisplayNameStyles;
@@ -122,6 +123,12 @@ internal class TransportUser : ObservableApiObject
 	/// </summary>
 	[JsonProperty("theme_colors", NullValueHandling = NullValueHandling.Ignore)]
 	public int[]? ThemeColors { get; internal set; }
+
+	/// <summary>
+	///     Gets the users vad colors.
+	/// </summary>
+	[JsonProperty("vad_colors", NullValueHandling = NullValueHandling.Ignore)]
+	public int[]? VadColors { get; internal set; }
 
 	/// <summary>
 	///     Gets a value indicating whether is bot.
