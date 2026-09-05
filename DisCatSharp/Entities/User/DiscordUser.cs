@@ -145,7 +145,8 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	///     Gets the user's vad colors, if set.
 	/// </summary>
 	[JsonIgnore]
-	public virtual IReadOnlyList<DiscordColor>? VadColors => !(this.VadColorsInternal is not null && this.VadColorsInternal.Count != 0) ? null : this.VadColorsInternal.Select(x => new DiscordColor(x)).ToList();
+	public virtual IReadOnlyList<DiscordColor>? VadColors
+		=> !(this.VadColorsInternal is not null && this.VadColorsInternal.Count != 0) ? null : this.VadColorsInternal.Select(x => new DiscordColor(x)).ToList();
 
 	/// <summary>
 	///     Gets the user's banner url

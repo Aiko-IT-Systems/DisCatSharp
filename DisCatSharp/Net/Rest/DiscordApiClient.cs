@@ -744,7 +744,7 @@ public sealed class DiscordApiClient
 				old.BannerColorInternal = usr.BannerColorInternal;
 				old.AvatarDecorationData = usr.AvatarDecorationData;
 				old.ThemeColorsInternal = usr.ThemeColorsInternal;
-			old.VadColorsInternal = usr.VadColorsInternal;
+				old.VadColorsInternal = usr.VadColorsInternal;
 				old.Collectibles = usr.Collectibles;
 				old.IsSystem = usr.IsSystem;
 				old.IsBot = usr.IsBot;
