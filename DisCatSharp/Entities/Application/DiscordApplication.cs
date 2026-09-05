@@ -152,6 +152,9 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 		this.MaxParticipants = tapp.MaxParticipants;
 		this.ApprovedConsoles = [.. tapp.ApprovedConsoles];
 		this.PricingLocalizationStrategy = tapp.PricingLocalizationStrategy;
+		this.PrivateChannelObfuscationEnabled = tapp.PrivateChannelObfuscationEnabled;
+		this.PrivilegedIntentsReview = tapp.PrivilegedIntentsReview;
+		this.EligibleOAuth2Scopes = tapp.EligibleOAuth2Scopes is { } scopes ? scopes.AsReadOnly() : new List<string>().AsReadOnly();
 	}
 
 	/// <summary>
@@ -464,6 +467,21 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	///     Gets the pricing localization strategy used for the application's store presence.
 	/// </summary>
 	public string? PricingLocalizationStrategy { get; internal set; }
+
+	/// <summary>
+	///     Gets whether private channel obfuscation is enabled for the application.
+	/// </summary>
+	public bool PrivateChannelObfuscationEnabled { get; internal set; }
+
+	/// <summary>
+	///     Gets the privileged intents review status for the application.
+	/// </summary>
+	public DiscordPrivilegedIntentsReview? PrivilegedIntentsReview { get; internal set; }
+
+	/// <summary>
+	///     Gets the eligible OAuth2 scopes for the application.
+	/// </summary>
+	public IReadOnlyList<string> EligibleOAuth2Scopes { get; internal set; } = [];
 
 	/// <summary>
 	///    Gets or sets the parent application id.

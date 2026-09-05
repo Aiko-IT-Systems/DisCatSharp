@@ -373,4 +373,22 @@ internal sealed class TransportApplication : ObservableApiObject
 	/// </summary>
 	[JsonProperty("event_webhooks_types", NullValueHandling = NullValueHandling.Ignore)]
 	public List<string>? EventWebhooksTypes { get; set; }
+
+	/// <summary>
+	///     Gets or sets whether private channel obfuscation is enabled for the application.
+	/// </summary>
+	[JsonProperty("private_channel_obfuscation_enabled", NullValueHandling = NullValueHandling.Ignore)]
+	public bool PrivateChannelObfuscationEnabled { get; set; }
+
+	/// <summary>
+	///     Gets or sets the privileged intents review status for the application.
+	/// </summary>
+	[JsonProperty("privileged_intents_review", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordPrivilegedIntentsReview? PrivilegedIntentsReview { get; set; }
+
+	/// <summary>
+	///     Gets or sets the eligible OAuth2 scopes for the application.
+	/// </summary>
+	[JsonProperty("eligible_oauth2_scopes", NullValueHandling = NullValueHandling.Ignore)]
+	public List<string>? EligibleOAuth2Scopes { get; set; }
 }
