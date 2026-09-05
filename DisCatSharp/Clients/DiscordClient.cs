@@ -1519,9 +1519,11 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public Uri GetInAppOAuth(Permissions permissions = Permissions.None, OAuthScopes scopes = OAuthScopes.BOT_DEFAULT, string? redir = null, bool user_install = false, ulong? guild_id = null, string? state = null, string? access_type = null, string? response_type = null, bool prompt = true, string? manual_scopes = null)
 	{
 		permissions &= PermissionMethods.FullPerms;
+		var requestedScopes = manual_scopes ?? OAuth.ResolveScopes(scopes);
+		this.WarnForIneligibleOAuth2Scopes(this.CurrentApplication, requestedScopes);
 		return new(new QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
 			.AddParameter("client_id", this.CurrentApplication.Id.ToString(CultureInfo.InvariantCulture))
-			.AddParameter("scope", manual_scopes ?? OAuth.ResolveScopes(scopes))
+			.AddParameter("scope", requestedScopes)
 			.AddParameter("permissions", ((long)permissions).ToString(CultureInfo.InvariantCulture))
 			.AddParameter("state", state ?? string.Empty)
 			.AddParameter("redirect_uri", redir ?? string.Empty)
@@ -1557,9 +1559,12 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			throw new ArgumentException("The user must be a bot.", nameof(bot));
 
 		permissions &= PermissionMethods.FullPerms;
+		var requestedScopes = manual_scopes ?? OAuth.ResolveScopes(scopes);
+		if (this.CurrentApplication?.Id == bot.Id)
+			this.WarnForIneligibleOAuth2Scopes(this.CurrentApplication, requestedScopes);
 		return new(new QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
 			.AddParameter("client_id", bot.Id.ToString(CultureInfo.InvariantCulture))
-			.AddParameter("scope", manual_scopes ?? OAuth.ResolveScopes(scopes))
+			.AddParameter("scope", requestedScopes)
 			.AddParameter("permissions", ((long)permissions).ToString(CultureInfo.InvariantCulture))
 			.AddParameter("state", state ?? string.Empty)
 			.AddParameter("redirect_uri", redir ?? string.Empty)
@@ -1569,6 +1574,26 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			.AddParameter("response_type", response_type ?? string.Empty)
 			.AddParameter("prompt", prompt ? "consent" : "none")
 			.ToString());
+	}
+
+	/// <summary>
+	///     Warns when an OAuth2 authorization URL requests scopes that Discord did not report as eligible for the application.
+	/// </summary>
+	/// <param name="application">The application whose eligible OAuth2 scopes are known.</param>
+	/// <param name="requestedScopes">The space-delimited OAuth2 scopes requested by the authorization URL.</param>
+	private void WarnForIneligibleOAuth2Scopes(DiscordApplication? application, string requestedScopes)
+	{
+		if (application?.EligibleOAuth2Scopes.Count is not > 0)
+			return;
+
+		var ineligibleScopes = requestedScopes
+			.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+			.Where(scope => !application.EligibleOAuth2Scopes.Contains(scope, StringComparer.Ordinal))
+			.ToArray();
+		if (ineligibleScopes.Length is 0)
+			return;
+
+		this.Logger.LogWarning(LoggerEvents.Misc, "OAuth2 URL for application {ApplicationId} requests scopes Discord did not report as eligible: {IneligibleScopes}", application.Id, string.Join(", ", ineligibleScopes));
 	}
 
 	/// <summary>

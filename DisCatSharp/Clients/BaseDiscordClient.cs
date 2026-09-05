@@ -432,7 +432,12 @@ public abstract class BaseDiscordClient : IDisposable, IAsyncDisposable
 		}
 
 		if (this.Configuration.TokenType is TokenType.Bot && this.CurrentApplication is null)
+		{
 			this.CurrentApplication = await this.GetCurrentApplicationAsync(cancellationToken).ConfigureAwait(false);
+			this.LogPrivilegedIntentsReviewStatus(this.CurrentApplication);
+			this.LogPrivilegedIntentConfigurationStatus(this.CurrentApplication);
+			this.LogPrivacyPolicyStatus(this.CurrentApplication);
+		}
 
 		if (this.Configuration.TokenType is not TokenType.Bearer && this.InternalVoiceRegions.IsEmpty)
 		{
@@ -440,6 +445,101 @@ public abstract class BaseDiscordClient : IDisposable, IAsyncDisposable
 			foreach (var xvr in vrs)
 				this.InternalVoiceRegions.TryAdd(xvr.Id, xvr);
 		}
+	}
+
+	/// <summary>
+	///     Logs the privileged intents review state returned for the application during startup.
+	/// </summary>
+	/// <param name="application">The application whose review state was fetched.</param>
+	private void LogPrivilegedIntentsReviewStatus(DiscordApplication application)
+	{
+		var review = application.PrivilegedIntentsReview;
+		if (review is null)
+		{
+			this.Logger.LogInformation(LoggerEvents.Startup, "Discord did not report a pending privileged intents review for application {ApplicationId}; any previously submitted review is approved or no review is required", application.Id);
+			return;
+		}
+
+		var enabledPrivilegedIntentFlags = GetEnabledPrivilegedGatewayIntents(application.Flags);
+		var enabledPrivilegedIntents = enabledPrivilegedIntentFlags.Count > 0
+			? string.Join(", ", enabledPrivilegedIntentFlags)
+			: "not identified by application flags";
+		if (!review.HasSubmitted)
+		{
+			this.Logger.LogWarning(LoggerEvents.Startup, "Privileged intents review has not been submitted for application {ApplicationId}. Enabled privileged intents: {EnabledPrivilegedIntents}. The limited intents threshold was exceeded at {ThresholdExceededAt}; submit the review before its deadline at {ReviewDeadline} to avoid possible revocation of limited intent access", application.Id, enabledPrivilegedIntents, review.LimitedIntentsThresholdExceededAt, review.LimitedIntentsRevocationDeadline);
+			return;
+		}
+
+		this.Logger.LogInformation(LoggerEvents.Startup, "Privileged intents review is pending for application {ApplicationId}. Enabled privileged intents: {EnabledPrivilegedIntents}. The limited intents threshold was exceeded at {ThresholdExceededAt}; Discord's review deadline is {ReviewDeadline}", application.Id, enabledPrivilegedIntents, review.LimitedIntentsThresholdExceededAt, review.LimitedIntentsRevocationDeadline);
+	}
+
+	/// <summary>
+	///     Gets the privileged gateway intents that Discord reports as enabled for an application.
+	/// </summary>
+	/// <param name="flags">The application's flags returned by Discord.</param>
+	/// <returns>The enabled privileged gateway intents.</returns>
+	private static IReadOnlyList<DiscordIntents> GetEnabledPrivilegedGatewayIntents(ApplicationFlags flags)
+	{
+		List<DiscordIntents> intents = [];
+		if (flags.HasFlag(ApplicationFlags.GatewayGuildMembers) || flags.HasFlag(ApplicationFlags.GatewayGuildMembersLimited))
+			intents.Add(DiscordIntents.GuildMembers);
+		if (flags.HasFlag(ApplicationFlags.GatewayPresence) || flags.HasFlag(ApplicationFlags.GatewayPresenceLimited))
+			intents.Add(DiscordIntents.GuildPresences);
+		if (flags.HasFlag(ApplicationFlags.GatewayMessageContent) || flags.HasFlag(ApplicationFlags.GatewayMessageContentLimited))
+			intents.Add(DiscordIntents.MessageContent);
+
+		return intents;
+	}
+
+	/// <summary>
+	///     Logs differences between the privileged gateway intents enabled for the application in Discord and those requested by this client.
+	/// </summary>
+	/// <param name="application">The application whose enabled gateway intent flags were fetched.</param>
+	private void LogPrivilegedIntentConfigurationStatus(DiscordApplication application)
+	{
+		var portalIntents = GetEnabledPrivilegedGatewayIntents(application.Flags);
+		var configuredIntents = GetConfiguredPrivilegedGatewayIntents(this.Configuration.Intents);
+		var enabledButNotRequested = portalIntents.Except(configuredIntents).ToArray();
+		var requestedButNotEnabled = configuredIntents.Except(portalIntents).ToArray();
+
+		if (enabledButNotRequested.Length > 0)
+			this.Logger.LogInformation(LoggerEvents.Intents, "Application {ApplicationId} enables privileged intents in Discord that this client does not request: {EnabledButNotRequested}. Consider disabling them in the Developer Portal if no other deployment needs them", application.Id, string.Join(", ", enabledButNotRequested));
+
+		if (requestedButNotEnabled.Length > 0)
+			this.Logger.LogWarning(LoggerEvents.Intents, "Application {ApplicationId} requests privileged intents that Discord does not report as enabled: {RequestedButNotEnabled}. Enable them in the Developer Portal before connecting", application.Id, string.Join(", ", requestedButNotEnabled));
+	}
+
+	/// <summary>
+	///     Gets the privileged gateway intents requested by a client configuration.
+	/// </summary>
+	/// <param name="intents">The configured gateway intents.</param>
+	/// <returns>The configured privileged gateway intents.</returns>
+	private static IReadOnlyList<DiscordIntents> GetConfiguredPrivilegedGatewayIntents(DiscordIntents intents)
+	{
+		List<DiscordIntents> configuredIntents = [];
+		if (intents.HasIntent(DiscordIntents.GuildMembers))
+			configuredIntents.Add(DiscordIntents.GuildMembers);
+		if (intents.HasIntent(DiscordIntents.GuildPresences))
+			configuredIntents.Add(DiscordIntents.GuildPresences);
+		if (intents.HasIntent(DiscordIntents.MessageContent))
+			configuredIntents.Add(DiscordIntents.MessageContent);
+
+		return configuredIntents;
+	}
+
+	/// <summary>
+	///     Logs whether the application has a privacy policy URL configured in Discord.
+	/// </summary>
+	/// <param name="application">The application whose privacy policy configuration was fetched.</param>
+	private void LogPrivacyPolicyStatus(DiscordApplication application)
+	{
+		if (string.IsNullOrWhiteSpace(application.PrivacyPolicyUrl))
+		{
+			this.Logger.LogWarning(LoggerEvents.Startup, "Application {ApplicationId} has no privacy policy URL configured in Discord", application.Id);
+			return;
+		}
+
+		this.Logger.LogInformation(LoggerEvents.Startup, "Application {ApplicationId} privacy policy URL: {PrivacyPolicyUrl}", application.Id, application.PrivacyPolicyUrl);
 	}
 
 	/// <summary>
