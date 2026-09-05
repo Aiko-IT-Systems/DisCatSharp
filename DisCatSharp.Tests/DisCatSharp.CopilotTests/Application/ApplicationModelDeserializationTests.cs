@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
@@ -86,6 +87,58 @@ public class ApplicationModelDeserializationTests
 			],
 			application.ApprovedConsoles);
 		Assert.Equal("localized_price_sets", application.PricingLocalizationStrategy);
+	}
+
+	[Fact]
+	public void DiscordApplicationPayload_DeserializesReviewAndEligibleOAuth2Scopes()
+	{
+		const string json = """
+		                    {
+		                      "id": "891436243903728565",
+		                      "name": "Wordle",
+		                      "icon": null,
+		                      "description": "Official Wordle",
+		                      "owner": {
+		                        "id": "1110738998453837384",
+		                        "username": "owner",
+		                        "discriminator": "0001",
+		                        "avatar": null
+		                      },
+		                      "privileged_intents_review": {
+		                        "limited_intents_threshold_exceeded_at": "2026-08-13T18:01:28.637384+00:00",
+		                        "limited_intents_revocation_deadline": "2026-11-11T18:01:28.637384+00:00",
+		                        "has_submitted": false
+		                      },
+		                      "eligible_oauth2_scopes": ["bot", "applications.commands"]
+		                    }
+		                    """;
+
+		var application = new DiscordApplication(Deserialize<TransportApplication>(json));
+
+		Assert.NotNull(application.PrivilegedIntentsReview);
+		Assert.False(application.PrivilegedIntentsReview.HasSubmitted);
+		Assert.Equal(new DateTimeOffset(2026, 8, 13, 18, 1, 28, 637, TimeSpan.Zero).AddTicks(3840), application.PrivilegedIntentsReview.LimitedIntentsThresholdExceededAt);
+		Assert.Equal(new DateTimeOffset(2026, 11, 11, 18, 1, 28, 637, TimeSpan.Zero).AddTicks(3840), application.PrivilegedIntentsReview.LimitedIntentsRevocationDeadline);
+		Assert.Equal(["bot", "applications.commands"], application.EligibleOAuth2Scopes);
+	}
+
+	[Fact]
+	public void DiscordUserPayload_MapsVadColorIntegersToDiscordColors()
+	{
+		const string json = """
+		                    {
+		                      "id": "1110738998453837384",
+		                      "username": "user",
+		                      "discriminator": "0001",
+		                      "avatar": null,
+		                      "vad_colors": [16711680, 65280, 255]
+		                    }
+		                    """;
+
+		var user = new DiscordUser(Deserialize<TransportUser>(json));
+
+		Assert.Equal([16711680, 65280, 255], user.VadColorsInternal);
+		Assert.Equal(["#FF0000", "#00FF00", "#0000FF"], user.VadColors?.Select(color => color.ToString()));
 	}
 
 	private static T Deserialize<T>(string json)
