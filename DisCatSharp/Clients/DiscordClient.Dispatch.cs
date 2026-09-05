@@ -1012,6 +1012,7 @@ public sealed partial class DiscordClient
 							old.IsSystem = usr.IsSystem;
 							old.IsBot = usr.IsBot;
 							old.ThemeColorsInternal = usr.ThemeColorsInternal;
+							old.VadColorsInternal = usr.VadColorsInternal;
 							old.Pronouns = usr.Pronouns;
 							old.Locale = usr.Locale;
 							old.GlobalName = usr.GlobalName;
@@ -2500,6 +2501,7 @@ public sealed partial class DiscordClient
 			old.IsSystem = usr.IsSystem;
 			old.IsBot = usr.IsBot;
 			old.ThemeColorsInternal = usr.ThemeColorsInternal;
+			old.VadColorsInternal = usr.VadColorsInternal;
 			old.Pronouns = usr.Pronouns;
 			old.Locale = usr.Locale;
 			old.GlobalName = usr.GlobalName;
@@ -2580,6 +2582,7 @@ public sealed partial class DiscordClient
 			old.IsSystem = usr.IsSystem;
 			old.IsBot = usr.IsBot;
 			old.ThemeColorsInternal = usr.ThemeColorsInternal;
+			old.VadColorsInternal = usr.VadColorsInternal;
 			old.Pronouns = usr.Pronouns;
 			old.Locale = usr.Locale;
 			old.GlobalName = usr.GlobalName;
