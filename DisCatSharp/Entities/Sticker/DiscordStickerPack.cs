@@ -51,7 +51,8 @@ public sealed class DiscordStickerPack : SnowflakeObject
 	///     Gets the pack's cover sticker.
 	/// </summary>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
-	public Task<DiscordSticker> GetCoverStickerAsync(CancellationToken cancellationToken = default) => this.Discord.ApiClient.GetStickerAsync(this.CoverStickerId, cancellationToken: cancellationToken);
+	public Task<DiscordSticker> GetCoverStickerAsync(CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.GetStickerAsync(this.CoverStickerId, cancellationToken: cancellationToken);
 
 	/// <summary>
 	///     Gets the Id of this pack's banner.
@@ -69,5 +70,6 @@ public sealed class DiscordStickerPack : SnowflakeObject
 	///     Gets the pack's banner url.
 	/// </summary>
 	[JsonIgnore]
-	public string BannerUrl => $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ASSETS}{Endpoints.STICKER_APPLICATION}{Endpoints.STORE}/{this.BannerAssetId}.png?size=4096";
+	public string BannerUrl
+		=> $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ASSETS}{Endpoints.STICKER_APPLICATION}{Endpoints.STORE}/{this.BannerAssetId}.png?size=4096";
 }

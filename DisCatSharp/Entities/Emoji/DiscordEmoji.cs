@@ -72,10 +72,10 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	/// </summary>
 	[JsonIgnore]
 	public string Url
-		=> this.Id == 0
+		=> this.Id is 0
 			? throw new InvalidOperationException("Cannot get URL of unicode emojis.")
 			: this.IsAnimated
-				? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMOJIS}/{this.Id.ToString(CultureInfo.InvariantCulture)}.gif"
+				? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMOJIS}/{this.Id.ToString(CultureInfo.InvariantCulture)}.webp?animated=true"
 				: $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMOJIS}/{this.Id.ToString(CultureInfo.InvariantCulture)}.png";
 
 	/// <summary>

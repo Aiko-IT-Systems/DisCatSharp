@@ -56,7 +56,8 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	///     Gets the guild associated with this sticker, if any.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordGuild Guild => (this.Discord as DiscordClient).InternalGetCachedGuild(this.GuildId);
+	public DiscordGuild Guild
+		=> (this.Discord as DiscordClient).InternalGetCachedGuild(this.GuildId);
 
 	/// <summary>
 	///     Gets the guild id the sticker belongs too.
@@ -111,7 +112,8 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	///     Gets the url of the sticker.
 	/// </summary>
 	[JsonIgnore]
-	public string Url => $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.STICKERS}/{this.Id}.{(this.FormatType == StickerFormat.Lottie ? "json" : "png")}";
+	public string Url
+		=> $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.STICKERS}/{this.Id}.{(this.FormatType is StickerFormat.Lottie ? "json" : this.FormatType is StickerFormat.Gif ? "gif" : "png")}";
 
 	/// <summary>
 	///     Whether to stickers are equal.
