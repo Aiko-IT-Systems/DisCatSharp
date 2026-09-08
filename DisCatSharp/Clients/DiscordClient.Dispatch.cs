@@ -2592,7 +2592,7 @@ public sealed partial class DiscordClient
 		});
 
 		if (!guild.Members.TryGetValue(member.User.Id, out var mbr))
-			mbr = new(usr)
+			mbr = new(member)
 			{
 				Discord = this,
 				GuildId = guild.Id
@@ -2621,6 +2621,9 @@ public sealed partial class DiscordClient
 		mbr.IsPending = pending;
 		mbr.CommunicationDisabledUntil = member.CommunicationDisabledUntil;
 		mbr.UnusualDmActivityUntil = member.UnusualDmActivityUntil;
+		mbr.PremiumSince = member.PremiumSince;
+		if (member.JoinedAt != default)
+			mbr.JoinedAt = member.JoinedAt;
 		mbr.RoleIdsInternal.Clear();
 		mbr.RoleIdsInternal.AddRange(roles);
 		guild.MembersInternal.AddOrUpdate(member.User.Id, mbr, (id, oldMbr) => oldMbr);
