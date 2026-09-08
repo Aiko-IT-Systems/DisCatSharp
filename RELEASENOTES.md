@@ -32,6 +32,7 @@ DisCatSharp Release Notes
     - Renamed `deleteMessageDays` to `deleteMessageSeconds` on `DiscordMember.BanAsync` and all `DiscordGuild.BanMemberAsync` overloads; removed the legacy days-to-seconds compatibility shim — the API has always accepted seconds. **Note:** positional callers passing day values must be updated manually; named-argument callers are handled by `DCS1102`.
     - Padded log-level labels to eight characters in `DefaultLogger` for consistent column alignment across log lines.
     - Fixed `DiscordEventArgs` scoped service scope to be properly disposed after event dispatch, preventing scoped service leaks on high-volume bots.
+    - Fixed `GUILD_MEMBER_UPDATE` dropping `premium_since` and `joined_at` when updating a cached member, and building an uncached member from the user instead of the transport payload — a member who started boosting while cached kept a stale `DiscordMember.PremiumSince` indefinitely.
 
     - Overhauled presence caching and added follow-up regression coverage around gateway cache behavior.
     - Added Discord parity updates for store, entitlement, SKU, guild powerup / applied boost, application, audit-log, automod, message-type, and OAuth scope surfaces.
