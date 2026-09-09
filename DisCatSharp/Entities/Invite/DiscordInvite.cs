@@ -222,7 +222,7 @@ public class DiscordInvite : SnowflakeObject
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordInvite> DeleteAsync(string reason = null, CancellationToken cancellationToken = default)
-		=> this.Discord.ApiClient.DeleteInviteAsync(this.Code, reason, cancellationToken: cancellationToken);
+		=> this.Discord.ApiClient.DeleteInviteAsync(this.Code, reason, cancellationToken);
 
 	/// <summary>
 	///     Gets the target users allowed to accept an invite.
@@ -233,7 +233,99 @@ public class DiscordInvite : SnowflakeObject
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<IReadOnlyList<ulong>> GetTargetUsersAsync(CancellationToken cancellationToken = default)
-		=> this.Discord.ApiClient.GetInviteTargetUsersAsync(this.Code, cancellationToken: cancellationToken);
+		=> this.Discord.ApiClient.GetInviteTargetUsersAsync(this.Code, cancellationToken);
+
+	/// <summary>
+	///     Adds a target user to an existing invite.
+	/// </summary>
+	/// <param name="userId">The user id to add.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task AddTargetUserAsync(ulong userId, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.AddInviteTargetUserAsync(this.Code, userId, cancellationToken);
+
+	/// <summary>
+	///     Adds a target user to an existing invite.
+	/// </summary>
+	/// <param name="user">The user to add.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task AddTargetUserAsync(DiscordUser user, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.AddInviteTargetUserAsync(this.Code, user.Id, cancellationToken);
+
+	/// <summary>
+	///     Removes a target user from an existing invite.
+	/// </summary>
+	/// <param name="userId">The user id to remove.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task RemoveTargetUserAsync(ulong userId, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.RemoveInviteTargetUserAsync(this.Code, userId, cancellationToken);
+
+	/// <summary>
+	///     Removes a target user from an existing invite.
+	/// </summary>
+	/// <param name="user">The user to remove.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task RemoveTargetUserAsync(DiscordUser user, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.RemoveInviteTargetUserAsync(this.Code, user.Id, cancellationToken);
+
+	/// <summary>
+	///     Adds multiple target users to an existing invite.
+	/// </summary>
+	/// <param name="targetUserIds">The user ids to add.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <exception cref="ArgumentException">Thrown when no valid users are provided or more than 1,000 distinct users are provided.</exception>
+	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task AddTargetUsersAsync(IEnumerable<ulong> targetUserIds, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.BulkAddInviteTargetUsersAsync(this.Code, targetUserIds, cancellationToken);
+
+	/// <summary>
+	///     Adds multiple target users to an existing invite.
+	/// </summary>
+	/// <param name="targetUsers">The users to add.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <exception cref="ArgumentException">Thrown when no valid users are provided or more than 1,000 distinct users are provided.</exception>
+	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task AddTargetUsersAsync(IEnumerable<DiscordUser> targetUsers, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.BulkAddInviteTargetUsersAsync(this.Code, targetUsers, cancellationToken);
+
+	/// <summary>
+	///     Removes multiple target users from an existing invite.
+	/// </summary>
+	/// <param name="targetUserIds">The user ids to remove.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <exception cref="ArgumentException">Thrown when no valid users are provided or more than 1,000 distinct users are provided.</exception>
+	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task RemoveTargetUsersAsync(IEnumerable<ulong> targetUserIds, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.BulkDeleteInviteTargetUsersAsync(this.Code, targetUserIds, cancellationToken);
+
+	/// <summary>
+	///     Removes multiple target users from an existing invite.
+	/// </summary>
+	/// <param name="targetUsers">The users to remove.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <exception cref="ArgumentException">Thrown when no valid users are provided or more than 1,000 distinct users are provided.</exception>
+	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task RemoveTargetUsersAsync(IEnumerable<DiscordUser> targetUsers, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.BulkDeleteInviteTargetUsersAsync(this.Code, targetUsers, cancellationToken);
 
 	/// <summary>
 	///     Updates the target users allowed to accept an invite using a CSV stream.

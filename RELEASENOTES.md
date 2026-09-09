@@ -33,7 +33,6 @@ DisCatSharp Release Notes
     - Padded log-level labels to eight characters in `DefaultLogger` for consistent column alignment across log lines.
     - Fixed `DiscordEventArgs` scoped service scope to be properly disposed after event dispatch, preventing scoped service leaks on high-volume bots.
     - Fixed `GUILD_MEMBER_UPDATE` dropping `premium_since` and `joined_at` when updating a cached member, and building an uncached member from the user instead of the transport payload — a member who started boosting while cached kept a stale `DiscordMember.PremiumSince` indefinitely.
-
     - Overhauled presence caching and added follow-up regression coverage around gateway cache behavior.
     - Added Discord parity updates for store, entitlement, SKU, guild powerup / applied boost, application, audit-log, automod, message-type, and OAuth scope surfaces.
     - Fixed interaction response posting, soundboard cache refresh/list behavior, duplicate application-command execution logging, and several gateway/store dispatch follow-ups.
@@ -47,6 +46,7 @@ DisCatSharp Release Notes
     - Made `DiscordApplicationCommandLocalization.ValidLocales` a static `FrozenSet<string>` for O(1) lookup and zero per-instance allocation.
     - Added `IAsyncDisposable` support across `DiscordClient`, `DiscordShardedClient`, `DiscordOAuth2Client`, and `DiscordWebhookClient`; synchronous `Dispose()` remains for compatibility and delegates to the async path.
     - Added async-disposal migration guidance, including a dedicated documentation article and lifecycle regression coverage for mixed sync/async disposal patterns.
+    - Added support for adding and removing user(s) to and from invites
 
 DisCatSharp.Attributes Release Notes
 

@@ -5645,6 +5645,62 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
+	///     Adds a user to an invite's target user allowlist.
+	/// </summary>
+	/// <param name="inviteCode">The invite code.</param>
+	/// <param name="userId">The user id to add.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	internal Task AddInviteTargetUserAsync(string inviteCode, ulong userId, CancellationToken cancellationToken = default)
+	{
+		var route = $"{Endpoints.INVITES}/:invite_code{Endpoints.TARGET_USERS}/:user_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new
+		{
+			invite_code = inviteCode,
+			user_id = userId
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, cancellationToken: cancellationToken);
+	}
+
+	/// <summary>
+	///     Removes a user from an invite's target user allowlist.
+	/// </summary>
+	/// <param name="inviteCode">The invite code.</param>
+	/// <param name="userId">The user id to remove.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	internal Task RemoveInviteTargetUserAsync(string inviteCode, ulong userId, CancellationToken cancellationToken = default)
+	{
+		var route = $"{Endpoints.INVITES}/:invite_code{Endpoints.TARGET_USERS}/:user_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
+		{
+			invite_code = inviteCode,
+			user_id = userId
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, cancellationToken: cancellationToken);
+	}
+
+	/// <summary>
+	///     Adds multiple target users to an existing invite.
+	/// </summary>
+	/// <param name="inviteCode">The invite code.</param>
+	/// <param name="targetUsers">The target user objects.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	internal Task BulkAddInviteTargetUsersAsync(string inviteCode, IEnumerable<DiscordUser>? targetUsers, CancellationToken cancellationToken = default)
+		=> this.BulkAddInviteTargetUsersAsync(inviteCode, targetUsers.Select(u => u.Id).Distinct(), cancellationToken);
+
+	/// <summary>
+	///     Removes multiple target users from an existing invite.
+	/// </summary>
+	/// <param name="inviteCode">The invite code.</param>
+	/// <param name="targetUsers">The target user objects.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	internal Task BulkDeleteInviteTargetUsersAsync(string inviteCode, IEnumerable<DiscordUser>? targetUsers, CancellationToken cancellationToken = default)
+		=> this.BulkDeleteInviteTargetUsersAsync(inviteCode, targetUsers.Select(u => u.Id).Distinct(), cancellationToken);
+
+	/// <summary>
 	///     Updates the target users allowed to accept an invite.
 	/// </summary>
 	/// <param name="inviteCode">The invite_code.</param>
@@ -5691,6 +5747,60 @@ public sealed class DiscordApiClient
 				// ignore
 			}
 		}
+	}
+
+	/// <summary>
+	///     Add multiple target users to an existing invite.
+	/// </summary>
+	/// <param name="inviteCode">The invite code.</param>
+	/// <param name="targetUserIds">The explicit target user ids.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <returns>A task representing the asynchronous operation.</returns>
+	internal async Task BulkAddInviteTargetUsersAsync(string inviteCode, IEnumerable<ulong> targetUserIds, CancellationToken cancellationToken)
+	{
+		var userIds = targetUserIds.ToList();
+		if (userIds.Count < 1 || userIds.Count > 1000)
+			throw new ArgumentException("Provide between 1 and 1000 distinct, non-zero target user ids.");
+		var payload = new RestInviteTargetUsersBulkModifyPayload
+		{
+			UserIds = userIds
+		};
+		var route = $"{Endpoints.INVITES}/:invite_code{Endpoints.TARGET_USERS}{Endpoints.BULK_ADD}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
+		{
+			invite_code = inviteCode
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(payload), cancellationToken: cancellationToken);
+	}
+
+
+
+	/// <summary>
+	///     Remove multiple target users from an existing invite.
+	/// </summary>
+	/// <param name="inviteCode">The invite code.</param>
+	/// <param name="targetUserIds">The explicit target user ids.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <returns>A task representing the asynchronous operation.</returns>
+	internal async Task BulkDeleteInviteTargetUsersAsync(string inviteCode, IEnumerable<ulong> targetUserIds, CancellationToken cancellationToken)
+	{
+		var userIds = targetUserIds.ToList();
+		if (userIds.Count < 1 || userIds.Count > 1000)
+			throw new ArgumentException("Provide between 1 and 1000 distinct, non-zero target user ids.");
+		var payload = new RestInviteTargetUsersBulkModifyPayload
+		{
+			UserIds = userIds
+		};
+		var route = $"{Endpoints.INVITES}/:invite_code{Endpoints.TARGET_USERS}{Endpoints.BULK_DELETE}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
+		{
+			invite_code = inviteCode
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(payload), cancellationToken: cancellationToken);
 	}
 
 	/// <summary>

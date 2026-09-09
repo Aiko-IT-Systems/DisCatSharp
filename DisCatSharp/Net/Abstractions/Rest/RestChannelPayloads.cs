@@ -428,6 +428,18 @@ internal sealed class RestChannelInviteCreatePayload : ObservableApiObject
 }
 
 /// <summary>
+///     Represents an incremental invite target user allowlist update payload.
+/// </summary>
+internal sealed class RestInviteTargetUsersBulkModifyPayload : ObservableApiObject
+{
+	/// <summary>
+	///     Gets or sets the user ids to add to or remove from the invite allowlist.
+	/// </summary>
+	[JsonProperty("user_ids")]
+	public IReadOnlyList<ulong> UserIds { get; set; }
+}
+
+/// <summary>
 ///     Represents a channel permission edit payload.
 /// </summary>
 internal sealed class RestChannelPermissionEditPayload : ObservableApiObject

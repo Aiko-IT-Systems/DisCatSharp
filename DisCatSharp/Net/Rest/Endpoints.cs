@@ -83,6 +83,11 @@ public static class Endpoints
 	public const string RECIPIENTS = "/recipients";
 
 	/// <summary>
+	///     The bulk-add endpoint.
+	/// </summary>
+	public const string BULK_ADD = "/bulk-add";
+
+	/// <summary>
 	///     The bulk-delete endpoint.
 	/// </summary>
 	public const string BULK_DELETE = "/bulk-delete";
