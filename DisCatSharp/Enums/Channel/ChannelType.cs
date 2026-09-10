@@ -91,6 +91,11 @@ public enum ChannelType
 	DmSdk = 18,
 
 	/// <summary>
+	/// 	Indicates that this channel is power by an application.
+	/// </summary>
+	Application = 21,
+
+	/// <summary>
 	///     Indicates unknown channel type.
 	/// </summary>
 	Unknown = int.MaxValue

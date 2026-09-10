@@ -292,6 +292,12 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	public bool IsNsfw { get; internal set; }
 
 	/// <summary>
+	///     Gets the id of the application powering this channel.
+	/// </summary>
+	[JsonProperty("application_id", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong? ApplicationId { get; internal set; }
+
+	/// <summary>
 	///     Gets this channel's region id (if voice channel).
 	/// </summary>
 	[JsonProperty("rtc_region", NullValueHandling = NullValueHandling.Ignore)]
