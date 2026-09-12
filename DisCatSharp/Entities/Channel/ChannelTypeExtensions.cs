@@ -17,7 +17,7 @@ public static class ChannelTypeExtensions
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
 	/// </summary>
-	private static readonly HashSet<int> s_textual = [0, 1, 2, 3, 5, 10, 11, 12, 13];
+	private static readonly HashSet<int> s_textual = [0, 1, 2, 3, 5, 10, 11, 12, 13, 17, 18, 21];
 
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
@@ -27,17 +27,17 @@ public static class ChannelTypeExtensions
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
 	/// </summary>
-	private static readonly HashSet<int> s_stickers = [0, 1, 2, 3, 5, 10, 11, 12, 13, 15, 16];
+	private static readonly HashSet<int> s_stickers = [0, 1, 2, 3, 5, 10, 11, 12, 13, 15, 16, 17, 18, 21];
 
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
 	/// </summary>
-	private static readonly HashSet<int> s_readable = [0, 1, 2, 3, 5, 10, 11, 12, 13, 14, 15, 16];
+	private static readonly HashSet<int> s_readable = [0, 1, 2, 3, 5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21];
 
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
 	/// </summary>
-	private static readonly HashSet<int> s_guild = [0, 2, 4, 5, 6, 10, 11, 12, 13, 14, 15, 16];
+	private static readonly HashSet<int> s_guild = [0, 2, 4, 5, 6, 10, 11, 12, 13, 14, 15, 16, 17, 21];
 
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
@@ -52,17 +52,17 @@ public static class ChannelTypeExtensions
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
 	/// </summary>
-	private static readonly HashSet<int> s_guildThreaded = [0, 5, 15, 16];
+	private static readonly HashSet<int> s_guildThreaded = [0, 5, 15, 16, 21];
 
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
 	/// </summary>
-	private static readonly HashSet<int> s_guildStored = [0, 2, 4, 5, 6, 13, 14, 15, 16];
+	private static readonly HashSet<int> s_guildStored = [0, 2, 4, 5, 6, 13, 14, 15, 16, 17, 21];
 
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
 	/// </summary>
-	private static readonly HashSet<int> s_guildTextual = [0, 2, 5, 10, 11, 12, 13];
+	private static readonly HashSet<int> s_guildTextual = [0, 2, 5, 10, 11, 12, 13, 17, 21];
 
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
@@ -87,22 +87,22 @@ public static class ChannelTypeExtensions
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
 	/// </summary>
-	private static readonly HashSet<int> s_guildTextOnly = [0, 5, 10, 11, 12];
+	private static readonly HashSet<int> s_guildTextOnly = [0, 5, 10, 11, 12, 21];
 
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
 	/// </summary>
-	private static readonly HashSet<int> s_limitedChannelName = [0, 5, 10, 11, 12, 15, 16];
+	private static readonly HashSet<int> s_limitedChannelName = [0, 5, 10, 11, 12, 15, 16, 21];
 
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
 	/// </summary>
-	private static readonly HashSet<int> s_searchable = [0, 1, 2, 3, 5, 10, 11, 12, 13, 15, 16];
+	private static readonly HashSet<int> s_searchable = [0, 1, 2, 3, 5, 10, 11, 12, 13, 15, 16, 21];
 
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
 	/// </summary>
-	private static readonly HashSet<int> s_guildUserContent = [0, 2, 5, 10, 11, 12, 13, 15, 16];
+	private static readonly HashSet<int> s_guildUserContent = [0, 2, 5, 10, 11, 12, 13, 15, 16, 21];
 
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
@@ -112,7 +112,7 @@ public static class ChannelTypeExtensions
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
 	/// </summary>
-	private static readonly HashSet<int> s_guildWebhooks = [0, 2, 5, 15, 16];
+	private static readonly HashSet<int> s_guildWebhooks = [0, 2, 5, 15, 16, 21];
 
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
@@ -122,12 +122,12 @@ public static class ChannelTypeExtensions
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
 	/// </summary>
-	private static readonly HashSet<int> s_guildParentable = [0, 2, 5, 10, 11, 12, 13, 14, 15, 16];
+	private static readonly HashSet<int> s_guildParentable = [0, 2, 5, 10, 11, 12, 13, 14, 15, 16, 17, 21];
 
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
 	/// </summary>
-	private static readonly HashSet<int> s_guildAutoModerated = [0, 2, 5, 10, 11, 12, 13, 15, 16];
+	private static readonly HashSet<int> s_guildAutoModerated = [0, 2, 5, 10, 11, 12, 13, 15, 16, 17, 21];
 
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
@@ -137,7 +137,7 @@ public static class ChannelTypeExtensions
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
 	/// </summary>
-	private static readonly HashSet<int> s_createableGuildChannels = [0, 2, 4, 5, 6, 13, 14, 15, 16];
+	private static readonly HashSet<int> s_createableGuildChannels = [0, 2, 4, 5, 6, 13, 14, 15, 16, 21];
 
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
@@ -147,12 +147,12 @@ public static class ChannelTypeExtensions
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
 	/// </summary>
-	private static readonly HashSet<int> s_allDms = [1, 3];
+	private static readonly HashSet<int> s_allDms = [1, 3, 18];
 
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
 	/// </summary>
-	private static readonly HashSet<int> s_invitable = [0, 2, 3, 5, 6, 13, 14, 15, 16];
+	private static readonly HashSet<int> s_invitable = [0, 2, 3, 5, 6, 13, 14, 15, 16, 17, 21];
 
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
@@ -162,7 +162,7 @@ public static class ChannelTypeExtensions
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
 	/// </summary>
-	private static readonly HashSet<int> s_roleSubscriptions = [0, 2, 5, 13, 15, 16];
+	private static readonly HashSet<int> s_roleSubscriptions = [0, 2, 5, 13, 15, 16, 21];
 
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
@@ -182,7 +182,7 @@ public static class ChannelTypeExtensions
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
 	/// </summary>
-	private static readonly HashSet<int> s_polls = [0, 1, 2, 3, 5, 10, 11, 12, 13];
+	private static readonly HashSet<int> s_polls = [0, 1, 2, 3, 5, 10, 11, 12, 13, 21];
 
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
@@ -192,7 +192,7 @@ public static class ChannelTypeExtensions
 	/// <summary>
 	///     Contains sets used by Discord to determine features of a channel.
 	/// </summary>
-	private static readonly HashSet<int> s_all = [0, 1, 2, 3, 4, 5, 6, 10, 11, 12, 13, 14, 15, 16];
+	private static readonly HashSet<int> s_all = [0, 1, 2, 3, 4, 5, 6, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21];
 
 	/// <summary>
 	///     Determines if the channel type is callable.

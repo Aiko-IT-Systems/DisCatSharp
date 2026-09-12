@@ -35,12 +35,6 @@ public class DiscordDmChannel : DiscordChannel
 	public ulong OwnerId { get; internal set; }
 
 	/// <summary>
-	///     Gets the application id of the direct message's creator if it a bot.
-	/// </summary>
-	[JsonProperty("application_id", NullValueHandling = NullValueHandling.Ignore)]
-	public ulong? ApplicationId { get; internal set; }
-
-	/// <summary>
 	///     Gets whether the channel is managed by an application via the `gdm.join` OAuth2 scope.
 	/// </summary>
 	[JsonProperty("managed", NullValueHandling = NullValueHandling.Ignore)]
