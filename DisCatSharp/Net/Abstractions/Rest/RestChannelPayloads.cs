@@ -425,6 +425,12 @@ internal sealed class RestChannelInviteCreatePayload : ObservableApiObject
 	/// </summary>
 	[JsonProperty("role_ids", NullValueHandling = NullValueHandling.Ignore)]
 	public IEnumerable<ulong>? RoleIds { get; set; }
+
+	/// <summary>
+	///     Gets or sets the target user ids.
+	/// </summary>
+	[JsonProperty("target_user_ids", NullValueHandling = NullValueHandling.Ignore)]
+	public IEnumerable<ulong>? TargetUserIds { get; set; }
 }
 
 /// <summary>

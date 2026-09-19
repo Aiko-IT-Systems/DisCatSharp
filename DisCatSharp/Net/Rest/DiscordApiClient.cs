@@ -4298,9 +4298,7 @@ public sealed class DiscordApiClient
 	internal async Task<DiscordInvite> CreateChannelInviteAsync(ulong channelId, int maxAge, int maxUses, TargetType? targetType, ulong? targetApplicationId, ulong? targetUser, bool temporary, bool unique, string? reason, IEnumerable<ulong>? roleIds = null, IEnumerable<ulong>? targetUserIds = null, IEnumerable<DiscordUser>? targetUsers = null, Stream? targetUsersFile = null, CancellationToken cancellationToken = default)
 	{
 		var mergedTargetUsers = MergeTargetUserIds(targetUserIds, targetUsers);
-		var targetUsersCsv = targetUsersFile is not null
-			? CreateTargetUsersFile(targetUsersFile)
-			: BuildTargetUsersCsvFile(mergedTargetUsers);
+		var targetUsersCsv = CreateTargetUsersFile(targetUsersFile);
 		var disposeTargetUsersCsv = targetUsersFile is null && targetUsersCsv is not null;
 
 		var pld = new RestChannelInviteCreatePayload
@@ -4312,7 +4310,8 @@ public sealed class DiscordApiClient
 			TargetUserId = targetUser,
 			Temporary = temporary,
 			Unique = unique,
-			RoleIds = roleIds
+			RoleIds = roleIds,
+			TargetUserIds = mergedTargetUsers
 		};
 
 		var headers = Utilities.GetBaseHeaders();
