@@ -33,11 +33,11 @@
   "devDependencies": {
     "@types/node": "26.2.0",
     "jsdom": "26.1.0",
-    "miniflare": "5.20260926.0-alpha",
+    "miniflare": "5.20261001.0-alpha",
     "tsx": "4.23.12",
     "typescript": "7.0.2",
     "vitest": "5.0.0",
-    "wrangler": "4.143.0"
+    "wrangler": "4.146.0"
   },
   "engines": {
     "node": ">=22.18"
