@@ -317,7 +317,7 @@ jobs:
 
             - name: Create Sentry release
               if: inputs.packages_to_release == 'DisCatSharp' && steps.state.outputs.release_state != 'verify'
-              uses: getsentry/action-release@v3.7.0
+              uses: getsentry/action-release@v3.7.1
               env:
                   SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
                   SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
