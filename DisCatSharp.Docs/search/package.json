@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/server": "2.0.0",
-    "agents": "0.20.1",
+    "agents": "0.28.1",
     "zod": "4.4.3"
   },
   "devDependencies": {
