@@ -138,6 +138,12 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		=> !string.IsNullOrWhiteSpace(this.HomeHeaderHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILD_HOME_HEADERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.HomeHeaderHash}.jpg?size=1280" : null;
 
 	/// <summary>
+	///     Gets the guild's theme.
+	/// </summary>
+	[JsonProperty("theme", NullValueHandling = NullValueHandling.Ignore)]
+	public string? Theme { get; internal set; }
+
+	/// <summary>
 	///     Gets the preferred locale of this guild.
 	///     <para>This is used for server discovery, interactions and notices from Discord. Defaults to en-US.</para>
 	/// </summary>
