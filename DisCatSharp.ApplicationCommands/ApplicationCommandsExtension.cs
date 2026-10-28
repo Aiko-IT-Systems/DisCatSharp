@@ -382,11 +382,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	private void FinishedRegistration()
 	{
-		this.Client.InternalInteractionCreated.Unregister(this.CatchInteractionsOnStartup);
-		this.Client.InternalContextMenuInteractionCreated.Unregister(this.CatchContextMenuInteractionsOnStartup);
-
 		this.Client.InternalInteractionCreated.Register(this.InteractionHandler);
 		this.Client.InternalContextMenuInteractionCreated.Register(this.ContextMenuHandler);
+		this.Client.InternalInteractionCreated.Unregister(this.CatchInteractionsOnStartup);
+		this.Client.InternalContextMenuInteractionCreated.Unregister(this.CatchContextMenuInteractionsOnStartup);
 	}
 
 	/// <summary>
