@@ -265,6 +265,29 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	#region Methods
 
 	/// <summary>
+	///     Gets this role's guild permissions from Discord.
+	/// </summary>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <returns>The computed permissions, including the @everyone role.</returns>
+	public Task<Permissions> GetPermissionsAsync(CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.GetGuildRolePermissionsAsync(this.GuildId, this.Id, cancellationToken: cancellationToken);
+
+	/// <summary>
+	///     Gets this role's permissions in a channel from Discord.
+	/// </summary>
+	/// <param name="channel">The channel to get permissions in.</param>
+	/// <param name="includeImplicit">Whether to include implicit permissions. Leave null to use Discord's default.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <returns>The computed permissions, including channel overwrites.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when <paramref name="channel" /> is null.</exception>
+	/// <exception cref="ArgumentException">Thrown when the channel belongs to a different guild.</exception>
+	public Task<Permissions> GetPermissionsInAsync(DiscordChannel channel, bool? includeImplicit = null, CancellationToken cancellationToken = default)
+	{
+		ArgumentNullException.ThrowIfNull(channel);
+		return channel.GetRolePermissionsAsync(this, includeImplicit, cancellationToken: cancellationToken);
+	}
+
+	/// <summary>
 	///     Modifies this role's position.
 	/// </summary>
 	/// <param name="position">New position</param>

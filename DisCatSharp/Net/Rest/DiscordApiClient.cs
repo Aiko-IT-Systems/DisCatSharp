@@ -3457,6 +3457,60 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
+	///     Gets the computed channel permissions for a member.
+	/// </summary>
+	/// <param name="channelId">The ID of the channel.</param>
+	/// <param name="userId">The ID of the member.</param>
+	/// <param name="includeImplicit">Whether to include implicit permissions, or null to omit the query parameter.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <returns>The permissions computed by Discord.</returns>
+	internal async Task<Permissions> GetChannelMemberPermissionsAsync(ulong channelId, ulong userId, bool? includeImplicit, CancellationToken cancellationToken = default)
+	{
+		var urlParams = new Dictionary<string, string>();
+		if (includeImplicit.HasValue)
+			urlParams["implicit"] = includeImplicit.Value ? "true" : "false";
+
+		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.PERMISSIONS}/member/:user_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+		{
+			channel_id = channelId,
+			user_id = userId
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, urlParams.Count != 0 ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+		return DiscordJson.DeserializeObject<RestPermissionsResponse>(res.Response, this.Discord).Permissions;
+	}
+
+	/// <summary>
+	///     Gets the computed channel permissions for a role.
+	/// </summary>
+	/// <param name="channelId">The ID of the channel.</param>
+	/// <param name="roleId">The ID of the role.</param>
+	/// <param name="includeImplicit">Whether to include implicit permissions, or null to omit the query parameter.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <returns>The permissions computed by Discord.</returns>
+	internal async Task<Permissions> GetChannelRolePermissionsAsync(ulong channelId, ulong roleId, bool? includeImplicit, CancellationToken cancellationToken = default)
+	{
+		var urlParams = new Dictionary<string, string>();
+		if (includeImplicit.HasValue)
+			urlParams["implicit"] = includeImplicit.Value ? "true" : "false";
+
+		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.PERMISSIONS}/role/:role_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+		{
+			channel_id = channelId,
+			role_id = roleId
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, urlParams.Count != 0 ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+		return DiscordJson.DeserializeObject<RestPermissionsResponse>(res.Response, this.Discord).Permissions;
+	}
+
+	/// <summary>
 	///     Gets the channel async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
@@ -4710,6 +4764,28 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
+	///     Gets the computed guild permissions for a member.
+	/// </summary>
+	/// <param name="guildId">The ID of the guild.</param>
+	/// <param name="userId">The ID of the member.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <returns>The permissions computed by Discord.</returns>
+	internal async Task<Permissions> GetGuildMemberPermissionsAsync(ulong guildId, ulong userId, CancellationToken cancellationToken = default)
+	{
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.PERMISSIONS}/member/:user_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+		{
+			guild_id = guildId,
+			user_id = userId
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+		return DiscordJson.DeserializeObject<RestPermissionsResponse>(res.Response, this.Discord).Permissions;
+	}
+
+	/// <summary>
 	///     Gets the guild member async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
@@ -5023,6 +5099,28 @@ public sealed class DiscordApiClient
 		}).ToList();
 
 		return roles;
+	}
+
+	/// <summary>
+	///     Gets the computed guild permissions for a role.
+	/// </summary>
+	/// <param name="guildId">The ID of the guild.</param>
+	/// <param name="roleId">The ID of the role.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <returns>The permissions computed by Discord.</returns>
+	internal async Task<Permissions> GetGuildRolePermissionsAsync(ulong guildId, ulong roleId, CancellationToken cancellationToken = default)
+	{
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.PERMISSIONS}/role/:role_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+		{
+			guild_id = guildId,
+			role_id = roleId
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+		return DiscordJson.DeserializeObject<RestPermissionsResponse>(res.Response, this.Discord).Permissions;
 	}
 
 	/// <summary>

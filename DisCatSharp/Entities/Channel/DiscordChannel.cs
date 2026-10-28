@@ -1485,6 +1485,74 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	#endregion
 
 	/// <summary>
+	///     Gets the member's channel permissions from Discord.
+	/// </summary>
+	/// <param name="memberId">The ID of the member.</param>
+	/// <param name="includeImplicit">Whether to include implicit permissions. Leave null to use Discord's default.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <returns>The computed permissions, including channel overwrites.</returns>
+	/// <exception cref="InvalidOperationException">Thrown when the channel does not belong to a guild.</exception>
+	public Task<Permissions> GetMemberPermissionsAsync(ulong memberId, bool? includeImplicit = null, CancellationToken cancellationToken = default)
+	{
+		if (this.GuildId is null)
+			throw new InvalidOperationException("Cannot get guild permissions for a channel without a guild.");
+
+		return this.Discord.ApiClient.GetChannelMemberPermissionsAsync(this.Id, memberId, includeImplicit, cancellationToken: cancellationToken);
+	}
+
+	/// <summary>
+	///     Gets the member's channel permissions from Discord.
+	/// </summary>
+	/// <param name="member">The member to get permissions for.</param>
+	/// <param name="includeImplicit">Whether to include implicit permissions. Leave null to use Discord's default.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <returns>The computed permissions, including channel overwrites.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when <paramref name="member" /> is null.</exception>
+	/// <exception cref="ArgumentException">Thrown when the member belongs to a different guild.</exception>
+	public Task<Permissions> GetMemberPermissionsAsync(DiscordMember member, bool? includeImplicit = null, CancellationToken cancellationToken = default)
+	{
+		ArgumentNullException.ThrowIfNull(member);
+		if (member.GuildId != this.GuildId)
+			throw new ArgumentException("The member must belong to this channel's guild.", nameof(member));
+
+		return this.GetMemberPermissionsAsync(member.Id, includeImplicit, cancellationToken: cancellationToken);
+	}
+
+	/// <summary>
+	///     Gets the role's channel permissions from Discord.
+	/// </summary>
+	/// <param name="roleId">The ID of the role.</param>
+	/// <param name="includeImplicit">Whether to include implicit permissions. Leave null to use Discord's default.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <returns>The computed permissions, including channel overwrites.</returns>
+	/// <exception cref="InvalidOperationException">Thrown when the channel does not belong to a guild.</exception>
+	public Task<Permissions> GetRolePermissionsAsync(ulong roleId, bool? includeImplicit = null, CancellationToken cancellationToken = default)
+	{
+		if (this.GuildId is null)
+			throw new InvalidOperationException("Cannot get guild permissions for a channel without a guild.");
+
+		return this.Discord.ApiClient.GetChannelRolePermissionsAsync(this.Id, roleId, includeImplicit, cancellationToken: cancellationToken);
+	}
+
+	/// <summary>
+	///     Gets the role's channel permissions from Discord.
+	/// </summary>
+	/// <param name="role">The role to get permissions for.</param>
+	/// <param name="includeImplicit">Whether to include implicit permissions. Leave null to use Discord's default.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <returns>The computed permissions, including channel overwrites.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when <paramref name="role" /> is null.</exception>
+	/// <exception cref="ArgumentException">Thrown when the role belongs to a different guild.</exception>
+	public Task<Permissions> GetRolePermissionsAsync(DiscordRole role, bool? includeImplicit = null, CancellationToken cancellationToken = default)
+	{
+		ArgumentNullException.ThrowIfNull(role);
+		if (role.GuildId != this.GuildId)
+			throw new ArgumentException("The role must belong to this channel's guild.", nameof(role));
+
+		return this.GetRolePermissionsAsync(role.Id, includeImplicit, cancellationToken: cancellationToken);
+	}
+
+	/// <summary>
 	///     Adds a channel permission overwrite for specified role.
 	/// </summary>
 	/// <param name="role">The role to have the permission added.</param>

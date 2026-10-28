@@ -2318,6 +2318,32 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	}
 
 	/// <summary>
+	///     Gets the member's guild permissions from Discord.
+	/// </summary>
+	/// <param name="memberId">The ID of the member.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <returns>The computed permissions, including the @everyone role.</returns>
+	public Task<Permissions> GetMemberPermissionsAsync(ulong memberId, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.GetGuildMemberPermissionsAsync(this.Id, memberId, cancellationToken: cancellationToken);
+
+	/// <summary>
+	///     Gets the member's guild permissions from Discord.
+	/// </summary>
+	/// <param name="member">The member to get permissions for.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <returns>The computed permissions, including the @everyone role.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when <paramref name="member" /> is null.</exception>
+	/// <exception cref="ArgumentException">Thrown when the member belongs to a different guild.</exception>
+	public Task<Permissions> GetMemberPermissionsAsync(DiscordMember member, CancellationToken cancellationToken = default)
+	{
+		ArgumentNullException.ThrowIfNull(member);
+		if (member.GuildId != this.Id)
+			throw new ArgumentException("The member must belong to this guild.", nameof(member));
+
+		return this.GetMemberPermissionsAsync(member.Id, cancellationToken: cancellationToken);
+	}
+
+	/// <summary>
 	///     Gets a member of this guild by their user ID.
 	/// </summary>
 	/// <param name="userId">ID of the member to get.</param>
@@ -2558,6 +2584,32 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <returns>Requested role.</returns>
 	public DiscordRole? GetRole(ulong id)
 		=> this.RolesInternal.GetValueOrDefault(id);
+
+	/// <summary>
+	///     Gets the role's guild permissions from Discord.
+	/// </summary>
+	/// <param name="roleId">The ID of the role.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <returns>The computed permissions, including the @everyone role.</returns>
+	public Task<Permissions> GetRolePermissionsAsync(ulong roleId, CancellationToken cancellationToken = default)
+		=> this.Discord.ApiClient.GetGuildRolePermissionsAsync(this.Id, roleId, cancellationToken: cancellationToken);
+
+	/// <summary>
+	///     Gets the role's guild permissions from Discord.
+	/// </summary>
+	/// <param name="role">The role to get permissions for.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <returns>The computed permissions, including the @everyone role.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when <paramref name="role" /> is null.</exception>
+	/// <exception cref="ArgumentException">Thrown when the role belongs to a different guild.</exception>
+	public Task<Permissions> GetRolePermissionsAsync(DiscordRole role, CancellationToken cancellationToken = default)
+	{
+		ArgumentNullException.ThrowIfNull(role);
+		if (role.GuildId != this.Id)
+			throw new ArgumentException("The role must belong to this guild.", nameof(role));
+
+		return this.GetRolePermissionsAsync(role.Id, cancellationToken: cancellationToken);
+	}
 
 	/// <summary>
 	///     Gets a role from this guild from the api by its ID.
