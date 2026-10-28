@@ -1,5 +1,5 @@
 import { readFile } from "node:fs/promises";
-import { Miniflare } from "miniflare";
+import { convertV4MiniflareOptions, Miniflare } from "miniflare";
 import { afterEach, describe, expect, it } from "vitest";
 import { unstable_splitSqlQuery } from "wrangler";
 import { createActivationStatements } from "../src/release-sync";
@@ -12,11 +12,11 @@ afterEach(async () => {
 });
 
 async function migratedDatabase(): Promise<D1Database> {
-  const runtime = new Miniflare({
+  const runtime = new Miniflare(convertV4MiniflareOptions({
     modules: true,
     script: "export default { fetch() { return new Response('ok'); } }",
     d1Databases: ["DB"],
-  });
+  }));
   runtimes.push(runtime);
   const database = await runtime.getD1Database("DB");
   for (const migrationName of ["0001_initial.sql", "0002_staged_releases.sql", "0003_documentation_corpora.sql"]) {
