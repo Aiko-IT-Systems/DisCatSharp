@@ -1755,8 +1755,15 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="mbr">Member to calculate permissions for.</param>
 	/// <returns>Calculated permissions for a given member.</returns>
+	/// <remarks>
+	///     Uses the parent channel's permission overwrites for threads. Returns <see cref="Permissions.None" /> for
+	///     a thread whose parent channel is not cached, including for guild owners and administrators.
+	/// </remarks>
 	public Permissions PermissionsFor(DiscordMember mbr)
 	{
+		if (this.IsThread())
+			return this.Parent?.PermissionsFor(mbr) ?? Permissions.None;
+
 		// user > role > everyone
 		// allow > deny > undefined
 		// =>

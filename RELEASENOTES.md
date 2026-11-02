@@ -1,5 +1,6 @@
 DisCatSharp Release Notes
 
+    - Fixed local permission calculations in threads to apply their parent channel's permission overwrites, returning no permissions when the parent is not cached.
     - Added guild and channel permission lookups for members and roles, with member/role helpers and optional implicit channel permissions.
     - Added an embedded NuGet package README across the main DisCatSharp, Attributes, and Analyzer package families.
     - Added `DiscordOAuth2ClientConfiguration` with a configurable shared RSA key-file path and atomic key publication so concurrent OAuth clients reliably load the same key without racing during creation.
