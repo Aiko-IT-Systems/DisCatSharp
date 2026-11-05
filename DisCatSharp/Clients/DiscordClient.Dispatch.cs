@@ -4483,12 +4483,12 @@ public sealed partial class DiscordClient
 		if (vstateNew.Channel != null)
 			gld.VoiceStatesInternal[vstateNew.UserId] = vstateNew;
 
-		if (gld.MembersInternal.TryGetValue(uid, out var mbr))
+		if (gld.MembersInternal.TryGetValue(uid, out var mbr) && mbr is not null)
 		{
 			mbr.IsMuted = vstateNew.IsServerMuted;
 			mbr.IsDeafened = vstateNew.IsServerDeafened;
 		}
-		else
+		else if (vstateNew.TransportMember?.User is not null)
 		{
 			var transportMbr = vstateNew.TransportMember;
 			this.UpdateUser(new(transportMbr.User)
@@ -4496,6 +4496,8 @@ public sealed partial class DiscordClient
 				Discord = this
 			}, gid, gld, transportMbr);
 		}
+		else
+			this.Logger.LogDebug(LoggerEvents.WebSocketReceive, "Voice state update for user {UserId} in guild {GuildId} has no cached or transport member, skipping member cache update.", uid, gid);
 
 		var ea = new VoiceStateUpdateEventArgs(this.ServiceProvider)
 		{
