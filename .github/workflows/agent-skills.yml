@@ -45,7 +45,7 @@ jobs:
         name: Validate Agent Skills
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v7
+              uses: actions/checkout@v7.0.1
               with:
                 sparse-checkout: |
                   skills
@@ -108,7 +108,7 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.release == 'true' && github.event.inputs.version != '' }}
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v7
+              uses: actions/checkout@v7.0.1
               with:
                 sparse-checkout: |
                   skills
@@ -118,7 +118,7 @@ jobs:
                   GEMINI.md
             - name: Generate build provenance
               id: attest
-              uses: actions/attest@v4
+              uses: actions/attest@v4.2.2
               with:
                   subject-path: |
                     skills/*

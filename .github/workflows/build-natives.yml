@@ -50,7 +50,7 @@ jobs:
                       dave_asset: libdave-Linux-ARM64-boringssl.zip
 
         steps:
-            - uses: actions/checkout@v7
+            - uses: actions/checkout@v7.0.1
 
             - name: Install build dependencies
               run: |
@@ -137,7 +137,7 @@ jobs:
                     file -L "$RID_DIR/$lib.so" | grep -qi "${{ matrix.expected_arch }}"
                   done
 
-            - uses: actions/upload-artifact@v7
+            - uses: actions/upload-artifact@v7.0.2
               with:
                   name: natives-${{ matrix.rid }}
                   path: DisCatSharp.Voice.Natives/runtimes/${{ matrix.rid }}
@@ -160,7 +160,7 @@ jobs:
                       dave_asset: libdave-macOS-ARM64-boringssl.zip
 
         steps:
-            - uses: actions/checkout@v7
+            - uses: actions/checkout@v7.0.1
 
             - name: Install build dependencies
               run: |
@@ -248,7 +248,7 @@ jobs:
                     file -L "$RID_DIR/$lib.dylib" | grep -qi "${{ matrix.expected_arch }}"
                   done
 
-            - uses: actions/upload-artifact@v7
+            - uses: actions/upload-artifact@v7.0.2
               with:
                   name: natives-${{ matrix.rid }}
                   path: DisCatSharp.Voice.Natives/runtimes/${{ matrix.rid }}
@@ -264,7 +264,7 @@ jobs:
                       dave_asset: libdave-Windows-X64-boringssl.zip
 
         steps:
-            - uses: actions/checkout@v7
+            - uses: actions/checkout@v7.0.1
 
             - name: Prepare runtime directory
               shell: pwsh
@@ -345,7 +345,7 @@ jobs:
 
                   Copy-Item $daveDll.FullName "DisCatSharp.Voice.Natives/runtimes/${{ matrix.rid }}/native/libdave.dll"
 
-            - uses: actions/upload-artifact@v7
+            - uses: actions/upload-artifact@v7.0.2
               with:
                   name: natives-${{ matrix.rid }}
                   path: DisCatSharp.Voice.Natives/runtimes/${{ matrix.rid }}
@@ -360,27 +360,27 @@ jobs:
             - build-windows
 
         steps:
-            - uses: actions/download-artifact@v8
+            - uses: actions/download-artifact@v8.0.2
               with:
                   name: natives-linux-x64
                   path: bundle/DisCatSharp.Voice.Natives/runtimes/linux-x64
 
-            - uses: actions/download-artifact@v8
+            - uses: actions/download-artifact@v8.0.2
               with:
                   name: natives-linux-arm64
                   path: bundle/DisCatSharp.Voice.Natives/runtimes/linux-arm64
 
-            - uses: actions/download-artifact@v8
+            - uses: actions/download-artifact@v8.0.2
               with:
                   name: natives-osx-x64
                   path: bundle/DisCatSharp.Voice.Natives/runtimes/osx-x64
 
-            - uses: actions/download-artifact@v8
+            - uses: actions/download-artifact@v8.0.2
               with:
                   name: natives-osx-arm64
                   path: bundle/DisCatSharp.Voice.Natives/runtimes/osx-arm64
 
-            - uses: actions/download-artifact@v8
+            - uses: actions/download-artifact@v8.0.2
               with:
                   name: natives-win-x64
                   path: bundle/DisCatSharp.Voice.Natives/runtimes/win-x64
@@ -420,7 +420,7 @@ jobs:
 
             - name: Generate build provenance
               id: attest
-              uses: actions/attest@v4
+              uses: actions/attest@v4.2.2
               with:
                   subject-path: |
                     bundle/DisCatSharp.Voice.Natives
@@ -441,7 +441,7 @@ jobs:
               if: success()
               run: gh attestation verify ./DisCatSharp.Voice.Natives-runtime-bundle.zip --repo "$GITHUB_REPOSITORY"
 
-            - uses: actions/upload-artifact@v7
+            - uses: actions/upload-artifact@v7.0.2
               with:
                   name: DisCatSharp.Voice.Natives-runtime-bundle
                   path: |

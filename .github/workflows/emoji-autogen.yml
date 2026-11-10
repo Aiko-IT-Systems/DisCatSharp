@@ -15,7 +15,7 @@ jobs:
         NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 1
           token: ${{ secrets.NYUW_TOKEN_GH }}

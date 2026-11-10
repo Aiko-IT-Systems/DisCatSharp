@@ -21,7 +21,7 @@ jobs:
           NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v7
+              uses: actions/checkout@v7.0.1
               with:
                   token: ${{ secrets.NYUW_TOKEN_GH }}
             - name: Setup .NET
@@ -32,7 +32,7 @@ jobs:
                       10.x
                       9.x
             - name: Setup Node.js
-              uses: actions/setup-node@v7
+              uses: actions/setup-node@v7.1.0
               with:
                   node-version: 26
                   cache: npm
@@ -131,13 +131,13 @@ jobs:
               shell: pwsh
               run: ./DisCatSharp.Tools/pack-docs.ps1 -DocsPath "./DisCatSharp.Docs" -OutputPath "./" -PackageName "dcs-docs"
             - name: Upload packed docs
-              uses: actions/upload-artifact@v7
+              uses: actions/upload-artifact@v7.0.2
               with:
                   name: dcs-docs.zip
                   path: dcs-docs.zip
                   retention-days: 1
             - name: Upload staged search index
-              uses: actions/upload-artifact@v7
+              uses: actions/upload-artifact@v7.0.2
               with:
                   name: dcs-search-index
                   path: DisCatSharp.Docs/obj/search/search-index.json
@@ -148,7 +148,7 @@ jobs:
         needs: build
         steps:
             - name: Checkout docs repository
-              uses: actions/checkout@v7
+              uses: actions/checkout@v7.0.1
               with:
                   repository: Aiko-IT-Systems/DisCatSharp.Docs
                   token: ${{ secrets.NYUW_TOKEN_GH }}
@@ -156,7 +156,7 @@ jobs:
               shell: pwsh
               run: Get-ChildItem -Exclude .git* | Remove-Item -Recurse -Force
             - name: Download packed docs
-              uses: actions/download-artifact@v8
+              uses: actions/download-artifact@v8.0.2
               with:
                   name: dcs-docs.zip
             - name: Extract new docs
@@ -164,7 +164,7 @@ jobs:
             - name: Deleze zip
               run: rm dcs-docs.zip
             - name: Delete packed docs
-              uses: geekyeggo/delete-artifact@v6
+              uses: geekyeggo/delete-artifact@v6.0.0
               with:
                   name: dcs-docs.zip
             - name: Add .htaccess
@@ -174,7 +174,7 @@ jobs:
             - name: Set access rights
               run: sudo chmod 777 -R .
             - name: Commit and push changes
-              uses: EndBug/add-and-commit@v11
+              uses: EndBug/add-and-commit@v11.1.1
               with:
                   default_author: user_info
                   author_name: NyuwBot
@@ -190,9 +190,9 @@ jobs:
         timeout-minutes: 10
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v7
+              uses: actions/checkout@v7.0.1
             - name: Setup Node.js
-              uses: actions/setup-node@v7
+              uses: actions/setup-node@v7.1.0
               with:
                   node-version: 26
                   cache: npm
@@ -201,7 +201,7 @@ jobs:
               run: npm ci
               working-directory: DisCatSharp.Docs/search
             - name: Download staged search index
-              uses: actions/download-artifact@v8
+              uses: actions/download-artifact@v8.0.2
               with:
                   name: dcs-search-index
                   path: DisCatSharp.Docs/obj/search
@@ -230,7 +230,7 @@ jobs:
               run: npm run smoke:production
               working-directory: DisCatSharp.Docs/search
             - name: Delete staged search index artifact
-              uses: geekyeggo/delete-artifact@v6
+              uses: geekyeggo/delete-artifact@v6.0.0
               with:
                   name: dcs-search-index
 #    publish-backup:
