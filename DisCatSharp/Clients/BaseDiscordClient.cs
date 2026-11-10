@@ -454,17 +454,14 @@ public abstract class BaseDiscordClient : IDisposable, IAsyncDisposable
 	private void LogPrivilegedIntentsReviewStatus(DiscordApplication application)
 	{
 		var review = application.PrivilegedIntentsReview;
-		if (review is null)
-		{
-			this.Logger.LogInformation(LoggerEvents.Startup, "Discord did not report a pending privileged intents review for application {ApplicationId}; any previously submitted review is approved or no review is required", application.Id);
+		if (review?.HasSubmitted is null)
 			return;
-		}
 
 		var enabledPrivilegedIntentFlags = GetEnabledPrivilegedGatewayIntents(application.Flags);
 		var enabledPrivilegedIntents = enabledPrivilegedIntentFlags.Count > 0
 			? string.Join(", ", enabledPrivilegedIntentFlags)
 			: "not identified by application flags";
-		if (!review.HasSubmitted)
+		if (review.HasSubmitted is false)
 		{
 			this.Logger.LogWarning(LoggerEvents.Startup, "Privileged intents review has not been submitted for application {ApplicationId}. Enabled privileged intents: {EnabledPrivilegedIntents}. The limited intents threshold was exceeded at {ThresholdExceededAt}; submit the review before its deadline at {ReviewDeadline} to avoid possible revocation of limited intent access", application.Id, enabledPrivilegedIntents, review.LimitedIntentsThresholdExceededAt, review.LimitedIntentsRevocationDeadline);
 			return;

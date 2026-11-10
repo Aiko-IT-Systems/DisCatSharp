@@ -39,6 +39,12 @@ items:
   - uid: DisCatSharp.Voice.Entities.ExternalOpusFrame
     name: ExternalOpusFrame
     type: Class
+  - uid: DisCatSharp.Voice.Entities.VoiceMediaReceivePolicy
+    name: VoiceMediaReceivePolicy
+    type: Class
+  - uid: DisCatSharp.Voice.Entities.VoiceMediaSinkWants
+    name: VoiceMediaSinkWants
+    type: Class
   - uid: DisCatSharp.Voice.Entities.VoiceOutputController
     name: VoiceOutputController
     type: Class
@@ -60,6 +66,9 @@ items:
     type: Enum
   - uid: DisCatSharp.Voice.Enums.VoiceApplication
     name: VoiceApplication
+    type: Enum
+  - uid: DisCatSharp.Voice.Enums.VoiceMediaReceivePolicyKind
+    name: VoiceMediaReceivePolicyKind
     type: Enum
   - uid: DisCatSharp.Voice.Enums.VoicePacketDropReason
     name: VoicePacketDropReason

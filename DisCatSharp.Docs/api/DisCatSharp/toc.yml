@@ -590,6 +590,9 @@ items:
   - uid: DisCatSharp.Entities.DiscordPrimaryGuild
     name: DiscordPrimaryGuild
     type: Class
+  - uid: DisCatSharp.Entities.DiscordPrivilegedIntentsReview
+    name: DiscordPrivilegedIntentsReview
+    type: Class
   - uid: DisCatSharp.Entities.DiscordProtocol
     name: DiscordProtocol
     type: Class

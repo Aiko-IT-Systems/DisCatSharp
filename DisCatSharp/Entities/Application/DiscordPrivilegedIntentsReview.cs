@@ -22,8 +22,9 @@ public sealed class DiscordPrivilegedIntentsReview
 	public DateTimeOffset? LimitedIntentsRevocationDeadline { get; internal set; }
 
 	/// <summary>
-	///     Gets whether the application has submitted a privileged intents review.
+	///     Gets whether the application has submitted a privileged intents review, when Discord reports that state.
+	///     A null value means the application response did not include this field and must not be interpreted as false.
 	/// </summary>
 	[JsonProperty("has_submitted", NullValueHandling = NullValueHandling.Ignore)]
-	public bool HasSubmitted { get; internal set; }
+	public bool? HasSubmitted { get; internal set; }
 }

@@ -1,5 +1,6 @@
 DisCatSharp Release Notes
 
+	- Fixed privileged-intents review diagnostics treating an omitted Discord submission state as an unsubmitted review, which could produce a false warning for already-approved applications.
     - Fixed local permission calculations in threads to apply their parent channel's permission overwrites, returning no permissions when the parent is not cached.
     - Added guild and channel permission lookups for members and roles, with member/role helpers and optional implicit channel permissions.
     - Added an embedded NuGet package README across the main DisCatSharp, Attributes, and Analyzer package families.
@@ -125,6 +126,7 @@ DisCatSharp.Lavalink Release Notes
 
 DisCatSharp.Voice Release Notes
 
+	- Added managed Voice Gateway Media Sink Wants (OP 15) policies for receiving all, none, only selected users, or all except selected users. Added typed raw SSRC wants for advanced media clients; both modes survive voice reconnects.
     - Fixed the complete DAVE transition lifecycle: OP21, OP29, and OP30 now prepare receiver transforms and preserve their authoritative transition IDs; nonzero transitions send OP23 before OP22, while transition ID `0` executes immediately without OP23.
     - Corrected OP22 to consume one staged transition and switch only the local sender, without sending OP23 or resetting a successfully prepared MLS group; unknown and duplicate transition IDs are harmless.
     - Corrected DAVE recovery and wire payloads: OP24 now carries only `epoch` and `protocol_version`, failed commits or Welcomes send client-to-server OP31 with the original transition ID, and recovery sends a fresh OP26 while retaining the currently executing media transforms.

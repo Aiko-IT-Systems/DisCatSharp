@@ -25,6 +25,7 @@ public sealed class VoiceConfiguration
 	{
 		this.AudioFormat = new(other.AudioFormat.SampleRate, other.AudioFormat.ChannelCount, other.AudioFormat.VoiceApplication);
 		this.EnableIncoming = other.EnableIncoming;
+		this.MediaSinkPolicy = other.MediaSinkPolicy;
 		this.PacketQueueSize = other.PacketQueueSize;
 		this.MaxDaveProtocolVersion = other.MaxDaveProtocolVersion;
 		this.EnableDebugLogging = other.EnableDebugLogging;
@@ -43,6 +44,13 @@ public sealed class VoiceConfiguration
 	///     <para>Defaults to false.</para>
 	/// </summary>
 	public bool EnableIncoming { internal get; set; } = false;
+
+	/// <summary>
+	///     <para>Sets the initial policy controlling which remote media Discord forwards to each Voice connection.</para>
+	///     <para>When null, connections derive the policy from <see cref="EnableIncoming" />: enabled receives all media and
+	///     disabled receives none. An explicit policy takes precedence over that derived behavior.</para>
+	/// </summary>
+	public VoiceMediaReceivePolicy? MediaSinkPolicy { internal get; set; }
 
 	/// <summary>
 	///     <para>Sets the size of the packet queue.</para>

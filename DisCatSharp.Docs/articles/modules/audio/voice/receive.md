@@ -20,7 +20,50 @@ client.UseVoice(new VoiceConfiguration
 });
 ```
 
-## 2. Connect and Subscribe
+When `EnableIncoming` is `false` (the default), Voice now also asks Discord not to forward inbound media over UDP.
+Set it to `true` to receive every remote speaker, or use a Media Sink policy to receive only the users your bot needs.
+
+## 2. Reduce Inbound UDP Traffic
+
+Discord's voice gateway can stop forwarding media your bot will not consume. Configure a user-oriented policy when
+registering Voice, or update it after connecting:
+
+```csharp
+using System.Collections.Generic;
+using DisCatSharp.Voice.Entities;
+
+client.UseVoice(new VoiceConfiguration
+{
+    EnableIncoming = true,
+    MediaSinkPolicy = VoiceMediaReceivePolicy.OnlyUsers(
+    [
+        transcriptionTargetUserId,
+        moderatorUserId
+    ])
+});
+
+```
+
+`OnlyUsers` is conservative: Discord can forward a user only after it has announced that user's current SSRC, so a
+newly connected user may be suppressed briefly. `ExceptUsers` has the inverse limitation: it cannot suppress a newly
+unknown SSRC until Discord announces the mapping. Prefer `OnlyUsers` where bandwidth minimization is important.
+
+Advanced callers can send the complete Discord-native snapshot, including values between `0` and `100` for future
+media/video use. This replaces the previous gateway map and switches the connection to raw mode:
+
+```csharp
+await connection.SetMediaSinkWantsAsync(new VoiceMediaSinkWants(
+    any: 0,
+    ssrcWants: new Dictionary<uint, int>
+    {
+        [speakerSsrc] = 100
+    }));
+```
+
+Call `SetMediaSinkPolicyAsync` again to return to managed user-ID mode. Both modes are reapplied automatically after
+a voice reconnect.
+
+## 3. Connect and Subscribe
 
 ```csharp
 using DisCatSharp.Voice;
@@ -28,9 +71,12 @@ using DisCatSharp.Voice;
 VoiceConnection connection = await channel.ConnectAsync();
 connection.VoiceReceived += OnVoiceReceived;
 connection.VoicePacketDropped += OnVoicePacketDropped;
+
+// A connected bot can change the persistent policy at runtime.
+await connection.SetMediaSinkPolicyAsync(VoiceMediaReceivePolicy.ReceiveNone());
 ```
 
-## 3. Handle Decoded Frames
+## 4. Handle Decoded Frames
 
 `VoiceReceived` gives you decoded PCM plus metadata.
 
@@ -59,7 +105,7 @@ Useful fields:
 - `MissingFrames`: count of gap frames before this frame
 - `IsConcealmentFrame`: true when frame is packet-loss concealment
 
-## 4. Monitor Packet Drops
+## 5. Monitor Packet Drops
 
 ```csharp
 using DisCatSharp.Voice;
@@ -74,7 +120,7 @@ private static Task OnVoicePacketDropped(VoiceConnection _, VoicePacketDroppedEv
 
 Drop reasons include malformed RTP or extensions, out-of-order packets, DAVE media not ready, missing sender mappings or decryptors, queue overflow, and Opus decode failures.
 
-## 5. Record to MP3 (ffmpeg)
+## 6. Record to MP3 (ffmpeg)
 
 If you want a listen-test artifact, you can stream decoded PCM directly into `ffmpeg`:
 
@@ -141,7 +187,7 @@ StartMp3Recording("logs/recordings/session.mp3");
 
 The same pattern works for WAV by changing ffmpeg output arguments.
 
-## 6. DAVE Decryption Notes
+## 7. DAVE Decryption Notes
 
 When DAVE is active for the channel, transport decryption and then per-user DAVE decryption happen before your handler runs.
 
@@ -155,7 +201,7 @@ When DAVE is active for the channel, transport decryption and then per-user DAVE
 
 Do not infer receive usability from `DaveState == Active`. For example, an established member can receive normally while the control plane is `ReadyForTransition`, and protocol-0 passthrough is usable while the control plane is `Inactive`.
 
-## 7. Unsubscribe / Disconnect
+## 8. Unsubscribe / Disconnect
 
 ```csharp
 connection.VoiceReceived -= OnVoiceReceived;

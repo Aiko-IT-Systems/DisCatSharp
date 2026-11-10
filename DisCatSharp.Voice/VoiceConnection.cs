@@ -87,6 +87,16 @@ public sealed class VoiceConnection : IDisposable
 	private readonly SemaphoreSlim _reconnectSemaphore = new(1, 1);
 
 	/// <summary>
+	///     Serializes Media Sink Wants replacement payloads so the newest desired snapshot wins.
+	/// </summary>
+	private readonly SemaphoreSlim _mediaSinkSendSemaphore = new(1, 1);
+
+	/// <summary>
+	///     Retains media receive policy and user-to-SSRC state across voice gateway reconnects.
+	/// </summary>
+	private readonly VoiceMediaSinkState _mediaSinkState;
+
+	/// <summary>
 	///     Gets the transmitting s s r cs.
 	/// </summary>
 	private readonly ConcurrentDictionary<uint, AudioSender> _transmittingSsrCs;
@@ -156,6 +166,16 @@ public sealed class VoiceConnection : IDisposable
 	///     Gets or sets the last heartbeat.
 	/// </summary>
 	private DateTimeOffset _lastHeartbeat;
+
+	/// <summary>
+	///     Gets or sets the most recently sent Media Sink Wants snapshot for the current voice gateway session.
+	/// </summary>
+	private VoiceMediaSinkWants? _lastSentMediaSinkWants;
+
+	/// <summary>
+	///     Gets or sets whether the current voice gateway session has reached READY and accepts Media Sink Wants.
+	/// </summary>
+	private volatile bool _mediaSinkReady;
 
 	/// <summary>
 	///     Gets the last keepalive.
@@ -354,6 +374,7 @@ public sealed class VoiceConnection : IDisposable
 		this._tokenSource = new();
 
 		this._configuration = config;
+		this._mediaSinkState = new(this._configuration.MediaSinkPolicy, this._configuration.EnableIncoming);
 		VoiceRuntimeLogging.SetEnableDebugLogs(this._voiceLogger, this._configuration.EnableDebugLogging);
 		this._isInitialized = false;
 		this._isDisposed = false;
@@ -522,6 +543,40 @@ public sealed class VoiceConnection : IDisposable
 	}
 
 	/// <summary>
+	///     Replaces the managed policy that selects which remote users' media Discord forwards to this connection.
+	/// </summary>
+	/// <param name="policy">The persistent user-oriented receive policy.</param>
+	/// <returns>A task representing completion of an immediate gateway update when the connection is ready.</returns>
+	/// <remarks>
+	///     This method switches the connection from raw Media Sink Wants mode to managed policy mode. The policy is
+	///     retained across reconnects and is translated to current SSRCs as Discord announces them.
+	/// </remarks>
+	public Task SetMediaSinkPolicyAsync(VoiceMediaReceivePolicy policy)
+	{
+		ObjectDisposedException.ThrowIf(this._isDisposed, this);
+		ArgumentNullException.ThrowIfNull(policy);
+		this._mediaSinkState.SetPolicy(policy);
+		return this.ApplyMediaSinkWantsAsync();
+	}
+
+	/// <summary>
+	///     Replaces the raw Media Sink Wants snapshot sent to Discord's voice gateway.
+	/// </summary>
+	/// <param name="wants">The complete desired default and SSRC-specific want values.</param>
+	/// <returns>A task representing completion of an immediate gateway update when the connection is ready.</returns>
+	/// <remarks>
+	///     This method switches the connection from managed user-policy mode to raw mode. Each snapshot replaces the
+	///     gateway's previous Media Sink Wants state and is retained across reconnects.
+	/// </remarks>
+	public Task SetMediaSinkWantsAsync(VoiceMediaSinkWants wants)
+	{
+		ObjectDisposedException.ThrowIf(this._isDisposed, this);
+		ArgumentNullException.ThrowIfNull(wants);
+		this._mediaSinkState.SetRawWants(wants);
+		return this.ApplyMediaSinkWantsAsync();
+	}
+
+	/// <summary>
 	///     Disconnects and disposes this voice connection.
 	/// </summary>
 	public void Dispose()
@@ -568,6 +623,7 @@ public sealed class VoiceConnection : IDisposable
 			this._rtp?.Dispose();
 			this._rtp = null;
 			this._reconnectSemaphore.Dispose();
+			this._mediaSinkSendSemaphore.Dispose();
 		}
 		catch (Exception ex)
 		{
@@ -2098,10 +2154,14 @@ public sealed class VoiceConnection : IDisposable
 				this._voiceLogger.VoiceTrace(VoiceEvents.VoiceDispatch, "Received READY (OP2)");
 				ArgumentNullException.ThrowIfNull(opp);
 				var vrp = opp.ToObject<VoiceReadyPayload>()!;
+				this._mediaSinkState.ResetMappings();
+				this._lastSentMediaSinkWants = null;
+				this._mediaSinkReady = true;
 				this._ssrc = vrp.Ssrc;
 				this.UdpEndpoint = new(vrp.Address, vrp.Port);
 				// Voice gateway heartbeat interval is supplied by HELLO (OP8), not READY (OP2).
 				this._heartbeatTask = Task.Run(this.HeartbeatAsync, CancellationToken.None);
+				await this.ApplyMediaSinkWantsAsync().ConfigureAwait(false);
 				await this.Stage1(vrp).ConfigureAwait(false);
 				break;
 
@@ -2188,6 +2248,9 @@ public sealed class VoiceConnection : IDisposable
 					User = resolvedUser
 				};
 
+				if (spd.UserId.HasValue && this._mediaSinkState.SetUserSsrc(spd.UserId.Value, spk.Ssrc))
+					await this.ApplyMediaSinkWantsAsync().ConfigureAwait(false);
+
 				if (this._transmittingSsrCs.TryGetValue(spk.Ssrc, out var existingSender))
 				{
 					// Sender can be created by inbound RTP before OP5 arrives. Bind user id now.
@@ -2237,6 +2300,8 @@ public sealed class VoiceConnection : IDisposable
 				ArgumentNullException.ThrowIfNull(opp);
 				var ujpd = opp.ToObject<VoiceUserJoinPayload>()!;
 				var usrj = await this._discord.GetUserAsync(ujpd.UserId, true).ConfigureAwait(false);
+				if (this._mediaSinkState.SetUserSsrc(ujpd.UserId, ujpd.Ssrc))
+					await this.ApplyMediaSinkWantsAsync().ConfigureAwait(false);
 				{
 					var opus = this._opus.CreateDecoder();
 					var vtx = new AudioSender(ujpd.Ssrc, opus)
@@ -2267,6 +2332,8 @@ public sealed class VoiceConnection : IDisposable
 				}
 
 				this._daveSession?.RemoveUser(ulpd.UserId);
+				if (this._mediaSinkState.RemoveUser(ulpd.UserId))
+					await this.ApplyMediaSinkWantsAsync().ConfigureAwait(false);
 				var usrl = await this._discord.GetUserAsync(ulpd.UserId, true).ConfigureAwait(false);
 				await this._userLeft.InvokeAsync(this, new(this._discord.ServiceProvider)
 				{
@@ -2367,6 +2434,8 @@ public sealed class VoiceConnection : IDisposable
 
 		if (!this._isDisposed)
 		{
+			this._mediaSinkReady = false;
+			this._lastSentMediaSinkWants = null;
 			this._tokenSource.Cancel();
 			this._senderTokenSource?.Cancel();
 			this._receiverTokenSource?.Cancel();
@@ -2441,6 +2510,36 @@ public sealed class VoiceConnection : IDisposable
 	{
 		this._voiceLogger.VoiceTrace(VoiceEvents.VoiceWsTx, payload);
 		await this._voiceWs.SendMessageAsync(payload).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Sends the current complete Media Sink Wants snapshot after READY, unless the voice gateway already has it.
+	/// </summary>
+	/// <returns>A task representing any required voice gateway update.</returns>
+	private async Task ApplyMediaSinkWantsAsync()
+	{
+		await this._mediaSinkSendSemaphore.WaitAsync().ConfigureAwait(false);
+		try
+		{
+			if (!this._mediaSinkReady)
+				return;
+
+			var wants = this._mediaSinkState.GetWants();
+			if (wants.ContentEquals(this._lastSentMediaSinkWants))
+				return;
+
+			var dispatch = JsonConvert.SerializeObject(new VoiceDispatchPayload
+			{
+				OpCode = 15,
+				Payload = wants.ToJson()
+			}, Formatting.None);
+			await this.WsSendAsync(dispatch).ConfigureAwait(false);
+			this._lastSentMediaSinkWants = wants;
+		}
+		finally
+		{
+			this._mediaSinkSendSemaphore.Release();
+		}
 	}
 
 	/// <summary>
