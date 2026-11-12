@@ -391,4 +391,16 @@ internal sealed class TransportApplication : ObservableApiObject
 	/// </summary>
 	[JsonProperty("eligible_oauth2_scopes", NullValueHandling = NullValueHandling.Ignore)]
 	public List<string>? EligibleOAuth2Scopes { get; set; }
+
+	/// <summary>
+	///     Gets or sets the embedded surfaces the application is available on.
+	/// </summary>
+	[JsonProperty("embedded_surfaces", NullValueHandling = NullValueHandling.Ignore)]
+	public List<int>? EmbeddedSurfaces { get; set; }
+
+	/// <summary>
+	///     Gets or sets whether self-serve name changes are enabled for the application.
+	/// </summary>
+	[JsonProperty("self_serve_name_change_enabled", NullValueHandling = NullValueHandling.Ignore)]
+	public bool SelfServeNameChangeEnabled { get; set; }
 }

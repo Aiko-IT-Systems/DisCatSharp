@@ -155,6 +155,8 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 		this.PrivateChannelObfuscationEnabled = tapp.PrivateChannelObfuscationEnabled;
 		this.PrivilegedIntentsReview = tapp.PrivilegedIntentsReview;
 		this.EligibleOAuth2Scopes = tapp.EligibleOAuth2Scopes is { } scopes ? scopes.AsReadOnly() : new List<string>().AsReadOnly();
+		this.EmbeddedSurfaces = tapp.EmbeddedSurfaces is { } surfaces ? surfaces.AsReadOnly() : new List<int>().AsReadOnly();
+		this.SelfServeNameChangeEnabled = tapp.SelfServeNameChangeEnabled;
 	}
 
 	/// <summary>
@@ -482,6 +484,16 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	///     Gets the eligible OAuth2 scopes for the application.
 	/// </summary>
 	public IReadOnlyList<string> EligibleOAuth2Scopes { get; internal set; } = [];
+
+	/// <summary>
+	///     Gets the embedded surfaces the application is available on.
+	/// </summary>
+	public IReadOnlyList<int> EmbeddedSurfaces { get; internal set; } = [];
+
+	/// <summary>
+	///     Gets whether self-serve name changes are enabled for the application.
+	/// </summary>
+	public bool SelfServeNameChangeEnabled { get; internal set; }
 
 	/// <summary>
 	///    Gets or sets the parent application id.
