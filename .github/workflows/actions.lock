@@ -37,11 +37,11 @@ workflows:
         - 'actions/checkout@v7.0.1'
         - 'actions/setup-dotnet@v6.1.0'
         - 'actions/setup-node@v7.1.0'
-        - 'getsentry/action-release@v3.7.2'
+        - 'getsentry/action-release@v3.8.0'
         - 'nuget/login@v1.2.0'
     '.github/workflows/sentry.yml':
         - 'actions/checkout@v7.0.1'
-        - 'getsentry/action-release@v3.7.2'
+        - 'getsentry/action-release@v3.8.0'
 dependencies:
     'actions/attest@v4.2.2':
         ref: 'v4.2.2'
@@ -88,9 +88,9 @@ dependencies:
         commit: 'sha1-176a747ab7e287e3ff4787bf8a148716375ca118'
         owner_id: 1429781
         repo_id: 258660849
-    'getsentry/action-release@v3.7.2':
-        ref: 'v3.7.2'
-        commit: 'sha1-e6703d0b00208e0b3687ba660d18ab5af7892821'
+    'getsentry/action-release@v3.8.0':
+        ref: 'v3.8.0'
+        commit: 'sha1-d55c8c3b7375607e972b710f12926b676d89d7d2'
         owner_id: 1396951
         repo_id: 273043452
         uses:
