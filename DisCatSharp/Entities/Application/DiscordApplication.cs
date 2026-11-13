@@ -488,6 +488,14 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// <summary>
 	///     Gets the embedded surfaces the application is available on.
 	/// </summary>
+	/// <remarks>
+	///     Known values (not officially documented by Discord yet):
+	///     <list type="bullet">
+	///         <item><description><c>1</c>: Default embedded activity surface (voice channels, DMs, group DMs, and text channels).</description></item>
+	///         <item><description><c>2</c>: App channel.</description></item>
+	///     </list>
+	///     Unknown values are preserved as-is.
+	/// </remarks>
 	public IReadOnlyList<int> EmbeddedSurfaces { get; internal set; } = [];
 
 	/// <summary>

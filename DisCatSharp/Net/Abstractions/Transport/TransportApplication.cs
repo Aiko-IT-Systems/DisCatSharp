@@ -395,6 +395,14 @@ internal sealed class TransportApplication : ObservableApiObject
 	/// <summary>
 	///     Gets or sets the embedded surfaces the application is available on.
 	/// </summary>
+	/// <remarks>
+	///     Known values (not officially documented by Discord yet):
+	///     <list type="bullet">
+	///         <item><description><c>1</c>: Default embedded activity surface (voice channels, DMs, group DMs, and text channels).</description></item>
+	///         <item><description><c>2</c>: App channel.</description></item>
+	///     </list>
+	///     Unknown values are preserved as-is.
+	/// </remarks>
 	[JsonProperty("embedded_surfaces", NullValueHandling = NullValueHandling.Ignore)]
 	public List<int>? EmbeddedSurfaces { get; set; }
 
