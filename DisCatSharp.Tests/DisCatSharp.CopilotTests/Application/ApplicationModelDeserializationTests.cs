@@ -123,6 +123,38 @@ public class ApplicationModelDeserializationTests
 	}
 
 	[Fact]
+	public void DiscordApplicationPayload_DeserializesEmbeddedSurfacesAndSelfServeNameChange()
+	{
+		const string json = """
+		                    {
+		                      "id": "891436243903728565",
+		                      "name": "Wordle",
+		                      "icon": null,
+		                      "description": "Official Wordle",
+		                      "owner": {
+		                        "id": "1110738998453837384",
+		                        "username": "owner",
+		                        "discriminator": "0001",
+		                        "avatar": null
+		                      },
+		                      "private_channel_obfuscation_enabled": true,
+		                      "eligible_oauth2_scopes": ["bot"],
+		                      "embedded_surfaces": [1, 2],
+		                      "self_serve_name_change_enabled": true
+		                    }
+		                    """;
+
+		var transport = Deserialize<TransportApplication>(json);
+		Assert.Empty(transport.AdditionalProperties);
+
+		var application = new DiscordApplication(transport);
+
+		Assert.Equal([1, 2], application.EmbeddedSurfaces);
+		Assert.True(application.SelfServeNameChangeEnabled);
+		Assert.True(application.PrivateChannelObfuscationEnabled);
+	}
+
+	[Fact]
 	public void DiscordUserPayload_MapsVadColorIntegersToDiscordColors()
 	{
 		const string json = """
