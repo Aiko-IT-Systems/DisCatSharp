@@ -1375,7 +1375,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordThreadChannel> CreatePostAsync(string name, DiscordMessageBuilder builder, int? rateLimitPerUser = null, IEnumerable<ForumPostTag>? tags = null, string reason = null, CancellationToken cancellationToken = default)
-		=> this.Type != ChannelType.Forum ? throw new NotSupportedException("Parent channel must be forum.") : await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, null, null, rateLimitPerUser, tags, builder, true, reason, cancellationToken: cancellationToken).ConfigureAwait(false);
+		=> this.Type is not (ChannelType.Forum or ChannelType.GuildMedia) ? throw new NotSupportedException("Parent channel must be a forum or media channel.") : await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, null, null, rateLimitPerUser, tags, builder, true, reason, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	///     Gets joined archived private threads. Can contain more threads.

@@ -6942,6 +6942,19 @@ public sealed class DiscordApiClient
 				Mentions = builder.Mentions?.Any() ?? false ? new(builder.Mentions, builder.Mentions.Count is not 0) : null,
 				StickersIds = builder.StickerIds
 			};
+			if (builder.Files is { Count: > 0 })
+			{
+				var attachments = builder.Files.Select((file, index) => new DiscordAttachment
+				{
+					Id = (ulong)index,
+					Filename = file.Filename,
+					Description = file.Description,
+					IsSpoiler = file.IsSpoiler
+				}).ToList();
+				if (builder.Attachments is { Count: > 0 })
+					attachments.AddRange(builder.Attachments);
+				pld.Message.Attachments = attachments;
+			}
 			if (appliedTags != null && appliedTags.Any())
 			{
 				List<ulong> tags = [];
@@ -6979,7 +6992,16 @@ public sealed class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, param, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld), cancellationToken: cancellationToken).ConfigureAwait(false);
+		RestResponse res;
+		if (isForum && builder?.Files is { Count: > 0 })
+		{
+			var values = new Dictionary<string, string> { ["payload_json"] = DiscordJson.SerializeObject(pld) };
+			res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, values: values, files: builder.Files, cancellationToken: cancellationToken).ConfigureAwait(false);
+			foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
+				file.Stream.Position = file.ResetPositionTo!.Value;
+		}
+		else
+			res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld), cancellationToken: cancellationToken).ConfigureAwait(false);
 
 		var threadChannel = DiscordJson.DeserializeObject<DiscordThreadChannel>(res.Response, this.Discord);
 		return threadChannel;
