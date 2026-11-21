@@ -1,5 +1,6 @@
 DisCatSharp Release Notes
 
+	- Removed .NET 9 support; library and test projects now target .NET 10 and .NET 11.
 	- Fixed entry-point command synchronization mutating its comparison snapshot, which could hide handler or description changes.
 	- Clarified Discord's permissions for retrieving bans and voice states and for pruning guild members.
 	- Added bot and OAuth lobby HTTP operations with typed lobby, member, message, and invite models.

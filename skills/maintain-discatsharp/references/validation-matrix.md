@@ -4,7 +4,7 @@ Choose checks from the changed behavior rather than running commands mechanicall
 
 | Change | Minimum validation |
 | --- | --- |
-| Core or shared API | Focused tests plus affected project build across `net9.0`, `net10.0`, and `net11.0` |
+| Core or shared API | Focused tests plus affected project build across `net10.0` and `net11.0` |
 | Application commands | ApplicationCommands tests; trace parsing, validation, localization copies, equality, and synchronization |
 | Gateway event or cache | Event-handler/Copilot regression test; account for concurrent handlers and verify raw payload mapping |
 | Configuration or hosting | Configuration/Hosting tests and copy/reconstruction paths |

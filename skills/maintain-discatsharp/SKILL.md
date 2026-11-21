@@ -48,7 +48,7 @@ Mirror Discord's actual contract. Do not add speculative REST enrichment to a Ga
 Read [references/validation-matrix.md](references/validation-matrix.md), then:
 
 1. Run the smallest relevant test project or filtered regression tests.
-2. Cover `net9.0`, `net10.0`, and `net11.0` when the project targets all three.
+2. Cover `net10.0` and `net11.0` when the project targets both.
 3. Build the affected package or solution when public/API shape changes.
 4. Run `git diff --check` and inspect untracked files separately from the diff stat.
 5. For Gateway tests that immediately inspect callbacks, select `SequentialHandlers` or explicitly wait for concurrent handlers to complete.

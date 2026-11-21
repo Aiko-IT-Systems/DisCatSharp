@@ -36,7 +36,7 @@ Gateway event models should faithfully expose the raw payload. Do not introduce 
 ## Validation
 
 - Run the smallest relevant test project after a meaningful change.
-- Validate all targeted frameworks (`net9.0`, `net10.0`, and `net11.0`) when applicable.
+- Validate all targeted frameworks (`net10.0` and `net11.0`) when applicable.
 - Put agent-authored bug regression and diagnostic scenarios in `DisCatSharp.Tests/DisCatSharp.CopilotTests/`; put ordinary feature tests in the owning test project.
 - Gateway tests that immediately inspect callbacks must select `SequentialHandlers` or explicitly wait for concurrent handlers.
 - Build affected packages for public/API-shape changes.

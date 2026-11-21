@@ -28,6 +28,9 @@ items:
   - uid: DisCatSharp.DiscordConfiguration
     name: DiscordConfiguration
     type: Class
+  - uid: DisCatSharp.DiscordLobbyClient
+    name: DiscordLobbyClient
+    type: Class
   - uid: DisCatSharp.DiscordOAuth2Client
     name: DiscordOAuth2Client
     type: Class
@@ -116,6 +119,9 @@ items:
   - uid: DisCatSharp.Entities.ChannelTypeExtensions
     name: ChannelTypeExtensions
     type: Class
+  - uid: DisCatSharp.Entities.ContentScanFlags
+    name: ContentScanFlags
+    type: Enum
   - uid: DisCatSharp.Entities.DiscordActionRowComponent
     name: DiscordActionRowComponent
     type: Class
@@ -268,6 +274,9 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.DiscordContainerComponent
     name: DiscordContainerComponent
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordContentScanMetadata
+    name: DiscordContentScanMetadata
     type: Class
   - uid: DisCatSharp.Entities.DiscordCreatorMonetizationAuditLogEntry
     name: DiscordCreatorMonetizationAuditLogEntry
@@ -476,6 +485,27 @@ items:
   - uid: DisCatSharp.Entities.DiscordLinkButtonComponent
     name: DiscordLinkButtonComponent
     type: Class
+  - uid: DisCatSharp.Entities.DiscordLobby
+    name: DiscordLobby
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordLobbyInvite
+    name: DiscordLobbyInvite
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordLobbyMember
+    name: DiscordLobbyMember
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordLobbyMemberFlags
+    name: DiscordLobbyMemberFlags
+    type: Enum
+  - uid: DisCatSharp.Entities.DiscordLobbyMemberUpdate
+    name: DiscordLobbyMemberUpdate
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordLobbyMessage
+    name: DiscordLobbyMessage
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordLobbyMessageMember
+    name: DiscordLobbyMessageMember
+    type: Class
   - uid: DisCatSharp.Entities.DiscordLocales
     name: DiscordLocales
     type: Class
@@ -580,6 +610,9 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.DiscordPollResult
     name: DiscordPollResult
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordPositionUpdateAuditLogEntry
+    name: DiscordPositionUpdateAuditLogEntry
     type: Class
   - uid: DisCatSharp.Entities.DiscordPremiumButtonComponent
     name: DiscordPremiumButtonComponent

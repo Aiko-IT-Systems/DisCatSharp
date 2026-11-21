@@ -105,10 +105,10 @@ apt install git wget -y
 wget https://dot.net/v1/dotnet-install.sh -O dotnet.sh && chmod +x ./dotnet.sh
 ```
 
-- Install .NET 9:
+- Install .NET 10:
 
 ```sh
-./dotnet.sh --channel 9.0
+./dotnet.sh --channel 10.0
 ```
 
 > [!CAUTION]
@@ -145,7 +145,7 @@ source ~/.bashrc
 dotnet --version
 ```
 
-You should see version 9.x.x displayed.
+You should see version 10.x.x displayed.
 
 ##### Cloud Hosted Code
 
