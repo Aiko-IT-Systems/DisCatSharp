@@ -18,4 +18,3 @@ public sealed class DiscordLobby : ObservableApiObject
 	/// <summary>Gets the linked guild channel, if one is present.</summary>
 	[JsonProperty("linked_channel")] public DiscordChannel? LinkedChannel { get; internal set; }
 }
-

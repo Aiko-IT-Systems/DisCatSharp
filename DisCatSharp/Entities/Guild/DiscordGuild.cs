@@ -784,7 +784,7 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		=> await this.Discord.ApiClient.GetCurrentUserVoiceStateAsync(this.Id, cancellationToken: cancellationToken);
 
 	/// <summary>
-	///     Gets the current voice state for a member.
+	///     Gets a member's voice state. If the member is connected, Discord requires access to connect to their channel.
 	/// </summary>
 	/// <param name="memberId">The ID of the member.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
@@ -1611,6 +1611,7 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 
 	/// <summary>
 	///     Gets the bans for this guild, allowing for pagination.
+	///     Requires either <see cref="Permissions.BanMembers"/> or <see cref="Permissions.ViewAuditLog"/>.
 	/// </summary>
 	/// <param name="limit">Maximum number of bans to fetch. Max 1000. Defaults to 1000.</param>
 	/// <param name="before">
@@ -1621,8 +1622,7 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>Collection of bans in this guild in ascending order by user id.</returns>
 	/// <exception cref="UnauthorizedException">
-	///     Thrown when the client does not have the <see cref="Permissions.BanMembers" />
-	///     permission.
+	///     Thrown when the client has neither required permission.
 	/// </exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<IReadOnlyList<DiscordBan>> GetBansAsync(int? limit = null, ulong? before = null, ulong? after = null, CancellationToken cancellationToken = default)
@@ -2110,15 +2110,15 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	}
 
 	/// <summary>
-	///     Estimates the number of users to be pruned.
+	///     Estimates the number of users to be pruned. Requires administrator permission if the guild has
+	///     <see cref="GuildFeaturesEnum.PruneRequiresAdmin"/>; otherwise requires Manage Guild and Kick Members.
 	/// </summary>
 	/// <param name="days">Minimum number of inactivity days required for users to be pruned. Defaults to 7.</param>
 	/// <param name="includedRoles">The roles to be included in the prune.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns>Number of users that will be pruned.</returns>
 	/// <exception cref="UnauthorizedException">
-	///     Thrown when the client does not have the <see cref="Permissions.KickMembers" />
-	///     permission.
+	///     Thrown when the client lacks the required prune permissions.
 	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -2139,7 +2139,8 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	}
 
 	/// <summary>
-	///     Prunes inactive users from this guild.
+	///     Prunes inactive users from this guild. Requires administrator permission if the guild has
+	///     <see cref="GuildFeaturesEnum.PruneRequiresAdmin"/>; otherwise requires Manage Guild and Kick Members.
 	/// </summary>
 	/// <param name="days">Minimum number of inactivity days required for users to be pruned. Defaults to 7.</param>
 	/// <param name="computePruneCount">
@@ -2152,7 +2153,7 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <returns>Number of users pruned.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
-	///     <see cref="Permissions.ManageChannels" /> permission.
+	///     required prune permissions.
 	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>

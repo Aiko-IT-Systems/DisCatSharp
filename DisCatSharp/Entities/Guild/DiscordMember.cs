@@ -624,7 +624,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		=> channel.PlaceMemberAsync(this);
 
 	/// <summary>
-	///     Gets the member's voice state.
+	///     Gets the member's voice state. If the member is connected, Discord requires access to connect to their channel.
 	/// </summary>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
 	/// <returns></returns>

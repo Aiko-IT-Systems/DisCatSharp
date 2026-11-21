@@ -1358,7 +1358,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 						: ChannelType.PublicThread, rateLimitPerUser, isForum: false, reason: reason, cancellationToken: cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
-	///     Creates a forum post.
+	///     Creates a post in a forum or media channel.
 	/// </summary>
 	/// <param name="name">The name of the post.</param>
 	/// <param name="builder">The message of the post.</param>
