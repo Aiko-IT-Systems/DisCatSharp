@@ -41,6 +41,13 @@ public class DiscordAttachment : NullableSnowflakeObject
 	public string? Description { get; set; }
 
 	/// <summary>
+	///     Gets or sets the requested spoiler state when sending or editing an attachment. For received attachments,
+	///     inspect <see cref="Flags"/> for the state reported by Discord.
+	/// </summary>
+	[JsonProperty("is_spoiler", NullValueHandling = NullValueHandling.Ignore)]
+	public bool? IsSpoiler { get; set; }
+
+	/// <summary>
 	///     Gets the media, or MIME, type of the file.
 	/// </summary>
 	[JsonProperty("content_type", NullValueHandling = NullValueHandling.Ignore)]

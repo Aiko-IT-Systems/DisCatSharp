@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 
 using DisCatSharp.Enums;
 using DisCatSharp.Net;
@@ -14,6 +15,19 @@ namespace DisCatSharp.Copilot.Tests;
 
 public class SurfaceRegressionTests
 {
+	[Fact]
+	public void AttachmentSpoiler_CanBeRequestedAndCleared()
+	{
+		var attachment = new DiscordAttachment { Id = 123, IsSpoiler = true };
+		Assert.True((bool)JObject.Parse(DiscordJson.SerializeObject(attachment))["is_spoiler"]!);
+		attachment.IsSpoiler = false;
+		Assert.False((bool)JObject.Parse(DiscordJson.SerializeObject(attachment))["is_spoiler"]!);
+		attachment.IsSpoiler = null;
+		Assert.Null(JObject.Parse(DiscordJson.SerializeObject(attachment))["is_spoiler"]);
+		using var stream = new MemoryStream();
+		var builder = new DiscordMessageBuilder().AddSpoilerFile("photo.png", stream);
+		Assert.True(Assert.Single(builder.Files!).IsSpoiler);
+	}
 	[Fact]
 	public void ComponentMediaScanAndResolvedChannelPermissions_AreDeserialized()
 	{

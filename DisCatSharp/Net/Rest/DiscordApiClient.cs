@@ -3746,6 +3746,7 @@ public sealed class DiscordApiClient
 						Id = fileId,
 						Discord = this.Discord,
 						Description = file.Description,
+						IsSpoiler = file.IsSpoiler,
 						Filename = file.Filename,
 						FileSize = null
 					};
@@ -4089,6 +4090,7 @@ public sealed class DiscordApiClient
 						Id = fileId,
 						Discord = this.Discord,
 						Description = file.Description,
+						IsSpoiler = file.IsSpoiler,
 						Filename = file.Filename,
 						FileSize = null
 					};
@@ -6351,6 +6353,7 @@ public sealed class DiscordApiClient
 						Id = fileId,
 						Discord = this.Discord,
 						Description = file.Description,
+						IsSpoiler = file.IsSpoiler,
 						Filename = file.Filename,
 						FileSize = null
 					};
@@ -6514,6 +6517,7 @@ public sealed class DiscordApiClient
 						Id = fileId,
 						Discord = this.Discord,
 						Description = file.Description,
+						IsSpoiler = file.IsSpoiler,
 						Filename = file.Filename,
 						FileSize = null
 					};
@@ -8317,6 +8321,7 @@ public sealed class DiscordApiClient
 							Id = fileId,
 							Discord = this.Discord,
 							Description = file.Description,
+							IsSpoiler = file.IsSpoiler,
 							Filename = file.Filename,
 							FileSize = null
 						};
@@ -8552,6 +8557,7 @@ public sealed class DiscordApiClient
 						Id = fileId,
 						Discord = this.Discord,
 						Description = file.Description,
+						IsSpoiler = file.IsSpoiler,
 						Filename = file.Filename,
 						FileSize = null
 					};

@@ -1,5 +1,6 @@
 DisCatSharp Release Notes
 
+	- Added attachment spoiler request state for uploads and edits, including a message-builder convenience method.
 	- Added component media content-scan metadata, self-harm flags, component embed layouts, and resolved-channel app permissions.
 	- Fixed global bulk command registration omitting primary entry point descriptions.
 	- Added typed audit log support for channel and role position updates, including Discord's merged update count.

@@ -37,6 +37,9 @@ public sealed class DiscordMessageFile
 	/// </summary>
 	public string? Description { get; }
 
+	/// <summary>Gets or sets the requested spoiler state for the uploaded attachment.</summary>
+	public bool? IsSpoiler { get; set; }
+
 	/// <summary>
 	///     Gets the stream of the File.
 	/// </summary>

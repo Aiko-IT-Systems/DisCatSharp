@@ -364,6 +364,19 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 		return this;
 	}
 
+	/// <summary>Adds a file marked as a spoiler without changing its filename.</summary>
+	/// <param name="fileName">The filename to send.</param>
+	/// <param name="stream">The file data.</param>
+	/// <param name="resetStreamPosition">Whether to restore the stream position after sending.</param>
+	/// <param name="description">An optional file description.</param>
+	/// <returns>The current builder.</returns>
+	public DiscordMessageBuilder AddSpoilerFile(string fileName, Stream stream, bool resetStreamPosition = false, string? description = null)
+	{
+		this.AddFile(fileName, stream, resetStreamPosition, description);
+		this.FilesInternal![^1].IsSpoiler = true;
+		return this;
+	}
+
 	/// <summary>
 	///     Adds a file to the message.
 	/// </summary>
