@@ -16,6 +16,14 @@ namespace DisCatSharp.Copilot.Tests;
 public class SurfaceRegressionTests
 {
 	[Fact]
+	public void ApplicationChannel_IsWritableAndMovable()
+	{
+		var channel = new DiscordChannel { Type = ChannelType.Application };
+		Assert.True(channel.IsWritable());
+		Assert.True(channel.IsMovable());
+		Assert.True(channel.IsMovableInParent());
+	}
+	[Fact]
 	public void AttachmentSpoiler_CanBeRequestedAndCleared()
 	{
 		var attachment = new DiscordAttachment { Id = 123, IsSpoiler = true };

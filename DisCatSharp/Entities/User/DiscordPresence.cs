@@ -79,7 +79,7 @@ public sealed class DiscordPresence : ObservableApiObject
 	internal TransportActivity? RawActivity { get; set; }
 
 	/// <summary>
-	///     Gets the user's current activities.
+	///     Gets the user's current activities. Discord may omit custom status activities due to profile privacy settings.
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordActivity>? Activities

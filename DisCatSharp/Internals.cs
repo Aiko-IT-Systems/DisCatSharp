@@ -57,17 +57,17 @@ public static class Internals
 	/// </summary>
 	/// <param name="channel">The channel.</param>
 	internal static bool IsWritable(this DiscordChannel channel) => channel.Type is
-		ChannelType.PublicThread or ChannelType.PrivateThread or ChannelType.NewsThread or ChannelType.Text or ChannelType.News or ChannelType.Group or ChannelType.Private or ChannelType.Voice;
+		ChannelType.PublicThread or ChannelType.PrivateThread or ChannelType.NewsThread or ChannelType.Text or ChannelType.Application or ChannelType.News or ChannelType.Group or ChannelType.Private or ChannelType.Voice;
 
 	/// <summary>
 	///     Whether the <see cref="DiscordChannel" /> is moveable in a parent.
 	/// </summary>
 	/// <param name="channel">The channel.</param>
-	internal static bool IsMovableInParent(this DiscordChannel channel) => channel.Type == ChannelType.Voice || channel.Type == ChannelType.Stage || channel.Type == ChannelType.Text || channel.Type == ChannelType.Forum || channel.Type == ChannelType.News;
+	internal static bool IsMovableInParent(this DiscordChannel channel) => channel.Type == ChannelType.Voice || channel.Type == ChannelType.Stage || channel.Type == ChannelType.Text || channel.Type == ChannelType.Application || channel.Type == ChannelType.Forum || channel.Type == ChannelType.News;
 
 	/// <summary>
 	///     Whether the <see cref="DiscordChannel" /> is moveable.
 	/// </summary>
 	/// <param name="channel">The channel.</param>
-	internal static bool IsMovable(this DiscordChannel channel) => channel.Type == ChannelType.Voice || channel.Type == ChannelType.Stage || channel.Type == ChannelType.Text || channel.Type == ChannelType.Category || channel.Type == ChannelType.Forum || channel.Type == ChannelType.News;
+	internal static bool IsMovable(this DiscordChannel channel) => channel.Type == ChannelType.Voice || channel.Type == ChannelType.Stage || channel.Type == ChannelType.Text || channel.Type == ChannelType.Application || channel.Type == ChannelType.Category || channel.Type == ChannelType.Forum || channel.Type == ChannelType.News;
 }

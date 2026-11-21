@@ -607,6 +607,9 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		if (!this.IsWritable())
 			perUserRateLimit = Optional.None;
 
+		if (this.Type == ChannelType.Application)
+			return await this.Guild.CreateApplicationChannelAsync(this.Name, this.ApplicationId ?? throw new InvalidOperationException("Cannot clone an application channel without its application ID."), this.Parent, this.Topic, ovrs, this.IsNsfw, perUserRateLimit, this.DefaultAutoArchiveDuration ?? ThreadAutoArchiveDuration.OneDay, this.Flags, reason).ConfigureAwait(false);
+
 		return await this.Guild.CreateChannelAsync(this.Name, this.Type, this.Parent, this.Topic, bitrate, userLimit, ovrs, this.IsNsfw, perUserRateLimit, this.QualityMode, this.DefaultAutoArchiveDuration, this.Flags, reason).ConfigureAwait(false);
 	}
 
