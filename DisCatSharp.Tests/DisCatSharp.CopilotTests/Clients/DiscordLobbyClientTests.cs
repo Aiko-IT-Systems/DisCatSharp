@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
@@ -21,6 +22,22 @@ namespace DisCatSharp.Copilot.Tests.Clients;
 /// <summary>Verifies lobby request models and authorization boundaries without calling Discord.</summary>
 public sealed class DiscordLobbyClientTests
 {
+	/// <summary>Checks forum and media starting messages send multipart files and the Components V2 flag.</summary>
+	[Fact]
+	public async Task ForumPostRequest_IncludesSpoilerFileAndComponentsV2Flag()
+	{
+		using var client = new DiscordClient(new DiscordConfiguration { Token = "test-token" });
+		var handler = new RecordingHandler("{\"id\":\"99\",\"type\":11,\"name\":\"post\"}");
+		InstallHandler(client.ApiClient.Rest, handler);
+		using var stream = new MemoryStream([1, 2, 3]);
+		var builder = new DiscordMessageBuilder().WithV2Components().AddSpoilerFile("image.png", stream);
+		await client.ApiClient.CreateThreadAsync(42, null, "post", null, null, null, builder: builder, isForum: true);
+		Assert.Equal("/api/v10/channels/42/threads", handler.Path);
+		Assert.Contains("payload_json", handler.Body);
+		Assert.Contains("is_spoiler", handler.Body);
+		Assert.Contains("32768", handler.Body);
+		Assert.Contains("files[0]", handler.Body);
+	}
 	/// <summary>Checks bot guild listing authenticates as a bot and preserves query pagination and shard.</summary>
 	[Fact]
 	public async Task BotGuildList_UsesBotAuthorizationAndQuery()
