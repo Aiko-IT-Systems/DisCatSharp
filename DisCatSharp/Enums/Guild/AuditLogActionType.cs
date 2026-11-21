@@ -47,6 +47,8 @@ public enum AuditLogActionType
 	/// </summary>
 	OverwriteDelete = 15,
 
+	ChannelPositionUpdate = 16,
+
 	/// <summary>
 	///     Indicates that the user was kicked.
 	/// </summary>
