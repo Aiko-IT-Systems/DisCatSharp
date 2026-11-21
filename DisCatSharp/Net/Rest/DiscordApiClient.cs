@@ -3164,7 +3164,8 @@ public sealed class DiscordApiClient
 	/// <param name="flags">The channel flags.</param>
 	/// <param name="reason">The reason.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
-	internal async Task<DiscordChannel> CreateGuildChannelAsync(ulong guildId, string name, ChannelType type, ulong? parent, Optional<string> topic, int? bitrate, int? userLimit, IEnumerable<DiscordOverwriteBuilder>? overwrites, bool? nsfw, Optional<int?> perUserRateLimit, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? defaultAutoArchiveDuration, Optional<ChannelFlags?> flags, string? reason, CancellationToken cancellationToken = default)
+	/// <param name="applicationId">The application powering an application channel, if applicable.</param>
+	internal async Task<DiscordChannel> CreateGuildChannelAsync(ulong guildId, string name, ChannelType type, ulong? parent, Optional<string> topic, int? bitrate, int? userLimit, IEnumerable<DiscordOverwriteBuilder>? overwrites, bool? nsfw, Optional<int?> perUserRateLimit, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? defaultAutoArchiveDuration, Optional<ChannelFlags?> flags, string? reason, CancellationToken cancellationToken = default, ulong? applicationId = null)
 	{
 		var restOverwrites = new List<DiscordRestOverwrite>();
 		if (overwrites != null)
@@ -3174,6 +3175,7 @@ public sealed class DiscordApiClient
 		{
 			Name = name,
 			Type = type,
+			ApplicationId = applicationId,
 			Parent = parent,
 			Topic = topic,
 			Bitrate = bitrate,

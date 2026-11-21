@@ -21,6 +21,13 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 {
+	/// <summary>Stores the application associated with the channel.</summary>
+	private ulong? _applicationId;
+
+	/// <summary>Whether an application ID was supplied by the payload, including an explicit null.</summary>
+	[JsonIgnore]
+	internal bool HasApplicationId { get; private set; }
+
 	[JsonIgnore]
 	private readonly Lazy<IReadOnlyList<DiscordOverwrite>> _permissionOverwritesLazy;
 
@@ -294,8 +301,19 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <summary>
 	///     Gets the id of the application powering this channel or the creator application if it's a GDM.
 	/// </summary>
-	[JsonProperty("application_id", NullValueHandling = NullValueHandling.Ignore)]
-	public ulong? ApplicationId { get; internal set; }
+	[JsonProperty("application_id", NullValueHandling = NullValueHandling.Include)]
+	public ulong? ApplicationId
+	{
+		get => this._applicationId;
+		internal set
+		{
+			this._applicationId = value;
+			this.HasApplicationId = true;
+		}
+	}
+
+	/// <summary>Preserves the distinction between an omitted application ID and an explicit null.</summary>
+	internal bool ShouldSerializeApplicationId() => this.HasApplicationId;
 
 	/// <summary>
 	///     Gets this channel's region id (if voice channel).

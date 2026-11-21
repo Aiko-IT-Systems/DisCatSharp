@@ -1894,6 +1894,27 @@ public class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		=> this.CreateChannelAsync(name, ChannelType.Text, parent, topic, null, null, overwrites, nsfw, perUserRateLimit, null, defaultAutoArchiveDuration, flags, reason, cancellationToken: cancellationToken);
 
 	/// <summary>
+	///     Creates an application-powered channel. This capability is undocumented by Discord and may require guild-specific access.
+	/// </summary>
+	/// <param name="name">Name of the new channel.</param>
+	/// <param name="applicationId">ID of the application powering the channel.</param>
+	/// <param name="parent">Category to put the channel in.</param>
+	/// <param name="topic">Topic of the channel.</param>
+	/// <param name="overwrites">Permission overwrites for the channel.</param>
+	/// <param name="nsfw">Whether the channel is age restricted.</param>
+	/// <param name="perUserRateLimit">Slow mode timeout for users.</param>
+	/// <param name="defaultAutoArchiveDuration">Default auto archive duration for new threads.</param>
+	/// <param name="flags">Flags of the new channel.</param>
+	/// <param name="reason">Reason for the audit log.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <returns>The newly created channel.</returns>
+	public Task<DiscordChannel> CreateApplicationChannelAsync(string name, ulong applicationId, DiscordChannel? parent = null, Optional<string> topic = default, IEnumerable<DiscordOverwriteBuilder>? overwrites = null, bool? nsfw = null, Optional<int?> perUserRateLimit = default, ThreadAutoArchiveDuration defaultAutoArchiveDuration = ThreadAutoArchiveDuration.OneDay, Optional<ChannelFlags?> flags = default, string? reason = null, CancellationToken cancellationToken = default)
+	{
+		ArgumentOutOfRangeException.ThrowIfZero(applicationId);
+		return this.Discord.ApiClient.CreateGuildChannelAsync(this.Id, name, ChannelType.Application, parent?.Id, topic, null, null, overwrites, nsfw, perUserRateLimit, null, defaultAutoArchiveDuration, flags, reason, cancellationToken, applicationId);
+	}
+
+	/// <summary>
 	///     Creates a new forum channel in this guild.
 	///     <note type="note">The field template is not yet released, so it won't applied.</note>
 	/// </summary>

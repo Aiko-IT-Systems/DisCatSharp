@@ -2,6 +2,11 @@ using System;
 
 using DisCatSharp.Enums;
 using DisCatSharp.Net;
+using DisCatSharp.Net.Abstractions;
+using DisCatSharp.Net.Serialization;
+using DisCatSharp.Entities;
+
+using Newtonsoft.Json.Linq;
 
 using Xunit;
 
@@ -9,6 +14,28 @@ namespace DisCatSharp.Copilot.Tests;
 
 public class SurfaceRegressionTests
 {
+	[Fact]
+	public void ApplicationChannelPayload_ContainsApplicationIdOnlyWhenProvided()
+	{
+		var payload = new RestChannelCreatePayload { Name = "activity", Type = ChannelType.Application, ApplicationId = 123 };
+		var json = JObject.Parse(DiscordJson.SerializeObject(payload));
+		Assert.Equal(21, (int)json["type"]!);
+		Assert.Equal(123UL, (ulong)json["application_id"]!);
+		payload.ApplicationId = null;
+		Assert.Null(JObject.Parse(DiscordJson.SerializeObject(payload))["application_id"]);
+	}
+
+	[Fact]
+	public void ChannelApplicationId_DistinguishesOmittedAndNull()
+	{
+		var missing = DiscordJson.DeserializeObject<DiscordChannel>("{}", null);
+		var cleared = DiscordJson.DeserializeObject<DiscordChannel>("{\"application_id\":null}", null);
+		var populated = DiscordJson.DeserializeObject<DiscordChannel>("{\"application_id\":\"123\"}", null);
+		Assert.False(missing.HasApplicationId);
+		Assert.True(cleared.HasApplicationId);
+		Assert.Null(cleared.ApplicationId);
+		Assert.Equal(123UL, populated.ApplicationId);
+	}
 	[Fact]
 	public void GuildListShard_UsesOptionalNonnegativeQueryParameter()
 	{

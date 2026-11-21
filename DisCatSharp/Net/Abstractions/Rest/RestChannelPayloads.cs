@@ -25,6 +25,12 @@ internal sealed class RestChannelCreatePayload : ObservableApiObject
 	public ChannelType Type { get; set; }
 
 	/// <summary>
+	///     Gets or sets the application powering an application channel, when creating one.
+	/// </summary>
+	[JsonProperty("application_id", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong? ApplicationId { get; set; }
+
+	/// <summary>
 	///     Gets or sets the parent.
 	/// </summary>
 	[JsonProperty("parent_id", NullValueHandling = NullValueHandling.Ignore)]

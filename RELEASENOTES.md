@@ -1,5 +1,6 @@
 DisCatSharp Release Notes
 
+	- Added application-powered channel creation for guilds where Discord enables the currently undocumented capability.
 	- Added current-bot guild listing and a guild-list shard overload for OAuth clients, as required for applications using large-bot sharding. This shard is distinct from a gateway shard ID.
 	- Corrected subscription status values to match Discord: `Inactive` is 1 and `Ending` is 2. Consumers relying on the previously reversed numeric values should update their handling and recompile.
 	- Fixed privileged-intents review diagnostics treating an omitted Discord submission state as an unsubmitted review, which could produce a false warning for already-approved applications.

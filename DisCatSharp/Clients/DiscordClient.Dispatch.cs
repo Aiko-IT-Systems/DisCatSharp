@@ -1159,6 +1159,7 @@ public sealed partial class DiscordClient
 				Id = channelNew.Id,
 				LastMessageId = channelNew.LastMessageId,
 				Name = channelNew.Name,
+				ApplicationId = channelNew.ApplicationId,
 				PermissionOverwritesInternal = [.. channelNew.PermissionOverwritesInternal],
 				Position = channelNew.Position,
 				Topic = channelNew.Topic,
@@ -1174,6 +1175,8 @@ public sealed partial class DiscordClient
 
 			channelNew.Bitrate = channel.Bitrate;
 			channelNew.Name = channel.Name;
+			if (channel.HasApplicationId)
+				channelNew.ApplicationId = channel.ApplicationId;
 			channelNew.Position = channel.Position;
 			channelNew.Topic = channel.Topic;
 			channelNew.UserLimit = channel.UserLimit;
