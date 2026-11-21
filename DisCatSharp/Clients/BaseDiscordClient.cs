@@ -8,8 +8,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 
 using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
@@ -19,15 +19,12 @@ using DisCatSharp.Enums.Core;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
+using DisCatSharp.Telemetry;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
-using Microsoft.Extensions.Options;
 
 using Newtonsoft.Json.Linq;
-
-using DisCatSharp.Telemetry;
 
 namespace DisCatSharp;
 
@@ -245,7 +242,7 @@ public abstract class BaseDiscordClient : IDisposable, IAsyncDisposable
 		get
 		{
 			lock (this._readyGuildIdsLock)
-				return [..this._readyGuildIds];
+				return [.. this._readyGuildIds];
 		}
 	}
 
@@ -365,7 +362,7 @@ public abstract class BaseDiscordClient : IDisposable, IAsyncDisposable
 		DiscordIntegrationTypesConfig integrationTypesConfig = new()
 		{
 			UserInstall = new(new() { Scopes = scopes }),
-			GuildInstall = currentApplication.IntegrationTypesConfig.GuildInstall is not null ? new(currentApplication.IntegrationTypesConfig.GuildInstall.OAuth2InstallParams): null
+			GuildInstall = currentApplication.IntegrationTypesConfig.GuildInstall is not null ? new(currentApplication.IntegrationTypesConfig.GuildInstall.OAuth2InstallParams) : null
 		};
 
 		var app = await this.UpdateCurrentApplicationInfoAsync(Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, integrationTypesConfig).ConfigureAwait(false);

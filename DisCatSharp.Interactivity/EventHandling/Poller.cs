@@ -8,7 +8,6 @@ using ConcurrentCollections;
 
 using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
-using DisCatSharp.Telemetry;
 
 using Microsoft.Extensions.Logging;
 

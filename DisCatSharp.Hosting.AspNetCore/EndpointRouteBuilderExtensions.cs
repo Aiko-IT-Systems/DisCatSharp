@@ -3,13 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using DisCatSharp.Hosting.AspNetCore.Ingress;
-using DisCatSharp.Hosting.AspNetCore.Ingress.IncomingWebhooks;
-using DisCatSharp.Hosting.AspNetCore.Ingress.Interactions;
-using DisCatSharp.Hosting.AspNetCore.Ingress.OAuth;
-using DisCatSharp.Hosting.AspNetCore.Ingress.WebhookEvents;
-using DisCatSharp.Hosting.AspNetCore.Routing;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;

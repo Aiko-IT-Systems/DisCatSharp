@@ -1,9 +1,5 @@
 using System;
 
-using DisCatSharp.Hosting.AspNetCore.Ingress;
-using DisCatSharp.Hosting.AspNetCore.Ingress.OAuth;
-
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace DisCatSharp.Hosting.AspNetCore;

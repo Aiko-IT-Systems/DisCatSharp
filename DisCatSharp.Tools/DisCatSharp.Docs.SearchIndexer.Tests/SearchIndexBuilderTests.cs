@@ -1,5 +1,5 @@
 using System.Text.Json;
-using DisCatSharp.Docs.SearchIndexer;
+
 using Xunit;
 
 namespace DisCatSharp.Docs.SearchIndexer.Tests;
@@ -319,7 +319,7 @@ public sealed class SearchIndexBuilderTests : IDisposable
 		Directory.CreateDirectory(site);
 		Directory.CreateDirectory(api);
 		Directory.CreateDirectory(sourceDirectory);
-		var sourceLines = new List<string> { "namespace Library;", "public sealed class Large", "{" , "    public void First()", "    {" };
+		var sourceLines = new List<string> { "namespace Library;", "public sealed class Large", "{", "    public void First()", "    {" };
 		sourceLines.AddRange(Enumerable.Range(1, 170).Select(number => $"        // first {number}"));
 		sourceLines.AddRange(["    }", "    public void Second()", "    {"]);
 		sourceLines.AddRange(Enumerable.Range(1, 90).Select(number => $"        // second {number}"));

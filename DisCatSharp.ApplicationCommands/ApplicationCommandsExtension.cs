@@ -22,7 +22,6 @@ using DisCatSharp.Enums;
 using DisCatSharp.Enums.Core;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Exceptions;
-using DisCatSharp.Telemetry;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

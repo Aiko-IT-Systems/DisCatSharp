@@ -1,10 +1,8 @@
-using System.Linq;
 using System.Threading.Tasks;
 
-using DisCatSharp;
 using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
-using DisCatSharp.Net.Abstractions;
+
 using Newtonsoft.Json.Linq;
 
 using Xunit;

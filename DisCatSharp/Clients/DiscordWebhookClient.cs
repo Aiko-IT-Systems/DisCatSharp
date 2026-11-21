@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 
 using DisCatSharp.Common.RegularExpressions;
 using DisCatSharp.Entities;

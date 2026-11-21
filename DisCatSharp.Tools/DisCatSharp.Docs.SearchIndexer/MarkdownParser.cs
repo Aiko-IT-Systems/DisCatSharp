@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+
 using YamlDotNet.Serialization;
 
 namespace DisCatSharp.Docs.SearchIndexer;

@@ -302,11 +302,11 @@ internal static class TelemetryBootstrap
 		return !config.Telemetry.AttachUserInfo || currentUser is null
 			? null
 			: new()
-		{
-			Id = currentUser.Id.ToString(),
-			Username = currentUser.UsernameWithDiscriminator,
-			DeveloperUserId = config.Telemetry.DeveloperUserId?.ToString(),
-			FeedbackEmail = config.Telemetry.FeedbackEmail
-		};
+			{
+				Id = currentUser.Id.ToString(),
+				Username = currentUser.UsernameWithDiscriminator,
+				DeveloperUserId = config.Telemetry.DeveloperUserId?.ToString(),
+				FeedbackEmail = config.Telemetry.FeedbackEmail
+			};
 	}
 }

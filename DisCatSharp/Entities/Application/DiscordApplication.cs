@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -113,10 +113,13 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 		this.FlagsNewInternal = !string.IsNullOrWhiteSpace(tapp.FlagsNew) && long.TryParse(tapp.FlagsNew, NumberStyles.Integer, CultureInfo.InvariantCulture, out var flagsNewRaw)
 			? (ApplicationFlags)flagsNewRaw
 			: null;
-		if (this.FlagsNewInternal is not null) {
+		if (this.FlagsNewInternal is not null)
+		{
 			this.Flags = this.FlagsNewInternal.Value;
 			this.UsesNewFlags = true;
-		} else {
+		}
+		else
+		{
 			this.Flags = this.FlagsInternal;
 			this.UsesNewFlags = false;
 		}

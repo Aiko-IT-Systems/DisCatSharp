@@ -1,8 +1,6 @@
 using System;
 using System.Threading;
 
-using DisCatSharp;
-
 using Xunit;
 
 namespace DisCatSharp.CopilotTests.Configuration;

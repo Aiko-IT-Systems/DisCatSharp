@@ -1,8 +1,5 @@
 using System;
-using System.Linq;
-using System.Reflection;
 
-using DisCatSharp;
 using DisCatSharp.Entities;
 using DisCatSharp.Hosting.AspNetCore;
 using DisCatSharp.Hosting.AspNetCore.Deployment;

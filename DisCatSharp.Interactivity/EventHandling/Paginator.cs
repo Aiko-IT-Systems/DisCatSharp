@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 using ConcurrentCollections;
@@ -8,7 +7,6 @@ using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Interactivity.Enums;
-using DisCatSharp.Telemetry;
 
 using Microsoft.Extensions.Logging;
 

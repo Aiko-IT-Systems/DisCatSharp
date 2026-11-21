@@ -3,9 +3,6 @@ using System.Threading.Tasks;
 
 using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
-using DisCatSharp.EventArgs;
-using DisCatSharp.Hosting.AspNetCore.EventArgs.Webhook;
-using DisCatSharp.Hosting.AspNetCore.Ingress;
 
 using Microsoft.Extensions.Logging;
 
@@ -402,10 +399,10 @@ public sealed class DiscordWebhookEventDispatcher
 		return !this._unknownWebhookEventReceived.HasHandlers
 			? Task.CompletedTask
 			: this._unknownWebhookEventReceived.InvokeAsync(this, new UnknownWebhookEventArgs(this._provider)
-		{
-			Request = request,
-			Envelope = envelope
-		});
+			{
+				Request = request,
+				Envelope = envelope
+			});
 	}
 
 	private void EventErrorHandler<TSender, TArgs>(AsyncEvent<TSender, TArgs> asyncEvent, Exception ex, AsyncEventHandler<TSender, TArgs> handler, TSender sender, TArgs eventArgs)

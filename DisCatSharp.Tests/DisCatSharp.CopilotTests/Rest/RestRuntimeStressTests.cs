@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
-using DisCatSharp.Net;
 
 using Xunit;
 using Xunit.Abstractions;

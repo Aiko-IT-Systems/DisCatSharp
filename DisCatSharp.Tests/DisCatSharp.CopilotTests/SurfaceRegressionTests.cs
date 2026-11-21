@@ -1,11 +1,11 @@
 using System;
 using System.IO;
 
+using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.Net;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Serialization;
-using DisCatSharp.Entities;
 
 using Newtonsoft.Json.Linq;
 

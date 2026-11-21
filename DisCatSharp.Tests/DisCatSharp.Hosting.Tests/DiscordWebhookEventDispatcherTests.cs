@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using DisCatSharp.Hosting.AspNetCore;
-using DisCatSharp.Hosting.AspNetCore.EventArgs;
 using DisCatSharp.Hosting.AspNetCore.Ingress;
 
 using Microsoft.AspNetCore.Http;

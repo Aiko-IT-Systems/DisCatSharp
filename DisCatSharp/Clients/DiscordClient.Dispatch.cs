@@ -12,7 +12,6 @@ using DisCatSharp.Common;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
-using DisCatSharp.Exceptions;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.AuditLogs;
 using DisCatSharp.Net.Serialization;
@@ -3288,16 +3287,16 @@ public sealed partial class DiscordClient
 		await this.RaiseEventAsync(this._messageCreated, ea).ConfigureAwait(false);
 	}
 
-		/// <summary>
-		///     Handles the message update event.
-		/// </summary>
-		/// <param name="message">The message.</param>
-		/// <param name="rawData">The raw gateway payload for the message update event.</param>
-		/// <param name="author">The transport user (author).</param>
-		/// <param name="member">The transport member.</param>
-		/// <param name="referenceAuthor">The reference transport user (author).</param>
-		/// <param name="referenceMember">The reference transport member.</param>
-		internal async Task OnMessageUpdateEventAsync(DiscordMessage message, JObject rawData, TransportUser author, TransportMember member, TransportUser referenceAuthor, TransportMember referenceMember)
+	/// <summary>
+	///     Handles the message update event.
+	/// </summary>
+	/// <param name="message">The message.</param>
+	/// <param name="rawData">The raw gateway payload for the message update event.</param>
+	/// <param name="author">The transport user (author).</param>
+	/// <param name="member">The transport member.</param>
+	/// <param name="referenceAuthor">The reference transport user (author).</param>
+	/// <param name="referenceMember">The reference transport member.</param>
+	internal async Task OnMessageUpdateEventAsync(DiscordMessage message, JObject rawData, TransportUser author, TransportMember member, TransportUser referenceAuthor, TransportMember referenceMember)
 	{
 		DiscordGuild guild;
 

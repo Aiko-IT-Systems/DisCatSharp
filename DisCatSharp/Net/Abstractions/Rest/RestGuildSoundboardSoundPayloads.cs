@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 
-using DisCatSharp;
 using DisCatSharp.Entities;
 
 using Newtonsoft.Json;

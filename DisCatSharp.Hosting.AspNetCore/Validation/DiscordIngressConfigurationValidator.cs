@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using DisCatSharp;
 using DisCatSharp.Entities;
-using DisCatSharp.Hosting.AspNetCore.Ingress;
 
 namespace DisCatSharp.Hosting.AspNetCore.Validation;
 

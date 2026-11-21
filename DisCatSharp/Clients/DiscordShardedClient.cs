@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.Enums.Core;
-using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
 using DisCatSharp.Telemetry;
 

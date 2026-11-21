@@ -1,5 +1,3 @@
-using System;
-
 using DisCatSharp.Net;
 
 using Newtonsoft.Json;

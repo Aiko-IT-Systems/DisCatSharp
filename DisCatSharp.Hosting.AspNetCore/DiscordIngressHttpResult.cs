@@ -1,8 +1,6 @@
 using System;
 using System.Threading.Tasks;
 
-using DisCatSharp.Hosting.AspNetCore.Ingress;
-
 using Microsoft.AspNetCore.Http;
 
 namespace DisCatSharp.Hosting.AspNetCore;

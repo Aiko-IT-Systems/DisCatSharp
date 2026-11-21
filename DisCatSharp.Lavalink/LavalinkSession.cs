@@ -20,10 +20,9 @@ using DisCatSharp.Lavalink.EventArgs;
 using DisCatSharp.Net;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.WebSocket;
+using DisCatSharp.Telemetry;
 using DisCatSharp.Voice;
 using DisCatSharp.Voice.Interfaces;
-
-using DisCatSharp.Telemetry;
 
 using Microsoft.Extensions.Logging;
 

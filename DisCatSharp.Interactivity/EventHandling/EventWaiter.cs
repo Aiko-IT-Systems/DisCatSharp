@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using ConcurrentCollections;
 
 using DisCatSharp.Common.Utilities;
-using DisCatSharp.Telemetry;
 
 using Microsoft.Extensions.Logging;
 

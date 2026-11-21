@@ -1,8 +1,6 @@
 using System;
 
 using DisCatSharp.EventArgs;
-using DisCatSharp.Hosting.AspNetCore.Ingress;
-using DisCatSharp.Hosting.AspNetCore.Ingress.WebhookEvents;
 
 namespace DisCatSharp.Hosting.AspNetCore.EventArgs.Webhook;
 

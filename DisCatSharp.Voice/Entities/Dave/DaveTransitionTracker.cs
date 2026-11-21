@@ -7,11 +7,11 @@ namespace DisCatSharp.Voice.Entities.Dave;
 /// </summary>
 /// <remarks>
 ///     <para>
-	///         After OP 21 (<c>dave_mls_prepare_transition</c>), OP 29 (<c>dave_mls_announce_commit_transition</c>),
-	///         or OP 30 (<c>dave_mls_welcome</c>) prepares receiver transforms, the client records
-	///         <c>(transitionId, targetVersion)</c>. When OP 22 (<c>dave_mls_execute_transition</c>) arrives
-	///         with a matching <c>transitionId</c>, <see cref="TryConsume"/> retrieves and removes the entry
-	///         so it can be acted on exactly once.
+///         After OP 21 (<c>dave_mls_prepare_transition</c>), OP 29 (<c>dave_mls_announce_commit_transition</c>),
+///         or OP 30 (<c>dave_mls_welcome</c>) prepares receiver transforms, the client records
+///         <c>(transitionId, targetVersion)</c>. When OP 22 (<c>dave_mls_execute_transition</c>) arrives
+///         with a matching <c>transitionId</c>, <see cref="TryConsume"/> retrieves and removes the entry
+///         so it can be acted on exactly once.
 ///     </para>
 ///     <para>
 ///         A <c>transitionId</c> of <c>0</c> means no OP 23 acknowledgement should be sent.

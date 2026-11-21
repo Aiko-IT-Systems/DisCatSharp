@@ -100,16 +100,16 @@ public sealed class DiscordInteractionIngressResponse
 			: builder.Poll is not null
 			? throw new NotSupportedException("Inline HTTP interaction responses do not support poll payloads yet.")
 			: new DiscordInteractionIngressCallbackData
-		{
-			IsTts = builder.IsTts ? true : null,
-			Content = builder.IsComponentsV2 ? null : builder.Content,
-			Embeds = builder.IsComponentsV2 ? null : builder.Embeds,
-			AllowedMentions = CreateAllowedMentions(builder.Mentions),
-			Flags = CreateFlags(builder),
-			Components = builder.Components,
-			Choices = builder.Choices,
-			Eligible = builder.IsEligible ? true : null
-		};
+			{
+				IsTts = builder.IsTts ? true : null,
+				Content = builder.IsComponentsV2 ? null : builder.Content,
+				Embeds = builder.IsComponentsV2 ? null : builder.Embeds,
+				AllowedMentions = CreateAllowedMentions(builder.Mentions),
+				Flags = CreateFlags(builder),
+				Components = builder.Components,
+				Choices = builder.Choices,
+				Eligible = builder.IsEligible ? true : null
+			};
 	}
 
 	private static MessageFlags? CreateFlags(DiscordInteractionResponseBuilder builder)

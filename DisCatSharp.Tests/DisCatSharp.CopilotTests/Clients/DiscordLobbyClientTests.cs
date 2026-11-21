@@ -1,6 +1,6 @@
 using System;
-using System.Linq;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 using DisCatSharp.Entities;
 using DisCatSharp.Entities.OAuth2;
 using DisCatSharp.Enums;
-using DisCatSharp.Net.Serialization;
 using DisCatSharp.Net;
+using DisCatSharp.Net.Serialization;
 
 using Newtonsoft.Json.Linq;
 

@@ -2,9 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using DisCatSharp.Hosting.AspNetCore;
-using DisCatSharp.Hosting.AspNetCore.LinkedRoles;
-
 namespace DisCatSharp.Hosting.AspNetCore.Routing;
 
 /// <summary>

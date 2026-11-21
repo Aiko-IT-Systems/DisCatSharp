@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 using DisCatSharp.Voice.Entities;
 
-using Newtonsoft.Json.Linq;
-
 using Xunit;
 
 namespace DisCatSharp.CopilotTests;

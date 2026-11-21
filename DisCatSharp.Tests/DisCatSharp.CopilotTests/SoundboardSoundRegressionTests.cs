@@ -1,4 +1,3 @@
-using DisCatSharp;
 using DisCatSharp.Entities;
 using DisCatSharp.Net.Abstractions;
 

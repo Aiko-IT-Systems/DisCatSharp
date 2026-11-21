@@ -92,7 +92,7 @@ public sealed class DiscordLinkedRolesService(
 		ArgumentNullException.ThrowIfNull(callbackResult);
 
 		return callbackResult.AccessToken is not null
-		       && callbackResult.AccessToken.Scope.Split(' ', StringSplitOptions.RemoveEmptyEntries).Any(static scope => scope == "role_connections.write");
+			   && callbackResult.AccessToken.Scope.Split(' ', StringSplitOptions.RemoveEmptyEntries).Any(static scope => scope == "role_connections.write");
 	}
 
 	/// <summary>
@@ -202,11 +202,11 @@ public sealed class DiscordLinkedRolesService(
 			var currentItem = current[index];
 			var desiredItem = desired[index];
 			if (currentItem.Type != desiredItem.Type
-			    || !string.Equals(currentItem.Key, desiredItem.Key, StringComparison.Ordinal)
-			    || !string.Equals(currentItem.Name, desiredItem.Name, StringComparison.Ordinal)
-			    || !string.Equals(currentItem.Description, desiredItem.Description, StringComparison.Ordinal)
-			    || !LocalizationEquals(currentItem.NameLocalizations, desiredItem.NameLocalizations)
-			    || !LocalizationEquals(currentItem.DescriptionLocalizations, desiredItem.DescriptionLocalizations))
+				|| !string.Equals(currentItem.Key, desiredItem.Key, StringComparison.Ordinal)
+				|| !string.Equals(currentItem.Name, desiredItem.Name, StringComparison.Ordinal)
+				|| !string.Equals(currentItem.Description, desiredItem.Description, StringComparison.Ordinal)
+				|| !LocalizationEquals(currentItem.NameLocalizations, desiredItem.NameLocalizations)
+				|| !LocalizationEquals(currentItem.DescriptionLocalizations, desiredItem.DescriptionLocalizations))
 				return false;
 		}
 
@@ -218,8 +218,8 @@ public sealed class DiscordLinkedRolesService(
 		var leftValues = left?.GetKeyValuePairs() ?? [];
 		var rightValues = right?.GetKeyValuePairs() ?? [];
 		return leftValues.Count == rightValues.Count
-		       && leftValues.OrderBy(static pair => pair.Key, StringComparer.Ordinal)
-		           .SequenceEqual(rightValues.OrderBy(static pair => pair.Key, StringComparer.Ordinal));
+			   && leftValues.OrderBy(static pair => pair.Key, StringComparer.Ordinal)
+				   .SequenceEqual(rightValues.OrderBy(static pair => pair.Key, StringComparer.Ordinal));
 	}
 
 	private static void ValidateMetadata(IReadOnlyList<DiscordApplicationRoleConnectionMetadata> metadata)

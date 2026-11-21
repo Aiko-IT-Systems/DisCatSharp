@@ -1,8 +1,6 @@
 using System;
 using System.Linq;
 
-using DisCatSharp;
-
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>

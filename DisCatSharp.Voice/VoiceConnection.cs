@@ -29,7 +29,6 @@ using DisCatSharp.Voice.EventArgs;
 using DisCatSharp.Voice.Interfaces;
 using DisCatSharp.Voice.Logging;
 using DisCatSharp.Voice.Payloads;
-using DisCatSharp.Telemetry;
 
 using Microsoft.Extensions.Logging;
 

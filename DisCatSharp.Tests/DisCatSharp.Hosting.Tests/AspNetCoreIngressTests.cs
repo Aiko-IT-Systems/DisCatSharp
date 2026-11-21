@@ -8,8 +8,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-using DisCatSharp.Entities.OAuth2;
 using DisCatSharp.Entities;
+using DisCatSharp.Entities.OAuth2;
 using DisCatSharp.Enums;
 using DisCatSharp.Hosting.AspNetCore;
 using DisCatSharp.Hosting.AspNetCore.Ingress;

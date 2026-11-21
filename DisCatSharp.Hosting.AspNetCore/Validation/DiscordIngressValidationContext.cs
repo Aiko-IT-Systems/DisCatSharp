@@ -1,6 +1,5 @@
 using System;
 
-using DisCatSharp;
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.Hosting.AspNetCore.Validation;

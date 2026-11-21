@@ -1,5 +1,3 @@
-using DisCatSharp;
-
 using Xunit;
 
 namespace DisCatSharp.CopilotTests.Utilities;

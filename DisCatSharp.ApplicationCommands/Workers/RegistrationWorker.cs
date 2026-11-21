@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using DisCatSharp.ApplicationCommands.Checks;
 using DisCatSharp.Common;
 using DisCatSharp.Entities;
-using DisCatSharp.Enums;
 using DisCatSharp.Exceptions;
 
 using Microsoft.Extensions.Logging;
@@ -30,7 +29,7 @@ internal class RegistrationWorker
 	{
 		// Include entry point in the command list for proper change detection
 		var allCommands = entryPointCommand is not null
-			? [..commands, entryPointCommand]
+			? [.. commands, entryPointCommand]
 			: commands;
 
 		var (changedCommands, unchangedCommands) = BuildGlobalOverwriteList(client, allCommands);

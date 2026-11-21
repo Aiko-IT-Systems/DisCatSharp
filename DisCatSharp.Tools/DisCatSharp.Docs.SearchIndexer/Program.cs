@@ -1,4 +1,5 @@
 using System.Text.Json;
+
 using DisCatSharp.Docs.SearchIndexer;
 
 var options = CliOptions.Parse(args);
