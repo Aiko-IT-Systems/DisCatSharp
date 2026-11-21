@@ -15,6 +15,16 @@ namespace DisCatSharp.Copilot.Tests;
 public class SurfaceRegressionTests
 {
 	[Fact]
+	public void ComponentMediaScanAndResolvedChannelPermissions_AreDeserialized()
+	{
+		var media = DiscordJson.DeserializeObject<DiscordUnfurledMediaItem>("{\"url\":\"https://example.org/a.png\",\"content_scan_metadata\":{\"flags\":5}}", null);
+		Assert.Equal(ContentScanFlags.Explicit | ContentScanFlags.SelfHarm, media.ContentScanMetadata!.Flags);
+		var channel = DiscordJson.DeserializeObject<DiscordChannel>("{\"app_permissions\":\"1024\"}", null);
+		Assert.Equal((Permissions)1024, channel.AppPermissions);
+		Assert.Equal(128, (long)AttachmentFlags.ContainsSelfHarmContent);
+		Assert.Equal(128, (long)EmbedFlags.ContainsSelfHarmContent);
+	}
+	[Fact]
 	public void GuildFeatures_RecognizeNewAndExistingSpamLinkMappings()
 	{
 		var guild = new DiscordGuild { RawFeatures = ["PRUNE_REQUIRES_ADMIN", "AUTOMOD_TRIGGER_SPAM_LINK_FILTER", "UNKNOWN_FUTURE_FEATURE"] };

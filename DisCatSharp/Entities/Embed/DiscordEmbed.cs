@@ -76,6 +76,10 @@ public sealed class DiscordEmbed : ObservableApiObject
 	[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
 	public string Type { get; internal set; }
 
+	/// <summary>Gets the display-only component layout for a component link-preview embed, when present.</summary>
+	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
+	public IReadOnlyList<DiscordComponent>? Components { get; internal set; }
+
 	/// <summary>
 	///     Gets the embed's description.
 	/// </summary>

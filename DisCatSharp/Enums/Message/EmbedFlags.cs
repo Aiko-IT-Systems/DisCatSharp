@@ -42,6 +42,9 @@ public enum EmbedFlags : long
 	/// </summary>
 	ContainsGoreContent = 1L << 6,
 
+	/// <summary>The embed was flagged as self-harm content by Discord's content scanning.</summary>
+	ContainsSelfHarmContent = 1L << 7,
+
 	/// <summary>
 	///      The flags are unknown.
 	/// </summary>

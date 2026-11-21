@@ -8,6 +8,12 @@ namespace DisCatSharp.Entities;
 public sealed class DiscordUnfurledMediaItem : DiscordUnfurledMedia
 {
 	/// <summary>
+	///     Gets Discord's scan result, which may appear in a later message update.
+	/// </summary>
+	[JsonProperty("content_scan_metadata", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordContentScanMetadata? ContentScanMetadata { get; internal set; }
+
+	/// <summary>
 	///     Constructs a new empty <see cref="DiscordUnfurledMediaItem" />.
 	/// </summary>
 	[JsonConstructor]

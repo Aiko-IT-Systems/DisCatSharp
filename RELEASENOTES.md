@@ -1,5 +1,7 @@
 DisCatSharp Release Notes
 
+	- Added component media content-scan metadata, self-harm flags, component embed layouts, and resolved-channel app permissions.
+	- Fixed global bulk command registration omitting primary entry point descriptions.
 	- Added typed audit log support for channel and role position updates, including Discord's merged update count.
 	- Updated recognized guild features from Discord's current documentation and published feature list, and corrected the AutoMod spam-link feature mapping.
 	- Added application-powered channel creation for guilds where Discord enables the currently undocumented capability.

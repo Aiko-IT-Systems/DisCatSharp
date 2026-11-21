@@ -109,6 +109,12 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	public ChannelFlags Flags { get; internal set; }
 
 	/// <summary>
+	///     Gets the bot's computed permissions for an interaction-resolved channel, before implicit permission masking.
+	/// </summary>
+	[JsonProperty("app_permissions", NullValueHandling = NullValueHandling.Ignore)]
+	public Permissions? AppPermissions { get; internal set; }
+
+	/// <summary>
 	///     Gets the icon emoji for this channel.
 	///     Only visible and configurable on mobile with the new layout.
 	/// </summary>
