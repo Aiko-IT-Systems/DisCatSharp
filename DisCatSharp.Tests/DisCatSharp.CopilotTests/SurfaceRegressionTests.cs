@@ -1,3 +1,5 @@
+using System;
+
 using DisCatSharp.Enums;
 using DisCatSharp.Net;
 
@@ -7,6 +9,16 @@ namespace DisCatSharp.Copilot.Tests;
 
 public class SurfaceRegressionTests
 {
+	[Fact]
+	public void GuildListShard_UsesOptionalNonnegativeQueryParameter()
+	{
+		var url = new QueryUriBuilder("https://discord.com/api/users/@me/guilds");
+		DiscordApiClient.AddGuildListShard(url, null);
+		Assert.Empty(url.Build().Query);
+		DiscordApiClient.AddGuildListShard(url, 3);
+		Assert.Equal("?shard=3", url.Build().Query);
+		Assert.Throws<ArgumentOutOfRangeException>(() => DiscordApiClient.AddGuildListShard(url, -1));
+	}
 	[Fact]
 	public void StoreAndApplicationEnumValues_RemainStable()
 	{

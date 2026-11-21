@@ -465,6 +465,16 @@ public sealed class DiscordOAuth2Client : IDisposable, IAsyncDisposable
 		=> accessToken.Scope.Split(' ').Any(x => x == "guilds") ? await this.ApiClient.GetCurrentUserGuildsAsync(accessToken.AccessToken, cancellationToken: cancellationToken) : throw new AccessViolationException("Access token does not include guilds scope");
 
 	/// <summary>
+	///     Gets guilds in a large-bot guild-list shard. This shard is not a gateway shard ID.
+	/// </summary>
+	/// <param name="accessToken">The Discord access token with the guilds scope.</param>
+	/// <param name="shard">The guild-list shard, from zero to the session start maximum concurrency minus one.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <returns>The guilds returned for the specified shard.</returns>
+	public async Task<IReadOnlyList<DiscordGuild>> GetCurrentUserGuildsAsync(DiscordAccessToken accessToken, int shard, CancellationToken cancellationToken = default)
+		=> accessToken.Scope.Split(' ').Any(x => x == "guilds") ? await this.ApiClient.GetCurrentUserGuildsAsync(accessToken.AccessToken, cancellationToken: cancellationToken, shard: shard).ConfigureAwait(false) : throw new AccessViolationException("Access token does not include guilds scope");
+
+	/// <summary>
 	///     Gets the current user's guild member for given <paramref name="guildId" />.
 	/// </summary>
 	/// <param name="accessToken">The discord access token.</param>

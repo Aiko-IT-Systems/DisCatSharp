@@ -1213,6 +1213,22 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
+	///     Gets a page of the current bot's guilds through the HTTP API.
+	/// </summary>
+	/// <param name="shard">The large-bot guild-list shard, distinct from a gateway shard ID. Required by Discord for large-bot sharding.</param>
+	/// <param name="limit">Maximum number of guilds returned, from 1 through 200.</param>
+	/// <param name="before">Return guilds before this ID.</param>
+	/// <param name="after">Return guilds after this ID.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <returns>Cached guilds where available, otherwise partial guild objects returned by Discord.</returns>
+	public Task<IReadOnlyList<DiscordGuild>> GetCurrentUserGuildsAsync(int? shard = null, int limit = 100, ulong? before = null, ulong? after = null, CancellationToken cancellationToken = default)
+	{
+		ArgumentOutOfRangeException.ThrowIfLessThan(limit, 1);
+		ArgumentOutOfRangeException.ThrowIfGreaterThan(limit, 200);
+		return this.ApiClient.GetCurrentUserGuildsAsync(limit, before, after, cancellationToken, shard);
+	}
+
+	/// <summary>
 	///     Gets a guild.
 	///     <para>Setting <paramref name="withCounts" /> to true will make a REST request.</para>
 	/// </summary>

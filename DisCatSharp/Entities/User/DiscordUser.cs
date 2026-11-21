@@ -696,6 +696,16 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		=> this.AccessToken is not null ? await oauth2Client.GetCurrentUserGuildsAsync(this.AccessToken) : throw new NullReferenceException("You need to specify the AccessToken on this DiscordUser entity.");
 
 	/// <summary>
+	///     Gets the current user's guilds for a large-bot guild-list shard.
+	/// </summary>
+	/// <param name="oauth2Client">The OAuth2 client.</param>
+	/// <param name="shard">The guild-list shard, which is distinct from a gateway shard ID.</param>
+	/// <param name="cancellationToken">A token to cancel the request.</param>
+	/// <returns>The guilds returned for the specified shard.</returns>
+	public Task<IReadOnlyList<DiscordGuild>> OAuth2GetGuildAsync(DiscordOAuth2Client oauth2Client, int shard, CancellationToken cancellationToken = default)
+		=> this.AccessToken is not null ? oauth2Client.GetCurrentUserGuildsAsync(this.AccessToken, shard, cancellationToken) : throw new NullReferenceException("You need to specify the AccessToken on this DiscordUser entity.");
+
+	/// <summary>
 	///     Gets the current user's member object for given <paramref name="guild" />.
 	///     <para>Requires a <see cref="DiscordAccessToken" /> set in <see cref="AccessToken" />.</para>
 	/// </summary>

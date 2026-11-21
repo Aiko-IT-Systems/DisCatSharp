@@ -4896,8 +4896,9 @@ public sealed class DiscordApiClient
 	/// <param name="limit">The limit.</param>
 	/// <param name="before">The before.</param>
 	/// <param name="after">The after.</param>
+	/// <param name="shard">The large-bot guild-list shard, distinct from a gateway shard ID.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
-	internal async Task<IReadOnlyList<DiscordGuild>> GetCurrentUserGuildsAsync(int limit = 100, ulong? before = null, ulong? after = null, CancellationToken cancellationToken = default)
+	internal async Task<IReadOnlyList<DiscordGuild>> GetCurrentUserGuildsAsync(int limit = 100, ulong? before = null, ulong? after = null, CancellationToken cancellationToken = default, int? shard = null)
 	{
 		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.GUILDS}";
 
@@ -4911,17 +4912,15 @@ public sealed class DiscordApiClient
 			url.AddParameter("before", before.Value.ToString(CultureInfo.InvariantCulture));
 		if (after != null)
 			url.AddParameter("after", after.Value.ToString(CultureInfo.InvariantCulture));
+		AddGuildListShard(url, shard);
 
 		var res = await this.DoRequestAsync(this.Discord, bucket, url.Build(), RestRequestMethod.GET, route, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-		if (this.Discord is DiscordClient)
-		{
-			var guildsRaw = DiscordJson.DeserializeIEnumerableObject<IEnumerable<RestUserGuild>>(res.Response, this.Discord);
-			var glds = guildsRaw.Select(xug => (this.Discord as DiscordClient)?.GuildsInternal[xug.Id]);
-			return new ReadOnlyCollection<DiscordGuild>([.. glds]);
-		}
+		var guilds = DiscordJson.DeserializeIEnumerableObject<List<DiscordGuild>>(res.Response, this.Discord);
+		if (this.Discord is DiscordClient client)
+			return new ReadOnlyCollection<DiscordGuild>([.. guilds.Select(guild => client.GuildsInternal.TryGetValue(guild.Id, out var cached) ? cached : guild)]);
 
-		return DiscordJson.DeserializeIEnumerableObject<List<DiscordGuild>>(res.Response, this.Discord);
+		return guilds;
 	}
 
 	/// <summary>
@@ -9190,8 +9189,9 @@ public sealed class DiscordApiClient
 	///     Gets the current user's guilds.
 	/// </summary>
 	/// <param name="accessToken">The access token.</param>
+	/// <param name="shard">The large-bot guild-list shard, distinct from a gateway shard ID.</param>
 	/// <param name="cancellationToken">A token to cancel the request.</param>
-	internal async Task<IReadOnlyList<DiscordGuild>> GetCurrentUserGuildsAsync(string accessToken, CancellationToken cancellationToken = default)
+	internal async Task<IReadOnlyList<DiscordGuild>> GetCurrentUserGuildsAsync(string accessToken, CancellationToken cancellationToken = default, int? shard = null)
 	{
 		if (this.Discord != null!)
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
@@ -9203,10 +9203,24 @@ public sealed class DiscordApiClient
 		var headers = Utilities.GetBaseHeaders();
 		headers.Add("Bearer", accessToken);
 
-		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
+		var urlBuilder = Utilities.GetApiUriBuilderFor(path, this.OAuth2Client.DiscordConfiguration);
+		AddGuildListShard(urlBuilder, shard);
+		var url = urlBuilder.Build();
 		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers, cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 		return DiscordJson.DeserializeIEnumerableObject<List<DiscordGuild>>(res.Response, null);
+	}
+
+	/// <summary>
+	///     Adds Discord's optional large-bot guild-list shard query parameter.
+	/// </summary>
+	/// <param name="url">The request URI builder.</param>
+	/// <param name="shard">The guild-list shard, or null to omit it.</param>
+	internal static void AddGuildListShard(QueryUriBuilder url, int? shard)
+	{
+		ArgumentOutOfRangeException.ThrowIfNegative(shard.GetValueOrDefault());
+		if (shard.HasValue)
+			url.AddParameter("shard", shard.Value.ToString(CultureInfo.InvariantCulture));
 	}
 
 	/// <summary>
