@@ -22,7 +22,7 @@
 		<NoWarn>$(NoWarn);IDE0130;DV2001;CS8602;CS8618;CS8602</NoWarn>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Concentus" Version="2.2.2" />
+		<PackageReference Include="Concentus" Version="2.2.3" />
 		<PackageReference Include="Concentus.Oggfile" Version="1.0.7" />
 		<PackageReference Include="DisCatSharp.Analyzer" Version="1.0.6.1">
 			<PrivateAssets>all</PrivateAssets>
