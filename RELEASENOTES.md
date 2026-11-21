@@ -1,5 +1,6 @@
 DisCatSharp Release Notes
 
+	- Added bot and OAuth lobby HTTP operations with typed lobby, member, message, and invite models.
 	- Allowed forum post creation in media channels and included uploaded files in forum and media thread creation requests.
 	- Prevented duplicate voice READY payloads from triggering a second protocol selection in the same session.
 	- Added OAuth authorization-response issuer validation for callbacks using Discord's `iss` parameter.
