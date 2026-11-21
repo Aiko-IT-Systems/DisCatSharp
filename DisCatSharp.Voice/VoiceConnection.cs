@@ -188,6 +188,9 @@ public sealed class VoiceConnection : IDisposable
 	/// </summary>
 	private volatile int _lastSeq = -1;
 
+	/// <summary>Whether READY has already started protocol selection for the current identified session.</summary>
+	private int _protocolSelectionStarted;
+
 	/// <summary>
 	///     Gets or sets the nonce.
 	/// </summary>
@@ -861,6 +864,7 @@ public sealed class VoiceConnection : IDisposable
 
 		if (isNewSession)
 		{
+			Interlocked.Exchange(ref this._protocolSelectionStarted, 0);
 			vdp.OpCode = 0;
 			this._lastSeq = -1;
 			vdp.Payload = new VoiceIdentifyPayload
@@ -2153,6 +2157,11 @@ public sealed class VoiceConnection : IDisposable
 			case 2: // READY
 				this._voiceLogger.VoiceTrace(VoiceEvents.VoiceDispatch, "Received READY (OP2)");
 				ArgumentNullException.ThrowIfNull(opp);
+				if (Interlocked.Exchange(ref this._protocolSelectionStarted, 1) != 0)
+				{
+					this._discord.Logger.LogWarning(VoiceEvents.VoiceHandshake, "Ignoring duplicate voice READY for an existing session.");
+					break;
+				}
 				var vrp = opp.ToObject<VoiceReadyPayload>()!;
 				this._mediaSinkState.ResetMappings();
 				this._lastSentMediaSinkWants = null;

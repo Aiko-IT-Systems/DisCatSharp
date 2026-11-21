@@ -13,6 +13,13 @@ namespace DisCatSharp.Copilot.Tests.Clients;
 
 public sealed class DiscordOAuth2ClientTests
 {
+	[Theory]
+	[InlineData("https://example.org/callback?iss=https%3A%2F%2Fdiscord.com", true)]
+	[InlineData("https://example.org/callback?iss=https%3A%2F%2Fevil.example", false)]
+	[InlineData("https://example.org/callback", false)]
+	[InlineData("https://example.org/callback?iss=https%3A%2F%2Fdiscord.com&iss=https%3A%2F%2Fevil.example", false)]
+	public void ValidateIssuer_RequiresOneExactDiscordIssuer(string callback, bool expected)
+		=> Assert.Equal(expected, DiscordOAuth2Client.ValidateIssuer(new Uri(callback)));
 	[Fact]
 	public void PublicApi_DoesNotExposeOAuthClientSecrets()
 	{

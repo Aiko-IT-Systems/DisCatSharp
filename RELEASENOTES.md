@@ -1,5 +1,7 @@
 DisCatSharp Release Notes
 
+	- Prevented duplicate voice READY payloads from triggering a second protocol selection in the same session.
+	- Added OAuth authorization-response issuer validation for callbacks using Discord's `iss` parameter.
 	- Added attachment spoiler request state for uploads and edits, including a message-builder convenience method.
 	- Added component media content-scan metadata, self-harm flags, component embed layouts, and resolved-channel app permissions.
 	- Fixed global bulk command registration omitting primary entry point descriptions.

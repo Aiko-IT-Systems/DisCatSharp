@@ -379,6 +379,19 @@ public sealed class DiscordOAuth2Client : IDisposable, IAsyncDisposable
 	}
 
 	/// <summary>
+	///     Checks that an OAuth2 authorization response contains exactly one Discord issuer parameter.
+	///     Validate the issuer alongside the state, especially when supporting multiple authorization providers.
+	/// </summary>
+	/// <param name="responseUrl">The authorization response URL.</param>
+	/// <returns>Whether the issuer is exactly <c>https://discord.com</c>.</returns>
+	public static bool ValidateIssuer(Uri responseUrl)
+	{
+		ArgumentNullException.ThrowIfNull(responseUrl);
+		var issuers = HttpUtility.ParseQueryString(responseUrl.Query, Encoding.UTF8).GetValues("iss");
+		return issuers is { Length: 1 } && string.Equals(issuers[0], "https://discord.com", StringComparison.Ordinal);
+	}
+
+	/// <summary>
 	///     Gets the OAuth2 code to use with <see cref="ExchangeAccessTokenAsync" /> from the <paramref name="url" />.
 	/// </summary>
 	/// <param name="url">The url.</param>
