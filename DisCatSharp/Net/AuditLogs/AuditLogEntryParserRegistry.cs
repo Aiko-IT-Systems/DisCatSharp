@@ -48,6 +48,7 @@ internal sealed class AuditLogEntryParserRegistry
 			[AuditLogActionType.ChannelCreate] = ParseChannelEntry,
 			[AuditLogActionType.ChannelUpdate] = ParseChannelEntry,
 			[AuditLogActionType.ChannelDelete] = ParseChannelEntry,
+			[AuditLogActionType.ChannelPositionUpdate] = static (_, _, _) => new DiscordPositionUpdateAuditLogEntry(),
 			[AuditLogActionType.OverwriteCreate] = ParseOverwriteEntry,
 			[AuditLogActionType.OverwriteUpdate] = ParseOverwriteEntry,
 			[AuditLogActionType.OverwriteDelete] = ParseOverwriteEntry,
@@ -63,6 +64,7 @@ internal sealed class AuditLogEntryParserRegistry
 			[AuditLogActionType.RoleCreate] = ParseRoleEntry,
 			[AuditLogActionType.RoleUpdate] = ParseRoleEntry,
 			[AuditLogActionType.RoleDelete] = ParseRoleEntry,
+			[AuditLogActionType.RolePositionUpdate] = static (_, _, _) => new DiscordPositionUpdateAuditLogEntry(),
 			[AuditLogActionType.InviteCreate] = ParseInviteEntry,
 			[AuditLogActionType.InviteUpdate] = ParseInviteEntry,
 			[AuditLogActionType.InviteDelete] = ParseInviteEntry,
@@ -651,6 +653,8 @@ internal sealed class AuditLogEntryParserRegistry
 				or AuditLogActionType.VoiceChannelStatusDelete
 				or AuditLogActionType.AutoModerationRuleDelete => AuditLogActionCategory.Delete,
 			AuditLogActionType.ChannelUpdate
+				or AuditLogActionType.ChannelPositionUpdate
+				or AuditLogActionType.RolePositionUpdate
 				or AuditLogActionType.GuildUpdate
 				or AuditLogActionType.EmojiUpdate
 				or AuditLogActionType.InviteUpdate

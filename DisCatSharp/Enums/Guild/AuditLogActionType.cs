@@ -47,6 +47,9 @@ public enum AuditLogActionType
 	/// </summary>
 	OverwriteDelete = 15,
 
+	/// <summary>
+	///     Indicates that channels were reordered.
+	/// </summary>
 	ChannelPositionUpdate = 16,
 
 	/// <summary>
@@ -108,6 +111,11 @@ public enum AuditLogActionType
 	///     Indicates that the role was deleted.
 	/// </summary>
 	RoleDelete = 32,
+
+	/// <summary>
+	///     Indicates that roles were reordered.
+	/// </summary>
+	RolePositionUpdate = 33,
 
 	/// <summary>
 	///     Indicates that the invite was created.

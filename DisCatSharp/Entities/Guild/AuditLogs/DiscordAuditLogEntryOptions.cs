@@ -33,7 +33,7 @@ public sealed class DiscordAuditLogEntryOptions
 	public ulong? ChannelId { get; internal set; }
 
 	/// <summary>
-	///     Gets the targeted entity count.
+	///     Gets the targeted entity count or the number of position updates, depending on the action.
 	/// </summary>
 	public int? Count { get; internal set; }
 

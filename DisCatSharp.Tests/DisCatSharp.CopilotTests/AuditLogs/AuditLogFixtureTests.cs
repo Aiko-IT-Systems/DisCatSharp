@@ -16,6 +16,18 @@ namespace DisCatSharp.Copilot.Tests.AuditLogs;
 /// </summary>
 public sealed class AuditLogFixtureTests
 {
+	/// <summary>Checks both position-update actions and their string-encoded counts.</summary>
+	[Theory]
+	[InlineData(16)]
+	[InlineData(33)]
+	public void PositionUpdates_ParseCountAndCategory(int actionType)
+	{
+		using var harness = new AuditLogTestHarness();
+		var raw = JsonConvert.DeserializeObject<RawAuditLog>($"{{\"audit_log_entries\":[{{\"id\":\"42\",\"action_type\":{actionType},\"options\":{{\"count\":\"3\"}}}}]}}")!;
+		var entry = Assert.IsType<DiscordPositionUpdateAuditLogEntry>(Assert.Single(AuditLogEntryParserRegistry.Instance.ParsePage(harness.Guild, raw, false).Entries));
+		Assert.Equal(3, entry.Count);
+		Assert.Equal(AuditLogActionCategory.Update, entry.ActionCategory);
+	}
 	/// <summary>
 	///     Gets the sanitized fixture cases to validate.
 	/// </summary>

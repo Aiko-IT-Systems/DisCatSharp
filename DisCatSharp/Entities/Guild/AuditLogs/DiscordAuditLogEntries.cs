@@ -5,6 +5,19 @@ using DisCatSharp.Enums;
 namespace DisCatSharp.Entities;
 
 /// <summary>
+///     Represents an audit entry for channel or role reordering.
+/// </summary>
+/// <remarks>
+///     Discord can merge consecutive entries by the same actor. Only the first reason is retained, and subsequent
+///     merged updates currently do not emit another gateway event.
+/// </remarks>
+public sealed class DiscordPositionUpdateAuditLogEntry : DiscordAuditLogEntry
+{
+	/// <summary>Gets the number of position updates reported by Discord, when available.</summary>
+	public int? Count => this.Options?.Count;
+}
+
+/// <summary>
 ///     Represents a guild audit log entry.
 /// </summary>
 public sealed class DiscordGuildAuditLogEntry : DiscordAuditLogEntry
