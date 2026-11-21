@@ -1,5 +1,6 @@
 DisCatSharp Release Notes
 
+	- Updated recognized guild features from Discord's current documentation and published feature list, and corrected the AutoMod spam-link feature mapping.
 	- Added application-powered channel creation for guilds where Discord enables the currently undocumented capability.
 	- Added current-bot guild listing and a guild-list shard overload for OAuth clients, as required for applications using large-bot sharding. This shard is distinct from a gateway shard ID.
 	- Corrected subscription status values to match Discord: `Inactive` is 1 and `Ending` is 2. Consumers relying on the previously reversed numeric values should update their handling and recompile.

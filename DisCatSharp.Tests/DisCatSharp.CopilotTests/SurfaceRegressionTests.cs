@@ -15,6 +15,15 @@ namespace DisCatSharp.Copilot.Tests;
 public class SurfaceRegressionTests
 {
 	[Fact]
+	public void GuildFeatures_RecognizeNewAndExistingSpamLinkMappings()
+	{
+		var guild = new DiscordGuild { RawFeatures = ["PRUNE_REQUIRES_ADMIN", "AUTOMOD_TRIGGER_SPAM_LINK_FILTER", "UNKNOWN_FUTURE_FEATURE"] };
+		Assert.True(guild.Features.HasFeature(GuildFeaturesEnum.PruneRequiresAdmin));
+		Assert.True(guild.Features.HasFeature(GuildFeaturesEnum.AutomodTriggerSpamLinkFilter));
+		Assert.True(guild.Features.HasFeature(GuildFeaturesEnum.AutomodTriggerSpamLinkFilterGuild));
+		Assert.Contains("UNKNOWN_FUTURE_FEATURE", guild.RawFeatures);
+	}
+	[Fact]
 	public void ApplicationChannelPayload_ContainsApplicationIdOnlyWhenProvided()
 	{
 		var payload = new RestChannelCreatePayload { Name = "activity", Type = ChannelType.Application, ApplicationId = 123 };

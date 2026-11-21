@@ -23,6 +23,108 @@ public class GuildFeatures
 		if (guild.RawFeatures is null)
 			return;
 
+		if (guild.RawFeatures.Contains("ACTIVITY_FEED_DISABLED_BY_USER")) this.Features.Add(GuildFeaturesEnum.ActivityFeedDisabledByUser);
+		if (guild.RawFeatures.Contains("ACTIVITY_FEED_ENABLED_BY_USER")) this.Features.Add(GuildFeaturesEnum.ActivityFeedEnabledByUser);
+		if (guild.RawFeatures.Contains("AGE_VERIFICATION_LARGE_GUILD")) this.Features.Add(GuildFeaturesEnum.AgeVerificationLargeGuild);
+		if (guild.RawFeatures.Contains("AUDIO_BITRATE_128_KBPS")) this.Features.Add(GuildFeaturesEnum.AudioBitrate128Kbps);
+		if (guild.RawFeatures.Contains("AUDIO_BITRATE_256_KBPS")) this.Features.Add(GuildFeaturesEnum.AudioBitrate256Kbps);
+		if (guild.RawFeatures.Contains("AUDIO_BITRATE_384_KBPS")) this.Features.Add(GuildFeaturesEnum.AudioBitrate384Kbps);
+		if (guild.RawFeatures.Contains("AUTOMOD_TRIGGER_SPAM_LINK_FILTER")) this.Features.Add(GuildFeaturesEnum.AutomodTriggerSpamLinkFilter);
+		if (guild.RawFeatures.Contains("AUTOMOD_TRIGGER_USER_PROFILE")) this.Features.Add(GuildFeaturesEnum.AutomodTriggerUserProfile);
+		if (guild.RawFeatures.Contains("BYPASS_SLOWMODE_PERMISSION_MIGRATION_COMPLETE")) this.Features.Add(GuildFeaturesEnum.BypassSlowmodePermissionMigrationComplete);
+		if (guild.RawFeatures.Contains("CHANNEL_EMOJIS_GENERATED")) this.Features.Add(GuildFeaturesEnum.ChannelEmojisGenerated);
+		if (guild.RawFeatures.Contains("CHANNEL_ICON_EMOJIS_GENERATED")) this.Features.Add(GuildFeaturesEnum.ChannelIconEmojisGenerated);
+		if (guild.RawFeatures.Contains("CLAN")) this.Features.Add(GuildFeaturesEnum.Clan);
+		if (guild.RawFeatures.Contains("CLAN_DISCOVERY_DISABLED")) this.Features.Add(GuildFeaturesEnum.ClanDiscoveryDisabled);
+		if (guild.RawFeatures.Contains("CLAN_PILOT_GENSHIN")) this.Features.Add(GuildFeaturesEnum.ClanPilotGenshin);
+		if (guild.RawFeatures.Contains("CLAN_PILOT_VALORANT")) this.Features.Add(GuildFeaturesEnum.ClanPilotValorant);
+		if (guild.RawFeatures.Contains("CLAN_SAFETY_REVIEW_DISABLED")) this.Features.Add(GuildFeaturesEnum.ClanSafetyReviewDisabled);
+		if (guild.RawFeatures.Contains("CLYDE_DISABLED")) this.Features.Add(GuildFeaturesEnum.ClydeDisabled);
+		if (guild.RawFeatures.Contains("CLYDE_ENABLED")) this.Features.Add(GuildFeaturesEnum.ClydeEnabled);
+		if (guild.RawFeatures.Contains("CLYDE_EXPERIMENT_ENABLED")) this.Features.Add(GuildFeaturesEnum.ClydeExperimentEnabled);
+		if (guild.RawFeatures.Contains("COMMUNITY_CANARY")) this.Features.Add(GuildFeaturesEnum.CommunityCanary);
+		if (guild.RawFeatures.Contains("COMMUNITY_EXP_MEDIUM")) this.Features.Add(GuildFeaturesEnum.CommunityExpMedium);
+		if (guild.RawFeatures.Contains("COMMUNITY_EXP_LARGE_GATED")) this.Features.Add(GuildFeaturesEnum.CommunityExpLargeGated);
+		if (guild.RawFeatures.Contains("COMMUNITY_EXP_LARGE_UNGATED")) this.Features.Add(GuildFeaturesEnum.CommunityExpLargeUngated);
+		if (guild.RawFeatures.Contains("CONFERENCE")) this.Features.Add(GuildFeaturesEnum.Conference);
+		if (guild.RawFeatures.Contains("CONSIDERED_EXTERNALLY_DISCOVERABLE")) this.Features.Add(GuildFeaturesEnum.ConsideredExternallyDiscoverable);
+		if (guild.RawFeatures.Contains("CONTENT_INDEXING")) this.Features.Add(GuildFeaturesEnum.ContentIndexing);
+		if (guild.RawFeatures.Contains("CONVERSATIONS_EXTRACTION_CONTROL")) this.Features.Add(GuildFeaturesEnum.ConversationsExtractionControl);
+		if (guild.RawFeatures.Contains("CONVERSATIONS_EXTRACTION_OVERRIDE")) this.Features.Add(GuildFeaturesEnum.ConversationsExtractionOverride);
+		if (guild.RawFeatures.Contains("CONVERSATIONS_EXTRACTION_PROCESSING")) this.Features.Add(GuildFeaturesEnum.ConversationsExtractionProcessing);
+		if (guild.RawFeatures.Contains("CONVERSATIONS_EXTRACTION_TREATMENT")) this.Features.Add(GuildFeaturesEnum.ConversationsExtractionTreatment);
+		if (guild.RawFeatures.Contains("CREATOR_ACCEPTED_NEW_TERMS")) this.Features.Add(GuildFeaturesEnum.CreatorAcceptedNewTerms);
+		if (guild.RawFeatures.Contains("CREATOR_MONETIZABLE_PENDING_NEW_OWNER_ONBOARDING")) this.Features.Add(GuildFeaturesEnum.CreatorMonetizablePendingNewOwnerOnboarding);
+		if (guild.RawFeatures.Contains("ENABLED_DISCOVERABLE_BEFORE")) this.Features.Add(GuildFeaturesEnum.EnabledDiscoverableBefore);
+		if (guild.RawFeatures.Contains("ENABLED_MODERATION_EXPERIENCE_FOR_NON_COMMUNITY")) this.Features.Add(GuildFeaturesEnum.EnabledModerationExperienceForNonCommunity);
+		if (guild.RawFeatures.Contains("ENHANCED_ROLE_COLORS")) this.Features.Add(GuildFeaturesEnum.EnhancedRoleColors);
+		if (guild.RawFeatures.Contains("FORWARDING_DISABLED")) this.Features.Add(GuildFeaturesEnum.ForwardingDisabled);
+		if (guild.RawFeatures.Contains("GAME_SERVER_HOSTING")) this.Features.Add(GuildFeaturesEnum.GameServerHosting);
+		if (guild.RawFeatures.Contains("GAME_SERVERS")) this.Features.Add(GuildFeaturesEnum.GameServers);
+		if (guild.RawFeatures.Contains("GENSHIN_L30")) this.Features.Add(GuildFeaturesEnum.GenshinL30);
+		if (guild.RawFeatures.Contains("GUESTS_ENABLED")) this.Features.Add(GuildFeaturesEnum.GuestsEnabled);
+		if (guild.RawFeatures.Contains("GUILD_HOME_DEPRECATION_OVERRIDE")) this.Features.Add(GuildFeaturesEnum.GuildHomeDeprecationOverride);
+		if (guild.RawFeatures.Contains("GUILD_ONBOARDING")) this.Features.Add(GuildFeaturesEnum.GuildOnboarding);
+		if (guild.RawFeatures.Contains("GUILD_ONBOARDING_ADMIN_ONLY")) this.Features.Add(GuildFeaturesEnum.GuildOnboardingAdminOnly);
+		if (guild.RawFeatures.Contains("GUILD_ONBOARDING_HAS_PROMPTS")) this.Features.Add(GuildFeaturesEnum.GuildOnboardingHasPrompts);
+		if (guild.RawFeatures.Contains("GUILD_PRODUCTS")) this.Features.Add(GuildFeaturesEnum.GuildProducts);
+		if (guild.RawFeatures.Contains("GUILD_PRODUCTS_ALLOW_ARCHIVED_FILE")) this.Features.Add(GuildFeaturesEnum.GuildProductsAllowArchivedFile);
+		if (guild.RawFeatures.Contains("GUILD_ROLE_SUBSCRIPTIONS")) this.Features.Add(GuildFeaturesEnum.GuildRoleSubscriptions);
+		if (guild.RawFeatures.Contains("GUILD_ROLE_SUBSCRIPTION_TIER_TEMPLATE")) this.Features.Add(GuildFeaturesEnum.GuildRoleSubscriptionTierTemplate);
+		if (guild.RawFeatures.Contains("GUILD_SERVER_GUIDE")) this.Features.Add(GuildFeaturesEnum.GuildServerGuide);
+		if (guild.RawFeatures.Contains("GUILD_TAGS")) this.Features.Add(GuildFeaturesEnum.GuildTags);
+		if (guild.RawFeatures.Contains("GUILD_TAGS_BADGE_PACK_CREEPY_CRAWLIES")) this.Features.Add(GuildFeaturesEnum.GuildTagsBadgePackCreepyCrawlies);
+		if (guild.RawFeatures.Contains("GUILD_TAGS_BADGE_PACK_FLEX")) this.Features.Add(GuildFeaturesEnum.GuildTagsBadgePackFlex);
+		if (guild.RawFeatures.Contains("GUILD_TAGS_BADGE_PACK_PETS")) this.Features.Add(GuildFeaturesEnum.GuildTagsBadgePackPets);
+		if (guild.RawFeatures.Contains("GUILD_TAGS_BADGE_PACK_PLANT")) this.Features.Add(GuildFeaturesEnum.GuildTagsBadgePackPlant);
+		if (guild.RawFeatures.Contains("GUILD_THEME")) this.Features.Add(GuildFeaturesEnum.GuildTheme);
+		if (guild.RawFeatures.Contains("GUILD_WEB_PAGE_VANITY_URL")) this.Features.Add(GuildFeaturesEnum.GuildWebPageVanityUrl);
+		if (guild.RawFeatures.Contains("HIDE_FROM_EXPERIMENT_UI")) this.Features.Add(GuildFeaturesEnum.HideFromExperimentUi);
+		if (guild.RawFeatures.Contains("LEADERBOARD_ENABLED")) this.Features.Add(GuildFeaturesEnum.LeaderboardEnabled);
+		if (guild.RawFeatures.Contains("MARKETPLACES_CONNECTION_ROLES")) this.Features.Add(GuildFeaturesEnum.MarketplacesConnectionRoles);
+		if (guild.RawFeatures.Contains("MAX_FILE_SIZE_50_MB")) this.Features.Add(GuildFeaturesEnum.MaxFileSize50Mb);
+		if (guild.RawFeatures.Contains("MAX_FILE_SIZE_100_MB")) this.Features.Add(GuildFeaturesEnum.MaxFileSize100Mb);
+		if (guild.RawFeatures.Contains("MAX_FILE_SIZE_250_MB")) this.Features.Add(GuildFeaturesEnum.MaxFileSize250Mb);
+		if (guild.RawFeatures.Contains("MEMBER_SAFETY_PAGE_ROLLOUT")) this.Features.Add(GuildFeaturesEnum.MemberSafetyPageRollout);
+		if (guild.RawFeatures.Contains("MEMBER_VERIFICATION_MANUAL_APPROVAL")) this.Features.Add(GuildFeaturesEnum.MemberVerificationManualApproval);
+		if (guild.RawFeatures.Contains("MEMBER_VERIFICATION_ROLLOUT_TEST")) this.Features.Add(GuildFeaturesEnum.MemberVerificationRolloutTest);
+		if (guild.RawFeatures.Contains("MORE_SOUNDBOARD")) this.Features.Add(GuildFeaturesEnum.MoreSoundboard);
+		if (guild.RawFeatures.Contains("NON_COMMUNITY_RAID_ALERTS")) this.Features.Add(GuildFeaturesEnum.NonCommunityRaidAlerts);
+		if (guild.RawFeatures.Contains("OFFICIAL_GAME_GUILD")) this.Features.Add(GuildFeaturesEnum.OfficialGameGuild);
+		if (guild.RawFeatures.Contains("PIN_PERMISSION_MIGRATION_COMPLETE")) this.Features.Add(GuildFeaturesEnum.PinPermissionMigrationComplete);
+		if (guild.RawFeatures.Contains("POWERUP_BETA_FEATURES")) this.Features.Add(GuildFeaturesEnum.PowerupBetaFeatures);
+		if (guild.RawFeatures.Contains("PRODUCTS_AVAILABLE_FOR_PURCHASE")) this.Features.Add(GuildFeaturesEnum.ProductsAvailableForPurchase);
+		if (guild.RawFeatures.Contains("PRUNE_REQUIRES_ADMIN")) this.Features.Add(GuildFeaturesEnum.PruneRequiresAdmin);
+		if (guild.RawFeatures.Contains("RAID_ALERTS_DISABLED")) this.Features.Add(GuildFeaturesEnum.RaidAlertsDisabled);
+		if (guild.RawFeatures.Contains("RAPIDASH_TEST")) this.Features.Add(GuildFeaturesEnum.RapidashTest);
+		if (guild.RawFeatures.Contains("RAPIDASH_TEST_REBIRTH")) this.Features.Add(GuildFeaturesEnum.RapidashTestRebirth);
+		if (guild.RawFeatures.Contains("REPORT_TO_MOD_PILOT")) this.Features.Add(GuildFeaturesEnum.ReportToModPilot);
+		if (guild.RawFeatures.Contains("REPORT_TO_MOD_SURVEY")) this.Features.Add(GuildFeaturesEnum.ReportToModSurvey);
+		if (guild.RawFeatures.Contains("ROLE_SUBSCRIPTIONS_ENABLED_FOR_PURCHASE")) this.Features.Add(GuildFeaturesEnum.RoleSubscriptionsEnabledForPurchase);
+		if (guild.RawFeatures.Contains("SERVER_PROFILES_TEST")) this.Features.Add(GuildFeaturesEnum.ServerProfilesTest);
+		if (guild.RawFeatures.Contains("SHARD")) this.Features.Add(GuildFeaturesEnum.Shard);
+		if (guild.RawFeatures.Contains("SHARED_CANVAS_FRIENDS_AND_FAMILY_TEST")) this.Features.Add(GuildFeaturesEnum.SharedCanvasFriendsAndFamilyTest);
+		if (guild.RawFeatures.Contains("STAGE_CHANNEL_VIEWERS_50")) this.Features.Add(GuildFeaturesEnum.StageChannelViewers50);
+		if (guild.RawFeatures.Contains("STAGE_CHANNEL_VIEWERS_150")) this.Features.Add(GuildFeaturesEnum.StageChannelViewers150);
+		if (guild.RawFeatures.Contains("STAGE_CHANNEL_VIEWERS_300")) this.Features.Add(GuildFeaturesEnum.StageChannelViewers300);
+		if (guild.RawFeatures.Contains("SUMMARIES_DISABLED_BY_USER")) this.Features.Add(GuildFeaturesEnum.SummariesDisabledByUser);
+		if (guild.RawFeatures.Contains("SUMMARIES_ENABLED")) this.Features.Add(GuildFeaturesEnum.SummariesEnabled);
+		if (guild.RawFeatures.Contains("SUMMARIES_ENABLED_BY_USER")) this.Features.Add(GuildFeaturesEnum.SummariesEnabledByUser);
+		if (guild.RawFeatures.Contains("SUMMARIES_ENABLED_GA")) this.Features.Add(GuildFeaturesEnum.SummariesEnabledGa);
+		if (guild.RawFeatures.Contains("SUMMARIES_LONG_LOOKBACK")) this.Features.Add(GuildFeaturesEnum.SummariesLongLookback);
+		if (guild.RawFeatures.Contains("SUMMARIES_OPT_OUT_EXPERIENCE")) this.Features.Add(GuildFeaturesEnum.SummariesOptOutExperience);
+		if (guild.RawFeatures.Contains("TEXT_IN_STAGE_ENABLED")) this.Features.Add(GuildFeaturesEnum.TextInStageEnabled);
+		if (guild.RawFeatures.Contains("THREADS_ONLY_CHANNEL")) this.Features.Add(GuildFeaturesEnum.ThreadsOnlyChannel);
+		if (guild.RawFeatures.Contains("TICKETING_ENABLED")) this.Features.Add(GuildFeaturesEnum.TicketingEnabled);
+		if (guild.RawFeatures.Contains("TIERLESS_BOOSTING")) this.Features.Add(GuildFeaturesEnum.TierlessBoosting);
+		if (guild.RawFeatures.Contains("TIERLESS_BOOSTING_CLIENT_TEST")) this.Features.Add(GuildFeaturesEnum.TierlessBoostingClientTest);
+		if (guild.RawFeatures.Contains("TIERLESS_BOOSTING_SYSTEM_MESSAGE")) this.Features.Add(GuildFeaturesEnum.TierlessBoostingSystemMessage);
+		if (guild.RawFeatures.Contains("TIERLESS_BOOSTING_TEST")) this.Features.Add(GuildFeaturesEnum.TierlessBoostingTest);
+		if (guild.RawFeatures.Contains("VALORANT_L30")) this.Features.Add(GuildFeaturesEnum.ValorantL30);
+		if (guild.RawFeatures.Contains("VIDEO_BITRATE_ENHANCED")) this.Features.Add(GuildFeaturesEnum.VideoBitrateEnhanced);
+		if (guild.RawFeatures.Contains("VIDEO_QUALITY_720_60FPS")) this.Features.Add(GuildFeaturesEnum.VideoQuality72060fps);
+		if (guild.RawFeatures.Contains("VIDEO_QUALITY_1080_60FPS")) this.Features.Add(GuildFeaturesEnum.VideoQuality108060fps);
+
 		if (guild.RawFeatures.Contains("APPLICATION_COMMAND_PERMISSIONS_V2")) this.Features.Add(GuildFeaturesEnum.UsesApplicationCommandsPermissionsV2);
 		if (guild.RawFeatures.Contains("RAID_ALERTS_ENABLED")) this.Features.Add(GuildFeaturesEnum.RaidAlertsEnabled);
 		if (guild.RawFeatures.Contains("CREATOR_MONETIZABLE_RESTRICTED")) this.Features.Add(GuildFeaturesEnum.CreatorMonetizableRestricted);
@@ -74,7 +176,7 @@ public class GuildFeatures
 		if (guild.RawFeatures.Contains("ACTIVITIES_INTERNAL_DEV")) this.Features.Add(GuildFeaturesEnum.ActivitiesInternalDev);
 		if (guild.RawFeatures.Contains("AUTOMOD_TRIGGER_KEYWORD_FILTER")) this.Features.Add(GuildFeaturesEnum.AutomodTriggerKeywordFilter);
 		if (guild.RawFeatures.Contains("AUTOMOD_TRIGGER_ML_SPAM_FILTER")) this.Features.Add(GuildFeaturesEnum.AutomodTriggerMlSpamFilter);
-		if (guild.RawFeatures.Contains("AUTOMOD_TRIGGER_SPAM_LINK_FILTERGuild")) this.Features.Add(GuildFeaturesEnum.AutomodTriggerSpamLinkFilterGuild);
+		if (guild.RawFeatures.Contains("AUTOMOD_TRIGGER_SPAM_LINK_FILTER")) this.Features.Add(GuildFeaturesEnum.AutomodTriggerSpamLinkFilterGuild);
 		if (guild.RawFeatures.Contains("AUTOMOD_DEFAULT_LIST")) this.Features.Add(GuildFeaturesEnum.AutomodDefaultList);
 		if (guild.RawFeatures.Contains("BFG")) this.Features.Add(GuildFeaturesEnum.Bfg);
 		if (guild.RawFeatures.Contains("BOOSTING_TIERS_EXPERIMENT_MEDIUM_GUILD")) this.Features.Add(GuildFeaturesEnum.BoostingTiersExperimentMediumGuild);
@@ -645,5 +747,308 @@ public enum GuildFeaturesEnum
 
 	RaidAlertsEnabled,
 
-	UsesApplicationCommandsPermissionsV2
+	UsesApplicationCommandsPermissionsV2,
+
+	/// <summary>Indicates that Discord reports the <c>ACTIVITY_FEED_DISABLED_BY_USER</c> guild feature; its detailed semantics may be undocumented.</summary>
+	ActivityFeedDisabledByUser,
+
+	/// <summary>Indicates that Discord reports the <c>ACTIVITY_FEED_ENABLED_BY_USER</c> guild feature; its detailed semantics may be undocumented.</summary>
+	ActivityFeedEnabledByUser,
+
+	/// <summary>Indicates that Discord reports the <c>AGE_VERIFICATION_LARGE_GUILD</c> guild feature; its detailed semantics may be undocumented.</summary>
+	AgeVerificationLargeGuild,
+
+	/// <summary>Indicates that Discord reports the <c>AUDIO_BITRATE_128_KBPS</c> guild feature; its detailed semantics may be undocumented.</summary>
+	AudioBitrate128Kbps,
+
+	/// <summary>Indicates that Discord reports the <c>AUDIO_BITRATE_256_KBPS</c> guild feature; its detailed semantics may be undocumented.</summary>
+	AudioBitrate256Kbps,
+
+	/// <summary>Indicates that Discord reports the <c>AUDIO_BITRATE_384_KBPS</c> guild feature; its detailed semantics may be undocumented.</summary>
+	AudioBitrate384Kbps,
+
+	/// <summary>Indicates that Discord reports the <c>AUTOMOD_TRIGGER_SPAM_LINK_FILTER</c> guild feature; its detailed semantics may be undocumented.</summary>
+	AutomodTriggerSpamLinkFilter,
+
+	/// <summary>Indicates that Discord reports the <c>AUTOMOD_TRIGGER_USER_PROFILE</c> guild feature; its detailed semantics may be undocumented.</summary>
+	AutomodTriggerUserProfile,
+
+	/// <summary>Indicates that Discord reports the <c>BYPASS_SLOWMODE_PERMISSION_MIGRATION_COMPLETE</c> guild feature; its detailed semantics may be undocumented.</summary>
+	BypassSlowmodePermissionMigrationComplete,
+
+	/// <summary>Indicates that Discord reports the <c>CHANNEL_EMOJIS_GENERATED</c> guild feature; its detailed semantics may be undocumented.</summary>
+	ChannelEmojisGenerated,
+
+	/// <summary>Indicates that Discord reports the <c>CHANNEL_ICON_EMOJIS_GENERATED</c> guild feature; its detailed semantics may be undocumented.</summary>
+	ChannelIconEmojisGenerated,
+
+	/// <summary>Indicates that Discord reports the <c>CLAN</c> guild feature; its detailed semantics may be undocumented.</summary>
+	Clan,
+
+	/// <summary>Indicates that Discord reports the <c>CLAN_DISCOVERY_DISABLED</c> guild feature; its detailed semantics may be undocumented.</summary>
+	ClanDiscoveryDisabled,
+
+	/// <summary>Indicates that Discord reports the <c>CLAN_PILOT_GENSHIN</c> guild feature; its detailed semantics may be undocumented.</summary>
+	ClanPilotGenshin,
+
+	/// <summary>Indicates that Discord reports the <c>CLAN_PILOT_VALORANT</c> guild feature; its detailed semantics may be undocumented.</summary>
+	ClanPilotValorant,
+
+	/// <summary>Indicates that Discord reports the <c>CLAN_SAFETY_REVIEW_DISABLED</c> guild feature; its detailed semantics may be undocumented.</summary>
+	ClanSafetyReviewDisabled,
+
+	/// <summary>Indicates that Discord reports the <c>CLYDE_DISABLED</c> guild feature; its detailed semantics may be undocumented.</summary>
+	ClydeDisabled,
+
+	/// <summary>Indicates that Discord reports the <c>CLYDE_ENABLED</c> guild feature; its detailed semantics may be undocumented.</summary>
+	ClydeEnabled,
+
+	/// <summary>Indicates that Discord reports the <c>CLYDE_EXPERIMENT_ENABLED</c> guild feature; its detailed semantics may be undocumented.</summary>
+	ClydeExperimentEnabled,
+
+	/// <summary>Indicates that Discord reports the <c>COMMUNITY_CANARY</c> guild feature; its detailed semantics may be undocumented.</summary>
+	CommunityCanary,
+
+	/// <summary>Indicates that Discord reports the <c>COMMUNITY_EXP_MEDIUM</c> guild feature; its detailed semantics may be undocumented.</summary>
+	CommunityExpMedium,
+
+	/// <summary>Indicates that Discord reports the <c>COMMUNITY_EXP_LARGE_GATED</c> guild feature; its detailed semantics may be undocumented.</summary>
+	CommunityExpLargeGated,
+
+	/// <summary>Indicates that Discord reports the <c>COMMUNITY_EXP_LARGE_UNGATED</c> guild feature; its detailed semantics may be undocumented.</summary>
+	CommunityExpLargeUngated,
+
+	/// <summary>Indicates that Discord reports the <c>CONFERENCE</c> guild feature; its detailed semantics may be undocumented.</summary>
+	Conference,
+
+	/// <summary>Indicates that Discord reports the <c>CONSIDERED_EXTERNALLY_DISCOVERABLE</c> guild feature; its detailed semantics may be undocumented.</summary>
+	ConsideredExternallyDiscoverable,
+
+	/// <summary>Indicates that Discord reports the <c>CONTENT_INDEXING</c> guild feature; its detailed semantics may be undocumented.</summary>
+	ContentIndexing,
+
+	/// <summary>Indicates that Discord reports the <c>CONVERSATIONS_EXTRACTION_CONTROL</c> guild feature; its detailed semantics may be undocumented.</summary>
+	ConversationsExtractionControl,
+
+	/// <summary>Indicates that Discord reports the <c>CONVERSATIONS_EXTRACTION_OVERRIDE</c> guild feature; its detailed semantics may be undocumented.</summary>
+	ConversationsExtractionOverride,
+
+	/// <summary>Indicates that Discord reports the <c>CONVERSATIONS_EXTRACTION_PROCESSING</c> guild feature; its detailed semantics may be undocumented.</summary>
+	ConversationsExtractionProcessing,
+
+	/// <summary>Indicates that Discord reports the <c>CONVERSATIONS_EXTRACTION_TREATMENT</c> guild feature; its detailed semantics may be undocumented.</summary>
+	ConversationsExtractionTreatment,
+
+	/// <summary>Indicates that Discord reports the <c>CREATOR_ACCEPTED_NEW_TERMS</c> guild feature; its detailed semantics may be undocumented.</summary>
+	CreatorAcceptedNewTerms,
+
+	/// <summary>Indicates that Discord reports the <c>CREATOR_MONETIZABLE_PENDING_NEW_OWNER_ONBOARDING</c> guild feature; its detailed semantics may be undocumented.</summary>
+	CreatorMonetizablePendingNewOwnerOnboarding,
+
+	/// <summary>Indicates that Discord reports the <c>ENABLED_DISCOVERABLE_BEFORE</c> guild feature; its detailed semantics may be undocumented.</summary>
+	EnabledDiscoverableBefore,
+
+	/// <summary>Indicates that Discord reports the <c>ENABLED_MODERATION_EXPERIENCE_FOR_NON_COMMUNITY</c> guild feature; its detailed semantics may be undocumented.</summary>
+	EnabledModerationExperienceForNonCommunity,
+
+	/// <summary>Indicates that Discord reports the <c>ENHANCED_ROLE_COLORS</c> guild feature; its detailed semantics may be undocumented.</summary>
+	EnhancedRoleColors,
+
+	/// <summary>Indicates that Discord reports the <c>FORWARDING_DISABLED</c> guild feature; its detailed semantics may be undocumented.</summary>
+	ForwardingDisabled,
+
+	/// <summary>Indicates that Discord reports the <c>GAME_SERVER_HOSTING</c> guild feature; its detailed semantics may be undocumented.</summary>
+	GameServerHosting,
+
+	/// <summary>Indicates that Discord reports the <c>GAME_SERVERS</c> guild feature; its detailed semantics may be undocumented.</summary>
+	GameServers,
+
+	/// <summary>Indicates that Discord reports the <c>GENSHIN_L30</c> guild feature; its detailed semantics may be undocumented.</summary>
+	GenshinL30,
+
+	/// <summary>Indicates that Discord reports the <c>GUESTS_ENABLED</c> guild feature; its detailed semantics may be undocumented.</summary>
+	GuestsEnabled,
+
+	/// <summary>Indicates that Discord reports the <c>GUILD_HOME_DEPRECATION_OVERRIDE</c> guild feature; its detailed semantics may be undocumented.</summary>
+	GuildHomeDeprecationOverride,
+
+	/// <summary>Indicates that Discord reports the <c>GUILD_ONBOARDING</c> guild feature; its detailed semantics may be undocumented.</summary>
+	GuildOnboarding,
+
+	/// <summary>Indicates that Discord reports the <c>GUILD_ONBOARDING_ADMIN_ONLY</c> guild feature; its detailed semantics may be undocumented.</summary>
+	GuildOnboardingAdminOnly,
+
+	/// <summary>Indicates that Discord reports the <c>GUILD_ONBOARDING_HAS_PROMPTS</c> guild feature; its detailed semantics may be undocumented.</summary>
+	GuildOnboardingHasPrompts,
+
+	/// <summary>Indicates that Discord reports the <c>GUILD_PRODUCTS</c> guild feature; its detailed semantics may be undocumented.</summary>
+	GuildProducts,
+
+	/// <summary>Indicates that Discord reports the <c>GUILD_PRODUCTS_ALLOW_ARCHIVED_FILE</c> guild feature; its detailed semantics may be undocumented.</summary>
+	GuildProductsAllowArchivedFile,
+
+	/// <summary>Indicates that Discord reports the <c>GUILD_ROLE_SUBSCRIPTIONS</c> guild feature; its detailed semantics may be undocumented.</summary>
+	GuildRoleSubscriptions,
+
+	/// <summary>Indicates that Discord reports the <c>GUILD_ROLE_SUBSCRIPTION_TIER_TEMPLATE</c> guild feature; its detailed semantics may be undocumented.</summary>
+	GuildRoleSubscriptionTierTemplate,
+
+	/// <summary>Indicates that Discord reports the <c>GUILD_SERVER_GUIDE</c> guild feature; its detailed semantics may be undocumented.</summary>
+	GuildServerGuide,
+
+	/// <summary>Indicates that Discord reports the <c>GUILD_TAGS</c> guild feature; its detailed semantics may be undocumented.</summary>
+	GuildTags,
+
+	/// <summary>Indicates that Discord reports the <c>GUILD_TAGS_BADGE_PACK_CREEPY_CRAWLIES</c> guild feature; its detailed semantics may be undocumented.</summary>
+	GuildTagsBadgePackCreepyCrawlies,
+
+	/// <summary>Indicates that Discord reports the <c>GUILD_TAGS_BADGE_PACK_FLEX</c> guild feature; its detailed semantics may be undocumented.</summary>
+	GuildTagsBadgePackFlex,
+
+	/// <summary>Indicates that Discord reports the <c>GUILD_TAGS_BADGE_PACK_PETS</c> guild feature; its detailed semantics may be undocumented.</summary>
+	GuildTagsBadgePackPets,
+
+	/// <summary>Indicates that Discord reports the <c>GUILD_TAGS_BADGE_PACK_PLANT</c> guild feature; its detailed semantics may be undocumented.</summary>
+	GuildTagsBadgePackPlant,
+
+	/// <summary>Indicates that Discord reports the <c>GUILD_THEME</c> guild feature; its detailed semantics may be undocumented.</summary>
+	GuildTheme,
+
+	/// <summary>Indicates that Discord reports the <c>GUILD_WEB_PAGE_VANITY_URL</c> guild feature; its detailed semantics may be undocumented.</summary>
+	GuildWebPageVanityUrl,
+
+	/// <summary>Indicates that Discord reports the <c>HIDE_FROM_EXPERIMENT_UI</c> guild feature; its detailed semantics may be undocumented.</summary>
+	HideFromExperimentUi,
+
+	/// <summary>Indicates that Discord reports the <c>LEADERBOARD_ENABLED</c> guild feature; its detailed semantics may be undocumented.</summary>
+	LeaderboardEnabled,
+
+	/// <summary>Indicates that Discord reports the <c>MARKETPLACES_CONNECTION_ROLES</c> guild feature; its detailed semantics may be undocumented.</summary>
+	MarketplacesConnectionRoles,
+
+	/// <summary>Indicates that Discord reports the <c>MAX_FILE_SIZE_50_MB</c> guild feature; its detailed semantics may be undocumented.</summary>
+	MaxFileSize50Mb,
+
+	/// <summary>Indicates that Discord reports the <c>MAX_FILE_SIZE_100_MB</c> guild feature; its detailed semantics may be undocumented.</summary>
+	MaxFileSize100Mb,
+
+	/// <summary>Indicates that Discord reports the <c>MAX_FILE_SIZE_250_MB</c> guild feature; its detailed semantics may be undocumented.</summary>
+	MaxFileSize250Mb,
+
+	/// <summary>Indicates that Discord reports the <c>MEMBER_SAFETY_PAGE_ROLLOUT</c> guild feature; its detailed semantics may be undocumented.</summary>
+	MemberSafetyPageRollout,
+
+	/// <summary>Indicates that Discord reports the <c>MEMBER_VERIFICATION_MANUAL_APPROVAL</c> guild feature; its detailed semantics may be undocumented.</summary>
+	MemberVerificationManualApproval,
+
+	/// <summary>Indicates that Discord reports the <c>MEMBER_VERIFICATION_ROLLOUT_TEST</c> guild feature; its detailed semantics may be undocumented.</summary>
+	MemberVerificationRolloutTest,
+
+	/// <summary>Indicates that Discord reports the <c>MORE_SOUNDBOARD</c> guild feature; its detailed semantics may be undocumented.</summary>
+	MoreSoundboard,
+
+	/// <summary>Indicates that Discord reports the <c>NON_COMMUNITY_RAID_ALERTS</c> guild feature; its detailed semantics may be undocumented.</summary>
+	NonCommunityRaidAlerts,
+
+	/// <summary>Indicates that Discord reports the <c>OFFICIAL_GAME_GUILD</c> guild feature; its detailed semantics may be undocumented.</summary>
+	OfficialGameGuild,
+
+	/// <summary>Indicates that Discord reports the <c>PIN_PERMISSION_MIGRATION_COMPLETE</c> guild feature; its detailed semantics may be undocumented.</summary>
+	PinPermissionMigrationComplete,
+
+	/// <summary>Indicates that Discord reports the <c>POWERUP_BETA_FEATURES</c> guild feature; its detailed semantics may be undocumented.</summary>
+	PowerupBetaFeatures,
+
+	/// <summary>Indicates that Discord reports the <c>PRODUCTS_AVAILABLE_FOR_PURCHASE</c> guild feature; its detailed semantics may be undocumented.</summary>
+	ProductsAvailableForPurchase,
+
+	/// <summary>Indicates that Discord reports the <c>PRUNE_REQUIRES_ADMIN</c> guild feature; its detailed semantics may be undocumented.</summary>
+	PruneRequiresAdmin,
+
+	/// <summary>Indicates that Discord reports the <c>RAID_ALERTS_DISABLED</c> guild feature; its detailed semantics may be undocumented.</summary>
+	RaidAlertsDisabled,
+
+	/// <summary>Indicates that Discord reports the <c>RAPIDASH_TEST</c> guild feature; its detailed semantics may be undocumented.</summary>
+	RapidashTest,
+
+	/// <summary>Indicates that Discord reports the <c>RAPIDASH_TEST_REBIRTH</c> guild feature; its detailed semantics may be undocumented.</summary>
+	RapidashTestRebirth,
+
+	/// <summary>Indicates that Discord reports the <c>REPORT_TO_MOD_PILOT</c> guild feature; its detailed semantics may be undocumented.</summary>
+	ReportToModPilot,
+
+	/// <summary>Indicates that Discord reports the <c>REPORT_TO_MOD_SURVEY</c> guild feature; its detailed semantics may be undocumented.</summary>
+	ReportToModSurvey,
+
+	/// <summary>Indicates that Discord reports the <c>ROLE_SUBSCRIPTIONS_ENABLED_FOR_PURCHASE</c> guild feature; its detailed semantics may be undocumented.</summary>
+	RoleSubscriptionsEnabledForPurchase,
+
+	/// <summary>Indicates that Discord reports the <c>SERVER_PROFILES_TEST</c> guild feature; its detailed semantics may be undocumented.</summary>
+	ServerProfilesTest,
+
+	/// <summary>Indicates that Discord reports the <c>SHARD</c> guild feature; its detailed semantics may be undocumented.</summary>
+	Shard,
+
+	/// <summary>Indicates that Discord reports the <c>SHARED_CANVAS_FRIENDS_AND_FAMILY_TEST</c> guild feature; its detailed semantics may be undocumented.</summary>
+	SharedCanvasFriendsAndFamilyTest,
+
+	/// <summary>Indicates that Discord reports the <c>STAGE_CHANNEL_VIEWERS_50</c> guild feature; its detailed semantics may be undocumented.</summary>
+	StageChannelViewers50,
+
+	/// <summary>Indicates that Discord reports the <c>STAGE_CHANNEL_VIEWERS_150</c> guild feature; its detailed semantics may be undocumented.</summary>
+	StageChannelViewers150,
+
+	/// <summary>Indicates that Discord reports the <c>STAGE_CHANNEL_VIEWERS_300</c> guild feature; its detailed semantics may be undocumented.</summary>
+	StageChannelViewers300,
+
+	/// <summary>Indicates that Discord reports the <c>SUMMARIES_DISABLED_BY_USER</c> guild feature; its detailed semantics may be undocumented.</summary>
+	SummariesDisabledByUser,
+
+	/// <summary>Indicates that Discord reports the <c>SUMMARIES_ENABLED</c> guild feature; its detailed semantics may be undocumented.</summary>
+	SummariesEnabled,
+
+	/// <summary>Indicates that Discord reports the <c>SUMMARIES_ENABLED_BY_USER</c> guild feature; its detailed semantics may be undocumented.</summary>
+	SummariesEnabledByUser,
+
+	/// <summary>Indicates that Discord reports the <c>SUMMARIES_ENABLED_GA</c> guild feature; its detailed semantics may be undocumented.</summary>
+	SummariesEnabledGa,
+
+	/// <summary>Indicates that Discord reports the <c>SUMMARIES_LONG_LOOKBACK</c> guild feature; its detailed semantics may be undocumented.</summary>
+	SummariesLongLookback,
+
+	/// <summary>Indicates that Discord reports the <c>SUMMARIES_OPT_OUT_EXPERIENCE</c> guild feature; its detailed semantics may be undocumented.</summary>
+	SummariesOptOutExperience,
+
+	/// <summary>Indicates that Discord reports the <c>TEXT_IN_STAGE_ENABLED</c> guild feature; its detailed semantics may be undocumented.</summary>
+	TextInStageEnabled,
+
+	/// <summary>Indicates that Discord reports the <c>THREADS_ONLY_CHANNEL</c> guild feature; its detailed semantics may be undocumented.</summary>
+	ThreadsOnlyChannel,
+
+	/// <summary>Indicates that Discord reports the <c>TICKETING_ENABLED</c> guild feature; its detailed semantics may be undocumented.</summary>
+	TicketingEnabled,
+
+	/// <summary>Indicates that Discord reports the <c>TIERLESS_BOOSTING</c> guild feature; its detailed semantics may be undocumented.</summary>
+	TierlessBoosting,
+
+	/// <summary>Indicates that Discord reports the <c>TIERLESS_BOOSTING_CLIENT_TEST</c> guild feature; its detailed semantics may be undocumented.</summary>
+	TierlessBoostingClientTest,
+
+	/// <summary>Indicates that Discord reports the <c>TIERLESS_BOOSTING_SYSTEM_MESSAGE</c> guild feature; its detailed semantics may be undocumented.</summary>
+	TierlessBoostingSystemMessage,
+
+	/// <summary>Indicates that Discord reports the <c>TIERLESS_BOOSTING_TEST</c> guild feature; its detailed semantics may be undocumented.</summary>
+	TierlessBoostingTest,
+
+	/// <summary>Indicates that Discord reports the <c>VALORANT_L30</c> guild feature; its detailed semantics may be undocumented.</summary>
+	ValorantL30,
+
+	/// <summary>Indicates that Discord reports the <c>VIDEO_BITRATE_ENHANCED</c> guild feature; its detailed semantics may be undocumented.</summary>
+	VideoBitrateEnhanced,
+
+	/// <summary>Indicates that Discord reports the <c>VIDEO_QUALITY_720_60FPS</c> guild feature; its detailed semantics may be undocumented.</summary>
+	VideoQuality72060fps,
+
+	/// <summary>Indicates that Discord reports the <c>VIDEO_QUALITY_1080_60FPS</c> guild feature; its detailed semantics may be undocumented.</summary>
+	VideoQuality108060fps,
 }
