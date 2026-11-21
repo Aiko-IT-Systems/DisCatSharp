@@ -11,12 +11,12 @@ public enum SubscriptionStatus
 	Active = 0,
 
 	/// <summary>
-	///     Subscription is ending.
-	/// </summary>
-	Ending = 1,
-
-	/// <summary>
 	///     Subscription is inactive.
 	/// </summary>
-	Inactive = 2
+	Inactive = 1,
+
+	/// <summary>
+	///     Subscription is ending.
+	/// </summary>
+	Ending = 2
 }

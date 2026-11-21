@@ -44,6 +44,7 @@ public class SurfaceRegressionTests
 		Assert.Equal(4, (int)AutomodActionType.QuarantineUser);
 		Assert.Equal(2, (int)AutomodEventType.GuildMemberEvent);
 		Assert.Equal(6, (int)AutomodTriggerType.UserProfile);
-		Assert.Equal(1, (int)SubscriptionStatus.Ending);
+		Assert.Equal(1, (int)SubscriptionStatus.Inactive);
+		Assert.Equal(2, (int)SubscriptionStatus.Ending);
 	}
 }
