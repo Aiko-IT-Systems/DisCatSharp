@@ -118,7 +118,7 @@ public class DiscordConnection : ObservableApiObject
 	///         </item>
 	///         <item>
 	///             <term>battlenet</term>
-	///             <description>false</description>
+	///             <description>Deprecated from the current-user connections endpoint.</description>
 	///         </item>
 	///         <item>
 	///             <term>github</term>
@@ -126,7 +126,7 @@ public class DiscordConnection : ObservableApiObject
 	///         </item>
 	///         <item>
 	///             <term>leagueoflegends</term>
-	///             <description>false</description>
+	///             <description>Riot Games connections are deprecated from the current-user connections endpoint.</description>
 	///         </item>
 	///         <item>
 	///             <term>skype</term>

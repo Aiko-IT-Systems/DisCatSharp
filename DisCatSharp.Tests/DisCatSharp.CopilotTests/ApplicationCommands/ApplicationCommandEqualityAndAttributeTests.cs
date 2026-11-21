@@ -4,6 +4,8 @@ using System.Linq;
 
 using DisCatSharp.ApplicationCommands.Attributes;
 using DisCatSharp.ApplicationCommands.Checks;
+using DisCatSharp.ApplicationCommands;
+using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 
 using Xunit;
@@ -15,6 +17,18 @@ namespace DisCatSharp.Copilot.Tests;
 /// </summary>
 public class ApplicationCommandEqualityAndAttributeTests
 {
+	[Fact]
+	public void EntryPointCopy_PreservesFetchedSnapshotForChangeDetection()
+	{
+		using var client = new DiscordClient(new DiscordConfiguration { Token = "test-token" });
+		var source = new DiscordApplicationCommand("launch", "Original", type: ApplicationCommandType.PrimaryEntryPoint, handlerType: ApplicationCommandHandlerType.AppHandler);
+		var desired = ApplicationCommandsExtension.CopyEntryPointCommand(source);
+		desired.Description = "Updated";
+		desired.HandlerType = ApplicationCommandHandlerType.DiscordLaunchActivity;
+		Assert.Equal("Original", source.Description);
+		Assert.Equal(ApplicationCommandHandlerType.AppHandler, source.HandlerType);
+		Assert.False(source.IsEqualTo(desired, client, false));
+	}
 	// ===== C5: NullableSequenceEqual duplicate-distribution bug =====
 
 	[Fact]

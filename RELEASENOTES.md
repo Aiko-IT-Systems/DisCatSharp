@@ -1,5 +1,6 @@
 DisCatSharp Release Notes
 
+	- Fixed entry-point command synchronization mutating its comparison snapshot, which could hide handler or description changes.
 	- Clarified Discord's permissions for retrieving bans and voice states and for pruning guild members.
 	- Added bot and OAuth lobby HTTP operations with typed lobby, member, message, and invite models.
 	- Allowed forum post creation in media channels and included uploaded files in forum and media thread creation requests.

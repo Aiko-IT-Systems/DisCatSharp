@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
 using DisCatSharp.Entities.OAuth2;
+using DisCatSharp.Enums;
 using DisCatSharp.Net.Serialization;
 using DisCatSharp.Net;
 
@@ -20,6 +21,31 @@ namespace DisCatSharp.Copilot.Tests.Clients;
 /// <summary>Verifies lobby request models and authorization boundaries without calling Discord.</summary>
 public sealed class DiscordLobbyClientTests
 {
+	/// <summary>Checks bot guild listing authenticates as a bot and preserves query pagination and shard.</summary>
+	[Fact]
+	public async Task BotGuildList_UsesBotAuthorizationAndQuery()
+	{
+		using var client = new DiscordClient(new DiscordConfiguration { Token = "test-token" });
+		var handler = new RecordingHandler("[{\"id\":\"12\",\"name\":\"Partial guild\",\"features\":[]}]");
+		InstallHandler(client.ApiClient.Rest, handler);
+		var guild = Assert.Single(await client.GetCurrentUserGuildsAsync(shard: 3, limit: 25, after: 11));
+		Assert.Equal(12UL, guild.Id);
+		Assert.Equal("Bot", handler.Scheme);
+		Assert.Equal("/api/v10/users/@me/guilds?limit=25&after=11&shard=3", handler.Path);
+	}
+	/// <summary>Checks the bulk request retains primary-entry-point descriptions and handlers.</summary>
+	[Fact]
+	public async Task BulkCommandRequest_PreservesEntryPointDescription()
+	{
+		using var client = new DiscordClient(new DiscordConfiguration { Token = "test-token" });
+		var handler = new RecordingHandler("[]");
+		InstallHandler(client.ApiClient.Rest, handler);
+		var command = new DiscordApplicationCommand("launch", "Open the activity", type: ApplicationCommandType.PrimaryEntryPoint, handlerType: ApplicationCommandHandlerType.AppHandler);
+		await client.ApiClient.BulkOverwriteGlobalApplicationCommandsAsync(123, [command]);
+		var payload = JArray.Parse(handler.Body!);
+		Assert.Equal("Open the activity", (string?)payload[0]["description"]);
+		Assert.NotNull(payload[0]["handler"]);
+	}
 	/// <summary>Verifies that bot lobby routes use the bot token and resolve their route parameters.</summary>
 	[Fact]
 	public async Task BotRequest_UsesBotAuthorizationAndLobbyRoute()
@@ -67,13 +93,16 @@ public sealed class DiscordLobbyClientTests
 		public string? Scheme { get; private set; }
 		/// <summary>Gets the received authorization token.</summary>
 		public string? Token { get; private set; }
+		/// <summary>Gets the request body.</summary>
+		public string? Body { get; private set; }
 		/// <summary>Returns the configured response after recording the request.</summary>
-		protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+		protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
 		{
 			this.Path = request.RequestUri!.PathAndQuery;
 			this.Scheme = request.Headers.Authorization?.Scheme;
 			this.Token = request.Headers.Authorization?.Parameter;
-			return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(json) });
+			this.Body = request.Content is null ? null : await request.Content.ReadAsStringAsync(cancellationToken);
+			return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(json) };
 		}
 	}
 	/// <summary>Reads lobby and message responses without dropping metadata or member names.</summary>

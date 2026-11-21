@@ -38,6 +38,14 @@ public class SurfaceRegressionTests
 		Assert.Equal(128, (long)AttachmentFlags.ContainsSelfHarmContent);
 		Assert.Equal(128, (long)EmbedFlags.ContainsSelfHarmContent);
 	}
+
+	[Fact]
+	public void ComponentEmbed_DeserializesContainerLayout()
+	{
+		var embed = DiscordJson.DeserializeObject<DiscordEmbed>("{\"type\":\"components\",\"components\":[{\"type\":17,\"components\":[{\"type\":10,\"content\":\"hello\"}]}]}", null);
+		Assert.Equal("components", embed.Type);
+		Assert.IsType<DiscordContainerComponent>(Assert.Single(embed.Components!));
+	}
 	[Fact]
 	public void GuildFeatures_RecognizeNewAndExistingSpamLinkMappings()
 	{

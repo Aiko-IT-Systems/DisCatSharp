@@ -647,6 +647,26 @@ public class StoreGatewayDispatchFollowupRegressionTests
 	}
 
 	[Fact]
+	public async Task ChannelUpdate_ApplicationIdPreservesOmissionAndAppliesExplicitNull()
+	{
+		var client = CreateClient();
+		const ulong guildId = 12345;
+		const ulong channelId = 67890;
+		var guild = new DiscordGuild { Id = guildId, Discord = client };
+		var cached = new DiscordChannel { Id = channelId, GuildId = guildId, Discord = client, ApplicationId = 42 };
+		guild.ChannelsInternal[channelId] = cached;
+		client.GuildsInternal[guildId] = guild;
+		ChannelUpdateEventArgs? captured = null;
+		client.ChannelUpdated += (_, args) => { captured = args; return Task.CompletedTask; };
+
+		await client.OnChannelUpdateEventAsync(new DiscordChannel { Id = channelId, GuildId = guildId });
+		Assert.Equal(42UL, cached.ApplicationId);
+		await client.OnChannelUpdateEventAsync(new DiscordChannel { Id = channelId, GuildId = guildId, ApplicationId = null });
+		Assert.Null(cached.ApplicationId);
+		Assert.Equal(42UL, captured!.ChannelBefore!.ApplicationId);
+	}
+
+	[Fact]
 	public async Task ChannelUpdate_MissingGuildCache_DoesNotThrowAndStillRaisesEvent()
 	{
 		var client = CreateClient();

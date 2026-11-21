@@ -315,6 +315,19 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 	internal static DiscordApplicationCommand? EntryPointCommand { get; set; } = null;
 
+	/// <summary>Copies a fetched entry point so desired changes do not mutate the comparison snapshot.</summary>
+	/// <param name="source">The entry point returned by Discord.</param>
+	/// <returns>An independent command suitable for registration.</returns>
+	internal static DiscordApplicationCommand CopyEntryPointCommand(DiscordApplicationCommand source)
+		=> new(source.Name, source.Description, source.Options, source.Type, source.NameLocalizations,
+			source.DescriptionLocalizations, source.DefaultMemberPermissions, source.IsNsfw,
+			source.AllowedContexts?.ToList(), source.IntegrationTypes?.ToList(), source.HandlerType)
+		{
+			Id = source.Id,
+			ApplicationId = source.ApplicationId,
+			Version = source.Version
+		};
+
 	/// <summary>
 	///     Gets the user-provided entry point command configuration.
 	///     Set via <see cref="RegisterEntryPointCommand"/>.
@@ -682,6 +695,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					var entryPointCommand = globalCommands.FirstOrDefault(command => command.Type is ApplicationCommandType.PrimaryEntryPoint);
 					if (entryPointCommand is not null)
 					{
+						entryPointCommand = CopyEntryPointCommand(entryPointCommand);
 						if (this._userEntryPointCommand is not null)
 						{
 							entryPointCommand.Description = this._userEntryPointCommand.Description;
