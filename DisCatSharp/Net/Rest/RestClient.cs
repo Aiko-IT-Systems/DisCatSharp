@@ -343,7 +343,8 @@ internal sealed class RestClient : IDisposable, IRestDiagnostics
 			var txt = Utilities.UTF8.GetString(bts, 0, bts.Length);
 
 			if (this.Debug)
-				this._logger.Log(LogLevel.Trace, LoggerEvents.RestRx, "Rest Response Content: {Content}", txt);
+				this._logger.Log(LogLevel.Trace, LoggerEvents.RestRx, "Rest Response Content: {Content}",
+					request.Route == "/partner-sdk/token/bot" ? "<redacted provisional token response>" : txt);
 
 			var response = new RestResponse
 			{

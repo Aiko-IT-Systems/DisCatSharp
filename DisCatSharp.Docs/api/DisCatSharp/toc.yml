@@ -40,6 +40,9 @@ items:
   - uid: DisCatSharp.DiscordShardedClient
     name: DiscordShardedClient
     type: Class
+  - uid: DisCatSharp.DiscordSocialClient
+    name: DiscordSocialClient
+    type: Class
   - uid: DisCatSharp.DiscordWebhookClient
     name: DiscordWebhookClient
     type: Class
@@ -166,6 +169,12 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.DiscordApplicationEmoji
     name: DiscordApplicationEmoji
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordApplicationIdentity
+    name: DiscordApplicationIdentity
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordApplicationIdentityProfile
+    name: DiscordApplicationIdentityProfile
     type: Class
   - uid: DisCatSharp.Entities.DiscordApplicationInstallParams
     name: DiscordApplicationInstallParams
@@ -352,6 +361,18 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.DiscordGameActivity
     name: DiscordGameActivity
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordGameDynamicField
+    name: DiscordGameDynamicField
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordGamePrimaryStats
+    name: DiscordGamePrimaryStats
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordGameProfileData
+    name: DiscordGameProfileData
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordGameProfileMedia
+    name: DiscordGameProfileMedia
     type: Class
   - uid: DisCatSharp.Entities.DiscordGuild
     name: DiscordGuild
@@ -628,6 +649,9 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.DiscordProtocol
     name: DiscordProtocol
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordProvisionalToken
+    name: DiscordProvisionalToken
     type: Class
   - uid: DisCatSharp.Entities.DiscordRadioGroupComponent
     name: DiscordRadioGroupComponent

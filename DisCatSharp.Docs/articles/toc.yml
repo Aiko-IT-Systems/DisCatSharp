@@ -129,6 +129,8 @@ items:
                   uid: modules_interactivity_pagination
     - name: Topics
       items:
+          - name: Social SDK Bot API
+            uid: topics_social_sdk_bot_api
           - name: Configuration Layout
             uid: topics_configuration
           - name: Events
