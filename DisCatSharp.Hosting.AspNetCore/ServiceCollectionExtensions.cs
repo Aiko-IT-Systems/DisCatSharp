@@ -11,6 +11,20 @@ namespace DisCatSharp.Hosting.AspNetCore;
 /// </summary>
 public static class ServiceCollectionExtensions
 {
+	/// <summary>Registers bot-authenticated Social SDK and lobby clients for dependency injection.</summary>
+	/// <remarks>The factory is evaluated when a client is first resolved. For a hosted bot, resolve its client only after the bot has initialized.</remarks>
+	/// <param name="services">The service collection to update.</param>
+	/// <param name="clientFactory">Resolves the initialized bot client; when omitted, a registered <see cref="DiscordClient" /> is used.</param>
+	/// <returns>The service collection for chaining.</returns>
+	public static IServiceCollection AddDiscordSocialSdkSupport(this IServiceCollection services, Func<IServiceProvider, DiscordClient>? clientFactory = null)
+	{
+		ArgumentNullException.ThrowIfNull(services);
+		clientFactory ??= static provider => provider.GetRequiredService<DiscordClient>();
+		services.TryAddSingleton(provider => new DiscordSocialClient(clientFactory(provider)));
+		services.TryAddSingleton(provider => new DiscordLobbyClient(clientFactory(provider)));
+		return services;
+	}
+
 	/// <summary>
 	///     Registers the baseline ASP.NET Core service dependencies used by the DisCatSharp web ingress scaffold.
 	/// </summary>

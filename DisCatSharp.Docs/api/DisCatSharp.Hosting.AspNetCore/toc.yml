@@ -225,6 +225,9 @@ items:
   - uid: DisCatSharp.Hosting.AspNetCore.Ingress.WebhookEvents.DiscordWebhookSocialMessageEventData
     name: DiscordWebhookSocialMessageEventData
     type: Class
+  - uid: DisCatSharp.Hosting.AspNetCore.Ingress.WebhookEvents.DiscordWebhookSocialMessageExtensions
+    name: DiscordWebhookSocialMessageExtensions
+    type: Class
 - uid: DisCatSharp.Hosting.AspNetCore.LinkedRoles
   name: DisCatSharp.Hosting.AspNetCore.LinkedRoles
   type: Namespace
