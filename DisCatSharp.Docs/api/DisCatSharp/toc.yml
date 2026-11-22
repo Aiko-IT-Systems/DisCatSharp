@@ -28,9 +28,6 @@ items:
   - uid: DisCatSharp.DiscordConfiguration
     name: DiscordConfiguration
     type: Class
-  - uid: DisCatSharp.DiscordLobbyClient
-    name: DiscordLobbyClient
-    type: Class
   - uid: DisCatSharp.DiscordOAuth2Client
     name: DiscordOAuth2Client
     type: Class
@@ -40,8 +37,8 @@ items:
   - uid: DisCatSharp.DiscordShardedClient
     name: DiscordShardedClient
     type: Class
-  - uid: DisCatSharp.DiscordSocialClient
-    name: DiscordSocialClient
+  - uid: DisCatSharp.DiscordSocialSdkClient
+    name: DiscordSocialSdkClient
     type: Class
   - uid: DisCatSharp.DiscordWebhookClient
     name: DiscordWebhookClient

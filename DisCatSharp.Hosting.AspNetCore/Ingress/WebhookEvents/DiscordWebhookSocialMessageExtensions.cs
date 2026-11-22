@@ -13,13 +13,13 @@ public static class DiscordWebhookSocialMessageExtensions
 	/// <param name="metadata">The moderation metadata.</param><param name="cancellationToken">A cancellation token.</param>
 	/// <returns>A task representing the request.</returns>
 	/// <exception cref="InvalidOperationException">The payload lacks the lobby or message ID.</exception>
-	public static Task UpdateModerationMetadataAsync(this DiscordWebhookLobbyMessageEventData message, DiscordLobbyClient client, Dictionary<string, string> metadata, CancellationToken cancellationToken = default)
+	public static Task UpdateModerationMetadataAsync(this DiscordWebhookLobbyMessageEventData message, DiscordSocialSdkClient client, Dictionary<string, string> metadata, CancellationToken cancellationToken = default)
 	{
 		ArgumentNullException.ThrowIfNull(message);
 		ArgumentNullException.ThrowIfNull(client);
 		if (message.LobbyId is not > 0 || message.Id == 0)
 			throw new InvalidOperationException("The webhook message must include a lobby ID and message ID.");
-		return client.UpdateModerationMetadataAsync(message.LobbyId.Value, message.Id, metadata, cancellationToken);
+		return client.UpdateLobbyMessageModerationAsync(message.LobbyId.Value, message.Id, metadata, cancellationToken);
 	}
 
 	/// <summary>Updates moderation metadata for a game direct message received by webhook.</summary>
@@ -27,7 +27,7 @@ public static class DiscordWebhookSocialMessageExtensions
 	/// <param name="metadata">The moderation metadata.</param><param name="cancellationToken">A cancellation token.</param>
 	/// <returns>A task representing the request.</returns>
 	/// <exception cref="InvalidOperationException">The payload lacks a message ID, author ID, or recipient ID.</exception>
-	public static Task UpdateModerationMetadataAsync(this DiscordWebhookGameDirectMessageEventData message, DiscordSocialClient client, IReadOnlyDictionary<string, string> metadata, CancellationToken cancellationToken = default)
+	public static Task UpdateModerationMetadataAsync(this DiscordWebhookGameDirectMessageEventData message, DiscordSocialSdkClient client, IReadOnlyDictionary<string, string> metadata, CancellationToken cancellationToken = default)
 	{
 		ArgumentNullException.ThrowIfNull(message);
 		ArgumentNullException.ThrowIfNull(client);

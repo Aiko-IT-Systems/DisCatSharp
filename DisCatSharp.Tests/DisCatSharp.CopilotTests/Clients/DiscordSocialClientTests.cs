@@ -19,7 +19,7 @@ using Xunit;
 namespace DisCatSharp.Copilot.Tests.Clients;
 
 /// <summary>Exercises bot-authenticated Social SDK routes using an in-memory HTTP transport.</summary>
-public sealed class DiscordSocialClientTests
+public sealed class DiscordSocialSdkClientTests
 {
 	/// <summary>Checks user identity lookup returns Discord's identity list without losing provider IDs.</summary>
 	[Fact]
@@ -28,7 +28,7 @@ public sealed class DiscordSocialClientTests
 		using var client = new DiscordClient(new DiscordConfiguration { Token = "bot-test" });
 		var handler = new RecordingHandler(HttpStatusCode.OK, "{\"identities\":[{\"user_id\":\"34\",\"provider_type\":\"OIDC\",\"provider_id\":\"issuer\",\"provider_issued_user_id\":\"external\"}]}");
 		InstallHandler(client.ApiClient.Rest, handler);
-		var identity = Assert.Single(await new DiscordSocialClient(client).GetUserIdentitiesAsync(12, 34));
+		var identity = Assert.Single(await new DiscordSocialSdkClient(client).GetUserIdentitiesAsync(12, 34));
 		Assert.Equal("issuer", identity.ProviderId);
 		Assert.Equal("/api/v10/users/34/application-identities/12", handler.Path);
 	}
@@ -40,7 +40,7 @@ public sealed class DiscordSocialClientTests
 		using var client = new DiscordClient(new DiscordConfiguration { Token = "bot-test" });
 		var handler = new RecordingHandler(HttpStatusCode.OK, "{\"username\":\"cat\",\"metadata\":{\"a\":1},\"data\":{\"primary\":{\"total_wins\":4},\"dynamic\":[{\"type\":1,\"name\":\"rank\",\"value\":\"gold\"}]}}");
 		InstallHandler(client.ApiClient.Rest, handler);
-		var profile = await new DiscordSocialClient(client).GetProfileAsync(12, 34, "external");
+		var profile = await new DiscordSocialSdkClient(client).GetProfileAsync(12, 34, "external");
 		Assert.Equal(4, profile.Data!.Primary!.TotalWins);
 		Assert.Equal("gold", (string?)Assert.Single(profile.Data.Dynamic!).Value);
 		Assert.Equal(1, (int)profile.Metadata!["a"]!);
@@ -53,7 +53,7 @@ public sealed class DiscordSocialClientTests
 		using var client = new DiscordClient(new DiscordConfiguration { Token = "bot-test" });
 		var handler = new RecordingHandler(HttpStatusCode.NoContent, "");
 		InstallHandler(client.ApiClient.Rest, handler);
-		await new DiscordSocialClient(client).DeleteIdentityAsync(12, 34, "OIDC", "external/id", "issuer");
+		await new DiscordSocialSdkClient(client).DeleteIdentityAsync(12, 34, "OIDC", "external/id", "issuer");
 		Assert.Equal(HttpMethod.Post, handler.Method);
 		Assert.Equal("/api/v10/users/34/application-identities/12/OIDC/external%2Fid/delete", handler.Path);
 		Assert.Equal("issuer", (string?)JObject.Parse(handler.Body!)["provider_id"]);
@@ -66,7 +66,7 @@ public sealed class DiscordSocialClientTests
 		using var client = new DiscordClient(new DiscordConfiguration { Token = "bot-test" });
 		var handler = new RecordingHandler(HttpStatusCode.NoContent, "");
 		InstallHandler(client.ApiClient.Rest, handler);
-		await new DiscordSocialClient(client).UnmergeProvisionalAccountAsync("player");
+		await new DiscordSocialSdkClient(client).UnmergeProvisionalAccountAsync("player");
 		Assert.Equal("/api/v10/partner-sdk/provisional-accounts/unmerge/bot", handler.Path);
 		Assert.Equal("player", (string?)JObject.Parse(handler.Body!)["external_user_id"]);
 	}
@@ -77,7 +77,7 @@ public sealed class DiscordSocialClientTests
 		using var client = new DiscordClient(new DiscordConfiguration { Token = "bot-test" });
 		var handler = new RecordingHandler(HttpStatusCode.OK, "{\"identities\":[{\"user_id\":\"77\",\"provider_type\":\"OIDC\",\"provider_issued_user_id\":\"a/b\"}]}");
 		InstallHandler(client.ApiClient.Rest, handler);
-		var result = await new DiscordSocialClient(client).GetIdentitiesByExternalIdAsync(12, "OIDC", "a/b ?", "site & app");
+		var result = await new DiscordSocialSdkClient(client).GetIdentitiesByExternalIdAsync(12, "OIDC", "a/b ?", "site & app");
 		Assert.Equal(77UL, Assert.Single(result).UserId);
 		Assert.Equal("Bot", handler.Scheme);
 		Assert.Equal("/api/v10/applications/12/application-identities/OIDC/a%2Fb%20%3F?provider_id=site%20%26%20app", handler.Path);
@@ -97,7 +97,7 @@ public sealed class DiscordSocialClientTests
 			Primary = new() { PlaytimeHours = 69.41, TotalWins = 57 },
 			Dynamic = [DiscordGameDynamicField.String("tier", "gold"), DiscordGameDynamicField.Number("score", 1.5), DiscordGameDynamicField.Media("badge", "https://example.org/a.png")]
 		};
-		await new DiscordSocialClient(client).UpdateProfileAsync(12, 34, "external/id", data: data);
+		await new DiscordSocialSdkClient(client).UpdateProfileAsync(12, 34, "external/id", data: data);
 		var payload = JObject.Parse(handler.Body!);
 		Assert.Null(payload["username"]);
 		Assert.Equal(69.41, (double)payload["data"]!["primary"]!["playtime_hours"]!);
@@ -112,7 +112,7 @@ public sealed class DiscordSocialClientTests
 		using var client = new DiscordClient(new DiscordConfiguration { Token = "bot-test" });
 		var handler = new RecordingHandler(HttpStatusCode.NoContent, "");
 		InstallHandler(client.ApiClient.Rest, handler);
-		await new DiscordSocialClient(client).UpdateProfileAsync(12, 34, "abc", username: "cat");
+		await new DiscordSocialSdkClient(client).UpdateProfileAsync(12, 34, "abc", username: "cat");
 		Assert.Equal("cat", (string?)JObject.Parse(handler.Body!)["username"]);
 		Assert.Null(JObject.Parse(handler.Body!)["data"]);
 	}
@@ -124,7 +124,7 @@ public sealed class DiscordSocialClientTests
 		using var client = new DiscordClient(new DiscordConfiguration { Token = "bot-test" });
 		var handler = new RecordingHandler(HttpStatusCode.NoContent, "");
 		InstallHandler(client.ApiClient.Rest, handler);
-		await new DiscordSocialClient(client).UpdateDirectMessageModerationAsync(1, 2, 3, new Dictionary<string, string> { ["action"] = "hide" });
+		await new DiscordSocialSdkClient(client).UpdateDirectMessageModerationAsync(1, 2, 3, new Dictionary<string, string> { ["action"] = "hide" });
 		Assert.Equal("/api/v10/partner-sdk/dms/1/2/messages/3/moderation-metadata", handler.Path);
 		Assert.Equal("hide", (string?)JObject.Parse(handler.Body!)["action"]);
 	}
@@ -138,7 +138,7 @@ public sealed class DiscordSocialClientTests
 		using var client = new DiscordClient(new DiscordConfiguration { Token = "bot-test", EnableLibraryDeveloperMode = true, Logging = new() { MinimumLogLevel = LogLevel.Trace, LoggerFactory = loggerFactory } });
 		var handler = new RecordingHandler(HttpStatusCode.OK, "{\"access_token\":\"secret-access-value\",\"id_token\":\"secret-identity-value\",\"refresh_token\":\"secret-extra-value\",\"token_type\":\"Bearer\",\"expires_in\":100,\"scope\":\"sdk.social_layer\"}");
 		InstallHandler(client.ApiClient.Rest, handler);
-		var token = await new DiscordSocialClient(client).GetProvisionalTokenAsync("player-1", "Lala");
+		var token = await new DiscordSocialSdkClient(client).GetProvisionalTokenAsync("player-1", "Lala");
 		Assert.Equal("secret-access-value", token.AccessToken);
 		Assert.Equal("/api/v10/partner-sdk/token/bot", handler.Path);
 		Assert.Equal("player-1", (string?)JObject.Parse(handler.Body!)["external_user_id"]);

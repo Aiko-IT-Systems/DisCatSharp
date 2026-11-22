@@ -13,9 +13,8 @@ using DisCatSharp.Net.Serialization;
 
 namespace DisCatSharp;
 
-/// <summary>Provides HTTP access to Discord lobbies using either a bot or an OAuth2 user token.</summary>
-/// <remarks>Bot and bearer routes are distinct; methods reject attempts to use the wrong client kind.</remarks>
-public sealed class DiscordLobbyClient
+/// <summary>Provides lobby operations for the Social SDK client.</summary>
+public sealed partial class DiscordSocialSdkClient
 {
 	/// <summary>The REST client shared with the originating Discord client.</summary>
 	private readonly DiscordApiClient _api;
@@ -26,34 +25,13 @@ public sealed class DiscordLobbyClient
 	/// <summary>The bearer token, when using OAuth authentication.</summary>
 	private readonly DiscordAccessToken? _token;
 
-	/// <summary>Creates a lobby client for bot-authenticated operations.</summary>
-	/// <param name="client">The bot client providing REST and rate-limit handling.</param>
-	public DiscordLobbyClient(DiscordClient client)
-	{
-		ArgumentNullException.ThrowIfNull(client);
-		this._bot = client;
-		this._api = client.ApiClient;
-	}
-
-	/// <summary>Creates a lobby client for user bearer-token operations.</summary>
-	/// <param name="client">The OAuth client providing REST and rate-limit handling.</param>
-	/// <param name="token">The user's OAuth access token.</param>
-	public DiscordLobbyClient(DiscordOAuth2Client client, DiscordAccessToken token)
-	{
-		ArgumentNullException.ThrowIfNull(client);
-		ArgumentNullException.ThrowIfNull(token);
-		this._oauth = client;
-		this._token = token;
-		this._api = client.ApiClient;
-	}
-
 	/// <summary>Creates a bot-managed lobby with at most 25 initial members.</summary>
 	/// <param name="metadata">Optional lobby metadata.</param>
 	/// <param name="members">Optional initial members.</param>
 	/// <param name="idleTimeoutSeconds">Optional idle timeout in seconds.</param>
 	/// <param name="cancellationToken">A cancellation token.</param>
 	/// <returns>The created lobby.</returns>
-	public Task<DiscordLobby> CreateAsync(Dictionary<string, string>? metadata = null, IEnumerable<DiscordLobbyMemberUpdate>? members = null, int? idleTimeoutSeconds = null, CancellationToken cancellationToken = default)
+	public Task<DiscordLobby> CreateLobbyAsync(Dictionary<string, string>? metadata = null, IEnumerable<DiscordLobbyMemberUpdate>? members = null, int? idleTimeoutSeconds = null, CancellationToken cancellationToken = default)
 	{
 		this.RequireBot();
 		var memberArray = ValidateMembers(members, false);
@@ -67,7 +45,7 @@ public sealed class DiscordLobbyClient
 	/// <summary>Gets a bot-managed lobby.</summary>
 	/// <param name="lobbyId">The lobby ID.</param><param name="cancellationToken">A cancellation token.</param>
 	/// <returns>The lobby.</returns>
-	public Task<DiscordLobby> GetAsync(ulong lobbyId, CancellationToken cancellationToken = default)
+	public Task<DiscordLobby> GetLobbyAsync(ulong lobbyId, CancellationToken cancellationToken = default)
 	{
 		this.RequireBot();
 		return this.RequestObjectAsync<DiscordLobby>(RestRequestMethod.GET, "/lobbies/:lobby_id", lobbyId, null, null, cancellationToken);
@@ -77,7 +55,7 @@ public sealed class DiscordLobbyClient
 	/// <param name="lobbyId">The lobby ID.</param><param name="metadata">Optional replacement metadata; an explicit null clears it.</param>
 	/// <param name="members">Optional replacement members, at most 25.</param><param name="idleTimeoutSeconds">Optional idle timeout in seconds.</param>
 	/// <param name="cancellationToken">A cancellation token.</param><returns>The updated lobby.</returns>
-	public Task<DiscordLobby> ModifyAsync(ulong lobbyId, Optional<Dictionary<string, string>?> metadata = default, IEnumerable<DiscordLobbyMemberUpdate>? members = null, int? idleTimeoutSeconds = null, CancellationToken cancellationToken = default)
+	public Task<DiscordLobby> ModifyLobbyAsync(ulong lobbyId, Optional<Dictionary<string, string>?> metadata = default, IEnumerable<DiscordLobbyMemberUpdate>? members = null, int? idleTimeoutSeconds = null, CancellationToken cancellationToken = default)
 	{
 		this.RequireBot();
 		var body = new Dictionary<string, object?>();
@@ -89,7 +67,7 @@ public sealed class DiscordLobbyClient
 
 	/// <summary>Deletes a bot-managed lobby.</summary>
 	/// <param name="lobbyId">The lobby ID.</param><param name="cancellationToken">A cancellation token.</param><returns>A task representing the request.</returns>
-	public Task DeleteAsync(ulong lobbyId, CancellationToken cancellationToken = default)
+	public Task DeleteLobbyAsync(ulong lobbyId, CancellationToken cancellationToken = default)
 	{
 		this.RequireBot();
 		return this.RequestAsync(RestRequestMethod.DELETE, "/lobbies/:lobby_id", lobbyId, null, null, cancellationToken);
@@ -97,7 +75,7 @@ public sealed class DiscordLobbyClient
 
 	/// <summary>Adds or updates one member in a bot-managed lobby.</summary>
 	/// <param name="lobbyId">The lobby ID.</param><param name="member">The member and fields to update.</param><param name="cancellationToken">A cancellation token.</param><returns>The lobby member.</returns>
-	public Task<DiscordLobbyMember> UpsertMemberAsync(ulong lobbyId, DiscordLobbyMemberUpdate member, CancellationToken cancellationToken = default)
+	public Task<DiscordLobbyMember> UpsertLobbyMemberAsync(ulong lobbyId, DiscordLobbyMemberUpdate member, CancellationToken cancellationToken = default)
 	{
 		this.RequireBot();
 		ArgumentNullException.ThrowIfNull(member);
@@ -110,7 +88,7 @@ public sealed class DiscordLobbyClient
 
 	/// <summary>Adds, updates, or removes one to 25 members in one request.</summary>
 	/// <param name="lobbyId">The lobby ID.</param><param name="members">The member updates.</param><param name="cancellationToken">A cancellation token.</param><returns>The members upserted by Discord.</returns>
-	public async Task<IReadOnlyList<DiscordLobbyMember>> UpdateMembersAsync(ulong lobbyId, IEnumerable<DiscordLobbyMemberUpdate> members, CancellationToken cancellationToken = default)
+	public async Task<IReadOnlyList<DiscordLobbyMember>> UpdateLobbyMembersAsync(ulong lobbyId, IEnumerable<DiscordLobbyMemberUpdate> members, CancellationToken cancellationToken = default)
 	{
 		this.RequireBot();
 		var response = await this.RequestAsync(RestRequestMethod.POST, "/lobbies/:lobby_id/members/bulk", lobbyId, null, ValidateMembers(members, true), cancellationToken).ConfigureAwait(false);
@@ -119,7 +97,7 @@ public sealed class DiscordLobbyClient
 
 	/// <summary>Removes a member from a bot-managed lobby.</summary>
 	/// <param name="lobbyId">The lobby ID.</param><param name="userId">The user's ID.</param><param name="cancellationToken">A cancellation token.</param><returns>A task representing the request.</returns>
-	public Task RemoveMemberAsync(ulong lobbyId, ulong userId, CancellationToken cancellationToken = default)
+	public Task RemoveLobbyMemberAsync(ulong lobbyId, ulong userId, CancellationToken cancellationToken = default)
 	{
 		this.RequireBot();
 		return this.RequestAsync(RestRequestMethod.DELETE, "/lobbies/:lobby_id/members/:user_id", lobbyId, userId, null, cancellationToken);
@@ -127,7 +105,7 @@ public sealed class DiscordLobbyClient
 
 	/// <summary>Creates a single-use linked-channel invite for a specified user using bot authentication.</summary>
 	/// <param name="lobbyId">The lobby ID.</param><param name="userId">The target user ID.</param><param name="cancellationToken">A cancellation token.</param><returns>The invite.</returns>
-	public Task<DiscordLobbyInvite> CreateUserInviteAsync(ulong lobbyId, ulong userId, CancellationToken cancellationToken = default)
+	public Task<DiscordLobbyInvite> CreateLobbyUserInviteAsync(ulong lobbyId, ulong userId, CancellationToken cancellationToken = default)
 	{
 		this.RequireBot();
 		return this.RequestObjectAsync<DiscordLobbyInvite>(RestRequestMethod.POST, "/lobbies/:lobby_id/members/:user_id/invites", lobbyId, userId, null, cancellationToken);
@@ -135,7 +113,7 @@ public sealed class DiscordLobbyClient
 
 	/// <summary>Updates application-scoped moderation metadata on a lobby message.</summary>
 	/// <param name="lobbyId">The lobby ID.</param><param name="messageId">The message ID.</param><param name="metadata">The moderation metadata.</param><param name="cancellationToken">A cancellation token.</param><returns>A task representing the request.</returns>
-	public Task UpdateModerationMetadataAsync(ulong lobbyId, ulong messageId, Dictionary<string, string> metadata, CancellationToken cancellationToken = default)
+	public Task UpdateLobbyMessageModerationAsync(ulong lobbyId, ulong messageId, Dictionary<string, string> metadata, CancellationToken cancellationToken = default)
 	{
 		this.RequireBot();
 		ArgumentNullException.ThrowIfNull(metadata);
@@ -144,7 +122,7 @@ public sealed class DiscordLobbyClient
 
 	/// <summary>Creates or joins a lobby using the current user's social-layer bearer token.</summary>
 	/// <param name="secret">The application-scoped lobby secret.</param><param name="lobbyMetadata">Optional lobby metadata.</param><param name="memberMetadata">Optional member metadata.</param><param name="idleTimeoutSeconds">Optional idle timeout.</param><param name="cancellationToken">A cancellation token.</param><returns>The joined lobby.</returns>
-	public Task<DiscordLobby> CreateOrJoinAsync(string secret, Dictionary<string, string>? lobbyMetadata = null, Dictionary<string, string>? memberMetadata = null, int? idleTimeoutSeconds = null, CancellationToken cancellationToken = default)
+	public Task<DiscordLobby> CreateOrJoinLobbyAsync(string secret, Dictionary<string, string>? lobbyMetadata = null, Dictionary<string, string>? memberMetadata = null, int? idleTimeoutSeconds = null, CancellationToken cancellationToken = default)
 	{
 		this.RequireBearer();
 		ArgumentException.ThrowIfNullOrEmpty(secret);
@@ -158,7 +136,7 @@ public sealed class DiscordLobbyClient
 
 	/// <summary>Removes the current OAuth user from a lobby.</summary>
 	/// <param name="lobbyId">The lobby ID.</param><param name="cancellationToken">A cancellation token.</param><returns>A task representing the request.</returns>
-	public Task LeaveAsync(ulong lobbyId, CancellationToken cancellationToken = default)
+	public Task LeaveLobbyAsync(ulong lobbyId, CancellationToken cancellationToken = default)
 	{
 		this.RequireBearer(false);
 		return this.RequestAsync(RestRequestMethod.DELETE, "/lobbies/:lobby_id/members/@me", lobbyId, null, null, cancellationToken);
@@ -166,7 +144,7 @@ public sealed class DiscordLobbyClient
 
 	/// <summary>Links or unlinks a guild channel using a lobby member's bearer token.</summary>
 	/// <param name="lobbyId">The lobby ID.</param><param name="channelId">The channel to link, or null to unlink.</param><param name="cancellationToken">A cancellation token.</param><returns>The updated lobby.</returns>
-	public Task<DiscordLobby> LinkChannelAsync(ulong lobbyId, ulong? channelId, CancellationToken cancellationToken = default)
+	public Task<DiscordLobby> LinkLobbyChannelAsync(ulong lobbyId, ulong? channelId, CancellationToken cancellationToken = default)
 	{
 		this.RequireBearer(false);
 		var body = new Dictionary<string, object>();
@@ -176,7 +154,7 @@ public sealed class DiscordLobbyClient
 
 	/// <summary>Sends a lobby message as the current OAuth user.</summary>
 	/// <param name="lobbyId">The lobby ID.</param><param name="content">The nonempty message content.</param><param name="metadata">Optional dispatch-only metadata.</param><param name="flags">Optional Social SDK message flags.</param><param name="cancellationToken">A cancellation token.</param><returns>The created lobby message.</returns>
-	public Task<DiscordLobbyMessage> SendMessageAsync(ulong lobbyId, string content, Dictionary<string, string>? metadata = null, MessageFlags? flags = null, CancellationToken cancellationToken = default)
+	public Task<DiscordLobbyMessage> SendLobbyMessageAsync(ulong lobbyId, string content, Dictionary<string, string>? metadata = null, MessageFlags? flags = null, CancellationToken cancellationToken = default)
 	{
 		this.RequireBearer();
 		ArgumentException.ThrowIfNullOrEmpty(content);
@@ -188,7 +166,7 @@ public sealed class DiscordLobbyClient
 
 	/// <summary>Gets recent lobby messages as the current OAuth user.</summary>
 	/// <param name="lobbyId">The lobby ID.</param><param name="limit">The maximum number of messages, between 1 and 200.</param><param name="cancellationToken">A cancellation token.</param><returns>The recent messages.</returns>
-	public async Task<IReadOnlyList<DiscordLobbyMessage>> GetMessagesAsync(ulong lobbyId, int limit = 50, CancellationToken cancellationToken = default)
+	public async Task<IReadOnlyList<DiscordLobbyMessage>> GetLobbyMessagesAsync(ulong lobbyId, int limit = 50, CancellationToken cancellationToken = default)
 	{
 		this.RequireBearer();
 		ArgumentOutOfRangeException.ThrowIfLessThan(limit, 1);
@@ -199,7 +177,7 @@ public sealed class DiscordLobbyClient
 
 	/// <summary>Creates a linked-channel invite targeted at the current OAuth user.</summary>
 	/// <param name="lobbyId">The lobby ID.</param><param name="cancellationToken">A cancellation token.</param><returns>The invite.</returns>
-	public Task<DiscordLobbyInvite> CreateSelfInviteAsync(ulong lobbyId, CancellationToken cancellationToken = default)
+	public Task<DiscordLobbyInvite> CreateLobbySelfInviteAsync(ulong lobbyId, CancellationToken cancellationToken = default)
 	{
 		this.RequireBearer();
 		return this.RequestObjectAsync<DiscordLobbyInvite>(RestRequestMethod.POST, "/lobbies/:lobby_id/members/@me/invites", lobbyId, null, null, cancellationToken);

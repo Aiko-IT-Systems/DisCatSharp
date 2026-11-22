@@ -1,6 +1,7 @@
 DisCatSharp Release Notes
 
-	- Added ASP.NET Core dependency-injection registration for Social SDK and lobby clients and webhook-message moderation helpers.
+	- Unified Social SDK and lobby operations under `DiscordSocialSdkClient`.
+	- Added ASP.NET Core dependency-injection registration for the Social SDK client and webhook-message moderation helpers.
 	- Added bot-authenticated Social SDK provisional account, direct-message moderation, application identity, and game-stat profile operations. Provisional token responses are redacted from REST trace logs.
 	- Enabled text-channel message helpers and cloning for application channels.
 	- Removed .NET 9 support; library and test projects now target .NET 10 and .NET 11.

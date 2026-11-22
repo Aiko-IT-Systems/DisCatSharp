@@ -70,7 +70,7 @@ public sealed class DiscordLobbyClientTests
 		using var client = new DiscordClient(new DiscordConfiguration { Token = "test-token" });
 		var handler = new RecordingHandler("{\"id\":\"12\",\"application_id\":\"34\",\"members\":[]}");
 		InstallHandler(client.ApiClient.Rest, handler);
-		var lobby = await new DiscordLobbyClient(client).GetAsync(12);
+		var lobby = await new DiscordSocialSdkClient(client).GetLobbyAsync(12);
 		Assert.Equal(12UL, lobby.Id);
 		Assert.Equal("/api/v10/lobbies/12", handler.Path);
 		Assert.Equal("Bot", handler.Scheme);
@@ -84,7 +84,7 @@ public sealed class DiscordLobbyClientTests
 		var handler = new RecordingHandler("[]");
 		InstallHandler(client.ApiClient.Rest, handler);
 		var token = new DiscordAccessToken("user-token", "Bearer", 3600, "refresh", "sdk.social_layer");
-		Assert.Empty(await new DiscordLobbyClient(client, token).GetMessagesAsync(12, 17));
+		Assert.Empty(await new DiscordSocialSdkClient(client, token).GetLobbyMessagesAsync(12, 17));
 		Assert.Equal("/api/v10/lobbies/12/messages?limit=17", handler.Path);
 		Assert.Equal("Bearer", handler.Scheme);
 		Assert.Equal("user-token", handler.Token);
@@ -151,9 +151,9 @@ public sealed class DiscordLobbyClientTests
 	public void BotClient_RejectsOversizedBatchesAndBearerOperations()
 	{
 		using var client = new DiscordClient(new DiscordConfiguration { Token = "test" });
-		var lobby = new DiscordLobbyClient(client);
-		Assert.Throws<ArgumentOutOfRangeException>(() => { _ = lobby.CreateAsync(members: Enumerable.Range(1, 26).Select(x => new DiscordLobbyMemberUpdate { Id = (ulong)x })); });
-		Assert.Throws<InvalidOperationException>(() => { _ = lobby.CreateOrJoinAsync("secret"); });
+		var lobby = new DiscordSocialSdkClient(client);
+		Assert.Throws<ArgumentOutOfRangeException>(() => { _ = lobby.CreateLobbyAsync(members: Enumerable.Range(1, 26).Select(x => new DiscordLobbyMemberUpdate { Id = (ulong)x })); });
+		Assert.Throws<InvalidOperationException>(() => { _ = lobby.CreateOrJoinLobbyAsync("secret"); });
 	}
 
 	/// <summary>Checks that bearer-only clients cannot use bot routes or omit required scope.</summary>
@@ -162,8 +162,22 @@ public sealed class DiscordLobbyClientTests
 	{
 		using var client = new DiscordOAuth2Client(123, "test", "https://example.org/callback");
 		var token = new DiscordAccessToken("token", "Bearer", 3600, "refresh", "identify");
-		var lobby = new DiscordLobbyClient(client, token);
-		Assert.Throws<InvalidOperationException>(() => { _ = lobby.GetAsync(123); });
-		Assert.Throws<InvalidOperationException>(() => { _ = lobby.CreateOrJoinAsync("secret"); });
+		var lobby = new DiscordSocialSdkClient(client, token);
+		Assert.Throws<InvalidOperationException>(() => { _ = lobby.GetLobbyAsync(123); });
+		Assert.Throws<InvalidOperationException>(() => { _ = lobby.CreateOrJoinLobbyAsync("secret"); });
+	}
+
+	/// <summary>Checks unified clients preserve bot and bearer authorization boundaries.</summary>
+	[Fact]
+	public async Task SocialSdkClient_EnforcesAuthenticationForBothOperationGroups()
+	{
+		using var bot = new DiscordClient(new DiscordConfiguration { Token = "test" });
+		using var oauth = new DiscordOAuth2Client(123, "test", "https://example.org/callback");
+		var token = new DiscordAccessToken("token", "Bearer", 3600, "refresh", "sdk.social_layer");
+		var botSocial = new DiscordSocialSdkClient(bot);
+		var userSocial = new DiscordSocialSdkClient(oauth, token);
+		Assert.Throws<InvalidOperationException>(() => { _ = botSocial.CreateOrJoinLobbyAsync("secret"); });
+		Assert.Throws<InvalidOperationException>(() => { _ = userSocial.GetLobbyAsync(123); });
+		await Assert.ThrowsAsync<InvalidOperationException>(() => userSocial.GetProfileAsync(1, 2, "player"));
 	}
 }

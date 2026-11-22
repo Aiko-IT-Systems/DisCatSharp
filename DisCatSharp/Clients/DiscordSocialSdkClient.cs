@@ -5,21 +5,35 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Entities.OAuth2;
 using DisCatSharp.Net;
 using DisCatSharp.Net.Serialization;
 
 namespace DisCatSharp;
 
-/// <summary>Bot-authenticated HTTP operations for Discord's Social SDK and game-stat features.</summary>
-/// <remarks>Discord may require Social SDK or game-stat access and user authorization for individual operations.</remarks>
-public sealed class DiscordSocialClient
+/// <summary>Provides bot and OAuth access to Discord Social SDK and game-stat operations.</summary>
+/// <remarks>Individual operations require either bot or user authorization. Discord may restrict access to Social SDK or game-stat features.</remarks>
+public sealed partial class DiscordSocialSdkClient
 {
-	/// <summary>The bot client whose REST transport and authorization are used for all requests.</summary>
-	private readonly DiscordClient _client;
-
 	/// <summary>Creates a Social SDK API client backed by a bot client.</summary>
 	/// <param name="client">The bot client.</param>
-	public DiscordSocialClient(DiscordClient client) => this._client = client ?? throw new ArgumentNullException(nameof(client));
+	public DiscordSocialSdkClient(DiscordClient client)
+	{
+		this._bot = client ?? throw new ArgumentNullException(nameof(client));
+		this._api = client.ApiClient;
+	}
+
+	/// <summary>Creates a Social SDK client for user-authenticated operations.</summary>
+	/// <param name="client">The OAuth client providing REST and rate-limit handling.</param>
+	/// <param name="token">The user access token.</param>
+	public DiscordSocialSdkClient(DiscordOAuth2Client client, DiscordAccessToken token)
+	{
+		ArgumentNullException.ThrowIfNull(client);
+		ArgumentNullException.ThrowIfNull(token);
+		this._oauth = client;
+		this._token = token;
+		this._api = client.ApiClient;
+	}
 
 	/// <summary>Gets game-stat profile data for an authorized user's external identity.</summary>
 	/// <param name="applicationId">The application's ID.</param>
@@ -30,7 +44,7 @@ public sealed class DiscordSocialClient
 	public async Task<DiscordApplicationIdentityProfile> GetProfileAsync(ulong applicationId, ulong userId, string externalUserId, CancellationToken cancellationToken = default)
 	{
 		var result = await this.RequestAsync(RestRequestMethod.GET, "/applications/:application_id/users/:user_id/identities/:external_id/profile", applicationId, userId, externalId: externalUserId, cancellationToken: cancellationToken).ConfigureAwait(false);
-		return DiscordJson.DeserializeObject<DiscordApplicationIdentityProfile>(result.Response, this._client);
+		return DiscordJson.DeserializeObject<DiscordApplicationIdentityProfile>(result.Response, this._bot);
 	}
 
 	/// <summary>Updates an authorized user's application identity profile.</summary>
@@ -61,7 +75,7 @@ public sealed class DiscordSocialClient
 	public async Task<IReadOnlyList<DiscordApplicationIdentity>> GetUserIdentitiesAsync(ulong applicationId, ulong userId, CancellationToken cancellationToken = default)
 	{
 		var result = await this.RequestAsync(RestRequestMethod.GET, "/users/:user_id/application-identities/:application_id", applicationId, userId, cancellationToken: cancellationToken).ConfigureAwait(false);
-		return DiscordJson.DeserializeObject<DiscordApplicationIdentityList>(result.Response, this._client).Identities;
+		return DiscordJson.DeserializeObject<DiscordApplicationIdentityList>(result.Response, this._bot).Identities;
 	}
 
 	/// <summary>Finds application identities by external provider and user ID.</summary>
@@ -70,7 +84,7 @@ public sealed class DiscordSocialClient
 	public async Task<IReadOnlyList<DiscordApplicationIdentity>> GetIdentitiesByExternalIdAsync(ulong applicationId, string providerType, string externalUserId, string? providerId = null, CancellationToken cancellationToken = default)
 	{
 		var result = await this.RequestAsync(RestRequestMethod.GET, "/applications/:application_id/application-identities/:provider_type/:external_id", applicationId, providerType: providerType, externalId: externalUserId, providerId: providerId, cancellationToken: cancellationToken).ConfigureAwait(false);
-		return DiscordJson.DeserializeObject<DiscordApplicationIdentityList>(result.Response, this._client).Identities;
+		return DiscordJson.DeserializeObject<DiscordApplicationIdentityList>(result.Response, this._bot).Identities;
 	}
 
 	/// <summary>Deletes an application identity and its associated profile data.</summary>
@@ -131,6 +145,7 @@ public sealed class DiscordSocialClient
 	/// <returns>The REST response.</returns>
 	private Task<RestResponse> RequestAsync(RestRequestMethod method, string route, ulong applicationId = 0, ulong userId = 0, ulong otherUserId = 0, ulong messageId = 0, string? providerType = null, string? externalId = null, string? providerId = null, object? body = null, CancellationToken cancellationToken = default)
 	{
+		if (this._bot is null) throw new InvalidOperationException("This Social SDK operation requires a bot client.");
 		var parameters = new
 		{
 			application_id = applicationId,
@@ -142,9 +157,9 @@ public sealed class DiscordSocialClient
 		};
 		if (route.Contains(":external_id", StringComparison.Ordinal) && externalId is null) throw new ArgumentNullException(nameof(externalId));
 		if (route.Contains(":provider_type", StringComparison.Ordinal) && providerType is null) throw new ArgumentNullException(nameof(providerType));
-		var bucket = this._client.ApiClient.Rest.GetBucket(method, route, parameters, out var path);
-		var url = Utilities.GetApiUriBuilderFor(path, this._client.Configuration);
+		var bucket = this._bot.ApiClient.Rest.GetBucket(method, route, parameters, out var path);
+		var url = Utilities.GetApiUriBuilderFor(path, this._bot.Configuration);
 		if (providerId is not null) url.AddParameter("provider_id", providerId);
-		return this._client.ApiClient.DoRequestAsync(this._client, bucket, url.Build(), method, route, payload: body is null ? null : DiscordJson.SerializeObject(body), cancellationToken: cancellationToken);
+		return this._bot.ApiClient.DoRequestAsync(this._bot, bucket, url.Build(), method, route, payload: body is null ? null : DiscordJson.SerializeObject(body), cancellationToken: cancellationToken);
 	}
 }

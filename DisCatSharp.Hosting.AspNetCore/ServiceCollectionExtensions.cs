@@ -11,7 +11,7 @@ namespace DisCatSharp.Hosting.AspNetCore;
 /// </summary>
 public static class ServiceCollectionExtensions
 {
-	/// <summary>Registers bot-authenticated Social SDK and lobby clients for dependency injection.</summary>
+	/// <summary>Registers a bot-authenticated Social SDK client for dependency injection.</summary>
 	/// <remarks>The factory is evaluated when a client is first resolved. For a hosted bot, resolve its client only after the bot has initialized.</remarks>
 	/// <param name="services">The service collection to update.</param>
 	/// <param name="clientFactory">Resolves the initialized bot client; when omitted, a registered <see cref="DiscordClient" /> is used.</param>
@@ -20,8 +20,7 @@ public static class ServiceCollectionExtensions
 	{
 		ArgumentNullException.ThrowIfNull(services);
 		clientFactory ??= static provider => provider.GetRequiredService<DiscordClient>();
-		services.TryAddSingleton(provider => new DiscordSocialClient(clientFactory(provider)));
-		services.TryAddSingleton(provider => new DiscordLobbyClient(clientFactory(provider)));
+		services.TryAddSingleton(provider => new DiscordSocialSdkClient(clientFactory(provider)));
 		return services;
 	}
 

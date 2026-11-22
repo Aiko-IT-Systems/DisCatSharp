@@ -19,7 +19,7 @@ namespace DisCatSharp.Hosting.Tests;
 /// <summary>Verifies Social SDK service registration and webhook-to-REST mapping.</summary>
 public sealed class DiscordSocialSdkIntegrationTests
 {
-	/// <summary>Both clients use the supplied bot and registration remains idempotent.</summary>
+	/// <summary>The unified client uses the supplied bot and registration remains idempotent.</summary>
 	[Fact]
 	public void Services_ResolveClientsUsingConfiguredBot()
 	{
@@ -27,8 +27,7 @@ public sealed class DiscordSocialSdkIntegrationTests
 		var services = new ServiceCollection();
 		services.AddDiscordSocialSdkSupport(_ => bot).AddDiscordSocialSdkSupport(_ => throw new InvalidOperationException());
 		using var provider = services.BuildServiceProvider();
-		Assert.Same(provider.GetRequiredService<DiscordSocialClient>(), provider.GetRequiredService<DiscordSocialClient>());
-		Assert.Same(provider.GetRequiredService<DiscordLobbyClient>(), provider.GetRequiredService<DiscordLobbyClient>());
+		Assert.Same(provider.GetRequiredService<DiscordSocialSdkClient>(), provider.GetRequiredService<DiscordSocialSdkClient>());
 	}
 
 	/// <summary>Webhook identifiers are passed through to their corresponding moderation endpoints.</summary>
@@ -45,12 +44,12 @@ public sealed class DiscordSocialSdkIntegrationTests
 		original.Dispose();
 		var lobby = JsonConvert.DeserializeObject<DiscordWebhookLobbyMessageEventData>("{\"id\":\"33\",\"lobby_id\":\"22\"}")!;
 		var direct = JsonConvert.DeserializeObject<DiscordWebhookGameDirectMessageEventData>("{\"id\":\"44\",\"author\":{\"id\":\"11\"},\"recipient_id\":\"22\"}")!;
-		await lobby.UpdateModerationMetadataAsync(new DiscordLobbyClient(bot), new() { ["action"] = "hide" });
+		await lobby.UpdateModerationMetadataAsync(new DiscordSocialSdkClient(bot), new() { ["action"] = "hide" });
 		Assert.Equal("/api/v10/lobbies/22/messages/33/moderation-metadata", handler.Path);
-		await direct.UpdateModerationMetadataAsync(new DiscordSocialClient(bot), new Dictionary<string, string> { ["action"] = "hide" });
+		await direct.UpdateModerationMetadataAsync(new DiscordSocialSdkClient(bot), new Dictionary<string, string> { ["action"] = "hide" });
 		Assert.Equal("/api/v10/partner-sdk/dms/11/22/messages/44/moderation-metadata", handler.Path);
 		var partial = JsonConvert.DeserializeObject<DiscordWebhookGameDirectMessageEventData>("{\"id\":\"44\"}")!;
-		Assert.Throws<InvalidOperationException>(() => { _ = partial.UpdateModerationMetadataAsync(new DiscordSocialClient(bot), new Dictionary<string, string>()); });
+		Assert.Throws<InvalidOperationException>(() => { _ = partial.UpdateModerationMetadataAsync(new DiscordSocialSdkClient(bot), new Dictionary<string, string>()); });
 	}
 
 	/// <summary>Captures the outgoing request without contacting Discord.</summary>

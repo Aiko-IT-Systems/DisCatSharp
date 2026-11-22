@@ -6,10 +6,12 @@ author: DisCatSharp Team
 
 # Social SDK operations using a bot
 
-`DiscordSocialClient` uses an existing `DiscordClient` and its bot token for Discord's server-side Social SDK operations. Access to game-stat widgets or Social SDK features can require enablement by Discord; profile and identity operations also require the user to authorize the application with `application_identities.write`.
+`DiscordSocialSdkClient` uses an existing `DiscordClient` and its bot token for Discord's server-side Social SDK operations. Access to game-stat widgets or Social SDK features can require enablement by Discord; profile and identity operations also require the user to authorize the application with `application_identities.write`.
+
+Lobby operations are also available on this client, with names such as `CreateLobbyAsync` and `GetLobbyAsync`. Construct it with a `DiscordOAuth2Client` and a user's access token for bearer-only operations such as `CreateOrJoinLobbyAsync`; bot-only operations require the bot-backed constructor.
 
 ```csharp
-var social = new DiscordSocialClient(discord);
+var social = new DiscordSocialSdkClient(discord);
 var data = new DiscordGameProfileData
 {
     Primary = new DiscordGamePrimaryStats { RankName = "Silver", TotalWins = 57 },
@@ -27,17 +29,17 @@ When an update includes `data`, Discord **replaces the entire existing data obje
 
 ## Message moderation
 
-Use `UpdateDirectMessageModerationAsync` to set application-scoped moderation metadata for a Social SDK direct message. Provide both participant IDs and the message ID; the order of participants does not matter. Discord's Social SDK webhook events are available through the ASP.NET Core webhook event ingress. Lobby message moderation is exposed separately by `DiscordLobbyClient`.
+Use `UpdateDirectMessageModerationAsync` to set application-scoped moderation metadata for a Social SDK direct message. Provide both participant IDs and the message ID; the order of participants does not matter. Discord's Social SDK webhook events are available through the ASP.NET Core webhook event ingress. Lobby message moderation uses the same client.
 
 ## ASP.NET Core integration
 
-Register both bot-authenticated clients in your application container. If the bot is a hosted service, resolve its initialized client through a factory:
+Register the bot-authenticated client in your application container. If the bot is a hosted service, resolve its initialized client through a factory:
 
 ```csharp
 builder.Services.AddDiscordSocialSdkSupport(services => services.GetRequiredService<MyBot>().Client);
 ```
 
-When a `DiscordClient` is already registered directly, use `AddDiscordSocialSdkSupport()` instead. Inject `DiscordSocialClient` or `DiscordLobbyClient` wherever you need their operations. Resolve them after the hosted bot has initialized; registration does not connect or start a bot.
+When a `DiscordClient` is already registered directly, use `AddDiscordSocialSdkSupport()` instead. Inject `DiscordSocialSdkClient` wherever you need its operations. Resolve them after the hosted bot has initialized; registration does not connect or start a bot.
 
 Webhook handlers can pass their typed message payload directly to moderation. Import `DisCatSharp.Hosting.AspNetCore.Ingress.WebhookEvents` for the extension methods:
 
@@ -45,6 +47,6 @@ Webhook handlers can pass their typed message payload directly to moderation. Im
 await args.Message.UpdateModerationMetadataAsync(social, new Dictionary<string, string> { ["action"] = "hide" });
 ```
 
-For a lobby message use the same extension with a `DiscordLobbyClient`. The payload must contain the relevant message and lobby IDs, or the author and recipient IDs for a game direct message. Partial payloads missing these fields throw an `InvalidOperationException`; do not substitute unrelated IDs. Webhook dispatch acknowledges requests before handlers finish and applies a one-second handler timeout, so queue longer moderation work in your own background service.
+For a lobby message use the same extension with the same client. The payload must contain the relevant message and lobby IDs, or the author and recipient IDs for a game direct message. Partial payloads missing these fields throw an `InvalidOperationException`; do not substitute unrelated IDs. Webhook dispatch acknowledges requests before handlers finish and applies a one-second handler timeout, so queue longer moderation work in your own background service.
 
 See Discord's [application identity profile reference](https://docs.discord.com/developers/resources/application-identity-profile), [bot-token provisional account guide](https://docs.discord.com/developers/discord-social-sdk/development-guides/provisional-accounts/bot-token-endpoint), and [moderation guide](https://docs.discord.com/developers/discord-social-sdk/how-to/integrate-moderation) for current access requirements and limits.
