@@ -54,6 +54,19 @@ public class SurfaceRegressionTests
 		Assert.Equal("components", embed.Type);
 		Assert.IsType<DiscordContainerComponent>(Assert.Single(embed.Components!));
 	}
+
+	[Fact]
+	public void AudioEmbed_DeserializesAudioResource()
+	{
+		var embed = DiscordJson.DeserializeObject<DiscordEmbed>("{\"type\":\"audio\",\"audio\":{\"url\":\"https://cdn.example.org/track.ogg\",\"proxy_url\":\"https://media.discordapp.net/track.ogg\",\"content_type\":\"audio/ogg\",\"description\":\"A test track\"}}", null);
+
+		Assert.Equal("audio", embed.Type);
+		Assert.NotNull(embed.Audio);
+		Assert.Equal("https://cdn.example.org/track.ogg", embed.Audio.Url.ToString());
+		Assert.Equal("https://media.discordapp.net/track.ogg", embed.Audio.ProxyUrl!.ToString());
+		Assert.Equal("audio/ogg", embed.Audio.ContentType);
+		Assert.Equal("A test track", embed.Audio.Description);
+	}
 	[Fact]
 	public void GuildFeatures_RecognizeNewAndExistingSpamLinkMappings()
 	{

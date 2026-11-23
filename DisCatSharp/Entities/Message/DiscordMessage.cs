@@ -433,10 +433,11 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 			: null;
 
 	/// <summary>
-	///     Gets the message object for the referenced message
+	///     Gets the message object for the referenced message.
+	///     The value is <see langword="null" /> when Discord deleted the referenced message or when a thread starter message is unavailable to the requester.
 	/// </summary>
 	[JsonProperty("referenced_message", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordMessage ReferencedMessage { get; internal set; }
+	public DiscordMessage? ReferencedMessage { get; internal set; }
 
 	/// <summary>
 	///     Gets whether the message is a response to an interaction.

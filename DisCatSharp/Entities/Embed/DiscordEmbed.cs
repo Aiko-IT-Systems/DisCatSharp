@@ -52,6 +52,10 @@ public sealed class DiscordEmbed : ObservableApiObject
 	///             <description>video embed</description>
 	///         </item>
 	///         <item>
+	///             <term>audio</term>
+	///             <description>audio embed rendered with an inline audio player</description>
+	///         </item>
+	///         <item>
 	///             <term>gifv</term>
 	///             <description>animated gif image embed rendered as a video embed</description>
 	///         </item>
@@ -128,6 +132,13 @@ public sealed class DiscordEmbed : ObservableApiObject
 	/// </summary>
 	[JsonProperty("video", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordEmbedVideo? Video { get; internal set; }
+
+	/// <summary>
+	///     Gets the embed's audio.
+	///     Discord automatically creates audio embeds for direct links to supported audio files.
+	/// </summary>
+	[JsonProperty("audio", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordEmbedAudio? Audio { get; internal set; }
 
 	/// <summary>
 	///     Gets the embed's provider.

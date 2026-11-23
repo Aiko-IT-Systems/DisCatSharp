@@ -299,6 +299,9 @@ items:
   - uid: DisCatSharp.Entities.DiscordEmbed
     name: DiscordEmbed
     type: Class
+  - uid: DisCatSharp.Entities.DiscordEmbedAudio
+    name: DiscordEmbedAudio
+    type: Class
   - uid: DisCatSharp.Entities.DiscordEmbedAuthor
     name: DiscordEmbedAuthor
     type: Class
