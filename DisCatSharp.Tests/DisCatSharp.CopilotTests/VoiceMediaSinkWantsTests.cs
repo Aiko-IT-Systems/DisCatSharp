@@ -1,7 +1,12 @@
 using System;
 using System.Collections.Generic;
 
+using DisCatSharp.Voice;
 using DisCatSharp.Voice.Entities;
+using DisCatSharp.Voice.Enums;
+
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 using Xunit;
 
@@ -40,6 +45,36 @@ public sealed class VoiceMediaSinkWantsTests
 		Assert.Equal(0, json.Value<int>("any"));
 		Assert.Equal(100, json.Value<int>("42"));
 		Assert.Equal(50, json.Value<int>("2"));
+	}
+
+	/// <summary>
+	///     Verifies server-originated OP 15 snapshots use the same validated immutable representation as client snapshots.
+	/// </summary>
+	[Fact]
+	public void ServerWantsDeserializeAsValidatedSnapshot()
+	{
+		var wants = VoiceMediaSinkWants.FromJson(JObject.Parse("{\"any\":25,\"2\":100,\"42\":0}"));
+
+		Assert.Equal(25, wants.Any);
+		Assert.Equal(100, wants.SsrcWants[2]);
+		Assert.Equal(0, wants.SsrcWants[42]);
+		Assert.Throws<JsonSerializationException>(() => VoiceMediaSinkWants.FromJson(JObject.Parse("{\"any\":101}")));
+		Assert.Throws<JsonSerializationException>(() => VoiceMediaSinkWants.FromJson(JObject.Parse("{\"any\":100,\"0\":0}")));
+	}
+
+	/// <summary>
+	///     Verifies the informational voice-gateway surfaces remain available to consumers without conflating them with receive policy.
+	/// </summary>
+	[Fact]
+	public void InformationalVoiceGatewaySurfacesArePublic()
+	{
+		Assert.NotNull(typeof(VoiceConnection).GetMethod(nameof(VoiceConnection.RequestVoiceBackendVersionAsync)));
+		Assert.NotNull(typeof(VoiceConnection).GetEvent(nameof(VoiceConnection.MediaSinkWantsReceived)));
+		Assert.NotNull(typeof(VoiceConnection).GetEvent(nameof(VoiceConnection.VoiceBackendVersionReceived)));
+		Assert.NotNull(typeof(VoiceConnection).GetEvent(nameof(VoiceConnection.ClientFlagsReceived)));
+		Assert.Equal(1, (int)VoiceClientFlags.ClipsEnabled);
+		Assert.Equal(2, (int)VoiceClientFlags.AllowVoiceRecording);
+		Assert.Equal(4, (int)VoiceClientFlags.AllowAnyViewerClips);
 	}
 
 	/// <summary>

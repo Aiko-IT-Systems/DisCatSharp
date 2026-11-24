@@ -115,6 +115,12 @@ public sealed class VoiceConnection : IDisposable
 
 	private readonly AsyncEvent<VoiceConnection, VoicePacketDroppedEventArgs> _voicePacketDropped;
 
+	private readonly AsyncEvent<VoiceConnection, VoiceMediaSinkWantsEventArgs> _mediaSinkWantsReceived;
+
+	private readonly AsyncEvent<VoiceConnection, VoiceBackendVersionEventArgs> _voiceBackendVersionReceived;
+
+	private readonly AsyncEvent<VoiceConnection, VoiceClientFlagsEventArgs> _clientFlagsReceived;
+
 	private readonly AsyncEvent<VoiceConnection, DaveStateChangedEventArgs> _daveStateChanged;
 
 	private readonly AsyncEvent<VoiceConnection, DaveOpcodeEventArgs> _daveOpcodeObserved;
@@ -370,6 +376,9 @@ public sealed class VoiceConnection : IDisposable
 		this._userLeft = new("VOICE_USER_LEFT", TimeSpan.Zero, this._discord.EventErrorHandler);
 		this._voiceReceived = new("VOICE_VOICE_RECEIVED", TimeSpan.Zero, this._discord.EventErrorHandler);
 		this._voicePacketDropped = new("VOICE_PACKET_DROPPED", TimeSpan.Zero, this._discord.EventErrorHandler);
+		this._mediaSinkWantsReceived = new("VOICE_MEDIA_SINK_WANTS_RECEIVED", TimeSpan.Zero, this._discord.EventErrorHandler);
+		this._voiceBackendVersionReceived = new("VOICE_BACKEND_VERSION_RECEIVED", TimeSpan.Zero, this._discord.EventErrorHandler);
+		this._clientFlagsReceived = new("VOICE_CLIENT_FLAGS_RECEIVED", TimeSpan.Zero, this._discord.EventErrorHandler);
 		this._daveStateChanged = new("VOICE_DAVE_STATE_CHANGED", TimeSpan.Zero, this._discord.EventErrorHandler);
 		this._daveOpcodeObserved = new("VOICE_DAVE_OPCODE_OBSERVED", TimeSpan.Zero, this._discord.EventErrorHandler);
 		this._voiceSocketError = new("VOICE_WS_ERROR", TimeSpan.Zero, this._discord.EventErrorHandler);
@@ -579,6 +588,28 @@ public sealed class VoiceConnection : IDisposable
 	}
 
 	/// <summary>
+	///     Requests informational backend version details from Discord's voice server.
+	/// </summary>
+	/// <returns>A task representing the request send operation. The response is delivered through <see cref="VoiceBackendVersionReceived" />.</returns>
+	/// <remarks>
+	///     Discord accepts this request only after the voice gateway has sent READY. The returned version strings are
+	///     informational and do not change voice connection behavior.
+	/// </remarks>
+	/// <exception cref="InvalidOperationException">Thrown when the voice gateway has not sent READY for the current session.</exception>
+	public Task RequestVoiceBackendVersionAsync()
+	{
+		ObjectDisposedException.ThrowIf(this._isDisposed, this);
+		if (!this._mediaSinkReady)
+			throw new InvalidOperationException("Voice backend versions can only be requested after the voice gateway sends READY.");
+
+		return this.WsSendAsync(JsonConvert.SerializeObject(new VoiceDispatchPayload
+		{
+			OpCode = 16,
+			Payload = new JObject()
+		}, Formatting.None));
+	}
+
+	/// <summary>
 	///     Disconnects and disposes this voice connection.
 	/// </summary>
 	public void Dispose()
@@ -680,6 +711,40 @@ public sealed class VoiceConnection : IDisposable
 	{
 		add => this._voicePacketDropped.Register(value);
 		remove => this._voicePacketDropped.Unregister(value);
+	}
+
+	/// <summary>
+	///     Triggered when Discord's voice server sends media preferences for outbound media.
+	/// </summary>
+	/// <remarks>
+	///     This does not affect the connection's receive policy. The server currently uses it for video it would like
+	///     the client to send.
+	/// </remarks>
+	public event AsyncEventHandler<VoiceConnection, VoiceMediaSinkWantsEventArgs> MediaSinkWantsReceived
+	{
+		add => this._mediaSinkWantsReceived.Register(value);
+		remove => this._mediaSinkWantsReceived.Unregister(value);
+	}
+
+	/// <summary>
+	///     Triggered when Discord's voice server reports informational backend version details.
+	/// </summary>
+	public event AsyncEventHandler<VoiceConnection, VoiceBackendVersionEventArgs> VoiceBackendVersionReceived
+	{
+		add => this._voiceBackendVersionReceived.Register(value);
+		remove => this._voiceBackendVersionReceived.Unregister(value);
+	}
+
+	/// <summary>
+	///     Triggered when a user's client reports its Discord Clips preferences.
+	/// </summary>
+	/// <remarks>
+	///     The payload is client-reported and must not be treated as verified state or as consent to record voice.
+	/// </remarks>
+	public event AsyncEventHandler<VoiceConnection, VoiceClientFlagsEventArgs> ClientFlagsReceived
+	{
+		add => this._clientFlagsReceived.Register(value);
+		remove => this._clientFlagsReceived.Unregister(value);
 	}
 
 	/// <summary>
@@ -2347,6 +2412,37 @@ public sealed class VoiceConnection : IDisposable
 				{
 					User = usrl,
 					Ssrc = txssrc.Key
+				}).ConfigureAwait(false);
+				break;
+
+			case 15: // MEDIA_SINK_WANTS
+				this._voiceLogger.VoiceTrace(VoiceEvents.VoiceDispatch, "Received MEDIA_SINK_WANTS (OP15)");
+				ArgumentNullException.ThrowIfNull(opp);
+				await this._mediaSinkWantsReceived.InvokeAsync(this, new(this._discord.ServiceProvider)
+				{
+					Wants = VoiceMediaSinkWants.FromJson(opp)
+				}).ConfigureAwait(false);
+				break;
+
+			case 16: // VOICE_BACKEND_VERSION
+				this._voiceLogger.VoiceTrace(VoiceEvents.VoiceDispatch, "Received VOICE_BACKEND_VERSION (OP16)");
+				ArgumentNullException.ThrowIfNull(opp);
+				var vbvp = opp.ToObject<VoiceBackendVersionPayload>()!;
+				await this._voiceBackendVersionReceived.InvokeAsync(this, new(this._discord.ServiceProvider)
+				{
+					VoiceVersion = vbvp.Voice,
+					RtcWorkerVersion = vbvp.RtcWorker
+				}).ConfigureAwait(false);
+				break;
+
+			case 18: // CLIENT_FLAGS
+				this._voiceLogger.VoiceTrace(VoiceEvents.VoiceDispatch, "Received CLIENT_FLAGS (OP18)");
+				ArgumentNullException.ThrowIfNull(opp);
+				var vcfp = opp.ToObject<VoiceClientFlagsPayload>()!;
+				await this._clientFlagsReceived.InvokeAsync(this, new(this._discord.ServiceProvider)
+				{
+					UserId = vcfp.UserId,
+					Flags = vcfp.Flags
 				}).ConfigureAwait(false);
 				break;
 

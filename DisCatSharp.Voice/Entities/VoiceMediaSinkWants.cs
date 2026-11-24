@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace DisCatSharp.Voice.Entities;
@@ -78,6 +79,56 @@ public sealed class VoiceMediaSinkWants
 			payload[ssrc.ToString(CultureInfo.InvariantCulture)] = want;
 
 		return payload;
+	}
+
+	/// <summary>
+	///     Parses a Media Sink Wants snapshot received from Discord's voice gateway.
+	/// </summary>
+	/// <param name="payload">The OP 15 payload.</param>
+	/// <returns>An immutable representation of the complete gateway snapshot.</returns>
+	/// <exception cref="JsonSerializationException">Thrown when the gateway payload has an invalid want value or SSRC key.</exception>
+	internal static VoiceMediaSinkWants FromJson(JObject payload)
+	{
+		ArgumentNullException.ThrowIfNull(payload);
+		if (!payload.TryGetValue("any", out var anyToken))
+			throw new JsonSerializationException("Media Sink Wants payload is missing its 'any' value.");
+
+		var wants = new Dictionary<uint, int>(payload.Count - 1);
+		foreach (var property in payload.Properties())
+		{
+			if (property.Name == "any")
+				continue;
+
+			if (!uint.TryParse(property.Name, NumberStyles.None, CultureInfo.InvariantCulture, out var ssrc) || ssrc == 0)
+				throw new JsonSerializationException($"Media Sink Wants property '{property.Name}' is not a non-zero SSRC.");
+
+			wants.Add(ssrc, GetWant(property.Value, property.Name));
+		}
+
+		return new(GetWant(anyToken, "any"), wants);
+
+		static int GetWant(JToken token, string name)
+		{
+			if (token.Type != JTokenType.Integer)
+				throw new JsonSerializationException($"Media Sink Wants property '{name}' is not an integer.");
+
+			var value = token.Value<long>();
+			if (value is < int.MinValue or > int.MaxValue)
+				throw new JsonSerializationException($"Media Sink Wants property '{name}' is outside the supported integer range.");
+
+			var want = (int)value;
+
+			try
+			{
+				ValidateWant(want, name);
+			}
+			catch (ArgumentOutOfRangeException exception)
+			{
+				throw new JsonSerializationException(exception.Message, exception);
+			}
+
+			return want;
+		}
 	}
 
 	/// <summary>

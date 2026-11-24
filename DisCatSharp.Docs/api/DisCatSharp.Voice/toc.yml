@@ -67,6 +67,9 @@ items:
   - uid: DisCatSharp.Voice.Enums.VoiceApplication
     name: VoiceApplication
     type: Enum
+  - uid: DisCatSharp.Voice.Enums.VoiceClientFlags
+    name: VoiceClientFlags
+    type: Enum
   - uid: DisCatSharp.Voice.Enums.VoiceMediaReceivePolicyKind
     name: VoiceMediaReceivePolicyKind
     type: Enum
@@ -89,6 +92,15 @@ items:
     type: Class
   - uid: DisCatSharp.Voice.EventArgs.DaveStateChangedEventArgs
     name: DaveStateChangedEventArgs
+    type: Class
+  - uid: DisCatSharp.Voice.EventArgs.VoiceBackendVersionEventArgs
+    name: VoiceBackendVersionEventArgs
+    type: Class
+  - uid: DisCatSharp.Voice.EventArgs.VoiceClientFlagsEventArgs
+    name: VoiceClientFlagsEventArgs
+    type: Class
+  - uid: DisCatSharp.Voice.EventArgs.VoiceMediaSinkWantsEventArgs
+    name: VoiceMediaSinkWantsEventArgs
     type: Class
   - uid: DisCatSharp.Voice.EventArgs.VoicePacketDroppedEventArgs
     name: VoicePacketDroppedEventArgs

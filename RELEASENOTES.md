@@ -1,5 +1,6 @@
 DisCatSharp Release Notes
 
+	- Added voice gateway backend-version requests, server Media Sink Wants notifications, and raw client-reported Clips flags for future media support. Client flags are untrusted and are not recording consent.
 	- Added audio resources to received embeds and clarified when a referenced thread-starter message can be unavailable.
 	- Unified Social SDK and lobby operations under `DiscordSocialSdkClient`.
 	- Added ASP.NET Core dependency-injection registration for the Social SDK client and webhook-message moderation helpers.
