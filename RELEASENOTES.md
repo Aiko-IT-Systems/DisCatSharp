@@ -1,6 +1,5 @@
 DisCatSharp Release Notes
 
-	- Added voice gateway backend-version requests, server Media Sink Wants notifications, and raw client-reported Clips flags for future media support. Client flags are untrusted and are not recording consent.
 	- Added audio resources to received embeds and clarified when a referenced thread-starter message can be unavailable.
 	- Unified Social SDK and lobby operations under `DiscordSocialSdkClient`.
 	- Added ASP.NET Core dependency-injection registration for the Social SDK client and webhook-message moderation helpers.
@@ -147,6 +146,7 @@ DisCatSharp.Lavalink Release Notes
 
 DisCatSharp.Voice Release Notes
 
+	- Added voice gateway backend-version requests, server Media Sink Wants notifications, and raw client-reported Clips flags for future media support. Client flags are untrusted and are not recording consent.
 	- Added managed Voice Gateway Media Sink Wants (OP 15) policies for receiving all, none, only selected users, or all except selected users. Added typed raw SSRC wants for advanced media clients; both modes survive voice reconnects.
     - Fixed the complete DAVE transition lifecycle: OP21, OP29, and OP30 now prepare receiver transforms and preserve their authoritative transition IDs; nonzero transitions send OP23 before OP22, while transition ID `0` executes immediately without OP23.
     - Corrected OP22 to consume one staged transition and switch only the local sender, without sending OP23 or resetting a successfully prepared MLS group; unknown and duplicate transition IDs are harmless.
