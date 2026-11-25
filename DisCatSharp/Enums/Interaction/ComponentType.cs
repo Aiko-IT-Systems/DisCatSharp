@@ -113,5 +113,15 @@ public enum ComponentType
 	/// <summary>
 	///     A checkbox.
 	/// </summary>
-	Checkbox = 23
+	Checkbox = 23,
+
+	/// <summary>
+	///     An interactive overflow menu containing grouped menu action items.
+	/// </summary>
+	OverflowMenu = 25,
+
+	/// <summary>
+	///     An action in an overflow menu.
+	/// </summary>
+	MenuActionItem = 26
 }

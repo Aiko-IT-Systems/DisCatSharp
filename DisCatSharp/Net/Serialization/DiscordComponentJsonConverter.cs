@@ -53,6 +53,8 @@ internal sealed class DiscordComponentJsonConverter : JsonConverter
 			ComponentType.RadioGroup => new DiscordRadioGroupComponent(),
 			ComponentType.CheckboxGroup => new DiscordCheckboxGroupComponent(),
 			ComponentType.Checkbox => new DiscordCheckboxComponent(),
+			ComponentType.OverflowMenu => new DiscordOverflowMenuComponent(),
+			ComponentType.MenuActionItem => new DiscordMenuActionItemComponent(),
 			_ => new()
 			{
 				Type = type

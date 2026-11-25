@@ -55,7 +55,7 @@ public sealed class DiscordSectionComponent : DiscordComponent
 
 	/// <summary>
 	///     The accessory for the section.
-	///     Can be <see cref="DiscordThumbnailComponent" /> or <see cref="DiscordButtonComponent"/> at the moment.
+	///     Can be a <see cref="DiscordThumbnailComponent" />, <see cref="DiscordButtonComponent" />, or <see cref="DiscordOverflowMenuComponent" />.
 	/// </summary>
 	[JsonProperty("accessory", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordSectionAccessory Accessory { get; internal set; }
@@ -65,8 +65,8 @@ public sealed class DiscordSectionComponent : DiscordComponent
 	{
 		foreach (var comp in this.Components)
 			yield return comp;
-		if (this.Accessory is DiscordBaseButtonComponent acc)
-			yield return acc;
+		if (this.Accessory is not null)
+			yield return this.Accessory;
 	}
 
 	/// <summary>
@@ -90,6 +90,17 @@ public sealed class DiscordSectionComponent : DiscordComponent
 	public DiscordSectionComponent WithButtonComponent(DiscordBaseButtonComponent button)
 	{
 		this.Accessory = button;
+		return this;
+	}
+
+	/// <summary>
+	///     Adds an overflow menu to the section as its accessory.
+	/// </summary>
+	/// <param name="menu">The overflow menu to add.</param>
+	/// <returns>The current <see cref="DiscordSectionComponent" />.</returns>
+	public DiscordSectionComponent WithOverflowMenuComponent(DiscordOverflowMenuComponent menu)
+	{
+		this.Accessory = menu;
 		return this;
 	}
 

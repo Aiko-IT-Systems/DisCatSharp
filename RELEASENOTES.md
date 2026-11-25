@@ -1,5 +1,6 @@
 DisCatSharp Release Notes
 
+	- Added Components V2 overflow menus and menu action items, including validation, interaction payload parsing, and action-row and section-accessory support.
 	- Added audio resources to received embeds and clarified when a referenced thread-starter message can be unavailable.
 	- Unified Social SDK and lobby operations under `DiscordSocialSdkClient`.
 	- Added ASP.NET Core dependency-injection registration for the Social SDK client and webhook-message moderation helpers.

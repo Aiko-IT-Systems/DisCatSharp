@@ -626,6 +626,11 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 			foreach (var child in row.Components)
 				ModifyComponentRecursive(child, customId, modifyAction);
 		}
+		else if (component is DiscordOverflowMenuComponent menu)
+		{
+			foreach (var child in menu.GetChildren())
+				ModifyComponentRecursive(child, customId, modifyAction);
+		}
 		else if (component is DiscordContainerComponent cont)
 		{
 			foreach (var child in cont.Components)
@@ -658,6 +663,11 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 		if (component is DiscordActionRowComponent row)
 		{
 			foreach (var child in row.Components)
+				ModifyComponentRecursive(child, id, modifyAction);
+		}
+		else if (component is DiscordOverflowMenuComponent menu)
+		{
+			foreach (var child in menu.GetChildren())
 				ModifyComponentRecursive(child, id, modifyAction);
 		}
 		else if (component is DiscordContainerComponent cont)
@@ -716,9 +726,19 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 			if (shouldSet)
 				select.Disabled = disabled;
 		}
+		else if (component is DiscordMenuActionItemComponent item)
+		{
+			if (shouldSet)
+				item.Disabled = disabled;
+		}
 		else if (component is DiscordActionRowComponent row)
 		{
 			foreach (var child in row.Components)
+				SetComponentStateRecursive(child, disabled, ids, customIds, all);
+		}
+		else if (component is DiscordOverflowMenuComponent menu)
+		{
+			foreach (var child in menu.GetChildren())
 				SetComponentStateRecursive(child, disabled, ids, customIds, all);
 		}
 		else if (component is DiscordContainerComponent cont)
@@ -730,8 +750,8 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 		{
 			foreach (var child in sec.Components)
 				SetComponentStateRecursive(child, disabled, ids, customIds, all);
-			if (sec.Accessory is DiscordButtonComponent accBtn)
-				SetComponentStateRecursive(accBtn, disabled, ids, customIds, all);
+			if (sec.Accessory is not null)
+				SetComponentStateRecursive(sec.Accessory, disabled, ids, customIds, all);
 		}
 	}
 

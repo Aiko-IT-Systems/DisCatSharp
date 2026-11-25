@@ -551,6 +551,9 @@ items:
   - uid: DisCatSharp.Entities.DiscordMentionableSelectComponent
     name: DiscordMentionableSelectComponent
     type: Class
+  - uid: DisCatSharp.Entities.DiscordMenuActionItemComponent
+    name: DiscordMenuActionItemComponent
+    type: Class
   - uid: DisCatSharp.Entities.DiscordMessage
     name: DiscordMessage
     type: Class
@@ -598,6 +601,12 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.DiscordOnboardingPromptOption
     name: DiscordOnboardingPromptOption
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordOverflowMenuComponent
+    name: DiscordOverflowMenuComponent
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordOverflowMenuGroup
+    name: DiscordOverflowMenuGroup
     type: Class
   - uid: DisCatSharp.Entities.DiscordOverwrite
     name: DiscordOverwrite
@@ -1267,6 +1276,9 @@ items:
     type: Enum
   - uid: DisCatSharp.Enums.MentionType
     name: MentionType
+    type: Enum
+  - uid: DisCatSharp.Enums.MenuActionItemStyle
+    name: MenuActionItemStyle
     type: Enum
   - uid: DisCatSharp.Enums.MessageActivityType
     name: MessageActivityType
