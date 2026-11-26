@@ -18,6 +18,22 @@ namespace DisCatSharp.Interactivity.Extensions;
 public static class MessageExtensions
 {
 	/// <summary>
+	///     Waits for an interactive item in an overflow menu on this message.
+	/// </summary>
+	/// <param name="message">The message to wait on.</param>
+	/// <param name="timeoutOverride">Overrides the timeout set in <see cref="InteractivityConfiguration.Timeout" />.</param>
+	public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForMenuActionAsync(this DiscordMessage message, TimeSpan? timeoutOverride = null)
+		=> GetInteractivity(message).WaitForMenuActionAsync(message, timeoutOverride);
+
+	/// <summary>
+	///     Waits for an interactive item in an overflow menu on this message.
+	/// </summary>
+	/// <param name="message">The message to wait on.</param>
+	/// <param name="token">A cancellation token that can cancel the wait.</param>
+	public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForMenuActionAsync(this DiscordMessage message, CancellationToken token)
+		=> GetInteractivity(message).WaitForMenuActionAsync(message, token);
+
+	/// <summary>
 	///     Waits for the next message that has the same author and channel as this message.
 	/// </summary>
 	/// <param name="message">Original message.</param>

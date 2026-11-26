@@ -172,6 +172,34 @@ public class InteractivityExtension : BaseExtension, IDisposable
 	}
 
 	/// <summary>
+	///     Waits for an interactive item in an overflow menu on the specified message.
+	/// </summary>
+	/// <param name="message">The message to wait on.</param>
+	/// <param name="timeoutOverride">Override the timeout period specified in <see cref="InteractivityConfiguration" />.</param>
+	/// <returns>The interaction result, or a timed-out result if no menu item was selected.</returns>
+	public Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForMenuActionAsync(DiscordMessage message, TimeSpan? timeoutOverride = null)
+		=> this.WaitForMenuActionAsync(message, this.GetCancellationToken(timeoutOverride));
+
+	/// <summary>
+	///     Waits for an interactive item in an overflow menu on the specified message.
+	/// </summary>
+	/// <param name="message">The message to wait on.</param>
+	/// <param name="token">A cancellation token that can cancel the wait.</param>
+	/// <returns>The interaction result, or a timed-out result if no menu item was selected.</returns>
+	/// <exception cref="InvalidOperationException">The message was not authored by the current application.</exception>
+	public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForMenuActionAsync(DiscordMessage message, CancellationToken token)
+	{
+		if (message.Author != this.Client.CurrentUser)
+			throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
+
+		var result = await this._componentEventWaiter
+			.WaitForMatchAsync(new(message, c => c.Interaction.Data.ComponentType is ComponentType.MenuActionItem, token))
+			.ConfigureAwait(false);
+
+		return new(result is null, result);
+	}
+
+	/// <summary>
 	///     Waits for a user modal submit.
 	/// </summary>
 	/// <param name="customId">The custom id of the modal to wait for.</param>
